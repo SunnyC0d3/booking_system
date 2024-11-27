@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\LoginUserRequest;
 use App\Http\Requests\Api\V1\RegisterUserRequest;
 use App\Models\User;
-use App\Permissions\Api\V1\Abilities;
+use App\Permissions\Abilities;
 use App\Traits\ApiResponses;
 use Illuminate\Support\Facades\Auth;
 
@@ -45,7 +45,7 @@ class AuthController extends Controller
             [
                 'token' => $user->createToken(
                     'API token for ' . $user->email,
-                    //Abilities::getAbilities($user),
+                    Abilities::getAbilities($user),
                     now()->addMonth()
                 )->plainTextToken
             ]
@@ -64,7 +64,7 @@ class AuthController extends Controller
     {
         $request->user()->currentAccessToken()->delete();
 
-        return $this->ok('');
+        return $this->ok('User logged out Successfully.');
     }
 
     /**
@@ -94,7 +94,7 @@ class AuthController extends Controller
 
         $token = $user->createToken(
             'API token for ' . $user->email,
-            // Abilities::getAbilities($user),
+            Abilities::getAbilities($user),
             now()->addMonth()
         )->plainTextToken;
 
