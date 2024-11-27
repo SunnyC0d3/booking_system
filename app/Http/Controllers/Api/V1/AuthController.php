@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\LoginUserRequest;
+use App\Http\Requests\Api\V1\RegisterUserRequest;
 use App\Models\User;
 use App\Permissions\Api\V1\Abilities;
 use App\Traits\ApiResponses;
@@ -13,7 +14,6 @@ use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller
 {
     use ApiResponses;
-
 
     /**
      * Login
@@ -65,5 +65,45 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return $this->ok('');
+    }
+
+    /**
+     * Register
+     * 
+     * Registers a new user and returns the user's API token.
+     * 
+     * @unauthenticated
+     * @group Authentication
+     * @response 201 {
+     *   "data": {
+     *       "token": "{YOUR_AUTH_KEY}"
+     *   },
+     *   "message": "User registered successfully",
+     *   "status": 201
+     * }
+     */
+    public function register(RegisterUserRequest $request)
+    {
+        $request->validated($request->all());
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+        ]);
+
+        $token = $user->createToken(
+            'API token for ' . $user->email,
+            // Abilities::getAbilities($user),
+            now()->addMonth()
+        )->plainTextToken;
+
+        return $this->ok(
+            'User registered successfully',
+            [
+                'token' => $token,
+            ],
+            201
+        );
     }
 }
