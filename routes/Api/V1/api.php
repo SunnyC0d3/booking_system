@@ -7,9 +7,13 @@ use App\Http\Controllers\Api\V1\AuthController;
 
 // Registering, Logging In/Logging Out Routes
 
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/register', [AuthController::class, 'register']);
-Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+Route::middleware(['throttle:60,1'])->group(function () {
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/register', [AuthController::class, 'register']);
+});
+Route::middleware('auth:sanctum', 'ability:user:only,admin:only')->post('/logout', [AuthController::class, 'logout']);
+
+// User Routes
 
 Route::get('/user', function (Request $request) {
     return $request->user();
