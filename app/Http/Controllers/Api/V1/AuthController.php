@@ -93,16 +93,6 @@ class AuthController extends Controller
 
         $user = User::firstWhere('email', $request->email);
 
-        $user->currentAccessToken()->delete();
-
-        if ($request->filled('refresh_token')) {
-            $refreshToken = $user->tokens()->where('refresh_token', $request->refresh_token)->first();
-
-            if ($refreshToken) {
-                $refreshToken->delete();
-            }
-        }
-
         $token = $user->createToken('API token for ' . $user->email, Abilities::getAbilities($user), now()->addDay())->plainTextToken;
         $refreshToken = Str::random(60);
 
@@ -171,7 +161,7 @@ class AuthController extends Controller
      */
     public function refreshToken(RefreshTokenRequest $request)
     {
-        $request->validated($request->all());
+        $request->validated($request->only(['refresh_token']));
 
         $token = $request->user()->tokens()->where('refresh_token', $request->refresh_token)->first();
 
