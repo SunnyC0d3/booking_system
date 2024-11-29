@@ -24,7 +24,7 @@ final class Abilities
     public const DeleteClient  = 'client:delete';
     public const OnlyClient    = 'client:only';
 
-    public static function getAbilities(User $user)
+    public static function getAbilities(User $user): array
     {
         if ($user->role === 'client') {
             return [

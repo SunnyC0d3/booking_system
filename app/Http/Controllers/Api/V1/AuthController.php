@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\V1\LoginUserRequest;
-use App\Http\Requests\Api\V1\RegisterUserRequest;
+use App\Requests\Api\V1\LoginUserRequest;
+use App\Requests\Api\V1\RegisterUserRequest;
 use App\Models\User;
 use App\Permissions\Abilities;
 use App\Traits\ApiResponses;
@@ -90,6 +90,7 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
+            'role' => $request->role ?? 'user',
         ]);
 
         $token = $user->createToken(
