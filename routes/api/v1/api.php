@@ -12,6 +12,7 @@ Route::middleware(['throttle:60,1'])->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 });
 Route::middleware('auth:sanctum', 'ability:user:only,admin:only')->post('/logout', [AuthController::class, 'logout']);
+Route::middleware('auth:sanctum', 'ability:user:only,admin:only')->post('/token/refresh', [AuthController::class, 'refreshToken']);
 
 // User Routes
 
