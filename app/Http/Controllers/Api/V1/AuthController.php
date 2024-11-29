@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use App\Requests\Api\V1\LoginUserRequest;
+use App\Requests\Api\V1\LogoutUserRequest;
 use App\Requests\Api\V1\RegisterUserRequest;
 use App\Requests\Api\V1\RefreshTokenRequest;
 use App\Models\User;
 use App\Permissions\Abilities;
 use App\Traits\ApiResponses;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -95,10 +95,16 @@ class AuthController extends Controller
 
         $user->currentAccessToken()->delete();
 
+        if ($request->filled('refresh_token')) {
+            $refreshToken = $user->tokens()->where('refresh_token', $request->refresh_token)->first();
+
+            if ($refreshToken) {
+                $refreshToken->delete();
+            }
+        }
+
         $token = $user->createToken('API token for ' . $user->email, Abilities::getAbilities($user), now()->addDay())->plainTextToken;
         $refreshToken = Str::random(60);
-
-        $user->tokens()->where('name', 'API Refresh Token')->delete();
 
         $user->tokens()->create([
             'name' => 'API Refresh Token',
@@ -124,10 +130,19 @@ class AuthController extends Controller
      * @group Authentication
      * @response 200 {}
      */
-    public function logout(Request $request)
+    public function logout(LogoutUserRequest $request)
     {
+        $request->validated($request->only(['refresh_token']));
+
         $request->user()->currentAccessToken()->delete();
-        $request->user()->tokens()->where('name', 'API Refresh Token')->delete();
+
+        if ($request->filled('refresh_token')) {
+            $refreshToken = $request->user()->tokens()->where('refresh_token', $request->refresh_token)->first();
+
+            if ($refreshToken) {
+                $refreshToken->delete();
+            }
+        }
 
         return $this->ok('User logged out Successfully.');
     }
@@ -158,7 +173,7 @@ class AuthController extends Controller
     {
         $request->validated($request->all());
 
-        $token = $request->user->tokens()->where('refresh_token', $request->refresh_token)->first();
+        $token = $request->user()->tokens()->where('refresh_token', $request->refresh_token)->first();
 
         if (!$token) {
             return $this->error('Refresh token expired', 400);
@@ -168,7 +183,7 @@ class AuthController extends Controller
             return $this->error('Invalid refresh token', 400);
         }
 
-        $newAccessToken = $request->user->createToken('API token for ' . $request->user->email, Abilities::getAbilities($request->user), now()->addDay())->plainTextToken;
+        $newAccessToken = $request->user()->createToken('API token for ' . $request->user()->email, Abilities::getAbilities($request->user), now()->addDay())->plainTextToken;
         $newRefreshToken = Str::random(60);
 
         $token->update([
