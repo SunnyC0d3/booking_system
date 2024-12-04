@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Laravel\Sanctum\PersonalAccessToken as SanctumPersonalAccessToken;
+use Illuminate\Database\Eloquent\Builder;
 
 class PersonalAccessToken extends SanctumPersonalAccessToken
 {
@@ -24,4 +25,10 @@ class PersonalAccessToken extends SanctumPersonalAccessToken
     protected $hidden = [
         'token',
     ];
+
+    public function scopeExpired(Builder $query)
+    {
+        return $query->where('expires_at', '<', now())
+            ->orWhere('refresh_token_expires_at', '<', now());
+    }
 }

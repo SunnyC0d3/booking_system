@@ -23,8 +23,7 @@ class LoginUserRequest extends FormRequest
     {
         return [
             'email' => ['required', 'string', 'email'],
-            'password' => ['required', 'string', 'min:8'],
-            'refresh_token' => 'nullable|string|max:60',
+            'password' => ['required', 'string', 'min:8']
         ];
     }
 }
