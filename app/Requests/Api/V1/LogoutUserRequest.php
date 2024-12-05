@@ -22,7 +22,7 @@ class LogoutUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'refresh_token' => 'nullable|string|max:60',
+            'refresh_token' => 'required|string|max:60',
         ];
     }
 }

@@ -124,14 +124,15 @@ class AuthController extends Controller
     {
         $request->validated($request->only(['refresh_token']));
 
+        if (!$request->user()->currentAccessToken() || !$request->filled('refresh_token')) {
+            return $this->error('No token exists.', 400);
+        }
+
         $request->user()->currentAccessToken()->delete();
+        $refreshToken = $request->user()->tokens()->where('refresh_token', $request->refresh_token)->first();
 
-        if ($request->filled('refresh_token')) {
-            $refreshToken = $request->user()->tokens()->where('refresh_token', $request->refresh_token)->first();
-
-            if ($refreshToken) {
-                $refreshToken->delete();
-            }
+        if ($refreshToken) {
+            $refreshToken->delete();
         }
 
         return $this->ok('User logged out Successfully.');
@@ -173,7 +174,9 @@ class AuthController extends Controller
             return $this->error('Invalid refresh token', 400);
         }
 
-        $newAccessToken = $request->user()->createToken('API token for ' . $request->user()->email, Abilities::getAbilities($request->user), now()->addDay())->plainTextToken;
+        $user = User::firstWhere('email', $request->user()->email);
+
+        $newAccessToken = $request->user()->createToken('API token for ' . $request->user()->email, Abilities::getAbilities($user), now()->addDay())->plainTextToken;
         $newRefreshToken = Str::random(60);
 
         $token->update([
