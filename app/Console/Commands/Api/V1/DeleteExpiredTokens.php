@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Api\V1;
 
 use Illuminate\Console\Command;
-use App\Models\PersonalAccessToken;
+use App\Models\Api\V1\PersonalAccessToken;
 
 class DeleteExpiredTokens extends Command
 {
