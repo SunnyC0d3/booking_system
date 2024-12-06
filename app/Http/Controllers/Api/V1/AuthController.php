@@ -9,7 +9,7 @@ use App\Requests\Api\V1\LoginUserRequest;
 use App\Requests\Api\V1\LogoutUserRequest;
 use App\Requests\Api\V1\RegisterUserRequest;
 use App\Requests\Api\V1\RefreshTokenRequest;
-use App\Models\Api\V1\User;
+use App\Models\User;
 use App\Permissions\Abilities;
 use App\Traits\ApiResponses;
 
