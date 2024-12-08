@@ -12,6 +12,7 @@ use App\Requests\Api\V1\RefreshTokenRequest;
 use App\Models\User;
 use App\Permissions\Abilities;
 use App\Traits\ApiResponses;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -39,7 +40,7 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password),
+            'password' => Hash::make($request->password),
             'role' => 'user',
         ]);
 
