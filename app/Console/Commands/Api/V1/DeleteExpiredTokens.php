@@ -3,7 +3,7 @@
 namespace App\Console\Commands\Api\V1;
 
 use Illuminate\Console\Command;
-use App\Models\Api\V1\PersonalAccessToken;
+use App\Models\PersonalAccessToken;
 
 class DeleteExpiredTokens extends Command
 {

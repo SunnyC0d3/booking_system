@@ -45,12 +45,11 @@ class AuthController extends Controller
         ]);
 
         $token = $user->createToken('API token for ' . $user->email, Abilities::getAbilities($user), now()->addDay())->plainTextToken;
-        $refreshToken = Str::random(60);
+        $refreshToken = Hash::make(Str::random(60));
 
         $user->tokens()->create([
             'name' => 'API Refresh Token',
-            'token' => hash('sha256', $refreshToken),
-            'refresh_token' => $refreshToken,
+            'token' => $refreshToken,
             'refresh_token_expires_at' => now()->addDays(30),
         ]);
 
@@ -95,12 +94,11 @@ class AuthController extends Controller
         $user = User::firstWhere('email', $request->email);
 
         $token = $user->createToken('API token for ' . $user->email, Abilities::getAbilities($user), now()->addDay())->plainTextToken;
-        $refreshToken = Str::random(60);
+        $refreshToken = Hash::make(Str::random(60));
 
         $user->tokens()->create([
             'name' => 'API Refresh Token',
-            'token' => hash('sha256', $refreshToken),
-            'refresh_token' => $refreshToken,
+            'token' => $refreshToken,
             'refresh_token_expires_at' => now()->addDays(30),
         ]);
 
@@ -109,7 +107,8 @@ class AuthController extends Controller
             [
                 'token' => $token,
                 'refresh_token' => $refreshToken,
-            ]
+            ],
+            200
         );
     }
 
@@ -130,10 +129,13 @@ class AuthController extends Controller
         }
 
         $request->user()->currentAccessToken()->delete();
-        $refreshToken = $request->user()->tokens()->where('refresh_token', $request->refresh_token)->first();
 
-        if ($refreshToken) {
-            $refreshToken->delete();
+        $refreshTokens = $request->user()->tokens;
+
+        foreach ($refreshTokens as $token) {
+            if (Hash::check($request->refresh_token, $token->refresh_token)) {
+                $token->delete();
+            }
         }
 
         return $this->ok('User logged out Successfully.');
@@ -178,12 +180,11 @@ class AuthController extends Controller
         $user = User::firstWhere('email', $request->user()->email);
 
         $newAccessToken = $request->user()->createToken('API token for ' . $user->email, Abilities::getAbilities($user), now()->addDay())->plainTextToken;
-        $newRefreshToken = Str::random(60);
+        $newRefreshToken = Hash::make(Str::random(60));
 
         $token->update([
             'name' => 'API Refresh Token',
-            'token' => hash('sha256', $newRefreshToken),
-            'refresh_token' => $newRefreshToken,
+            'token' => $newRefreshToken,
             'refresh_token_expires_at' => now()->addDays(30),
         ]);
 
