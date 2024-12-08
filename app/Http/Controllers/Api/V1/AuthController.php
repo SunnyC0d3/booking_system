@@ -35,7 +35,7 @@ class AuthController extends Controller
      */
     public function register(RegisterUserRequest $request)
     {
-        $request->validated($request->all());
+        $request->validated($request->only(['name', 'email', 'password', 'password_confirmation']));
 
         $user = User::create([
             'name' => $request->name,
@@ -86,7 +86,7 @@ class AuthController extends Controller
      */
     public function login(LoginUserRequest $request)
     {
-        $request->validated($request->all());
+        $request->validated($request->only(['email', 'passowrd']));
 
         if (!Auth::attempt($request->only('email', 'password'))) {
             return $this->error('Invalid credentials', 401);
@@ -168,19 +168,21 @@ class AuthController extends Controller
         $token = $request->user()->tokens()->where('refresh_token', $request->refresh_token)->first();
 
         if (!$token) {
-            return $this->error('Refresh token expired', 400);
+            return $this->error('Invalid refresh token', 400);
         }
 
         if ($token->refresh_token_expires_at < now()) {
-            return $this->error('Invalid refresh token', 400);
+            return $this->error('Refresh token expired', 400);
         }
 
         $user = User::firstWhere('email', $request->user()->email);
 
-        $newAccessToken = $request->user()->createToken('API token for ' . $request->user()->email, Abilities::getAbilities($user), now()->addDay())->plainTextToken;
+        $newAccessToken = $request->user()->createToken('API token for ' . $user->email, Abilities::getAbilities($user), now()->addDay())->plainTextToken;
         $newRefreshToken = Str::random(60);
 
         $token->update([
+            'name' => 'API Refresh Token',
+            'token' => hash('sha256', $newRefreshToken),
             'refresh_token' => $newRefreshToken,
             'refresh_token_expires_at' => now()->addDays(30),
         ]);
