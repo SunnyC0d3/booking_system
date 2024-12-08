@@ -45,11 +45,11 @@ class AuthController extends Controller
         ]);
 
         $token = $user->createToken('API token for ' . $user->email, Abilities::getAbilities($user), now()->addDay())->plainTextToken;
-        $refreshToken = Hash::make(Str::random(60));
+        $refreshToken = Str::random(60);
 
         $user->tokens()->create([
             'name' => 'API Refresh Token',
-            'token' => $refreshToken,
+            'token' => hash('sha256', $refreshToken),
             'refresh_token_expires_at' => now()->addDays(30),
         ]);
 
@@ -94,11 +94,11 @@ class AuthController extends Controller
         $user = User::firstWhere('email', $request->email);
 
         $token = $user->createToken('API token for ' . $user->email, Abilities::getAbilities($user), now()->addDay())->plainTextToken;
-        $refreshToken = Hash::make(Str::random(60));
+        $refreshToken = Str::random(60);
 
         $user->tokens()->create([
             'name' => 'API Refresh Token',
-            'token' => $refreshToken,
+            'token' => hash('sha256', $refreshToken),
             'refresh_token_expires_at' => now()->addDays(30),
         ]);
 
@@ -132,9 +132,9 @@ class AuthController extends Controller
 
         $refreshTokens = $request->user()->tokens;
 
-        foreach ($refreshTokens as $token) {
-            if (Hash::check($request->refresh_token, $token->refresh_token)) {
-                $token->delete();
+        foreach ($refreshTokens as $refreshToken) {
+            if (hash('sha256', $request->refresh_token) === $refreshToken->token) {
+                $refreshToken->delete();
             }
         }
 
@@ -167,7 +167,7 @@ class AuthController extends Controller
     {
         $request->validated($request->only(['refresh_token']));
 
-        $token = $request->user()->tokens()->where('refresh_token', $request->refresh_token)->first();
+        $token = $request->user()->tokens()->where('token', hash('sha256', $request->refresh_token))->first();
 
         if (!$token) {
             return $this->error('Invalid refresh token', 400);
@@ -180,11 +180,11 @@ class AuthController extends Controller
         $user = User::firstWhere('email', $request->user()->email);
 
         $newAccessToken = $request->user()->createToken('API token for ' . $user->email, Abilities::getAbilities($user), now()->addDay())->plainTextToken;
-        $newRefreshToken = Hash::make(Str::random(60));
+        $newRefreshToken = Str::random(60);
 
         $token->update([
             'name' => 'API Refresh Token',
-            'token' => $newRefreshToken,
+            'token' => hash('sha256', $newRefreshToken),
             'refresh_token_expires_at' => now()->addDays(30),
         ]);
 
