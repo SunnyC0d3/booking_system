@@ -9,9 +9,9 @@ servers:
 paths:
   /api/login:
     post:
-      summary: Login
-      operationId: login
-      description: "Authenticates the user and returns the user's API token."
+      summary: 'Authenticate the user and return their API token.'
+      operationId: authenticateTheUserAndReturnTheirAPIToken
+      description: "This endpoint is used to authenticate a user with their email and password. If the\ncredentials are valid, an API token and refresh token will be issued."
       parameters: []
       responses:
         200:
@@ -23,6 +23,7 @@ paths:
                 example:
                   data:
                     token: '{YOUR_AUTH_KEY}'
+                    refresh_token: '{YOUR_REFRESH_KEY}'
                   message: Authenticated
                   status: 200
                 properties:
@@ -32,20 +33,123 @@ paths:
                       token:
                         type: string
                         example: '{YOUR_AUTH_KEY}'
+                      refresh_token:
+                        type: string
+                        example: '{YOUR_REFRESH_KEY}'
                   message:
                     type: string
                     example: Authenticated
                   status:
                     type: integer
                     example: 200
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Invalid credentials'
+                  status: 401
+                properties:
+                  message:
+                    type: string
+                    example: 'Invalid credentials'
+                  status:
+                    type: integer
+                    example: 401
       tags:
-        - Authentication
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: nosinski@example.com
+                  nullable: false
+                password:
+                  type: string
+                  description: 'Must be at least 8 characters.'
+                  example: "m)'`F3|:oif.}"
+                  nullable: false
+              required:
+                - email
+                - password
+      security: []
+  /api/register:
+    post:
+      summary: 'Register a new user and return their API token.'
+      operationId: registerANewUserAndReturnTheirAPIToken
+      description: "This endpoint is used to register a new user, including their name, email, password,\nand password confirmation. A new API token and refresh token will be issued."
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    token: '{YOUR_AUTH_KEY}'
+                    refresh_token: '{YOUR_REFRESH_KEY}'
+                  message: 'User registered successfully'
+                  status: 201
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        example: '{YOUR_AUTH_KEY}'
+                      refresh_token:
+                        type: string
+                        example: '{YOUR_REFRESH_KEY}'
+                  message:
+                    type: string
+                    example: 'User registered successfully'
+                  status:
+                    type: integer
+                    example: 201
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: dtbhgzirhgwwxxwgedi
+                  nullable: false
+                email:
+                  type: string
+                  description: 'Must be a valid email address. Must not be greater than 255 characters.'
+                  example: alysha43@example.net
+                  nullable: false
+                password:
+                  type: string
+                  description: 'Must be at least 8 characters.'
+                  example: "sGHcTl$E'OLnAO^;wA"
+                  nullable: false
+              required:
+                - name
+                - email
+                - password
       security: []
   /api/logout:
     post:
-      summary: Logout
-      operationId: logout
-      description: "Signs out the user and destroy's the API token."
+      summary: 'Logout the user and destroy their API token.'
+      operationId: logoutTheUserAndDestroyTheirAPIToken
+      description: "This endpoint allows the user to log out by deleting their current access token\nand refresh token from the database."
       parameters: []
       responses:
         200:
@@ -56,33 +160,122 @@ paths:
                 type: object
                 example: {  }
                 properties: {  }
-      tags:
-        - Authentication
-  /api/user:
-    get:
-      summary: ''
-      operationId: getApiUser
-      description: ''
-      parameters: []
-      responses:
-        401:
+        400:
           description: ''
           content:
             application/json:
               schema:
                 type: object
                 example:
-                  message: Unauthenticated.
+                  message: 'No token exists.'
+                  status: 400
                 properties:
                   message:
                     type: string
-                    example: Unauthenticated.
+                    example: 'No token exists.'
+                  status:
+                    type: integer
+                    example: 400
       tags:
         - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+                  description: 'Must not be greater than 60 characters.'
+                  example: rxsvaefhpsdyvn
+                  nullable: false
+              required:
+                - refresh_token
+  /api/token/refresh:
+    post:
+      summary: "Refresh the user's API token and generate a new refresh token."
+      operationId: refreshTheUsersAPITokenAndGenerateANewRefreshToken
+      description: "This endpoint is used to refresh the user's API access token by validating their\nrefresh token and issuing new tokens if valid."
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    token: '{YOUR_NEW_AUTH_KEY}'
+                    refresh_token: '{YOUR_NEW_REFRESH_KEY}'
+                  message: 'New tokens have been generated.'
+                  status: 201
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        example: '{YOUR_NEW_AUTH_KEY}'
+                      refresh_token:
+                        type: string
+                        example: '{YOUR_NEW_REFRESH_KEY}'
+                  message:
+                    type: string
+                    example: 'New tokens have been generated.'
+                  status:
+                    type: integer
+                    example: 201
+        400:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'Refresh token expired'
+                      status: 400
+                    properties:
+                      message:
+                        type: string
+                        example: 'Refresh token expired'
+                      status:
+                        type: integer
+                        example: 400
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'Invalid refresh token'
+                      status: 400
+                    properties:
+                      message:
+                        type: string
+                        example: 'Invalid refresh token'
+                      status:
+                        type: integer
+                        example: 400
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+                  description: 'Must not be greater than 60 characters.'
+                  example: uxpecaldbkharzpgvsqqomah
+                  nullable: false
+              required:
+                - refresh_token
 tags:
-  -
-    name: Authentication
-    description: ''
   -
     name: Endpoints
     description: ''

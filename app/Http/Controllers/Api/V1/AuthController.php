@@ -19,15 +19,18 @@ class AuthController extends Controller
     use ApiResponses;
 
     /**
-     * Register
+     * Register a new user and return their API token.
      * 
-     * Registers a new user and returns the user's API token.
+     * This endpoint is used to register a new user, including their name, email, password, 
+     * and password confirmation. A new API token and refresh token will be issued.
      * 
      * @unauthenticated
-     * @group Authentication
+     * @group Endpoints
+     * @subgroup Authentication
      * @response 201 {
      *   "data": {
-     *       "token": "{YOUR_AUTH_KEY}"
+     *       "token": "{YOUR_AUTH_KEY}",
+     *       "refresh_token": "{YOUR_REFRESH_KEY}"
      *   },
      *   "message": "User registered successfully",
      *   "status": 201
@@ -64,23 +67,25 @@ class AuthController extends Controller
     }
 
     /**
-     * Login
+     * Authenticate the user and return their API token.
      * 
-     * Authenticates the user and returns the user's API token.
+     * This endpoint is used to authenticate a user with their email and password. If the
+     * credentials are valid, an API token and refresh token will be issued.
      * 
      * @unauthenticated
-     * @group Authentication
+     * @group Endpoints
+     * @subgroup Authentication
      * @response 200 {
      * "data": {
      *       "token": "{YOUR_AUTH_KEY}",
-     *       "refresh_token": "{YOUR_AUTH_KEY}"
+     *       "refresh_token": "{YOUR_REFRESH_KEY}"
      * },
      *      "message": "Authenticated",
      *      "status": 200
      * }
      * @response 401 {
      *      "message": "Invalid credentials",
-     *      "status": 200
+     *      "status": 401
      * }
      */
     public function login(LoginUserRequest $request)
@@ -113,12 +118,18 @@ class AuthController extends Controller
     }
 
     /**
-     * Logout
+     * Logout the user and destroy their API token.
      * 
-     * Signs out the user and destroy's the API token.
+     * This endpoint allows the user to log out by deleting their current access token
+     * and refresh token from the database.
      * 
-     * @group Authentication
+     * @group Endpoints
+     * @subgroup Authentication
      * @response 200 {}
+     * @response 400 {
+     *      "message": "No token exists.",
+     *      "status": 400
+     * }
      */
     public function logout(LogoutUserRequest $request)
     {
@@ -142,14 +153,17 @@ class AuthController extends Controller
     }
 
     /**
-     * refreshToken
+     * Refresh the user's API token and generate a new refresh token.
      * 
-     * Generates new tokens for the user.
+     * This endpoint is used to refresh the user's API access token by validating their
+     * refresh token and issuing new tokens if valid.
      * 
-     * @group Authentication
+     * @group Endpoints
+     * @subgroup Authentication
+     * @response 201 {
      * "data": {
-     *       "token": "{YOUR_AUTH_KEY}",
-     *       "refresh_token": "{YOUR_AUTH_KEY}"
+     *       "token": "{YOUR_NEW_AUTH_KEY}",
+     *       "refresh_token": "{YOUR_NEW_REFRESH_KEY}"
      * },
      *      "message": "New tokens have been generated.",
      *      "status": 201

@@ -34,7 +34,7 @@ return [
 
             // Exclude these routes even if they matched the rules above.
             'exclude' => [
-                // 'GET /health', 'admin.*'
+                'api/user'
             ],
         ],
     ],
@@ -123,19 +123,15 @@ return [
 
     // Text to place in the "Introduction" section, right after the `description`. Markdown and HTML are supported.
     'intro_text' => <<<INTRO
-This documentation aims to provide all the information you need to work with our API.
+Welcome to the E-Commerce API Documentation. 
 
-<aside>As you scroll, you'll see code examples for working with the API in different programming languages in the dark area to the right (or as part of the content on mobile).
-You can switch the language used with the tabs at the top right (or from the nav menu at the top left on mobile).</aside>
+This API allows you to interact with our e-commerce platform for managing products, orders, users, and more. Whether you're integrating with our product catalog, processing orders, or managing customer information, this documentation will guide you through every available endpoint.
 INTRO,
 
     // Example requests for each endpoint will be shown in each of these languages.
     // Supported options are: bash, javascript, php, python
     // To add a language of your own, see https://scribe.knuckles.wtf/laravel/advanced/example-requests
-    'example_languages' => [
-        'bash',
-        'javascript',
-    ],
+    'example_languages' => [],
 
     // Generate a Postman collection (v2.1.0) in addition to HTML docs.
     // For 'static' docs, the collection will be generated to public/docs/collection.json.

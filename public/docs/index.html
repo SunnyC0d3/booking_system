@@ -21,8 +21,6 @@
 
     <style id="language-style">
         /* starts out as display none and is replaced with js later  */
-                    body .content .bash-example code { display: none; }
-                    body .content .javascript-example code { display: none; }
             </style>
 
     <script>
@@ -36,7 +34,7 @@
 
 </head>
 
-<body data-languages="[&quot;bash&quot;,&quot;javascript&quot;]">
+<body data-languages="[]">
 
 <a href="#" id="nav-button">
     <span>
@@ -47,8 +45,6 @@
 <div class="tocify-wrapper">
     
             <div class="lang-selector">
-                                            <button type="button" class="lang-button" data-language-name="bash">bash</button>
-                                            <button type="button" class="lang-button" data-language-name="javascript">javascript</button>
                     </div>
     
     <div class="search">
@@ -66,27 +62,28 @@
                     <a href="#authenticating-requests">Authenticating requests</a>
                 </li>
                             </ul>
-                    <ul id="tocify-header-authentication" class="tocify-header">
-                <li class="tocify-item level-1" data-unique="authentication">
-                    <a href="#authentication">Authentication</a>
-                </li>
-                                    <ul id="tocify-subheader-authentication" class="tocify-subheader">
-                                                    <li class="tocify-item level-2" data-unique="authentication-POSTapi-login">
-                                <a href="#authentication-POSTapi-login">Login</a>
-                            </li>
-                                                                                <li class="tocify-item level-2" data-unique="authentication-POSTapi-logout">
-                                <a href="#authentication-POSTapi-logout">Logout</a>
-                            </li>
-                                                                        </ul>
-                            </ul>
                     <ul id="tocify-header-endpoints" class="tocify-header">
                 <li class="tocify-item level-1" data-unique="endpoints">
                     <a href="#endpoints">Endpoints</a>
                 </li>
                                     <ul id="tocify-subheader-endpoints" class="tocify-subheader">
-                                                    <li class="tocify-item level-2" data-unique="endpoints-GETapi-user">
-                                <a href="#endpoints-GETapi-user">GET api/user</a>
+                                                    <li class="tocify-item level-2" data-unique="endpoints-authentication">
+                                <a href="#endpoints-authentication">Authentication</a>
                             </li>
+                                                            <ul id="tocify-subheader-endpoints-authentication" class="tocify-subheader">
+                                                                            <li class="tocify-item level-3" data-unique="endpoints-POSTapi-login">
+                                            <a href="#endpoints-POSTapi-login">Authenticate the user and return their API token.</a>
+                                        </li>
+                                                                            <li class="tocify-item level-3" data-unique="endpoints-POSTapi-register">
+                                            <a href="#endpoints-POSTapi-register">Register a new user and return their API token.</a>
+                                        </li>
+                                                                            <li class="tocify-item level-3" data-unique="endpoints-POSTapi-logout">
+                                            <a href="#endpoints-POSTapi-logout">Logout the user and destroy their API token.</a>
+                                        </li>
+                                                                            <li class="tocify-item level-3" data-unique="endpoints-POSTapi-token-refresh">
+                                            <a href="#endpoints-POSTapi-token-refresh">Refresh the user's API token and generate a new refresh token.</a>
+                                        </li>
+                                                                    </ul>
                                                                         </ul>
                             </ul>
             </div>
@@ -98,7 +95,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: November 23, 2024</li>
+        <li>Last updated: December 10, 2024</li>
     </ul>
 </div>
 
@@ -109,51 +106,29 @@
 <aside>
     <strong>Base URL</strong>: <code>http://localhost</code>
 </aside>
-<p>This documentation aims to provide all the information you need to work with our API.</p>
-<aside>As you scroll, you'll see code examples for working with the API in different programming languages in the dark area to the right (or as part of the content on mobile).
-You can switch the language used with the tabs at the top right (or from the nav menu at the top left on mobile).</aside>
+<p>Welcome to the E-Commerce API Documentation. </p>
+<p>This API allows you to interact with our e-commerce platform for managing products, orders, users, and more. Whether you're integrating with our product catalog, processing orders, or managing customer information, this documentation will guide you through every available endpoint.</p>
 
         <h1 id="authenticating-requests">Authenticating requests</h1>
 <p>To authenticate requests, include an <strong><code>Authorization</code></strong> header with the value <strong><code>"Bearer {YOUR_AUTH_KEY}"</code></strong>.</p>
 <p>All authenticated endpoints are marked with a <code>requires authentication</code> badge in the documentation below.</p>
 <p>You can retrieve your token by visiting your dashboard and clicking <b>Generate API token</b>.</p>
 
-        <h1 id="authentication">Authentication</h1>
+        <h1 id="endpoints">Endpoints</h1>
 
     
 
-                                <h2 id="authentication-POSTapi-login">Login</h2>
+                        <h2 id="endpoints-authentication">Authentication</h2>
+                                                    <h2 id="endpoints-POSTapi-login">Authenticate the user and return their API token.</h2>
 
 <p>
 </p>
 
-<p>Authenticates the user and returns the user's API token.</p>
+<p>This endpoint is used to authenticate a user with their email and password. If the
+credentials are valid, an API token and refresh token will be issued.</p>
 
 <span id="example-requests-POSTapi-login">
 <blockquote>Example request:</blockquote>
-
-
-<div class="bash-example">
-    <pre><code class="language-bash">curl --request POST \
-    "http://localhost/api/login" \
-    --header "Content-Type: application/json" \
-    --header "Accept: application/json"</code></pre></div>
-
-
-<div class="javascript-example">
-    <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/login"
-);
-
-const headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-fetch(url, {
-    method: "POST",
-    headers,
-}).then(response =&gt; response.json());</code></pre></div>
 
 </span>
 
@@ -165,10 +140,21 @@ fetch(url, {
 
 <code class="language-json" style="max-height: 300px;">{
     &quot;data&quot;: {
-        &quot;token&quot;: &quot;{YOUR_AUTH_KEY}&quot;
+        &quot;token&quot;: &quot;{YOUR_AUTH_KEY}&quot;,
+        &quot;refresh_token&quot;: &quot;{YOUR_REFRESH_KEY}&quot;
     },
     &quot;message&quot;: &quot;Authenticated&quot;,
     &quot;status&quot;: 200
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Invalid credentials&quot;,
+    &quot;status&quot;: 401
 }</code>
  </pre>
     </span>
@@ -241,43 +227,176 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Example: <code>application/json</code></p>
             </div>
-                        </form>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>email</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="email"                data-endpoint="POSTapi-login"
+               value="nosinski@example.com"
+               data-component="body">
+    <br>
+<p>Must be a valid email address. Example: <code>nosinski@example.com</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>password</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="password"                data-endpoint="POSTapi-login"
+               value="m)'`F3|:oif.}"
+               data-component="body">
+    <br>
+<p>Must be at least 8 characters. Example: <code>m)'</code>F3|:oif.}`</p>
+        </div>
+        </form>
 
-                    <h2 id="authentication-POSTapi-logout">Logout</h2>
+                    <h2 id="endpoints-POSTapi-register">Register a new user and return their API token.</h2>
+
+<p>
+</p>
+
+<p>This endpoint is used to register a new user, including their name, email, password,
+and password confirmation. A new API token and refresh token will be issued.</p>
+
+<span id="example-requests-POSTapi-register">
+<blockquote>Example request:</blockquote>
+
+</span>
+
+<span id="example-responses-POSTapi-register">
+            <blockquote>
+            <p>Example response (201):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;data&quot;: {
+        &quot;token&quot;: &quot;{YOUR_AUTH_KEY}&quot;,
+        &quot;refresh_token&quot;: &quot;{YOUR_REFRESH_KEY}&quot;
+    },
+    &quot;message&quot;: &quot;User registered successfully&quot;,
+    &quot;status&quot;: 201
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-register" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-register"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-register"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-register" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-register">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-register" data-method="POST"
+      data-path="api/register"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-register', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-register"
+                    onclick="tryItOut('POSTapi-register');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-register"
+                    onclick="cancelTryOut('POSTapi-register');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-register"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/register</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-register"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-register"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="name"                data-endpoint="POSTapi-register"
+               value="dtbhgzirhgwwxxwgedi"
+               data-component="body">
+    <br>
+<p>Must not be greater than 255 characters. Example: <code>dtbhgzirhgwwxxwgedi</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>email</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="email"                data-endpoint="POSTapi-register"
+               value="alysha43@example.net"
+               data-component="body">
+    <br>
+<p>Must be a valid email address. Must not be greater than 255 characters. Example: <code>alysha43@example.net</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>password</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="password"                data-endpoint="POSTapi-register"
+               value="sGHcTl$E'OLnAO^;wA"
+               data-component="body">
+    <br>
+<p>Must be at least 8 characters. Example: <code>sGHcTl$E'OLnAO^;wA</code></p>
+        </div>
+        </form>
+
+                    <h2 id="endpoints-POSTapi-logout">Logout the user and destroy their API token.</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Signs out the user and destroy's the API token.</p>
+<p>This endpoint allows the user to log out by deleting their current access token
+and refresh token from the database.</p>
 
 <span id="example-requests-POSTapi-logout">
 <blockquote>Example request:</blockquote>
-
-
-<div class="bash-example">
-    <pre><code class="language-bash">curl --request POST \
-    "http://localhost/api/logout" \
-    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
-    --header "Content-Type: application/json" \
-    --header "Accept: application/json"</code></pre></div>
-
-
-<div class="javascript-example">
-    <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/logout"
-);
-
-const headers = {
-    "Authorization": "Bearer {YOUR_AUTH_KEY}",
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-fetch(url, {
-    method: "POST",
-    headers,
-}).then(response =&gt; response.json());</code></pre></div>
 
 </span>
 
@@ -288,6 +407,16 @@ fetch(url, {
                 <pre>
 
 <code class="language-json" style="max-height: 300px;">{}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (400):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;No token exists.&quot;,
+    &quot;status&quot;: 400
+}</code>
  </pre>
     </span>
 <span id="execution-results-POSTapi-logout" hidden>
@@ -370,113 +499,115 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Example: <code>application/json</code></p>
             </div>
-                        </form>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>refresh_token</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="refresh_token"                data-endpoint="POSTapi-logout"
+               value="rxsvaefhpsdyvn"
+               data-component="body">
+    <br>
+<p>Must not be greater than 60 characters. Example: <code>rxsvaefhpsdyvn</code></p>
+        </div>
+        </form>
 
-                <h1 id="endpoints">Endpoints</h1>
-
-    
-
-                                <h2 id="endpoints-GETapi-user">GET api/user</h2>
+                    <h2 id="endpoints-POSTapi-token-refresh">Refresh the user&#039;s API token and generate a new refresh token.</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
+<p>This endpoint is used to refresh the user's API access token by validating their
+refresh token and issuing new tokens if valid.</p>
 
-
-<span id="example-requests-GETapi-user">
+<span id="example-requests-POSTapi-token-refresh">
 <blockquote>Example request:</blockquote>
-
-
-<div class="bash-example">
-    <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost/api/user" \
-    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
-    --header "Content-Type: application/json" \
-    --header "Accept: application/json"</code></pre></div>
-
-
-<div class="javascript-example">
-    <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/user"
-);
-
-const headers = {
-    "Authorization": "Bearer {YOUR_AUTH_KEY}",
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-fetch(url, {
-    method: "GET",
-    headers,
-}).then(response =&gt; response.json());</code></pre></div>
 
 </span>
 
-<span id="example-responses-GETapi-user">
+<span id="example-responses-POSTapi-token-refresh">
             <blockquote>
-            <p>Example response (401):</p>
+            <p>Example response (201):</p>
         </blockquote>
-                <details class="annotation">
-            <summary style="cursor: pointer;">
-                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
-            </summary>
-            <pre><code class="language-http">cache-control: no-cache, private
-content-type: application/json
-access-control-allow-origin: *
- </code></pre></details>         <pre>
+                <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Unauthenticated.&quot;
+    &quot;data&quot;: {
+        &quot;token&quot;: &quot;{YOUR_NEW_AUTH_KEY}&quot;,
+        &quot;refresh_token&quot;: &quot;{YOUR_NEW_REFRESH_KEY}&quot;
+    },
+    &quot;message&quot;: &quot;New tokens have been generated.&quot;,
+    &quot;status&quot;: 201
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (400):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Refresh token expired&quot;,
+    &quot;status&quot;: 400
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (400):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Invalid refresh token&quot;,
+    &quot;status&quot;: 400
 }</code>
  </pre>
     </span>
-<span id="execution-results-GETapi-user" hidden>
+<span id="execution-results-POSTapi-token-refresh" hidden>
     <blockquote>Received response<span
-                id="execution-response-status-GETapi-user"></span>:
+                id="execution-response-status-POSTapi-token-refresh"></span>:
     </blockquote>
-    <pre class="json"><code id="execution-response-content-GETapi-user"
+    <pre class="json"><code id="execution-response-content-POSTapi-token-refresh"
       data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
 </span>
-<span id="execution-error-GETapi-user" hidden>
+<span id="execution-error-POSTapi-token-refresh" hidden>
     <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-GETapi-user">
+    <pre><code id="execution-error-message-POSTapi-token-refresh">
 
 Tip: Check that you&#039;re properly connected to the network.
 If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
 You can check the Dev Tools console for debugging information.</code></pre>
 </span>
-<form id="form-GETapi-user" data-method="GET"
-      data-path="api/user"
+<form id="form-POSTapi-token-refresh" data-method="POST"
+      data-path="api/token/refresh"
       data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
-      onsubmit="event.preventDefault(); executeTryOut('GETapi-user', this);">
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-token-refresh', this);">
     <h3>
         Request&nbsp;&nbsp;&nbsp;
                     <button type="button"
                     style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-tryout-GETapi-user"
-                    onclick="tryItOut('GETapi-user');">Try it out ⚡
+                    id="btn-tryout-POSTapi-token-refresh"
+                    onclick="tryItOut('POSTapi-token-refresh');">Try it out ⚡
             </button>
             <button type="button"
                     style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-canceltryout-GETapi-user"
-                    onclick="cancelTryOut('GETapi-user');" hidden>Cancel 🛑
+                    id="btn-canceltryout-POSTapi-token-refresh"
+                    onclick="cancelTryOut('POSTapi-token-refresh');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
                     style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-executetryout-GETapi-user"
+                    id="btn-executetryout-POSTapi-token-refresh"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
                     hidden>Send Request 💥
             </button>
             </h3>
             <p>
-            <small class="badge badge-green">GET</small>
-            <b><code>api/user</code></b>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/token/refresh</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
                                 <div style="padding-left: 28px; clear: unset;">
@@ -484,7 +615,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Authorization" class="auth-value"               data-endpoint="GETapi-user"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-token-refresh"
                value="Bearer {YOUR_AUTH_KEY}"
                data-component="header">
     <br>
@@ -495,7 +626,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="GETapi-user"
+                              name="Content-Type"                data-endpoint="POSTapi-token-refresh"
                value="application/json"
                data-component="header">
     <br>
@@ -506,13 +637,25 @@ You can check the Dev Tools console for debugging information.</code></pre>
 &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Accept"                data-endpoint="GETapi-user"
+                              name="Accept"                data-endpoint="POSTapi-token-refresh"
                value="application/json"
                data-component="header">
     <br>
 <p>Example: <code>application/json</code></p>
             </div>
-                        </form>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>refresh_token</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="refresh_token"                data-endpoint="POSTapi-token-refresh"
+               value="uxpecaldbkharzpgvsqqomah"
+               data-component="body">
+    <br>
+<p>Must not be greater than 60 characters. Example: <code>uxpecaldbkharzpgvsqqomah</code></p>
+        </div>
+        </form>
 
             
 
@@ -520,8 +663,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
     </div>
     <div class="dark-box">
                     <div class="lang-selector">
-                                                        <button type="button" class="lang-button" data-language-name="bash">bash</button>
-                                                        <button type="button" class="lang-button" data-language-name="javascript">javascript</button>
                             </div>
             </div>
 </div>
