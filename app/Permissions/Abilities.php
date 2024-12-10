@@ -24,7 +24,7 @@ final class Abilities
     public const DeleteClient  = 'client:delete';
     public const OnlyClient    = 'client:only';
 
-    public static function getAbilities(User $user): array
+    public static function getAbilities(User $user): array | null
     {
         if ($user->role === 'client') {
             return [
@@ -55,5 +55,7 @@ final class Abilities
                 self::OnlyUser
             ];
         }
+
+        return null;
     }
 }

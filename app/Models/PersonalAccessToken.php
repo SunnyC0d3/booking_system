@@ -12,7 +12,9 @@ class PersonalAccessToken extends SanctumPersonalAccessToken
         'token',
         'abilities',
         'refresh_token_expires_at',
-        'expires_at'
+        'expires_at',
+        'tokenable_type',
+        'tokenable_id',
     ];
 
     protected $casts = [
