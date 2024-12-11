@@ -27,6 +27,12 @@ class AuthController extends Controller
      * @unauthenticated
      * @group Endpoints
      * @subgroup Authentication
+     * 
+     * @bodyParam name string required The user's full name. Example: John Doe
+     * @bodyParam email string required The user's email address. Example: john.doe@example.com
+     * @bodyParam password string required The user's password. Must be at least 8 characters. Example: password123
+     * @bodyParam password_confirmation string required Must match the password field. Example: password123
+     * 
      * @response 201 {
      *   "data": {
      *       "token": "{YOUR_AUTH_KEY}",

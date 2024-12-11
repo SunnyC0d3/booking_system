@@ -70,12 +70,12 @@ paths:
                 email:
                   type: string
                   description: 'Must be a valid email address.'
-                  example: nosinski@example.com
+                  example: tankunding@example.net
                   nullable: false
                 password:
                   type: string
                   description: 'Must be at least 8 characters.'
-                  example: "m)'`F3|:oif.}"
+                  example: "dPJUAO<{jO'Lpfqk<_"
                   nullable: false
               required:
                 - email
@@ -127,23 +127,29 @@ paths:
               properties:
                 name:
                   type: string
-                  description: 'Must not be greater than 255 characters.'
-                  example: dtbhgzirhgwwxxwgedi
+                  description: "The user's full name."
+                  example: 'John Doe'
                   nullable: false
                 email:
                   type: string
-                  description: 'Must be a valid email address. Must not be greater than 255 characters.'
-                  example: alysha43@example.net
+                  description: "The user's email address."
+                  example: john.doe@example.com
                   nullable: false
                 password:
                   type: string
-                  description: 'Must be at least 8 characters.'
-                  example: "sGHcTl$E'OLnAO^;wA"
+                  description: "The user's password. Must be at least 8 characters."
+                  example: password123
+                  nullable: false
+                password_confirmation:
+                  type: string
+                  description: 'Must match the password field.'
+                  example: password123
                   nullable: false
               required:
                 - name
                 - email
                 - password
+                - password_confirmation
       security: []
   /api/logout:
     post:
@@ -188,7 +194,7 @@ paths:
                 refresh_token:
                   type: string
                   description: 'Must not be greater than 60 characters.'
-                  example: rxsvaefhpsdyvn
+                  example: eljnfguppzikqszhrwqimytb
                   nullable: false
               required:
                 - refresh_token
@@ -271,7 +277,7 @@ paths:
                 refresh_token:
                   type: string
                   description: 'Must not be greater than 60 characters.'
-                  example: uxpecaldbkharzpgvsqqomah
+                  example: giapvc
                   nullable: false
               required:
                 - refresh_token

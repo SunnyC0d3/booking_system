@@ -30,7 +30,7 @@ endpoints:
         name: email
         description: 'Must be a valid email address.'
         required: true
-        example: nosinski@example.com
+        example: tankunding@example.net
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -40,15 +40,15 @@ endpoints:
         name: password
         description: 'Must be at least 8 characters.'
         required: true
-        example: "m)'`F3|:oif.}"
+        example: "dPJUAO<{jO'Lpfqk<_"
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      email: nosinski@example.com
-      password: "m)'`F3|:oif.}"
+      email: tankunding@example.net
+      password: "dPJUAO<{jO'Lpfqk<_"
     fileParameters: []
     responses:
       -
@@ -106,38 +106,49 @@ endpoints:
     bodyParameters:
       name:
         name: name
-        description: 'Must not be greater than 255 characters.'
+        description: "The user's full name."
         required: true
-        example: dtbhgzirhgwwxxwgedi
+        example: 'John Doe'
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         custom: []
       email:
         name: email
-        description: 'Must be a valid email address. Must not be greater than 255 characters.'
+        description: "The user's email address."
         required: true
-        example: alysha43@example.net
+        example: john.doe@example.com
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         custom: []
       password:
         name: password
-        description: 'Must be at least 8 characters.'
+        description: "The user's password. Must be at least 8 characters."
         required: true
-        example: "sGHcTl$E'OLnAO^;wA"
+        example: password123
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      password_confirmation:
+        name: password_confirmation
+        description: 'Must match the password field.'
+        required: true
+        example: password123
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
         nullable: false
         custom: []
     cleanBodyParameters:
-      name: dtbhgzirhgwwxxwgedi
-      email: alysha43@example.net
-      password: "sGHcTl$E'OLnAO^;wA"
+      name: 'John Doe'
+      email: john.doe@example.com
+      password: password123
+      password_confirmation: password123
     fileParameters: []
     responses:
       -
@@ -188,14 +199,14 @@ endpoints:
         name: refresh_token
         description: 'Must not be greater than 60 characters.'
         required: true
-        example: rxsvaefhpsdyvn
+        example: eljnfguppzikqszhrwqimytb
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      refresh_token: rxsvaefhpsdyvn
+      refresh_token: eljnfguppzikqszhrwqimytb
     fileParameters: []
     responses:
       -
@@ -251,14 +262,14 @@ endpoints:
         name: refresh_token
         description: 'Must not be greater than 60 characters.'
         required: true
-        example: uxpecaldbkharzpgvsqqomah
+        example: giapvc
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      refresh_token: uxpecaldbkharzpgvsqqomah
+      refresh_token: giapvc
     fileParameters: []
     responses:
       -
