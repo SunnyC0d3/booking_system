@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
+use App\Models\PersonalAccessToken;
 use App\Requests\Api\V1\LoginUserRequest;
 use App\Requests\Api\V1\LogoutUserRequest;
 use App\Requests\Api\V1\RegisterUserRequest;
@@ -24,7 +24,9 @@ class AuthController extends Controller
      * This endpoint is used to register a new user, including their name, email, password, 
      * and password confirmation. A new API token and refresh token will be issued.
      * 
-     * @unauthenticated
+     * Works with **client-side** authentication only. Requires **"client:only"** ability.
+     * 
+     * @authentication
      * @group Endpoints
      * @subgroup Authentication
      * 
@@ -65,7 +67,7 @@ class AuthController extends Controller
         return $this->ok(
             'User registered successfully',
             [
-                'token' => $token,
+                'access_token' => $token,
                 'refresh_token' => $refreshToken,
             ],
             201
@@ -78,7 +80,9 @@ class AuthController extends Controller
      * This endpoint is used to authenticate a user with their email and password. If the
      * credentials are valid, an API token and refresh token will be issued.
      * 
-     * @unauthenticated
+     * Works with **client-side** authentication only. Requires **"client:only"** ability.
+     * 
+     * @authentication
      * @group Endpoints
      * @subgroup Authentication
      * @response 200 {
@@ -96,9 +100,11 @@ class AuthController extends Controller
      */
     public function login(LoginUserRequest $request)
     {
-        $request->validated($request->only(['email', 'passowrd']));
+        $request->validated($request->only(['email', 'password']));
 
-        if (!Auth::attempt($request->only('email', 'password'))) {
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
             return $this->error('Invalid credentials', 401);
         }
 
@@ -116,7 +122,7 @@ class AuthController extends Controller
         return $this->ok(
             'Authenticated',
             [
-                'token' => $token,
+                'access_token' => $token,
                 'refresh_token' => $refreshToken,
             ],
             200
@@ -129,6 +135,9 @@ class AuthController extends Controller
      * This endpoint allows the user to log out by deleting their current access token
      * and refresh token from the database.
      * 
+     * Works with **client-side** authentication only. Requires **"client:only"** ability.
+     * 
+     * @authentication
      * @group Endpoints
      * @subgroup Authentication
      * @response 200 {}
@@ -139,19 +148,26 @@ class AuthController extends Controller
      */
     public function logout(LogoutUserRequest $request)
     {
-        $request->validated($request->only(['refresh_token']));
+        $request->validated($request->only(['access_token', 'refresh_token']));
 
-        if (!$request->user()->currentAccessToken() || !$request->filled('refresh_token')) {
+        if (!$request->filled('access_token') || !$request->filled('refresh_token')) {
             return $this->error('No token exists.', 400);
         }
 
-        $request->user()->currentAccessToken()->delete();
+        $accessToken = explode('|', $request->access_token, 2)[1] ?? $request->access_token;
+        $user = PersonalAccessToken::where('token', hash('sha256', $accessToken))->first()->tokenable;
 
-        $refreshTokens = $request->user()->tokens;
+        if (!$user) {
+            return $this->error('Invalid request', 400);
+        }
 
-        foreach ($refreshTokens as $refreshToken) {
-            if (hash('sha256', $request->refresh_token) === $refreshToken->token) {
-                $refreshToken->delete();
+        foreach ($user->tokens as $token) {
+            if (hash('sha256', $accessToken) === $token->token) {
+                $token->delete();
+            }
+
+            if (hash('sha256', $request->refresh_token) === $token->token) {
+                $token->delete();
             }
         }
 
@@ -164,6 +180,9 @@ class AuthController extends Controller
      * This endpoint is used to refresh the user's API access token by validating their
      * refresh token and issuing new tokens if valid.
      * 
+     * Works with **client-side** authentication only. Requires **"client:only"** ability.
+     * 
+     * @authentication
      * @group Endpoints
      * @subgroup Authentication
      * @response 201 {
@@ -185,33 +204,46 @@ class AuthController extends Controller
      */
     public function refreshToken(RefreshTokenRequest $request)
     {
-        $request->validated($request->only(['refresh_token']));
+        $request->validated($request->only(['access_token', 'refresh_token']));
 
-        $token = $request->user()->tokens()->where('token', hash('sha256', $request->refresh_token))->first();
+        if (!$request->filled('access_token') || !$request->filled('refresh_token')) {
+            return $this->error('No token exists.', 400);
+        }
 
-        if (!$token) {
+        $accessToken = explode('|', $request->access_token, 2)[1] ?? $request->access_token;
+        $user = PersonalAccessToken::where('token', hash('sha256', $accessToken))->first();
+
+        if (!$user) {
+            return $this->error('Invalid request', 400);
+        }
+
+        $user = $user->tokenable;
+
+        $refreshToken = $user->tokens->where('token', hash('sha256', $request->refresh_token))->first();
+
+        if (!$refreshToken) {
             return $this->error('Invalid refresh token', 400);
         }
 
-        if ($token->refresh_token_expires_at < now()) {
+        if ($refreshToken->refresh_token_expires_at < now()) {
             return $this->error('Refresh token expired', 400);
         }
 
-        $user = User::firstWhere('email', $request->user()->email);
+        $user->tokens->where('token', hash('sha256', $accessToken))->first()->delete();
 
         $newAccessToken = $request->user()->createToken('API token for ' . $user->email, Abilities::getAbilities($user), now()->addDay())->plainTextToken;
         $newRefreshToken = Str::random(60);
 
-        $token->update([
+        $refreshToken->update([
             'name' => 'API Refresh Token',
             'token' => hash('sha256', $newRefreshToken),
-            'refresh_token_expires_at' => now()->addDays(30),
+            'refresh_token_expires_at' => now()->addDay()
         ]);
 
         return $this->ok(
             'New tokens have been generated.',
             [
-                'token' => $newAccessToken,
+                'access_token' => $newAccessToken,
                 'refresh_token' => $newRefreshToken,
             ],
             201

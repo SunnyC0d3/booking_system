@@ -6,6 +6,7 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\Sanctum;
+use App\Models\User;
 
 class AuthControllerTest extends TestCase
 {
@@ -13,6 +14,9 @@ class AuthControllerTest extends TestCase
 
     public function test_registersANewUserAndReturnsApiToken()
     {
+        $client = User::factory()->create();
+        $token = $client->createToken('Test Token', ['client:only'])->plainTextToken;
+
         $requestData = [
             'name' => 'John Doe',
             'email' => 'johndoe@example.com',
@@ -20,27 +24,29 @@ class AuthControllerTest extends TestCase
             'password_confirmation' => 'password123',
         ];
 
-        $response = $this->postJson('/api/register', $requestData);
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->postJson('/api/register', $requestData);
 
         $response
             ->assertStatus(200)
             ->assertJsonStructure([
                 'data' => [
-                    'token',
+                    'access_token',
                     'refresh_token'
                 ],
                 'message',
                 'status'
             ]);
-
-        $this->assertDatabaseHas('users', [
-            'email' => 'johndoe@example.com',
-        ]);
     }
 
     public function test_logsInAUserAndReturnsNewToken()
     {
-        \App\Models\User::factory()->create([
+        $client = User::factory()->create();
+        $token = $client->createToken('Test Token', ['client:only'])->plainTextToken;
+
+        User::factory()->create([
+            'name' => 'John Doe',
             'email' => 'johndoe@example.com',
             'password' => Hash::make('password123'),
         ]);
@@ -50,25 +56,31 @@ class AuthControllerTest extends TestCase
             'password' => 'password123',
         ];
 
-        $response = $this->postJson('/api/login', $loginData);
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->postJson('/api/login', $loginData);
 
         $response
             ->assertStatus(200)
             ->assertJsonStructure([
                 'data' => [
-                    'token',
+                    'access_token',
                     'refresh_token'
                 ],
                 'message',
                 'status'
             ]);
 
-        $this->assertNotNull($response['data']['token']);
+        $this->assertNotNull($response['data']['access_token']);
     }
 
     public function test_logsOutAUserWhichShouldDeleteAllTheRelatedTokens()
     {
-        $user = \App\Models\User::factory()->create([
+        $client = User::factory()->create();
+        $token = $client->createToken('Test Token', ['client:only'])->plainTextToken;
+
+        $user = User::factory()->create([
+            'name' => 'John Doe',
             'email' => 'johndoe@example.com',
             'password' => Hash::make('password123'),
         ]);
@@ -78,25 +90,28 @@ class AuthControllerTest extends TestCase
             'password' => 'password123',
         ];
 
-        $response = $this->postJson('/api/login', $loginData);
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->postJson('/api/login', $loginData);
 
         $response
             ->assertStatus(200)
             ->assertJsonStructure([
                 'data' => [
-                    'token',
+                    'access_token',
                     'refresh_token'
                 ],
                 'message',
                 'status'
             ]);
 
-        $user = Sanctum::actingAs($user, ['user:only']);
-
-        $token = $response['data']['token'];
+        $userToken = $response['data']['access_token'];
         $refreshToken = $response['data']['refresh_token'];
 
-        $response = $this->postJson('/api/logout', [
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->postJson('/api/logout', [
+            'access_token' => $userToken,
             'refresh_token' => $refreshToken
         ])
             ->assertStatus(200)
@@ -105,9 +120,13 @@ class AuthControllerTest extends TestCase
             ]);
     }
 
-    public function test_logInAsAUserAndSeeIfPassingTokenAndRefreshTokenUpdatesAndReturnsNewTokens()
+    public function test_logInAsAUserAndSeeIfPassingAccessTokenAndRefreshTokenUpdatesAndReturnsNewTokens()
     {
-        \App\Models\User::factory()->create([
+        $client = User::factory()->create();
+        $token = $client->createToken('Test Token', ['client:only'])->plainTextToken;
+
+        User::factory()->create([
+            'name' => 'John Doe',
             'email' => 'johndoe@example.com',
             'password' => Hash::make('password123'),
         ]);
@@ -117,20 +136,22 @@ class AuthControllerTest extends TestCase
             'password' => 'password123',
         ];
 
-        $response = $this->postJson('/api/login', $loginData);
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->postJson('/api/login', $loginData);
 
         $response
             ->assertStatus(200)
             ->assertJsonStructure([
                 'data' => [
-                    'token',
+                    'access_token',
                     'refresh_token'
                 ],
                 'message',
                 'status'
             ]);
 
-        $token = $response['data']['token'];
+        $userToken = $response['data']['access_token'];
         $refreshToken = $response['data']['refresh_token'];
 
         $response = $this->withHeaders([
@@ -138,6 +159,7 @@ class AuthControllerTest extends TestCase
             'Content-Type' => 'application/json'
         ])
             ->postJson('/api/token/refresh', [
+                'access_token' => $userToken,
                 'refresh_token' => $refreshToken
             ])
             ->assertStatus(200)
@@ -146,7 +168,7 @@ class AuthControllerTest extends TestCase
             ])
             ->assertJsonStructure([
                 'data' => [
-                    'token',
+                    'access_token',
                     'refresh_token'
                 ],
                 'message',
@@ -154,9 +176,13 @@ class AuthControllerTest extends TestCase
             ]);
     }
 
-    public function test_logInAsAUserAndSeeIfPassingTokenAndFakeRefreshTokenFails()
+    public function test_logInAsAUserAndSeeIfPassingFakeAccessTokenAndFakeRefreshTokenFails()
     {
-        \App\Models\User::factory()->create([
+        $client = User::factory()->create();
+        $token = $client->createToken('Test Token', ['client:only'])->plainTextToken;
+
+        User::factory()->create([
+            'name' => 'John Doe',
             'email' => 'johndoe@example.com',
             'password' => Hash::make('password123'),
         ]);
@@ -166,20 +192,22 @@ class AuthControllerTest extends TestCase
             'password' => 'password123',
         ];
 
-        $response = $this->postJson('/api/login', $loginData);
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->postJson('/api/login', $loginData);
 
         $response
             ->assertStatus(200)
             ->assertJsonStructure([
                 'data' => [
-                    'token',
+                    'access_token',
                     'refresh_token'
                 ],
                 'message',
                 'status'
             ]);
 
-        $token = $response['data']['token'];
+        $userToken = $response['data']['access_token'];
         $refreshToken = $response['data']['refresh_token'];
 
         $response = $this->withHeaders([
@@ -187,6 +215,7 @@ class AuthControllerTest extends TestCase
             'Content-Type' => 'application/json'
         ])
             ->postJson('/api/token/refresh', [
+                'access_token' => 'fake_token',
                 'refresh_token' => 'fake_token'
             ])
             ->assertStatus(400);

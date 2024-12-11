@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "E-Commerce API Documentation",
-        "_postman_id": "3f0f4ea4-62e6-4a7b-abaf-cd9256d92861",
+        "_postman_id": "8bced0fc-3d1e-4868-9da2-f7fbd784c051",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -45,12 +45,9 @@
                                 ],
                                 "body": {
                                     "mode": "raw",
-                                    "raw": "{\"email\":\"tankunding@example.net\",\"password\":\"dPJUAO<{jO'Lpfqk<_\"}"
+                                    "raw": "{\"email\":\"thane@example.net\",\"password\":\"'Xv3Ks\\\/lQL\"}"
                                 },
-                                "description": "This endpoint is used to authenticate a user with their email and password. If the\ncredentials are valid, an API token and refresh token will be issued.",
-                                "auth": {
-                                    "type": "noauth"
-                                }
+                                "description": "This endpoint is used to authenticate a user with their email and password. If the\ncredentials are valid, an API token and refresh token will be issued.\n\nWorks with **client-side** authentication only. Requires **\"client:only\"** ability."
                             },
                             "response": [
                                 {
@@ -91,10 +88,7 @@
                                     "mode": "raw",
                                     "raw": "{\"name\":\"John Doe\",\"email\":\"john.doe@example.com\",\"password\":\"password123\",\"password_confirmation\":\"password123\"}"
                                 },
-                                "description": "This endpoint is used to register a new user, including their name, email, password,\nand password confirmation. A new API token and refresh token will be issued.",
-                                "auth": {
-                                    "type": "noauth"
-                                }
+                                "description": "This endpoint is used to register a new user, including their name, email, password,\nand password confirmation. A new API token and refresh token will be issued.\n\nWorks with **client-side** authentication only. Requires **\"client:only\"** ability."
                             },
                             "response": [
                                 {
@@ -127,9 +121,9 @@
                                 ],
                                 "body": {
                                     "mode": "raw",
-                                    "raw": "{\"refresh_token\":\"eljnfguppzikqszhrwqimytb\"}"
+                                    "raw": "{\"access_token\":\"rbnelyweblidowkhhypxpqxgx\",\"refresh_token\":\"ccgurkepepibqngb\"}"
                                 },
-                                "description": "This endpoint allows the user to log out by deleting their current access token\nand refresh token from the database."
+                                "description": "This endpoint allows the user to log out by deleting their current access token\nand refresh token from the database.\n\nWorks with **client-side** authentication only. Requires **\"client:only\"** ability."
                             },
                             "response": [
                                 {
@@ -168,9 +162,9 @@
                                 ],
                                 "body": {
                                     "mode": "raw",
-                                    "raw": "{\"refresh_token\":\"giapvc\"}"
+                                    "raw": "{\"access_token\":\"prrlntihmxfngbebmazc\",\"refresh_token\":\"tpwqrcavszgfbkedii\"}"
                                 },
-                                "description": "This endpoint is used to refresh the user's API access token by validating their\nrefresh token and issuing new tokens if valid."
+                                "description": "This endpoint is used to refresh the user's API access token by validating their\nrefresh token and issuing new tokens if valid.\n\nWorks with **client-side** authentication only. Requires **\"client:only\"** ability."
                             },
                             "response": [
                                 {

@@ -22,6 +22,7 @@ class RefreshTokenRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'access_token' => 'required|string|max:60',
             'refresh_token' => 'required|string|max:60',
         ];
     }

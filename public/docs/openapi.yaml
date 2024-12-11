@@ -11,7 +11,7 @@ paths:
     post:
       summary: 'Authenticate the user and return their API token.'
       operationId: authenticateTheUserAndReturnTheirAPIToken
-      description: "This endpoint is used to authenticate a user with their email and password. If the\ncredentials are valid, an API token and refresh token will be issued."
+      description: "This endpoint is used to authenticate a user with their email and password. If the\ncredentials are valid, an API token and refresh token will be issued.\n\nWorks with **client-side** authentication only. Requires **\"client:only\"** ability."
       parameters: []
       responses:
         200:
@@ -70,22 +70,21 @@ paths:
                 email:
                   type: string
                   description: 'Must be a valid email address.'
-                  example: tankunding@example.net
+                  example: thane@example.net
                   nullable: false
                 password:
                   type: string
                   description: 'Must be at least 8 characters.'
-                  example: "dPJUAO<{jO'Lpfqk<_"
+                  example: "'Xv3Ks/lQL"
                   nullable: false
               required:
                 - email
                 - password
-      security: []
   /api/register:
     post:
       summary: 'Register a new user and return their API token.'
       operationId: registerANewUserAndReturnTheirAPIToken
-      description: "This endpoint is used to register a new user, including their name, email, password,\nand password confirmation. A new API token and refresh token will be issued."
+      description: "This endpoint is used to register a new user, including their name, email, password,\nand password confirmation. A new API token and refresh token will be issued.\n\nWorks with **client-side** authentication only. Requires **\"client:only\"** ability."
       parameters: []
       responses:
         201:
@@ -150,12 +149,11 @@ paths:
                 - email
                 - password
                 - password_confirmation
-      security: []
   /api/logout:
     post:
       summary: 'Logout the user and destroy their API token.'
       operationId: logoutTheUserAndDestroyTheirAPIToken
-      description: "This endpoint allows the user to log out by deleting their current access token\nand refresh token from the database."
+      description: "This endpoint allows the user to log out by deleting their current access token\nand refresh token from the database.\n\nWorks with **client-side** authentication only. Requires **\"client:only\"** ability."
       parameters: []
       responses:
         200:
@@ -191,18 +189,24 @@ paths:
             schema:
               type: object
               properties:
+                access_token:
+                  type: string
+                  description: 'Must not be greater than 60 characters.'
+                  example: rbnelyweblidowkhhypxpqxgx
+                  nullable: false
                 refresh_token:
                   type: string
                   description: 'Must not be greater than 60 characters.'
-                  example: eljnfguppzikqszhrwqimytb
+                  example: ccgurkepepibqngb
                   nullable: false
               required:
+                - access_token
                 - refresh_token
   /api/token/refresh:
     post:
       summary: "Refresh the user's API token and generate a new refresh token."
       operationId: refreshTheUsersAPITokenAndGenerateANewRefreshToken
-      description: "This endpoint is used to refresh the user's API access token by validating their\nrefresh token and issuing new tokens if valid."
+      description: "This endpoint is used to refresh the user's API access token by validating their\nrefresh token and issuing new tokens if valid.\n\nWorks with **client-side** authentication only. Requires **\"client:only\"** ability."
       parameters: []
       responses:
         201:
@@ -274,12 +278,18 @@ paths:
             schema:
               type: object
               properties:
+                access_token:
+                  type: string
+                  description: 'Must not be greater than 60 characters.'
+                  example: prrlntihmxfngbebmazc
+                  nullable: false
                 refresh_token:
                   type: string
                   description: 'Must not be greater than 60 characters.'
-                  example: giapvc
+                  example: tpwqrcavszgfbkedii
                   nullable: false
               required:
+                - access_token
                 - refresh_token
 tags:
   -

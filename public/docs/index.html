@@ -128,10 +128,12 @@
                                                     <h2 id="endpoints-POSTapi-login">Authenticate the user and return their API token.</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
 <p>This endpoint is used to authenticate a user with their email and password. If the
 credentials are valid, an API token and refresh token will be issued.</p>
+<p>Works with <strong>client-side</strong> authentication only. Requires <strong>&quot;client:only&quot;</strong> ability.</p>
 
 <span id="example-requests-POSTapi-login">
 <blockquote>Example request:</blockquote>
@@ -140,11 +142,12 @@ credentials are valid, an API token and refresh token will be issued.</p>
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
     "http://localhost/api/login" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"email\": \"tankunding@example.net\",
-    \"password\": \"dPJUAO&lt;{jO\'Lpfqk&lt;_\"
+    \"email\": \"thane@example.net\",
+    \"password\": \"\'Xv3Ks\\/lQL\"
 }"
 </code></pre></div>
 
@@ -155,13 +158,14 @@ credentials are valid, an API token and refresh token will be issued.</p>
 );
 
 const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
 
 let body = {
-    "email": "tankunding@example.net",
-    "password": "dPJUAO&lt;{jO'Lpfqk&lt;_"
+    "email": "thane@example.net",
+    "password": "'Xv3Ks\/lQL"
 };
 
 fetch(url, {
@@ -178,12 +182,13 @@ $response = $client-&gt;post(
     $url,
     [
         'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_AUTH_KEY}',
             'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
         ],
         'json' =&gt; [
-            'email' =&gt; 'tankunding@example.net',
-            'password' =&gt; 'dPJUAO&lt;{jO\'Lpfqk&lt;_',
+            'email' =&gt; 'thane@example.net',
+            'password' =&gt; '\'Xv3Ks/lQL',
         ],
     ]
 );
@@ -235,7 +240,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-POSTapi-login" data-method="POST"
       data-path="api/login"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -266,6 +271,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
                                 <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-login"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -294,10 +310,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="email"                data-endpoint="POSTapi-login"
-               value="tankunding@example.net"
+               value="thane@example.net"
                data-component="body">
     <br>
-<p>Must be a valid email address. Example: <code>tankunding@example.net</code></p>
+<p>Must be a valid email address. Example: <code>thane@example.net</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>password</code></b>&nbsp;&nbsp;
@@ -305,20 +321,22 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="password"                data-endpoint="POSTapi-login"
-               value="dPJUAO<{jO'Lpfqk<_"
+               value="'Xv3Ks/lQL"
                data-component="body">
     <br>
-<p>Must be at least 8 characters. Example: <code>dPJUAO&lt;{jO'Lpfqk&lt;_</code></p>
+<p>Must be at least 8 characters. Example: <code>'Xv3Ks/lQL</code></p>
         </div>
         </form>
 
                     <h2 id="endpoints-POSTapi-register">Register a new user and return their API token.</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
 <p>This endpoint is used to register a new user, including their name, email, password,
 and password confirmation. A new API token and refresh token will be issued.</p>
+<p>Works with <strong>client-side</strong> authentication only. Requires <strong>&quot;client:only&quot;</strong> ability.</p>
 
 <span id="example-requests-POSTapi-register">
 <blockquote>Example request:</blockquote>
@@ -327,6 +345,7 @@ and password confirmation. A new API token and refresh token will be issued.</p>
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
     "http://localhost/api/register" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
@@ -344,6 +363,7 @@ and password confirmation. A new API token and refresh token will be issued.</p>
 );
 
 const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
@@ -369,6 +389,7 @@ $response = $client-&gt;post(
     $url,
     [
         'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_AUTH_KEY}',
             'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
         ],
@@ -418,7 +439,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-POSTapi-register" data-method="POST"
       data-path="api/register"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -448,6 +469,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <b><code>api/register</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-register"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
@@ -525,6 +557,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <p>This endpoint allows the user to log out by deleting their current access token
 and refresh token from the database.</p>
+<p>Works with <strong>client-side</strong> authentication only. Requires <strong>&quot;client:only&quot;</strong> ability.</p>
 
 <span id="example-requests-POSTapi-logout">
 <blockquote>Example request:</blockquote>
@@ -537,7 +570,8 @@ and refresh token from the database.</p>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"refresh_token\": \"eljnfguppzikqszhrwqimytb\"
+    \"access_token\": \"rbnelyweblidowkhhypxpqxgx\",
+    \"refresh_token\": \"ccgurkepepibqngb\"
 }"
 </code></pre></div>
 
@@ -554,7 +588,8 @@ const headers = {
 };
 
 let body = {
-    "refresh_token": "eljnfguppzikqszhrwqimytb"
+    "access_token": "rbnelyweblidowkhhypxpqxgx",
+    "refresh_token": "ccgurkepepibqngb"
 };
 
 fetch(url, {
@@ -576,7 +611,8 @@ $response = $client-&gt;post(
             'Accept' =&gt; 'application/json',
         ],
         'json' =&gt; [
-            'refresh_token' =&gt; 'eljnfguppzikqszhrwqimytb',
+            'access_token' =&gt; 'rbnelyweblidowkhhypxpqxgx',
+            'refresh_token' =&gt; 'ccgurkepepibqngb',
         ],
     ]
 );
@@ -686,15 +722,26 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                                 <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>access_token</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="access_token"                data-endpoint="POSTapi-logout"
+               value="rbnelyweblidowkhhypxpqxgx"
+               data-component="body">
+    <br>
+<p>Must not be greater than 60 characters. Example: <code>rbnelyweblidowkhhypxpqxgx</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>refresh_token</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
  &nbsp;
                 <input type="text" style="display: none"
                               name="refresh_token"                data-endpoint="POSTapi-logout"
-               value="eljnfguppzikqszhrwqimytb"
+               value="ccgurkepepibqngb"
                data-component="body">
     <br>
-<p>Must not be greater than 60 characters. Example: <code>eljnfguppzikqszhrwqimytb</code></p>
+<p>Must not be greater than 60 characters. Example: <code>ccgurkepepibqngb</code></p>
         </div>
         </form>
 
@@ -706,6 +753,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <p>This endpoint is used to refresh the user's API access token by validating their
 refresh token and issuing new tokens if valid.</p>
+<p>Works with <strong>client-side</strong> authentication only. Requires <strong>&quot;client:only&quot;</strong> ability.</p>
 
 <span id="example-requests-POSTapi-token-refresh">
 <blockquote>Example request:</blockquote>
@@ -718,7 +766,8 @@ refresh token and issuing new tokens if valid.</p>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"refresh_token\": \"giapvc\"
+    \"access_token\": \"prrlntihmxfngbebmazc\",
+    \"refresh_token\": \"tpwqrcavszgfbkedii\"
 }"
 </code></pre></div>
 
@@ -735,7 +784,8 @@ const headers = {
 };
 
 let body = {
-    "refresh_token": "giapvc"
+    "access_token": "prrlntihmxfngbebmazc",
+    "refresh_token": "tpwqrcavszgfbkedii"
 };
 
 fetch(url, {
@@ -757,7 +807,8 @@ $response = $client-&gt;post(
             'Accept' =&gt; 'application/json',
         ],
         'json' =&gt; [
-            'refresh_token' =&gt; 'giapvc',
+            'access_token' =&gt; 'prrlntihmxfngbebmazc',
+            'refresh_token' =&gt; 'tpwqrcavszgfbkedii',
         ],
     ]
 );
@@ -884,15 +935,26 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                                 <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>access_token</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="access_token"                data-endpoint="POSTapi-token-refresh"
+               value="prrlntihmxfngbebmazc"
+               data-component="body">
+    <br>
+<p>Must not be greater than 60 characters. Example: <code>prrlntihmxfngbebmazc</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>refresh_token</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
  &nbsp;
                 <input type="text" style="display: none"
                               name="refresh_token"                data-endpoint="POSTapi-token-refresh"
-               value="giapvc"
+               value="tpwqrcavszgfbkedii"
                data-component="body">
     <br>
-<p>Must not be greater than 60 characters. Example: <code>giapvc</code></p>
+<p>Must not be greater than 60 characters. Example: <code>tpwqrcavszgfbkedii</code></p>
         </div>
         </form>
 

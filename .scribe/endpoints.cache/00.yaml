@@ -16,9 +16,12 @@ endpoints:
       description: |-
         This endpoint is used to authenticate a user with their email and password. If the
         credentials are valid, an API token and refresh token will be issued.
-      authenticated: false
+
+        Works with **client-side** authentication only. Requires **"client:only"** ability.
+      authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -30,7 +33,7 @@ endpoints:
         name: email
         description: 'Must be a valid email address.'
         required: true
-        example: tankunding@example.net
+        example: thane@example.net
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -40,15 +43,15 @@ endpoints:
         name: password
         description: 'Must be at least 8 characters.'
         required: true
-        example: "dPJUAO<{jO'Lpfqk<_"
+        example: "'Xv3Ks/lQL"
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      email: tankunding@example.net
-      password: "dPJUAO<{jO'Lpfqk<_"
+      email: thane@example.net
+      password: "'Xv3Ks/lQL"
     fileParameters: []
     responses:
       -
@@ -76,7 +79,10 @@ endpoints:
         description: ''
         custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
     controller: null
     method: null
     route: null
@@ -94,9 +100,12 @@ endpoints:
       description: |-
         This endpoint is used to register a new user, including their name, email, password,
         and password confirmation. A new API token and refresh token will be issued.
-      authenticated: false
+
+        Works with **client-side** authentication only. Requires **"client:only"** ability.
+      authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -166,7 +175,10 @@ endpoints:
         description: ''
         custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
     controller: null
     method: null
     route: null
@@ -184,6 +196,8 @@ endpoints:
       description: |-
         This endpoint allows the user to log out by deleting their current access token
         and refresh token from the database.
+
+        Works with **client-side** authentication only. Requires **"client:only"** ability.
       authenticated: true
       custom: []
     headers:
@@ -195,18 +209,29 @@ endpoints:
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
+      access_token:
+        name: access_token
+        description: 'Must not be greater than 60 characters.'
+        required: true
+        example: rbnelyweblidowkhhypxpqxgx
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
       refresh_token:
         name: refresh_token
         description: 'Must not be greater than 60 characters.'
         required: true
-        example: eljnfguppzikqszhrwqimytb
+        example: ccgurkepepibqngb
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      refresh_token: eljnfguppzikqszhrwqimytb
+      access_token: rbnelyweblidowkhhypxpqxgx
+      refresh_token: ccgurkepepibqngb
     fileParameters: []
     responses:
       -
@@ -247,6 +272,8 @@ endpoints:
       description: |-
         This endpoint is used to refresh the user's API access token by validating their
         refresh token and issuing new tokens if valid.
+
+        Works with **client-side** authentication only. Requires **"client:only"** ability.
       authenticated: true
       custom: []
     headers:
@@ -258,18 +285,29 @@ endpoints:
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
+      access_token:
+        name: access_token
+        description: 'Must not be greater than 60 characters.'
+        required: true
+        example: prrlntihmxfngbebmazc
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
       refresh_token:
         name: refresh_token
         description: 'Must not be greater than 60 characters.'
         required: true
-        example: giapvc
+        example: tpwqrcavszgfbkedii
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      refresh_token: giapvc
+      access_token: prrlntihmxfngbebmazc
+      refresh_token: tpwqrcavszgfbkedii
     fileParameters: []
     responses:
       -
