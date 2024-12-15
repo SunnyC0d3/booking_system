@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\Api\V1;
+namespace App\Console\Commands\V1;
 
 use Illuminate\Console\Command;
 use App\Models\PersonalAccessToken;

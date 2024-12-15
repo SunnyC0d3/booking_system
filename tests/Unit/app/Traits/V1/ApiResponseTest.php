@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\App\Traits;
+namespace Tests\Unit\App\Traits\V1;
 
 use Tests\TestCase;
 use Illuminate\Testing\TestResponse;
@@ -13,7 +13,7 @@ class ApiResponseTest extends TestCase
     protected function getTestClass()
     {
         return new class {
-            use \App\Traits\ApiResponses;
+            use \App\Traits\V1\ApiResponses;
 
             public function testOk($message, $data = [])
             {

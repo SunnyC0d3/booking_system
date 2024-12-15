@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Requests\Api\V1;
+namespace App\Requests\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RefreshTokenRequest extends FormRequest
+class LoginUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,8 @@ class RefreshTokenRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'access_token' => 'required|string|max:60',
-            'refresh_token' => 'required|string|max:60',
+            'email' => ['required', 'string', 'email'],
+            'password' => ['required', 'string', 'min:8']
         ];
     }
 }

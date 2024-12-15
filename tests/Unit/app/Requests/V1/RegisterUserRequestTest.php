@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\Unit\App\Requests\Api\V1;
+namespace Tests\Unit\App\Requests\V1;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Requests\Api\V1\RegisterUserRequest;
+use App\Requests\V1\RegisterUserRequest;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;

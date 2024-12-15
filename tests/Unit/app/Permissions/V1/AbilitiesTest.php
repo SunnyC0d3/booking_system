@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\Unit\App\Permissions;
+namespace Tests\Unit\App\Permissions\V1;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\User;
-use App\Permissions\Abilities;
+use App\Permissions\V1\Abilities;
 
 class AbilitiesTest extends TestCase
 {
