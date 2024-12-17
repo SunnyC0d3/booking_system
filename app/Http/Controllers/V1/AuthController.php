@@ -4,6 +4,10 @@ namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
 use App\Auth\V1\UserAuth;
+use App\Requests\V1\LoginUserRequest;
+use App\Requests\V1\LogoutUserRequest;
+use App\Requests\V1\RegisterUserRequest;
+use App\Requests\V1\RefreshTokenRequest;
 
 class AuthController extends Controller
 {
@@ -39,9 +43,11 @@ class AuthController extends Controller
      *   "status": 201
      * }
      */
-    public function register()
+    public function register(RegisterUserRequest $request)
     {
-        return $this->userAuth->register();
+        $request->validated($request->only(['name', 'email', 'password', 'password_confirmation']));
+
+        return $this->userAuth->register($request);
     }
 
     /**
@@ -68,9 +74,11 @@ class AuthController extends Controller
      *      "status": 401
      * }
      */
-    public function login()
+    public function login(LoginUserRequest $request)
     {
-        return $this->userAuth->login();
+        $request->validated($request->only(['email', 'password']));
+
+        return $this->userAuth->login($request);
     }
 
     /**
@@ -90,9 +98,11 @@ class AuthController extends Controller
      *      "status": 400
      * }
      */
-    public function logout()
+    public function logout(LogoutUserRequest $request)
     {
-        return $this->userAuth->logout();
+        $request->validated($request->only(['access_token', 'refresh_token']));
+
+        return $this->userAuth->logout($request);
     }
 
     /**
@@ -123,8 +133,10 @@ class AuthController extends Controller
      *      "status": 400
      * }
      */
-    public function refreshToken()
+    public function refreshToken(RefreshTokenRequest $request)
     {
-        return $this->userAuth->refreshToken();
+        $request->validated($request->only(['access_token', 'refresh_token']));
+
+        return $this->userAuth->refreshToken($request);
     }
 }
