@@ -8,13 +8,23 @@ use App\Models\PersonalAccessToken;
 use Illuminate\Http\Request;
 use App\Permissions\V1\Abilities;
 use App\Traits\V1\ApiResponses;
+use App\Traits\V1\TokenHelper;
+use App\Policies\V1\UserPolicy;
 use Illuminate\Support\Facades\Hash;
 
 final class UserAuth
 {
-    use ApiResponses;
+    use ApiResponses, TokenHelper;
 
     private $authenticatedUser = null;
+    private $userPolicy;
+    private $accessToken;
+    private $refreshToken;
+
+    public function __construct()
+    {
+        $this->userPolicy = new UserPolicy();
+    }
 
     private function createTokens($user)
     {
@@ -27,22 +37,10 @@ final class UserAuth
             'refresh_token_expires_at' => now()->addDay(),
         ]);
 
+        $this->accessToken = $token;
+        $this->refreshToken = $refreshToken;
+
         return [$token, $refreshToken];
-    }
-
-    private function getTokenFromRequest(Request $request, string $tokenType = 'access')
-    {
-        $token = '';
-
-        if ($tokenType === 'access') {
-            $token = explode('|', $request->access_token, 2)[1] ?? $request->access_token;
-        }
-
-        if ($tokenType === 'refresh') {
-            $token = $request->refresh_token;
-        }
-
-        return hash('sha256', $token);
     }
 
     private function getUserBasedOffAccessTokenAndRefreshToken(Request $request)
@@ -169,5 +167,50 @@ final class UserAuth
             ],
             201
         );
+    }
+
+    public function canCreate()
+    {
+        if ($this->authenticatedUser !== null) {
+            return $this->userPolicy->create($this->authenticatedUser, $this->accessToken);
+        }
+
+        return false;
+    }
+
+    public function canReplace()
+    {
+        if ($this->authenticatedUser !== null) {
+            return $this->userPolicy->replace($this->authenticatedUser, $this->accessToken);
+        }
+
+        return false;
+    }
+
+    public function canUpdate()
+    {
+        if ($this->authenticatedUser !== null) {
+            return $this->userPolicy->update($this->authenticatedUser, $this->accessToken);
+        }
+
+        return false;
+    }
+
+    public function canDelete()
+    {
+        if ($this->authenticatedUser !== null) {
+            return $this->userPolicy->delete($this->authenticatedUser, $this->accessToken);
+        }
+
+        return false;
+    }
+
+    public function only()
+    {
+        if ($this->authenticatedUser !== null) {
+            return $this->userPolicy->only($this->authenticatedUser, $this->accessToken);
+        }
+
+        return false;
     }
 }
