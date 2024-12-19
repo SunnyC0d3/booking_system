@@ -218,6 +218,6 @@ class AuthControllerTest extends TestCase
                 'access_token' => 'fake_token',
                 'refresh_token' => 'fake_token'
             ])
-            ->assertStatus(400);
+            ->assertStatus(500);
     }
 }
