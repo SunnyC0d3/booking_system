@@ -45,8 +45,6 @@ final class UserAuth
 
     private function getUserBasedOffAccessTokenAndRefreshToken(Request $request)
     {
-        $request->validated($request->only(['access_token', 'refresh_token']));
-
         if (!$request->filled('access_token') || !$request->filled('refresh_token')) {
             return $this->error('No token exists.', 400);
         }
@@ -91,7 +89,7 @@ final class UserAuth
                 'access_token' => $createdTokens[0],
                 'refresh_token' => $createdTokens[1],
             ],
-            201
+            200
         );
     }
 
@@ -165,7 +163,7 @@ final class UserAuth
                 'access_token' => $createdTokens[0],
                 'refresh_token' => $createdTokens[1],
             ],
-            201
+            200
         );
     }
 

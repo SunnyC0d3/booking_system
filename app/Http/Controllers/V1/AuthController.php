@@ -34,13 +34,13 @@ class AuthController extends Controller
      * @bodyParam password string required The user's password. Must be at least 8 characters. Example: password123
      * @bodyParam password_confirmation string required Must match the password field. Example: password123
      * 
-     * @response 201 {
+     * @response 200 {
      *   "data": {
      *       "token": "{YOUR_AUTH_KEY}",
      *       "refresh_token": "{YOUR_REFRESH_KEY}"
      *   },
      *   "message": "User registered successfully",
-     *   "status": 201
+     *   "status": 200
      * }
      */
     public function register(RegisterUserRequest $request)
@@ -116,13 +116,13 @@ class AuthController extends Controller
      * @authentication
      * @group Endpoints
      * @subgroup Authentication
-     * @response 201 {
+     * @response 200 {
      * "data": {
      *       "token": "{YOUR_NEW_AUTH_KEY}",
      *       "refresh_token": "{YOUR_NEW_REFRESH_KEY}"
      * },
      *      "message": "New tokens have been generated.",
-     *      "status": 201
+     *      "status": 200
      * }
      * @response 400 {
      *      "message": "Refresh token expired",
