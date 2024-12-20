@@ -11,6 +11,7 @@ use App\Traits\V1\ApiResponses;
 use App\Traits\V1\TokenHelper;
 use App\Policies\V1\UserPolicy;
 use Illuminate\Support\Facades\Hash;
+use \Exception;
 
 final class UserAuth
 {
@@ -52,7 +53,7 @@ final class UserAuth
         $user = PersonalAccessToken::where('token', $this->getTokenFromRequest($request))->first();
 
         if (!$user) {
-            return $this->error('Invalid request', 400);
+            throw new Exception('Invalid request', 400);
         }
 
         $user = $user->tokenable;
@@ -143,11 +144,11 @@ final class UserAuth
         $refreshToken = $user->tokens->where('token', $this->getTokenFromRequest($request, 'refresh'))->first();
 
         if (!$refreshToken) {
-            return $this->error('Invalid refresh token', 400);
+            throw new Exception('Invalid refresh token', 400);
         }
 
         if ($refreshToken->refresh_token_expires_at < now()) {
-            return $this->error('Refresh token expired', 400);
+            throw new Exception('Refresh token expired', 400);
         }
 
         $user->tokens->where('token', $this->getTokenFromRequest($request))->first()->delete();

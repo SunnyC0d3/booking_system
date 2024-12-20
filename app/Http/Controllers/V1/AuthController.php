@@ -8,9 +8,13 @@ use App\Requests\V1\LoginUserRequest;
 use App\Requests\V1\LogoutUserRequest;
 use App\Requests\V1\RegisterUserRequest;
 use App\Requests\V1\RefreshTokenRequest;
+use App\Traits\V1\ApiResponses;
+use \Exception;
 
 class AuthController extends Controller
 {
+    use ApiResponses;
+
     protected $userAuth;
 
     public function __construct(UserAuth $userAuth)
@@ -47,7 +51,11 @@ class AuthController extends Controller
     {
         $request->validated($request->only(['name', 'email', 'password', 'password_confirmation']));
 
-        return $this->userAuth->register($request);
+        try {
+            return $this->userAuth->register($request);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode());
+        }
     }
 
     /**
@@ -78,7 +86,11 @@ class AuthController extends Controller
     {
         $request->validated($request->only(['email', 'password']));
 
-        return $this->userAuth->login($request);
+        try {
+            return $this->userAuth->login($request);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode());
+        }
     }
 
     /**
@@ -102,7 +114,11 @@ class AuthController extends Controller
     {
         $request->validated($request->only(['access_token', 'refresh_token']));
 
-        return $this->userAuth->logout($request);
+        try {
+            return $this->userAuth->logout($request);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode());
+        }
     }
 
     /**
@@ -137,6 +153,10 @@ class AuthController extends Controller
     {
         $request->validated($request->only(['access_token', 'refresh_token']));
 
-        return $this->userAuth->refreshToken($request);
+        try {
+            return $this->userAuth->refreshToken($request);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode());
+        }
     }
 }
