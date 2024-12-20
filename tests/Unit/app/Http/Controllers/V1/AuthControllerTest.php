@@ -5,7 +5,6 @@ namespace Tests\Unit\App\Http\Controllers\V1;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
-use Laravel\Sanctum\Sanctum;
 use App\Models\User;
 
 class AuthControllerTest extends TestCase
