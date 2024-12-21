@@ -7,18 +7,21 @@ use App\Http\Controllers\V1\ProductController;
 
 // Registering, Logging In/Logging Out Routes
 
-Route::middleware(['throttle:60,1', 'auth:sanctum', 'ability:client:only'])->group(function () {
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::post('/token/refresh', [AuthController::class, 'refreshToken']);
-});
+Route::middleware(['throttle:60,1', 'auth:sanctum', 'ability:client:only'])
+    ->controller(AuthController::class)
+    ->group(function () {
+        Route::post('/login', 'login');
+        Route::post('/register', 'register');
+        Route::post('/logout', 'logout');
+        Route::post('/token/refresh', 'refreshToken');
+    });
 
 // Products
 
 Route::prefix('products')
     ->middleware(['throttle:60,1', 'auth:sanctum', 'ability:client:only'])
-    ->controller(ProductController::class)->group(function () {
+    ->controller(ProductController::class)
+    ->group(function () {
         Route::get('/', 'index');
         Route::get('/{id}', 'show');
         Route::post('/', 'store');

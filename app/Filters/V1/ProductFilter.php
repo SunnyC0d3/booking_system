@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Filters\V1;
+namespace App\Filters\V1;
 
 use Illuminate\Database\Eloquent\Builder;
 
 class ProductFilter extends QueryFilter
 {
-    protected $sortable = [
+    protected array $sortable = [
         'name',
         'price',
         'quantity',
-        'createdAt' => 'created_at',
-        'updatedAt' => 'updated_at',
+        'created_at',
+        'updated_at',
     ];
 
     public function createdAt($value)

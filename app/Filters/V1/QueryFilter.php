@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Filters\V1;
+namespace App\Filters\V1;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -21,9 +21,13 @@ abstract class QueryFilter
         $this->builder = $builder;
 
         $filters = $this->request->query('filter', []);
-        $this->filter($filters);
+
+        if ($filters) {
+            $this->filter($filters);
+        }
 
         $sortValue = $this->request->query('sort');
+
         if ($sortValue) {
             $this->sort($sortValue);
         }

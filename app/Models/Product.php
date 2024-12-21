@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Http\Filters\V1\QueryFilter;
+use App\Filters\V1\QueryFilter;
 use Illuminate\Database\Eloquent\Builder;
 
 class Product extends Model

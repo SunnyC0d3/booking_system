@@ -15,4 +15,9 @@ class Attribute extends Model
         'attributable_id',
         'attributable_type'
     ];
+
+    public function attributable()
+    {
+        return $this->morphTo();
+    }
 }
