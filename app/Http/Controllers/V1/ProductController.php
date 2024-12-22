@@ -11,18 +11,33 @@ use App\Requests\V1\FilterProductRequest;
 use App\Models\Product;
 use App\Resources\V1\ProductResource;
 use App\Traits\V1\ApiResponses;
+use App\Auth\V1\UserAuth;
+use App\Exceptions\V1\APIException;
 
 class ProductController extends Controller
 {
     use ApiResponses;
 
+    protected $userAuth;
+
+    public function __construct(UserAuth $userAuth)
+    {
+        $this->userAuth = $userAuth;
+    }
+
     public function index(FilterProductRequest $request, ProductFilter $filter)
     {
-        $query = Product::with(['categories', 'images', 'attributes'])->filter($filter);
-        $perPage = $request->input('per_page', 15);
-        $products = $query->paginate($perPage);
+        try {
+            if (($this->userAuth->getAuthenticatedUser()->role === 'user' || ($this->userAuth->getAuthenticatedUser()->role === 'admin')) && $this->userAuth->only()) {
+                $query = Product::with(['categories', 'images', 'attributes'])->filter($filter);
+                $perPage = $request->input('per_page', 15);
+                $products = $query->paginate($perPage);
 
-        return ProductResource::collection($products);
+                return ProductResource::collection($products);
+            }
+        } catch (APIException $e) {
+            return $this->error($e->getMessage(), $e->getCode());
+        }
     }
 
     public function show(Product $product)

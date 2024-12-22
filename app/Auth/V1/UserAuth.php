@@ -47,7 +47,7 @@ final class UserAuth
     private function getUserBasedOffAccessTokenAndRefreshToken(Request $request)
     {
         if (!$request->filled('access_token') || !$request->filled('refresh_token')) {
-            return $this->error('No token exists.', 400);
+            throw new Exception('No token exists.', 400);
         }
 
         $user = PersonalAccessToken::where('token', $this->getTokenFromRequest($request))->first();
@@ -68,7 +68,11 @@ final class UserAuth
 
     public function getAuthenticatedUser()
     {
-        return $this->authenticatedUser;
+        if ($this->authenticatedUser !== null) {
+            return $this->authenticatedUser;
+        }
+
+        throw new Exception('No user found', 400);
     }
 
     public function register(Request $request)
@@ -89,8 +93,7 @@ final class UserAuth
             [
                 'access_token' => $createdTokens[0],
                 'refresh_token' => $createdTokens[1],
-            ],
-            200
+            ]
         );
     }
 
@@ -99,7 +102,7 @@ final class UserAuth
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return $this->error('Invalid credentials', 401);
+            throw new Exception('Invalid credentials', 400);
         }
 
         $user = User::firstWhere('email', $request->email);
@@ -113,8 +116,7 @@ final class UserAuth
             [
                 'access_token' => $createdTokens[0],
                 'refresh_token' => $createdTokens[1],
-            ],
-            200
+            ]
         );
     }
 
@@ -163,14 +165,13 @@ final class UserAuth
             [
                 'access_token' => $createdTokens[0],
                 'refresh_token' => $createdTokens[1],
-            ],
-            200
+            ]
         );
     }
 
     public function canCreate()
     {
-        if ($this->authenticatedUser !== null) {
+        if ($this->getAuthenticatedUser()) {
             return $this->userPolicy->create($this->authenticatedUser, $this->accessToken);
         }
 
@@ -179,7 +180,7 @@ final class UserAuth
 
     public function canReplace()
     {
-        if ($this->authenticatedUser !== null) {
+        if ($this->getAuthenticatedUser()) {
             return $this->userPolicy->replace($this->authenticatedUser, $this->accessToken);
         }
 
@@ -188,7 +189,7 @@ final class UserAuth
 
     public function canUpdate()
     {
-        if ($this->authenticatedUser !== null) {
+        if ($this->getAuthenticatedUser()) {
             return $this->userPolicy->update($this->authenticatedUser, $this->accessToken);
         }
 
@@ -197,7 +198,7 @@ final class UserAuth
 
     public function canDelete()
     {
-        if ($this->authenticatedUser !== null) {
+        if ($this->getAuthenticatedUser()) {
             return $this->userPolicy->delete($this->authenticatedUser, $this->accessToken);
         }
 
@@ -206,7 +207,7 @@ final class UserAuth
 
     public function only()
     {
-        if ($this->authenticatedUser !== null) {
+        if ($this->getAuthenticatedUser()) {
             return $this->userPolicy->only($this->authenticatedUser, $this->accessToken);
         }
 

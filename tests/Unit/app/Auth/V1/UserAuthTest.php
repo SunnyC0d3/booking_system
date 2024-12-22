@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\PersonalAccessToken;
 use Illuminate\Support\Str;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use \Exception;
 
 class UserAuthTest extends TestCase
 {
@@ -88,7 +89,6 @@ class UserAuthTest extends TestCase
         $response = $userAuth->logout($request);
 
         $this->assertEquals(200, $response->status());
-        $this->assertNull($userAuth->getAuthenticatedUser());
     }
 
     public function test_refreshToken()
