@@ -12,7 +12,7 @@ use App\Models\Product;
 use App\Resources\V1\ProductResource;
 use App\Traits\V1\ApiResponses;
 use App\Auth\V1\UserAuth;
-use App\Exceptions\V1\APIException;
+use \Exception;
 
 class ProductController extends Controller
 {
@@ -35,8 +35,8 @@ class ProductController extends Controller
 
                 return ProductResource::collection($products);
             }
-        } catch (APIException $e) {
-            return $this->error($e->getMessage(), $e->getCode());
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
     }
 

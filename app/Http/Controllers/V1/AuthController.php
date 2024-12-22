@@ -54,7 +54,7 @@ class AuthController extends Controller
         try {
             return $this->userAuth->register($request);
         } catch (Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode());
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
     }
 
@@ -89,7 +89,7 @@ class AuthController extends Controller
         try {
             return $this->userAuth->login($request);
         } catch (Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode());
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
     }
 
@@ -117,7 +117,7 @@ class AuthController extends Controller
         try {
             return $this->userAuth->logout($request);
         } catch (Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode());
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
     }
 
@@ -156,7 +156,7 @@ class AuthController extends Controller
         try {
             return $this->userAuth->refreshToken($request);
         } catch (Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode());
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
     }
 }
