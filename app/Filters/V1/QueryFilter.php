@@ -16,26 +16,20 @@ abstract class QueryFilter
         $this->request = $request;
     }
 
-    public function apply(Builder $builder): Builder
+    public function apply(Builder $builder)
     {
         $this->builder = $builder;
 
-        $filters = $this->request->query('filter', []);
-
-        if ($filters) {
-            $this->filter($filters);
+        foreach ($this->request->all() as $key => $value) {
+            if (method_exists($this, $key)) {
+                $this->$key($value);
+            }
         }
 
-        $sortValue = $this->request->query('sort');
-
-        if ($sortValue) {
-            $this->sort($sortValue);
-        }
-
-        return $this->builder;
+        return $builder;
     }
 
-    protected function filter(array $filters): void
+    protected function filter(array $filters)
     {
         foreach ($filters as $key => $value) {
             if (method_exists($this, $key)) {

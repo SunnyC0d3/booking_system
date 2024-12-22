@@ -19,11 +19,16 @@ class FilterProductRequest extends FormRequest
         return [
             'filter' => 'array',
             'filter.name' => 'string|max:255',
-            'filter.price' => 'string',
-            'filter.category_id' => 'integer|exists:categories,id',
-            'sort' => 'string',
+            'filter.price' => 'string|regex:/^\d+(\.\d{1,2})?(,\d+(\.\d{1,2})?)?$/',
+            'filter.category' => 'string|regex:/^(\d,?)+$/',
+            'filter.quantity' => 'integer|min:0',
+            'filter.created_at' => 'string|regex:/^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/',
+            'filter.updated_at' => 'string|regex:/^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/',
+            'filter.search' => 'string|max:255',
+            'filter.include' => 'string|regex:/^(\w+(,\w+)*)?$/',
             'page' => 'integer|min:1',
             'per_page' => 'integer|min:1|max:100',
+            'sort' => 'string|regex:/^(-?(name|price|quantity|created_at|updated_at),?)*$/',
         ];
     }
 }

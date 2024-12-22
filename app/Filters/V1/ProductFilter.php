@@ -55,7 +55,7 @@ class ProductFilter extends QueryFilter
     public function category($value)
     {
         return $this->builder->whereHas('categories', function (Builder $query) use ($value) {
-            $query->whereIn('id', explode(',', $value));
+            $query->whereIn('categories.id', explode(',', $value));
         });
     }
 
