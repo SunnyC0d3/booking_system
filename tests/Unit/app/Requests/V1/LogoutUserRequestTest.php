@@ -3,7 +3,7 @@
 namespace Tests\Unit\App\Requests\V1;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Requests\V1\LogoutUserRequest;
+use App\Requests\V1\CheckTokenRequest;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Validator;
 
@@ -18,7 +18,7 @@ class LogoutUserRequestTest extends TestCase
             'refresh_token' => 'validRefreshToken12345'
         ];
 
-        $request = new LogoutUserRequest();
+        $request = new CheckTokenRequest();
         $validator = Validator::make($validData, $request->rules());
 
         $this->assertFalse($validator->fails());
@@ -52,7 +52,7 @@ class LogoutUserRequestTest extends TestCase
             'refresh_token' => 'validRefreshToken12345'
         ];
 
-        $request = new LogoutUserRequest();
+        $request = new CheckTokenRequest();
         $validator = Validator::make($validData, $request->rules());
 
         $this->assertFalse($validator->fails());

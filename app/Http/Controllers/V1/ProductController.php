@@ -12,6 +12,7 @@ use App\Models\Product;
 use App\Resources\V1\ProductResource;
 use App\Traits\V1\ApiResponses;
 use App\Auth\V1\UserAuth;
+use App\Requests\V1\CheckTokenRequest;
 use \Exception;
 
 class ProductController extends Controller
@@ -25,10 +26,10 @@ class ProductController extends Controller
         $this->userAuth = $userAuth;
     }
 
-    public function index(FilterProductRequest $request, ProductFilter $filter)
+    public function index(CheckTokenRequest $tokenRequest, FilterProductRequest $request, ProductFilter $filter)
     {
         try {
-            if (($this->userAuth->getAuthenticatedUser()->role === 'user' || ($this->userAuth->getAuthenticatedUser()->role === 'admin')) && $this->userAuth->only()) {
+            if (in_array($this->userAuth->getAuthenticatedUser($tokenRequest)->role, ['user', 'admin']) && $this->userAuth->only()) {
                 $query = Product::with(['categories', 'images', 'attributes'])->filter($filter);
                 $perPage = $request->input('per_page', 15);
                 $products = $query->paginate($perPage);

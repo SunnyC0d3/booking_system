@@ -46,7 +46,7 @@ final class UserAuth
 
     private function getUserBasedOffAccessTokenAndRefreshToken(Request $request)
     {
-        if (!$request->filled('access_token') || !$request->filled('refresh_token')) {
+        if (!$request->filled('access_token') && !$request->filled('refresh_token')) {
             throw new Exception('No token exists.', 400);
         }
 
@@ -66,13 +66,21 @@ final class UserAuth
         $this->authenticatedUser = $authenticatedUser;
     }
 
-    public function getAuthenticatedUser()
+    public function getAuthenticatedUser(Request $request = null)
     {
         if ($this->authenticatedUser !== null) {
             return $this->authenticatedUser;
         }
 
-        throw new Exception('Invalid request', 400);
+        if ($request) {
+            $user = $this->getUserBasedOffAccessTokenAndRefreshToken($request);
+            $this->setAuthenticatedUser($user);
+            $this->accessToken = $request->access_token;
+            $this->refreshToken = $request->refresh_token;
+            return $user;
+        }
+
+        throw new Exception('User is not authenticated.', 400);
     }
 
     public function register(Request $request)
@@ -172,7 +180,7 @@ final class UserAuth
     public function canCreate()
     {
         if ($this->getAuthenticatedUser()) {
-            return $this->userPolicy->create($this->authenticatedUser, $this->accessToken);
+            return $this->userPolicy->create($this->getAuthenticatedUser(), $this->accessToken);
         }
 
         return false;
@@ -181,7 +189,7 @@ final class UserAuth
     public function canReplace()
     {
         if ($this->getAuthenticatedUser()) {
-            return $this->userPolicy->replace($this->authenticatedUser, $this->accessToken);
+            return $this->userPolicy->replace($this->getAuthenticatedUser(), $this->accessToken);
         }
 
         return false;
@@ -190,7 +198,7 @@ final class UserAuth
     public function canUpdate()
     {
         if ($this->getAuthenticatedUser()) {
-            return $this->userPolicy->update($this->authenticatedUser, $this->accessToken);
+            return $this->userPolicy->update($this->getAuthenticatedUser(), $this->accessToken);
         }
 
         return false;
@@ -199,7 +207,7 @@ final class UserAuth
     public function canDelete()
     {
         if ($this->getAuthenticatedUser()) {
-            return $this->userPolicy->delete($this->authenticatedUser, $this->accessToken);
+            return $this->userPolicy->delete($this->getAuthenticatedUser(), $this->accessToken);
         }
 
         return false;
@@ -208,7 +216,7 @@ final class UserAuth
     public function only()
     {
         if ($this->getAuthenticatedUser()) {
-            return $this->userPolicy->only($this->authenticatedUser, $this->accessToken);
+            return $this->userPolicy->only($this->getAuthenticatedUser(), $this->accessToken);
         }
 
         return false;

@@ -5,9 +5,8 @@ namespace App\Http\Controllers\V1;
 use App\Http\Controllers\Controller;
 use App\Auth\V1\UserAuth;
 use App\Requests\V1\LoginUserRequest;
-use App\Requests\V1\LogoutUserRequest;
+use App\Requests\V1\CheckTokenRequest;
 use App\Requests\V1\RegisterUserRequest;
-use App\Requests\V1\RefreshTokenRequest;
 use App\Traits\V1\ApiResponses;
 use \Exception;
 
@@ -110,7 +109,7 @@ class AuthController extends Controller
      *      "status": 400
      * }
      */
-    public function logout(LogoutUserRequest $request)
+    public function logout(CheckTokenRequest $request)
     {
         $request->validated($request->only(['access_token', 'refresh_token']));
 
@@ -149,7 +148,7 @@ class AuthController extends Controller
      *      "status": 400
      * }
      */
-    public function refreshToken(RefreshTokenRequest $request)
+    public function refreshToken(CheckTokenRequest $request)
     {
         $request->validated($request->only(['access_token', 'refresh_token']));
 
