@@ -77,7 +77,7 @@ final class UserAuth
             $this->setAuthenticatedUser($user);
             $this->accessToken = $request->access_token;
             $this->refreshToken = $request->refresh_token;
-            return $user;
+            return $this->authenticatedUser;
         }
 
         throw new Exception('User is not authenticated.', 400);
