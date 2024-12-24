@@ -69,7 +69,7 @@ final class UserAuth
     public function getAuthenticatedUser(Request $request = null)
     {
         if ($this->authenticatedUser !== null) {
-            return $this->authenticatedUser;
+            return $this;
         }
 
         if ($request) {
@@ -77,7 +77,7 @@ final class UserAuth
             $this->setAuthenticatedUser($user);
             $this->accessToken = $request->access_token;
             $this->refreshToken = $request->refresh_token;
-            return $this->authenticatedUser;
+            return $this;
         }
 
         throw new Exception('Not authorised', 400);
@@ -180,7 +180,7 @@ final class UserAuth
     public function canCreate()
     {
         if ($this->getAuthenticatedUser()) {
-            return $this->userPolicy->create($this->getAuthenticatedUser(), $this->accessToken);
+            return $this->userPolicy->create($this->getAuthenticatedUser()->authenticatedUser, $this->accessToken);
         }
 
         return false;
@@ -189,7 +189,7 @@ final class UserAuth
     public function canReplace()
     {
         if ($this->getAuthenticatedUser()) {
-            return $this->userPolicy->replace($this->getAuthenticatedUser(), $this->accessToken);
+            return $this->userPolicy->replace($this->getAuthenticatedUser()->authenticatedUser, $this->accessToken);
         }
 
         return false;
@@ -198,7 +198,7 @@ final class UserAuth
     public function canUpdate()
     {
         if ($this->getAuthenticatedUser()) {
-            return $this->userPolicy->update($this->getAuthenticatedUser(), $this->accessToken);
+            return $this->userPolicy->update($this->getAuthenticatedUser()->authenticatedUser, $this->accessToken);
         }
 
         return false;
@@ -207,7 +207,7 @@ final class UserAuth
     public function canDelete()
     {
         if ($this->getAuthenticatedUser()) {
-            return $this->userPolicy->delete($this->getAuthenticatedUser(), $this->accessToken);
+            return $this->userPolicy->delete($this->getAuthenticatedUser()->authenticatedUser, $this->accessToken);
         }
 
         return false;
@@ -216,9 +216,16 @@ final class UserAuth
     public function only()
     {
         if ($this->getAuthenticatedUser()) {
-            return $this->userPolicy->only($this->getAuthenticatedUser(), $this->accessToken);
+            return $this->userPolicy->only($this->getAuthenticatedUser()->authenticatedUser, $this->accessToken);
         }
 
         return false;
+    }
+
+    public function checkRole(array $roles)
+    {
+        if ($this->getAuthenticatedUser()) {
+            return in_array($this->getAuthenticatedUser()->authenticatedUser->role, $roles) ?? false;
+        }
     }
 }

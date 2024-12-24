@@ -29,7 +29,9 @@ class ProductController extends Controller
     public function index(CheckTokenRequest $tokenRequest, FilterProductRequest $request, ProductFilter $filter)
     {
         try {
-            if (in_array($this->userAuth->getAuthenticatedUser($tokenRequest)->role, ['user', 'admin']) && $this->userAuth->only()) {
+            $user = $this->userAuth->getAuthenticatedUser($tokenRequest);
+
+            if ($user->checkRole(['user', 'admin']) && $user->only()) {
                 $query = Product::with(['categories', 'images', 'attributes'])->filter($filter);
                 $perPage = $request->input('per_page', 15);
                 $products = $query->paginate($perPage);
@@ -41,11 +43,18 @@ class ProductController extends Controller
         }
     }
 
-    public function show(Product $product)
+    public function show(CheckTokenRequest $tokenRequest, Product $product)
     {
-        $product->load(['attributes', 'images']);
-
-        return ProductResource::collection($product);
+        try {
+            $user = $this->userAuth->getAuthenticatedUser($tokenRequest);
+            
+            if ($user->checkRole(['user', 'admin']) && $user->only()) {
+                $product->load(['attributes', 'images']);
+                return ProductResource::collection($product);
+            }
+        } catch(Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
     }
 
     public function store(StoreProductRequest $request)
