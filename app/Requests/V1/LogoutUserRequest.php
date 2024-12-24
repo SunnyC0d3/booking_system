@@ -2,9 +2,9 @@
 
 namespace App\Requests\V1;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Requests\V1\BaseFormRequest;
 
-class LogoutUserRequest extends FormRequest
+class LogoutUserRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

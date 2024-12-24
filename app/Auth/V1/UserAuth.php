@@ -72,7 +72,7 @@ final class UserAuth
             return $this->authenticatedUser;
         }
 
-        throw new Exception('No user found', 400);
+        throw new Exception('Invalid request', 400);
     }
 
     public function register(Request $request)

@@ -4,7 +4,7 @@ namespace App\Requests\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RefreshTokenRequest extends FormRequest
+class RefreshTokenRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
