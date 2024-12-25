@@ -88,7 +88,7 @@ return [
         'use_csrf' => false,
 
         // The URL to fetch the CSRF token from (if `use_csrf` is true).
-        'csrf_url' => '/sanctum/csrf-cookie',
+        'csrf_url' => null,
     ],
 
     // How is your API authenticated? This information will be used in the displayed docs, generated examples and response calls.
