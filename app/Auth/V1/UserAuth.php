@@ -4,7 +4,6 @@ namespace App\Auth\V1;
 
 use Illuminate\Support\Str;
 use App\Models\User;
-use App\Models\PersonalAccessToken;
 use Illuminate\Http\Request;
 use App\Permissions\V1\Abilities;
 use App\Traits\V1\ApiResponses;
@@ -29,13 +28,13 @@ final class UserAuth
 
     private function createTokens($user)
     {
-        $token = $user->createToken('API token for ' . $user->email, Abilities::getAbilities($user), now()->addDay())->plainTextToken;
+        $token = $user->createToken('API token for ' . $user->email, Abilities::getAbilities($user), now()->addMinutes(30))->plainTextToken;
         $refreshToken = Str::random(60);
 
         $user->tokens()->create([
             'name' => 'API Refresh Token',
             'token' => hash('sha256', $refreshToken),
-            'refresh_token_expires_at' => now()->addDay(),
+            'refresh_token_expires_at' => now()->addDays(7),
         ]);
 
         $this->accessToken = $token;
@@ -50,7 +49,7 @@ final class UserAuth
             throw new Exception('No token exists.', 400);
         }
 
-        $user = PersonalAccessToken::where('token', $this->getTokenFromRequest($request))->first();
+        //$user = PersonalAccessToken::where('token', $this->getTokenFromRequest($request))->first();
 
         if (!$user) {
             throw new Exception('Invalid request', 400);

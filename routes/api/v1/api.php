@@ -7,7 +7,7 @@ use App\Http\Controllers\V1\ProductController;
 
 // Registering, Logging In/Logging Out Routes
 
-Route::middleware(['throttle:60,1', 'auth:sanctum', 'ability:client:only'])
+Route::middleware(['throttle:60,1', 'client'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/login', 'login');
@@ -19,7 +19,7 @@ Route::middleware(['throttle:60,1', 'auth:sanctum', 'ability:client:only'])
 // Products
 
 Route::prefix('products')
-    ->middleware(['throttle:60,1', 'auth:sanctum', 'ability:client:only'])
+    ->middleware(['throttle:60,1', 'client'])
     ->controller(ProductController::class)
     ->group(function () {
         Route::get('/', 'index');

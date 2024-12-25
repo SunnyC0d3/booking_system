@@ -3,8 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Models\PersonalAccessToken;
-use Laravel\Sanctum\Sanctum;
+use Laravel\Passport\Passport;
 use App\Auth\V1\UserAuth;
 use App\Models\User;
 
@@ -29,6 +28,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
+        Passport::routes();
+        Passport::tokensExpireIn(now()->addMinutes(30));
+        Passport::refreshTokensExpireIn(now()->addDays(7));
+
+        Passport::hashClientSecrets();
     }
 }

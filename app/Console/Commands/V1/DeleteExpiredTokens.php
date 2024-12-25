@@ -3,7 +3,6 @@
 namespace App\Console\Commands\V1;
 
 use Illuminate\Console\Command;
-use App\Models\PersonalAccessToken;
 
 class DeleteExpiredTokens extends Command
 {
@@ -26,7 +25,7 @@ class DeleteExpiredTokens extends Command
      */
     public function handle()
     {
-        $expiredTokens = PersonalAccessToken::expired()->get();
+        //$expiredTokens = PersonalAccessToken::expired()->get();
 
         $count = $expiredTokens->count();
 
