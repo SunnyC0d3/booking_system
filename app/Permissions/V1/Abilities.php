@@ -6,22 +6,23 @@ use App\Models\User;
 
 final class Abilities
 {
-    public const ReadProducts  = 'read-products';
-    public const WriteProducts = 'write-products';
+    public const Scopes = [
+        'read-products' => 'Ability to read products',
+        'write-products' => 'Ability to create, update or delete products'
+    ];
 
-    public static function getAbilities(User $user): string | null
+    public static function getAbilities(User $user): array | null
     {
+        $keys = array_keys(self::Scopes);
+
         if ($user->role === 'admin') {
-            return implode(' ', [
-                self::ReadProducts,
-                self::WriteProducts
-            ]);
+            return $keys;
         }
 
         if ($user->role === 'user') {
-            return implode(' ', [
-                self::ReadProducts
-            ]);
+            return [
+                $keys[0]
+            ];
         }
 
         return null;

@@ -29,9 +29,22 @@ final class UserAuth
         $this->userPolicy = new UserPolicy();
     }
 
+    private function decodeToken(string $token): ?string
+    {
+        $parts = explode('.', $token);
+
+        if (count($parts) !== 3) {
+            return null;
+        }
+
+        $payload = json_decode(base64_decode($parts[1]), true);
+
+        return $payload['jti'] ?? null;
+    }
+
     private function validateClientFromToken($accessToken)
     {
-        $token = Token::where('id', $accessToken)->first();
+        $token = Token::where('id', $this->decodeToken($accessToken))->first();
 
         if (!$token) {
             throw new Exception('Invalid token', 401);
@@ -43,14 +56,11 @@ final class UserAuth
             throw new Exception('Invalid client', 401);
         }
 
-        return $this->ok(
-            'Client validated successfully',
-            [
-                'client_id' => $client->id,
-                'client_secret' => $client->secret,
-                'client_name' => $client->name,
-            ]
-        );
+        return [
+            'client_id' => $client->id,
+            'client_secret' => $client->secret,
+            'client_name' => $client->name,
+        ];
     }
 
     public function setAuthenticatedUser($authenticatedUser)
@@ -61,7 +71,7 @@ final class UserAuth
     public function getAuthenticatedUser()
     {
         if ($this->authenticatedUser !== null) {
-            return $this->authenticatedUser;
+            return $this;
         }
 
         throw new Exception('Not authorised', 400);
@@ -167,10 +177,10 @@ final class UserAuth
         );
     }
 
-    public function hasPermission()
+    public function hasPermission(string $scope)
     {
         if ($this->getAuthenticatedUser()) {
-            return $this->userPolicy->can($this->getAuthenticatedUser());
+            return $this->userPolicy->can($this->getAuthenticatedUser()->authenticatedUser, $scope);
         }
 
         return false;
@@ -179,7 +189,7 @@ final class UserAuth
     public function checkRole(array $roles)
     {
         if ($this->getAuthenticatedUser()) {
-            return in_array($this->getAuthenticatedUser()->role, $roles) ?? false;
+            return in_array($this->getAuthenticatedUser()->authenticatedUser->role, $roles) ?? false;
         }
     }
 }

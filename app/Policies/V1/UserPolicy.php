@@ -7,8 +7,16 @@ use App\Permissions\V1\Abilities;
 
 class UserPolicy
 {
-    public function can(User $user)
+    public function can(User $user, $scope)
     {
-        return $user->tokenCan(Abilities::getAbilities($user)) ? true : false;
+        if (Abilities::getAbilities($user)) {
+            foreach (Abilities::getAbilities($user) as $ability) {
+                if ($scope === $ability && $user->tokenCan($ability)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
