@@ -109,12 +109,10 @@ class AuthController extends Controller
      *      "status": 400
      * }
      */
-    public function logout(CheckTokenRequest $request)
+    public function logout()
     {
-        $request->validated($request->only(['access_token', 'refresh_token']));
-
         try {
-            return $this->userAuth->logout($request);
+            return $this->userAuth->logout();
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
@@ -150,7 +148,7 @@ class AuthController extends Controller
      */
     public function refreshToken(CheckTokenRequest $request)
     {
-        $request->validated($request->only(['access_token', 'refresh_token']));
+        $request->validated($request->only(['refresh_token']));
 
         try {
             return $this->userAuth->refreshToken($request);

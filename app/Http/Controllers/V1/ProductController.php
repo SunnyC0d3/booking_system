@@ -31,7 +31,7 @@ class ProductController extends Controller
         try {
             $user = $this->userAuth->getAuthenticatedUser($tokenRequest);
 
-            if ($user->checkRole(['user', 'admin']) && $user->only()) {
+            if ($user->checkRole(['user', 'admin']) && $user->hasPermission()) {
                 $query = Product::with(['categories', 'images', 'attributes'])->filter($filter);
                 $perPage = $request->input('per_page', 15);
                 $products = $query->paginate($perPage);

@@ -1,5 +1,5 @@
 <?php
 
 use Illuminate\Support\Facades\Schedule;
-
-Schedule::command('tokens:delete-expired')->daily();
+ 
+Schedule::command('passport:purge')->hourly();
