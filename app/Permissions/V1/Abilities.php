@@ -7,8 +7,9 @@ use App\Models\User;
 final class Abilities
 {
     public const Scopes = [
-        'read-products' => 'Ability to read products',
-        'write-products' => 'Ability to create, update or delete products'
+        'register'      => 'Ability to register for clients with valid credentials',
+        'read-products'     => 'Ability to read products',
+        'write-products'    => 'Ability to create, update or delete products'
     ];
 
     public static function getAbilities(User $user): array | null

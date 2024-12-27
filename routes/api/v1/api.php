@@ -7,15 +7,13 @@ use App\Http\Controllers\V1\ProductController;
 
 // Registering, Logging In/Logging Out Routes
 
-Route::middleware(['throttle:60,1', 'client'])
+Route::middleware(['throttle:60,1', 'client:register'])
     ->controller(AuthController::class)
     ->group(function () {
-        Route::post('/register', 'register');
-        Route::post('/login', 'login');
-        Route::post('/token/refresh', 'refreshToken');
+        Route::post('/logout', 'logout');
     });
 
-Route::middleware(['throttle:60,1', 'api:auth'])
+Route::middleware(['throttle:60,1', 'auth:api'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/logout', 'logout');
