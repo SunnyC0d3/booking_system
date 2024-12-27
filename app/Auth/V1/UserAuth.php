@@ -10,18 +10,61 @@ use App\Policies\V1\UserPolicy;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\TokenRepository;
 use Laravel\Passport\RefreshTokenRepository;
+use \GuzzleHttp\Client;
+use \Exception;
 
 final class UserAuth
 {
     use ApiResponses;
 
     private $userPolicy;
-    private $accessToken;
-    private $refreshToken;
+    private $clientConfig = [
+        'grant_type' => '',
+        'client_id' => '',
+        'client_secret' => '',
+        'scope' => '',
+        'refresh_token' => '',
+        'username' => '',
+        'password' => ''
+    ];
 
     public function __construct()
     {
         $this->userPolicy = new UserPolicy();
+    }
+
+    private function generateToken(array $config)
+    {
+        $matchedKeys = array_intersect_key($config, $this->clientConfig);
+
+        if (empty($matchedKeys)) {
+            throw new Exception('No valid keys found in the configuration.', 400);
+        }
+
+        $this->clientConfig = array_merge($this->clientConfig, $matchedKeys);
+
+        $http = new Client();
+
+        $response = $http->post(env('APP_URL') . env('OAUTH_PATH'), [
+            'form_params' => $this->clientConfig
+        ]);
+
+        return $this->ok(
+            'Generated Token Successfully',
+            json_decode((string) $response->getBody(), true)
+        );
+    }
+
+    public function clientToken(Request $request)
+    {
+        $config = [
+            'grant_type' => $request->grant_type,
+            'client_id' => $request->client_id,
+            'client_secret' => $request->client_secret,
+            'scope' => $request->scope
+        ];
+
+        return $this->generateToken($config);
     }
 
     public function register(Request $request)

@@ -7,7 +7,8 @@ use App\Models\User;
 final class Abilities
 {
     public const Scopes = [
-        'register'      => 'Ability to register for clients with valid credentials',
+        'register'      => 'Ability to register',
+        'logout'        => 'Ability to logout',
         'read-products'     => 'Ability to read products',
         'write-products'    => 'Ability to create, update or delete products'
     ];
@@ -22,7 +23,8 @@ final class Abilities
 
         if ($user->role === 'user') {
             return [
-                $keys[1]
+                $keys[1],
+                $keys[2],
             ];
         }
 
