@@ -22,7 +22,7 @@ final class Abilities
 
         if ($user->role === 'user') {
             return [
-                $keys[0]
+                $keys[1]
             ];
         }
 

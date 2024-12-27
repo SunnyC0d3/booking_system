@@ -74,12 +74,10 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        dd($this->userAuth->hasPermission('read-products'));
-
-        // try {
-        //     return $this->userAuth->logout();
-        // } catch (Exception $e) {
-        //     return $this->error($e->getMessage(), $e->getCode() ?: 500);
-        // }
+        try {
+            return $this->userAuth->logout();
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
     }
 }
