@@ -26,7 +26,7 @@ class RefreshTokenRequest extends BaseFormRequest
             'client_secret' => ['required', 'string', 'exists:oauth_clients,secret'],
             'scope' => ['nullable', 'string'],
             'grant_type' => ['required', 'string', 'in:refresh_token'],
-            'refresh_token' => ['required', 'string', 'exists:oauth_refresh_tokens,refresh_token']
+            'refresh_token' => ['required', 'string', 'max:1024']
         ];
     }
 }

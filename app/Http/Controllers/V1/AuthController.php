@@ -96,7 +96,7 @@ class AuthController extends Controller
      */
     public function login(LoginUserRequest $request)
     {
-        $request->validated($request->only(['client_id', 'client_secret', 'scope', 'grant_type', 'email', 'password']));
+        $request->validated($request->only(['client_id', 'client_secret', 'scope', 'grant_type', 'username', 'password']));
 
         try {
             return $this->userAuth->login($request);

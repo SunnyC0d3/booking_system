@@ -15,16 +15,18 @@ Route::middleware(['throttle:60,1'])
 
 // Registering, Logging In/Logging Out Routes
 
-Route::middleware(['throttle:60,1', 'client:register'])
+Route::middleware(['throttle:60,1', 'client:register,login'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/register', 'register');
+        Route::post('/login', 'login');
     });
 
-Route::middleware(['throttle:60,1', 'auth:api', 'scope:logout'])
+Route::middleware(['throttle:60,1', 'auth:api', 'scope:logout,refresh-token'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/logout', 'logout');
+        Route::post('/refresh-token', 'refreshToken');
     });
 
 // Products

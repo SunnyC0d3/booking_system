@@ -26,7 +26,7 @@ class LoginUserRequest extends BaseFormRequest
             'client_secret' => ['required', 'string', 'exists:oauth_clients,secret'],
             'scope' => ['nullable', 'string'],
             'grant_type' => ['required', 'string', 'in:password'],
-            'email' => ['required', 'string', 'email'],
+            'username' => ['required', 'string', 'email'],
             'password' => ['required', 'string', 'min:8']
         ];
     }

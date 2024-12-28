@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Traits\V1\ApiResponses;
 use Illuminate\Support\Facades\Auth;
-use App\Policies\V1\UserPolicy;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\TokenRepository;
 use Laravel\Passport\RefreshTokenRepository;
@@ -17,7 +16,6 @@ final class UserAuth
 {
     use ApiResponses;
 
-    private $userPolicy;
     private $clientConfig = [
         'grant_type' => '',
         'client_id' => '',
@@ -28,17 +26,12 @@ final class UserAuth
         'password' => ''
     ];
 
-    public function __construct()
-    {
-        $this->userPolicy = new UserPolicy();
-    }
-
     private function generateToken(array $config)
     {
         $matchedKeys = array_intersect_key($config, $this->clientConfig);
 
         if (empty($matchedKeys)) {
-            throw new Exception('No valid keys found in the configuration.', 400);
+            throw new Exception('No valid keys found in the configuration', 400);
         }
 
         $this->clientConfig = array_merge($this->clientConfig, $matchedKeys);
@@ -82,6 +75,33 @@ final class UserAuth
         );
     }
 
+    public function login(Request $request)
+    {
+        $config = [
+            'grant_type' => $request->grant_type,
+            'username' => $request->username,
+            'password' => $request->password,
+            'client_id' => $request->client_id,
+            'client_secret' => $request->client_secret,
+            'scope' => $request->scope
+        ];
+
+        return $this->generateToken($config);
+    }
+
+    public function refreshToken(Request $request)
+    {
+        $config = [
+            'grant_type' => $request->grant_type,
+            'refresh_token' => $request->refresh_token,
+            'client_id' => $request->client_id,
+            'client_secret' => $request->client_secret,
+            'scope' => $request->scope
+        ];
+
+        return $this->generateToken($config);
+    }
+
     public function logout()
     {
         $user = Auth::user();
@@ -104,7 +124,7 @@ final class UserAuth
         $user = Auth::user();
 
         if ($user) {
-            return $this->userPolicy->can($user, $scope);
+            return $user->tokenCan($scope);
         }
 
         return false;

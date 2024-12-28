@@ -5,15 +5,10 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 use App\Auth\V1\UserAuth;
-use App\Models\User;
 use App\Permissions\V1\Abilities;
 
 class AppServiceProvider extends ServiceProvider
 {
-    protected $policies = [
-        User::class => \App\Policies\V1\UserPolicy::class,
-    ];
-
     /**
      * Register any application services.
      */
