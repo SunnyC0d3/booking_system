@@ -11,14 +11,16 @@ Route::middleware(['throttle:60,1'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/client-token', 'clientToken');
+        Route::get('/callback', 'callback');
     });
 
 // Registering, Logging In/Logging Out Routes
 
-Route::middleware(['throttle:60,1', 'client:register,login'])
+Route::middleware(['throttle:60,1', 'client:register,authorise,login'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/register', 'register');
+        Route::post('/authorise', 'authorise');
         Route::post('/login', 'login');
     });
 

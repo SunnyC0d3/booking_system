@@ -4,12 +4,14 @@ namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
 use App\Auth\V1\UserAuth;
+use App\Requests\V1\AuthoriseRequest;
 use App\Requests\V1\ClientTokenRequest;
 use App\Requests\V1\LoginUserRequest;
 use App\Requests\V1\RegisterUserRequest;
 use App\Requests\V1\RefreshTokenRequest;
 use App\Traits\V1\ApiResponses;
 use \Exception;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -31,6 +33,22 @@ class AuthController extends Controller
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
+    }
+
+    public function authorise(AuthoriseRequest $request) 
+    {
+        $request->validated($request->only(['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'prompt']));
+
+        try {
+            return $this->userAuth->authGrantAuthorize($request);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
+    }
+
+    public function callback(Request $request) 
+    {
+        dd($request->all());
     }
 
     /**
@@ -96,7 +114,7 @@ class AuthController extends Controller
      */
     public function login(LoginUserRequest $request)
     {
-        $request->validated($request->only(['client_id', 'client_secret', 'scope', 'grant_type', 'username', 'password']));
+        $request->validated($request->only(['client_id', 'client_secret', 'redirect_uri', 'grant_type', 'code']));
 
         try {
             return $this->userAuth->login($request);

@@ -22,11 +22,13 @@ final class UserAuth
         'client_secret' => '',
         'scope' => '',
         'refresh_token' => '',
-        'username' => '',
-        'password' => ''
+        'redirect_uri' => '',
+        'response_type' => '',
+        'state' => '',
+        'prompt' => ''
     ];
 
-    private function generateToken(array $config)
+    private function hydrateConfig(array $config)
     {
         $matchedKeys = array_intersect_key($config, $this->clientConfig);
 
@@ -34,18 +36,41 @@ final class UserAuth
             throw new Exception('No valid keys found in the configuration', 400);
         }
 
-        $this->clientConfig = array_merge($this->clientConfig, $matchedKeys);
+        return $matchedKeys;
+    }
+
+    private function generateToken(array $config)
+    {
+        $hydratedConfig = $this->hydrateConfig($config);
 
         $http = new Client();
 
-        $response = $http->post(env('APP_URL') . env('OAUTH_PATH'), [
-            'form_params' => $this->clientConfig
+        $response = $http->post(env('APP_URL') . env('OAUTH_TOKEN_URL'), [
+            'form_params' => $hydratedConfig
         ]);
 
         return $this->ok(
             'Generated Token Successfully',
             json_decode((string) $response->getBody(), true)
         );
+    }
+
+    public function authGrantAuthorize(Request $request)
+    {
+        $config = [
+            'client_id' => $request->client_id,
+            'redirect_uri' => $request->redirect_uri,
+            'response_type' => $request->response_type,
+            'scope' => $request->scope,
+            'state' => $request->state,
+            'prompt' => $request->prompt ?? 'login'
+        ];
+
+        $hydratedConfig = $this->hydrateConfig($config);
+
+        $query = http_build_query($hydratedConfig);
+
+        return redirect(env('APP_URL') . env('OAUTH_AUTHORISE_URL') . '?' . $query);
     }
 
     public function clientToken(Request $request)
@@ -79,11 +104,10 @@ final class UserAuth
     {
         $config = [
             'grant_type' => $request->grant_type,
-            'username' => $request->username,
-            'password' => $request->password,
+            'redirect_uri' => $request->redirect_uri,
             'client_id' => $request->client_id,
             'client_secret' => $request->client_secret,
-            'scope' => $request->scope
+            'code' => $request->code
         ];
 
         return $this->generateToken($config);
