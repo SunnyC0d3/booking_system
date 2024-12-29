@@ -11,7 +11,6 @@ Route::middleware(['throttle:60,1'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/client-token', 'clientToken');
-        Route::get('/callback', 'callback');
     });
 
 // Registering, Logging In/Logging Out Routes
