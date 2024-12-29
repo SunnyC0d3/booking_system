@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-<form action="{{route('login.post')}}" method="POST">
+<form action="#" method="POST">
     @csrf
     @error('success')
         <div class="success">
