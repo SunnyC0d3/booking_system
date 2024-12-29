@@ -9,81 +9,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\TokenRepository;
 use Laravel\Passport\RefreshTokenRepository;
-use \GuzzleHttp\Client;
-use \Exception;
 
 final class UserAuth
 {
     use ApiResponses;
-
-    private $clientConfig = [
-        'grant_type' => '',
-        'client_id' => '',
-        'client_secret' => '',
-        'scope' => '',
-        'refresh_token' => '',
-        'redirect_uri' => '',
-        'response_type' => '',
-        'state' => '',
-        'prompt' => ''
-    ];
-
-    private function hydrateConfig(array $config)
-    {
-        $matchedKeys = array_intersect_key($config, $this->clientConfig);
-
-        if (empty($matchedKeys)) {
-            throw new Exception('No valid keys found in the configuration', 400);
-        }
-
-        return $matchedKeys;
-    }
-
-    private function generateToken(array $config)
-    {
-        $hydratedConfig = $this->hydrateConfig($config);
-
-        $http = new Client();
-
-        $response = $http->post(env('APP_URL') . env('OAUTH_TOKEN_URL'), [
-            'form_params' => $hydratedConfig
-        ]);
-
-        return $this->ok(
-            'Generated Token Successfully',
-            json_decode((string) $response->getBody(), true)
-        );
-    }
-
-    public function authGrantAuthorize(Request $request)
-    {
-        $config = [
-            'client_id' => $request->client_id,
-            'redirect_uri' => $request->redirect_uri,
-            'response_type' => $request->response_type,
-            'scope' => $request->scope ?? '',
-            'state' => $request->state,
-            'prompt' => $request->prompt ?? 'login'
-        ];
-
-        $hydratedConfig = $this->hydrateConfig($config);
-
-        $query = http_build_query($hydratedConfig);
-
-        return redirect(env('APP_URL') . env('OAUTH_AUTHORISE_URL') . '?' . $query);
-    }
-
-    public function clientToken(Request $request)
-    {
-        $config = [
-            'grant_type' => $request->grant_type,
-            'client_id' => $request->client_id,
-            'client_secret' => $request->client_secret,
-            'scope' => $request->scope ?? ''
-        ];
-
-        return $this->generateToken($config);
-    }
 
     public function register(Request $request)
     {
@@ -94,36 +23,16 @@ final class UserAuth
             'role' => 'user'
         ]);
 
-        return $this->ok(
-            'User registered successfully',
-            []
-        );
+        return redirect('login')->withErrors(['success' => 'Successfully registered.']);
     }
 
     public function login(Request $request)
     {
-        $config = [
-            'grant_type' => $request->grant_type,
-            'redirect_uri' => $request->redirect_uri,
-            'client_id' => $request->client_id,
-            'client_secret' => $request->client_secret,
-            'code' => $request->code
-        ];
+        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
+            return redirect()->intended();
+        }
 
-        return $this->generateToken($config);
-    }
-
-    public function refreshToken(Request $request)
-    {
-        $config = [
-            'grant_type' => $request->grant_type,
-            'refresh_token' => $request->refresh_token,
-            'client_id' => $request->client_id,
-            'client_secret' => $request->client_secret,
-            'scope' => $request->scope ?? ''
-        ];
-
-        return $this->generateToken($config);
+        return back()->withErrors(['error' => 'Invalid username or password']);
     }
 
     public function logout()

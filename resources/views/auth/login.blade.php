@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-<form action="#" method="POST">
+<form action="{{route('login.post')}}" method="POST">
     @csrf
     @error('success')
         <div class="success">
@@ -39,6 +39,6 @@
     <br>
     <button type="submit">Login</button>
     <br>
-    Don't have an account? <a href="#">Register here</a>
+    Don't have an account? <a href="{{route('register')}}">Register here</a>
 </form>
 @endsection

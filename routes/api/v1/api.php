@@ -5,29 +5,19 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\AuthController;
 use App\Http\Controllers\V1\ProductController;
 
-// Get Client Token
-
-Route::middleware(['throttle:60,1'])
-    ->controller(AuthController::class)
-    ->group(function () {
-        Route::post('/client-token', 'clientToken');
-    });
-
 // Registering, Logging In/Logging Out Routes
 
-Route::middleware(['throttle:60,1', 'client:register,authorise,login'])
+Route::middleware(['throttle:60,1', 'client:register,login'])
     ->controller(AuthController::class)
     ->group(function () {
-        Route::post('/register', 'register');
-        Route::post('/authorise', 'authorise');
-        Route::post('/login', 'login');
+        Route::post('/register', 'register')->name('auth.register');
+        Route::post('/login', 'login')->name('auth.login');
     });
 
-Route::middleware(['throttle:60,1', 'auth:api', 'scope:logout,refresh-token'])
+Route::middleware(['throttle:60,1', 'auth:api', 'scope:logout'])
     ->controller(AuthController::class)
     ->group(function () {
-        Route::post('/logout', 'logout');
-        Route::post('/refresh-token', 'refreshToken');
+        Route::post('/logout', 'logout')->name('auth.logout');
     });
 
 // Products
@@ -36,15 +26,15 @@ Route::prefix('products')
     ->middleware(['throttle:60,1', 'auth:api', 'scope:read-products'])
     ->controller(ProductController::class)
     ->group(function () {
-        Route::get('/', 'index');
-        Route::get('/{id}', 'show');
+        Route::get('/', 'index')->name('products.index');
+        Route::get('/{id}', 'show')->name('products.show');
     });
 
 Route::prefix('products')
     ->middleware(['throttle:60,1', 'auth:api', 'scope:write-products'])
     ->controller(ProductController::class)
     ->group(function () {
-        Route::post('/', 'store');
-        Route::put('/{id}', 'update');
-        Route::delete('/{id}', 'destroy');
+        Route::post('/', 'store')->name('products.store');
+        Route::put('/{id}', 'update')->name('products.update');
+        Route::delete('/{id}', 'destroy')->name('products.destroy');
     });
