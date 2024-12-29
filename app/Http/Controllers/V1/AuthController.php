@@ -34,17 +34,15 @@ class AuthController extends Controller
         }
     }
 
-    public function authorise(AuthoriseRequest $request) 
+    public function authorise(AuthoriseRequest $request)
     {
-        dd('here');
-
-        // $request->validated($request->only(['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'prompt']));
-
-        // try {
-        //     return $this->userAuth->authGrantAuthorize($request);
-        // } catch (Exception $e) {
-        //     return $this->error($e->getMessage(), $e->getCode() ?: 500);
-        // }
+        $request->validated($request->only(['client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'prompt']));
+        
+        try {
+            return $this->userAuth->authGrantAuthorize($request);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
     }
 
     /**

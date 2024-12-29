@@ -61,7 +61,7 @@ final class UserAuth
             'client_id' => $request->client_id,
             'redirect_uri' => $request->redirect_uri,
             'response_type' => $request->response_type,
-            'scope' => $request->scope,
+            'scope' => $request->scope ?? '',
             'state' => $request->state,
             'prompt' => $request->prompt ?? 'login'
         ];
@@ -79,7 +79,7 @@ final class UserAuth
             'grant_type' => $request->grant_type,
             'client_id' => $request->client_id,
             'client_secret' => $request->client_secret,
-            'scope' => $request->scope
+            'scope' => $request->scope ?? ''
         ];
 
         return $this->generateToken($config);
@@ -120,7 +120,7 @@ final class UserAuth
             'refresh_token' => $request->refresh_token,
             'client_id' => $request->client_id,
             'client_secret' => $request->client_secret,
-            'scope' => $request->scope
+            'scope' => $request->scope ?? ''
         ];
 
         return $this->generateToken($config);
