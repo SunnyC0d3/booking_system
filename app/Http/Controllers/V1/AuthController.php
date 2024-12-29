@@ -11,7 +11,6 @@ use App\Requests\V1\RegisterUserRequest;
 use App\Requests\V1\RefreshTokenRequest;
 use App\Traits\V1\ApiResponses;
 use \Exception;
-use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
