@@ -39,6 +39,6 @@
     <br>
     <button type="submit">Login</button>
     <br>
-    Don't have an account? <a href="{{route('register')}}">Register here</a>
+    Don't have an account? <a href="#">Register here</a>
 </form>
 @endsection
