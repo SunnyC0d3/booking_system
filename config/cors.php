@@ -5,7 +5,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://192.168.0.221'],
+    'allowed_origins' => [env('APP_URL'), env('APP_URL_FRONTEND')],
 
     'allowed_origins_patterns' => [],
 
