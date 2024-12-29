@@ -3,7 +3,7 @@
 
 @section('content')
 
-<form action="{{route('register.post')}}" method="POST">
+<form action="{{route('auth.register')}}" method="POST">
     @csrf
     @error('success')
         <div class="success">

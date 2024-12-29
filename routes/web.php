@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-// Login
+// Registering, Logging In Routes
 
 Route::middleware(['throttle:60,1', 'client:register,login'])
     ->group(function () {
