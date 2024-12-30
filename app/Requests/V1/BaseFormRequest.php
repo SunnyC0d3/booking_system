@@ -21,11 +21,7 @@ class BaseFormRequest extends FormRequest
      */
     protected function failedValidation(Validator $validator)
     {
-        foreach ($validator->errors()->all() as $error) {
-            $errors[] = $error;
-        }
-
-        throw new HttpResponseException($this->error($errors, 422));
+        throw new HttpResponseException($this->error($validator->errors(), 422));
     }
 
     public function passedValidation()

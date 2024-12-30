@@ -1,53 +1,31 @@
-
 @extends('layout')
 
 @section('content')
 
-<form action="{{route('auth.register')}}" method="POST">
+<form id="registerForm">
     @csrf
-    @error('success')
-        <div class="success">
-            {{$message}}
-        </div>
-        <br><br>
-    @enderror
-    @error('error')
-        <div class="error">
-            {{$message}}
-        </div>
-        <br><br>
-    @enderror
+
     <div class="form-input">
         <label for="email">Email</label><br>
-        <input type="email" name="email" placeholder="Enter email" value="{{old('email')}}">
-        <div class="error">
-            @error('email')
-                {{$message}}
-            @enderror
-        </div>
+        <input type="email" id="email" name="email" placeholder="Enter email" value="{{old('email')}}">
+        <div id="error-email" class="error"></div>
     </div>
+
     <div class="form-input">
         <label for="name">Username</label><br>
-        <input type="text" name="name" placeholder="Enter Username" value="{{old('name')}}">
-        <div class="error">
-            @error('name')
-                {{$message}}
-            @enderror
-        </div>
+        <input type="text" id="name" name="name" placeholder="Enter Username" value="{{old('name')}}">
+        <div id="error-name" class="error"></div>
     </div>
+
     <div class="form-input">
         <label for="password">Password</label><br>
-        <input type="password" name="password" placeholder="Enter password" value="{{old('password')}}">
-        <div class="error">
-            @error('password')
-                {{$message}}
-            @enderror
-        </div>
+        <input type="password" id="password" name="password" placeholder="Enter password" value="{{old('password')}}">
+        <div id="error-password" class="error"></div>
     </div>
 
     <div class="form-input">
         <label for="password_confirmation">Confirm Password</label><br>
-        <input type="password" name="password_confirmation" placeholder="Confirm password">
+        <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Confirm password">
     </div>
 
     <br>
@@ -55,4 +33,7 @@
     <br>
     Already have an account? <a href="{{route('login')}}">Login here</a>
 </form>
+
+@vite('resources/js/app.js')
+
 @endsection

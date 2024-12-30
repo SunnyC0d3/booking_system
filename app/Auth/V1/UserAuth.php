@@ -23,16 +23,26 @@ final class UserAuth
             'role' => 'user'
         ]);
 
-        return redirect('login')->withErrors(['success' => 'Successfully registered.']);
+        return $this->ok(
+            'User registered successfully.',
+            [
+                'redirectUrl' => route('login')
+            ]
+        );
     }
 
     public function login(Request $request)
     {
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
-            return redirect()->intended();
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            return $this->ok(
+                'User logged in successfully.',
+                [
+                    'redirectUrl' => redirect()->intended()->getTargetUrl()
+                ]
+            );
         }
 
-        return back()->withErrors(['error' => 'Invalid username or password']);
+        return $this->error('Invalid username or password', 400);
     }
 
     public function logout()

@@ -46,4 +46,20 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function setNameAttribute($value)
+    {
+        $words = explode(' ', $value);
+        $capitalizedWords = array_map('ucwords', $words);
+
+        $this->attributes['name'] = implode(' ', $capitalizedWords);
+    }
+
+    public function getNameAttribute($value)
+    {
+        $words = explode(' ', $value);
+        $capitalizedWords = array_map('ucwords', $words);
+
+        return implode(' ', $capitalizedWords);
+    }
 }
