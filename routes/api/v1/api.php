@@ -7,7 +7,7 @@ use App\Http\Controllers\V1\ProductController;
 
 // Registering, Logging In/Logging Out Routes
 
-Route::middleware(['throttle:60,1', 'client:register,login'])
+Route::middleware(['throttle:60,1'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/register', 'register')->name('auth.register');
