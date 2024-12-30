@@ -31,9 +31,8 @@ export default function loginForm() {
                         return response.json();
                     })
                     .then(data => {
-                        console.log(data);
                         if (data.status === 200) {
-                            // window.location.href = data['data'].redirectUrl;
+                            window.location.href = data['data'].redirectUrl;
                         } else {
                             document.querySelectorAll('.error').forEach(element => {
                                 element.innerHTML = '';

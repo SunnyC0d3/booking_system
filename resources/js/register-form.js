@@ -33,7 +33,6 @@ export default function registerForm() {
                         return response.json();
                     })
                     .then(data => {
-                        console.log(data);
                         if (data.status === 200) {
                             window.location.href = data['data'].redirectUrl;
                         } else {
