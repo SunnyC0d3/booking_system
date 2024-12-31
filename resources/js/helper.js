@@ -75,11 +75,10 @@ export function hasErrors(formData) {
 
 export async function hmac(data) {
     const secretKey = process.env.HMAC_SECRET_KEY;
-    const data = JSON.stringify({ userId: 123, timestamp: Date.now() });
 
     const hmac = crypto
         .createHmac('sha256', secretKey)
-        .update(data)
+        .update(JSON.stringify({ data, timestamp: Date.now() }))
         .digest('hex');
 
     return hmac;
