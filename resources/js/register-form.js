@@ -1,6 +1,6 @@
-import { hasErrors, getClient } from './helper';
+import { hasErrors } from './helper';
 
-export default async function registerForm() {
+export default function registerForm() {
     if (document.getElementById('registerForm')) {
         document.getElementById('registerForm').addEventListener('submit', function (event) {
             event.preventDefault();
