@@ -1,6 +1,6 @@
-import { hasErrors } from './helper';
+import { hasErrors, getClient } from './helper';
 
-export default function registerForm() {
+export default async function registerForm() {
     if (document.getElementById('registerForm')) {
         document.getElementById('registerForm').addEventListener('submit', function (event) {
             event.preventDefault();
@@ -18,7 +18,7 @@ export default function registerForm() {
             };
 
             if (!hasErrors(formData)) {
-                fetch("{{ route('auth.register') }}", {
+                fetch(window.location.hostname + '/api/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

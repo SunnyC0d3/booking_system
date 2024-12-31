@@ -36,6 +36,10 @@ export function hasErrors(formData) {
     for (const [field, rules] of Object.entries(validationRules)) {
         const value = formData[field];
 
+        if (value === undefined) {
+            continue;
+        }
+
         if (rules.required && !value) {
             displayError(`error-${field}`, rules.required);
             hasErrors = true;
@@ -67,4 +71,16 @@ export function hasErrors(formData) {
     }
 
     return hasErrors;
+}
+
+export async function hmac(data) {
+    const secretKey = process.env.HMAC_SECRET_KEY;
+    const data = JSON.stringify({ userId: 123, timestamp: Date.now() });
+
+    const hmac = crypto
+        .createHmac('sha256', secretKey)
+        .update(data)
+        .digest('hex');
+
+    return hmac;
 }

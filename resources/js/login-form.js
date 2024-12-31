@@ -16,7 +16,7 @@ export default function loginForm() {
             };
 
             if (!hasErrors(formData)) {
-                fetch("{{ route('auth.login') }}", {
+                fetch(window.location.hostname + '/api/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

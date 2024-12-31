@@ -83,13 +83,14 @@ class AuthController extends Controller
      */
     public function login(LoginUserRequest $request)
     {
-        $request->validated($request->only(['email', 'password']));
+        dd($request->all());
+        // $request->validated($request->only(['email', 'password']));
 
-        try {
-            return $this->userAuth->login($request);
-        } catch (Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode() ?: 500);
-        }
+        // try {
+        //     return $this->userAuth->login($request);
+        // } catch (Exception $e) {
+        //     return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        // }
     }
 
     /**
