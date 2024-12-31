@@ -18,7 +18,7 @@ export default function registerForm() {
             };
 
             if (!hasErrors(formData)) {
-                fetch(window.location.hostname + '/api/register', {
+                fetch('/api/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

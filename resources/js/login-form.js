@@ -16,7 +16,7 @@ export default function loginForm() {
             };
 
             if (!hasErrors(formData)) {
-                fetch(window.location.hostname + '/api/login', {
+                fetch('/api/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
