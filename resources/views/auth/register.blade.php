@@ -4,7 +4,9 @@
 
 <form id="registerForm">
     @csrf
-
+    <div clas="form-input">
+        <div id="error-global" class="error"></div>
+    </div>
     <div class="form-input">
         <label for="email">Email</label><br>
         <input type="email" id="email" name="email" placeholder="Enter email" value="{{old('email')}}">

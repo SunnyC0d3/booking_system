@@ -8,6 +8,7 @@ use App\Requests\V1\LoginUserRequest;
 use App\Requests\V1\RegisterUserRequest;
 use App\Traits\V1\ApiResponses;
 use \Exception;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -83,14 +84,13 @@ class AuthController extends Controller
      */
     public function login(LoginUserRequest $request)
     {
-        dd($request->all());
-        // $request->validated($request->only(['email', 'password']));
+        $request->validated($request->only(['email', 'password']));
 
-        // try {
-        //     return $this->userAuth->login($request);
-        // } catch (Exception $e) {
-        //     return $this->error($e->getMessage(), $e->getCode() ?: 500);
-        // }
+        try {
+            return $this->userAuth->login($request);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
     }
 
     /**
@@ -110,10 +110,10 @@ class AuthController extends Controller
      *      "status": 400
      * }
      */
-    public function logout()
+    public function logout(Request $request)
     {
         try {
-            return $this->userAuth->logout();
+            return $this->userAuth->logout($request);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }

@@ -47,6 +47,11 @@ export default function registerForm() {
                                         errorElement.innerHTML = data['errors'][field].join('<br>');
                                     }
                                 }
+                            } else {
+                                const errorElement = document.getElementById('error-global');
+                                if (errorElement) {
+                                    errorElement.innerHTML = data['message'];
+                                }
                             }
                         }
                     })

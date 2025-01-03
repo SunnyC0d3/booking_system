@@ -18,9 +18,6 @@ export default function loginForm() {
             if (!hasErrors(formData)) {
                 fetch('/api/login', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
                     body: JSON.stringify(formData)
                 })
                     .then(response => {
@@ -44,6 +41,11 @@ export default function loginForm() {
                                     if (errorElement) {
                                         errorElement.innerHTML = data['errors'][field].join('<br>');
                                     }
+                                }
+                            } else {
+                                const errorElement = document.getElementById('error-global');
+                                if (errorElement) {
+                                    errorElement.innerHTML = data['message'];
                                 }
                             }
                         }

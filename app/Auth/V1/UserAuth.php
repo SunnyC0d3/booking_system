@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\TokenRepository;
 use Laravel\Passport\RefreshTokenRepository;
+use Illuminate\Auth\Events\Registered;
 
 final class UserAuth
 {
@@ -23,17 +24,24 @@ final class UserAuth
             'role' => 'user'
         ]);
 
+        Auth::login($user);
+
+        event(new Registered($user));
+
         return $this->ok(
             'User registered successfully.',
             [
-                'redirectUrl' => route('login')
+                'redirectUrl' => route(env('AFTER_REGISTER_REDIRECT_PATH'))
             ]
         );
     }
 
     public function login(Request $request)
     {
+        dd(redirect()->intended()->getTargetUrl());
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            $request->session()->regenerate();
+
             return $this->ok(
                 'User logged in successfully.',
                 [
@@ -45,7 +53,7 @@ final class UserAuth
         return $this->error('Invalid username or password', 400);
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
         $user = Auth::user();
 
@@ -59,7 +67,12 @@ final class UserAuth
             $refreshTokenRepository->revokeRefreshTokensByAccessTokenId($tokenId);
         }
 
-        return $this->ok('User logged out Successfully.');
+        Auth::logout();
+ 
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect(env('AFTER_LOGOUT_REDIRECT_PATH'));
     }
 
     public function hasPermission(string $scope)
