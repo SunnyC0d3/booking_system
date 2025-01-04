@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\TokenRepository;
 use Laravel\Passport\RefreshTokenRepository;
 use Illuminate\Auth\Events\Registered;
+use \Exception;
 
 final class UserAuth
 {
@@ -28,29 +29,18 @@ final class UserAuth
 
         event(new Registered($user));
 
-        return $this->ok(
-            'User registered successfully.',
-            [
-                'redirectUrl' => route(env('AFTER_REGISTER_REDIRECT_PATH'))
-            ]
-        );
+        return route(env('AFTER_REGISTER_REDIRECT_PATH'));
     }
 
     public function login(Request $request)
     {
-        dd(redirect()->intended()->getTargetUrl());
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $request->session()->regenerate();
 
-            return $this->ok(
-                'User logged in successfully.',
-                [
-                    'redirectUrl' => redirect()->intended()->getTargetUrl()
-                ]
-            );
+            return redirect()->intended()->getTargetUrl();
         }
 
-        return $this->error('Invalid username or password', 400);
+        throw new Exception('Invalid username or password', 400);
     }
 
     public function logout(Request $request)

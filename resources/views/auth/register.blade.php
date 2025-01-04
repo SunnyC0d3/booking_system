@@ -2,7 +2,7 @@
 
 @section('content')
 
-<form id="registerForm">
+<form id="registerForm" method="POST" action="{{ route('auth.register') }}">
     @csrf
     <div clas="form-input">
         <div id="error-global" class="error"></div>
@@ -10,19 +10,25 @@
     <div class="form-input">
         <label for="email">Email</label><br>
         <input type="email" id="email" name="email" placeholder="Enter email" value="{{old('email')}}">
-        <div id="error-email" class="error"></div>
+        @error('email')
+        <div id="error-email" class="error">{{ $message }}</div>
+        @enderror
     </div>
 
     <div class="form-input">
         <label for="name">Username</label><br>
         <input type="text" id="name" name="name" placeholder="Enter Username" value="{{old('name')}}">
-        <div id="error-name" class="error"></div>
+        @error('name')
+        <div id="error-name" class="error">{{ $message }}</div>
+        @enderror
     </div>
 
     <div class="form-input">
         <label for="password">Password</label><br>
-        <input type="password" id="password" name="password" placeholder="Enter password" value="{{old('password')}}">
-        <div id="error-password" class="error"></div>
+        <input type="password" id="password" name="password" placeholder="Enter password">
+        @error('password')
+        <div id="error-password" class="error">{{ $message }}</div>
+        @enderror
     </div>
 
     <div class="form-input">
