@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\TokenRepository;
 use Laravel\Passport\RefreshTokenRepository;
 use Illuminate\Auth\Events\Registered;
-use \Exception;
 
 final class UserAuth
 {
