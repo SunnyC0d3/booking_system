@@ -15,7 +15,7 @@ trait ApiResponses
             'data' => $data,
             'message' => $message,
             'status' => $statusCode
-        ], $statusCode);
+        ]);
     }
 
     protected function error($errors = [], $statusCode = null)
@@ -24,7 +24,7 @@ trait ApiResponses
             return response()->json([
                 'message' => $errors,
                 'status' => $statusCode
-            ], $statusCode);
+            ]);
         }
 
         return response()->json([

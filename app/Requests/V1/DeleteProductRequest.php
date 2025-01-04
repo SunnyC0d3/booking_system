@@ -2,12 +2,12 @@
 
 namespace App\Requests\V1;
 
-use App\Requests\V1\BaseFormRequest;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Handles validation for deleting existing products
  */
-class DeleteProductRequest extends BaseFormRequest
+class DeleteProductRequest extends FormRequest
 {
     public function authorize(): bool
     {

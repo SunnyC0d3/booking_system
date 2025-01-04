@@ -19,8 +19,4 @@ class BaseFormRequest extends FormRequest
      *
      * @throws \Illuminate\Http\Exceptions\HttpResponseException
      */
-    protected function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException($this->error($validator->errors(), 422));
-    }
 }

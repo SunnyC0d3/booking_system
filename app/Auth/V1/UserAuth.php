@@ -37,10 +37,12 @@ final class UserAuth
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $request->session()->regenerate();
 
-            return redirect()->intended()->getTargetUrl();
+            redirect()->intended()->getTargetUrl();
         }
 
-        throw new Exception('Invalid username or password', 400);
+        return back()->withErrors([
+            'global' => 'Username or password is incorrect.'
+        ]);
     }
 
     public function logout(Request $request)
@@ -62,7 +64,7 @@ final class UserAuth
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect(env('AFTER_LOGOUT_REDIRECT_PATH'));
+        redirect(env('AFTER_LOGOUT_REDIRECT_PATH'));
     }
 
     public function hasPermission(string $scope)
