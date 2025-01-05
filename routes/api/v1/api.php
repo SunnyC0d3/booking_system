@@ -6,7 +6,7 @@ use App\Http\Controllers\V1\ProductController;
 // Products
 
 Route::prefix('products')
-    ->middleware(['restrict-external', 'throttle:10,1', 'auth:api', 'scope:read-products'])
+    ->middleware(['throttle:10,1', 'auth:api', 'scope:read-products'])
     ->controller(ProductController::class)
     ->group(function () {
         Route::get('/', 'index')->name('products.index');
@@ -14,7 +14,7 @@ Route::prefix('products')
     });
 
 Route::prefix('products')
-    ->middleware(['restrict-external', 'throttle:10,1', 'auth:api', 'scope:write-products'])
+    ->middleware(['throttle:10,1', 'auth:api', 'scope:write-products'])
     ->controller(ProductController::class)
     ->group(function () {
         Route::post('/', 'store')->name('products.store');
