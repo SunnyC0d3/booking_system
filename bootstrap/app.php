@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\V1\CheckRedirectPath;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -19,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'client' => CheckClientCredentials::class,
             'scopes' => CheckScopes::class,
             'scope' => CheckForAnyScope::class,
+            'checkRedirectPath' => CheckRedirectPath::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

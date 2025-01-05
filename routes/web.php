@@ -8,7 +8,7 @@ use App\Http\Controllers\V1\AuthController;
 
 // Registering, Logging In Routes
 
-Route::middleware(['throttle:3,1', 'guest'])
+Route::middleware(['checkRedirectPath', 'throttle:10,1', 'guest'])
     ->group(function () {
         Route::get('/register', function () {
             return view('auth.register');
@@ -19,14 +19,14 @@ Route::middleware(['throttle:3,1', 'guest'])
         })->name('login');
     });
 
-Route::middleware(['throttle:3,1', 'guest'])
+Route::middleware(['checkRedirectPath', 'throttle:10,1', 'guest'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/register', 'register')->name('auth.register');
         Route::post('/login', 'login')->name('auth.login');
     });
 
-Route::middleware(['throttle:3,1', 'auth', 'verified'])
+Route::middleware(['checkRedirectPath', 'throttle:3,1', 'auth', 'verified'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/logout', 'logout')->name('auth.logout');

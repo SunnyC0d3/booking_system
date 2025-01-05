@@ -15,6 +15,23 @@ final class UserAuth
 {
     use ApiResponses;
 
+    private $userScopes = [
+        'read-products'
+    ];
+
+    private function revokeOldTokens($userId)
+    {
+        $tokenRepository = app(TokenRepository::class);
+        $refreshTokenRepository = app(RefreshTokenRepository::class);
+
+        $tokens = $tokenRepository->forUser($userId);
+
+        foreach ($tokens as $token) {
+            $tokenRepository->revokeAccessToken($token->id);
+            $refreshTokenRepository->revokeRefreshTokensByAccessTokenId($token->id);
+        }
+    }
+
     public function register(Request $request)
     {
         $user = User::create([
@@ -33,10 +50,37 @@ final class UserAuth
 
     public function login(Request $request)
     {
+        $targetUrl = redirect()->intended()->getTargetUrl();
+        $parsedPath = parse_url($targetUrl, PHP_URL_PATH);
+
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $request->session()->regenerate();
 
-            redirect()->intended()->getTargetUrl();
+            if ($parsedPath === '/oauth/authorize') {
+                redirect()->intended()->getTargetUrl();
+            } else {
+                $user = Auth::user();
+
+                $this->revokeOldTokens($user->id);
+
+                $tokenResult = $user->createToken('User Access Token', $this->userScopes);
+                $accessToken = $tokenResult->accessToken;
+                $expiresIn = $tokenResult->token->expires_at->diffInSeconds(now());
+        
+                $accessTokenCookie = cookie(
+                    'access_token', 
+                    $accessToken,    
+                    $expiresIn / 60, 
+                    env('APP_URL_FRONTEND'),             
+                    null,            
+                    true,           
+                    true,          
+                    false,          
+                    'None'           
+                );
+        
+                return redirect(env('APP_URL_FRONTEND'))->withCookie($accessTokenCookie);
+            }
         }
 
         return back()->withErrors([
@@ -59,7 +103,7 @@ final class UserAuth
         }
 
         Auth::logout();
- 
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
