@@ -6,14 +6,14 @@ use App\Http\Controllers\V1\AuthController;
 
 // Registering, Logging In Routes
 
-Route::middleware(['throttle:10,1'])
+Route::middleware(['restrictExternalAccess', 'throttle:10,1'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/register', 'register')->name('auth.register');
         Route::post('/login', 'login')->name('auth.login');
     });
 
-Route::middleware(['throttle:3,1', 'auth:api'])
+Route::middleware(['restrictExternalAccess', 'throttle:3,1', 'auth:api'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/logout', 'logout')->name('auth.logout');
@@ -22,7 +22,7 @@ Route::middleware(['throttle:3,1', 'auth:api'])
 // Products
 
 Route::prefix('products')
-    ->middleware(['throttle:10,1', 'auth:api', 'scope:read-products'])
+    ->middleware(['restrictExternalAccess', 'throttle:10,1', 'auth:api', 'scope:read-products'])
     ->controller(ProductController::class)
     ->group(function () {
         Route::get('/', 'index')->name('products.index');
@@ -30,7 +30,7 @@ Route::prefix('products')
     });
 
 Route::prefix('products')
-    ->middleware(['throttle:10,1', 'auth:api', 'scope:write-products'])
+    ->middleware(['restrictExternalAccess', 'throttle:10,1', 'auth:api', 'scope:write-products'])
     ->controller(ProductController::class)
     ->group(function () {
         Route::post('/', 'store')->name('products.store');
