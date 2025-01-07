@@ -22,7 +22,7 @@ Route::middleware(['throttle:3,1', 'auth:api'])
 // Products
 
 Route::prefix('products')
-    ->middleware(['throttle:10,1', 'auth:api', 'scope:read-products'])
+    ->middleware(['throttle:10,1', 'auth:api', 'scope:read-products', 'roles:user,admin'])
     ->controller(ProductController::class)
     ->group(function () {
         Route::get('/', 'index')->name('products.index');
@@ -30,7 +30,7 @@ Route::prefix('products')
     });
 
 Route::prefix('products')
-    ->middleware(['throttle:10,1', 'auth:api', 'scope:write-products'])
+    ->middleware(['throttle:10,1', 'auth:api', 'scope:write-products', 'roles:admin'])
     ->controller(ProductController::class)
     ->group(function () {
         Route::post('/', 'store')->name('products.store');
