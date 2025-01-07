@@ -6,7 +6,7 @@ use App\Http\Controllers\V1\AuthController;
 
 // Registering, Logging In Routes
 
-Route::middleware(['throttle:3:1', 'hmac'])
+Route::middleware(['throttle:3,1', 'hmac'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/register', 'register')->name('auth.register');

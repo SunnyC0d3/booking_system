@@ -45,7 +45,7 @@ final class UserAuth
         $accessToken = $tokenResult->accessToken;
         $expiresIn = $tokenResult->token->expires_at->diffInSeconds(now());
 
-        $this->ok(
+        return $this->ok(
             'User logged in successfully',
             [
                 'token_type' => 'Bearer',
