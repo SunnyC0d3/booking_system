@@ -8,7 +8,6 @@ use App\Requests\V1\LoginUserRequest;
 use App\Requests\V1\RegisterUserRequest;
 use App\Traits\V1\ApiResponses;
 use \Exception;
-use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -110,10 +109,10 @@ class AuthController extends Controller
      *      "status": 400
      * }
      */
-    public function logout(Request $request)
+    public function logout()
     {
         try {
-            return $this->userAuth->logout($request);
+            return $this->userAuth->logout();
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }

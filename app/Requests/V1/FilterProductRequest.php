@@ -2,12 +2,12 @@
 
 namespace App\Requests\V1;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Requests\V1\BaseFormRequest;
 
 /**
  * Handles validation for filtering products via API queries
  */
-class FilterProductRequest extends FormRequest
+class FilterProductRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {

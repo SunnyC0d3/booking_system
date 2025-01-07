@@ -2,12 +2,12 @@
 
 namespace App\Requests\V1;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Requests\V1\BaseFormRequest;
 
 /**
  * Handles validation for updating existing products
  */
-class UpdateProductRequest extends FormRequest
+class UpdateProductRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {

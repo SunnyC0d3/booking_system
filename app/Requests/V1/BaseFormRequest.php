@@ -19,4 +19,19 @@ class BaseFormRequest extends FormRequest
      *
      * @throws \Illuminate\Http\Exceptions\HttpResponseException
      */
+    protected function failedValidation(Validator $validator)
+    {
+        foreach ($validator->errors()->all() as $error) {
+            $errors[] = $error;
+        }
+
+        throw new HttpResponseException($this->error($errors, 422));
+    }
+
+    public function passedValidation()
+    {
+        if ($this->header('Content-Type') !== 'application/json') {
+            throw new HttpResponseException($this->error('Content-Type must be application/json', 422));
+        }
+    }
 }

@@ -2,6 +2,22 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\ProductController;
+use App\Http\Controllers\V1\AuthController;
+
+// Registering, Logging In Routes
+
+Route::middleware(['throttle:10,1'])
+    ->controller(AuthController::class)
+    ->group(function () {
+        Route::post('/register', 'register')->name('auth.register');
+        Route::post('/login', 'login')->name('auth.login');
+    });
+
+Route::middleware(['throttle:3,1', 'auth:api'])
+    ->controller(AuthController::class)
+    ->group(function () {
+        Route::post('/logout', 'logout')->name('auth.logout');
+    });
 
 // Products
 
