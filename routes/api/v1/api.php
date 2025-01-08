@@ -3,10 +3,13 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\ProductController;
 use App\Http\Controllers\V1\AuthController;
+use App\Http\Controllers\V1\EmailVerificationController;
+
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 // Registering, Logging In Routes
 
-Route::middleware(['throttle:3,1', 'hmac'])
+Route::middleware(['throttle:3,1'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/register', 'register')->name('auth.register');
@@ -36,4 +39,13 @@ Route::prefix('products')
         Route::post('/', 'store')->name('products.store');
         Route::put('/{id}', 'update')->name('products.update');
         Route::delete('/{id}', 'destroy')->name('products.destroy');
+    });
+
+// Email Verification
+
+Route::prefix('email')
+    ->controller(EmailVerificationController::class)
+    ->group(function() {
+        Route::get('/verify/{id}', 'verify')->name('verification.verify');
+        Route::get('/resend', 'resend')->name('verification.resend');
     });

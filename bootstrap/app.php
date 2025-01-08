@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\V1\EnsureEmailIsVerified;
 use App\Http\Middleware\V1\VerifyHmac;
 use App\Http\Middleware\V1\Role;
 use Illuminate\Foundation\Application;
@@ -22,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'scope' => CheckForAnyScope::class,
             'hmac' => VerifyHmac::class,
             'role' => Role::class,
+            'emailVerified' => EnsureEmailIsVerified::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

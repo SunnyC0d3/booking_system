@@ -20,12 +20,14 @@ final class UserAuth
 
     public function register(Request $request)
     {
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => 'user'
         ]);
+
+        $user->sendEmailVerificationNotification();
 
         return $this->ok(
             'User registered successfully',
