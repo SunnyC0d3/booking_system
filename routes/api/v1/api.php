@@ -9,7 +9,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 // Registering, Logging In Routes
 
-Route::middleware(['throttle:3,1'])
+Route::middleware(['throttle:3,1', 'hmac'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/register', 'register')->name('auth.register');
@@ -44,8 +44,15 @@ Route::prefix('products')
 // Email Verification
 
 Route::prefix('email')
+    ->middleware(['throttle:10,1', 'signed'])
     ->controller(EmailVerificationController::class)
     ->group(function() {
-        Route::get('/verify/{id}', 'verify')->name('verification.verify');
+        Route::get('/verify/{id}/{hash}', 'verify')->name('verification.verify');
+    });
+
+Route::prefix('email')
+    ->middleware(['throttle:10,1', 'auth:api'])
+    ->controller(EmailVerificationController::class)
+    ->group(function() {
         Route::get('/resend', 'resend')->name('verification.resend');
     });

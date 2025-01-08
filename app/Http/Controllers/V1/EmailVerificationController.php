@@ -21,7 +21,7 @@ class EmailVerificationController
             $user->markEmailAsVerified();
         }
 
-        return $this->ok('Email verified successfully', []);
+        return redirect(env('APP_URL_FRONTEND_EMAIL_VERIFIED'));
     }
 
     public function resend() {
