@@ -16,7 +16,7 @@ Route::middleware(['throttle:3,1', 'hmac'])
         Route::post('/login', 'login')->name('auth.login');
     });
 
-Route::middleware(['throttle:3,1', 'auth:api'])
+Route::middleware(['throttle:3,1', 'auth:api', 'emailVerified'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/logout', 'logout')->name('auth.logout');
@@ -25,7 +25,7 @@ Route::middleware(['throttle:3,1', 'auth:api'])
 // Products
 
 Route::prefix('products')
-    ->middleware(['throttle:10,1', 'auth:api', 'scope:read-products', 'roles:user,admin'])
+    ->middleware(['throttle:10,1', 'auth:api', 'scope:read-products', 'roles:user,admin', 'emailVerified'])
     ->controller(ProductController::class)
     ->group(function () {
         Route::get('/', 'index')->name('products.index');
@@ -33,7 +33,7 @@ Route::prefix('products')
     });
 
 Route::prefix('products')
-    ->middleware(['throttle:10,1', 'auth:api', 'scope:write-products', 'roles:admin'])
+    ->middleware(['throttle:10,1', 'auth:api', 'scope:write-products', 'roles:admin', 'emailVerified'])
     ->controller(ProductController::class)
     ->group(function () {
         Route::post('/', 'store')->name('products.store');
