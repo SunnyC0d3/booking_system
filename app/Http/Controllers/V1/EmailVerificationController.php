@@ -21,10 +21,20 @@ class EmailVerificationController
             $user->markEmailAsVerified();
         }
 
-        return redirect(env('APP_URL_FRONTEND_EMAIL_VERIFIED'));
+        return redirect(env('APP_URL_FRONTEND') . env('APP_URL_FRONTEND_EMAIL_VERIFIED'));
     }
 
     public function resend() {
+        // $user = Auth::user();
+
+        // if ($user->hasVerifiedEmail()) {
+        //     return $this->error('Email already verified.', 400);
+        // }
+    
+        // $user->sendEmailVerificationNotification();
+    
+        // return $this->ok('Email verification link sent on your email id');
+
         if (auth()->user()->hasVerifiedEmail()) {
             return $this->error('Email already verified.', 400);
         }

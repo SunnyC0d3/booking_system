@@ -7,8 +7,12 @@ use Illuminate\Http\Request;
 use App\Traits\V1\ApiResponses;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Laravel\Passport\TokenRepository;
 use Laravel\Passport\RefreshTokenRepository;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
+use \Exception;
 
 final class UserAuth
 {
@@ -40,7 +44,7 @@ final class UserAuth
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return $this->error('Invalid credentials', 401);
+            throw new Exception('Invalid credentials', 401);
         }
 
         $tokenResult = $user->createToken('User Access Token', $this->userScopes);
@@ -70,6 +74,52 @@ final class UserAuth
             $refreshTokenRepository = app(RefreshTokenRepository::class);
             $refreshTokenRepository->revokeRefreshTokensByAccessTokenId($tokenId);
         }
+
+        return $this->ok(
+            'User logged out successfully',
+            []
+        );
+    }
+
+    public function forgotPassword(Request $request)
+    {
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+
+        if ($status !== Password::ResetLinkSent) {
+            throw new Exception(__($status), 400);
+        }
+
+        return $this->ok(
+            __($status),
+            []
+        );
+    }
+
+    public function passwordReset(Request $request)
+    {
+        $status = Password::reset(
+            $request->only('token', 'email', 'password', 'password_confirmation'),
+            function (User $user, string $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->setRememberToken(Str::random(60));
+
+                $user->save();
+
+                event(new PasswordReset($user));
+            }
+        );
+
+        if ($status !== Password::PasswordReset) {
+            throw new Exception(__($status), 400);
+        }
+
+        return $this->ok(
+            __($status),
+            []
+        );
     }
 
     public function hasPermission(string $scope)

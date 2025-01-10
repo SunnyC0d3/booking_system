@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Auth\V1\UserAuth;
 use App\Requests\V1\LoginUserRequest;
 use App\Requests\V1\RegisterUserRequest;
+use App\Requests\V1\ForgotPasswordRequest;
+use App\Requests\V1\PasswordResetRequest;
 use App\Traits\V1\ApiResponses;
 use \Exception;
 
@@ -113,6 +115,28 @@ class AuthController extends Controller
     {
         try {
             return $this->userAuth->logout();
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
+    }
+
+    public function forgotPassword(ForgotPasswordRequest $request)
+    {
+        $request->validated($request->only(['email']));
+
+        try {
+            return $this->userAuth->forgotPassword($request);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
+    }
+
+    public function passwordReset(PasswordResetRequest $request)
+    {
+        $request->validated($request->only(['token', 'email', 'password', 'password_confirmation']));
+
+        try {
+            return $this->userAuth->passwordReset($request);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }

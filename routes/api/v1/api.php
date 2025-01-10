@@ -4,8 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\ProductController;
 use App\Http\Controllers\V1\AuthController;
 use App\Http\Controllers\V1\EmailVerificationController;
-
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Support\Facades\Redirect;
 
 // Registering, Logging In Routes
 
@@ -46,13 +45,22 @@ Route::prefix('products')
 Route::prefix('email')
     ->middleware(['throttle:10,1', 'signed'])
     ->controller(EmailVerificationController::class)
-    ->group(function() {
+    ->group(function () {
         Route::get('/verify/{id}/{hash}', 'verify')->name('verification.verify');
     });
 
 Route::prefix('email')
     ->middleware(['throttle:10,1', 'auth:api'])
     ->controller(EmailVerificationController::class)
-    ->group(function() {
+    ->group(function () {
         Route::get('/resend', 'resend')->name('verification.resend');
+    });
+
+// Password Reset
+
+Route::middleware(['throttle:10,1', 'hmac'])
+    ->controller(AuthController::class)
+    ->group(function () {
+        Route::post('/forgot-password', 'forgotPassword')->name('password.email');
+        Route::post('/reset-password', 'passwordReset')->name('password.update');
     });
