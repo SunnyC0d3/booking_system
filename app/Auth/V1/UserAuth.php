@@ -12,6 +12,7 @@ use Laravel\Passport\TokenRepository;
 use Laravel\Passport\RefreshTokenRepository;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Contracts\Auth\PasswordBroker;
 use \Exception;
 
 final class UserAuth
@@ -89,7 +90,7 @@ final class UserAuth
             $request->only('email')
         );
 
-        if ($status !== Password::ResetLinkSent) {
+        if ($status !== PasswordBroker::RESET_LINK_SENT) {
             throw new Exception(__($status), 400);
         }
 
@@ -114,7 +115,7 @@ final class UserAuth
             }
         );
 
-        if ($status !== Password::PasswordReset) {
+        if ($status !== PasswordBroker::PASSWORD_RESET) {
             throw new Exception(__($status), 400);
         }
 

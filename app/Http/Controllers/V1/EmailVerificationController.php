@@ -5,6 +5,7 @@ namespace App\Http\Controllers\V1;
 use App\Traits\V1\ApiResponses;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class EmailVerificationController
 {
@@ -25,21 +26,13 @@ class EmailVerificationController
     }
 
     public function resend() {
-        // $user = Auth::user();
+        $user = Auth::user();
 
-        // if ($user->hasVerifiedEmail()) {
-        //     return $this->error('Email already verified.', 400);
-        // }
-    
-        // $user->sendEmailVerificationNotification();
-    
-        // return $this->ok('Email verification link sent on your email id');
-
-        if (auth()->user()->hasVerifiedEmail()) {
+        if ($user->hasVerifiedEmail()) {
             return $this->error('Email already verified.', 400);
         }
     
-        auth()->user()->sendEmailVerificationNotification();
+        $user->sendEmailVerificationNotification();
     
         return $this->ok('Email verification link sent on your email id');
     }
