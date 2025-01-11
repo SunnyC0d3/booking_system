@@ -23,7 +23,8 @@ class LoginUserRequest extends BaseFormRequest
     {
         return [
             'email' => 'required|string|email|max:255|exists:users,email',
-            'password' => 'required|string|min:8'
+            'password' => 'required|string|min:8',
+            'remember' => 'nullable|boolean'
         ];
     }
 }

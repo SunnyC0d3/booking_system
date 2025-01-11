@@ -85,7 +85,7 @@ class AuthController extends Controller
      */
     public function login(LoginUserRequest $request)
     {
-        $request->validated($request->only(['email', 'password']));
+        $request->validated($request->only(['email', 'password', 'remember']));
 
         try {
             return $this->userAuth->login($request);

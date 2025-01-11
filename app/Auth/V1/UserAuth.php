@@ -47,9 +47,11 @@ final class UserAuth
             throw new Exception('Invalid credentials', 401);
         }
 
+        $tokenExpiration = $request->remember ? now()->addWeeks(1) : now();
+
         $tokenResult = $user->createToken('User Access Token', $this->userScopes);
         $accessToken = $tokenResult->accessToken;
-        $expiresIn = $tokenResult->token->expires_at->diffInSeconds(now());
+        $expiresIn = $tokenResult->token->expires_at->diffInSeconds($tokenExpiration);
 
         return $this->ok(
             'User logged in successfully',
