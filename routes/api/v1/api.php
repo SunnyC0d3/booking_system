@@ -15,7 +15,7 @@ Route::middleware(['throttle:3,1', 'hmac'])
         Route::post('/login', 'login')->name('auth.login');
     });
 
-Route::middleware(['throttle:3,1', 'auth:api', 'emailVerified'])
+Route::middleware(['throttle:3,1', 'auth:api'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/logout', 'logout')->name('auth.logout');
