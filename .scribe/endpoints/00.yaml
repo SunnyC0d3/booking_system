@@ -1,109 +1,24 @@
-name: Endpoints
+name: Authentication
 description: ''
 endpoints:
   -
     httpMethods:
       - POST
-    uri: api/login
-    metadata:
-      groupName: Endpoints
-      groupDescription: ''
-      subgroup: Authentication
-      subgroupDescription: ''
-      title: 'Authenticate the user and return their API token.'
-      description: |-
-        This endpoint is used to authenticate a user with their email and password. If the
-        credentials are valid, an API token and refresh token will be issued.
-
-        Works with **client-side** authentication only. Requires **"client:only"** ability.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      email:
-        name: email
-        description: 'Must be a valid email address.'
-        required: true
-        example: thane@example.net
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      password:
-        name: password
-        description: 'Must be at least 8 characters.'
-        required: true
-        example: "'Xv3Ks/lQL"
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      email: thane@example.net
-      password: "'Xv3Ks/lQL"
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-          "data": {
-                "token": "{YOUR_AUTH_KEY}",
-                "refresh_token": "{YOUR_REFRESH_KEY}"
-          },
-               "message": "Authenticated",
-               "status": 200
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 401
-        content: |-
-          {
-               "message": "Invalid credentials",
-               "status": 401
-          }
-        headers: []
-        description: ''
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
     uri: api/register
     metadata:
-      groupName: Endpoints
+      groupName: Authentication
       groupDescription: ''
-      subgroup: Authentication
+      subgroup: ''
       subgroupDescription: ''
       title: 'Register a new user and return their API token.'
       description: |-
         This endpoint is used to register a new user, including their name, email, password,
-        and password confirmation. A new API token and refresh token will be issued.
-
-        Works with **client-side** authentication only. Requires **"client:only"** ability.
-      authenticated: true
+        and password confirmation.
+      authenticated: false
       custom: []
     headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -159,24 +74,108 @@ endpoints:
     fileParameters: []
     responses:
       -
-        status: 201
+        status: 200
         content: |-
           {
-            "data": {
-                "token": "{YOUR_AUTH_KEY}",
-                "refresh_token": "{YOUR_REFRESH_KEY}"
-            },
+            "data": [],
             "message": "User registered successfully",
-            "status": 201
+            "status": 200
           }
         headers: []
         description: ''
         custom: []
     responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/login
+    metadata:
+      groupName: Authentication
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Login a user.'
+      description: 'Authenticates a user with email and password. Returns an API token with expiry timer.'
+      authenticated: false
+      custom: []
+    headers:
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + request body.'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      email:
+        name: email
+        description: "The user's email."
+        required: true
+        example: john.doe@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      password:
+        name: password
+        description: "The user's password."
+        required: true
+        example: password123
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      remember:
+        name: remember
+        description: 'optional Whether to remember the user.'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+    cleanBodyParameters:
+      email: john.doe@example.com
+      password: password123
+      remember: true
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "data": {
+                "token_type": "Bearer,
+                "token": "{YOUR_AUTH_KEY}",
+                "expires_in": "{YOUR_EXPIRY_TIMER}"
+            },
+            "message": "Authenticated",
+            "status": 200
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+            "message": "Invalid credentials",
+            "status": 401
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
     controller: null
     method: null
     route: null
@@ -186,158 +185,32 @@ endpoints:
       - POST
     uri: api/logout
     metadata:
-      groupName: Endpoints
+      groupName: Authentication
       groupDescription: ''
-      subgroup: Authentication
+      subgroup: ''
       subgroupDescription: ''
-      title: 'Logout the user and destroy their API token.'
-      description: |-
-        This endpoint allows the user to log out by deleting their current access token
-        and refresh token from the database.
-
-        Works with **client-side** authentication only. Requires **"client:only"** ability.
+      title: 'Logout a user.'
+      description: 'Logs out the currently authenticated user by invalidating their API token.'
       authenticated: true
       custom: []
     headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Authorization: 'Bearer Token required.'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
     cleanUrlParameters: []
     queryParameters: []
     cleanQueryParameters: []
-    bodyParameters:
-      access_token:
-        name: access_token
-        description: 'Must not be greater than 60 characters.'
-        required: true
-        example: rbnelyweblidowkhhypxpqxgx
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      refresh_token:
-        name: refresh_token
-        description: 'Must not be greater than 60 characters.'
-        required: true
-        example: ccgurkepepibqngb
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      access_token: rbnelyweblidowkhhypxpqxgx
-      refresh_token: ccgurkepepibqngb
+    bodyParameters: []
+    cleanBodyParameters: []
     fileParameters: []
     responses:
       -
         status: 200
-        content: '{}'
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 400
         content: |-
           {
-               "message": "No token exists.",
-               "status": 400
-          }
-        headers: []
-        description: ''
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/token/refresh
-    metadata:
-      groupName: Endpoints
-      groupDescription: ''
-      subgroup: Authentication
-      subgroupDescription: ''
-      title: "Refresh the user's API token and generate a new refresh token."
-      description: |-
-        This endpoint is used to refresh the user's API access token by validating their
-        refresh token and issuing new tokens if valid.
-
-        Works with **client-side** authentication only. Requires **"client:only"** ability.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      access_token:
-        name: access_token
-        description: 'Must not be greater than 60 characters.'
-        required: true
-        example: prrlntihmxfngbebmazc
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      refresh_token:
-        name: refresh_token
-        description: 'Must not be greater than 60 characters.'
-        required: true
-        example: tpwqrcavszgfbkedii
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      access_token: prrlntihmxfngbebmazc
-      refresh_token: tpwqrcavszgfbkedii
-    fileParameters: []
-    responses:
-      -
-        status: 201
-        content: |-
-          {
-          "data": {
-                "token": "{YOUR_NEW_AUTH_KEY}",
-                "refresh_token": "{YOUR_NEW_REFRESH_KEY}"
-          },
-               "message": "New tokens have been generated.",
-               "status": 201
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 400
-        content: |-
-          {
-               "message": "Refresh token expired",
-               "status": 400
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 400
-        content: |-
-          {
-               "message": "Invalid refresh token",
-               "status": 400
+            "message": "User logged out successfully",
+            "status": 200
           }
         headers: []
         description: ''

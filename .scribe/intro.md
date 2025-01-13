@@ -3,7 +3,7 @@
 
 
 <aside>
-    <strong>Base URL</strong>: <code>http://localhost</code>
+    <strong>Base URL</strong>: <code>http://marketplace.com</code>
 </aside>
 
 Welcome to the E-Commerce API Documentation. 

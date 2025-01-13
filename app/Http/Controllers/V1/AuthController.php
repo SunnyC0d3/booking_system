@@ -26,13 +26,12 @@ class AuthController extends Controller
      * Register a new user and return their API token.
      * 
      * This endpoint is used to register a new user, including their name, email, password, 
-     * and password confirmation. A new API token and refresh token will be issued.
+     * and password confirmation.
      * 
-     * Works with **client-side** authentication only. Requires **"client:only"** ability.
+     * @group Authentication
      * 
-     * @authentication
-     * @group Endpoints
-     * @subgroup Authentication
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + request body.
      * 
      * @bodyParam name string required The user's full name. Example: John Doe
      * @bodyParam email string required The user's email address. Example: john.doe@example.com
@@ -40,10 +39,7 @@ class AuthController extends Controller
      * @bodyParam password_confirmation string required Must match the password field. Example: password123
      * 
      * @response 200 {
-     *   "data": {
-     *       "token": "{YOUR_AUTH_KEY}",
-     *       "refresh_token": "{YOUR_REFRESH_KEY}"
-     *   },
+     *   "data": [],
      *   "message": "User registered successfully",
      *   "status": 200
      * }
@@ -60,27 +56,31 @@ class AuthController extends Controller
     }
 
     /**
-     * Authenticate the user and return their API token.
+     * Login a user.
+     *
+     * Authenticates a user with email and password. Returns an API token with expiry timer.
+     *
+     * @group Authentication
      * 
-     * This endpoint is used to authenticate a user with their email and password. If the
-     * credentials are valid, an API token and refresh token will be issued.
-     * 
-     * Works with **client-side** authentication only. Requires **"client:only"** ability.
-     * 
-     * @authentication
-     * @group Endpoints
-     * @subgroup Authentication
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + request body.
+     *
+     * @bodyParam email string required The user's email. Example: john.doe@example.com
+     * @bodyParam password string required The user's password. Example: password123
+     * @bodyParam remember boolean optional Whether to remember the user. Example: true
+     *
      * @response 200 {
-     * "data": {
+     *   "data": {
+     *       "token_type": "Bearer,
      *       "token": "{YOUR_AUTH_KEY}",
-     *       "refresh_token": "{YOUR_REFRESH_KEY}"
-     * },
-     *      "message": "Authenticated",
-     *      "status": 200
+     *       "expires_in": "{YOUR_EXPIRY_TIMER}"
+     *   },
+     *   "message": "Authenticated",
+     *   "status": 200
      * }
      * @response 401 {
-     *      "message": "Invalid credentials",
-     *      "status": 401
+     *   "message": "Invalid credentials",
+     *   "status": 401
      * }
      */
     public function login(LoginUserRequest $request)
@@ -95,20 +95,18 @@ class AuthController extends Controller
     }
 
     /**
-     * Logout the user and destroy their API token.
+     * Logout a user.
+     *
+     * Logs out the currently authenticated user by invalidating their API token.
+     *
+     * @group Authentication
+     * @authenticated
      * 
-     * This endpoint allows the user to log out by deleting their current access token
-     * and refresh token from the database.
-     * 
-     * Works with **client-side** authentication only. Requires **"client:only"** ability.
-     * 
-     * @authentication
-     * @group Endpoints
-     * @subgroup Authentication
-     * @response 200 {}
-     * @response 400 {
-     *      "message": "No token exists.",
-     *      "status": 400
+     * @header Authorization Bearer Token required.
+     *
+     * @response 200 {
+     *   "message": "User logged out successfully",
+     *   "status": 200
      * }
      */
     public function logout()
@@ -120,6 +118,28 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * Request a password reset link.
+     *
+     * Sends a password reset email to the specified email address.
+     *
+     * @group Password Reset
+     * 
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + request body.
+     *
+     * @bodyParam email string required The user's email address. Example: john.doe@example.com
+     *
+     * @response 200 {
+     *   "message": "Password reset link sent.",
+     *   "status": 200
+     * }
+     * 
+     * @response 400 {
+     *   "message": {ERROR_MESSAGE},
+     *   "status": 400
+     * }
+     */
     public function forgotPassword(ForgotPasswordRequest $request)
     {
         $request->validated($request->only(['email']));
@@ -131,6 +151,30 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * Reset a user's password.
+     *
+     * Resets the user's password using the provided reset token.
+     *
+     * @group Password Reset
+     * 
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + request body.
+     *
+     * @bodyParam token string required The password reset token. Example: abc123
+     * @bodyParam email string required The user's email address. Example: john.doe@example.com
+     * @bodyParam password string required The new password. Example: newpassword123
+     * @bodyParam password_confirmation string required Must match the password. Example: newpassword123
+     *
+     * @response 200 {
+     *   "message": "Password has been reset.",
+     *   "status": 200
+     * }
+     * @response 400 {
+     *   "message": {ERROR_MESSAGE},
+     *   "status": 400
+     * }
+     */
     public function passwordReset(PasswordResetRequest $request)
     {
         $request->validated($request->only(['token', 'email', 'password', 'password_confirmation']));

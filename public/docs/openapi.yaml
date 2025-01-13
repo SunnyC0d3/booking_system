@@ -5,14 +5,28 @@ info:
   version: 1.0.0
 servers:
   -
-    url: 'http://localhost'
+    url: 'http://marketplace.com'
 paths:
-  /api/login:
+  /api/register:
     post:
-      summary: 'Authenticate the user and return their API token.'
-      operationId: authenticateTheUserAndReturnTheirAPIToken
-      description: "This endpoint is used to authenticate a user with their email and password. If the\ncredentials are valid, an API token and refresh token will be issued.\n\nWorks with **client-side** authentication only. Requires **\"client:only\"** ability."
-      parameters: []
+      summary: 'Register a new user and return their API token.'
+      operationId: registerANewUserAndReturnTheirAPIToken
+      description: "This endpoint is used to register a new user, including their name, email, password,\nand password confirmation."
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -21,102 +35,21 @@ paths:
               schema:
                 type: object
                 example:
-                  data:
-                    token: '{YOUR_AUTH_KEY}'
-                    refresh_token: '{YOUR_REFRESH_KEY}'
-                  message: Authenticated
+                  data: []
+                  message: 'User registered successfully'
                   status: 200
                 properties:
                   data:
-                    type: object
-                    properties:
-                      token:
-                        type: string
-                        example: '{YOUR_AUTH_KEY}'
-                      refresh_token:
-                        type: string
-                        example: '{YOUR_REFRESH_KEY}'
-                  message:
-                    type: string
-                    example: Authenticated
-                  status:
-                    type: integer
-                    example: 200
-        401:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'Invalid credentials'
-                  status: 401
-                properties:
-                  message:
-                    type: string
-                    example: 'Invalid credentials'
-                  status:
-                    type: integer
-                    example: 401
-      tags:
-        - Endpoints
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  description: 'Must be a valid email address.'
-                  example: thane@example.net
-                  nullable: false
-                password:
-                  type: string
-                  description: 'Must be at least 8 characters.'
-                  example: "'Xv3Ks/lQL"
-                  nullable: false
-              required:
-                - email
-                - password
-  /api/register:
-    post:
-      summary: 'Register a new user and return their API token.'
-      operationId: registerANewUserAndReturnTheirAPIToken
-      description: "This endpoint is used to register a new user, including their name, email, password,\nand password confirmation. A new API token and refresh token will be issued.\n\nWorks with **client-side** authentication only. Requires **\"client:only\"** ability."
-      parameters: []
-      responses:
-        201:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  data:
-                    token: '{YOUR_AUTH_KEY}'
-                    refresh_token: '{YOUR_REFRESH_KEY}'
-                  message: 'User registered successfully'
-                  status: 201
-                properties:
-                  data:
-                    type: object
-                    properties:
-                      token:
-                        type: string
-                        example: '{YOUR_AUTH_KEY}'
-                      refresh_token:
-                        type: string
-                        example: '{YOUR_REFRESH_KEY}'
+                    type: array
+                    example: []
                   message:
                     type: string
                     example: 'User registered successfully'
                   status:
                     type: integer
-                    example: 201
+                    example: 200
       tags:
-        - Endpoints
+        - Authentication
       requestBody:
         required: true
         content:
@@ -149,11 +82,84 @@ paths:
                 - email
                 - password
                 - password_confirmation
+      security: []
+  /api/login:
+    post:
+      summary: 'Login a user.'
+      operationId: loginAUser
+      description: 'Authenticates a user with email and password. Returns an API token with expiry timer.'
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + request body.'
+          schema:
+            type: string
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n  \"data\": {\n      \"token_type\": \"Bearer,\n      \"token\": \"{YOUR_AUTH_KEY}\",\n      \"expires_in\": \"{YOUR_EXPIRY_TIMER}\"\n  },\n  \"message\": \"Authenticated\",\n  \"status\": 200\n}"
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Invalid credentials'
+                  status: 401
+                properties:
+                  message:
+                    type: string
+                    example: 'Invalid credentials'
+                  status:
+                    type: integer
+                    example: 401
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: "The user's email."
+                  example: john.doe@example.com
+                  nullable: false
+                password:
+                  type: string
+                  description: "The user's password."
+                  example: password123
+                  nullable: false
+                remember:
+                  type: boolean
+                  description: 'optional Whether to remember the user.'
+                  example: true
+                  nullable: true
+              required:
+                - email
+                - password
+      security: []
   /api/logout:
     post:
-      summary: 'Logout the user and destroy their API token.'
-      operationId: logoutTheUserAndDestroyTheirAPIToken
-      description: "This endpoint allows the user to log out by deleting their current access token\nand refresh token from the database.\n\nWorks with **client-side** authentication only. Requires **\"client:only\"** ability."
+      summary: 'Logout a user.'
+      operationId: logoutAUser
+      description: 'Logs out the currently authenticated user by invalidating their API token.'
       parameters: []
       responses:
         200:
@@ -162,24 +168,150 @@ paths:
             application/json:
               schema:
                 type: object
-                example: {  }
-                properties: {  }
-        400:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
                 example:
-                  message: 'No token exists.'
-                  status: 400
+                  message: 'User logged out successfully'
+                  status: 200
                 properties:
                   message:
                     type: string
-                    example: 'No token exists.'
+                    example: 'User logged out successfully'
                   status:
                     type: integer
-                    example: 400
+                    example: 200
+      tags:
+        - Authentication
+  /api/products:
+    post:
+      summary: ''
+      operationId: postApiProducts
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: rwvkhf
+                  nullable: false
+                description:
+                  type: string
+                  description: ''
+                  example: 'Aut laudantium voluptatem at.'
+                  nullable: true
+                price:
+                  type: number
+                  description: 'Must be at least 0.'
+                  example: 39
+                  nullable: false
+                category_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the categories table.'
+                  example: null
+                  nullable: true
+                attributes:
+                  type: array
+                  description: ''
+                  example: null
+                  items:
+                    type: object
+                    properties:
+                      key:
+                        type: string
+                        description: 'This field is required when <code>attributes</code> is present. Must not be greater than 255 characters.'
+                        example: mzemnxqfpe
+                        nullable: false
+                      value:
+                        type: string
+                        description: 'This field is required when <code>attributes</code> is present. Must not be greater than 255 characters.'
+                        example: gjko
+                        nullable: false
+                images:
+                  type: array
+                  description: 'Must be a file. Must be an image. Must not be greater than 2048 kilobytes.'
+                  items:
+                    type: string
+                    format: binary
+              required:
+                - name
+                - price
+      security: []
+  '/api/products/{id}':
+    put:
+      summary: ''
+      operationId: putApiProductsId
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: lvt
+                  nullable: false
+                description:
+                  type: string
+                  description: ''
+                  example: 'Rem voluptas culpa omnis asperiores sed.'
+                  nullable: true
+                price:
+                  type: number
+                  description: 'Must be at least 0.'
+                  example: 25
+                  nullable: false
+                category_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the categories table.'
+                  example: null
+                  nullable: true
+                attributes:
+                  type: array
+                  description: ''
+                  example: null
+                  items:
+                    type: object
+                    properties:
+                      key:
+                        type: string
+                        description: 'This field is required when <code>attributes</code> is present. Must not be greater than 255 characters.'
+                        example: drrxpcebpnkxgb
+                        nullable: false
+                      value:
+                        type: string
+                        description: 'This field is required when <code>attributes</code> is present. Must not be greater than 255 characters.'
+                        example: ugsvucgofjht
+                        nullable: false
+                images:
+                  type: array
+                  description: 'Must be a file. Must be an image. Must not be greater than 2048 kilobytes.'
+                  items:
+                    type: string
+                    format: binary
+              required:
+                - name
+                - price
+      security: []
+    delete:
+      summary: ''
+      operationId: deleteApiProductsId
+      description: ''
+      parameters: []
+      responses: {  }
       tags:
         - Endpoints
       requestBody:
@@ -189,88 +321,860 @@ paths:
             schema:
               type: object
               properties:
-                access_token:
-                  type: string
-                  description: 'Must not be greater than 60 characters.'
-                  example: rbnelyweblidowkhhypxpqxgx
-                  nullable: false
-                refresh_token:
-                  type: string
-                  description: 'Must not be greater than 60 characters.'
-                  example: ccgurkepepibqngb
+                id:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the products table.'
+                  example: 5
                   nullable: false
               required:
-                - access_token
-                - refresh_token
-  /api/token/refresh:
-    post:
-      summary: "Refresh the user's API token and generate a new refresh token."
-      operationId: refreshTheUsersAPITokenAndGenerateANewRefreshToken
-      description: "This endpoint is used to refresh the user's API access token by validating their\nrefresh token and issuing new tokens if valid.\n\nWorks with **client-side** authentication only. Requires **\"client:only\"** ability."
+                - id
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the product.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/email/verify/{id}/{hash}':
+    get:
+      summary: ''
+      operationId: getApiEmailVerifyIdHash
+      description: ''
       parameters: []
       responses:
-        201:
+        403:
           description: ''
           content:
             application/json:
               schema:
                 type: object
                 example:
-                  data:
-                    token: '{YOUR_NEW_AUTH_KEY}'
-                    refresh_token: '{YOUR_NEW_REFRESH_KEY}'
-                  message: 'New tokens have been generated.'
-                  status: 201
+                  message: 'Invalid signature.'
+                  exception: Illuminate\Routing\Exceptions\InvalidSignatureException
+                  file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ValidateSignature.php
+                  line: 73
+                  trace:
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                      line: 183
+                      function: handle
+                      class: Illuminate\Routing\Middleware\ValidateSignature
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php
+                      line: 51
+                      function: 'Illuminate\Pipeline\{closure}'
+                      class: Illuminate\Pipeline\Pipeline
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                      line: 183
+                      function: handle
+                      class: Illuminate\Routing\Middleware\SubstituteBindings
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php
+                      line: 161
+                      function: 'Illuminate\Pipeline\{closure}'
+                      class: Illuminate\Pipeline\Pipeline
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php
+                      line: 92
+                      function: handleRequest
+                      class: Illuminate\Routing\Middleware\ThrottleRequests
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                      line: 183
+                      function: handle
+                      class: Illuminate\Routing\Middleware\ThrottleRequests
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                      line: 119
+                      function: 'Illuminate\Pipeline\{closure}'
+                      class: Illuminate\Pipeline\Pipeline
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Router.php
+                      line: 807
+                      function: then
+                      class: Illuminate\Pipeline\Pipeline
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Router.php
+                      line: 786
+                      function: runRouteWithinStack
+                      class: Illuminate\Routing\Router
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Router.php
+                      line: 750
+                      function: runRoute
+                      class: Illuminate\Routing\Router
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Router.php
+                      line: 739
+                      function: dispatchToRoute
+                      class: Illuminate\Routing\Router
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
+                      line: 201
+                      function: dispatch
+                      class: Illuminate\Routing\Router
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                      line: 144
+                      function: 'Illuminate\Foundation\Http\{closure}'
+                      class: Illuminate\Foundation\Http\Kernel
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php
+                      line: 21
+                      function: 'Illuminate\Pipeline\{closure}'
+                      class: Illuminate\Pipeline\Pipeline
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php
+                      line: 31
+                      function: handle
+                      class: Illuminate\Foundation\Http\Middleware\TransformsRequest
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                      line: 183
+                      function: handle
+                      class: Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php
+                      line: 21
+                      function: 'Illuminate\Pipeline\{closure}'
+                      class: Illuminate\Pipeline\Pipeline
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php
+                      line: 51
+                      function: handle
+                      class: Illuminate\Foundation\Http\Middleware\TransformsRequest
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                      line: 183
+                      function: handle
+                      class: Illuminate\Foundation\Http\Middleware\TrimStrings
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php
+                      line: 27
+                      function: 'Illuminate\Pipeline\{closure}'
+                      class: Illuminate\Pipeline\Pipeline
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                      line: 183
+                      function: handle
+                      class: Illuminate\Http\Middleware\ValidatePostSize
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php
+                      line: 110
+                      function: 'Illuminate\Pipeline\{closure}'
+                      class: Illuminate\Pipeline\Pipeline
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                      line: 183
+                      function: handle
+                      class: Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php
+                      line: 62
+                      function: 'Illuminate\Pipeline\{closure}'
+                      class: Illuminate\Pipeline\Pipeline
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                      line: 183
+                      function: handle
+                      class: Illuminate\Http\Middleware\HandleCors
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php
+                      line: 58
+                      function: 'Illuminate\Pipeline\{closure}'
+                      class: Illuminate\Pipeline\Pipeline
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                      line: 183
+                      function: handle
+                      class: Illuminate\Http\Middleware\TrustProxies
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php
+                      line: 22
+                      function: 'Illuminate\Pipeline\{closure}'
+                      class: Illuminate\Pipeline\Pipeline
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                      line: 183
+                      function: handle
+                      class: Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                      line: 119
+                      function: 'Illuminate\Pipeline\{closure}'
+                      class: Illuminate\Pipeline\Pipeline
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
+                      line: 176
+                      function: then
+                      class: Illuminate\Pipeline\Pipeline
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
+                      line: 145
+                      function: sendRequestThroughRouter
+                      class: Illuminate\Foundation\Http\Kernel
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                      line: 310
+                      function: handle
+                      class: Illuminate\Foundation\Http\Kernel
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                      line: 298
+                      function: callLaravelOrLumenRoute
+                      class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                      line: 91
+                      function: makeApiCall
+                      class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                      line: 44
+                      function: makeResponseCall
+                      class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                      line: 35
+                      function: makeResponseCallIfConditionsPass
+                      class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
+                      line: 237
+                      function: __invoke
+                      class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
+                      line: 163
+                      function: iterateThroughStrategies
+                      class: Knuckles\Scribe\Extracting\Extractor
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
+                      line: 95
+                      function: fetchResponses
+                      class: Knuckles\Scribe\Extracting\Extractor
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
+                      line: 125
+                      function: processRoute
+                      class: Knuckles\Scribe\Extracting\Extractor
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
+                      line: 72
+                      function: extractEndpointsInfoFromLaravelApp
+                      class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
+                      line: 50
+                      function: extractEndpointsInfoAndWriteToDisk
+                      class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Commands/GenerateDocumentation.php
+                      line: 53
+                      function: get
+                      class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
+                      line: 36
+                      function: handle
+                      class: Knuckles\Scribe\Commands\GenerateDocumentation
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Container/Util.php
+                      line: 43
+                      function: 'Illuminate\Container\{closure}'
+                      class: Illuminate\Container\BoundMethod
+                      type: '::'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
+                      line: 95
+                      function: unwrapIfClosure
+                      class: Illuminate\Container\Util
+                      type: '::'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
+                      line: 35
+                      function: callBoundMethod
+                      class: Illuminate\Container\BoundMethod
+                      type: '::'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Container/Container.php
+                      line: 690
+                      function: call
+                      class: Illuminate\Container\BoundMethod
+                      type: '::'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Console/Command.php
+                      line: 213
+                      function: call
+                      class: Illuminate\Container\Container
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/symfony/console/Command/Command.php
+                      line: 279
+                      function: execute
+                      class: Illuminate\Console\Command
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Console/Command.php
+                      line: 182
+                      function: run
+                      class: Symfony\Component\Console\Command\Command
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/symfony/console/Application.php
+                      line: 1047
+                      function: run
+                      class: Illuminate\Console\Command
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/symfony/console/Application.php
+                      line: 316
+                      function: doRunCommand
+                      class: Symfony\Component\Console\Application
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/symfony/console/Application.php
+                      line: 167
+                      function: doRun
+                      class: Symfony\Component\Console\Application
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php
+                      line: 197
+                      function: run
+                      class: Symfony\Component\Console\Application
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Application.php
+                      line: 1205
+                      function: handle
+                      class: Illuminate\Foundation\Console\Kernel
+                      type: '->'
+                    -
+                      file: /var/www/marketplace/artisan
+                      line: 13
+                      function: handleCommand
+                      class: Illuminate\Foundation\Application
+                      type: '->'
                 properties:
-                  data:
-                    type: object
-                    properties:
-                      token:
-                        type: string
-                        example: '{YOUR_NEW_AUTH_KEY}'
-                      refresh_token:
-                        type: string
-                        example: '{YOUR_NEW_REFRESH_KEY}'
                   message:
                     type: string
-                    example: 'New tokens have been generated.'
-                  status:
+                    example: 'Invalid signature.'
+                  exception:
+                    type: string
+                    example: Illuminate\Routing\Exceptions\InvalidSignatureException
+                  file:
+                    type: string
+                    example: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ValidateSignature.php
+                  line:
                     type: integer
-                    example: 201
-        400:
+                    example: 73
+                  trace:
+                    type: array
+                    example:
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line: 183
+                        function: handle
+                        class: Illuminate\Routing\Middleware\ValidateSignature
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php
+                        line: 51
+                        function: 'Illuminate\Pipeline\{closure}'
+                        class: Illuminate\Pipeline\Pipeline
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line: 183
+                        function: handle
+                        class: Illuminate\Routing\Middleware\SubstituteBindings
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php
+                        line: 161
+                        function: 'Illuminate\Pipeline\{closure}'
+                        class: Illuminate\Pipeline\Pipeline
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php
+                        line: 92
+                        function: handleRequest
+                        class: Illuminate\Routing\Middleware\ThrottleRequests
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line: 183
+                        function: handle
+                        class: Illuminate\Routing\Middleware\ThrottleRequests
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line: 119
+                        function: 'Illuminate\Pipeline\{closure}'
+                        class: Illuminate\Pipeline\Pipeline
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Router.php
+                        line: 807
+                        function: then
+                        class: Illuminate\Pipeline\Pipeline
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Router.php
+                        line: 786
+                        function: runRouteWithinStack
+                        class: Illuminate\Routing\Router
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Router.php
+                        line: 750
+                        function: runRoute
+                        class: Illuminate\Routing\Router
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Router.php
+                        line: 739
+                        function: dispatchToRoute
+                        class: Illuminate\Routing\Router
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
+                        line: 201
+                        function: dispatch
+                        class: Illuminate\Routing\Router
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line: 144
+                        function: 'Illuminate\Foundation\Http\{closure}'
+                        class: Illuminate\Foundation\Http\Kernel
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php
+                        line: 21
+                        function: 'Illuminate\Pipeline\{closure}'
+                        class: Illuminate\Pipeline\Pipeline
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php
+                        line: 31
+                        function: handle
+                        class: Illuminate\Foundation\Http\Middleware\TransformsRequest
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line: 183
+                        function: handle
+                        class: Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php
+                        line: 21
+                        function: 'Illuminate\Pipeline\{closure}'
+                        class: Illuminate\Pipeline\Pipeline
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php
+                        line: 51
+                        function: handle
+                        class: Illuminate\Foundation\Http\Middleware\TransformsRequest
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line: 183
+                        function: handle
+                        class: Illuminate\Foundation\Http\Middleware\TrimStrings
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php
+                        line: 27
+                        function: 'Illuminate\Pipeline\{closure}'
+                        class: Illuminate\Pipeline\Pipeline
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line: 183
+                        function: handle
+                        class: Illuminate\Http\Middleware\ValidatePostSize
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php
+                        line: 110
+                        function: 'Illuminate\Pipeline\{closure}'
+                        class: Illuminate\Pipeline\Pipeline
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line: 183
+                        function: handle
+                        class: Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php
+                        line: 62
+                        function: 'Illuminate\Pipeline\{closure}'
+                        class: Illuminate\Pipeline\Pipeline
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line: 183
+                        function: handle
+                        class: Illuminate\Http\Middleware\HandleCors
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php
+                        line: 58
+                        function: 'Illuminate\Pipeline\{closure}'
+                        class: Illuminate\Pipeline\Pipeline
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line: 183
+                        function: handle
+                        class: Illuminate\Http\Middleware\TrustProxies
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php
+                        line: 22
+                        function: 'Illuminate\Pipeline\{closure}'
+                        class: Illuminate\Pipeline\Pipeline
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line: 183
+                        function: handle
+                        class: Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line: 119
+                        function: 'Illuminate\Pipeline\{closure}'
+                        class: Illuminate\Pipeline\Pipeline
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
+                        line: 176
+                        function: then
+                        class: Illuminate\Pipeline\Pipeline
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
+                        line: 145
+                        function: sendRequestThroughRouter
+                        class: Illuminate\Foundation\Http\Kernel
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                        line: 310
+                        function: handle
+                        class: Illuminate\Foundation\Http\Kernel
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                        line: 298
+                        function: callLaravelOrLumenRoute
+                        class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                        line: 91
+                        function: makeApiCall
+                        class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                        line: 44
+                        function: makeResponseCall
+                        class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                        line: 35
+                        function: makeResponseCallIfConditionsPass
+                        class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
+                        line: 237
+                        function: __invoke
+                        class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
+                        line: 163
+                        function: iterateThroughStrategies
+                        class: Knuckles\Scribe\Extracting\Extractor
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
+                        line: 95
+                        function: fetchResponses
+                        class: Knuckles\Scribe\Extracting\Extractor
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
+                        line: 125
+                        function: processRoute
+                        class: Knuckles\Scribe\Extracting\Extractor
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
+                        line: 72
+                        function: extractEndpointsInfoFromLaravelApp
+                        class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
+                        line: 50
+                        function: extractEndpointsInfoAndWriteToDisk
+                        class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Commands/GenerateDocumentation.php
+                        line: 53
+                        function: get
+                        class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
+                        line: 36
+                        function: handle
+                        class: Knuckles\Scribe\Commands\GenerateDocumentation
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Container/Util.php
+                        line: 43
+                        function: 'Illuminate\Container\{closure}'
+                        class: Illuminate\Container\BoundMethod
+                        type: '::'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
+                        line: 95
+                        function: unwrapIfClosure
+                        class: Illuminate\Container\Util
+                        type: '::'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
+                        line: 35
+                        function: callBoundMethod
+                        class: Illuminate\Container\BoundMethod
+                        type: '::'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Container/Container.php
+                        line: 690
+                        function: call
+                        class: Illuminate\Container\BoundMethod
+                        type: '::'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Console/Command.php
+                        line: 213
+                        function: call
+                        class: Illuminate\Container\Container
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/symfony/console/Command/Command.php
+                        line: 279
+                        function: execute
+                        class: Illuminate\Console\Command
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Console/Command.php
+                        line: 182
+                        function: run
+                        class: Symfony\Component\Console\Command\Command
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/symfony/console/Application.php
+                        line: 1047
+                        function: run
+                        class: Illuminate\Console\Command
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/symfony/console/Application.php
+                        line: 316
+                        function: doRunCommand
+                        class: Symfony\Component\Console\Application
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/symfony/console/Application.php
+                        line: 167
+                        function: doRun
+                        class: Symfony\Component\Console\Application
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php
+                        line: 197
+                        function: run
+                        class: Symfony\Component\Console\Application
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Application.php
+                        line: 1205
+                        function: handle
+                        class: Illuminate\Foundation\Console\Kernel
+                        type: '->'
+                      -
+                        file: /var/www/marketplace/artisan
+                        line: 13
+                        function: handleCommand
+                        class: Illuminate\Foundation\Application
+                        type: '->'
+                    items:
+                      type: object
+                      properties:
+                        file:
+                          type: string
+                          example: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line:
+                          type: integer
+                          example: 183
+                        function:
+                          type: string
+                          example: handle
+                        class:
+                          type: string
+                          example: Illuminate\Routing\Middleware\ValidateSignature
+                        type:
+                          type: string
+                          example: '->'
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the verify.'
+        example: pariatur
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: hash
+        description: ''
+        example: perspiciatis
+        required: true
+        schema:
+          type: string
+  /api/email/resend:
+    get:
+      summary: ''
+      operationId: getApiEmailResend
+      description: ''
+      parameters: []
+      responses:
+        401:
           description: ''
           content:
             application/json:
               schema:
-                oneOf:
-                  -
-                    description: ''
-                    type: object
-                    example:
-                      message: 'Refresh token expired'
-                      status: 400
-                    properties:
-                      message:
-                        type: string
-                        example: 'Refresh token expired'
-                      status:
-                        type: integer
-                        example: 400
-                  -
-                    description: ''
-                    type: object
-                    example:
-                      message: 'Invalid refresh token'
-                      status: 400
-                    properties:
-                      message:
-                        type: string
-                        example: 'Invalid refresh token'
-                      status:
-                        type: integer
-                        example: 400
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
       tags:
         - Endpoints
+      security: []
+  /api/forgot-password:
+    post:
+      summary: 'Request a password reset link.'
+      operationId: requestAPasswordResetLink
+      description: 'Sends a password reset email to the specified email address.'
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + request body.'
+          schema:
+            type: string
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Password reset link sent.'
+                  status: 200
+                properties:
+                  message:
+                    type: string
+                    example: 'Password reset link sent.'
+                  status:
+                    type: integer
+                    example: 200
+        400:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n  \"message\": {ERROR_MESSAGE},\n  \"status\": 400\n}"
+      tags:
+        - 'Password Reset'
       requestBody:
         required: true
         content:
@@ -278,29 +1182,109 @@ paths:
             schema:
               type: object
               properties:
-                access_token:
+                email:
                   type: string
-                  description: 'Must not be greater than 60 characters.'
-                  example: prrlntihmxfngbebmazc
-                  nullable: false
-                refresh_token:
-                  type: string
-                  description: 'Must not be greater than 60 characters.'
-                  example: tpwqrcavszgfbkedii
+                  description: "The user's email address."
+                  example: john.doe@example.com
                   nullable: false
               required:
-                - access_token
-                - refresh_token
+                - email
+      security: []
+  /api/reset-password:
+    post:
+      summary: "Reset a user's password."
+      operationId: resetAUsersPassword
+      description: "Resets the user's password using the provided reset token."
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + request body.'
+          schema:
+            type: string
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Password has been reset.'
+                  status: 200
+                properties:
+                  message:
+                    type: string
+                    example: 'Password has been reset.'
+                  status:
+                    type: integer
+                    example: 200
+        400:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n  \"message\": {ERROR_MESSAGE},\n  \"status\": 400\n}"
+      tags:
+        - 'Password Reset'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  description: 'The password reset token.'
+                  example: abc123
+                  nullable: false
+                email:
+                  type: string
+                  description: "The user's email address."
+                  example: john.doe@example.com
+                  nullable: false
+                password:
+                  type: string
+                  description: 'The new password.'
+                  example: newpassword123
+                  nullable: false
+                password_confirmation:
+                  type: string
+                  description: 'Must match the password.'
+                  example: newpassword123
+                  nullable: false
+              required:
+                - token
+                - email
+                - password
+                - password_confirmation
+      security: []
 tags:
   -
+    name: Authentication
+    description: ''
+  -
     name: Endpoints
+    description: ''
+  -
+    name: 'Password Reset'
     description: ''
 components:
   securitySchemes:
     default:
       type: http
       scheme: bearer
-      description: 'You can retrieve your token by visiting your dashboard and clicking <b>Generate API token</b>.'
+      description: 'You can retrieve your token by making sure **PASSPORT_PERSONAL_ACCESS_CLIENT_ID** and **PASSPORT_PERSONAL_ACCESS_CLIENT_SECRET** are included and a personal token is issued to create user tokens. Most paths will only need **HMAC** verification, this ensures all paths are secure.'
 security:
   -
     default: []
