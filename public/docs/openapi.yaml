@@ -24,7 +24,7 @@ paths:
           in: header
           name: X-Timestamp
           description: ''
-          example: 'Timestamp + request body.'
+          example: 'Timestamp + Request body.'
           schema:
             type: string
       responses:
@@ -100,7 +100,7 @@ paths:
           in: header
           name: X-Timestamp
           description: ''
-          example: 'Timestamp + request body.'
+          example: 'Timestamp + Request body.'
           schema:
             type: string
       responses:
@@ -180,940 +180,42 @@ paths:
                     example: 200
       tags:
         - Authentication
-  /api/products:
-    post:
-      summary: ''
-      operationId: postApiProducts
-      description: ''
-      parameters: []
-      responses: {  }
-      tags:
-        - Endpoints
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: 'Must not be greater than 255 characters.'
-                  example: rwvkhf
-                  nullable: false
-                description:
-                  type: string
-                  description: ''
-                  example: 'Aut laudantium voluptatem at.'
-                  nullable: true
-                price:
-                  type: number
-                  description: 'Must be at least 0.'
-                  example: 39
-                  nullable: false
-                category_id:
-                  type: string
-                  description: 'The <code>id</code> of an existing record in the categories table.'
-                  example: null
-                  nullable: true
-                attributes:
-                  type: array
-                  description: ''
-                  example: null
-                  items:
-                    type: object
-                    properties:
-                      key:
-                        type: string
-                        description: 'This field is required when <code>attributes</code> is present. Must not be greater than 255 characters.'
-                        example: mzemnxqfpe
-                        nullable: false
-                      value:
-                        type: string
-                        description: 'This field is required when <code>attributes</code> is present. Must not be greater than 255 characters.'
-                        example: gjko
-                        nullable: false
-                images:
-                  type: array
-                  description: 'Must be a file. Must be an image. Must not be greater than 2048 kilobytes.'
-                  items:
-                    type: string
-                    format: binary
-              required:
-                - name
-                - price
-      security: []
-  '/api/products/{id}':
-    put:
-      summary: ''
-      operationId: putApiProductsId
-      description: ''
-      parameters: []
-      responses: {  }
-      tags:
-        - Endpoints
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: 'Must not be greater than 255 characters.'
-                  example: lvt
-                  nullable: false
-                description:
-                  type: string
-                  description: ''
-                  example: 'Rem voluptas culpa omnis asperiores sed.'
-                  nullable: true
-                price:
-                  type: number
-                  description: 'Must be at least 0.'
-                  example: 25
-                  nullable: false
-                category_id:
-                  type: string
-                  description: 'The <code>id</code> of an existing record in the categories table.'
-                  example: null
-                  nullable: true
-                attributes:
-                  type: array
-                  description: ''
-                  example: null
-                  items:
-                    type: object
-                    properties:
-                      key:
-                        type: string
-                        description: 'This field is required when <code>attributes</code> is present. Must not be greater than 255 characters.'
-                        example: drrxpcebpnkxgb
-                        nullable: false
-                      value:
-                        type: string
-                        description: 'This field is required when <code>attributes</code> is present. Must not be greater than 255 characters.'
-                        example: ugsvucgofjht
-                        nullable: false
-                images:
-                  type: array
-                  description: 'Must be a file. Must be an image. Must not be greater than 2048 kilobytes.'
-                  items:
-                    type: string
-                    format: binary
-              required:
-                - name
-                - price
-      security: []
-    delete:
-      summary: ''
-      operationId: deleteApiProductsId
-      description: ''
-      parameters: []
-      responses: {  }
-      tags:
-        - Endpoints
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                id:
-                  type: integer
-                  description: 'The <code>id</code> of an existing record in the products table.'
-                  example: 5
-                  nullable: false
-              required:
-                - id
-      security: []
-    parameters:
-      -
-        in: path
-        name: id
-        description: 'The ID of the product.'
-        example: 1
-        required: true
-        schema:
-          type: integer
   '/api/email/verify/{id}/{hash}':
     get:
-      summary: ''
-      operationId: getApiEmailVerifyIdHash
-      description: ''
-      parameters: []
+      summary: "Verify a user's email address."
+      operationId: verifyAUsersEmailAddress
+      description: 'Once a user registers, a notification is sent out to their specified email address, which requires them to verify.'
+      parameters:
+        -
+          in: query
+          name: id
+          description: "The user's id."
+          example: '1'
+          required: true
+          schema:
+            type: string
+            description: "The user's id."
+            example: '1'
+            nullable: false
+        -
+          in: query
+          name: hash
+          description: 'The hash to verify the email.'
+          example: '1234567890'
+          required: true
+          schema:
+            type: string
+            description: 'The hash to verify the email.'
+            example: '1234567890'
+            nullable: false
       responses:
-        403:
+        200:
           description: ''
           content:
-            application/json:
+            text/plain:
               schema:
-                type: object
-                example:
-                  message: 'Invalid signature.'
-                  exception: Illuminate\Routing\Exceptions\InvalidSignatureException
-                  file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ValidateSignature.php
-                  line: 73
-                  trace:
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                      line: 183
-                      function: handle
-                      class: Illuminate\Routing\Middleware\ValidateSignature
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php
-                      line: 51
-                      function: 'Illuminate\Pipeline\{closure}'
-                      class: Illuminate\Pipeline\Pipeline
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                      line: 183
-                      function: handle
-                      class: Illuminate\Routing\Middleware\SubstituteBindings
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php
-                      line: 161
-                      function: 'Illuminate\Pipeline\{closure}'
-                      class: Illuminate\Pipeline\Pipeline
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php
-                      line: 92
-                      function: handleRequest
-                      class: Illuminate\Routing\Middleware\ThrottleRequests
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                      line: 183
-                      function: handle
-                      class: Illuminate\Routing\Middleware\ThrottleRequests
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                      line: 119
-                      function: 'Illuminate\Pipeline\{closure}'
-                      class: Illuminate\Pipeline\Pipeline
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Router.php
-                      line: 807
-                      function: then
-                      class: Illuminate\Pipeline\Pipeline
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Router.php
-                      line: 786
-                      function: runRouteWithinStack
-                      class: Illuminate\Routing\Router
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Router.php
-                      line: 750
-                      function: runRoute
-                      class: Illuminate\Routing\Router
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Router.php
-                      line: 739
-                      function: dispatchToRoute
-                      class: Illuminate\Routing\Router
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
-                      line: 201
-                      function: dispatch
-                      class: Illuminate\Routing\Router
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                      line: 144
-                      function: 'Illuminate\Foundation\Http\{closure}'
-                      class: Illuminate\Foundation\Http\Kernel
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php
-                      line: 21
-                      function: 'Illuminate\Pipeline\{closure}'
-                      class: Illuminate\Pipeline\Pipeline
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php
-                      line: 31
-                      function: handle
-                      class: Illuminate\Foundation\Http\Middleware\TransformsRequest
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                      line: 183
-                      function: handle
-                      class: Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php
-                      line: 21
-                      function: 'Illuminate\Pipeline\{closure}'
-                      class: Illuminate\Pipeline\Pipeline
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php
-                      line: 51
-                      function: handle
-                      class: Illuminate\Foundation\Http\Middleware\TransformsRequest
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                      line: 183
-                      function: handle
-                      class: Illuminate\Foundation\Http\Middleware\TrimStrings
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php
-                      line: 27
-                      function: 'Illuminate\Pipeline\{closure}'
-                      class: Illuminate\Pipeline\Pipeline
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                      line: 183
-                      function: handle
-                      class: Illuminate\Http\Middleware\ValidatePostSize
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php
-                      line: 110
-                      function: 'Illuminate\Pipeline\{closure}'
-                      class: Illuminate\Pipeline\Pipeline
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                      line: 183
-                      function: handle
-                      class: Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php
-                      line: 62
-                      function: 'Illuminate\Pipeline\{closure}'
-                      class: Illuminate\Pipeline\Pipeline
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                      line: 183
-                      function: handle
-                      class: Illuminate\Http\Middleware\HandleCors
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php
-                      line: 58
-                      function: 'Illuminate\Pipeline\{closure}'
-                      class: Illuminate\Pipeline\Pipeline
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                      line: 183
-                      function: handle
-                      class: Illuminate\Http\Middleware\TrustProxies
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php
-                      line: 22
-                      function: 'Illuminate\Pipeline\{closure}'
-                      class: Illuminate\Pipeline\Pipeline
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                      line: 183
-                      function: handle
-                      class: Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                      line: 119
-                      function: 'Illuminate\Pipeline\{closure}'
-                      class: Illuminate\Pipeline\Pipeline
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
-                      line: 176
-                      function: then
-                      class: Illuminate\Pipeline\Pipeline
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
-                      line: 145
-                      function: sendRequestThroughRouter
-                      class: Illuminate\Foundation\Http\Kernel
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
-                      line: 310
-                      function: handle
-                      class: Illuminate\Foundation\Http\Kernel
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
-                      line: 298
-                      function: callLaravelOrLumenRoute
-                      class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
-                      line: 91
-                      function: makeApiCall
-                      class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
-                      line: 44
-                      function: makeResponseCall
-                      class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
-                      line: 35
-                      function: makeResponseCallIfConditionsPass
-                      class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
-                      line: 237
-                      function: __invoke
-                      class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
-                      line: 163
-                      function: iterateThroughStrategies
-                      class: Knuckles\Scribe\Extracting\Extractor
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
-                      line: 95
-                      function: fetchResponses
-                      class: Knuckles\Scribe\Extracting\Extractor
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
-                      line: 125
-                      function: processRoute
-                      class: Knuckles\Scribe\Extracting\Extractor
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
-                      line: 72
-                      function: extractEndpointsInfoFromLaravelApp
-                      class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
-                      line: 50
-                      function: extractEndpointsInfoAndWriteToDisk
-                      class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Commands/GenerateDocumentation.php
-                      line: 53
-                      function: get
-                      class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
-                      line: 36
-                      function: handle
-                      class: Knuckles\Scribe\Commands\GenerateDocumentation
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Container/Util.php
-                      line: 43
-                      function: 'Illuminate\Container\{closure}'
-                      class: Illuminate\Container\BoundMethod
-                      type: '::'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
-                      line: 95
-                      function: unwrapIfClosure
-                      class: Illuminate\Container\Util
-                      type: '::'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
-                      line: 35
-                      function: callBoundMethod
-                      class: Illuminate\Container\BoundMethod
-                      type: '::'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Container/Container.php
-                      line: 690
-                      function: call
-                      class: Illuminate\Container\BoundMethod
-                      type: '::'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Console/Command.php
-                      line: 213
-                      function: call
-                      class: Illuminate\Container\Container
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/symfony/console/Command/Command.php
-                      line: 279
-                      function: execute
-                      class: Illuminate\Console\Command
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Console/Command.php
-                      line: 182
-                      function: run
-                      class: Symfony\Component\Console\Command\Command
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/symfony/console/Application.php
-                      line: 1047
-                      function: run
-                      class: Illuminate\Console\Command
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/symfony/console/Application.php
-                      line: 316
-                      function: doRunCommand
-                      class: Symfony\Component\Console\Application
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/symfony/console/Application.php
-                      line: 167
-                      function: doRun
-                      class: Symfony\Component\Console\Application
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php
-                      line: 197
-                      function: run
-                      class: Symfony\Component\Console\Application
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Application.php
-                      line: 1205
-                      function: handle
-                      class: Illuminate\Foundation\Console\Kernel
-                      type: '->'
-                    -
-                      file: /var/www/marketplace/artisan
-                      line: 13
-                      function: handleCommand
-                      class: Illuminate\Foundation\Application
-                      type: '->'
-                properties:
-                  message:
-                    type: string
-                    example: 'Invalid signature.'
-                  exception:
-                    type: string
-                    example: Illuminate\Routing\Exceptions\InvalidSignatureException
-                  file:
-                    type: string
-                    example: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ValidateSignature.php
-                  line:
-                    type: integer
-                    example: 73
-                  trace:
-                    type: array
-                    example:
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                        line: 183
-                        function: handle
-                        class: Illuminate\Routing\Middleware\ValidateSignature
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php
-                        line: 51
-                        function: 'Illuminate\Pipeline\{closure}'
-                        class: Illuminate\Pipeline\Pipeline
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                        line: 183
-                        function: handle
-                        class: Illuminate\Routing\Middleware\SubstituteBindings
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php
-                        line: 161
-                        function: 'Illuminate\Pipeline\{closure}'
-                        class: Illuminate\Pipeline\Pipeline
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ThrottleRequests.php
-                        line: 92
-                        function: handleRequest
-                        class: Illuminate\Routing\Middleware\ThrottleRequests
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                        line: 183
-                        function: handle
-                        class: Illuminate\Routing\Middleware\ThrottleRequests
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                        line: 119
-                        function: 'Illuminate\Pipeline\{closure}'
-                        class: Illuminate\Pipeline\Pipeline
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Router.php
-                        line: 807
-                        function: then
-                        class: Illuminate\Pipeline\Pipeline
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Router.php
-                        line: 786
-                        function: runRouteWithinStack
-                        class: Illuminate\Routing\Router
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Router.php
-                        line: 750
-                        function: runRoute
-                        class: Illuminate\Routing\Router
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Routing/Router.php
-                        line: 739
-                        function: dispatchToRoute
-                        class: Illuminate\Routing\Router
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
-                        line: 201
-                        function: dispatch
-                        class: Illuminate\Routing\Router
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                        line: 144
-                        function: 'Illuminate\Foundation\Http\{closure}'
-                        class: Illuminate\Foundation\Http\Kernel
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php
-                        line: 21
-                        function: 'Illuminate\Pipeline\{closure}'
-                        class: Illuminate\Pipeline\Pipeline
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php
-                        line: 31
-                        function: handle
-                        class: Illuminate\Foundation\Http\Middleware\TransformsRequest
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                        line: 183
-                        function: handle
-                        class: Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php
-                        line: 21
-                        function: 'Illuminate\Pipeline\{closure}'
-                        class: Illuminate\Pipeline\Pipeline
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php
-                        line: 51
-                        function: handle
-                        class: Illuminate\Foundation\Http\Middleware\TransformsRequest
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                        line: 183
-                        function: handle
-                        class: Illuminate\Foundation\Http\Middleware\TrimStrings
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php
-                        line: 27
-                        function: 'Illuminate\Pipeline\{closure}'
-                        class: Illuminate\Pipeline\Pipeline
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                        line: 183
-                        function: handle
-                        class: Illuminate\Http\Middleware\ValidatePostSize
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php
-                        line: 110
-                        function: 'Illuminate\Pipeline\{closure}'
-                        class: Illuminate\Pipeline\Pipeline
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                        line: 183
-                        function: handle
-                        class: Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php
-                        line: 62
-                        function: 'Illuminate\Pipeline\{closure}'
-                        class: Illuminate\Pipeline\Pipeline
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                        line: 183
-                        function: handle
-                        class: Illuminate\Http\Middleware\HandleCors
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php
-                        line: 58
-                        function: 'Illuminate\Pipeline\{closure}'
-                        class: Illuminate\Pipeline\Pipeline
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                        line: 183
-                        function: handle
-                        class: Illuminate\Http\Middleware\TrustProxies
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php
-                        line: 22
-                        function: 'Illuminate\Pipeline\{closure}'
-                        class: Illuminate\Pipeline\Pipeline
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                        line: 183
-                        function: handle
-                        class: Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                        line: 119
-                        function: 'Illuminate\Pipeline\{closure}'
-                        class: Illuminate\Pipeline\Pipeline
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
-                        line: 176
-                        function: then
-                        class: Illuminate\Pipeline\Pipeline
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
-                        line: 145
-                        function: sendRequestThroughRouter
-                        class: Illuminate\Foundation\Http\Kernel
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
-                        line: 310
-                        function: handle
-                        class: Illuminate\Foundation\Http\Kernel
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
-                        line: 298
-                        function: callLaravelOrLumenRoute
-                        class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
-                        line: 91
-                        function: makeApiCall
-                        class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
-                        line: 44
-                        function: makeResponseCall
-                        class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
-                        line: 35
-                        function: makeResponseCallIfConditionsPass
-                        class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
-                        line: 237
-                        function: __invoke
-                        class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
-                        line: 163
-                        function: iterateThroughStrategies
-                        class: Knuckles\Scribe\Extracting\Extractor
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
-                        line: 95
-                        function: fetchResponses
-                        class: Knuckles\Scribe\Extracting\Extractor
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
-                        line: 125
-                        function: processRoute
-                        class: Knuckles\Scribe\Extracting\Extractor
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
-                        line: 72
-                        function: extractEndpointsInfoFromLaravelApp
-                        class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
-                        line: 50
-                        function: extractEndpointsInfoAndWriteToDisk
-                        class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/knuckleswtf/scribe/src/Commands/GenerateDocumentation.php
-                        line: 53
-                        function: get
-                        class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
-                        line: 36
-                        function: handle
-                        class: Knuckles\Scribe\Commands\GenerateDocumentation
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Container/Util.php
-                        line: 43
-                        function: 'Illuminate\Container\{closure}'
-                        class: Illuminate\Container\BoundMethod
-                        type: '::'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
-                        line: 95
-                        function: unwrapIfClosure
-                        class: Illuminate\Container\Util
-                        type: '::'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
-                        line: 35
-                        function: callBoundMethod
-                        class: Illuminate\Container\BoundMethod
-                        type: '::'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Container/Container.php
-                        line: 690
-                        function: call
-                        class: Illuminate\Container\BoundMethod
-                        type: '::'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Console/Command.php
-                        line: 213
-                        function: call
-                        class: Illuminate\Container\Container
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/symfony/console/Command/Command.php
-                        line: 279
-                        function: execute
-                        class: Illuminate\Console\Command
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Console/Command.php
-                        line: 182
-                        function: run
-                        class: Symfony\Component\Console\Command\Command
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/symfony/console/Application.php
-                        line: 1047
-                        function: run
-                        class: Illuminate\Console\Command
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/symfony/console/Application.php
-                        line: 316
-                        function: doRunCommand
-                        class: Symfony\Component\Console\Application
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/symfony/console/Application.php
-                        line: 167
-                        function: doRun
-                        class: Symfony\Component\Console\Application
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php
-                        line: 197
-                        function: run
-                        class: Symfony\Component\Console\Application
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Foundation/Application.php
-                        line: 1205
-                        function: handle
-                        class: Illuminate\Foundation\Console\Kernel
-                        type: '->'
-                      -
-                        file: /var/www/marketplace/artisan
-                        line: 13
-                        function: handleCommand
-                        class: Illuminate\Foundation\Application
-                        type: '->'
-                    items:
-                      type: object
-                      properties:
-                        file:
-                          type: string
-                          example: /var/www/marketplace/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                        line:
-                          type: integer
-                          example: 183
-                        function:
-                          type: string
-                          example: handle
-                        class:
-                          type: string
-                          example: Illuminate\Routing\Middleware\ValidateSignature
-                        type:
-                          type: string
-                          example: '->'
-      tags:
-        - Endpoints
-      security: []
-    parameters:
-      -
-        in: path
-        name: id
-        description: 'The ID of the verify.'
-        example: pariatur
-        required: true
-        schema:
-          type: string
-      -
-        in: path
-        name: hash
-        description: ''
-        example: perspiciatis
-        required: true
-        schema:
-          type: string
-  /api/email/resend:
-    get:
-      summary: ''
-      operationId: getApiEmailResend
-      description: ''
-      parameters: []
-      responses:
+                type: string
+                example: 'Redirected to specified URL'
         401:
           description: ''
           content:
@@ -1121,14 +223,76 @@ paths:
               schema:
                 type: object
                 example:
-                  message: Unauthenticated.
+                  message: 'Invalid/Expired url provided.'
+                  status: 401
                 properties:
                   message:
                     type: string
-                    example: Unauthenticated.
+                    example: 'Invalid/Expired url provided.'
+                  status:
+                    type: integer
+                    example: 401
       tags:
-        - Endpoints
+        - 'Email Verification'
       security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the verify.'
+        example: consequuntur
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: hash
+        description: ''
+        example: earum
+        required: true
+        schema:
+          type: string
+  /api/email/resend:
+    get:
+      summary: 'Resend email to user.'
+      operationId: resendEmailToUser
+      description: 'Once a user registers, a notification is sent out to their specified email address, which requires them to verify. Incase they dont recieve one, they can request again.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Email verification link sent on your email id.'
+                  status: 200
+                properties:
+                  message:
+                    type: string
+                    example: 'Email verification link sent on your email id.'
+                  status:
+                    type: integer
+                    example: 200
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Email already verified.'
+                  status: 400
+                properties:
+                  message:
+                    type: string
+                    example: 'Email already verified.'
+                  status:
+                    type: integer
+                    example: 400
+      tags:
+        - 'Email Verification'
   /api/forgot-password:
     post:
       summary: 'Request a password reset link.'
@@ -1146,7 +310,7 @@ paths:
           in: header
           name: X-Timestamp
           description: ''
-          example: 'Timestamp + request body.'
+          example: 'Timestamp + Request body.'
           schema:
             type: string
       responses:
@@ -1207,7 +371,7 @@ paths:
           in: header
           name: X-Timestamp
           description: ''
-          example: 'Timestamp + request body.'
+          example: 'Timestamp + Request body.'
           schema:
             type: string
       responses:
@@ -1274,7 +438,7 @@ tags:
     name: Authentication
     description: ''
   -
-    name: Endpoints
+    name: 'Email Verification'
     description: ''
   -
     name: 'Password Reset'

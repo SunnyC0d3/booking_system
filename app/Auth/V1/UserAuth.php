@@ -35,7 +35,7 @@ final class UserAuth
         $user->sendEmailVerificationNotification();
 
         return $this->ok(
-            'User registered successfully',
+            'User registered successfully.',
             []
         );
     }
@@ -45,7 +45,7 @@ final class UserAuth
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            throw new Exception('Invalid credentials', 401);
+            throw new Exception('Invalid credentials.', 401);
         }
 
         $tokenExpiration = $request->remember ? now()->addWeeks(1) : now();
@@ -55,7 +55,7 @@ final class UserAuth
         $expiresIn = $tokenResult->token->expires_at->diffInSeconds($tokenExpiration);
 
         return $this->ok(
-            'User logged in successfully',
+            'User logged in successfully.',
             [
                 'token_type' => 'Bearer',
                 'access_token' => $accessToken,

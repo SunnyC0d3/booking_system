@@ -31,7 +31,7 @@ class AuthController extends Controller
      * @group Authentication
      * 
      * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + request body.
+     * @header X-Timestamp Timestamp + Request body.
      * 
      * @bodyParam name string required The user's full name. Example: John Doe
      * @bodyParam email string required The user's email address. Example: john.doe@example.com
@@ -63,7 +63,7 @@ class AuthController extends Controller
      * @group Authentication
      * 
      * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + request body.
+     * @header X-Timestamp Timestamp + Request body.
      *
      * @bodyParam email string required The user's email. Example: john.doe@example.com
      * @bodyParam password string required The user's password. Example: password123
@@ -102,7 +102,7 @@ class AuthController extends Controller
      * @group Authentication
      * @authenticated
      * 
-     * @header Authorization Bearer Token required.
+     * @header Authorization Bearer token required.
      *
      * @response 200 {
      *   "message": "User logged out successfully",
@@ -126,7 +126,7 @@ class AuthController extends Controller
      * @group Password Reset
      * 
      * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + request body.
+     * @header X-Timestamp Timestamp + Request body.
      *
      * @bodyParam email string required The user's email address. Example: john.doe@example.com
      *
@@ -159,7 +159,7 @@ class AuthController extends Controller
      * @group Password Reset
      * 
      * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + request body.
+     * @header X-Timestamp Timestamp + Request body.
      *
      * @bodyParam token string required The password reset token. Example: abc123
      * @bodyParam email string required The user's email address. Example: john.doe@example.com
