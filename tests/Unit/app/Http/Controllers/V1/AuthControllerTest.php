@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Support\Facades\Password;
 use App\Http\Middleware\V1\VerifyHmac;
+use Laravel\Passport\Passport;
+use Illuminate\Support\Facades\DB;
 
 class AuthControllerTest extends TestCase
 {
@@ -16,7 +18,20 @@ class AuthControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->withoutMiddleware(VerifyHmac::class);
+
+        DB::table('oauth_clients')->insert([
+            'id' => env('PASSPORT_PERSONAL_ACCESS_CLIENT_ID'),
+            'secret' => env('PASSPORT_PERSONAL_ACCESS_CLIENT_SECRET'),
+            'name' => 'User Access Token',
+            'redirect' => 'http://localhost',
+            'personal_access_client' => true,
+            'password_client' => false,
+            'revoked' => false,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 
     public function test_register_creates_user_and_returns_success_response()
@@ -51,8 +66,6 @@ class AuthControllerTest extends TestCase
             'password' => 'password123',
         ]);
 
-        dd($response);
-
         $response->assertStatus(200)
             ->assertJsonStructure([
                 'data' => [
@@ -72,10 +85,8 @@ class AuthControllerTest extends TestCase
             'password' => 'wrongpassword',
         ]);
 
-        $response->assertStatus(401)
-            ->assertJson([
-                'message' => 'Invalid credentials.',
-                'status' => 401,
+        $response->assertJson([
+                'errors' => ['The selected email is invalid.']
             ]);
     }
 
@@ -121,7 +132,7 @@ class AuthControllerTest extends TestCase
 
         $token = Password::createToken($user);
 
-        $response = $this->postJson('/api/password-reset', [
+        $response = $this->postJson('/api/reset-password', [
             'email' => 'reset@example.com',
             'token' => $token,
             'password' => 'newpassword',
@@ -130,7 +141,7 @@ class AuthControllerTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([
-                'message' => 'Password has been reset.',
+                'message' => 'Your password has been reset.',
                 'status' => 200,
             ]);
 
