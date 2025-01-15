@@ -6,217 +6,134 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Facades\Password;
+use App\Http\Middleware\V1\VerifyHmac;
 
 class AuthControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_registersANewUserAndReturnsApiToken()
+    protected function setUp(): void
     {
-        $client = User::factory()->create();
-        $token = $client->createToken('Test Token', ['client:only'])->plainTextToken;
+        parent::setUp();
+        $this->withoutMiddleware(VerifyHmac::class);
+    }
 
-        $requestData = [
+    public function test_register_creates_user_and_returns_success_response()
+    {
+        $response = $this->postJson('/api/register', [
             'name' => 'John Doe',
-            'email' => 'johndoe@example.com',
+            'email' => 'john.doe@example.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',
-        ];
+        ]);
 
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-        ])->postJson('/api/register', $requestData);
-
-        $response
-            ->assertStatus(200)
-            ->assertJsonStructure([
-                'data' => [
-                    'access_token',
-                    'refresh_token'
-                ],
-                'message',
-                'status'
+        $response->assertStatus(200)
+            ->assertJson([
+                'message' => 'User registered successfully.',
+                'status' => 200,
             ]);
+
+        $this->assertDatabaseHas('users', [
+            'email' => 'john.doe@example.com',
+        ]);
     }
 
-    public function test_logsInAUserAndReturnsNewToken()
+    public function test_login_returns_token_on_valid_credentials()
     {
-        $client = User::factory()->create();
-        $token = $client->createToken('Test Token', ['client:only'])->plainTextToken;
-
         User::factory()->create([
-            'name' => 'John Doe',
-            'email' => 'johndoe@example.com',
+            'email' => 'test@example.com',
             'password' => Hash::make('password123'),
         ]);
 
-        $loginData = [
-            'email' => 'johndoe@example.com',
+        $response = $this->postJson('/api/login', [
+            'email' => 'test@example.com',
             'password' => 'password123',
-        ];
+        ]);
+
+        dd($response);
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    'token_type',
+                    'access_token',
+                    'expires_in',
+                ],
+                'message',
+                'status',
+            ]);
+    }
+
+    public function test_login_fails_on_invalid_credentials()
+    {
+        $response = $this->postJson('/api/login', [
+            'email' => 'nonexistent@example.com',
+            'password' => 'wrongpassword',
+        ]);
+
+        $response->assertStatus(401)
+            ->assertJson([
+                'message' => 'Invalid credentials.',
+                'status' => 401,
+            ]);
+    }
+
+    public function test_logout_invalidates_user_token()
+    {
+        $user = User::factory()->create();
+        $token = $user->createToken('User Access Token')->accessToken;
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->postJson('/api/login', $loginData);
+        ])->postJson('/api/logout');
 
-        $response
-            ->assertStatus(200)
-            ->assertJsonStructure([
-                'data' => [
-                    'access_token',
-                    'refresh_token'
-                ],
-                'message',
-                'status'
+        $response->assertStatus(200)
+            ->assertJson([
+                'message' => 'User logged out successfully',
+                'status' => 200,
             ]);
-
-        $this->assertNotNull($response['data']['access_token']);
     }
 
-    public function test_logsOutAUserWhichShouldDeleteAllTheRelatedTokens()
+    public function test_forgot_password_sends_email()
     {
-        $client = User::factory()->create();
-        $token = $client->createToken('Test Token', ['client:only'])->plainTextToken;
-
         $user = User::factory()->create([
-            'name' => 'John Doe',
-            'email' => 'johndoe@example.com',
-            'password' => Hash::make('password123'),
+            'email' => 'forgot@example.com',
         ]);
 
-        $loginData = [
-            'email' => 'johndoe@example.com',
-            'password' => 'password123',
-        ];
+        $response = $this->postJson('/api/forgot-password', [
+            'email' => 'forgot@example.com',
+        ]);
 
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-        ])->postJson('/api/login', $loginData);
-
-        $response
-            ->assertStatus(200)
-            ->assertJsonStructure([
-                'data' => [
-                    'access_token',
-                    'refresh_token'
-                ],
-                'message',
-                'status'
-            ]);
-
-        $userToken = $response['data']['access_token'];
-        $refreshToken = $response['data']['refresh_token'];
-
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-        ])->postJson('/api/logout', [
-            'access_token' => $userToken,
-            'refresh_token' => $refreshToken
-        ])
-            ->assertStatus(200)
+        $response->assertStatus(200)
             ->assertJson([
-                'message' => 'User logged out Successfully.',
+                'message' => 'We have emailed your password reset link.',
+                'status' => 200,
             ]);
     }
 
-    public function test_logInAsAUserAndSeeIfPassingAccessTokenAndRefreshTokenUpdatesAndReturnsNewTokens()
+    public function test_password_reset_resets_user_password()
     {
-        $client = User::factory()->create();
-        $token = $client->createToken('Test Token', ['client:only'])->plainTextToken;
-
-        User::factory()->create([
-            'name' => 'John Doe',
-            'email' => 'johndoe@example.com',
-            'password' => Hash::make('password123'),
+        $user = User::factory()->create([
+            'email' => 'reset@example.com',
+            'password' => Hash::make('oldpassword'),
         ]);
 
-        $loginData = [
-            'email' => 'johndoe@example.com',
-            'password' => 'password123',
-        ];
+        $token = Password::createToken($user);
 
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-        ])->postJson('/api/login', $loginData);
+        $response = $this->postJson('/api/password-reset', [
+            'email' => 'reset@example.com',
+            'token' => $token,
+            'password' => 'newpassword',
+            'password_confirmation' => 'newpassword',
+        ]);
 
-        $response
-            ->assertStatus(200)
-            ->assertJsonStructure([
-                'data' => [
-                    'access_token',
-                    'refresh_token'
-                ],
-                'message',
-                'status'
-            ]);
-
-        $userToken = $response['data']['access_token'];
-        $refreshToken = $response['data']['refresh_token'];
-
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-            'Content-Type' => 'application/json'
-        ])
-            ->postJson('/api/token/refresh', [
-                'access_token' => $userToken,
-                'refresh_token' => $refreshToken
-            ])
-            ->assertStatus(200)
+        $response->assertStatus(200)
             ->assertJson([
-                'message' => 'New tokens have been generated.',
-            ])
-            ->assertJsonStructure([
-                'data' => [
-                    'access_token',
-                    'refresh_token'
-                ],
-                'message',
-                'status'
-            ]);
-    }
-
-    public function test_logInAsAUserAndSeeIfPassingFakeAccessTokenAndFakeRefreshTokenFails()
-    {
-        $client = User::factory()->create();
-        $token = $client->createToken('Test Token', ['client:only'])->plainTextToken;
-
-        User::factory()->create([
-            'name' => 'John Doe',
-            'email' => 'johndoe@example.com',
-            'password' => Hash::make('password123'),
-        ]);
-
-        $loginData = [
-            'email' => 'johndoe@example.com',
-            'password' => 'password123',
-        ];
-
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-        ])->postJson('/api/login', $loginData);
-
-        $response
-            ->assertStatus(200)
-            ->assertJsonStructure([
-                'data' => [
-                    'access_token',
-                    'refresh_token'
-                ],
-                'message',
-                'status'
+                'message' => 'Password has been reset.',
+                'status' => 200,
             ]);
 
-        $userToken = $response['data']['access_token'];
-        $refreshToken = $response['data']['refresh_token'];
-
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-            'Content-Type' => 'application/json'
-        ])
-            ->postJson('/api/token/refresh', [
-                'access_token' => 'fake_token',
-                'refresh_token' => 'fake_token'
-            ])
-            ->assertStatus(400);
+        $this->assertTrue(Hash::check('newpassword', $user->fresh()->password));
     }
 }

@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\ProductController;
 use App\Http\Controllers\V1\AuthController;
 use App\Http\Controllers\V1\EmailVerificationController;
-use Illuminate\Support\Facades\Redirect;
 
 // Registering, Logging In Routes
 

@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\PersonalAccessToken;
 use Illuminate\Support\Str;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use \Exception;
 
 class UserAuthTest extends TestCase
 {
