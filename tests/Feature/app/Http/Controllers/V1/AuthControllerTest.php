@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Support\Facades\Password;
 use App\Http\Middleware\V1\VerifyHmac;
-use Laravel\Passport\Passport;
 use Illuminate\Support\Facades\DB;
 
 class AuthControllerTest extends TestCase
