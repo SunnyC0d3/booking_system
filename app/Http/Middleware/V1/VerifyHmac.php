@@ -5,7 +5,6 @@ namespace App\Http\Middleware\V1;
 use App\Traits\V1\ApiResponses;
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class VerifyHmac
 {
