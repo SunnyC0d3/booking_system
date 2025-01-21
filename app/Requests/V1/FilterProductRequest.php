@@ -19,7 +19,7 @@ class FilterProductRequest extends BaseFormRequest
         return [
             'filter' => 'array',
             'filter.name' => 'string|max:255',
-            'filter.price' => 'string|regex:/^\d+(\.\d{1,2})?(,\d+(\.\d{1,2})?)?$/',
+            'filter.price' => 'string|regex:/^\d+(\.\d{1,2})?(,\d+(\.\d{1,2})?)*$/',
             'filter.category' => 'string|regex:/^(\d,?)+$/',
             'filter.quantity' => 'integer|min:0',
             'filter.created_at' => 'string|regex:/^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/',
@@ -28,7 +28,7 @@ class FilterProductRequest extends BaseFormRequest
             'filter.include' => 'string|regex:/^(\w+(,\w+)*)?$/',
             'page' => 'integer|min:1',
             'per_page' => 'integer|min:1|max:100',
-            'sort' => 'string|regex:/^(-?(name|price|quantity|created_at|updated_at),?)*$/',
+            'sort' => 'string|regex:/^(-?[a-zA-Z0-9_]+)(,-?[a-zA-Z0-9_]+)*$/',
         ];
     }
 }

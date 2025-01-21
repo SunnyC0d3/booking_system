@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\App\Requests\V1;
+namespace Tests\Feature\App\Requests\V1;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Requests\V1\RegisterUserRequest;
