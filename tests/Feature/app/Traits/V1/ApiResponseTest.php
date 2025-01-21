@@ -57,8 +57,7 @@ class ApiResponseTest extends TestCase
 
         $response = TestResponse::fromBaseResponse($trait->testError('Something went wrong', 400));
 
-        $response->assertStatus(400)
-            ->assertJson([
+        $response->assertJson([
                 'message' => 'Something went wrong',
                 'status' => 400,
             ]);

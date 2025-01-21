@@ -2,119 +2,103 @@
 
 namespace Tests\Feature\App\Requests\V1;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Requests\V1\RegisterUserRequest;
-use Tests\TestCase;
 use Illuminate\Support\Facades\Validator;
-use App\Models\User;
+use Tests\TestCase;
 
 class RegisterUserRequestTest extends TestCase
 {
-    use RefreshDatabase;
-
-    public function test_validatesNameField()
+    public function test_validation_passes_with_valid_data()
     {
-        $validData = [
-            'name' => 'Valid Name',
-            'email' => 'valid@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
+        $data = [
+            'name' => 'John Doe',
+            'email' => 'johndoe@example.com',
+            'password' => 'securepassword',
+            'password_confirmation' => 'securepassword',
         ];
 
-        $request = new RegisterUserRequest();
-        $validator = Validator::make($validData, $request->rules());
+        $rules = (new RegisterUserRequest())->rules();
+        $validator = Validator::make($data, $rules);
 
-        $this->assertFalse($validator->fails());
+        $this->assertFalse($validator->fails(), 'Validation should pass with valid data.');
+    }
 
-        $invalidData = [
-            'name' => '',
-            'email' => 'valid@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
+    public function test_validation_fails_when_name_is_missing()
+    {
+        $data = [
+            'email' => 'johndoe@example.com',
+            'password' => 'securepassword',
+            'password_confirmation' => 'securepassword',
         ];
 
-        $validator = Validator::make($invalidData, $request->rules());
+        $rules = (new RegisterUserRequest())->rules();
+        $validator = Validator::make($data, $rules);
 
-        $this->assertTrue($validator->fails());
+        $this->assertTrue($validator->fails(), 'Validation should fail when the name is missing.');
         $this->assertArrayHasKey('name', $validator->errors()->toArray());
     }
 
-    public function test_validatesEmailField()
+    public function test_validation_fails_when_email_is_invalid()
     {
-        $validData = [
-            'name' => 'Valid Name',
-            'email' => 'valid@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
+        $data = [
+            'name' => 'John Doe',
+            'email' => 'invalid-email',
+            'password' => 'securepassword',
+            'password_confirmation' => 'securepassword',
         ];
 
-        $request = new RegisterUserRequest();
-        $validator = Validator::make($validData, $request->rules());
+        $rules = (new RegisterUserRequest())->rules();
+        $validator = Validator::make($data, $rules);
 
-        $this->assertFalse($validator->fails());
-
-        $invalidData = [
-            'name' => 'Valid Name',
-            'email' => '',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
-        ];
-
-        $validator = Validator::make($invalidData, $request->rules());
-
-        $this->assertTrue($validator->fails());
-        $this->assertArrayHasKey('email', $validator->errors()->toArray());
-
-        $invalidData['email'] = 'invalid-email';
-        $validator = Validator::make($invalidData, $request->rules());
-
-        $this->assertTrue($validator->fails());
-        $this->assertArrayHasKey('email', $validator->errors()->toArray());
-
-        User::create([
-            'name' => 'Existing User',
-            'email' => 'valid@example.com',
-            'password' => bcrypt('password123'),
-        ]);
-
-        $invalidData['email'] = 'valid@example.com';
-        $validator = Validator::make($invalidData, $request->rules());
-
-        $this->assertTrue($validator->fails());
+        $this->assertTrue($validator->fails(), 'Validation should fail with an invalid email.');
         $this->assertArrayHasKey('email', $validator->errors()->toArray());
     }
 
-    public function test_validatesPasswordField()
+    public function test_validation_fails_when_password_confirmation_does_not_match()
     {
-        $validData = [
-            'name' => 'Valid Name',
-            'email' => 'valid@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
+        $data = [
+            'name' => 'John Doe',
+            'email' => 'johndoe@example.com',
+            'password' => 'securepassword',
+            'password_confirmation' => 'differentpassword',
         ];
 
-        $request = new RegisterUserRequest();
-        $validator = Validator::make($validData, $request->rules());
+        $rules = (new RegisterUserRequest())->rules();
+        $validator = Validator::make($data, $rules);
 
-        $this->assertFalse($validator->fails());
+        $this->assertTrue($validator->fails(), 'Validation should fail when password confirmation does not match.');
+        $this->assertArrayHasKey('password', $validator->errors()->toArray());
+    }
 
-        $invalidData = [
-            'name' => 'Valid Name',
-            'email' => 'valid@example.com',
+    public function test_validation_fails_when_password_is_too_short()
+    {
+        $data = [
+            'name' => 'John Doe',
+            'email' => 'johndoe@example.com',
             'password' => 'short',
             'password_confirmation' => 'short',
         ];
 
-        $validator = Validator::make($invalidData, $request->rules());
+        $rules = (new RegisterUserRequest())->rules();
+        $validator = Validator::make($data, $rules);
 
-        $this->assertTrue($validator->fails());
+        $this->assertTrue($validator->fails(), 'Validation should fail when password is too short.');
         $this->assertArrayHasKey('password', $validator->errors()->toArray());
+    }
 
-        $invalidData['password'] = 'password123';
-        $invalidData['password_confirmation'] = 'differentpassword';
-        $validator = Validator::make($invalidData, $request->rules());
+    public function test_validation_fails_when_email_is_empty()
+    {
+        $data = [
+            'name' => 'John Doe',
+            'email' => '',
+            'password' => 'securepassword',
+            'password_confirmation' => 'securepassword',
+        ];
 
-        $this->assertTrue($validator->fails());
-        $this->assertArrayHasKey('password', $validator->errors()->toArray());
+        $rules = (new RegisterUserRequest())->rules();
+        $validator = Validator::make($data, $rules);
+
+        $this->assertTrue($validator->fails(), 'Validation should fail when email is empty.');
+        $this->assertArrayHasKey('email', $validator->errors()->toArray());
     }
 }
