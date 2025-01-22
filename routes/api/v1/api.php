@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\V1\ProductController;
-use App\Http\Controllers\V1\AuthController;
-use App\Http\Controllers\V1\EmailVerificationController;
+use App\Http\Controllers\V1\Public\ProductController;
+use App\Http\Controllers\V1\Auth\AuthController;
+use App\Http\Controllers\V1\Auth\EmailVerificationController;
 
 // Registering, Logging In Routes
 

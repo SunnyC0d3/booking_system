@@ -2,45 +2,41 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Filters\V1\QueryFilter;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Product extends Model
+class Product extends Model implements HasMedia
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use InteractsWithMedia;
+    use SoftDeletes;
 
     protected $fillable = [
+        'vendor_id',
         'name',
-        'slug',
         'description',
         'price',
-        'discount_price',
         'quantity',
-        'sku',
-        'is_active',
-        'is_featured'
+        'status',
     ];
 
-    public function categories()
-    {
-        return $this->morphToMany(Category::class, 'categorizable');
-    }
+    // public function vendor(): BelongsTo
+    // {
+    //     return $this->belongsTo(Vendor::class);
+    // }
 
-    public function images()
-    {
-        return $this->morphMany(ProductImage::class, 'imageable');
-    }
+    // public function reviews(): HasMany
+    // {
+    //     return $this->hasMany(Review::class);
+    // }
 
-    public function attributes()
+    public function productVariants(): HasMany
     {
-        return $this->morphMany(Attribute::class, 'attributable');
-    }
-
-    public function scopeFilter(Builder $builder, QueryFilter $filters)
-    {
-        return $filters->apply($builder);
+        return $this->hasMany(ProductVariant::class);
     }
 }

@@ -2,34 +2,22 @@
 
 namespace Database\Seeders;
 
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Category;
-use App\Models\Product;
-use App\Models\ProductImage;
-use App\Models\Attribute;
 
 class DatabaseSeeder extends Seeder
 {
-    public function run()
+    /**
+     * Seed the application's database.
+     */
+    public function run(): void
     {
-        $categories = Category::factory(5)->create();
-
-        $categories->each(function (Category $category) {
-            $products = Product::factory(10)->create();
-
-            $products->each(function (Product $product) use ($category) {
-                $product->categories()->attach($category);
-
-                ProductImage::factory(3)->create([
-                    'imageable_id' => $product->id,
-                    'imageable_type' => Product::class,
-                ]);
-
-                Attribute::factory(3)->create([
-                    'attributable_id' => $product->id,
-                    'attributable_type' => Product::class,
-                ]);
-            });
-        });
+        $this->call([
+            ProductStatusSeeder::class,
+            ProductCategorySeeder::class,
+            ProductAttributeSeeder::class,
+            ProductSeeder::class,
+            ProductReviewSeeder::class,
+        ]);
     }
 }

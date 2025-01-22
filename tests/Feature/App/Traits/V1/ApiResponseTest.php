@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\App\Traits\V1;
+namespace Tests\Feature\App\Traits\V1;
 
 use Tests\TestCase;
 use Illuminate\Testing\TestResponse;
