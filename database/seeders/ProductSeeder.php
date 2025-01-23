@@ -11,6 +11,7 @@ use Illuminate\Database\Seeder;
 use App\Models\ProductCategory;
 use App\Models\ProductAttribute;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class ProductSeeder extends Seeder
 {
@@ -154,7 +155,7 @@ class ProductSeeder extends Seeder
 
         // Bulk insert variants, and product-tag relationships
         ProductVariant::insert($variants);
-        \DB::table('product_tag')->insert($productTags);
+        DB::table('product_tag')->insert($productTags);
     }
 
     private function generateVariantValue(string $attributeName): string

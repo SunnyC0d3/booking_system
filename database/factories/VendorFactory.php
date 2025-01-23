@@ -2,36 +2,37 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use App\Models\Vendor;
-use App\Models\Product;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ProductFactory extends Factory
+class VendorFactory extends Factory
 {
-    protected $model = Product::class;
+    protected $model = Vendor::class;
 
     public function definition(): array
     {
         return [
             'name'        => fake()->name(),
             'description' => fake()->text(),
-            'price'       => fake()->randomFloat(),
-            'quantity' => fake()->randomNumber(3),
-            'status'      => fake()->word(),
+            'created_at'  => Carbon::now(),
+            'updated_at'  => Carbon::now(),
 
-            'vendor_id' => Vendor::factory(),
+            'user_id' => User::factory(),
         ];
     }
+
 
     public function configure(): static
     {
         $images = collect(Storage::files('demo-images'));
 
-        return $this->afterCreating(function (Product $product) use ($images) {
-            $product->addMediaFromDisk($images->random())
+        return $this->afterCreating(function (Vendor $vendor) use ($images) {
+            $vendor->addMediaFromDisk($images->random())
                 ->preservingOriginal()
-                ->toMediaCollection('featured_image');
+                ->toMediaCollection('logo');
         });
     }
 }
