@@ -22,7 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'scopes' => CheckScopes::class,
             'scope' => CheckForAnyScope::class,
             'hmac' => VerifyHmac::class,
-            'role' => Role::class,
+            'roles' => Role::class,
             'emailVerified' => EnsureEmailIsVerified::class,
         ]);
     })

@@ -124,24 +124,4 @@ final class UserAuth
             []
         );
     }
-
-    public function hasPermission(string $scope)
-    {
-        $user = Auth::user();
-
-        if ($user) {
-            return $user->tokenCan($scope);
-        }
-
-        return false;
-    }
-
-    public function checkRole(array $roles)
-    {
-        $user = Auth::user();
-
-        if ($user) {
-            return in_array($user->role, $roles) ?? false;
-        }
-    }
 }

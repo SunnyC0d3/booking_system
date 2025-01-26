@@ -1,13 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\V1\Public\ProductController;
+use App\Http\Controllers\V1\Admin\ProductController;
 use App\Http\Controllers\V1\Auth\AuthController;
 use App\Http\Controllers\V1\Auth\EmailVerificationController;
 
 // Registering, Logging In Routes
 
-Route::middleware(['throttle:3,1', 'hmac'])
+// Route::middleware(['throttle:3,1', 'hmac'])
+Route::middleware(['throttle:3,1'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/register', 'register')->name('auth.register');
@@ -20,18 +21,18 @@ Route::middleware(['throttle:3,1', 'auth:api'])
         Route::post('/logout', 'logout')->name('auth.logout');
     });
 
-// Products
+// Admin/Products
 
-Route::prefix('products')
-    ->middleware(['throttle:10,1', 'auth:api', 'scope:read-products', 'roles:user,admin', 'emailVerified'])
+Route::prefix('admin/products')
+    ->middleware(['throttle:10,1', 'auth:api', 'scope:read-products', 'roles:super admin,admin', 'emailVerified'])
     ->controller(ProductController::class)
     ->group(function () {
         Route::get('/', 'index')->name('products.index');
         Route::get('/{id}', 'show')->name('products.show');
     });
 
-Route::prefix('products')
-    ->middleware(['throttle:10,1', 'auth:api', 'scope:write-products', 'roles:admin', 'emailVerified'])
+Route::prefix('admin/products')
+    ->middleware(['throttle:10,1', 'auth:api', 'scope:write-products', 'roles:super admin,admin', 'emailVerified'])
     ->controller(ProductController::class)
     ->group(function () {
         Route::post('/', 'store')->name('products.store');

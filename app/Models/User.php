@@ -63,9 +63,34 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function hasRole(string|array $roles): bool
     {
+        if (is_string($roles)) {
+            $roles = strtolower($roles);
+        } else {
+            $roles = array_map('strtolower', $roles);
+        }
+
         $rolesIds = $this->role->whereIn('name', $roles)->pluck('id')->toArray();
 
         return in_array($this->role_id, $rolesIds);
+    }
+
+    public function hasPermission(string|array $permissions): bool
+    {
+        if (is_string($permissions)) {
+            $permissions = strtolower($permissions);
+        } else {
+            $permissions = array_map('strtolower', $permissions);
+        }
+
+        $userPermissions = $this->role->permissions->pluck('name')->toArray();
+
+        foreach ((array)$permissions as $permission) {
+            if (in_array($permission, $userPermissions)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function setNameAttribute($value)

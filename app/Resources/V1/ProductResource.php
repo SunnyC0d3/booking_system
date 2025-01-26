@@ -15,9 +15,15 @@ class ProductResource extends JsonResource
             'price' => $this->price,
             'quantity' => $this->quantity,
             'description' => $this->description,
-            'categories' => $this->whenLoaded('categories'),
-            'images' => $this->whenLoaded('images'),
-            'attributes' => $this->whenLoaded('attributes'),
+            'categories' => $this->whenLoaded('category'),
+            'images' => $this->getMedia('featured_image')->map(function ($media) {
+                return [
+                    'url' => $media->getUrl(),
+                    'name' => $media->name,
+                    'type' => $media->mime_type,
+                ];
+            }),
+            'attributes' => $this->whenLoaded('productVariants'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

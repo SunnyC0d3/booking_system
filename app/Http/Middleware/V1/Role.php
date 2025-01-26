@@ -11,7 +11,7 @@ class Role
 
     public function handle($request, Closure $next, ...$roles)
     {
-        if (!$request->user() || !in_array($request->user()->role, $roles)) {
+        if (!$request->user() || !$request->user()->hasRole($roles)) {
             return $this->error('Unauthorized action', 403);
         }
 
