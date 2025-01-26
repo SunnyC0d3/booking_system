@@ -28,7 +28,7 @@ Route::prefix('admin/products')
     ->controller(ProductController::class)
     ->group(function () {
         Route::get('/', 'index')->name('products.index');
-        Route::get('/{id}', 'show')->name('products.show');
+        Route::get('/{product}', 'show')->name('products.show');
     });
 
 Route::prefix('admin/products')
@@ -36,8 +36,8 @@ Route::prefix('admin/products')
     ->controller(ProductController::class)
     ->group(function () {
         Route::post('/', 'store')->name('products.store');
-        Route::put('/{id}', 'update')->name('products.update');
-        Route::delete('/{id}', 'destroy')->name('products.destroy');
+        Route::put('/{product}', 'update')->name('products.update');
+        Route::delete('/{product}', 'destroy')->name('products.destroy');
     });
 
 // Email Verification

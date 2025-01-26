@@ -41,8 +41,8 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         try {
-            $product->load(['vendor', 'productVariants', 'media']);
-            return $this->ok(ProductResource::collection($product));
+            $product->load(['vendor', 'productVariants', 'category', 'media']);
+            return $this->ok(new ProductResource($product));
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }

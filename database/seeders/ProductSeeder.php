@@ -59,7 +59,7 @@ class ProductSeeder extends Seeder
         }
         $uniqueTags = array_unique($allPossibleTags);
 
-        $tagRecords = array_map(fn ($tag) => [
+        $tagRecords = array_map(fn($tag) => [
             'name'       => $tag,
             'created_at' => now(),
             'updated_at' => now(),
@@ -179,5 +179,11 @@ class ProductSeeder extends Seeder
         $product->addMediaFromDisk($images->random())
             ->preservingOriginal()
             ->toMediaCollection('featured_image');
+
+        $images->shuffle()->take(3)->each(function ($image) use ($product) {
+            $product->addMediaFromDisk($image)
+                ->preservingOriginal()
+                ->toMediaCollection('gallery');
+        });
     }
 }
