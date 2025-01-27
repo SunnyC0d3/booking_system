@@ -3,25 +3,26 @@
 namespace App\Http\Controllers\V1\Admin;
 
 use App\Models\Product;
+use App\Models\Vendor;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Filters\V1\ProductFilter;
 use App\Resources\V1\ProductResource;
 use \Exception;
 use App\Traits\V1\ApiResponses;
+use App\Requests\V1\FilterProductRequest;
 use App\Requests\V1\StoreProductRequest;
 use App\Requests\V1\UpdateProductRequest;
 use App\Requests\V1\DeleteProductRequest;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
     use ApiResponses;
 
-    public function index(Request $request, ProductFilter $filter)
+    public function index(FilterProductRequest $request, ProductFilter $filter)
     {
-        $user = Auth::user();
+        $user = $request->user();
 
         try {
             if ($user->hasPermission('view_products')) {
@@ -38,11 +39,17 @@ class ProductController extends Controller
         }
     }
 
-    public function show(Product $product)
+    public function show(Request $request, Product $product)
     {
+        $user = $request->user();
+
         try {
-            $product->load(['vendor', 'productVariants', 'category', 'media']);
-            return $this->ok(new ProductResource($product));
+            if ($user->hasPermission('view_products')) {
+                $product->load(['vendor', 'productVariants', 'category', 'media']);
+                return $this->ok(new ProductResource($product));
+            }
+
+            return $this->error('You do not have the required permissions.', 403);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
@@ -50,55 +57,89 @@ class ProductController extends Controller
 
     public function store(StoreProductRequest $request)
     {
+        $user = $request->user();
+
         try {
-            $data = $request->validated();
+            if ($user->hasPermission('create_products')) {
+                $data = $request->validated();
 
-            DB::transaction(function () use ($data, &$product) {
-                $product = Product::create($data);
+                $vendor = Vendor::where('user_id', $user->id)->first();
 
-                if (isset($data['product_variants'])) {
-                    foreach ($data['product_variants'] as $variant) {
-                        $product->productVariants()->create($variant);
-                    }
+                if (!$vendor) {
+                    return $this->error('Vendor not found.', 404);
                 }
 
-                if (isset($data['media'])) {
-                    foreach ($data['media'] as $media) {
-                        $product->addMedia($media->store('product_media', 'public'))->toMediaCollection();
-                    }
-                }
-            });
+                $product = DB::transaction(function () use ($data, $vendor) {
+                    $product = Product::create([
+                        'name' => $data['name'],
+                        'description' => $data['description'] ?? null,
+                        'price' => $data['price'],
+                        'quantity' => $data['quantity'],
+                        'product_category_id' => $data['product_category_id'],
+                        'vendor_id' => $vendor->id,
+                        'product_status_id' => 1,
+                    ]);
 
-            return $this->ok(ProductResource::collection($product));
-        } catch (Exception $e) {
+                    if (!empty($data['product_variants'])) {
+                        foreach ($data['product_variants'] as $variant) {
+                            $product->productVariants()->create($variant);
+                        }
+                    }
+
+                    if (!empty($data['media'])) {
+                        if($data['media']['featured_image']) {
+                            $product->addMedia($data['media']['featured_image']->store('product_media', 'public'))->toMediaCollection('featured_image');
+                        }
+
+                        if($data['media']['gallery']) {
+                            foreach ($data['media']['gallery'] as $media) {
+                                $product->addMedia($media->store('product_media', 'public'))->toMediaCollection('gallery');
+                            }
+                        }
+                    }
+
+                    return $product;
+                });
+
+                return $this->ok('Product created successfully!', new ProductResource($product));
+            }
+
+            return $this->error('You do not have the required permissions.', 403);
+        } catch (\Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
     }
 
     public function update(UpdateProductRequest $request, Product $product)
     {
+        $user = $request->user();
+
         try {
-            $data = $request->validated();
+            if ($user->hasPermission('edit_products')) {
+                $data = $request->validated();
 
-            DB::transaction(function () use ($data, $product) {
-                $product->update($data);
+                DB::transaction(function () use ($data, $product) {
+                    $product->update($data);
 
-                if (isset($data['product_variants'])) {
-                    $product->productVariants()->delete();
-                    foreach ($data['product_variants'] as $variant) {
-                        $product->productVariants()->create($variant);
+                    if (isset($data['product_variants'])) {
+                        $product->productVariants()->delete();
+                        foreach ($data['product_variants'] as $variant) {
+                            $product->productVariants()->create($variant);
+                        }
                     }
-                }
 
-                if (isset($data['media'])) {
-                    $product->clearMediaCollection();
-                    foreach ($data['media'] as $media) {
-                        $product->addMedia($media->store('product_media', 'public'))->toMediaCollection();
+                    if (isset($data['media'])) {
+                        $product->clearMediaCollection();
+                        foreach ($data['media'] as $media) {
+                            $product->addMedia($media->store('product_media', 'public'))->toMediaCollection();
+                        }
                     }
-                }
-            });
+                });
 
-            return $this->ok(ProductResource::collection($product));
+                return $this->ok(ProductResource::collection($product));
+            }
+
+            return $this->error('You do not have the required permissions.', 403);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
@@ -106,12 +147,18 @@ class ProductController extends Controller
 
     public function destroy(DeleteProductRequest $request)
     {
-        try {
-            $productId = $request->validated()['id'];
-            $product = Product::findOrFail($productId);
-            $product->delete();
+        $user = $request->user();
 
-            return $this->ok('Product deleted successfully.');
+        try {
+            if ($user->hasPermission('delete_products')) {
+                $productId = $request->validated()['id'];
+                $product = Product::findOrFail($productId);
+                $product->delete();
+
+                return $this->ok('Product deleted successfully.');
+            }
+
+            return $this->error('You do not have the required permissions.', 403);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }

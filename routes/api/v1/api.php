@@ -24,7 +24,7 @@ Route::middleware(['throttle:3,1', 'auth:api'])
 // Admin/Products
 
 Route::prefix('admin/products')
-    ->middleware(['throttle:10,1', 'auth:api', 'scope:read-products', 'roles:super admin,admin', 'emailVerified'])
+    ->middleware(['throttle:10,1', 'auth:api', 'scope:read-products', 'roles:super admin', 'emailVerified'])
     ->controller(ProductController::class)
     ->group(function () {
         Route::get('/', 'index')->name('products.index');
@@ -32,7 +32,8 @@ Route::prefix('admin/products')
     });
 
 Route::prefix('admin/products')
-    ->middleware(['throttle:10,1', 'auth:api', 'scope:write-products', 'roles:super admin,admin', 'emailVerified'])
+    //->middleware(['throttle:10,1', 'auth:api', 'scope:write-products', 'roles:super admin', 'emailVerified'])
+    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin', 'emailVerified'])
     ->controller(ProductController::class)
     ->group(function () {
         Route::post('/', 'store')->name('products.store');

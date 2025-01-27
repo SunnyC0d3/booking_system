@@ -14,6 +14,12 @@ class ProductFilter extends QueryFilter
         'updated_at',
     ];
 
+    public function name($value)
+    {
+        $likeStr = str_replace('*', '%', $value);
+        return $this->builder->where('name', 'like', $likeStr);
+    }
+
     public function createdAt($value)
     {
         $dates = explode(',', $value);
@@ -54,8 +60,8 @@ class ProductFilter extends QueryFilter
 
     public function category($value)
     {
-        return $this->builder->whereHas('categories', function (Builder $query) use ($value) {
-            $query->whereIn('categories.id', explode(',', $value));
+        return $this->builder->whereHas('category', function (Builder $query) use ($value) {
+            $query->whereIn('id', explode(',', $value));
         });
     }
 

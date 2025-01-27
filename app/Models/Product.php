@@ -20,11 +20,12 @@ class Product extends Model implements HasMedia
 
     protected $fillable = [
         'vendor_id',
+        'product_category_id',
         'name',
         'description',
         'price',
         'quantity',
-        'status',
+        'product_status_id',
     ];
 
     public function category(): BelongsTo

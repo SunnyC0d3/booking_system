@@ -20,12 +20,14 @@ class StoreProductRequest extends BaseFormRequest
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
-            'category_id' => 'nullable|exists:categories,id',
-            'attributes' => 'array',
-            'attributes.*.key' => 'required_with:attributes|string|max:255',
-            'attributes.*.value' => 'required_with:attributes|string|max:255',
-            'images' => 'array',
-            'images.*' => 'file|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'product_category_id' => 'required|exists:product_categories,id',
+            'quantity' => 'required|integer|min:0',
+            'product_variants' => 'array',
+            'product_variants.*.value' => 'required_with:product_variants|string|max:255',
+            'product_variants.*.additional_price' => 'nullable|numeric|min:0',
+            'product_variants.*.quantity' => 'integer|min:0',
+            'media' => 'array',
+            'media.*' => 'file|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
     }
 }
