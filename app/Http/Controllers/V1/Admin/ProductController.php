@@ -119,8 +119,6 @@ class ProductController extends Controller
     {
         $user = $request->user();
 
-        dd($request->all());
-
         try {
             if ($user->hasPermission('edit_products')) {
                 $data = $request->validated();
@@ -157,7 +155,7 @@ class ProductController extends Controller
                         if (!empty($data['media']['gallery'])) {
                             $product->clearMediaCollection('gallery');
                             foreach ($data['media']['gallery'] as $galleryItem) {
-                                $product->addMedia($galleryItem->store('product_media', 'public'))->toMediaCollection('gallery');
+                                $product->addMedia($galleryItem)->toMediaCollection('gallery');
                             }
                         }
                     }

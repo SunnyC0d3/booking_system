@@ -37,7 +37,7 @@ Route::prefix('admin/products')
     ->controller(ProductController::class)
     ->group(function () {
         Route::post('/', 'store')->name('products.store');
-        Route::put('/{product}', 'update')->name('products.update');
+        Route::post('/{product}', 'update')->name('products.update');
         Route::delete('/{product}', 'destroy')->name('products.destroy');
     });
 
