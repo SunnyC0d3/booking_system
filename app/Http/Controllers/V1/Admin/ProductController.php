@@ -77,23 +77,29 @@ class ProductController extends Controller
                         'quantity' => $data['quantity'],
                         'product_category_id' => $data['product_category_id'],
                         'vendor_id' => $vendor->id,
-                        'product_status_id' => 1,
+                        'product_status_id' => $data['product_status_id'],
                     ]);
 
                     if (!empty($data['product_variants'])) {
                         foreach ($data['product_variants'] as $variant) {
-                            $product->productVariants()->create($variant);
+                            $product->productVariants()->create([
+                                'product_id' => $product->id,
+                                'product_attribute_id' => $variant['product_attribute_id'],
+                                'value' => $variant['value'],
+                                'additional_price' => $variant['additional_price'],
+                                'quantity' => $variant['quantity']
+                            ]);
                         }
                     }
 
                     if (!empty($data['media'])) {
-                        if($data['media']['featured_image']) {
-                            $product->addMedia($data['media']['featured_image']->store('product_media', 'public'))->toMediaCollection('featured_image');
+                        if(!empty($data['media']['featured_image'])) {
+                            $product->addMediaFromRequest('media.featured_image')->toMediaCollection('featured_image');
                         }
 
-                        if($data['media']['gallery']) {
+                        if(!empty($data['media']['gallery'])) {
                             foreach ($data['media']['gallery'] as $media) {
-                                $product->addMedia($media->store('product_media', 'public'))->toMediaCollection('gallery');
+                                $product->addMedia($media)->toMediaCollection('gallery');
                             }
                         }
                     }
