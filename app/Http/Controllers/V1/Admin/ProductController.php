@@ -172,6 +172,25 @@ class ProductController extends Controller
         }
     }
 
+    public function softDestroy(Request $request, Product $product)
+    {
+        $user = $request->user();
+
+        try {
+            if (!$user->hasPermission('delete_products')) {
+                return $this->error('You do not have the required permissions.', 403);
+            }
+    
+            DB::transaction(function () use ($product) {
+                $product->delete();
+            });
+    
+            return $this->ok('Product deleted successfully.');
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
+    }
+
     public function destroy(Request $request, Product $product)
     {
         $user = $request->user();
