@@ -38,6 +38,7 @@ Route::prefix('admin/products')
     ->group(function () {
         Route::post('/', 'store')->name('products.store');
         Route::post('/{product}', 'update')->name('products.update');
+        Route::delete('/soft-destroy/{product}', 'softDestroy')->name('products.softDestroy');
         Route::delete('/{product}', 'destroy')->name('products.destroy');
     });
 

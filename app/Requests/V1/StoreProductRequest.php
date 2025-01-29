@@ -23,6 +23,8 @@ class StoreProductRequest extends BaseFormRequest
             'product_category_id' => 'required|exists:product_categories,id',
             'product_status_id' => 'required|exists:product_statuses,id',
             'quantity' => 'required|integer|min:0',
+            'product_tags' => 'array',
+            'product_tags.*' => 'exists:product_tags,id',
             'product_variants' => 'array',
             'product_variants.*.product_attribute_id' => 'required|exists:product_attributes,id',
             'product_variants.*.value' => 'required_with:product_variants|string|max:255',

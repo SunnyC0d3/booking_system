@@ -24,7 +24,8 @@ class ProductResource extends JsonResource
                     'type' => $media->mime_type,
                 ];
             }),
-            'attributes' => $this->whenLoaded('productVariants'),
+            'attributes' => $this->whenLoaded('variants'),
+            'tags' => $this->whenLoaded('tags'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

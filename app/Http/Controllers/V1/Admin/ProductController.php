@@ -25,7 +25,7 @@ class ProductController extends Controller
 
         try {
             if ($user->hasPermission('view_products')) {
-                $query = Product::with(['vendor', 'productVariants', 'category', 'media'])->filter($filter);
+                $query = Product::with(['vendor', 'variants', 'category', 'tags', 'media'])->filter($filter);
                 $perPage = $request->input('per_page', 15);
                 $products = $query->paginate($perPage);
 
@@ -44,7 +44,7 @@ class ProductController extends Controller
 
         try {
             if ($user->hasPermission('view_products')) {
-                $product->load(['vendor', 'productVariants', 'category', 'media']);
+                $product->load(['vendor', 'variants', 'category', 'tags', 'media']);
                 return $this->ok(new ProductResource($product));
             }
 
@@ -79,9 +79,13 @@ class ProductController extends Controller
                         'product_status_id' => $data['product_status_id'],
                     ]);
 
+                    if (!empty($data['product_tags'])) {
+                        $product->tags()->sync($data['product_tags']);
+                    }
+
                     if (!empty($data['product_variants'])) {
                         foreach ($data['product_variants'] as $variant) {
-                            $product->productVariants()->create([
+                            $product->variants()->create([
                                 'product_id' => $product->id,
                                 'product_attribute_id' => $variant['product_attribute_id'],
                                 'value' => $variant['value'],
@@ -133,10 +137,14 @@ class ProductController extends Controller
                         'product_status_id' => $data['product_status_id'],
                     ]);
 
+                    if (!empty($data['product_tags'])) {
+                        $product->tags()->sync($data['product_tags']);
+                    }
+
                     if (isset($data['product_variants'])) {
-                        $product->productVariants()->delete();
+                        $product->variants()->delete();
                         foreach ($data['product_variants'] as $variant) {
-                            $product->productVariants()->create([
+                            $product->variants()->create([
                                 'product_id' => $product->id,
                                 'product_attribute_id' => $variant['product_attribute_id'],
                                 'value' => $variant['value'],
@@ -201,7 +209,7 @@ class ProductController extends Controller
             DB::transaction(function () use ($product) {
                 $product->clearMediaCollection('featured_image');
                 $product->clearMediaCollection('gallery');
-                $product->productVariants()->forceDelete();
+                $product->variants()->forceDelete();
                 $product->forceDelete();
             });
     
