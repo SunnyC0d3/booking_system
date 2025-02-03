@@ -1,9 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\V1\Admin\ProductController;
+
+// Auth Controllers
 use App\Http\Controllers\V1\Auth\AuthController;
 use App\Http\Controllers\V1\Auth\EmailVerificationController;
+
+// Admin Controllers
+
+use App\Http\Controllers\V1\Admin\ProductController;
+use App\Http\Controllers\V1\Admin\ProductAttributeController;
 
 // Registering, Logging In Routes
 
@@ -24,22 +30,28 @@ Route::middleware(['throttle:3,1', 'auth:api'])
 // Admin/Products
 
 Route::prefix('admin/products')
-    ->middleware(['throttle:10,1', 'auth:api', 'scope:read-products', 'roles:super admin', 'emailVerified'])
+    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin', 'emailVerified'])
     ->controller(ProductController::class)
     ->group(function () {
         Route::get('/', 'index')->name('products.index');
         Route::get('/{product}', 'show')->name('products.show');
-    });
-
-Route::prefix('admin/products')
-    //->middleware(['throttle:10,1', 'auth:api', 'scope:write-products', 'roles:super admin', 'emailVerified'])
-    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin', 'emailVerified'])
-    ->controller(ProductController::class)
-    ->group(function () {
         Route::post('/', 'store')->name('products.store');
         Route::post('/{product}', 'update')->name('products.update');
         Route::delete('/soft-destroy/{product}', 'softDestroy')->name('products.softDestroy');
         Route::delete('/{product}', 'destroy')->name('products.destroy');
+    });
+
+// Admin/Product Attributes
+
+Route::prefix('admin/products')
+    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin', 'emailVerified'])
+    ->controller(ProductAttributeController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('products.attributes.index');
+        Route::post('/', 'store')->name('products.attributes.store');
+        Route::get('/{productAttribute}', 'show')->name('products.attributes.show');
+        Route::post('/{productAttribute}', 'update')->name('products.attributes.update');
+        Route::delete('/{productAttribute}', 'destroy')->name('products.attributes.destroy');
     });
 
 // Email Verification

@@ -8,16 +8,23 @@ use App\Traits\V1\ApiResponses;
 use App\Requests\V1\UpdateProductAttributeRequest;
 use App\Requests\V1\StoreProductAttributeRequest;
 use \Exception;
+use Illuminate\Http\Request;
 
 class ProductAttributeController extends Controller
 {
     use ApiResponses;
 
-    public function index()
+    public function index(Request $request)
     {
+        $user = $request->user();
+
         try {
-            $attributes = ProductAttribute::all();
-            return $this->ok('Attributes retrieved successfully.', $attributes);
+            if ($user->hasPermission('view_product_attributes')) {
+                $attributes = ProductAttribute::all();
+                return $this->ok('Attributes retrieved successfully.', $attributes);
+            }
+
+            return $this->error('You do not have the required permissions.', 403);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
@@ -25,35 +32,62 @@ class ProductAttributeController extends Controller
 
     public function store(StoreProductAttributeRequest $request)
     {
+        $user = $request->user();
+
         try {
-            $attribute = ProductAttribute::create($request->validated());
-            return $this->ok('Product attribute created successfully.', $attribute);
+            if ($user->hasPermission('create_product_attributes')) {
+                $attribute = ProductAttribute::create($request->validated());
+                return $this->ok('Product attribute created successfully.', $attribute);
+            }
+
+            return $this->error('You do not have the required permissions.', 403);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
     }
 
-    public function show(ProductAttribute $productAttribute)
+    public function show(Request $request, ProductAttribute $productAttribute)
     {
-        return $this->ok('', $productAttribute);
+        $user = $request->user();
+
+        try {
+            if ($user->hasPermission('view_product_attributes')) {
+                return $this->ok('Attribute retrieved successfully.', $productAttribute);
+            }
+
+            return $this->error('You do not have the required permissions.', 403);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
     }
 
     public function update(UpdateProductAttributeRequest $request, ProductAttribute $productAttribute)
     {
-        try {
-            $productAttribute->update($request->validated());
+        $user = $request->user();
 
-            $this->ok('Product attribute updated successfully.', $productAttribute);
+        try {
+            if ($user->hasPermission('edit_product_attributes')) {
+                $productAttribute->update($request->validated());
+                $this->ok('Product attribute updated successfully.', $productAttribute);
+            }
+
+            return $this->error('You do not have the required permissions.', 403);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
     }
 
-    public function destroy(ProductAttribute $productAttribute)
+    public function destroy(Request $request, ProductAttribute $productAttribute)
     {
+        $user = $request->user();
+
         try {
-            $productAttribute->forceDelete();
-            $this->ok('Product attribute deleted successfully.');
+            if ($user->hasPermission('delete_product_attributes')) {
+                $productAttribute->forceDelete();
+                $this->ok('Product attribute deleted successfully.');
+            }
+
+            return $this->error('You do not have the required permissions.', 403);
         } catch (\Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
