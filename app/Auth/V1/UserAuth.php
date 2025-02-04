@@ -19,10 +19,6 @@ final class UserAuth
 {
     use ApiResponses;
 
-    private $userScopes = [
-        'read-products'
-    ];
-
     public function register(Request $request)
     {
         $user = User::create([
@@ -50,7 +46,7 @@ final class UserAuth
 
         $tokenExpiration = $request->remember ? now()->addWeeks(1) : now();
 
-        $tokenResult = $user->createToken('User Access Token', $this->userScopes);
+        $tokenResult = $user->createToken('User Access Token', '*');
         $accessToken = $tokenResult->accessToken;
         $expiresIn = $tokenResult->token->expires_at->diffInSeconds($tokenExpiration);
 

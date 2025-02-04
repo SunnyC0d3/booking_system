@@ -60,7 +60,7 @@ Route::prefix('email')
     ->middleware(['throttle:10,1', 'signed'])
     ->controller(EmailVerificationController::class)
     ->group(function () {
-        Route::get('/verify/{id}/{hash}', 'verify')->name('verification.verify');
+        Route::get('/verify/{user}/{hash}', 'verify')->name('verification.verify');
     });
 
 Route::prefix('email')

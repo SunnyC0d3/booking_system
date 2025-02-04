@@ -21,6 +21,21 @@ class ProductController extends Controller
 
     public function index(FilterProductRequest $request, ProductFilter $filter)
     {
+        $request->validated($request->only([
+            'filter',
+            'filter.name',
+            'filter.price',
+            'filter.category',
+            'filter.quantity',
+            'filter.created_at',
+            'filter.updated_at',
+            'filter.search',
+            'filter.include',
+            'page',
+            'per_page',
+            'sort',
+        ]));
+
         $user = $request->user();
 
         try {
@@ -56,6 +71,25 @@ class ProductController extends Controller
 
     public function store(StoreProductRequest $request)
     {
+        $request->validated($request->only([
+            'name',
+            'description',
+            'price',
+            'product_category_id',
+            'product_status_id',
+            'quantity',
+            'product_tags',
+            'product_tags.*',
+            'product_variants',
+            'product_variants.*.product_attribute_id',
+            'product_variants.*.value',
+            'product_variants.*.additional_price',
+            'product_variants.*.quantity',
+            'media.*',
+            'media.featured_image',
+            'media.gallery.*',
+        ]));
+
         $user = $request->user();
 
         try {
@@ -121,6 +155,25 @@ class ProductController extends Controller
 
     public function update(UpdateProductRequest $request, Product $product)
     {
+        $request->validated($request->only([
+            'name',
+            'description',
+            'price',
+            'product_category_id',
+            'product_status_id',
+            'quantity',
+            'product_tags',
+            'product_tags.*',
+            'product_variants',
+            'product_variants.*.product_attribute_id',
+            'product_variants.*.value',
+            'product_variants.*.additional_price',
+            'product_variants.*.quantity',
+            'media.*',
+            'media.featured_image',
+            'media.gallery.*',
+        ]));
+        
         $user = $request->user();
 
         try {

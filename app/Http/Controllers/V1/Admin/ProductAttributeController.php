@@ -32,6 +32,8 @@ class ProductAttributeController extends Controller
 
     public function store(StoreProductAttributeRequest $request)
     {
+        $request->validated($request->only(['name']));
+        
         $user = $request->user();
 
         try {
@@ -63,6 +65,8 @@ class ProductAttributeController extends Controller
 
     public function update(UpdateProductAttributeRequest $request, ProductAttribute $productAttribute)
     {
+        $request->validated($request->only(['name']));
+        
         $user = $request->user();
 
         try {
