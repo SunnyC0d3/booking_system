@@ -22,15 +22,16 @@ class ProductController extends Controller
     public function index(FilterProductRequest $request, ProductFilter $filter)
     {
         $request->validated($request->only([
-            'filter',
-            'filter.name',
-            'filter.price',
-            'filter.category',
-            'filter.quantity',
-            'filter.created_at',
-            'filter.updated_at',
-            'filter.search',
-            'filter.include',
+            'filter' => [
+                'name',
+                'price',
+                'category',
+                'quantity',
+                'created_at',
+                'updated_at',
+                'search',
+                'include'
+            ],
             'page',
             'per_page',
             'sort',
@@ -84,10 +85,11 @@ class ProductController extends Controller
             'product_variants.*.product_attribute_id',
             'product_variants.*.value',
             'product_variants.*.additional_price',
-            'product_variants.*.quantity',
+            'product_variants.*.quanatity',
+            'media',
             'media.*',
-            'media.featured_image',
-            'media.gallery.*',
+            'media.feature_image',
+            'media.gallery.*'
         ]));
 
         $user = $request->user();
@@ -168,12 +170,13 @@ class ProductController extends Controller
             'product_variants.*.product_attribute_id',
             'product_variants.*.value',
             'product_variants.*.additional_price',
-            'product_variants.*.quantity',
+            'product_variants.*.quanatity',
+            'media',
             'media.*',
-            'media.featured_image',
-            'media.gallery.*',
+            'media.feature_image',
+            'media.gallery.*'
         ]));
-        
+
         $user = $request->user();
 
         try {
@@ -239,11 +242,11 @@ class ProductController extends Controller
             if (!$user->hasPermission('delete_products')) {
                 return $this->error('You do not have the required permissions.', 403);
             }
-    
+
             DB::transaction(function () use ($product) {
                 $product->delete();
             });
-    
+
             return $this->ok('Product deleted successfully.');
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
@@ -258,14 +261,14 @@ class ProductController extends Controller
             if (!$user->hasPermission('delete_products')) {
                 return $this->error('You do not have the required permissions.', 403);
             }
-    
+
             DB::transaction(function () use ($product) {
                 $product->clearMediaCollection('featured_image');
                 $product->clearMediaCollection('gallery');
                 $product->variants()->forceDelete();
                 $product->forceDelete();
             });
-    
+
             return $this->ok('Product deleted successfully.');
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);

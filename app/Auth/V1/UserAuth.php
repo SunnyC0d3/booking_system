@@ -2,6 +2,7 @@
 
 namespace App\Auth\V1;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Traits\V1\ApiResponses;
@@ -25,7 +26,7 @@ final class UserAuth
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'user'
+            'role_id' => Role::where('name', 'User')->first()->id
         ]);
 
         $user->sendEmailVerificationNotification();
@@ -46,7 +47,7 @@ final class UserAuth
 
         $tokenExpiration = $request->remember ? now()->addWeeks(1) : now();
 
-        $tokenResult = $user->createToken('User Access Token', '*');
+        $tokenResult = $user->createToken('User Access Token');
         $accessToken = $tokenResult->accessToken;
         $expiresIn = $tokenResult->token->expires_at->diffInSeconds($tokenExpiration);
 

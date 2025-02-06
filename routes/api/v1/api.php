@@ -43,7 +43,7 @@ Route::prefix('admin/products')
 
 // Admin/Product Attributes
 
-Route::prefix('admin/products')
+Route::prefix('admin/product-attributes')
     ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin', 'emailVerified'])
     ->controller(ProductAttributeController::class)
     ->group(function () {
@@ -60,7 +60,7 @@ Route::prefix('email')
     ->middleware(['throttle:10,1', 'signed'])
     ->controller(EmailVerificationController::class)
     ->group(function () {
-        Route::get('/verify/{user}/{hash}', 'verify')->name('verification.verify');
+        Route::get('/verify/{id}/{hash}', 'verify')->name('verification.verify');
     });
 
 Route::prefix('email')
