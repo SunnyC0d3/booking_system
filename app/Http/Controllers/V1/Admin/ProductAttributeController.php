@@ -72,7 +72,7 @@ class ProductAttributeController extends Controller
         try {
             if ($user->hasPermission('edit_product_attributes')) {
                 $productAttribute->update($request->validated());
-                $this->ok('Product attribute updated successfully.', $productAttribute);
+                return $this->ok('Product attribute updated successfully.', $productAttribute);
             }
 
             return $this->error('You do not have the required permissions.', 403);
@@ -88,7 +88,7 @@ class ProductAttributeController extends Controller
         try {
             if ($user->hasPermission('delete_product_attributes')) {
                 $productAttribute->forceDelete();
-                $this->ok('Product attribute deleted successfully.');
+                return $this->ok('Product attribute deleted successfully.');
             }
 
             return $this->error('You do not have the required permissions.', 403);
