@@ -10,6 +10,7 @@ use App\Http\Controllers\V1\Auth\EmailVerificationController;
 
 use App\Http\Controllers\V1\Admin\ProductController;
 use App\Http\Controllers\V1\Admin\ProductAttributeController;
+use App\Http\Controllers\V1\Admin\ProductCategoryController;
 
 // Registering, Logging In Routes
 
@@ -52,6 +53,19 @@ Route::prefix('admin/product-attributes')
         Route::get('/{productAttribute}', 'show')->name('products.attributes.show');
         Route::post('/{productAttribute}', 'update')->name('products.attributes.update');
         Route::delete('/{productAttribute}', 'destroy')->name('products.attributes.destroy');
+    });
+
+// Admin/Product Categories
+
+Route::prefix('admin/product-categories')
+    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin', 'emailVerified'])
+    ->controller(ProductCategoryController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('products.categories.index');
+        Route::post('/', 'store')->name('products.categories.store');
+        Route::get('/{productCategory}', 'show')->name('products.categories.show');
+        Route::post('/{productCategory}', 'update')->name('products.categories.update');
+        Route::delete('/{productCategory}', 'destroy')->name('products.categories.destroy');
     });
 
 // Email Verification
