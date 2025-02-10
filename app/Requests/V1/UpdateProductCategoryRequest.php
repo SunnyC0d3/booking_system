@@ -21,7 +21,7 @@ class UpdateProductCategoryRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'name' => 'requiredstring|max:255|unique:product_categories,name,' . $this->productCategoryId,
+            'name' => 'required|string|max:255|unique:product_categories,name,' . $this->productCategoryId,
             'parent_id' => 'nullable|exists:product_categories,id|not_in:' . $this->productCategoryId,
         ];
     }
