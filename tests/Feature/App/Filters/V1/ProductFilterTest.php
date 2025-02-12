@@ -7,11 +7,16 @@ use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Illuminate\Http\Request;
-use App\Models\Category;
+use App\Models\ProductCategory;
 
 class ProductFilterTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
 
     public function test_filters_by_created_at()
     {
@@ -66,9 +71,8 @@ class ProductFilterTest extends TestCase
 
     public function test_filters_by_category()
     {
-        $category = Category::factory()->create();
-        $products = Product::factory()->count(3)->create();
-        $products->each(fn($product) => $product->categories()->attach($category->id));
+        $category = ProductCategory::factory()->create();
+        $products = Product::factory()->count(3)->create(['product_category_id' => $category->id]);
 
         $request = Request::create('', 'GET', ['category' => $category->id]);
         $filter = new ProductFilter($request);
@@ -85,15 +89,15 @@ class ProductFilterTest extends TestCase
     public function test_includes_relations()
     {
         $products = Product::factory()->count(5)->create();
-        $request = Request::create('', 'GET', ['include' => 'categories']);
-
+        $request = Request::create('', 'GET', ['include' => 'category']);
+    
         $filter = new ProductFilter($request);
         $builder = Product::query();
-
+    
         $response = $filter->apply($builder);
-
-        $this->assertFalse(
-            $response->get()->pluck('categories')->every(fn($categories) => $categories->isNotEmpty())
+    
+        $this->assertTrue(
+            $response->get()->pluck('category')->every(fn($category) => !is_null($category))
         );
     }
 

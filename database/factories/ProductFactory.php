@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Vendor;
+use App\Models\ProductStatus;
+use App\Models\ProductCategory;
 use App\Models\Product;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -14,13 +16,13 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'        => fake()->name(),
-            'description' => fake()->text(),
-            'price'       => fake()->randomFloat(),
-            'quantity' => fake()->randomNumber(3),
-            'status'      => fake()->word(),
-
-            'vendor_id' => Vendor::factory(),
+            'name'                  => fake()->name(),
+            'description'           => fake()->text(),
+            'price'                 => fake()->randomFloat(2, 1, 100),
+            'quantity'              => fake()->randomNumber(3),
+            'product_status_id'     => ProductStatus::factory(),
+            'product_category_id'   => ProductCategory::factory(),
+            'vendor_id'             => Vendor::factory(),
         ];
     }
 

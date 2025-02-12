@@ -36,6 +36,10 @@ class UserAuthTest extends TestCase
             'updated_at' => now(),
         ]);
 
+        DB::table('roles')->insert([
+            'name' => 'User'
+        ]);
+
         $this->userAuth = new UserAuth();
     }
 
@@ -93,7 +97,7 @@ class UserAuthTest extends TestCase
 
     public function test_logout_successfully()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->user()->create();
         $user->createToken('User Access Token')->accessToken;
 
         $response = $this->userAuth->logout();
