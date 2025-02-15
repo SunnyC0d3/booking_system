@@ -5,6 +5,7 @@ namespace Tests\Feature\App\Http\Middleware\V1;
 use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
 
 class RoleTest extends TestCase
 {
@@ -12,14 +13,18 @@ class RoleTest extends TestCase
     {
         parent::setUp();
 
-        Route::middleware('role:admin,manager')->get('/test-role', function () {
+        Route::middleware('roles:admin,manager')->get('/test-role', function () {
             return response()->json(['message' => 'Access granted.']);
         });
+
+        DB::table('roles')->insert([
+            'name' => 'Admin'
+        ]);
     }
 
     public function test_denies_access_to_users_with_an_unauthorized_role()
     {
-        $user = User::factory()->create(['role' => 'user']);
+        $user = User::factory()->create();
 
         $response = $this->actingAs($user, 'api')->getJson('/test-role');
 
@@ -31,7 +36,7 @@ class RoleTest extends TestCase
 
     public function test_allows_access_to_users_with_an_authorized_role()
     {
-        $user = User::factory()->create(['role' => 'admin']);
+        $user = User::factory()->admin()->create();
 
         $response = $this->actingAs($user, 'api')->getJson('/test-role');
 

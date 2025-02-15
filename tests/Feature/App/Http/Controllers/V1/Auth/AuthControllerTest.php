@@ -31,6 +31,10 @@ class AuthControllerTest extends TestCase
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+        DB::table('roles')->insert([
+            'name' => 'User'
+        ]);
     }
 
     public function test_register_creates_user_and_returns_success_response()

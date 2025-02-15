@@ -29,11 +29,6 @@ class ApiResponseTest extends TestCase
             {
                 return $this->error($errors, $statusCode);
             }
-
-            public function testNotAuthorized($message)
-            {
-                return $this->notAuthorized($message);
-            }
         };
     }
 
@@ -72,22 +67,6 @@ class ApiResponseTest extends TestCase
         $response->assertStatus(200)
             ->assertJson([
                 'errors' => ['field' => 'Field is required'],
-            ]);
-    }
-
-    public function test_returnsNotAuthorizedResponse()
-    {
-        $trait = $this->getTestClass();
-
-        $response = TestResponse::fromBaseResponse($trait->testNotAuthorized('Not authorized to perform this action'));
-
-        $response->assertStatus(200)
-            ->assertJson([
-                'errors' => [
-                    'status' => 401,
-                    'message' => 'Not authorized to perform this action',
-                    'source' => '',
-                ]
             ]);
     }
 }

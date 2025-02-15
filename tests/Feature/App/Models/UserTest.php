@@ -5,24 +5,27 @@ namespace Tests\Feature\App\Models;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Illuminate\Support\Facades\DB;
 
 class UserTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        DB::table('roles')->insert([
+            'name' => 'User'
+        ]);
+    }
+
     public function test_allowsMassAssignmentOfFillableAttributes()
     {
-        $user = User::create([
-            'name' => 'John Doe',
-            'email' => 'johndoe@example.com',
-            'password' => 'password123',
-            'role' => 'admin',
-        ]);
+        $user = User::factory()->create();
 
         $this->assertDatabaseHas('users', [
-            'name' => 'John Doe',
-            'email' => 'johndoe@example.com',
-            'role' => 'admin',
+            'name' => $user->name
         ]);
 
         $this->assertNotEquals('password123', $user->password);

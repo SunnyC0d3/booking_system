@@ -17,8 +17,6 @@ class ProductTagFactory extends Factory
             'name'       => fake()->name(),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
-
-            'product_id' => Product::factory(),
         ];
     }
 }

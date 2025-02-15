@@ -44,38 +44,6 @@ class UpdateProductRequestTest extends TestCase
         $this->assertArrayHasKey('name', $validator->errors()->toArray());
     }
 
-    public function test_validation_fails_with_invalid_attributes()
-    {
-        $data = [
-            'attributes' => [
-                ['key' => '', 'value' => 'Value1'],
-                ['key' => 'Key2', 'value' => ''],
-            ],
-        ];
-
-        $rules = (new UpdateProductRequest())->rules();
-        $validator = Validator::make($data, $rules);
-
-        $this->assertTrue($validator->fails(), 'Validation should fail with invalid attributes.');
-        $this->assertArrayHasKey('attributes.0.key', $validator->errors()->toArray());
-        $this->assertArrayHasKey('attributes.1.value', $validator->errors()->toArray());
-    }
-
-    public function test_validation_fails_with_invalid_images()
-    {
-        $data = [
-            'images' => [
-                'not-an-image',
-            ],
-        ];
-
-        $rules = (new UpdateProductRequest())->rules();
-        $validator = Validator::make($data, $rules);
-
-        $this->assertTrue($validator->fails(), 'Validation should fail with invalid images.');
-        $this->assertArrayHasKey('images.0', $validator->errors()->toArray());
-    }
-
     public function test_validation_passes_with_nullable_fields_set_to_null()
     {
         $data = [

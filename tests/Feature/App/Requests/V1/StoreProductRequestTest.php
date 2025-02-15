@@ -8,27 +8,29 @@ use Tests\TestCase;
 
 class StoreProductRequestTest extends TestCase
 {
-    public function test_validation_fails_when_name_is_missing()
+    public function test_validation_fails_when_required_fields_are_missing()
     {
-        $data = [
-            'description' => 'A sample product description.',
-            'price' => 19.99,
-        ];
-
+        $data = [];
         $rules = (new StoreProductRequest())->rules();
         $validator = Validator::make($data, $rules);
 
-        $this->assertTrue($validator->fails(), 'Validation should fail when the name is missing.');
+        $this->assertTrue($validator->fails(), 'Validation should fail when required fields are missing.');
         $this->assertArrayHasKey('name', $validator->errors()->toArray());
+        $this->assertArrayHasKey('price', $validator->errors()->toArray());
+        $this->assertArrayHasKey('product_category_id', $validator->errors()->toArray());
+        $this->assertArrayHasKey('product_status_id', $validator->errors()->toArray());
+        $this->assertArrayHasKey('quantity', $validator->errors()->toArray());
     }
 
     public function test_validation_fails_when_price_is_invalid()
     {
         $data = [
             'name' => 'Sample Product',
-            'price' => 'invalid-price',
+            'price' => 'invalid',
+            'product_category_id' => 1,
+            'product_status_id' => 1,
+            'quantity' => 10,
         ];
-
         $rules = (new StoreProductRequest())->rules();
         $validator = Validator::make($data, $rules);
 
@@ -36,54 +38,85 @@ class StoreProductRequestTest extends TestCase
         $this->assertArrayHasKey('price', $validator->errors()->toArray());
     }
 
-    public function test_validation_fails_when_attributes_are_invalid()
+    public function test_validation_fails_when_product_variants_are_invalid()
     {
         $data = [
             'name' => 'Sample Product',
             'price' => 19.99,
-            'attributes' => [
-                ['key' => '', 'value' => 'Value1'],
-                ['key' => 'Key2', 'value' => ''],
+            'product_category_id' => 1,
+            'product_status_id' => 1,
+            'quantity' => 10,
+            'product_variants' => [
+                ['product_attribute_id' => null, 'value' => 'Large', 'additional_price' => -5, 'quantity' => -1],
+            ],
+        ];
+        $rules = (new StoreProductRequest())->rules();
+        $validator = Validator::make($data, $rules);
+
+        $this->assertTrue($validator->fails(), 'Validation should fail when product variants are invalid.');
+        $this->assertArrayHasKey('product_variants.0.product_attribute_id', $validator->errors()->toArray());
+        $this->assertArrayHasKey('product_variants.0.additional_price', $validator->errors()->toArray());
+        $this->assertArrayHasKey('product_variants.0.quantity', $validator->errors()->toArray());
+    }
+
+    public function test_validation_fails_when_media_is_invalid()
+    {
+        $data = [
+            'name' => 'Sample Product',
+            'price' => 19.99,
+            'product_category_id' => 1,
+            'product_status_id' => 1,
+            'quantity' => 10,
+            'media' => [
+                'featured_image' => 'not-a-file',
+                'gallery' => ['invalid-file'],
+            ],
+        ];
+        $rules = (new StoreProductRequest())->rules();
+        $validator = Validator::make($data, $rules);
+
+        $this->assertTrue($validator->fails(), 'Validation should fail when media is invalid.');
+        $this->assertArrayHasKey('media.featured_image', $validator->errors()->toArray());
+        $this->assertArrayHasKey('media.gallery.0', $validator->errors()->toArray());
+    }
+
+    public function test_validation_passes_with_valid_data()
+    {
+        // Create valid related records
+        $category = \App\Models\ProductCategory::factory()->create();
+        $status = \App\Models\ProductStatus::factory()->create();
+        $tag1 = \App\Models\ProductTag::factory()->create();
+        $tag2 = \App\Models\ProductTag::factory()->create();
+        $attribute = \App\Models\ProductAttribute::factory()->create();
+
+        // Create a fake image file
+        $image = \Illuminate\Http\UploadedFile::fake()->image('product.jpg');
+
+        $data = [
+            'name' => 'Sample Product',
+            'price' => 19.99,
+            'description' => 'A great product.',
+            'product_category_id' => $category->id,
+            'product_status_id' => $status->id,
+            'quantity' => 10,
+            'product_tags' => [$tag1->id, $tag2->id],
+            'product_variants' => [
+                [
+                    'product_attribute_id' => $attribute->id,
+                    'value' => 'Large',
+                    'additional_price' => 5,
+                    'quantity' => 5,
+                ],
+            ],
+            'media' => [
+                'featured_image' => $image,
+                'gallery' => [$image],
             ],
         ];
 
         $rules = (new StoreProductRequest())->rules();
         $validator = Validator::make($data, $rules);
 
-        $this->assertTrue($validator->fails(), 'Validation should fail with invalid attributes.');
-        $this->assertArrayHasKey('attributes.0.key', $validator->errors()->toArray());
-        $this->assertArrayHasKey('attributes.1.value', $validator->errors()->toArray());
-    }
-
-    public function test_validation_fails_when_images_are_invalid()
-    {
-        $data = [
-            'name' => 'Sample Product',
-            'price' => 19.99,
-            'images' => [
-                'not-an-image',
-            ],
-        ];
-
-        $rules = (new StoreProductRequest())->rules();
-        $validator = Validator::make($data, $rules);
-
-        $this->assertTrue($validator->fails(), 'Validation should fail when images are invalid.');
-        $this->assertArrayHasKey('images.0', $validator->errors()->toArray());
-    }
-
-    public function test_validation_passes_with_nullable_fields()
-    {
-        $data = [
-            'name' => 'Sample Product',
-            'price' => 19.99,
-            'description' => null,
-            'category_id' => null,
-        ];
-
-        $rules = (new StoreProductRequest())->rules();
-        $validator = Validator::make($data, $rules);
-
-        $this->assertFalse($validator->fails(), 'Validation should pass with nullable fields.');
+        $this->assertFalse($validator->fails(), 'Validation should pass with valid data.');
     }
 }
