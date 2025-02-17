@@ -1,0 +1,147 @@
+name: 'Email Verification'
+description: ''
+endpoints:
+  -
+    httpMethods:
+      - GET
+    uri: 'api/email/verify/{id}/{hash}'
+    metadata:
+      groupName: 'Email Verification'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: "Verify a user's email address."
+      description: 'Once a user registers, a notification is sent out to their specified email address, which requires them to verify.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the verify.'
+        required: true
+        example: tempore
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      hash:
+        name: hash
+        description: ''
+        required: true
+        example: perferendis
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: tempore
+      hash: perferendis
+    queryParameters:
+      id:
+        name: id
+        description: "The user's id."
+        required: true
+        example: '1'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      hash:
+        name: hash
+        description: 'The hash to verify the email.'
+        required: true
+        example: '1234567890'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanQueryParameters:
+      id: '1'
+      hash: '1234567890'
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: 'Redirected to specified URL'
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+            "message": "Invalid/Expired url provided.",
+            "status": 401
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/email/resend
+    metadata:
+      groupName: 'Email Verification'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Resend email to user.'
+      description: 'Once a user registers, a notification is sent out to their specified email address, which requires them to verify. Incase they dont recieve one, they can request again.'
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer token required.'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Email verification link sent on your email id.",
+            "status": 200
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+            "message": "Email already verified.",
+            "status": 400
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
+    controller: null
+    method: null
+    route: null
+    custom: []

@@ -14,6 +14,24 @@ class ProductStatusController extends Controller
 {
     use ApiResponses;
 
+    /**
+     * Retrieve all product statuses.
+     * 
+     * @group Product Statuses
+     * @authenticated
+     * 
+     * @response 200 {
+     *     "message": "Statuses retrieved successfully.",
+     *     "data": [
+     *         {"id": 1, "name": "Available"},
+     *         {"id": 2, "name": "Out of Stock"}
+     *     ]
+     * }
+     * 
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function index(Request $request)
     {
         $user = $request->user();
@@ -30,10 +48,27 @@ class ProductStatusController extends Controller
         }
     }
 
+    /**
+     * Create a new product status.
+     * 
+     * @group Product Statuses
+     * @authenticated
+     * 
+     * @bodyParam name string required The name of the product status.
+     * 
+     * @response 201 {
+     *     "message": "Product status created successfully.",
+     *     "data": {"id": 3, "name": "Discontinued"}
+     * }
+     * 
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function store(StoreProductStatusRequest $request)
     {
         $request->validated($request->only(['name']));
-        
+
         $user = $request->user();
 
         try {
@@ -48,6 +83,21 @@ class ProductStatusController extends Controller
         }
     }
 
+    /**
+     * Retrieve a specific product status.
+     * 
+     * @group Product Statuses
+     * @authenticated
+     * 
+     * @response 200 {
+     *     "message": "Status retrieved successfully.",
+     *     "data": {"id": 1, "name": "Available"}
+     * }
+     * 
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function show(Request $request, ProductStatus $productStatus)
     {
         $user = $request->user();
@@ -63,10 +113,27 @@ class ProductStatusController extends Controller
         }
     }
 
+    /**
+     * Update an existing product status.
+     * 
+     * @group Product Statuses
+     * @authenticated
+     * 
+     * @bodyParam name string required The updated name of the product status.
+     * 
+     * @response 200 {
+     *     "message": "Product status updated successfully.",
+     *     "data": {"id": 1, "name": "Unavailable"}
+     * }
+     * 
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function update(UpdateProductStatusRequest $request, ProductStatus $productStatus)
     {
         $request->validated($request->only(['name']));
-        
+
         $user = $request->user();
 
         try {
@@ -81,6 +148,20 @@ class ProductStatusController extends Controller
         }
     }
 
+    /**
+     * Delete a product status.
+     * 
+     * @group Product Statuses
+     * @authenticated
+     * 
+     * @response 200 {
+     *     "message": "Product status deleted successfully."
+     * }
+     * 
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function destroy(Request $request, ProductStatus $productStatus)
     {
         $user = $request->user();

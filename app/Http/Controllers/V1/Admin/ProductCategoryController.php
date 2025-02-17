@@ -14,6 +14,27 @@ class ProductCategoryController extends Controller
 {
     use ApiResponses;
 
+    /**
+     * Get all product categories
+     *
+     * @group Product Category
+     * @authenticated
+     *
+     * @response 200 {
+     *     "message": "Categories retrieved successfully.",
+     *     "data": [
+     *         {
+     *             "id": 1,
+     *             "name": "Electronics",
+     *             "children": []
+     *         }
+     *     ]
+     * }
+     * 
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function index(Request $request)
     {
         $user = $request->user();
@@ -30,6 +51,28 @@ class ProductCategoryController extends Controller
         }
     }
 
+    /**
+     * Store a new product category
+     *
+     * @group Product Category
+     * @authenticated
+     *
+     * @bodyParam name string required The name of the category.
+     * @bodyParam parent_id int optional The ID of the parent category.
+     *
+     * @response 201 {
+     *     "message": "Category created successfully.",
+     *     "data": {
+     *         "id": 2,
+     *         "name": "Laptops",
+     *         "parent_id": 1
+     *     }
+     * }
+     * 
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function store(StoreProductCategoryRequest $request)
     {
         $request->validated($request->only(['name', 'parent_id']));
@@ -48,6 +91,25 @@ class ProductCategoryController extends Controller
         }
     }
 
+    /**
+     * Get a specific product category
+     *
+     * @group Product Category
+     * @authenticated
+     *
+     * @response 200 {
+     *     "message": "Category retrieved successfully.",
+     *     "data": {
+     *         "id": 1,
+     *         "name": "Electronics",
+     *         "children": []
+     *     }
+     * }
+     * 
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function show(Request $request, ProductCategory $productCategory)
     {
         $user = $request->user();
@@ -63,6 +125,28 @@ class ProductCategoryController extends Controller
         }
     }
 
+    /**
+     * Update a product category
+     *
+     * @group Product Category
+     * @authenticated
+     *
+     * @bodyParam name string required The name of the category.
+     * @bodyParam parent_id int optional The ID of the parent category.
+     *
+     * @response 200 {
+     *     "message": "Category updated successfully.",
+     *     "data": {
+     *         "id": 1,
+     *         "name": "Updated Category Name",
+     *         "parent_id": null
+     *     }
+     * }
+     * 
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function update(UpdateProductCategoryRequest $request, ProductCategory $productCategory)
     {
         $request->validated($request->only(['name', 'parent_id']));
@@ -81,6 +165,24 @@ class ProductCategoryController extends Controller
         }
     }
 
+    /**
+     * Delete a product category
+     *
+     * @group Product Category
+     * @authenticated
+     *
+     * @response 200 {
+     *     "message": "Category deleted successfully"
+     * }
+     * 
+     * @response 400 {
+     *     "message": "Cannot delete a category with subcategories"
+     * }
+     * 
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function destroy(Request $request, ProductCategory $productCategory)
     {
         $user = $request->user();

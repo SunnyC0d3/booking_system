@@ -19,6 +19,21 @@ class ProductController extends Controller
 {
     use ApiResponses;
 
+    /**
+     * Retrieve a paginated list of products.
+     *
+     * @group Products
+     * @authenticated
+     *
+     * @response 200 {
+     *     "message": "Products retrieved successfully.",
+     *     "data": []
+     * }
+     * 
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function index(FilterProductRequest $request, ProductFilter $filter)
     {
         $request->validated($request->only([
@@ -54,6 +69,21 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * Retrieve a specific product.
+     *
+     * @group Products
+     * @authenticated
+     *
+     * @response 200 {
+     *     "message": "Product retrieved successfully.",
+     *     "data": {}
+     * }
+     * 
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function show(Request $request, Product $product)
     {
         $user = $request->user();
@@ -70,6 +100,21 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * Create a new product.
+     *
+     * @group Products
+     * @authenticated
+     *
+     * @response 201 {
+     *     "message": "Product created successfully.",
+     *     "data": {}
+     * }
+     * 
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function store(StoreProductRequest $request)
     {
         $request->validated($request->only([
@@ -155,6 +200,21 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * Update an existing product.
+     *
+     * @group Products
+     * @authenticated
+     *
+     * @response 200 {
+     *     "message": "Product updated successfully.",
+     *     "data": {}
+     * }
+     * 
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function update(UpdateProductRequest $request, Product $product)
     {
         $request->validated($request->only([
@@ -234,6 +294,20 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * Soft delete a product.
+     *
+     * @group Products
+     * @authenticated
+     *
+     * @response 200 {
+     *     "message": "Product deleted successfully."
+     * }
+     * 
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function softDestroy(Request $request, Product $product)
     {
         $user = $request->user();
@@ -253,6 +327,20 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * Permanently delete a product.
+     *
+     * @group Products
+     * @authenticated
+     *
+     * @response 200 {
+     *     "message": "Product deleted successfully."
+     * }
+     * 
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function destroy(Request $request, Product $product)
     {
         $user = $request->user();

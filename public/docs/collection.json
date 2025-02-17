@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "E-Commerce API Documentation",
-        "_postman_id": "551dea3e-3f38-4a99-b723-cd175bab59d8",
+        "_postman_id": "7d142c1a-64df-405e-a5d2-4a141aeebe73",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -180,13 +180,13 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "consequuntur",
+                                    "value": "tempore",
                                     "description": "The ID of the verify."
                                 },
                                 {
                                     "id": "hash",
                                     "key": "hash",
-                                    "value": "earum",
+                                    "value": "perferendis",
                                     "description": ""
                                 }
                             ]
@@ -367,6 +367,1176 @@
                             "header": [],
                             "code": 400,
                             "body": "{\n  \"message\": {ERROR_MESSAGE},\n  \"status\": 400\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Product Attributes",
+            "description": "",
+            "item": [
+                {
+                    "name": "Retrieve all product attributes.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-attributes",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-attributes"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Attributes retrieved successfully.\",\n  \"data\": []\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a new product attribute.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-attributes",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-attributes"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"\\\"Color\\\"\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"message\": \"Product attribute created successfully.\",\n  \"data\": {}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Retrieve a specific product attribute.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-attributes\/:productAttribute_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-attributes\/:productAttribute_id",
+                            "variable": [
+                                {
+                                    "id": "productAttribute_id",
+                                    "key": "productAttribute_id",
+                                    "value": "11",
+                                    "description": "The ID of the productAttribute."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Attribute retrieved successfully.\",\n  \"data\": {}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete a product attribute.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-attributes\/:productAttribute_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-attributes\/:productAttribute_id",
+                            "variable": [
+                                {
+                                    "id": "productAttribute_id",
+                                    "key": "productAttribute_id",
+                                    "value": "11",
+                                    "description": "The ID of the productAttribute."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Product attribute deleted successfully.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Product Category",
+            "description": "",
+            "item": [
+                {
+                    "name": "Get all product categories",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-categories",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-categories"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Categories retrieved successfully.\",\n    \"data\": [\n        {\n            \"id\": 1,\n            \"name\": \"Electronics\",\n            \"children\": []\n        }\n    ]\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Store a new product category",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-categories",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-categories"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"ut\",\"parent_id\":5}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n    \"message\": \"Category created successfully.\",\n    \"data\": {\n        \"id\": 2,\n        \"name\": \"Laptops\",\n        \"parent_id\": 1\n    }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get a specific product category",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-categories\/:productCategory_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-categories\/:productCategory_id",
+                            "variable": [
+                                {
+                                    "id": "productCategory_id",
+                                    "key": "productCategory_id",
+                                    "value": "33",
+                                    "description": "The ID of the productCategory."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Category retrieved successfully.\",\n    \"data\": {\n        \"id\": 1,\n        \"name\": \"Electronics\",\n        \"children\": []\n    }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update a product category",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-categories\/:productCategory_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-categories\/:productCategory_id",
+                            "variable": [
+                                {
+                                    "id": "productCategory_id",
+                                    "key": "productCategory_id",
+                                    "value": "33",
+                                    "description": "The ID of the productCategory."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"fuga\",\"parent_id\":13}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Category updated successfully.\",\n    \"data\": {\n        \"id\": 1,\n        \"name\": \"Updated Category Name\",\n        \"parent_id\": null\n    }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete a product category",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-categories\/:productCategory_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-categories\/:productCategory_id",
+                            "variable": [
+                                {
+                                    "id": "productCategory_id",
+                                    "key": "productCategory_id",
+                                    "value": "33",
+                                    "description": "The ID of the productCategory."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Category deleted successfully\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n    \"message\": \"Cannot delete a category with subcategories\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Product Statuses",
+            "description": "",
+            "item": [
+                {
+                    "name": "Retrieve all product statuses.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-statuses",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-statuses"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Statuses retrieved successfully.\",\n    \"data\": [\n        {\"id\": 1, \"name\": \"Available\"},\n        {\"id\": 2, \"name\": \"Out of Stock\"}\n    ]\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a new product status.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-statuses",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-statuses"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"quod\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n    \"message\": \"Product status created successfully.\",\n    \"data\": {\"id\": 3, \"name\": \"Discontinued\"}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Retrieve a specific product status.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-statuses\/:productStatus_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-statuses\/:productStatus_id",
+                            "variable": [
+                                {
+                                    "id": "productStatus_id",
+                                    "key": "productStatus_id",
+                                    "value": "11",
+                                    "description": "The ID of the productStatus."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Status retrieved successfully.\",\n    \"data\": {\"id\": 1, \"name\": \"Available\"}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete a product status.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-statuses\/:productStatus_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-statuses\/:productStatus_id",
+                            "variable": [
+                                {
+                                    "id": "productStatus_id",
+                                    "key": "productStatus_id",
+                                    "value": "11",
+                                    "description": "The ID of the productStatus."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Product status deleted successfully.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Product Tags",
+            "description": "",
+            "item": [
+                {
+                    "name": "Retrieve all product tags.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-tags",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-tags"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Tags retrieved successfully.\",\n    \"data\": [\n        {\"id\": 1, \"name\": \"Electronics\"},\n        {\"id\": 2, \"name\": \"Fashion\"}\n    ]\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a new product tag.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-tags",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-tags"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"sed\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n    \"message\": \"Tag created successfully.\",\n    \"data\": {\"id\": 3, \"name\": \"Home Appliances\"}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Retrieve a specific product tag.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-tags\/:productTag_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-tags\/:productTag_id",
+                            "variable": [
+                                {
+                                    "id": "productTag_id",
+                                    "key": "productTag_id",
+                                    "value": "241",
+                                    "description": "The ID of the productTag."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Tag retrieved successfully.\",\n    \"data\": {\"id\": 1, \"name\": \"Electronics\"}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete a product tag.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-tags\/:productTag_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-tags\/:productTag_id",
+                            "variable": [
+                                {
+                                    "id": "productTag_id",
+                                    "key": "productTag_id",
+                                    "value": "241",
+                                    "description": "The ID of the productTag."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Tag deleted successfully.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Products",
+            "description": "",
+            "item": [
+                {
+                    "name": "Retrieve a paginated list of products.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/products",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/products"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"filter\":{\"name\":\"cn\",\"price\":\"3845742))\",\"category\":\"3,0,4,6,\",\"quantity\":70,\"created_at\":\"5451-60-46\",\"updated_at\":\"4482-23-20\",\"search\":\"rjdcwqjizsjajbduj\",\"include\":\"sa,i\"},\"page\":27,\"per_page\":5,\"sort\":\"-x\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Products retrieved successfully.\",\n    \"data\": []\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Retrieve a specific product.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/products\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/products\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the product."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Product retrieved successfully.\",\n    \"data\": {}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a new product.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/products",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/products"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "name",
+                                    "value": "oftcvctszabdmwjidpz",
+                                    "type": "text",
+                                    "description": "Must not be greater than 255 characters."
+                                },
+                                {
+                                    "key": "description",
+                                    "value": "Inventore et et nisi eius dolorem.",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "price",
+                                    "value": "89",
+                                    "type": "text",
+                                    "description": "Must be at least 0."
+                                },
+                                {
+                                    "key": "product_category_id",
+                                    "value": "maiores",
+                                    "type": "text",
+                                    "description": "The <code>id<\/code> of an existing record in the product_categories table."
+                                },
+                                {
+                                    "key": "product_status_id",
+                                    "value": "quas",
+                                    "type": "text",
+                                    "description": "The <code>id<\/code> of an existing record in the product_statuses table."
+                                },
+                                {
+                                    "key": "quantity",
+                                    "value": "15",
+                                    "type": "text",
+                                    "description": "Must be at least 0."
+                                },
+                                {
+                                    "key": "product_variants[0][product_attribute_id]",
+                                    "value": "sint",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "product_variants[0][value]",
+                                    "value": "c",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "product_variants[0][additional_price]",
+                                    "value": "1",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "product_variants[0][quantity]",
+                                    "value": "73",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "media[featured_image]",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n    \"message\": \"Product created successfully.\",\n    \"data\": {}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update an existing product.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/products\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/products\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the product."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "name",
+                                    "value": "vjwciwqqpcefbephxsyffmbm",
+                                    "type": "text",
+                                    "description": "Must not be greater than 255 characters."
+                                },
+                                {
+                                    "key": "description",
+                                    "value": "Autem minima ut minus qui eveniet.",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "price",
+                                    "value": "63",
+                                    "type": "text",
+                                    "description": "Must be at least 0."
+                                },
+                                {
+                                    "key": "product_category_id",
+                                    "value": "cum",
+                                    "type": "text",
+                                    "description": "The <code>id<\/code> of an existing record in the product_categories table."
+                                },
+                                {
+                                    "key": "product_status_id",
+                                    "value": "est",
+                                    "type": "text",
+                                    "description": "The <code>id<\/code> of an existing record in the product_statuses table."
+                                },
+                                {
+                                    "key": "quantity",
+                                    "value": "69",
+                                    "type": "text",
+                                    "description": "Must be at least 0."
+                                },
+                                {
+                                    "key": "product_variants[0][product_attribute_id]",
+                                    "value": "esse",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "product_variants[0][value]",
+                                    "value": "dlsfukmpwqnlk",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "product_variants[0][additional_price]",
+                                    "value": "87",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "product_variants[0][quantity]",
+                                    "value": "50",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "media[featured_image]",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Product updated successfully.\",\n    \"data\": {}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Soft delete a product.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/products\/soft-destroy\/:product_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/products\/soft-destroy\/:product_id",
+                            "variable": [
+                                {
+                                    "id": "product_id",
+                                    "key": "product_id",
+                                    "value": "1",
+                                    "description": "The ID of the product."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Product deleted successfully.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Permanently delete a product.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/products\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/products\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the product."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Product deleted successfully.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
                             "name": ""
                         }
                     ]

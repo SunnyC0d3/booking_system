@@ -14,6 +14,21 @@ class ProductAttributeController extends Controller
 {
     use ApiResponses;
 
+    /**
+     * Retrieve all product attributes.
+     *
+     * @group Product Attributes
+     * @authenticated
+     *
+     * @response 200 {
+     *   "message": "Attributes retrieved successfully.",
+     *   "data": []
+     * }
+     * 
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function index(Request $request)
     {
         $user = $request->user();
@@ -30,10 +45,27 @@ class ProductAttributeController extends Controller
         }
     }
 
+    /**
+     * Create a new product attribute.
+     *
+     * @group Product Attributes
+     * @authenticated
+     *
+     * @bodyParam name string required The name of the product attribute. Example: "Color"
+     *
+     * @response 201 {
+     *   "message": "Product attribute created successfully.",
+     *   "data": {}
+     * }
+     * 
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function store(StoreProductAttributeRequest $request)
     {
         $request->validated($request->only(['name']));
-        
+
         $user = $request->user();
 
         try {
@@ -48,6 +80,21 @@ class ProductAttributeController extends Controller
         }
     }
 
+    /**
+     * Retrieve a specific product attribute.
+     *
+     * @group Product Attributes
+     * @authenticated
+     *
+     * @response 200 {
+     *   "message": "Attribute retrieved successfully.",
+     *   "data": {}
+     * }
+     * 
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function show(Request $request, ProductAttribute $productAttribute)
     {
         $user = $request->user();
@@ -63,10 +110,27 @@ class ProductAttributeController extends Controller
         }
     }
 
+    /**
+     * Update a product attribute.
+     *
+     * @group Product Attributes
+     * @authenticated
+     *
+     * @bodyParam name string required The updated name of the product attribute. Example: "Size"
+     *
+     * @response 200 {
+     *   "message": "Product attribute updated successfully.",
+     *   "data": {}
+     * }
+     * 
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function update(UpdateProductAttributeRequest $request, ProductAttribute $productAttribute)
     {
         $request->validated($request->only(['name']));
-        
+
         $user = $request->user();
 
         try {
@@ -81,6 +145,20 @@ class ProductAttributeController extends Controller
         }
     }
 
+    /**
+     * Delete a product attribute.
+     *
+     * @group Product Attributes
+     * @authenticated
+     *
+     * @response 200 {
+     *   "message": "Product attribute deleted successfully."
+     * }
+     * 
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function destroy(Request $request, ProductAttribute $productAttribute)
     {
         $user = $request->user();

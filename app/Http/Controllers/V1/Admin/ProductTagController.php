@@ -14,6 +14,24 @@ class ProductTagController extends Controller
 {
     use ApiResponses;
 
+    /**
+     * Retrieve all product tags.
+     * 
+     * @group Product Tags
+     * @authenticated
+     *
+     * @response 200 {
+     *     "message": "Tags retrieved successfully.",
+     *     "data": [
+     *         {"id": 1, "name": "Electronics"},
+     *         {"id": 2, "name": "Fashion"}
+     *     ]
+     * }
+     * 
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function index(Request $request)
     {
         return response()->json(ProductTag::all());
@@ -31,10 +49,27 @@ class ProductTagController extends Controller
         }
     }
 
+    /**
+     * Create a new product tag.
+     * 
+     * @group Product Tags
+     * @authenticated
+     * 
+     * @bodyParam name string required The name of the product tag.
+     *
+     * @response 201 {
+     *     "message": "Tag created successfully.",
+     *     "data": {"id": 3, "name": "Home Appliances"}
+     * }
+     * 
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function store(StoreProductTagRequest $request)
     {
         $request->validated($request->only(['name']));
-        
+
         $user = $request->user();
 
         try {
@@ -49,6 +84,21 @@ class ProductTagController extends Controller
         }
     }
 
+    /**
+     * Retrieve a specific product tag.
+     * 
+     * @group Product Tags
+     * @authenticated
+     * 
+     * @response 200 {
+     *     "message": "Tag retrieved successfully.",
+     *     "data": {"id": 1, "name": "Electronics"}
+     * }
+     * 
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function show(Request $request, ProductTag $productTag)
     {
         $user = $request->user();
@@ -64,10 +114,27 @@ class ProductTagController extends Controller
         }
     }
 
+    /**
+     * Update an existing product tag.
+     * 
+     * @group Product Tags
+     * @authenticated
+     * 
+     * @bodyParam name string required The updated name of the product tag.
+     *
+     * @response 200 {
+     *     "message": "Tag updated successfully.",
+     *     "data": {"id": 1, "name": "Gadgets"}
+     * }
+     * 
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function update(UpdateProductTagRequest $request, ProductTag $productTag)
     {
         $request->validated($request->only(['name']));
-        
+
         $user = $request->user();
 
         try {
@@ -82,6 +149,20 @@ class ProductTagController extends Controller
         }
     }
 
+    /**
+     * Delete a product tag.
+     * 
+     * @group Product Tags
+     * @authenticated
+     * 
+     * @response 200 {
+     *     "message": "Tag deleted successfully."
+     * }
+     * 
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function destroy(Request $request, ProductTag $productTag)
     {
         $user = $request->user();
