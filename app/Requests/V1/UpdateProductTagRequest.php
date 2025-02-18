@@ -16,8 +16,10 @@ class UpdateProductTagRequest extends BaseFormRequest
 
     public function rules(): array
     {
+        $productTagId = $this->route('productTag')?->id ?? 'NULL';
+
         return [
-            'name' => 'required|string|max:255|unique:product_tags,name,' . $this->route('productTag')->id ?? null,
+            'name' => 'required|string|max:255|unique:product_tags,name,' . $productTagId,
         ];
     }
 }
