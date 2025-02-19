@@ -16,7 +16,7 @@ class UpdateProductAttributeRequest extends BaseFormRequest
 
     public function rules(): array
     {
-        $productAttributeId = $this->route('productAttribute')?->id ?? 'NULL';
+        $productAttributeId = $this->route('productAttribute')?->id ?? 'null';
 
         return [
             'name' => 'required|string|max:255|unique:product_attributes,name,' . $productAttributeId,

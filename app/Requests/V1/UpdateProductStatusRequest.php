@@ -16,8 +16,10 @@ class UpdateProductStatusRequest extends BaseFormRequest
 
     public function rules(): array
     {
+        $productStatusId = $this->route('productStatus')->id ?? 'null';
+
         return [
-            'name' => 'required|string|max:255|unique:product_statuses,name,' . $this->route('productStatus')->id,
+            'name' => 'required|string|max:255|unique:product_statuses,name,' . $productStatusId,
         ];
     }
 }

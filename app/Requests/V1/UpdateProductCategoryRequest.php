@@ -20,9 +20,11 @@ class UpdateProductCategoryRequest extends BaseFormRequest
 
     public function rules(): array
     {
+        $productCategoryId = $this->route('productCategory')->id ?? 'null';
+
         return [
-            'name' => 'required|string|max:255|unique:product_categories,name,' . $this->productCategoryId,
-            'parent_id' => 'nullable|exists:product_categories,id|not_in:' . $this->productCategoryId,
+            'name' => 'required|string|max:255|unique:product_categories,name,' . $productCategoryId,
+            'parent_id' => 'nullable|exists:product_categories,id|not_in:' . $productCategoryId,
         ];
     }
 }
