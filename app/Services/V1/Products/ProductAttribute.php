@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\V1\Product;
+namespace App\Services\V1\Products;
 
 use App\Models\ProductAttribute as DB;
 use Illuminate\Http\Request;

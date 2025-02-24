@@ -4,15 +4,23 @@ namespace App\Http\Controllers\V1\Admin;
 
 use Exception;
 use Illuminate\Http\Request;
-use App\Models\ProductCategory;
 use App\Http\Controllers\Controller;
 use App\Traits\V1\ApiResponses;
 use App\Requests\V1\StoreProductCategoryRequest;
 use App\Requests\V1\UpdateProductCategoryRequest;
+use App\Services\V1\Products\ProductCategory;
+use App\Models\ProductCategory as DB;
 
 class ProductCategoryController extends Controller
 {
     use ApiResponses;
+
+    private $productCategory;
+
+    public function __construct(ProductCategory $productCategory)
+    {
+        $this->productCategory = $productCategory;
+    }
 
     /**
      * Get all product categories
@@ -37,15 +45,8 @@ class ProductCategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $user = $request->user();
-
         try {
-            if ($user->hasPermission('view_product_categories')) {
-                $categories = ProductCategory::with('children')->get();
-                return $this->ok('Categories retrieved successfully.', $categories);
-            }
-
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->productCategory->all($request);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
@@ -77,15 +78,8 @@ class ProductCategoryController extends Controller
     {
         $request->validated($request->only(['name', 'parent_id']));
 
-        $user = $request->user();
-
         try {
-            if ($user->hasPermission('create_product_categories')) {
-                $category = ProductCategory::create($request->validated());
-                return $this->ok('Category created successfully.', $category);
-            }
-
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->productCategory->create($request);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
@@ -110,16 +104,10 @@ class ProductCategoryController extends Controller
      *     "message": "You do not have the required permissions."
      * }
      */
-    public function show(Request $request, ProductCategory $productCategory)
+    public function show(Request $request, DB $productCategory)
     {
-        $user = $request->user();
-
         try {
-            if ($user->hasPermission('view_product_categories')) {
-                return $this->ok('Category retrieved successfully.', $productCategory->load('children'));
-            }
-
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->productCategory->find($request, $productCategory);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
@@ -147,19 +135,12 @@ class ProductCategoryController extends Controller
      *     "message": "You do not have the required permissions."
      * }
      */
-    public function update(UpdateProductCategoryRequest $request, ProductCategory $productCategory)
+    public function update(UpdateProductCategoryRequest $request, DB $productCategory)
     {
         $request->validated($request->only(['name', 'parent_id']));
 
-        $user = $request->user();
-
         try {
-            if ($user->hasPermission('edit_product_categories')) {
-                $productCategory->update($request->validated());
-                return $this->ok('Category updated successfully.', $productCategory);
-            }
-
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->productCategory->update($request, $productCategory);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
@@ -183,22 +164,10 @@ class ProductCategoryController extends Controller
      *     "message": "You do not have the required permissions."
      * }
      */
-    public function destroy(Request $request, ProductCategory $productCategory)
+    public function destroy(Request $request, DB $productCategory)
     {
-        $user = $request->user();
-
         try {
-            if ($user->hasPermission('delete_product_categories')) {
-                if ($productCategory->children()->exists()) {
-                    return $this->error('Cannot delete a category with subcategories', 400);
-                }
-
-                $productCategory->delete();
-
-                return $this->ok('Category deleted successfully');
-            }
-
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->productCategory->delete($request, $productCategory);
         } catch (\Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }

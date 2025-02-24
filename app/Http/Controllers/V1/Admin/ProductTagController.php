@@ -4,15 +4,23 @@ namespace App\Http\Controllers\V1\Admin;
 
 use Exception;
 use Illuminate\Http\Request;
-use App\Models\ProductTag;
 use App\Http\Controllers\Controller;
 use App\Requests\V1\StoreProductTagRequest;
 use App\Requests\V1\UpdateProductTagRequest;
 use App\Traits\V1\ApiResponses;
+use App\Services\V1\Products\ProductTag;
+use App\Models\ProductTag as DB;
 
 class ProductTagController extends Controller
 {
     use ApiResponses;
+
+    private $productTag;
+
+    public function __construct(ProductTag $productTag)
+    {
+        $this->productTag = $productTag;
+    }
 
     /**
      * Retrieve all product tags.
@@ -34,16 +42,8 @@ class ProductTagController extends Controller
      */
     public function index(Request $request)
     {
-        return response()->json(ProductTag::all());
-        $user = $request->user();
-
         try {
-            if ($user->hasPermission('view_product_tags')) {
-                $tags = ProductTag::all();
-                return $this->ok('Tags retrieved successfully.', $tags);
-            }
-
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->productTag->all($request);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
@@ -70,15 +70,8 @@ class ProductTagController extends Controller
     {
         $request->validated($request->only(['name']));
 
-        $user = $request->user();
-
         try {
-            if ($user->hasPermission('create_product_tags')) {
-                $tag = ProductTag::create($request->validated());
-                return $this->ok('Tag created successfully.', $tag);
-            }
-
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->productTag->create($request);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
@@ -99,16 +92,10 @@ class ProductTagController extends Controller
      *     "message": "You do not have the required permissions."
      * }
      */
-    public function show(Request $request, ProductTag $productTag)
+    public function show(Request $request, DB $productTag)
     {
-        $user = $request->user();
-
         try {
-            if ($user->hasPermission('view_product_tags')) {
-                return $this->ok('Tag retrieved successfully.', $productTag->load('products'));
-            }
-
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->productTag->find($request, $productTag);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
@@ -131,19 +118,12 @@ class ProductTagController extends Controller
      *     "message": "You do not have the required permissions."
      * }
      */
-    public function update(UpdateProductTagRequest $request, ProductTag $productTag)
+    public function update(UpdateProductTagRequest $request, DB $productTag)
     {
         $request->validated($request->only(['name']));
 
-        $user = $request->user();
-
         try {
-            if ($user->hasPermission('edit_product_tags')) {
-                $productTag->update($request->validated());
-                return $this->ok('Tag updated successfully.', $productTag);
-            }
-
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->productTag->update($request, $productTag);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
@@ -163,17 +143,10 @@ class ProductTagController extends Controller
      *     "message": "You do not have the required permissions."
      * }
      */
-    public function destroy(Request $request, ProductTag $productTag)
+    public function destroy(Request $request, DB $productTag)
     {
-        $user = $request->user();
-
         try {
-            if ($user->hasPermission('delete_product_tags')) {
-                $productTag->forceDelete();
-                return $this->ok('Tag deleted successfully.');
-            }
-
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->productTag->delete($request, $productTag);
         } catch (\Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }

@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
-use App\Auth\V1\UserAuth;
+use App\Services\V1\Auth\UserAuth;
 use App\Permissions\V1\Abilities;
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
@@ -14,12 +14,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-    public function register(): void
-    {
-        $this->app->singleton(UserAuth::class, function ($app) {
-            return new UserAuth();
-        });
-    }
+    public function register(): void{}
 
     /**
      * Bootstrap any application services.
