@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\Feature\App\Auth\V1;
+namespace Tests\Feature\App\Services\V1\Auth;
 
-use App\Auth\V1\UserAuth;
+use App\Services\V1\Auth\UserAuth;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
