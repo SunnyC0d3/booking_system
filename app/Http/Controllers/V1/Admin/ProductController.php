@@ -2,22 +2,27 @@
 
 namespace App\Http\Controllers\V1\Admin;
 
-use App\Models\Product;
-use App\Models\Vendor;
+use App\Models\Product as ProdDB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Filters\V1\ProductFilter;
-use App\Resources\V1\ProductResource;
 use \Exception;
 use App\Traits\V1\ApiResponses;
 use App\Requests\V1\FilterProductRequest;
 use App\Requests\V1\StoreProductRequest;
 use App\Requests\V1\UpdateProductRequest;
-use Illuminate\Support\Facades\DB;
+use App\Services\V1\Products\Product;
 
 class ProductController extends Controller
 {
     use ApiResponses;
+
+    private $product;
+
+    public function __construct(Product $product)
+    {
+        $this->product = $product;
+    }
 
     /**
      * Retrieve a paginated list of products.
@@ -52,18 +57,8 @@ class ProductController extends Controller
             'sort',
         ]));
 
-        $user = $request->user();
-
         try {
-            if ($user->hasPermission('view_products')) {
-                $query = Product::with(['vendor', 'variants', 'category', 'tags', 'media'])->filter($filter);
-                $perPage = $request->input('per_page', 15);
-                $products = $query->paginate($perPage);
-
-                return $this->ok(ProductResource::collection($products));
-            }
-
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->product->all($request, $filter);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
@@ -84,17 +79,10 @@ class ProductController extends Controller
      *     "message": "You do not have the required permissions."
      * }
      */
-    public function show(Request $request, Product $product)
+    public function show(Request $request, ProdDB $product)
     {
-        $user = $request->user();
-
         try {
-            if ($user->hasPermission('view_products')) {
-                $product->load(['vendor', 'variants', 'category', 'tags', 'media']);
-                return $this->ok(new ProductResource($product));
-            }
-
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->product->find($request, $product);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
@@ -137,64 +125,8 @@ class ProductController extends Controller
             'media.gallery.*'
         ]));
 
-        $user = $request->user();
-
         try {
-            if ($user->hasPermission('create_products')) {
-                $data = $request->validated();
-
-                $vendor = Vendor::where('user_id', $user->id)->first();
-
-                if (!$vendor) {
-                    return $this->error('Vendor not found.', 404);
-                }
-
-                $product = DB::transaction(function () use ($data, $vendor) {
-                    $product = Product::create([
-                        'name' => $data['name'],
-                        'description' => $data['description'] ?? null,
-                        'price' => $data['price'],
-                        'quantity' => $data['quantity'],
-                        'product_category_id' => $data['product_category_id'],
-                        'vendor_id' => $vendor->id,
-                        'product_status_id' => $data['product_status_id'],
-                    ]);
-
-                    if (!empty($data['product_tags'])) {
-                        $product->tags()->sync($data['product_tags']);
-                    }
-
-                    if (!empty($data['product_variants'])) {
-                        foreach ($data['product_variants'] as $variant) {
-                            $product->variants()->create([
-                                'product_id' => $product->id,
-                                'product_attribute_id' => $variant['product_attribute_id'],
-                                'value' => $variant['value'],
-                                'additional_price' => $variant['additional_price'],
-                                'quantity' => $variant['quantity']
-                            ]);
-                        }
-                    }
-
-                    if (!empty($data['media'])) {
-                        if (!empty($data['media']['featured_image'])) {
-                            $product->addMediaFromRequest('media.featured_image')->toMediaCollection('featured_image');
-                        }
-
-                        if (!empty($data['media']['gallery'])) {
-                            foreach ($data['media']['gallery'] as $media) {
-                                $product->addMedia($media)->toMediaCollection('gallery');
-                            }
-                        }
-                    }
-
-                    return $product;
-                });
-
-                return $this->ok('Product created successfully!', new ProductResource($product));
-            }
-
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->product->create($request);
         } catch (\Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
@@ -215,7 +147,7 @@ class ProductController extends Controller
      *     "message": "You do not have the required permissions."
      * }
      */
-    public function update(UpdateProductRequest $request, Product $product)
+    public function update(UpdateProductRequest $request, ProdDB $product)
     {
         $request->validated($request->only([
             'name',
@@ -237,58 +169,8 @@ class ProductController extends Controller
             'media.gallery.*'
         ]));
 
-        $user = $request->user();
-
         try {
-            if ($user->hasPermission('edit_products')) {
-                $data = $request->validated();
-
-                DB::transaction(function () use ($data, $product) {
-                    $product->update([
-                        'name' => $data['name'],
-                        'description' => $data['description'] ?? null,
-                        'price' => $data['price'],
-                        'quantity' => $data['quantity'],
-                        'product_category_id' => $data['product_category_id'],
-                        'product_status_id' => $data['product_status_id'],
-                    ]);
-
-                    if (!empty($data['product_tags'])) {
-                        $product->tags()->sync($data['product_tags']);
-                    }
-
-                    if (isset($data['product_variants'])) {
-                        $product->variants()->delete();
-                        foreach ($data['product_variants'] as $variant) {
-                            $product->variants()->create([
-                                'product_id' => $product->id,
-                                'product_attribute_id' => $variant['product_attribute_id'],
-                                'value' => $variant['value'],
-                                'additional_price' => $variant['additional_price'],
-                                'quantity' => $variant['quantity']
-                            ]);
-                        }
-                    }
-
-                    if (!empty($data['media'])) {
-                        if (!empty($data['media']['featured_image'])) {
-                            $product->clearMediaCollection('featured_image');
-                            $product->addMediaFromRequest('media.featured_image')->toMediaCollection('featured_image');
-                        }
-
-                        if (!empty($data['media']['gallery'])) {
-                            $product->clearMediaCollection('gallery');
-                            foreach ($data['media']['gallery'] as $galleryItem) {
-                                $product->addMedia($galleryItem)->toMediaCollection('gallery');
-                            }
-                        }
-                    }
-                });
-
-                return $this->ok('Product updated successfully!', new ProductResource($product));
-            }
-
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->product->update($request, $product);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
@@ -308,20 +190,10 @@ class ProductController extends Controller
      *     "message": "You do not have the required permissions."
      * }
      */
-    public function softDestroy(Request $request, Product $product)
+    public function softDestroy(Request $request, ProdDB $product)
     {
-        $user = $request->user();
-
         try {
-            if (!$user->hasPermission('delete_products')) {
-                return $this->error('You do not have the required permissions.', 403);
-            }
-
-            DB::transaction(function () use ($product) {
-                $product->delete();
-            });
-
-            return $this->ok('Product deleted successfully.');
+            return $this->product->softDelete($request, $product);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
@@ -341,23 +213,10 @@ class ProductController extends Controller
      *     "message": "You do not have the required permissions."
      * }
      */
-    public function destroy(Request $request, Product $product)
+    public function destroy(Request $request, ProdDB $product)
     {
-        $user = $request->user();
-
         try {
-            if (!$user->hasPermission('delete_products')) {
-                return $this->error('You do not have the required permissions.', 403);
-            }
-
-            DB::transaction(function () use ($product) {
-                $product->clearMediaCollection('featured_image');
-                $product->clearMediaCollection('gallery');
-                $product->variants()->forceDelete();
-                $product->forceDelete();
-            });
-
-            return $this->ok('Product deleted successfully.');
+            return $this->product->delete($request, $product);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
