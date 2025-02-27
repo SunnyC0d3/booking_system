@@ -59,7 +59,7 @@ class ProductAttributeControllerTest extends TestCase
 
         $this->actingAs($this->user, 'api');
 
-        $response = $this->getJson(route('products.attributes.index'));
+        $response = $this->getJson(route('admin.products.attributes.index'));
 
         $response->assertOk();
     }
@@ -68,7 +68,7 @@ class ProductAttributeControllerTest extends TestCase
     {
         $this->actingAs($this->user, 'api');
 
-        $response = $this->postJson(route('products.attributes.store'), [
+        $response = $this->postJson(route('admin.products.attributes.store'), [
             'name' => 'Color'
         ]);
 

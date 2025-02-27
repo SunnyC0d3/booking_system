@@ -61,7 +61,7 @@ class ProductControllerTest extends TestCase
 
     public function test_user_can_retrieve_paginated_products()
     {
-        $response = $this->actingAs($this->user, 'api')->getJson(route('products.index'));
+        $response = $this->actingAs($this->user, 'api')->getJson(route('admin.products.index'));
 
         $response->assertStatus(200)
                  ->assertJsonStructure(['message', 'data']);
@@ -69,7 +69,7 @@ class ProductControllerTest extends TestCase
 
     public function test_user_can_view_a_single_product()
     {
-        $response = $this->actingAs($this->user, 'api')->getJson(route('products.show', $this->product));
+        $response = $this->actingAs($this->user, 'api')->getJson(route('admin.products.show', $this->product));
 
         $response->assertStatus(200)
                  ->assertJsonStructure(['message', 'data']);
@@ -80,7 +80,7 @@ class ProductControllerTest extends TestCase
         $data = Product::factory()->make()->toArray();
         $data['vendor_id'] = $this->vendor->id;
 
-        $response = $this->actingAs($this->user, 'api')->postJson(route('products.store'), $data);
+        $response = $this->actingAs($this->user, 'api')->postJson(route('admin.products.store'), $data);
 
         $response->assertStatus(200)
                  ->assertJsonStructure(['message', 'data']);
@@ -90,14 +90,14 @@ class ProductControllerTest extends TestCase
     {
         $updatedData = ['name' => 'Updated Product Name'];
 
-        $response = $this->actingAs($this->user, 'api')->postJson(route('products.update', $this->product), $updatedData);
+        $response = $this->actingAs($this->user, 'api')->postJson(route('admin.products.update', $this->product), $updatedData);
 
         $response->assertStatus(200);
     }
 
     public function test_user_can_soft_delete_a_product()
     {
-        $response = $this->actingAs($this->user, 'api')->deleteJson(route('products.softDestroy', $this->product));
+        $response = $this->actingAs($this->user, 'api')->deleteJson(route('admin.products.softDestroy', $this->product));
 
         $response->assertStatus(200)
                  ->assertJson(['message' => 'Product deleted successfully.']);
@@ -105,7 +105,7 @@ class ProductControllerTest extends TestCase
 
     public function test_user_can_permanently_delete_a_product()
     {
-        $response = $this->actingAs($this->user, 'api')->deleteJson(route('products.destroy', $this->product));
+        $response = $this->actingAs($this->user, 'api')->deleteJson(route('admin.products.destroy', $this->product));
 
         $response->assertStatus(200)
                  ->assertJson(['message' => 'Product deleted successfully.']);

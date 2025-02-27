@@ -59,7 +59,7 @@ class ProductStatusControllerTest extends TestCase
 
         $this->actingAs($this->user, 'api');
 
-        $response = $this->getJson(route('products.statuses.index'));
+        $response = $this->getJson(route('admin.products.statuses.index'));
 
         $response->assertOk();
     }
@@ -68,7 +68,7 @@ class ProductStatusControllerTest extends TestCase
     {
         $this->actingAs($this->user, 'api');
 
-        $response = $this->postJson(route('products.statuses.store'), [
+        $response = $this->postJson(route('admin.products.statuses.store'), [
             'name' => 'Active'
         ]);
 

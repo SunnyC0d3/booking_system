@@ -12,7 +12,10 @@ use Laravel\Passport\Http\Middleware\CheckScopes;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        api: __DIR__ . '/../routes/api/v1/api.php',
+        api: [
+            __DIR__ . '/../routes/api/v1/admin/api.php',
+            __DIR__ . '/../routes/api/v1/public/api.php'
+        ],
         commands: __DIR__ . '/../routes/console.php',
         health: '/up',
     )

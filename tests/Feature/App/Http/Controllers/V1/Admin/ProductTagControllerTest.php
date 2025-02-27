@@ -59,7 +59,7 @@ class ProductTagControllerTest extends TestCase
 
         $this->actingAs($this->user, 'api');
 
-        $response = $this->getJson(route('products.tags.index'));
+        $response = $this->getJson(route('admin.products.tags.index'));
 
         $response->assertOk();
     }
@@ -68,7 +68,7 @@ class ProductTagControllerTest extends TestCase
     {
         $this->actingAs($this->user, 'api');
 
-        $response = $this->postJson(route('products.tags.store'), [
+        $response = $this->postJson(route('admin.products.tags.store'), [
             'name' => 'product'
         ]);
 

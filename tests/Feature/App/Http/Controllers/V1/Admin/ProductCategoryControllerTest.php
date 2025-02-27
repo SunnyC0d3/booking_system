@@ -59,7 +59,7 @@ class ProductCategoryControllerTest extends TestCase
 
         $this->actingAs($this->user, 'api');
 
-        $response = $this->getJson(route('products.categories.index'));
+        $response = $this->getJson(route('admin.products.categories.index'));
 
         $response->assertOk();
     }
@@ -68,7 +68,7 @@ class ProductCategoryControllerTest extends TestCase
     {
         $this->actingAs($this->user, 'api');
 
-        $response = $this->postJson(route('products.categories.store'), [
+        $response = $this->postJson(route('admin.products.categories.store'), [
             'name' => 'Color'
         ]);
 
