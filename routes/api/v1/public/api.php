@@ -28,7 +28,7 @@ Route::middleware(['throttle:3,1', 'auth:api'])
 // Public/Products
 
 Route::prefix('public/products')
-    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin', 'emailVerified'])
+    ->middleware(['throttle:10,1', 'auth:api', 'roles:guest,user', 'emailVerified'])
     ->controller(ProductController::class)
     ->group(function () {
         Route::get('/', 'index')->name('public.products.index');

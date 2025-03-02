@@ -13,7 +13,7 @@ use App\Http\Controllers\V1\Admin\ProductTagController;
 // Admin/Products
 
 Route::prefix('admin/products')
-    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin', 'emailVerified'])
+    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin,admin', 'emailVerified'])
     ->controller(ProductController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.products.index');
@@ -27,7 +27,7 @@ Route::prefix('admin/products')
 // Admin/Product Attributes
 
 Route::prefix('admin/product-attributes')
-    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin', 'emailVerified'])
+    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin,admin', 'emailVerified'])
     ->controller(ProductAttributeController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.products.attributes.index');
@@ -40,7 +40,7 @@ Route::prefix('admin/product-attributes')
 // Admin/Product Categories
 
 Route::prefix('admin/product-categories')
-    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin', 'emailVerified'])
+    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin,admin', 'emailVerified'])
     ->controller(ProductCategoryController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.products.categories.index');
@@ -53,7 +53,7 @@ Route::prefix('admin/product-categories')
 // Admin/Product Statuses
 
 Route::prefix('admin/product-statuses')
-->middleware(['throttle:10,1', 'auth:api', 'roles:super admin', 'emailVerified'])
+->middleware(['throttle:10,1', 'auth:api', 'roles:super admin,admin', 'emailVerified'])
 ->controller(ProductStatusController::class)
 ->group(function () {
     Route::get('/', 'index')->name('admin.products.statuses.index');
@@ -66,7 +66,7 @@ Route::prefix('admin/product-statuses')
 // Admin/Product Tags
 
 Route::prefix('admin/product-tags')
-->middleware(['throttle:10,1', 'auth:api', 'roles:super admin', 'emailVerified'])
+->middleware(['throttle:10,1', 'auth:api', 'roles:super admin,admin', 'emailVerified'])
 ->controller(ProductTagController::class)
 ->group(function () {
     Route::get('/', 'index')->name('admin.products.tags.index');
