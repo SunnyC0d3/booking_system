@@ -28,7 +28,7 @@ class EmailVerificationController
      *   "status": 401
      * }
      */
-    public function verify($user_id,  Request $request) {
+    public function verify(int $user_id,  Request $request) {
         if (!$request->hasValidSignature()) {
             return $this->error('Invalid/Expired url provided.', 401);
         }

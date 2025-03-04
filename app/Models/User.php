@@ -93,7 +93,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return false;
     }
 
-    public function setNameAttribute($value)
+    public function setNameAttribute(string $value)
     {
         $words = explode(' ', $value);
         $capitalizedWords = array_map('ucwords', $words);
@@ -101,7 +101,7 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->attributes['name'] = implode(' ', $capitalizedWords);
     }
 
-    public function getNameAttribute($value)
+    public function getNameAttribute(string $value)
     {
         $words = explode(' ', $value);
         $capitalizedWords = array_map('ucwords', $words);

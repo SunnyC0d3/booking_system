@@ -14,13 +14,13 @@ class ProductFilter extends QueryFilter
         'updated_at',
     ];
 
-    public function name($value)
+    public function name(string $value)
     {
         $likeStr = str_replace('*', '%', $value);
         return $this->builder->where('name', 'like', $likeStr);
     }
 
-    public function createdAt($value)
+    public function createdAt(string $value)
     {
         $dates = explode(',', $value);
 
@@ -31,7 +31,7 @@ class ProductFilter extends QueryFilter
         return $this->builder->whereDate('created_at', $value);
     }
 
-    public function updatedAt($value)
+    public function updatedAt(string $value)
     {
         $dates = explode(',', $value);
 
@@ -42,7 +42,7 @@ class ProductFilter extends QueryFilter
         return $this->builder->whereDate('updated_at', $value);
     }
 
-    public function price($value)
+    public function price(string $value)
     {
         $range = explode(',', $value);
 
@@ -53,24 +53,24 @@ class ProductFilter extends QueryFilter
         return $this->builder->where('price', $value);
     }
 
-    public function quantity($value)
+    public function quantity(int $value)
     {
         return $this->builder->where('quantity', $value);
     }
 
-    public function category($value)
+    public function category(string $value)
     {
         return $this->builder->whereHas('category', function (Builder $query) use ($value) {
             $query->whereIn('id', explode(',', $value));
         });
     }
 
-    public function include($value)
+    public function include(string|array $value)
     {
         return $this->builder->with($value);
     }
 
-    public function search($value)
+    public function search(string $value)
     {
         $likeStr = str_replace('*', '%', $value);
         return $this->builder->where('name', 'like', $likeStr)

@@ -4,8 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
-use App\Services\V1\Auth\UserAuth;
-use App\Permissions\V1\Abilities;
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 
@@ -21,8 +19,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Passport::tokensCan(Abilities::Scopes);
-
         Passport::enablePasswordGrant();
         Passport::tokensExpireIn(now()->addMinutes(30));
         Passport::refreshTokensExpireIn(now()->addDays(7));

@@ -4,12 +4,12 @@ namespace App\Traits\V1;
 
 trait ApiResponses
 {
-    protected function ok($message, $data = [])
+    protected function ok(mixed $message, mixed $data = [])
     {
         return $this->success($message, $data, 200);
     }
 
-    protected function success($message, $data = [], $statusCode = 200)
+    protected function success(mixed $message, mixed $data = [], int|null $statusCode = 200)
     {
         return response()->json([
             'data' => $data,
@@ -18,7 +18,7 @@ trait ApiResponses
         ]);
     }
 
-    protected function error($errors = [], $statusCode = null)
+    protected function error(mixed $errors = [], int|null $statusCode = null)
     {
         if (is_string($errors)) {
             return response()->json([
