@@ -6,21 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class VendorReview extends Model
+class UserAddress extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'vendor_id',
         'user_id',
-        'rating',
-        'comment',
+        'address_line1',
+        'address_line2',
+        'city',
+        'state',
+        'country',
+        'postal_code',
     ];
-
-    public function vendor(): BelongsTo
-    {
-        return $this->belongsTo(Vendor::class);
-    }
 
     public function user(): BelongsTo
     {

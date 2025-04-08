@@ -6,10 +6,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\Auth\AuthController;
 use App\Http\Controllers\V1\Auth\EmailVerificationController;
 
-// Public Controllers
-
-use App\Http\Controllers\V1\Public\ProductController;
-
 // Auth
 
 Route::middleware(['throttle:3,1', 'hmac'])
@@ -23,16 +19,6 @@ Route::middleware(['throttle:3,1', 'auth:api'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/logout', 'logout')->name('auth.logout');
-    });
-
-// Public/Products
-
-Route::prefix('public/products')
-    ->middleware(['throttle:10,1', 'auth:api', 'roles:guest,user', 'emailVerified'])
-    ->controller(ProductController::class)
-    ->group(function () {
-        Route::get('/', 'index')->name('public.products.index');
-        Route::get('/{product}', 'show')->name('public.products.show');
     });
 
 // Email Verification

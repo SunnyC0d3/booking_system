@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             OrderShipmentStatusSeeder::class,
 
             UserSeeder::class,
+            UserAddressSeeder::class,
             VendorSeeder::class,
 
             ProductStatusSeeder::class,
@@ -27,10 +28,6 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
 
             OrderSeeder::class,
-
-            VendorSettingsSeeder::class,
-            VendorPaymentsSeeder::class,
-            VendorReviewsSeeder::class,
         ]);
     }
 }
