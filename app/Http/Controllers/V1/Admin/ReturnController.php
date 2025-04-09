@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\V1\Admin;
 
 use App\Models\OrderReturn;
 use Illuminate\Http\Request;
