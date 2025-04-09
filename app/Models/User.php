@@ -9,6 +9,7 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -59,6 +60,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function vendors(): HasMany
     {
         return $this->hasMany(Vendor::class);
+    }
+
+    public function userAddress(): HasOne
+    {
+        return $this->hasOne(UserAddress::class);
     }
 
     public function hasRole(string|array $roles): bool
