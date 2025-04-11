@@ -4,11 +4,25 @@ use Illuminate\Support\Facades\Route;
 
 // Admin Controllers
 
+use App\Http\Controllers\V1\Admin\UserController;
 use App\Http\Controllers\V1\Admin\ProductController;
 use App\Http\Controllers\V1\Admin\ProductAttributeController;
 use App\Http\Controllers\V1\Admin\ProductCategoryController;
 use App\Http\Controllers\V1\Admin\ProductStatusController;
 use App\Http\Controllers\V1\Admin\ProductTagController;
+
+// Admin/Users
+
+Route::prefix('admin/users')
+    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->controller(UserController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('admin.users.index');
+        Route::get('/{user}', 'show')->name('admin.users.show');
+        Route::post('/', 'store')->name('admin.users.store');
+        Route::post('/{user}', 'update')->name('admin.users.update');
+        Route::delete('/{user}', 'destroy')->name('admin.users.destroy');
+    });
 
 // Admin/Products
 

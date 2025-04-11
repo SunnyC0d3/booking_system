@@ -8,17 +8,22 @@ use App\Traits\V1\ApiResponses;
 use App\Requests\V1\StoreUserRequest;
 use App\Requests\V1\UpdateUserRequest;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
 use \Exception;
 
 class UserController extends Controller
 {
     use ApiResponses;
 
-    public function index()
+    public function index(Request $request)
     {
+        $user = $request->user();
+
         try {
-            $users = User::with(['role', 'vendors', 'userAddress'])->latest()->paginate(15);
-            return $this->ok('Users retrieved successfully.', $users);
+            if ($user->hasPermission('view_users')) {
+                $users = User::with(['role', 'vendors', 'userAddress'])->latest()->paginate(15);
+                return $this->ok('Users retrieved successfully.', $users);
+            }
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
@@ -39,17 +44,21 @@ class UserController extends Controller
             'address.state',
         ]));
 
+        $user = $request->user();
+
         try {
-            $user = User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'role_id' => $data['role_id'],
-                'password' => Hash::make($data['password']),
-            ]);
+            if ($user->hasPermission('create_users')) {
+                $user = User::create([
+                    'name' => $data['name'],
+                    'email' => $data['email'],
+                    'role_id' => $data['role_id'],
+                    'password' => Hash::make($data['password']),
+                ]);
 
-            $user = $user->userAddress()->create($data['address']);
+                $user = $user->userAddress()->create($data['address']);
 
-            return $this->ok('User created successfully!', $user);
+                return $this->ok('User created successfully!', $user);
+            }
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
@@ -58,8 +67,10 @@ class UserController extends Controller
     public function show(User $user)
     {
         try {
-            $user->load(['role', 'vendors', 'userAddress']);
-            return $this->ok('User details retrieved.', $user);
+            if ($user->hasPermission('view_users')) {
+                $user->load(['role', 'vendors', 'userAddress']);
+                return $this->ok('User details retrieved.', $user);
+            }
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
@@ -81,17 +92,19 @@ class UserController extends Controller
         ]));
 
         try {
-            if (isset($data['password'])) {
-                $data['password'] = Hash::make($data['password']);
+            if ($user->hasPermission('edit_users')) {
+                if (isset($data['password'])) {
+                    $data['password'] = Hash::make($data['password']);
+                }
+
+                $user->update($data);
+
+                if (isset($data['address'])) {
+                    $user->userAddress()->updateOrCreate([], $data['address']);
+                }
+
+                return $this->ok('User updated successfully.', $user->fresh()->load(['role', 'userAddress']));
             }
-
-            $user->update($data);
-
-            if (isset($data['address'])) {
-                $user->userAddress()->updateOrCreate([], $data['address']);
-            }
-
-            return $this->ok('User updated successfully.', $user->fresh()->load(['role', 'userAddress']));
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
@@ -100,8 +113,10 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         try {
-            $user->delete();
-            return $this->ok('User deleted successfully.');
+            if ($user->hasPermission('delete_users')) {
+                $user->delete();
+                return $this->ok('User deleted successfully.');
+            }
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }

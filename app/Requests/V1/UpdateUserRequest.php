@@ -15,7 +15,7 @@ class UpdateUserRequest extends BaseFormRequest
     {
         return [
             'name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|email|unique',
+            'email' => 'sometimes|email|unique:users,email',
             'password' => 'sometimes|nullable|min:8',
             'role_id' => 'sometimes|exists:roles,id',
             'address.address_line1' => 'sometimes|required|string|max:255',
