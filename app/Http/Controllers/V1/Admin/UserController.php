@@ -9,19 +9,38 @@ use App\Requests\V1\StoreUserRequest;
 use App\Requests\V1\UpdateUserRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use App\Requests\V1\FilterUserRequest;
+use App\Filters\V1\UserFilter;
 use \Exception;
 
 class UserController extends Controller
 {
     use ApiResponses;
 
-    public function index(Request $request)
+    public function index(FilterUserRequest $request, UserFilter $filter)
     {
+        $request->validated($request->only([
+            'filter' => [
+                'name',
+                'email',
+                'role',
+                'created_at',
+                'updated_at',
+                'search',
+                'include'
+            ],
+            'page',
+            'per_page',
+            'sort',
+        ]));
+
         $user = $request->user();
 
         try {
             if ($user->hasPermission('view_users')) {
-                $users = User::with(['role', 'vendors', 'userAddress'])->latest()->paginate(15);
+                $users = User::filter($filter)
+                    ->paginate($request->input('per_page', 15))
+                    ->appends($request->query());
                 return $this->ok('Users retrieved successfully.', $users);
             }
         } catch (Exception $e) {

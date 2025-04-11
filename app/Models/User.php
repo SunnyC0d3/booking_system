@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Filters\V1\QueryFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -113,5 +115,10 @@ class User extends Authenticatable implements MustVerifyEmail
         $capitalizedWords = array_map('ucwords', $words);
 
         return implode(' ', $capitalizedWords);
+    }
+
+    public function scopeFilter(Builder $builder, QueryFilter $filters)
+    {
+        return $filters->apply($builder);
     }
 }
