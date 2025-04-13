@@ -21,7 +21,7 @@ class OrderSeeder extends Seeder
     public function run(): void
     {
         $users = User::pluck('id')->toArray();
-        $products = Product::with('productVariants')->get();
+        $products = Product::with('variants')->get();
         $statuses = OrderStatus::pluck('id')->toArray();
         $returnStatuses = OrderReturnStatus::pluck('id', 'name')->toArray();
         $refundStatuses = OrderRefundStatus::pluck('id', 'name')->toArray();
@@ -50,7 +50,7 @@ class OrderSeeder extends Seeder
             $orderProducts = $products->random(rand(1, 5));
             foreach ($orderProducts as $product) {
                 $quantity = rand(1, 5);
-                $variant = $product->productVariants->count() > 0 ? $product->productVariants->random() : null;
+                $variant = $product->variants->count() > 0 ? $product->variants->random() : null;
                 $price = $product->price + ($variant ? ($variant->additional_price ?? 0) : 0);
 
                 $orderItems[] = [

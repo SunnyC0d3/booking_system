@@ -9,6 +9,7 @@ use App\Traits\V1\ApiResponses;
 use App\Requests\V1\StoreUserRequest;
 use App\Requests\V1\UpdateUserRequest;
 use App\Requests\V1\FilterUserRequest;
+use Illuminate\Http\Request;
 use App\Filters\V1\UserFilter;
 use \Exception;
 
@@ -69,16 +70,16 @@ class UserController extends Controller
         }
     }
 
-    public function show(UserDB $user)
+    public function show(Request $request, UserDB $user)
     {
         try {
-            return $this->user->find($user);
+            return $this->user->find($request, $user);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
     }
 
-    public function update(UpdateUserRequest $request)
+    public function update(UpdateUserRequest $request, UserDB $user)
     {
         $request->validated($request->only([
             'name',
@@ -94,16 +95,16 @@ class UserController extends Controller
         ]));
 
         try {
-            return $this->user->update($request);
+            return $this->user->update($request, $user);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
     }
 
-    public function destroy(UserDB $user)
+    public function destroy(Request $request, UserDB $user)
     {
         try {
-            return $this->user->delete($user);
+            return $this->user->delete($request, $user);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }

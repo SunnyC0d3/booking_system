@@ -12,9 +12,7 @@ class User
 {
     use ApiResponses;
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function all(Request $request, UserFilter $filter)
     {
@@ -31,11 +29,13 @@ class User
         return $this->error('You do not have the required permissions.', 403);
     }
 
-    public function find(UserDB $user)
+    public function find(Request $request, UserDB $_user)
     {
+        $user = $request->user();
+
         if ($user->hasPermission('view_users')) {
-            $user->load(['role', 'vendors', 'userAddress']);
-            return $this->ok('Users details retrieved.', $user);
+            $_user->load(['role', 'vendors', 'userAddress']);
+            return $this->ok('Users details retrieved.', $_user);
         }
 
         return $this->error('You do not have the required permissions.', 403);
@@ -48,22 +48,22 @@ class User
         if ($user->hasPermission('create_users')) {
             $data = $request->validated();
 
-            $user = UserDB::create([
+            $_user = UserDB::create([
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'role_id' => $data['role_id'],
                 'password' => Hash::make($data['password']),
             ]);
 
-            $user = $user->userAddress()->create($data['address']);
+            $_user = $_user->userAddress()->create($data['address']);
 
-            return $this->ok('Users created successfully!', $user);
+            return $this->ok('Users created successfully!', $_user);
         }
 
         return $this->error('You do not have the required permissions.', 403);
     }
 
-    public function update(Request $request)
+    public function update(Request $request, UserDB $_user)
     {
         $user = $request->user();
 
@@ -74,22 +74,24 @@ class User
                 $data['password'] = Hash::make($data['password']);
             }
 
-            $user->update($data);
+            $_user->update($data);
 
             if (isset($data['address'])) {
-                $user->userAddress()->updateOrCreate([], $data['address']);
+                $_user->userAddress()->updateOrCreate([], $data['address']);
             }
 
-            return $this->ok('Users updated successfully.', $user->fresh()->load(['role', 'userAddress']));
+            return $this->ok('Users updated successfully.', $_user->fresh()->load(['role', 'userAddress']));
         }
 
         return $this->error('You do not have the required permissions.', 403);
     }
 
-    public function delete(UserDB $user)
+    public function delete(Request $request, UserDB $_user)
     {
+        $user = $request->user();
+
         if ($user->hasPermission('delete_users')) {
-            $user->delete();
+            $_user->delete();
             return $this->ok('Users deleted successfully.');
         }
 
