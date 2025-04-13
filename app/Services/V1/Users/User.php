@@ -55,9 +55,9 @@ class User
                 'password' => Hash::make($data['password']),
             ]);
 
-            $_user = $_user->userAddress()->create($data['address']);
+            $_user->userAddress()->create($data['address']);
 
-            return $this->ok('Users created successfully!', $_user);
+            return $this->ok('Users created successfully!', $_user->fresh()->load(['role', 'userAddress']));
         }
 
         return $this->error('You do not have the required permissions.', 403);
@@ -91,6 +91,7 @@ class User
         $user = $request->user();
 
         if ($user->hasPermission('delete_users')) {
+            $_user->userAddress()->delete();
             $_user->delete();
             return $this->ok('Users deleted successfully.');
         }
