@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "E-Commerce API Documentation",
-        "_postman_id": "7d142c1a-64df-405e-a5d2-4a141aeebe73",
+        "_postman_id": "1f050ca0-178d-44db-b6de-17db77e090dd",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -180,13 +180,13 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "tempore",
+                                    "value": "sed",
                                     "description": "The ID of the verify."
                                 },
                                 {
                                     "id": "hash",
                                     "key": "hash",
-                                    "value": "perferendis",
+                                    "value": "temporibus",
                                     "description": ""
                                 }
                             ]
@@ -468,7 +468,7 @@
                                 {
                                     "id": "productAttribute_id",
                                     "key": "productAttribute_id",
-                                    "value": "11",
+                                    "value": "1",
                                     "description": "The ID of the productAttribute."
                                 }
                             ]
@@ -503,6 +503,55 @@
                     ]
                 },
                 {
+                    "name": "Update a product attribute.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-attributes\/:productAttribute_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-attributes\/:productAttribute_id",
+                            "variable": [
+                                {
+                                    "id": "productAttribute_id",
+                                    "key": "productAttribute_id",
+                                    "value": "1",
+                                    "description": "The ID of the productAttribute."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"\\\"Size\\\"\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Product attribute updated successfully.\",\n  \"data\": {}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
                     "name": "Delete a product attribute.",
                     "request": {
                         "url": {
@@ -514,7 +563,7 @@
                                 {
                                     "id": "productAttribute_id",
                                     "key": "productAttribute_id",
-                                    "value": "11",
+                                    "value": "1",
                                     "description": "The ID of the productAttribute."
                                 }
                             ]
@@ -614,7 +663,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"ut\",\"parent_id\":5}"
+                            "raw": "{\"name\":\"ratione\",\"parent_id\":8}"
                         },
                         "description": ""
                     },
@@ -645,7 +694,7 @@
                                 {
                                     "id": "productCategory_id",
                                     "key": "productCategory_id",
-                                    "value": "33",
+                                    "value": "1",
                                     "description": "The ID of the productCategory."
                                 }
                             ]
@@ -691,7 +740,7 @@
                                 {
                                     "id": "productCategory_id",
                                     "key": "productCategory_id",
-                                    "value": "33",
+                                    "value": "1",
                                     "description": "The ID of the productCategory."
                                 }
                             ]
@@ -709,7 +758,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"fuga\",\"parent_id\":13}"
+                            "raw": "{\"name\":\"ipsa\",\"parent_id\":10}"
                         },
                         "description": ""
                     },
@@ -740,7 +789,7 @@
                                 {
                                     "id": "productCategory_id",
                                     "key": "productCategory_id",
-                                    "value": "33",
+                                    "value": "1",
                                     "description": "The ID of the productCategory."
                                 }
                             ]
@@ -846,7 +895,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"quod\"}"
+                            "raw": "{\"name\":\"ad\"}"
                         },
                         "description": ""
                     },
@@ -877,7 +926,7 @@
                                 {
                                     "id": "productStatus_id",
                                     "key": "productStatus_id",
-                                    "value": "11",
+                                    "value": "1",
                                     "description": "The ID of the productStatus."
                                 }
                             ]
@@ -912,6 +961,55 @@
                     ]
                 },
                 {
+                    "name": "Update an existing product status.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-statuses\/:productStatus_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-statuses\/:productStatus_id",
+                            "variable": [
+                                {
+                                    "id": "productStatus_id",
+                                    "key": "productStatus_id",
+                                    "value": "1",
+                                    "description": "The ID of the productStatus."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"doloribus\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Product status updated successfully.\",\n    \"data\": {\"id\": 1, \"name\": \"Unavailable\"}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
                     "name": "Delete a product status.",
                     "request": {
                         "url": {
@@ -923,7 +1021,7 @@
                                 {
                                     "id": "productStatus_id",
                                     "key": "productStatus_id",
-                                    "value": "11",
+                                    "value": "1",
                                     "description": "The ID of the productStatus."
                                 }
                             ]
@@ -1023,7 +1121,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"sed\"}"
+                            "raw": "{\"name\":\"laboriosam\"}"
                         },
                         "description": ""
                     },
@@ -1054,7 +1152,7 @@
                                 {
                                     "id": "productTag_id",
                                     "key": "productTag_id",
-                                    "value": "241",
+                                    "value": "1",
                                     "description": "The ID of the productTag."
                                 }
                             ]
@@ -1089,6 +1187,55 @@
                     ]
                 },
                 {
+                    "name": "Update an existing product tag.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-tags\/:productTag_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-tags\/:productTag_id",
+                            "variable": [
+                                {
+                                    "id": "productTag_id",
+                                    "key": "productTag_id",
+                                    "value": "1",
+                                    "description": "The ID of the productTag."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"eum\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Tag updated successfully.\",\n    \"data\": {\"id\": 1, \"name\": \"Gadgets\"}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
                     "name": "Delete a product tag.",
                     "request": {
                         "url": {
@@ -1100,7 +1247,7 @@
                                 {
                                     "id": "productTag_id",
                                     "key": "productTag_id",
-                                    "value": "241",
+                                    "value": "1",
                                     "description": "The ID of the productTag."
                                 }
                             ]
@@ -1162,7 +1309,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"cn\",\"price\":\"3845742))\",\"category\":\"3,0,4,6,\",\"quantity\":70,\"created_at\":\"5451-60-46\",\"updated_at\":\"4482-23-20\",\"search\":\"rjdcwqjizsjajbduj\",\"include\":\"sa,i\"},\"page\":27,\"per_page\":5,\"sort\":\"-x\"}"
+                            "raw": "{\"filter\":{\"name\":\"nuzxcclzcdkssiqxclphpm\",\"price\":\"9377516.3)))))\",\"category\":\"2\",\"quantity\":50,\"created_at\":\"4838-72-27,2399-45-53\",\"updated_at\":\"2261-17-08,8949-51-68\",\"search\":\"yqsrlav\",\"include\":\")\"},\"page\":58,\"per_page\":12,\"sort\":\"WA,-_\"}"
                         },
                         "description": ""
                     },
@@ -1252,61 +1399,61 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "oftcvctszabdmwjidpz",
+                                    "value": "ngifioajhufq",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Inventore et et nisi eius dolorem.",
+                                    "value": "Magni eligendi temporibus repellendus ut.",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "price",
-                                    "value": "89",
+                                    "value": "14",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_category_id",
-                                    "value": "maiores",
+                                    "value": "aut",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_categories table."
                                 },
                                 {
                                     "key": "product_status_id",
-                                    "value": "quas",
+                                    "value": "odio",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_statuses table."
                                 },
                                 {
                                     "key": "quantity",
-                                    "value": "15",
+                                    "value": "77",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_variants[0][product_attribute_id]",
-                                    "value": "sint",
+                                    "value": "iste",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][value]",
-                                    "value": "c",
+                                    "value": "mu",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][additional_price]",
-                                    "value": "1",
+                                    "value": "28",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][quantity]",
-                                    "value": "73",
+                                    "value": "68",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1367,61 +1514,61 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "vjwciwqqpcefbephxsyffmbm",
+                                    "value": "nhs",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Autem minima ut minus qui eveniet.",
+                                    "value": "Vero molestias qui enim deserunt ex odit.",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "price",
-                                    "value": "63",
+                                    "value": "68",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_category_id",
-                                    "value": "cum",
+                                    "value": "vitae",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_categories table."
                                 },
                                 {
                                     "key": "product_status_id",
-                                    "value": "est",
+                                    "value": "quas",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_statuses table."
                                 },
                                 {
                                     "key": "quantity",
-                                    "value": "69",
+                                    "value": "60",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_variants[0][product_attribute_id]",
-                                    "value": "esse",
+                                    "value": "ut",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][value]",
-                                    "value": "dlsfukmpwqnlk",
+                                    "value": "ap",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][additional_price]",
-                                    "value": "87",
+                                    "value": "49",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][quantity]",
-                                    "value": "50",
+                                    "value": "15",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1531,6 +1678,235 @@
                             "header": [],
                             "code": 200,
                             "body": "{\n    \"message\": \"Product deleted successfully.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Users",
+            "description": "",
+            "item": [
+                {
+                    "name": "Retrieve a paginated list of users.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/users",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/users"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"filter\":{\"name\":\"doqhhlqrzisrg\",\"email\":\"clementina18@example.net\",\"role\":\"554,5,1,5,9,\",\"created_at\":\"3433-22-00\",\"updated_at\":\"7002-91-32,6281-17-48\",\"search\":\"vubjposfrbmn\",\"include\":\"nw,wzgxlhqmcd,dtfbqhtni,qxwtfpqtwap,xehylg)\"},\"page\":26,\"per_page\":5,\"sort\":\"XeeC\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Users retrieved successfully.\",\n    \"data\": []\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Retrieve a specific user.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/users\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/users\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the user."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Users details retrieved.\",\n    \"data\": {}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a new user.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/users",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/users"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"fffhsba\",\"email\":\"durgan.cassidy@example.com\",\"password\":\"L0bdDyIo&WC(\",\"role_id\":\"et\",\"address\":{\"address_line1\":\"xqnolzzqbuci\",\"city\":\"sdyzxpoehfgisvvopo\",\"country\":\"wfhoetriuxdpiwtm\",\"postal_code\":\"gybxawh\",\"address_line2\":\"veipifmumfrjy\",\"state\":\"mkppmjwzrltwsquf\"}}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n    \"message\": \"Users created successfully!\",\n    \"data\": {}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update an existing user.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/users\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/users\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the user."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"assplfzios\",\"email\":\"spfannerstill@example.net\",\"password\":\"V!72ydchmP;gr$Mu`2\",\"address\":{\"address_line1\":\"fenysln\",\"city\":\"vnf\",\"country\":\"bblbrsnyjwzdrscgb\",\"postal_code\":\"pacxozd\",\"address_line2\":\"pniopwcxddvnirbeksjcm\",\"state\":\"wmm\"}}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Users updated successfully.\",\n    \"data\": {}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Permanently delete a user.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/users\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/users\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the user."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Users deleted successfully.\"\n}",
                             "name": ""
                         },
                         {

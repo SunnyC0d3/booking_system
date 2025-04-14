@@ -86,7 +86,7 @@ endpoints:
         name: name
         description: 'The name of the category.'
         required: true
-        example: ut
+        example: ratione
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -96,15 +96,15 @@ endpoints:
         name: parent_id
         description: 'optional The ID of the parent category.'
         required: false
-        example: 5
+        example: 8
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: true
         custom: []
     cleanBodyParameters:
-      name: ut
-      parent_id: 5
+      name: ratione
+      parent_id: 8
     fileParameters: []
     responses:
       -
@@ -161,14 +161,14 @@ endpoints:
         name: productCategory_id
         description: 'The ID of the productCategory.'
         required: true
-        example: 33
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanUrlParameters:
-      productCategory_id: 33
+      productCategory_id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -229,14 +229,14 @@ endpoints:
         name: productCategory_id
         description: 'The ID of the productCategory.'
         required: true
-        example: 33
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanUrlParameters:
-      productCategory_id: 33
+      productCategory_id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -244,7 +244,7 @@ endpoints:
         name: name
         description: 'The name of the category.'
         required: true
-        example: fuga
+        example: ipsa
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -254,15 +254,15 @@ endpoints:
         name: parent_id
         description: 'optional The ID of the parent category.'
         required: false
-        example: 13
+        example: 10
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: true
         custom: []
     cleanBodyParameters:
-      name: fuga
-      parent_id: 13
+      name: ipsa
+      parent_id: 10
     fileParameters: []
     responses:
       -
@@ -319,14 +319,14 @@ endpoints:
         name: productCategory_id
         description: 'The ID of the productCategory.'
         required: true
-        example: 33
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanUrlParameters:
-      productCategory_id: 33
+      productCategory_id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []

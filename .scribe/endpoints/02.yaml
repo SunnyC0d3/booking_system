@@ -140,14 +140,14 @@ endpoints:
         name: productAttribute_id
         description: 'The ID of the productAttribute.'
         required: true
-        example: 11
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanUrlParameters:
-      productAttribute_id: 11
+      productAttribute_id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -159,6 +159,81 @@ endpoints:
         content: |-
           {
             "message": "Attribute retrieved successfully.",
+            "data": {}
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+              "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: 'api/admin/product-attributes/{productAttribute_id}'
+    metadata:
+      groupName: 'Product Attributes'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update a product attribute.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      productAttribute_id:
+        name: productAttribute_id
+        description: 'The ID of the productAttribute.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      productAttribute_id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        name: name
+        description: 'The updated name of the product attribute.'
+        required: true
+        example: '"Size"'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      name: '"Size"'
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Product attribute updated successfully.",
             "data": {}
           }
         headers: []
@@ -204,14 +279,14 @@ endpoints:
         name: productAttribute_id
         description: 'The ID of the productAttribute.'
         required: true
-        example: 11
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanUrlParameters:
-      productAttribute_id: 11
+      productAttribute_id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []

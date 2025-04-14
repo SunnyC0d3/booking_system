@@ -83,14 +83,14 @@ endpoints:
         name: name
         description: 'The name of the product status.'
         required: true
-        example: quod
+        example: ad
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      name: quod
+      name: ad
     fileParameters: []
     responses:
       -
@@ -143,14 +143,14 @@ endpoints:
         name: productStatus_id
         description: 'The ID of the productStatus.'
         required: true
-        example: 11
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanUrlParameters:
-      productStatus_id: 11
+      productStatus_id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -163,6 +163,81 @@ endpoints:
           {
               "message": "Status retrieved successfully.",
               "data": {"id": 1, "name": "Available"}
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+              "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: 'api/admin/product-statuses/{productStatus_id}'
+    metadata:
+      groupName: 'Product Statuses'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update an existing product status.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      productStatus_id:
+        name: productStatus_id
+        description: 'The ID of the productStatus.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      productStatus_id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        name: name
+        description: 'The updated name of the product status.'
+        required: true
+        example: doloribus
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      name: doloribus
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Product status updated successfully.",
+              "data": {"id": 1, "name": "Unavailable"}
           }
         headers: []
         description: ''
@@ -207,14 +282,14 @@ endpoints:
         name: productStatus_id
         description: 'The ID of the productStatus.'
         required: true
-        example: 11
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanUrlParameters:
-      productStatus_id: 11
+      productStatus_id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []

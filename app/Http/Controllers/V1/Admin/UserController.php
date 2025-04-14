@@ -24,6 +24,21 @@ class UserController extends Controller
         $this->user = $user;
     }
 
+    /**
+     * Retrieve a paginated list of users.
+     *
+     * @group Users
+     * @authenticated
+     *
+     * @response 200 {
+     *     "message": "Users retrieved successfully.",
+     *     "data": []
+     * }
+     *
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function index(FilterUserRequest $request, UserFilter $filter)
     {
         $request->validated($request->only([
@@ -48,6 +63,21 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Create a new user.
+     *
+     * @group Users
+     * @authenticated
+     *
+     * @response 201 {
+     *     "message": "Users created successfully!",
+     *     "data": {}
+     * }
+     *
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function store(StoreUserRequest $request)
     {
         $request->validated($request->only([
@@ -70,6 +100,21 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Retrieve a specific user.
+     *
+     * @group Users
+     * @authenticated
+     *
+     * @response 200 {
+     *     "message": "Users details retrieved.",
+     *     "data": {}
+     * }
+     *
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function show(Request $request, UserDB $user)
     {
         try {
@@ -79,6 +124,21 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Update an existing user.
+     *
+     * @group Users
+     * @authenticated
+     *
+     * @response 200 {
+     *     "message": "Users updated successfully.",
+     *     "data": {}
+     * }
+     *
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function update(UpdateUserRequest $request, UserDB $user)
     {
         $request->validated($request->only([
@@ -101,6 +161,20 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Permanently delete a user.
+     *
+     * @group Users
+     * @authenticated
+     *
+     * @response 200 {
+     *     "message": "Users deleted successfully."
+     * }
+     *
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function destroy(Request $request, UserDB $user)
     {
         try {
