@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 // Admin Controllers
 
 use App\Http\Controllers\V1\Admin\UserController;
+use App\Http\Controllers\V1\Admin\VendorController;
 use App\Http\Controllers\V1\Admin\ProductController;
 use App\Http\Controllers\V1\Admin\ProductAttributeController;
 use App\Http\Controllers\V1\Admin\ProductCategoryController;
@@ -22,6 +23,19 @@ Route::prefix('admin/users')
         Route::post('/', 'store')->name('admin.users.store');
         Route::post('/{user}', 'update')->name('admin.users.update');
         Route::delete('/{user}', 'destroy')->name('admin.users.destroy');
+    });
+
+// Admin/Vendors
+
+Route::prefix('admin/vendors')
+    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->controller(VendorController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('admin.vendors.index');
+        Route::get('/{vendor}', 'show')->name('admin.vendors.show');
+        Route::post('/', 'store')->name('admin.vendors.store');
+        Route::post('/{vendor}', 'update')->name('admin.vendors.update');
+        Route::delete('/{vendor}', 'destroy')->name('admin.vendors.destroy');
     });
 
 // Admin/Products

@@ -57,7 +57,7 @@ class User
 
             $_user->userAddress()->create($data['address']);
 
-            return $this->ok('Users created successfully!', $_user->fresh()->load(['role', 'userAddress']));
+            return $this->ok('Users created successfully!', $_user->load(['role', 'userAddress']));
         }
 
         return $this->error('You do not have the required permissions.', 403);
@@ -80,7 +80,7 @@ class User
                 $_user->userAddress()->updateOrCreate([], $data['address']);
             }
 
-            return $this->ok('Users updated successfully.', $_user->fresh()->load(['role', 'userAddress']));
+            return $this->ok('Users updated successfully.', $_user->load(['role', 'userAddress']));
         }
 
         return $this->error('You do not have the required permissions.', 403);

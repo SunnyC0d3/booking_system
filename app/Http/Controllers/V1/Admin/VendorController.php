@@ -2,24 +2,68 @@
 
 namespace App\Http\Controllers\V1\Admin;
 
-use App\Models\Vendor;
+use App\Services\V1\Users\Vendor;
+use App\Models\Vendor as VendorDB;
 use Illuminate\Http\Request;
+use App\Requests\V1\StoreVendorRequest;
+use App\Requests\V1\UpdateVendorRequest;
 use App\Http\Controllers\Controller;
 use App\Traits\V1\ApiResponses;
+use \Exception;
 
 class VendorController extends Controller
 {
-    public function index() {}
+    use ApiResponses;
 
-    public function create() {}
+    private $vendor;
 
-    public function store(Request $request) {}
+    public function __construct(Vendor $vendor)
+    {
+        $this->vendor = $vendor;
+    }
 
-    public function show(Vendor $vendor) {}
+    public function index(Request $request)
+    {
+        try {
+            return $this->vendor->all($request);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
+    }
 
-    public function edit(Vendor $vendor) {}
+    public function store(StoreVendorRequest $request)
+    {
+        try {
+            return $this->vendor->create($request);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
+    }
 
-    public function update(Request $request, Vendor $vendor) {}
+    public function show(Request $request, VendorDB $vendor)
+    {
+        try {
+            return $this->vendor->find($request, $vendor);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
+    }
 
-    public function destroy(Vendor $vendor) {}
+    public function update(UpdateVendorRequest $request, VendorDB $vendor)
+    {
+        try {
+            return $this->vendor->update($request, $vendor);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
+    }
+
+    public function destroy(Request $request, VendorDB $vendor)
+    {
+        try {
+            return $this->vendor->delete($request, $vendor);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
+    }
 }
