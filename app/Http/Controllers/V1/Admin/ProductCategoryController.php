@@ -38,7 +38,7 @@ class ProductCategoryController extends Controller
      *         }
      *     ]
      * }
-     * 
+     *
      * @response 403 {
      *     "message": "You do not have the required permissions."
      * }
@@ -69,15 +69,13 @@ class ProductCategoryController extends Controller
      *         "parent_id": 1
      *     }
      * }
-     * 
+     *
      * @response 403 {
      *     "message": "You do not have the required permissions."
      * }
      */
     public function store(StoreProductCategoryRequest $request)
     {
-        $request->validated($request->only(['name', 'parent_id']));
-
         try {
             return $this->productCategory->create($request);
         } catch (Exception $e) {
@@ -99,7 +97,7 @@ class ProductCategoryController extends Controller
      *         "children": []
      *     }
      * }
-     * 
+     *
      * @response 403 {
      *     "message": "You do not have the required permissions."
      * }
@@ -130,15 +128,13 @@ class ProductCategoryController extends Controller
      *         "parent_id": null
      *     }
      * }
-     * 
+     *
      * @response 403 {
      *     "message": "You do not have the required permissions."
      * }
      */
     public function update(UpdateProductCategoryRequest $request, DB $productCategory)
     {
-        $request->validated($request->only(['name', 'parent_id']));
-
         try {
             return $this->productCategory->update($request, $productCategory);
         } catch (Exception $e) {
@@ -155,11 +151,11 @@ class ProductCategoryController extends Controller
      * @response 200 {
      *     "message": "Category deleted successfully"
      * }
-     * 
+     *
      * @response 400 {
      *     "message": "Cannot delete a category with subcategories"
      * }
-     * 
+     *
      * @response 403 {
      *     "message": "You do not have the required permissions."
      * }

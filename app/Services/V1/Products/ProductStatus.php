@@ -40,7 +40,11 @@ class ProductStatus
         $user = $request->user();
 
         if ($user->hasPermission('create_product_statuses')) {
-            $status = DB::create($request->validated());
+            $data = $request->validated(
+                $request->only(['name'])
+            );
+
+            $status = DB::create($data);
             return $this->ok('Product status created successfully.', $status);
         }
 
@@ -52,7 +56,11 @@ class ProductStatus
         $user = $request->user();
 
         if ($user->hasPermission('edit_product_statuses')) {
-            $productStatus->update($request->validated());
+            $data = $request->validated(
+                $request->only(['name'])
+            );
+
+            $productStatus->update($data);
             return $this->ok('Product status updated successfully.', $productStatus);
         }
 

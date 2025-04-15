@@ -40,7 +40,14 @@ class ProductCategory
         $user = $request->user();
 
         if ($user->hasPermission('create_product_categories')) {
-            $category = DB::create($request->validated());
+            $data = $request->validated(
+                $request->only([
+                    'name',
+                    'parent_id',
+                ])
+            );
+
+            $category = DB::create($data);
             return $this->ok('Category created successfully.', $category);
         }
 
@@ -52,7 +59,14 @@ class ProductCategory
         $user = $request->user();
 
         if ($user->hasPermission('edit_product_categories')) {
-            $productCategory->update($request->validated());
+            $data = $request->validated(
+                $request->only([
+                    'name',
+                    'parent_id',
+                ])
+            );
+
+            $productCategory->update($data);
             return $this->ok('Category updated successfully.', $productCategory);
         }
 

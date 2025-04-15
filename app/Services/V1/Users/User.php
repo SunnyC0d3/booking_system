@@ -12,13 +12,30 @@ class User
 {
     use ApiResponses;
 
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     public function all(Request $request, UserFilter $filter)
     {
         $user = $request->user();
 
         if ($user->hasPermission('view_users')) {
+            $request->validated($request->only([
+                'filter' => [
+                    'name',
+                    'email',
+                    'role',
+                    'created_at',
+                    'updated_at',
+                    'search',
+                    'include'
+                ],
+                'page',
+                'per_page',
+                'sort',
+            ]));
+
             $query = UserDB::filter($filter);
             $perPage = $request->input('per_page', 15);
             $users = $query->paginate($perPage)->appends($request->query());
@@ -46,7 +63,18 @@ class User
         $user = $request->user();
 
         if ($user->hasPermission('create_users')) {
-            $data = $request->validated();
+            $data = $request->validated($request->only([
+                'name',
+                'email',
+                'password',
+                'role_id',
+                'address.address_line1',
+                'address.city',
+                'address.country',
+                'address.postal_code',
+                'address.address_line2',
+                'address.state',
+            ]));
 
             $_user = UserDB::create([
                 'name' => $data['name'],
@@ -68,7 +96,18 @@ class User
         $user = $request->user();
 
         if ($user->hasPermission('edit_users')) {
-            $data = $request->validated();
+            $data = $request->validated($request->only([
+                'name',
+                'email',
+                'password',
+                'role_id',
+                'address.address_line1',
+                'address.city',
+                'address.country',
+                'address.postal_code',
+                'address.address_line2',
+                'address.state',
+            ]));
 
             if (isset($data['password'])) {
                 $data['password'] = Hash::make($data['password']);

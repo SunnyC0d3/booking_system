@@ -21,6 +21,22 @@ class Product
         $user = $request->user();
 
         if ($user->hasPermission('view_products')) {
+            $request->validated($request->only([
+                'filter' => [
+                    'name',
+                    'price',
+                    'category',
+                    'quantity',
+                    'created_at',
+                    'updated_at',
+                    'search',
+                    'include'
+                ],
+                'page',
+                'per_page',
+                'sort',
+            ]));
+
             $query = ProdDB::with(['vendor', 'variants', 'category', 'tags', 'media'])->filter($filter);
             $perPage = $request->input('per_page', 15);
             $products = $query->paginate($perPage);
@@ -48,7 +64,25 @@ class Product
         $user = $request->user();
 
         if ($user->hasPermission('create_products')) {
-            $data = $request->validated();
+            $data = $request->validated($request->only([
+                'name',
+                'description',
+                'price',
+                'product_category_id',
+                'product_status_id',
+                'quantity',
+                'product_tags',
+                'product_tags.*',
+                'product_variants',
+                'product_variants.*.product_attribute_id',
+                'product_variants.*.value',
+                'product_variants.*.additional_price',
+                'product_variants.*.quanatity',
+                'media',
+                'media.*',
+                'media.feature_image',
+                'media.gallery.*'
+            ]));
 
             $vendor = Vendor::where('user_id', $user->id)->first();
 
@@ -109,7 +143,25 @@ class Product
         $user = $request->user();
 
         if ($user->hasPermission('edit_products')) {
-            $data = $request->validated();
+            $data = $request->validated($request->only([
+                'name',
+                'description',
+                'price',
+                'product_category_id',
+                'product_status_id',
+                'quantity',
+                'product_tags',
+                'product_tags.*',
+                'product_variants',
+                'product_variants.*.product_attribute_id',
+                'product_variants.*.value',
+                'product_variants.*.additional_price',
+                'product_variants.*.quanatity',
+                'media',
+                'media.*',
+                'media.feature_image',
+                'media.gallery.*'
+            ]));
 
             DB::transaction(function () use ($data, $product) {
                 $product->update([

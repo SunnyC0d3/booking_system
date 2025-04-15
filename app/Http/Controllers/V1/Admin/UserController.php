@@ -41,21 +41,6 @@ class UserController extends Controller
      */
     public function index(FilterUserRequest $request, UserFilter $filter)
     {
-        $request->validated($request->only([
-            'filter' => [
-                'name',
-                'email',
-                'role',
-                'created_at',
-                'updated_at',
-                'search',
-                'include'
-            ],
-            'page',
-            'per_page',
-            'sort',
-        ]));
-
         try {
             return $this->user->all($request, $filter);
         } catch (Exception $e) {
@@ -80,19 +65,6 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        $request->validated($request->only([
-            'name',
-            'email',
-            'password',
-            'role_id',
-            'address.address_line1',
-            'address.city',
-            'address.country',
-            'address.postal_code',
-            'address.address_line2',
-            'address.state',
-        ]));
-
         try {
             return $this->user->create($request);
         } catch (Exception $e) {
@@ -141,19 +113,6 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, UserDB $user)
     {
-        $request->validated($request->only([
-            'name',
-            'email',
-            'password',
-            'role_id',
-            'address.address_line1',
-            'address.city',
-            'address.country',
-            'address.postal_code',
-            'address.address_line2',
-            'address.state',
-        ]));
-
         try {
             return $this->user->update($request, $user);
         } catch (Exception $e) {

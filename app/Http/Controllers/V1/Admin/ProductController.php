@@ -34,29 +34,13 @@ class ProductController extends Controller
      *     "message": "Products retrieved successfully.",
      *     "data": []
      * }
-     * 
+     *
      * @response 403 {
      *     "message": "You do not have the required permissions."
      * }
      */
     public function index(FilterProductRequest $request, ProductFilter $filter)
     {
-        $request->validated($request->only([
-            'filter' => [
-                'name',
-                'price',
-                'category',
-                'quantity',
-                'created_at',
-                'updated_at',
-                'search',
-                'include'
-            ],
-            'page',
-            'per_page',
-            'sort',
-        ]));
-
         try {
             return $this->product->all($request, $filter);
         } catch (Exception $e) {
@@ -74,7 +58,7 @@ class ProductController extends Controller
      *     "message": "Product retrieved successfully.",
      *     "data": {}
      * }
-     * 
+     *
      * @response 403 {
      *     "message": "You do not have the required permissions."
      * }
@@ -98,33 +82,13 @@ class ProductController extends Controller
      *     "message": "Product created successfully.",
      *     "data": {}
      * }
-     * 
+     *
      * @response 403 {
      *     "message": "You do not have the required permissions."
      * }
      */
     public function store(StoreProductRequest $request)
     {
-        $request->validated($request->only([
-            'name',
-            'description',
-            'price',
-            'product_category_id',
-            'product_status_id',
-            'quantity',
-            'product_tags',
-            'product_tags.*',
-            'product_variants',
-            'product_variants.*.product_attribute_id',
-            'product_variants.*.value',
-            'product_variants.*.additional_price',
-            'product_variants.*.quanatity',
-            'media',
-            'media.*',
-            'media.feature_image',
-            'media.gallery.*'
-        ]));
-
         try {
             return $this->product->create($request);
         } catch (\Exception $e) {
@@ -142,33 +106,13 @@ class ProductController extends Controller
      *     "message": "Product updated successfully.",
      *     "data": {}
      * }
-     * 
+     *
      * @response 403 {
      *     "message": "You do not have the required permissions."
      * }
      */
     public function update(UpdateProductRequest $request, ProdDB $product)
     {
-        $request->validated($request->only([
-            'name',
-            'description',
-            'price',
-            'product_category_id',
-            'product_status_id',
-            'quantity',
-            'product_tags',
-            'product_tags.*',
-            'product_variants',
-            'product_variants.*.product_attribute_id',
-            'product_variants.*.value',
-            'product_variants.*.additional_price',
-            'product_variants.*.quanatity',
-            'media',
-            'media.*',
-            'media.feature_image',
-            'media.gallery.*'
-        ]));
-
         try {
             return $this->product->update($request, $product);
         } catch (Exception $e) {
@@ -185,7 +129,7 @@ class ProductController extends Controller
      * @response 200 {
      *     "message": "Product deleted successfully."
      * }
-     * 
+     *
      * @response 403 {
      *     "message": "You do not have the required permissions."
      * }
@@ -208,7 +152,7 @@ class ProductController extends Controller
      * @response 200 {
      *     "message": "Product deleted successfully."
      * }
-     * 
+     *
      * @response 403 {
      *     "message": "You do not have the required permissions."
      * }

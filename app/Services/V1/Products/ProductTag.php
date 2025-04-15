@@ -40,7 +40,11 @@ class ProductTag
         $user = $request->user();
 
         if ($user->hasPermission('create_product_tags')) {
-            $tag = DB::create($request->validated());
+            $data = $request->validated(
+                $request->only(['name'])
+            );
+
+            $tag = DB::create($data);
             return $this->ok('Tag created successfully.', $tag);
         }
 
@@ -52,7 +56,11 @@ class ProductTag
         $user = $request->user();
 
         if ($user->hasPermission('edit_product_tags')) {
-            $productTag->update($request->validated());
+            $data = $request->validated(
+                $request->only(['name'])
+            );
+
+            $productTag->update($data);
             return $this->ok('Tag updated successfully.', $productTag);
         }
 

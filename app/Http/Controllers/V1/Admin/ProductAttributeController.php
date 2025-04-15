@@ -32,7 +32,7 @@ class ProductAttributeController extends Controller
      *   "message": "Attributes retrieved successfully.",
      *   "data": []
      * }
-     * 
+     *
      * @response 403 {
      *     "message": "You do not have the required permissions."
      * }
@@ -58,15 +58,13 @@ class ProductAttributeController extends Controller
      *   "message": "Product attribute created successfully.",
      *   "data": {}
      * }
-     * 
+     *
      * @response 403 {
      *     "message": "You do not have the required permissions."
      * }
      */
     public function store(StoreProductAttributeRequest $request)
     {
-        $request->validated($request->only(['name']));
-
         try {
             return $this->productAttribute->create($request);
         } catch (Exception $e) {
@@ -84,7 +82,7 @@ class ProductAttributeController extends Controller
      *   "message": "Attribute retrieved successfully.",
      *   "data": {}
      * }
-     * 
+     *
      * @response 403 {
      *     "message": "You do not have the required permissions."
      * }
@@ -110,15 +108,13 @@ class ProductAttributeController extends Controller
      *   "message": "Product attribute updated successfully.",
      *   "data": {}
      * }
-     * 
+     *
      * @response 403 {
      *     "message": "You do not have the required permissions."
      * }
      */
     public function update(UpdateProductAttributeRequest $request, DB $productAttribute)
     {
-        $request->validated($request->only(['name']));
-
         try {
             return $this->productAttribute->update($request, $productAttribute);
         } catch (Exception $e) {
@@ -135,7 +131,7 @@ class ProductAttributeController extends Controller
      * @response 200 {
      *   "message": "Product attribute deleted successfully."
      * }
-     * 
+     *
      * @response 403 {
      *     "message": "You do not have the required permissions."
      * }

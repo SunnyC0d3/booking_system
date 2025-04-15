@@ -38,7 +38,11 @@ class ProductAttribute
         $user = $request->user();
 
         if ($user->hasPermission('create_product_attributes')) {
-            $attribute = DB::create($request->validated());
+            $data = $request->validated(
+                $request->only(['name'])
+            );
+
+            $attribute = DB::create($data);
             return $this->ok('Product attribute created successfully.', $attribute);
         }
 
@@ -50,7 +54,11 @@ class ProductAttribute
         $user = $request->user();
 
         if ($user->hasPermission('edit_product_attributes')) {
-            $productAttribute->update($request->validated());
+            $data = $request->validated(
+                $request->only(['name'])
+            );
+
+            $productAttribute->update($data);
             return $this->ok('Product attribute updated successfully.', $productAttribute);
         }
 
