@@ -30,9 +30,11 @@ class VendorFactory extends Factory
         $images = collect(Storage::files('demo-images'));
 
         return $this->afterCreating(function (Vendor $vendor) use ($images) {
-            $vendor->addMediaFromDisk($images->random())
-                ->preservingOriginal()
-                ->toMediaCollection('logo');
+            if ($images->isNotEmpty()) {
+                $vendor->addMediaFromDisk($images->random())
+                    ->preservingOriginal()
+                    ->toMediaCollection('logo');
+            }
         });
     }
 }

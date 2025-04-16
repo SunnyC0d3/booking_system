@@ -21,20 +21,7 @@ class User
         $user = $request->user();
 
         if ($user->hasPermission('view_users')) {
-            $request->validated($request->only([
-                'filter' => [
-                    'name',
-                    'email',
-                    'role',
-                    'created_at',
-                    'updated_at',
-                    'search',
-                    'include'
-                ],
-                'page',
-                'per_page',
-                'sort',
-            ]));
+            $request->validated();
 
             $query = UserDB::filter($filter);
             $perPage = $request->input('per_page', 15);

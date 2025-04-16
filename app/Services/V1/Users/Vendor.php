@@ -3,6 +3,7 @@
 namespace App\Services\V1\Users;
 
 use App\Models\Vendor as VendorDB;
+use App\Filters\V1\VendorFilter;
 use Illuminate\Http\Request;
 use App\Traits\V1\ApiResponses;
 
@@ -14,12 +15,15 @@ class Vendor
     {
     }
 
-    public function all(Request $request)
+    public function all(Request $request, VendorFilter $filter)
     {
         $user = $request->user();
 
         if ($user->hasPermission('view_vendors')) {
-            $vendors = VendorDB::all();
+            $query = VendorDB::filter($filter);
+            $perPage = $request->input('per_page', 15);
+            $vendors = $query->paginate($perPage)->appends($request->query());
+
             return $this->ok('Vendors fetched successfully', $vendors);
         }
 
@@ -45,7 +49,7 @@ class Vendor
         if ($user->hasPermission('create_vendors')) {
             $data = $request->validated();
 
-            $vendor = Vendor::create($data);
+            $vendor = VendorDB::create($data);
 
             if ($data['logo']) {
                 $vendor->addMediaFromRequest('logo')->toMediaCollection('logo');

@@ -9,6 +9,7 @@ use App\Requests\V1\StoreVendorRequest;
 use App\Requests\V1\UpdateVendorRequest;
 use App\Http\Controllers\Controller;
 use App\Traits\V1\ApiResponses;
+use App\Filters\V1\VendorFilter;
 use \Exception;
 
 class VendorController extends Controller
@@ -22,10 +23,10 @@ class VendorController extends Controller
         $this->vendor = $vendor;
     }
 
-    public function index(Request $request)
+    public function index(Request $request, VendorFilter $filter)
     {
         try {
-            return $this->vendor->all($request);
+            return $this->vendor->all($request, $filter);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
