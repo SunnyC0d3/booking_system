@@ -1,59 +1,86 @@
-name: 'Password Reset'
+name: 'Email Verification'
 description: ''
 endpoints:
   -
     httpMethods:
-      - POST
-    uri: api/forgot-password
+      - GET
+    uri: 'api/email/verify/{id}/{hash}'
     metadata:
-      groupName: 'Password Reset'
+      groupName: 'Email Verification'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Request a password reset link.'
-      description: 'Sends a password reset email to the specified email address.'
+      title: "Verify a user's email address."
+      description: 'Once a user registers, a notification is sent out to their specified email address, which requires them to verify.'
       authenticated: false
       custom: []
     headers:
-      X-Hmac: 'HMAC signature of the request payload done via sha256.'
-      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      email:
-        name: email
-        description: "The user's email address."
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the verify.'
         required: true
-        example: john.doe@example.com
+        example: nobis
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      hash:
+        name: hash
+        description: ''
+        required: true
+        example: ea
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: nobis
+      hash: ea
+    queryParameters:
+      id:
+        name: id
+        description: "The user's id."
+        required: true
+        example: '1'
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-    cleanBodyParameters:
-      email: john.doe@example.com
+      hash:
+        name: hash
+        description: 'The hash to verify the email.'
+        required: true
+        example: '1234567890'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanQueryParameters:
+      id: '1'
+      hash: '1234567890'
+    bodyParameters: []
+    cleanBodyParameters: []
     fileParameters: []
     responses:
       -
         status: 200
-        content: |-
-          {
-            "message": "Password reset link sent.",
-            "status": 200
-          }
+        content: 'Redirected to specified URL'
         headers: []
         description: ''
         custom: []
       -
-        status: 400
+        status: 401
         content: |-
           {
-            "message": {ERROR_MESSAGE},
-            "status": 400
+            "message": "Invalid/Expired url provided.",
+            "status": 401
           }
         headers: []
         description: ''
@@ -66,89 +93,44 @@ endpoints:
     custom: []
   -
     httpMethods:
-      - POST
-    uri: api/reset-password
+      - GET
+    uri: api/email/resend
     metadata:
-      groupName: 'Password Reset'
+      groupName: 'Email Verification'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: "Reset a user's password."
-      description: "Resets the user's password using the provided reset token."
+      title: 'Resend email to user.'
+      description: 'Once a user registers, a notification is sent out to their specified email address, which requires them to verify. Incase they dont recieve one, they can request again.'
       authenticated: false
       custom: []
     headers:
-      X-Hmac: 'HMAC signature of the request payload done via sha256.'
-      X-Timestamp: 'Timestamp + Request body.'
+      Authorization: 'Bearer token required.'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
     cleanUrlParameters: []
     queryParameters: []
     cleanQueryParameters: []
-    bodyParameters:
-      token:
-        name: token
-        description: 'The password reset token.'
-        required: true
-        example: abc123
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      email:
-        name: email
-        description: "The user's email address."
-        required: true
-        example: john.doe@example.com
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      password:
-        name: password
-        description: 'The new password.'
-        required: true
-        example: newpassword123
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      password_confirmation:
-        name: password_confirmation
-        description: 'Must match the password.'
-        required: true
-        example: newpassword123
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      token: abc123
-      email: john.doe@example.com
-      password: newpassword123
-      password_confirmation: newpassword123
+    bodyParameters: []
+    cleanBodyParameters: []
     fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
-            "message": "Password has been reset.",
+            "message": "Email verification link sent on your email id.",
             "status": 200
           }
         headers: []
         description: ''
         custom: []
       -
-        status: 400
+        status: 401
         content: |-
           {
-            "message": {ERROR_MESSAGE},
+            "message": "Email already verified.",
             "status": 400
           }
         headers: []

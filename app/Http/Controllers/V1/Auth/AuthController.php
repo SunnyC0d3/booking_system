@@ -24,20 +24,20 @@ class AuthController extends Controller
 
     /**
      * Register a new user and return their API token.
-     * 
-     * This endpoint is used to register a new user, including their name, email, password, 
+     *
+     * This endpoint is used to register a new user, including their name, email, password,
      * and password confirmation.
-     * 
+     *
      * @group Authentication
-     * 
+     *
      * @header X-Hmac HMAC signature of the request payload done via sha256.
      * @header X-Timestamp Timestamp + Request body.
-     * 
+     *
      * @bodyParam name string required The user's full name. Example: John Doe
      * @bodyParam email string required The user's email address. Example: john.doe@example.com
      * @bodyParam password string required The user's password. Must be at least 8 characters. Example: password123
      * @bodyParam password_confirmation string required Must match the password field. Example: password123
-     * 
+     *
      * @response 200 {
      *   "data": [],
      *   "message": "User registered successfully",
@@ -61,7 +61,7 @@ class AuthController extends Controller
      * Authenticates a user with email and password. Returns an API token with expiry timer.
      *
      * @group Authentication
-     * 
+     *
      * @header X-Hmac HMAC signature of the request payload done via sha256.
      * @header X-Timestamp Timestamp + Request body.
      *
@@ -101,7 +101,7 @@ class AuthController extends Controller
      *
      * @group Authentication
      * @authenticated
-     * 
+     *
      * @header Authorization Bearer token required.
      *
      * @response 200 {
@@ -124,7 +124,8 @@ class AuthController extends Controller
      * Sends a password reset email to the specified email address.
      *
      * @group Password Reset
-     * 
+     * @authenticated
+     *
      * @header X-Hmac HMAC signature of the request payload done via sha256.
      * @header X-Timestamp Timestamp + Request body.
      *
@@ -134,7 +135,7 @@ class AuthController extends Controller
      *   "message": "Password reset link sent.",
      *   "status": 200
      * }
-     * 
+     *
      * @response 400 {
      *   "message": {ERROR_MESSAGE},
      *   "status": 400
@@ -157,7 +158,8 @@ class AuthController extends Controller
      * Resets the user's password using the provided reset token.
      *
      * @group Password Reset
-     * 
+     * @authenticated
+     *
      * @header X-Hmac HMAC signature of the request payload done via sha256.
      * @header X-Timestamp Timestamp + Request body.
      *

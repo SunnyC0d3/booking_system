@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "E-Commerce API Documentation",
-        "_postman_id": "1f050ca0-178d-44db-b6de-17db77e090dd",
+        "_postman_id": "48ef3eba-3692-4962-9fa6-dc64656d6cfc",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -180,13 +180,13 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "sed",
+                                    "value": "nobis",
                                     "description": "The ID of the verify."
                                 },
                                 {
                                     "id": "hash",
                                     "key": "hash",
-                                    "value": "temporibus",
+                                    "value": "ea",
                                     "description": ""
                                 }
                             ]
@@ -244,7 +244,10 @@
                             }
                         ],
                         "body": null,
-                        "description": "Once a user registers, a notification is sent out to their specified email address, which requires them to verify. Incase they dont recieve one, they can request again."
+                        "description": "Once a user registers, a notification is sent out to their specified email address, which requires them to verify. Incase they dont recieve one, they can request again.",
+                        "auth": {
+                            "type": "noauth"
+                        }
                     },
                     "response": [
                         {
@@ -299,10 +302,7 @@
                             "mode": "raw",
                             "raw": "{\"email\":\"john.doe@example.com\"}"
                         },
-                        "description": "Sends a password reset email to the specified email address.",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": "Sends a password reset email to the specified email address."
                     },
                     "response": [
                         {
@@ -351,10 +351,7 @@
                             "mode": "raw",
                             "raw": "{\"token\":\"abc123\",\"email\":\"john.doe@example.com\",\"password\":\"newpassword123\",\"password_confirmation\":\"newpassword123\"}"
                         },
-                        "description": "Resets the user's password using the provided reset token.",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": "Resets the user's password using the provided reset token."
                     },
                     "response": [
                         {
@@ -663,7 +660,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"ratione\",\"parent_id\":8}"
+                            "raw": "{\"name\":\"eos\",\"parent_id\":14}"
                         },
                         "description": ""
                     },
@@ -758,7 +755,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"ipsa\",\"parent_id\":10}"
+                            "raw": "{\"name\":\"ea\",\"parent_id\":17}"
                         },
                         "description": ""
                     },
@@ -895,7 +892,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"ad\"}"
+                            "raw": "{\"name\":\"perferendis\"}"
                         },
                         "description": ""
                     },
@@ -990,7 +987,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"doloribus\"}"
+                            "raw": "{\"name\":\"delectus\"}"
                         },
                         "description": ""
                     },
@@ -1121,7 +1118,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"laboriosam\"}"
+                            "raw": "{\"name\":\"deserunt\"}"
                         },
                         "description": ""
                     },
@@ -1216,7 +1213,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"eum\"}"
+                            "raw": "{\"name\":\"optio\"}"
                         },
                         "description": ""
                     },
@@ -1309,7 +1306,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"nuzxcclzcdkssiqxclphpm\",\"price\":\"9377516.3)))))\",\"category\":\"2\",\"quantity\":50,\"created_at\":\"4838-72-27,2399-45-53\",\"updated_at\":\"2261-17-08,8949-51-68\",\"search\":\"yqsrlav\",\"include\":\")\"},\"page\":58,\"per_page\":12,\"sort\":\"WA,-_\"}"
+                            "raw": "{\"filter\":{\"name\":\"lgllnvqgjmmgupaqrqvzlmfy\",\"price\":\"562152.89)))))))\",\"category\":\"8\",\"quantity\":66,\"created_at\":\"8109-15-20\",\"updated_at\":\"1721-78-93\",\"search\":\"rtlo\",\"include\":\"cp,ubbatrd,g)\"},\"page\":43,\"per_page\":6,\"sort\":\"-_,-I,-x,-j\"}"
                         },
                         "description": ""
                     },
@@ -1399,61 +1396,61 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "ngifioajhufq",
+                                    "value": "hfgurtpjoepssqizxbl",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Magni eligendi temporibus repellendus ut.",
+                                    "value": "Velit alias quaerat est soluta.",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "price",
-                                    "value": "14",
+                                    "value": "47",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_category_id",
-                                    "value": "aut",
+                                    "value": "assumenda",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_categories table."
                                 },
                                 {
                                     "key": "product_status_id",
-                                    "value": "odio",
+                                    "value": "consectetur",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_statuses table."
                                 },
                                 {
                                     "key": "quantity",
-                                    "value": "77",
+                                    "value": "52",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_variants[0][product_attribute_id]",
-                                    "value": "iste",
+                                    "value": "earum",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][value]",
-                                    "value": "mu",
+                                    "value": "ld",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][additional_price]",
-                                    "value": "28",
+                                    "value": "85",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][quantity]",
-                                    "value": "68",
+                                    "value": "58",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1514,61 +1511,61 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "nhs",
+                                    "value": "ogjsupfvkfqcrhtnmx",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Vero molestias qui enim deserunt ex odit.",
+                                    "value": "Autem esse eum dolor et eum odio.",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "price",
-                                    "value": "68",
+                                    "value": "20",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_category_id",
-                                    "value": "vitae",
+                                    "value": "incidunt",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_categories table."
                                 },
                                 {
                                     "key": "product_status_id",
-                                    "value": "quas",
+                                    "value": "nihil",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_statuses table."
                                 },
                                 {
                                     "key": "quantity",
-                                    "value": "60",
+                                    "value": "2",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_variants[0][product_attribute_id]",
-                                    "value": "ut",
+                                    "value": "modi",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][value]",
-                                    "value": "ap",
+                                    "value": "fpw",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][additional_price]",
-                                    "value": "49",
+                                    "value": "10",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][quantity]",
-                                    "value": "15",
+                                    "value": "34",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1716,7 +1713,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"doqhhlqrzisrg\",\"email\":\"clementina18@example.net\",\"role\":\"554,5,1,5,9,\",\"created_at\":\"3433-22-00\",\"updated_at\":\"7002-91-32,6281-17-48\",\"search\":\"vubjposfrbmn\",\"include\":\"nw,wzgxlhqmcd,dtfbqhtni,qxwtfpqtwap,xehylg)\"},\"page\":26,\"per_page\":5,\"sort\":\"XeeC\"}"
+                            "raw": "{\"filter\":{\"name\":\"uqgwyebw\",\"email\":\"terry.kali@example.net\",\"role\":\"8,4,9,9,1,4\",\"created_at\":\"0083-49-49\",\"updated_at\":\"5673-95-00,1509-17-25\",\"search\":\"sgyqjzjhptksnmuhaqxoeq\",\"include\":\"fkowk,stvltkbwn,huic,gxzwwsgd,dgozojtay,vah,ipdodnxsi,ae)\"},\"page\":49,\"per_page\":21,\"sort\":\"-x,-L,-D,-B,X\"}"
                         },
                         "description": ""
                     },
@@ -1803,7 +1800,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"fffhsba\",\"email\":\"durgan.cassidy@example.com\",\"password\":\"L0bdDyIo&WC(\",\"role_id\":\"et\",\"address\":{\"address_line1\":\"xqnolzzqbuci\",\"city\":\"sdyzxpoehfgisvvopo\",\"country\":\"wfhoetriuxdpiwtm\",\"postal_code\":\"gybxawh\",\"address_line2\":\"veipifmumfrjy\",\"state\":\"mkppmjwzrltwsquf\"}}"
+                            "raw": "{\"name\":\"myxcvgiegyhuaotwber\",\"email\":\"berta.kuhic@example.net\",\"password\":\"~5z?@}hqy+=sA(dAAZii\",\"role_id\":\"quas\",\"address\":{\"address_line1\":\"tkapmsdgbxyabptzt\",\"city\":\"yyhcuagapzjxxrqaul\",\"country\":\"xdvzxqleyigfdp\",\"postal_code\":\"jvuveegliixzvtlattrz\",\"address_line2\":\"qmskkbcpeju\",\"state\":\"fxbzycjlwwqfftruxvdhyqweg\"}}"
                         },
                         "description": ""
                     },
@@ -1852,7 +1849,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"assplfzios\",\"email\":\"spfannerstill@example.net\",\"password\":\"V!72ydchmP;gr$Mu`2\",\"address\":{\"address_line1\":\"fenysln\",\"city\":\"vnf\",\"country\":\"bblbrsnyjwzdrscgb\",\"postal_code\":\"pacxozd\",\"address_line2\":\"pniopwcxddvnirbeksjcm\",\"state\":\"wmm\"}}"
+                            "raw": "{\"name\":\"e\",\"email\":\"kassandra79@example.org\",\"password\":\"q{]=8vRn3VTqGLFB~WS.\",\"address\":{\"address_line1\":\"cmx\",\"city\":\"hg\",\"country\":\"optufhuesywlnwnzry\",\"postal_code\":\"wpuucdobixtkzboan\",\"address_line2\":\"pfpfpgekaqtwlxra\",\"state\":\"zifo\"}}"
                         },
                         "description": ""
                     },
@@ -1907,6 +1904,274 @@
                             "header": [],
                             "code": 200,
                             "body": "{\n    \"message\": \"Users deleted successfully.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Vendors",
+            "description": "",
+            "item": [
+                {
+                    "name": "Retrieve a paginated list of vendors.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/vendors",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/vendors"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Vendors retrieved successfully.\",\n    \"data\": []\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Retrieve a specific vendor.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/vendors\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/vendors\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the vendor."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Vendor details retrieved.\",\n    \"data\": {}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a new vendor.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/vendors",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/vendors"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "user_id",
+                                    "value": "non",
+                                    "type": "text",
+                                    "description": "The <code>id<\/code> of an existing record in the users table."
+                                },
+                                {
+                                    "key": "name",
+                                    "value": "pajklzuowyjfco",
+                                    "type": "text",
+                                    "description": "Must not be greater than 255 characters."
+                                },
+                                {
+                                    "key": "description",
+                                    "value": "Adipisci nobis autem enim maxime aut.",
+                                    "type": "text",
+                                    "description": "Must not be greater than 1000 characters."
+                                },
+                                {
+                                    "key": "logo",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Vendors created successfully!\",\n    \"data\": {}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update an existing vendor.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/vendors\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/vendors\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the vendor."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "name",
+                                    "value": "urceogb",
+                                    "type": "text",
+                                    "description": "Must not be greater than 255 characters."
+                                },
+                                {
+                                    "key": "description",
+                                    "value": "Qui voluptatibus qui distinctio commodi in.",
+                                    "type": "text",
+                                    "description": "Must not be greater than 1000 characters."
+                                },
+                                {
+                                    "key": "logo",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Vendor updated successfully.\",\n    \"data\": {}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Permanently delete a vendor.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/vendors\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/vendors\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the vendor."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Vendor deleted successfully.\"\n}",
                             "name": ""
                         },
                         {

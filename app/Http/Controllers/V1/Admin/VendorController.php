@@ -23,6 +23,21 @@ class VendorController extends Controller
         $this->vendor = $vendor;
     }
 
+    /**
+     * Retrieve a paginated list of vendors.
+     *
+     * @group Vendors
+     * @authenticated
+     *
+     * @response 200 {
+     *     "message": "Vendors retrieved successfully.",
+     *     "data": []
+     * }
+     *
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function index(Request $request, VendorFilter $filter)
     {
         try {
@@ -32,6 +47,21 @@ class VendorController extends Controller
         }
     }
 
+    /**
+     * Create a new vendor.
+     *
+     * @group Vendors
+     * @authenticated
+     *
+     * @response 200 {
+     *     "message": "Vendors created successfully!",
+     *     "data": {}
+     * }
+     *
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function store(StoreVendorRequest $request)
     {
         try {
@@ -41,6 +71,21 @@ class VendorController extends Controller
         }
     }
 
+    /**
+     * Retrieve a specific vendor.
+     *
+     * @group Vendors
+     * @authenticated
+     *
+     * @response 200 {
+     *     "message": "Vendor details retrieved.",
+     *     "data": {}
+     * }
+     *
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function show(Request $request, VendorDB $vendor)
     {
         try {
@@ -50,6 +95,21 @@ class VendorController extends Controller
         }
     }
 
+    /**
+     * Update an existing vendor.
+     *
+     * @group Vendors
+     * @authenticated
+     *
+     * @response 200 {
+     *     "message": "Vendor updated successfully.",
+     *     "data": {}
+     * }
+     *
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function update(UpdateVendorRequest $request, VendorDB $vendor)
     {
         try {
@@ -59,6 +119,20 @@ class VendorController extends Controller
         }
     }
 
+    /**
+     * Permanently delete a vendor.
+     *
+     * @group Vendors
+     * @authenticated
+     *
+     * @response 200 {
+     *     "message": "Vendor deleted successfully."
+     * }
+     *
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function destroy(Request $request, VendorDB $vendor)
     {
         try {

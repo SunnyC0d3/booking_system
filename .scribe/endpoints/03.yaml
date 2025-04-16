@@ -1,16 +1,16 @@
-name: 'Product Category'
+name: 'Product Attributes'
 description: ''
 endpoints:
   -
     httpMethods:
       - GET
-    uri: api/admin/product-categories
+    uri: api/admin/product-attributes
     metadata:
-      groupName: 'Product Category'
+      groupName: 'Product Attributes'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Get all product categories'
+      title: 'Retrieve all product attributes.'
       description: ''
       authenticated: true
       custom: []
@@ -30,14 +30,8 @@ endpoints:
         status: 200
         content: |-
           {
-              "message": "Categories retrieved successfully.",
-              "data": [
-                  {
-                      "id": 1,
-                      "name": "Electronics",
-                      "children": []
-                  }
-              ]
+            "message": "Attributes retrieved successfully.",
+            "data": []
           }
         headers: []
         description: ''
@@ -63,13 +57,13 @@ endpoints:
   -
     httpMethods:
       - POST
-    uri: api/admin/product-categories
+    uri: api/admin/product-attributes
     metadata:
-      groupName: 'Product Category'
+      groupName: 'Product Attributes'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Store a new product category'
+      title: 'Create a new product attribute.'
       description: ''
       authenticated: true
       custom: []
@@ -84,39 +78,24 @@ endpoints:
     bodyParameters:
       name:
         name: name
-        description: 'The name of the category.'
+        description: 'The name of the product attribute.'
         required: true
-        example: ratione
+        example: '"Color"'
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         custom: []
-      parent_id:
-        name: parent_id
-        description: 'optional The ID of the parent category.'
-        required: false
-        example: 8
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        custom: []
     cleanBodyParameters:
-      name: ratione
-      parent_id: 8
+      name: '"Color"'
     fileParameters: []
     responses:
       -
         status: 201
         content: |-
           {
-              "message": "Category created successfully.",
-              "data": {
-                  "id": 2,
-                  "name": "Laptops",
-                  "parent_id": 1
-              }
+            "message": "Product attribute created successfully.",
+            "data": {}
           }
         headers: []
         description: ''
@@ -142,13 +121,13 @@ endpoints:
   -
     httpMethods:
       - GET
-    uri: 'api/admin/product-categories/{productCategory_id}'
+    uri: 'api/admin/product-attributes/{productAttribute_id}'
     metadata:
-      groupName: 'Product Category'
+      groupName: 'Product Attributes'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Get a specific product category'
+      title: 'Retrieve a specific product attribute.'
       description: ''
       authenticated: true
       custom: []
@@ -157,9 +136,9 @@ endpoints:
       Content-Type: application/json
       Accept: application/json
     urlParameters:
-      productCategory_id:
-        name: productCategory_id
-        description: 'The ID of the productCategory.'
+      productAttribute_id:
+        name: productAttribute_id
+        description: 'The ID of the productAttribute.'
         required: true
         example: 1
         type: integer
@@ -168,7 +147,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      productCategory_id: 1
+      productAttribute_id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -179,12 +158,8 @@ endpoints:
         status: 200
         content: |-
           {
-              "message": "Category retrieved successfully.",
-              "data": {
-                  "id": 1,
-                  "name": "Electronics",
-                  "children": []
-              }
+            "message": "Attribute retrieved successfully.",
+            "data": {}
           }
         headers: []
         description: ''
@@ -210,13 +185,13 @@ endpoints:
   -
     httpMethods:
       - POST
-    uri: 'api/admin/product-categories/{productCategory_id}'
+    uri: 'api/admin/product-attributes/{productAttribute_id}'
     metadata:
-      groupName: 'Product Category'
+      groupName: 'Product Attributes'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Update a product category'
+      title: 'Update a product attribute.'
       description: ''
       authenticated: true
       custom: []
@@ -225,9 +200,9 @@ endpoints:
       Content-Type: application/json
       Accept: application/json
     urlParameters:
-      productCategory_id:
-        name: productCategory_id
-        description: 'The ID of the productCategory.'
+      productAttribute_id:
+        name: productAttribute_id
+        description: 'The ID of the productAttribute.'
         required: true
         example: 1
         type: integer
@@ -236,45 +211,30 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      productCategory_id: 1
+      productAttribute_id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
       name:
         name: name
-        description: 'The name of the category.'
+        description: 'The updated name of the product attribute.'
         required: true
-        example: ipsa
+        example: '"Size"'
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         custom: []
-      parent_id:
-        name: parent_id
-        description: 'optional The ID of the parent category.'
-        required: false
-        example: 10
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: true
-        custom: []
     cleanBodyParameters:
-      name: ipsa
-      parent_id: 10
+      name: '"Size"'
     fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
-              "message": "Category updated successfully.",
-              "data": {
-                  "id": 1,
-                  "name": "Updated Category Name",
-                  "parent_id": null
-              }
+            "message": "Product attribute updated successfully.",
+            "data": {}
           }
         headers: []
         description: ''
@@ -300,13 +260,13 @@ endpoints:
   -
     httpMethods:
       - DELETE
-    uri: 'api/admin/product-categories/{productCategory_id}'
+    uri: 'api/admin/product-attributes/{productAttribute_id}'
     metadata:
-      groupName: 'Product Category'
+      groupName: 'Product Attributes'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Delete a product category'
+      title: 'Delete a product attribute.'
       description: ''
       authenticated: true
       custom: []
@@ -315,9 +275,9 @@ endpoints:
       Content-Type: application/json
       Accept: application/json
     urlParameters:
-      productCategory_id:
-        name: productCategory_id
-        description: 'The ID of the productCategory.'
+      productAttribute_id:
+        name: productAttribute_id
+        description: 'The ID of the productAttribute.'
         required: true
         example: 1
         type: integer
@@ -326,7 +286,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      productCategory_id: 1
+      productAttribute_id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -337,16 +297,7 @@ endpoints:
         status: 200
         content: |-
           {
-              "message": "Category deleted successfully"
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 400
-        content: |-
-          {
-              "message": "Cannot delete a category with subcategories"
+            "message": "Product attribute deleted successfully."
           }
         headers: []
         description: ''
