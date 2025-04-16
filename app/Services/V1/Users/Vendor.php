@@ -43,14 +43,7 @@ class Vendor
         $user = $request->user();
 
         if ($user->hasPermission('create_vendors')) {
-            $data = $request->validated(
-                $request->only([
-                    'user_id',
-                    'name',
-                    'description',
-                    'logo'
-                ])
-            );
+            $data = $request->validated();
 
             $vendor = Vendor::create($data);
 
@@ -69,14 +62,7 @@ class Vendor
         $user = $request->user();
 
         if ($user->hasPermission('edit_vendors')) {
-            $data = $request->validated(
-                $request->only([
-                    'user_id',
-                    'name',
-                    'description',
-                    'logo'
-                ])
-            );
+            $data = $request->validated();
 
             $vendor->update($data);
 

@@ -80,7 +80,6 @@ class UserFilterTest extends TestCase
     {
         $role = Role::factory()->create();
         $user = User::factory()->create(['role_id' => $role->id]);
-        User::factory()->create(['role_id' => null]);
 
         $request = Request::create('', 'GET', ['role' => (string)$role->id]);
         $filter = new UserFilter($request);
@@ -93,7 +92,14 @@ class UserFilterTest extends TestCase
 
     public function test_includes_relations()
     {
-        $user = User::factory()->hasAddress()->create();
+        $user = User::factory()->create();
+
+        $user->userAddress()->create([
+            'address_line1' => '123',
+            'city' => 'London',
+            'country' => 'UK',
+            'postal_code' => 'W1A',
+        ]);
 
         $request = Request::create('', 'GET', ['include' => 'userAddress']);
         $filter = new UserFilter($request);

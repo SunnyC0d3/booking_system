@@ -5,12 +5,14 @@ namespace Tests\Feature\App\Requests\V1;
 use App\Models\Role;
 use App\Models\User;
 use App\Requests\V1\UpdateUserRequest;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
 
 class UpdateUserRequestTest extends TestCase
 {
+    use RefreshDatabase;
     protected function setUp(): void
     {
         parent::setUp();
@@ -24,13 +26,18 @@ class UpdateUserRequestTest extends TestCase
         $user1 = User::factory()->create(['email' => 'user1@example.com']);
         $user2 = User::factory()->create(['email' => 'user2@example.com']);
 
-        $request = UpdateUserRequest::create("/dummy-route/{$user2->id}", 'GET', [
-            'email' => 'user1@example.com',
-        ]);
-        $request->setRouteResolver(fn() => (object)['parameter' => fn() => $user2]);
+        $request = new UpdateUserRequest();
+        $this->app->instance(UpdateUserRequest::class, $request);
+        $this->app['router']->getRoutes()->refreshNameLookups();
+        $this->app['router']->getRoutes()->refreshActionLookups();
 
-        $rules = (new UpdateUserRequest())->setContainer(app())->setRedirector(app('redirect'))->setRouteResolver(fn() => $user2)->rules();
-        $validator = Validator::make($request->all(), $rules);
+        $this->app['request']->setRouteResolver(function () use ($user2) {
+            return (object) ['parameters' => ['user' => $user2->id]];
+        });
+
+        $data = ['email' => 'user1@example.com'];
+        $rules = $request->rules();
+        $validator = Validator::make($data, $rules);
 
         $this->assertTrue($validator->fails());
         $this->assertArrayHasKey('email', $validator->errors()->toArray());
@@ -54,10 +61,16 @@ class UpdateUserRequestTest extends TestCase
             ]
         ];
 
-        $request = UpdateUserRequest::create("/dummy-route/{$user->id}", 'GET', $data);
-        $request->setRouteResolver(fn() => $user);
+        $request = new UpdateUserRequest();
+        $this->app->instance(UpdateUserRequest::class, $request);
+        $this->app['router']->getRoutes()->refreshNameLookups();
+        $this->app['router']->getRoutes()->refreshActionLookups();
 
-        $rules = (new UpdateUserRequest())->setContainer(app())->setRedirector(app('redirect'))->setRouteResolver(fn() => $user)->rules();
+        $this->app['request']->setRouteResolver(function () use ($user) {
+            return (object) ['parameters' => ['user' => $user->id]];
+        });
+
+        $rules = $request->rules();
         $validator = Validator::make($data, $rules);
 
         $this->assertFalse($validator->fails());

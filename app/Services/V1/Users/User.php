@@ -63,18 +63,7 @@ class User
         $user = $request->user();
 
         if ($user->hasPermission('create_users')) {
-            $data = $request->validated($request->only([
-                'name',
-                'email',
-                'password',
-                'role_id',
-                'address.address_line1',
-                'address.city',
-                'address.country',
-                'address.postal_code',
-                'address.address_line2',
-                'address.state',
-            ]));
+            $data = $request->validated();
 
             $_user = UserDB::create([
                 'name' => $data['name'],
@@ -96,18 +85,7 @@ class User
         $user = $request->user();
 
         if ($user->hasPermission('edit_users')) {
-            $data = $request->validated($request->only([
-                'name',
-                'email',
-                'password',
-                'role_id',
-                'address.address_line1',
-                'address.city',
-                'address.country',
-                'address.postal_code',
-                'address.address_line2',
-                'address.state',
-            ]));
+            $data = $request->validated();
 
             if (isset($data['password'])) {
                 $data['password'] = Hash::make($data['password']);
