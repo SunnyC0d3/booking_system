@@ -3,6 +3,7 @@
 namespace App\Services\V1\Users;
 
 use App\Models\User as UserDB;
+use App\Resources\V1\UserResource;
 use Illuminate\Http\Request;
 use App\Traits\V1\ApiResponses;
 use App\Filters\V1\UserFilter;
@@ -27,7 +28,7 @@ class User
             $perPage = $request->input('per_page', 15);
             $users = $query->paginate($perPage)->appends($request->query());
 
-            return $this->ok('Users retrieved successfully.', $users);
+            return $this->ok('Users retrieved successfully.', UserResource::collection($users));
         }
 
         return $this->error('You do not have the required permissions.', 403);
@@ -39,7 +40,7 @@ class User
 
         if ($user->hasPermission('view_users')) {
             $_user->load(['role', 'vendors', 'userAddress']);
-            return $this->ok('Users details retrieved.', $_user);
+            return $this->ok('Users details retrieved.', new UserResource($_user));
         }
 
         return $this->error('You do not have the required permissions.', 403);
@@ -61,7 +62,7 @@ class User
 
             $_user->userAddress()->create($data['address']);
 
-            return $this->ok('Users created successfully!', $_user->load(['role', 'userAddress']));
+            return $this->ok('Users created successfully!', new UserResource($_user));
         }
 
         return $this->error('You do not have the required permissions.', 403);
@@ -84,7 +85,7 @@ class User
                 $_user->userAddress()->updateOrCreate([], $data['address']);
             }
 
-            return $this->ok('Users updated successfully.', $_user->load(['role', 'userAddress']));
+            return $this->ok('Users updated successfully.', new UserResource($_user));
         }
 
         return $this->error('You do not have the required permissions.', 403);
