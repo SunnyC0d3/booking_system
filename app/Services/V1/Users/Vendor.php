@@ -21,9 +21,9 @@ class Vendor
         $user = $request->user();
 
         if ($user->hasPermission('view_vendors')) {
-            $query = VendorDB::filter($filter);
+            $query = VendorDB::with(['user'])->filter($filter);
             $perPage = $request->input('per_page', 15);
-            $vendors = $query->paginate($perPage)->appends($request->query());
+            $vendors = $query->paginate($perPage);
 
             return $this->ok('Vendors fetched successfully', VendorResource::collection($vendors));
         }
@@ -37,7 +37,7 @@ class Vendor
 
         if ($user->hasPermission('view_vendors')) {
             $vendor->load(['user']);
-            $this->success('Vendor details fetched successfully', new VendorResource($vendor));
+            return $this->success('Vendor details fetched successfully', new VendorResource($vendor));
         }
 
         return $this->error('You do not have the required permissions.', 403);
@@ -52,7 +52,7 @@ class Vendor
 
             $vendor = VendorDB::create($data);
 
-            if ($data['logo']) {
+            if (!empty($data['logo'])) {
                 $vendor->addMediaFromRequest('logo')->toMediaCollection('logo');
             }
 

@@ -24,9 +24,9 @@ class User
         if ($user->hasPermission('view_users')) {
             $request->validated();
 
-            $query = UserDB::filter($filter);
+            $query = UserDB::with(['userAddress', 'role', 'vendors'])->filter($filter);
             $perPage = $request->input('per_page', 15);
-            $users = $query->paginate($perPage)->appends($request->query());
+            $users = $query->paginate($perPage);
 
             return $this->ok('Users retrieved successfully.', UserResource::collection($users));
         }

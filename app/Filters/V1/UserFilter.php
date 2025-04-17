@@ -57,7 +57,7 @@ class UserFilter extends QueryFilter
     public function search(string $value)
     {
         $likeStr = str_replace('*', '%', $value);
-        return $this->builder->where(function ($query) use ($likeStr) {
+        return $this->builder->where(function (Builder $query) use ($likeStr) {
             $query->where('name', 'like', $likeStr)
                 ->orWhere('email', 'like', $likeStr);
         });
