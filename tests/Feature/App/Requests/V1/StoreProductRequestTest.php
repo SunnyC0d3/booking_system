@@ -82,14 +82,12 @@ class StoreProductRequestTest extends TestCase
 
     public function test_validation_passes_with_valid_data()
     {
-        // Create valid related records
         $category = \App\Models\ProductCategory::factory()->create();
         $status = \App\Models\ProductStatus::factory()->create();
         $tag1 = \App\Models\ProductTag::factory()->create();
         $tag2 = \App\Models\ProductTag::factory()->create();
         $attribute = \App\Models\ProductAttribute::factory()->create();
 
-        // Create a fake image file
         $image = \Illuminate\Http\UploadedFile::fake()->image('product.jpg');
 
         $data = [

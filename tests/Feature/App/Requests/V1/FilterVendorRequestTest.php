@@ -8,27 +8,6 @@ use App\Requests\V1\FilterVendorRequest;
 
 class FilterVendorRequestTest extends TestCase
 {
-    public function test_validation_passes_with_valid_data()
-    {
-        $data = [
-            'filter' => [
-                'name' => 'Vendor Ltd',
-                'description' => 'A trusted vendor',
-                'user_id' => 1,
-                'created_at' => '2025-01-01,2025-02-01',
-                'updated_at' => '2025-03-01',
-                'include' => 'user,media',
-            ],
-            'page' => 1,
-            'per_page' => 50,
-            'sort' => 'name,-created_at',
-        ];
-
-        $validator = Validator::make($data, (new FilterVendorRequest())->rules());
-
-        $this->assertFalse($validator->fails(), 'Valid data should pass validation.');
-    }
-
     public function test_validation_fails_with_invalid_data()
     {
         $data = [

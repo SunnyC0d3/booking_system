@@ -31,9 +31,11 @@ class ProductFactory extends Factory
         $images = collect(Storage::files('demo-images'));
 
         return $this->afterCreating(function (Product $product) use ($images) {
-            $product->addMediaFromDisk($images->random())
-                ->preservingOriginal()
-                ->toMediaCollection('featured_image');
+            if ($images->isNotEmpty()) {
+                $product->addMediaFromDisk($images->random())
+                    ->preservingOriginal()
+                    ->toMediaCollection('featured_image');
+            }
         });
     }
 }
