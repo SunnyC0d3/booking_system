@@ -2,7 +2,7 @@
 
 namespace App\Services\V1\Users;
 
-use App\Models\User as UserDB;
+use App\Models\User as DB;
 use App\Resources\V1\UserResource;
 use Illuminate\Http\Request;
 use App\Traits\V1\ApiResponses;
@@ -24,7 +24,7 @@ class User
         if ($user->hasPermission('view_users')) {
             $request->validated();
 
-            $query = UserDB::with(['userAddress', 'role', 'vendors'])->filter($filter);
+            $query = DB::with(['userAddress', 'role', 'vendors'])->filter($filter);
             $perPage = $request->input('per_page', 15);
             $users = $query->paginate($perPage);
 
@@ -34,7 +34,7 @@ class User
         return $this->error('You do not have the required permissions.', 403);
     }
 
-    public function find(Request $request, UserDB $_user)
+    public function find(Request $request, DB $_user)
     {
         $user = $request->user();
 
@@ -53,7 +53,7 @@ class User
         if ($user->hasPermission('create_users')) {
             $data = $request->validated();
 
-            $_user = UserDB::create([
+            $_user = DB::create([
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'role_id' => $data['role_id'],
@@ -68,7 +68,7 @@ class User
         return $this->error('You do not have the required permissions.', 403);
     }
 
-    public function update(Request $request, UserDB $_user)
+    public function update(Request $request, DB $_user)
     {
         $user = $request->user();
 
@@ -91,7 +91,7 @@ class User
         return $this->error('You do not have the required permissions.', 403);
     }
 
-    public function delete(Request $request, UserDB $_user)
+    public function delete(Request $request, DB $_user)
     {
         $user = $request->user();
 

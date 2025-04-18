@@ -146,7 +146,7 @@ endpoints:
         name: user_id
         description: 'The <code>id</code> of an existing record in the users table.'
         required: true
-        example: non
+        example: quia
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -156,7 +156,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: pajklzuowyjfco
+        example: fohgjkohipyfdzktjmqaaqute
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -166,7 +166,7 @@ endpoints:
         name: description
         description: 'Must not be greater than 1000 characters.'
         required: true
-        example: 'Adipisci nobis autem enim maxime aut.'
+        example: 'Nam in cumque non repudiandae rerum magnam nam.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -183,9 +183,9 @@ endpoints:
         nullable: true
         custom: []
     cleanBodyParameters:
-      user_id: non
-      name: pajklzuowyjfco
-      description: 'Adipisci nobis autem enim maxime aut.'
+      user_id: quia
+      name: fohgjkohipyfdzktjmqaaqute
+      description: 'Nam in cumque non repudiandae rerum magnam nam.'
     fileParameters:
       logo: null
     responses:
@@ -264,7 +264,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: urceogb
+        example: umnibnjqrkpjpbhoxqvw
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -274,7 +274,7 @@ endpoints:
         name: description
         description: 'Must not be greater than 1000 characters.'
         required: false
-        example: 'Qui voluptatibus qui distinctio commodi in.'
+        example: 'Sed qui consectetur culpa vel.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -291,8 +291,8 @@ endpoints:
         nullable: true
         custom: []
     cleanBodyParameters:
-      name: urceogb
-      description: 'Qui voluptatibus qui distinctio commodi in.'
+      name: umnibnjqrkpjpbhoxqvw
+      description: 'Sed qui consectetur culpa vel.'
     fileParameters:
       logo: null
     responses:

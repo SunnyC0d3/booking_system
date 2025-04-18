@@ -78,7 +78,7 @@ class ProductController extends Controller
      * @group Products
      * @authenticated
      *
-     * @response 201 {
+     * @response 200 {
      *     "message": "Product created successfully.",
      *     "data": {}
      * }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\V1\Admin;
 
 use App\Services\V1\Users\Vendor;
-use App\Models\Vendor as VendorDB;
+use App\Models\Vendor as DB;
 use Illuminate\Http\Request;
 use App\Requests\V1\StoreVendorRequest;
 use App\Requests\V1\UpdateVendorRequest;
@@ -86,7 +86,7 @@ class VendorController extends Controller
      *     "message": "You do not have the required permissions."
      * }
      */
-    public function show(Request $request, VendorDB $vendor)
+    public function show(Request $request, DB $vendor)
     {
         try {
             return $this->vendor->find($request, $vendor);
@@ -110,7 +110,7 @@ class VendorController extends Controller
      *     "message": "You do not have the required permissions."
      * }
      */
-    public function update(UpdateVendorRequest $request, VendorDB $vendor)
+    public function update(UpdateVendorRequest $request, DB $vendor)
     {
         try {
             return $this->vendor->update($request, $vendor);
@@ -133,7 +133,7 @@ class VendorController extends Controller
      *     "message": "You do not have the required permissions."
      * }
      */
-    public function destroy(Request $request, VendorDB $vendor)
+    public function destroy(Request $request, DB $vendor)
     {
         try {
             return $this->vendor->delete($request, $vendor);

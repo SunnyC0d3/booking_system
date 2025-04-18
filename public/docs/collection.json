@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "E-Commerce API Documentation",
-        "_postman_id": "48ef3eba-3692-4962-9fa6-dc64656d6cfc",
+        "_postman_id": "7b3af755-ad72-4daa-bc24-e9019bbff278",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -180,13 +180,13 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "nobis",
+                                    "value": "suscipit",
                                     "description": "The ID of the verify."
                                 },
                                 {
                                     "id": "hash",
                                     "key": "hash",
-                                    "value": "ea",
+                                    "value": "tenetur",
                                     "description": ""
                                 }
                             ]
@@ -371,6 +371,186 @@
             ]
         },
         {
+            "name": "Permissions",
+            "description": "",
+            "item": [
+                {
+                    "name": "Retrieve all permissions.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/permissions",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/permissions"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Permissions retrieved successfully.\",\n  \"data\": []\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a new permission.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/permissions",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/permissions"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"\\\"create-vendor\\\"\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Permission created successfully.\",\n  \"data\": {}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update a permission.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/permissions\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/permissions\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the permission."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"\\\"create-vendor\\\"\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Permission updated successfully.\",\n  \"data\": {}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete a permission.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/permissions\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/permissions\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the permission."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Permission deleted successfully.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "name": "Product Attributes",
             "description": "",
             "item": [
@@ -441,7 +621,7 @@
                     "response": [
                         {
                             "header": [],
-                            "code": 201,
+                            "code": 200,
                             "body": "{\n  \"message\": \"Product attribute created successfully.\",\n  \"data\": {}\n}",
                             "name": ""
                         },
@@ -660,14 +840,14 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"eos\",\"parent_id\":14}"
+                            "raw": "{\"name\":\"dolor\",\"parent_id\":3}"
                         },
                         "description": ""
                     },
                     "response": [
                         {
                             "header": [],
-                            "code": 201,
+                            "code": 200,
                             "body": "{\n    \"message\": \"Category created successfully.\",\n    \"data\": {\n        \"id\": 2,\n        \"name\": \"Laptops\",\n        \"parent_id\": 1\n    }\n}",
                             "name": ""
                         },
@@ -755,7 +935,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"ea\",\"parent_id\":17}"
+                            "raw": "{\"name\":\"quas\",\"parent_id\":6}"
                         },
                         "description": ""
                     },
@@ -892,14 +1072,14 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"perferendis\"}"
+                            "raw": "{\"name\":\"cum\"}"
                         },
                         "description": ""
                     },
                     "response": [
                         {
                             "header": [],
-                            "code": 201,
+                            "code": 200,
                             "body": "{\n    \"message\": \"Product status created successfully.\",\n    \"data\": {\"id\": 3, \"name\": \"Discontinued\"}\n}",
                             "name": ""
                         },
@@ -987,7 +1167,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"delectus\"}"
+                            "raw": "{\"name\":\"illum\"}"
                         },
                         "description": ""
                     },
@@ -1118,14 +1298,14 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"deserunt\"}"
+                            "raw": "{\"name\":\"ab\"}"
                         },
                         "description": ""
                     },
                     "response": [
                         {
                             "header": [],
-                            "code": 201,
+                            "code": 200,
                             "body": "{\n    \"message\": \"Tag created successfully.\",\n    \"data\": {\"id\": 3, \"name\": \"Home Appliances\"}\n}",
                             "name": ""
                         },
@@ -1213,7 +1393,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"optio\"}"
+                            "raw": "{\"name\":\"atque\"}"
                         },
                         "description": ""
                     },
@@ -1306,7 +1486,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"lgllnvqgjmmgupaqrqvzlmfy\",\"price\":\"562152.89)))))))\",\"category\":\"8\",\"quantity\":66,\"created_at\":\"8109-15-20\",\"updated_at\":\"1721-78-93\",\"search\":\"rtlo\",\"include\":\"cp,ubbatrd,g)\"},\"page\":43,\"per_page\":6,\"sort\":\"-_,-I,-x,-j\"}"
+                            "raw": "{\"filter\":{\"name\":\"rkgtzqatrlsqvwrnqxilvcqf\",\"price\":\"32.42,175.61\",\"category\":\"8\",\"quantity\":7,\"created_at\":\"3521-28-66\",\"updated_at\":\"3307-63-64\",\"search\":\"dxhfauzzcwgxgx\",\"include\":\"lxa,lkl)\"},\"page\":57,\"per_page\":7,\"sort\":\"-SSPTQMej\"}"
                         },
                         "description": ""
                     },
@@ -1396,61 +1576,61 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "hfgurtpjoepssqizxbl",
+                                    "value": "uyohsnbm",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Velit alias quaerat est soluta.",
+                                    "value": "Praesentium exercitationem consequatur eligendi sint consequatur consequuntur.",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "price",
-                                    "value": "47",
-                                    "type": "text",
-                                    "description": "Must be at least 0."
-                                },
-                                {
-                                    "key": "product_category_id",
-                                    "value": "assumenda",
-                                    "type": "text",
-                                    "description": "The <code>id<\/code> of an existing record in the product_categories table."
-                                },
-                                {
-                                    "key": "product_status_id",
-                                    "value": "consectetur",
-                                    "type": "text",
-                                    "description": "The <code>id<\/code> of an existing record in the product_statuses table."
-                                },
-                                {
-                                    "key": "quantity",
                                     "value": "52",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
+                                    "key": "product_category_id",
+                                    "value": "atque",
+                                    "type": "text",
+                                    "description": "The <code>id<\/code> of an existing record in the product_categories table."
+                                },
+                                {
+                                    "key": "product_status_id",
+                                    "value": "dolores",
+                                    "type": "text",
+                                    "description": "The <code>id<\/code> of an existing record in the product_statuses table."
+                                },
+                                {
+                                    "key": "quantity",
+                                    "value": "77",
+                                    "type": "text",
+                                    "description": "Must be at least 0."
+                                },
+                                {
                                     "key": "product_variants[0][product_attribute_id]",
-                                    "value": "earum",
+                                    "value": "molestias",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][value]",
-                                    "value": "ld",
+                                    "value": "prslabdwvvyvsdwsnydm",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][additional_price]",
-                                    "value": "85",
+                                    "value": "0",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][quantity]",
-                                    "value": "58",
+                                    "value": "61",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1466,7 +1646,7 @@
                     "response": [
                         {
                             "header": [],
-                            "code": 201,
+                            "code": 200,
                             "body": "{\n    \"message\": \"Product created successfully.\",\n    \"data\": {}\n}",
                             "name": ""
                         },
@@ -1511,61 +1691,61 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "ogjsupfvkfqcrhtnmx",
+                                    "value": "cuypawwhsunk",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Autem esse eum dolor et eum odio.",
+                                    "value": "Eum sed totam dolorum hic vel.",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "price",
-                                    "value": "20",
+                                    "value": "75",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_category_id",
-                                    "value": "incidunt",
+                                    "value": "asperiores",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_categories table."
                                 },
                                 {
                                     "key": "product_status_id",
-                                    "value": "nihil",
+                                    "value": "eos",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_statuses table."
                                 },
                                 {
                                     "key": "quantity",
-                                    "value": "2",
+                                    "value": "34",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_variants[0][product_attribute_id]",
-                                    "value": "modi",
+                                    "value": "unde",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][value]",
-                                    "value": "fpw",
+                                    "value": "nfwygelem",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][additional_price]",
-                                    "value": "10",
+                                    "value": "59",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][quantity]",
-                                    "value": "34",
+                                    "value": "52",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1713,7 +1893,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"uqgwyebw\",\"email\":\"terry.kali@example.net\",\"role\":\"8,4,9,9,1,4\",\"created_at\":\"0083-49-49\",\"updated_at\":\"5673-95-00,1509-17-25\",\"search\":\"sgyqjzjhptksnmuhaqxoeq\",\"include\":\"fkowk,stvltkbwn,huic,gxzwwsgd,dgozojtay,vah,ipdodnxsi,ae)\"},\"page\":49,\"per_page\":21,\"sort\":\"-x,-L,-D,-B,X\"}"
+                            "raw": "{\"filter\":{\"name\":\"ppktgw\",\"email\":\"idoyle@example.org\",\"role\":\"2,\",\"created_at\":\"8125-54-65\",\"updated_at\":\"3970-57-34\",\"search\":\"bvbzmbguxximjnyis\",\"include\":\"mg,xa,b\"},\"page\":59,\"per_page\":19,\"sort\":\"-W,D,-b,-V\"}"
                         },
                         "description": ""
                     },
@@ -1800,14 +1980,14 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"myxcvgiegyhuaotwber\",\"email\":\"berta.kuhic@example.net\",\"password\":\"~5z?@}hqy+=sA(dAAZii\",\"role_id\":\"quas\",\"address\":{\"address_line1\":\"tkapmsdgbxyabptzt\",\"city\":\"yyhcuagapzjxxrqaul\",\"country\":\"xdvzxqleyigfdp\",\"postal_code\":\"jvuveegliixzvtlattrz\",\"address_line2\":\"qmskkbcpeju\",\"state\":\"fxbzycjlwwqfftruxvdhyqweg\"}}"
+                            "raw": "{\"name\":\"ehzihhmpqifxyjown\",\"email\":\"shanelle53@example.com\",\"password\":\"B;dY+_n+^\\\"0=,\\\"nGI\",\"role_id\":\"reiciendis\",\"address\":{\"address_line1\":\"htuntcnsixqzqpiuqqu\",\"city\":\"zzojnotbali\",\"country\":\"mwnmdxuysrwiugdxtknraplh\",\"postal_code\":\"hhcgbnyxddaadedlxwk\",\"address_line2\":\"sufkfxacquf\",\"state\":\"ze\"}}"
                         },
                         "description": ""
                     },
                     "response": [
                         {
                             "header": [],
-                            "code": 201,
+                            "code": 200,
                             "body": "{\n    \"message\": \"Users created successfully!\",\n    \"data\": {}\n}",
                             "name": ""
                         },
@@ -1849,7 +2029,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"e\",\"email\":\"kassandra79@example.org\",\"password\":\"q{]=8vRn3VTqGLFB~WS.\",\"address\":{\"address_line1\":\"cmx\",\"city\":\"hg\",\"country\":\"optufhuesywlnwnzry\",\"postal_code\":\"wpuucdobixtkzboan\",\"address_line2\":\"pfpfpgekaqtwlxra\",\"state\":\"zifo\"}}"
+                            "raw": "{\"name\":\"gynwqdsjnenuhri\",\"email\":\"eleanore92@example.com\",\"password\":\"\\\"T{p=:&LmQ\\\/\",\"address\":{\"address_line1\":\"yfvv\",\"city\":\"rmakkcgyvcnzhzisfcypgzge\",\"country\":\"ozxsryweqmvtslsbaxoj\",\"postal_code\":\"fdnttmaejmkr\",\"address_line2\":\"cfamppwzxstxyxecxc\",\"state\":\"rmz\"}}"
                         },
                         "description": ""
                     },
@@ -2029,19 +2209,19 @@
                             "formdata": [
                                 {
                                     "key": "user_id",
-                                    "value": "non",
+                                    "value": "quia",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the users table."
                                 },
                                 {
                                     "key": "name",
-                                    "value": "pajklzuowyjfco",
+                                    "value": "fohgjkohipyfdzktjmqaaqute",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Adipisci nobis autem enim maxime aut.",
+                                    "value": "Nam in cumque non repudiandae rerum magnam nam.",
                                     "type": "text",
                                     "description": "Must not be greater than 1000 characters."
                                 },
@@ -2102,13 +2282,13 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "urceogb",
+                                    "value": "umnibnjqrkpjpbhoxqvw",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Qui voluptatibus qui distinctio commodi in.",
+                                    "value": "Sed qui consectetur culpa vel.",
                                     "type": "text",
                                     "description": "Must not be greater than 1000 characters."
                                 },

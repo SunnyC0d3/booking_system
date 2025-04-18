@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\V1\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User as UserDB;
+use App\Models\User as DB;
 use App\Services\V1\Users\User;
 use App\Traits\V1\ApiResponses;
 use App\Requests\V1\StoreUserRequest;
@@ -54,7 +54,7 @@ class UserController extends Controller
      * @group Users
      * @authenticated
      *
-     * @response 201 {
+     * @response 200 {
      *     "message": "Users created successfully!",
      *     "data": {}
      * }
@@ -87,7 +87,7 @@ class UserController extends Controller
      *     "message": "You do not have the required permissions."
      * }
      */
-    public function show(Request $request, UserDB $user)
+    public function show(Request $request, DB $user)
     {
         try {
             return $this->user->find($request, $user);
@@ -111,7 +111,7 @@ class UserController extends Controller
      *     "message": "You do not have the required permissions."
      * }
      */
-    public function update(UpdateUserRequest $request, UserDB $user)
+    public function update(UpdateUserRequest $request, DB $user)
     {
         try {
             return $this->user->update($request, $user);
@@ -134,7 +134,7 @@ class UserController extends Controller
      *     "message": "You do not have the required permissions."
      * }
      */
-    public function destroy(Request $request, UserDB $user)
+    public function destroy(Request $request, DB $user)
     {
         try {
             return $this->user->delete($request, $user);

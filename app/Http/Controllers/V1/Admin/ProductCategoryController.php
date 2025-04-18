@@ -61,7 +61,7 @@ class ProductCategoryController extends Controller
      * @bodyParam name string required The name of the category.
      * @bodyParam parent_id int optional The ID of the parent category.
      *
-     * @response 201 {
+     * @response 200 {
      *     "message": "Category created successfully.",
      *     "data": {
      *         "id": 2,

@@ -18,7 +18,15 @@ class PermissionSeeder extends Seeder
 
             // Role Management
             ['name' => 'view_roles'],
-            ['name' => 'manage_roles'],
+            ['name' => 'create_roles'],
+            ['name' => 'edit_roles'],
+            ['name' => 'delete_roles'],
+
+            // Permission Management
+            ['name' => 'view_roles'],
+            ['name' => 'create_permissions'],
+            ['name' => 'edit_permissions'],
+            ['name' => 'delete_permissions'],
 
             // Vendor Management
             ['name' => 'view_vendors'],

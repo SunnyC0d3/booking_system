@@ -54,7 +54,7 @@ class ProductAttributeController extends Controller
      *
      * @bodyParam name string required The name of the product attribute. Example: "Color"
      *
-     * @response 201 {
+     * @response 200 {
      *   "message": "Product attribute created successfully.",
      *   "data": {}
      * }

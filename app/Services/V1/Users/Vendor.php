@@ -2,7 +2,7 @@
 
 namespace App\Services\V1\Users;
 
-use App\Models\Vendor as VendorDB;
+use App\Models\Vendor as DB;
 use App\Filters\V1\VendorFilter;
 use App\Resources\V1\VendorResource;
 use Illuminate\Http\Request;
@@ -21,7 +21,7 @@ class Vendor
         $user = $request->user();
 
         if ($user->hasPermission('view_vendors')) {
-            $query = VendorDB::with(['user'])->filter($filter);
+            $query = DB::with(['user'])->filter($filter);
             $perPage = $request->input('per_page', 15);
             $vendors = $query->paginate($perPage);
 
@@ -31,7 +31,7 @@ class Vendor
         return $this->error('You do not have the required permissions.', 403);
     }
 
-    public function find(Request $request, VendorDB $vendor)
+    public function find(Request $request, DB $vendor)
     {
         $user = $request->user();
 
@@ -50,7 +50,7 @@ class Vendor
         if ($user->hasPermission('create_vendors')) {
             $data = $request->validated();
 
-            $vendor = VendorDB::create($data);
+            $vendor = DB::create($data);
 
             if (!empty($data['logo'])) {
                 $vendor->addMediaFromRequest('logo')->toMediaCollection('logo');
@@ -62,7 +62,7 @@ class Vendor
         return $this->error('You do not have the required permissions.', 403);
     }
 
-    public function update(Request $request, VendorDB $vendor)
+    public function update(Request $request, DB $vendor)
     {
         $user = $request->user();
 
@@ -82,7 +82,7 @@ class Vendor
         return $this->error('You do not have the required permissions.', 403);
     }
 
-    public function delete(Request $request, VendorDB $vendor)
+    public function delete(Request $request, DB $vendor)
     {
         $user = $request->user();
 

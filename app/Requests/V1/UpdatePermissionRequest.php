@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Requests\V1;
+
+use App\Requests\V1\BaseFormRequest;
+
+class UpdatePermissionRequest extends BaseFormRequest
+{
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    public function rules(): array
+    {
+        $permissionId = $this->route('permission')?->id ?? 'null';
+
+        return [
+            'name' => 'required|string|max:255|unique:permissions,name,' . $permissionId,
+        ];
+    }
+}

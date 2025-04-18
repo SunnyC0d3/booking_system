@@ -57,7 +57,7 @@ class ProductTagController extends Controller
      *
      * @bodyParam name string required The name of the product tag.
      *
-     * @response 201 {
+     * @response 200 {
      *     "message": "Tag created successfully.",
      *     "data": {"id": 3, "name": "Home Appliances"}
      * }

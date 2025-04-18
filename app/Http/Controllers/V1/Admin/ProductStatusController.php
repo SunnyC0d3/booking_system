@@ -57,7 +57,7 @@ class ProductStatusController extends Controller
      *
      * @bodyParam name string required The name of the product status.
      *
-     * @response 201 {
+     * @response 200 {
      *     "message": "Product status created successfully.",
      *     "data": {"id": 3, "name": "Discontinued"}
      * }
