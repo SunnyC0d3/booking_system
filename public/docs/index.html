@@ -242,6 +242,25 @@
                             </li>
                                                                         </ul>
                             </ul>
+                    <ul id="tocify-header-roles" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="roles">
+                    <a href="#roles">Roles</a>
+                </li>
+                                    <ul id="tocify-subheader-roles" class="tocify-subheader">
+                                                    <li class="tocify-item level-2" data-unique="roles-GETapi-admin-roles">
+                                <a href="#roles-GETapi-admin-roles">Retrieve all roles.</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="roles-POSTapi-admin-roles">
+                                <a href="#roles-POSTapi-admin-roles">Create a new role.</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="roles-POSTapi-admin-roles--id-">
+                                <a href="#roles-POSTapi-admin-roles--id-">Update a role.</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="roles-DELETEapi-admin-roles--id-">
+                                <a href="#roles-DELETEapi-admin-roles--id-">Delete a role.</a>
+                            </li>
+                                                                        </ul>
+                            </ul>
                     <ul id="tocify-header-users" class="tocify-header">
                 <li class="tocify-item level-1" data-unique="users">
                     <a href="#users">Users</a>
@@ -295,7 +314,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: April 18, 2025</li>
+        <li>Last updated: April 19, 2025</li>
     </ul>
 </div>
 
@@ -953,14 +972,14 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://marketplace.com/api/email/verify/suscipit/tenetur?id=1&amp;hash=1234567890" \
+    --get "http://marketplace.com/api/email/verify/eum/eius?id=1&amp;hash=1234567890" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/email/verify/suscipit/tenetur"
+    "http://marketplace.com/api/email/verify/eum/eius"
 );
 
 const params = {
@@ -983,7 +1002,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/email/verify/suscipit/tenetur';
+$url = 'http://marketplace.com/api/email/verify/eum/eius';
 $response = $client-&gt;get(
     $url,
     [
@@ -1097,10 +1116,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="id"                data-endpoint="GETapi-email-verify--id---hash-"
-               value="suscipit"
+               value="eum"
                data-component="url">
     <br>
-<p>The ID of the verify. Example: <code>suscipit</code></p>
+<p>The ID of the verify. Example: <code>eum</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>hash</code></b>&nbsp;&nbsp;
@@ -1108,10 +1127,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="hash"                data-endpoint="GETapi-email-verify--id---hash-"
-               value="tenetur"
+               value="eius"
                data-component="url">
     <br>
-<p>Example: <code>tenetur</code></p>
+<p>Example: <code>eius</code></p>
             </div>
                         <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
                                     <div style="padding-left: 28px; clear: unset;">
@@ -3535,8 +3554,8 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"name\": \"dolor\",
-    \"parent_id\": 3
+    \"name\": \"voluptatibus\",
+    \"parent_id\": 19
 }"
 </code></pre></div>
 
@@ -3553,8 +3572,8 @@ const headers = {
 };
 
 let body = {
-    "name": "dolor",
-    "parent_id": 3
+    "name": "voluptatibus",
+    "parent_id": 19
 };
 
 fetch(url, {
@@ -3576,8 +3595,8 @@ $response = $client-&gt;post(
             'Accept' =&gt; 'application/json',
         ],
         'json' =&gt; [
-            'name' =&gt; 'dolor',
-            'parent_id' =&gt; 3,
+            'name' =&gt; 'voluptatibus',
+            'parent_id' =&gt; 19,
         ],
     ]
 );
@@ -3698,10 +3717,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="name"                data-endpoint="POSTapi-admin-product-categories"
-               value="dolor"
+               value="voluptatibus"
                data-component="body">
     <br>
-<p>The name of the category. Example: <code>dolor</code></p>
+<p>The name of the category. Example: <code>voluptatibus</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>parent_id</code></b>&nbsp;&nbsp;
@@ -3709,10 +3728,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="parent_id"                data-endpoint="POSTapi-admin-product-categories"
-               value="3"
+               value="19"
                data-component="body">
     <br>
-<p>optional The ID of the parent category. Example: <code>3</code></p>
+<p>optional The ID of the parent category. Example: <code>19</code></p>
         </div>
         </form>
 
@@ -3909,8 +3928,8 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"name\": \"quas\",
-    \"parent_id\": 6
+    \"name\": \"quaerat\",
+    \"parent_id\": 9
 }"
 </code></pre></div>
 
@@ -3927,8 +3946,8 @@ const headers = {
 };
 
 let body = {
-    "name": "quas",
-    "parent_id": 6
+    "name": "quaerat",
+    "parent_id": 9
 };
 
 fetch(url, {
@@ -3950,8 +3969,8 @@ $response = $client-&gt;post(
             'Accept' =&gt; 'application/json',
         ],
         'json' =&gt; [
-            'name' =&gt; 'quas',
-            'parent_id' =&gt; 6,
+            'name' =&gt; 'quaerat',
+            'parent_id' =&gt; 9,
         ],
     ]
 );
@@ -4084,10 +4103,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="name"                data-endpoint="POSTapi-admin-product-categories--productCategory_id-"
-               value="quas"
+               value="quaerat"
                data-component="body">
     <br>
-<p>The name of the category. Example: <code>quas</code></p>
+<p>The name of the category. Example: <code>quaerat</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>parent_id</code></b>&nbsp;&nbsp;
@@ -4095,10 +4114,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="parent_id"                data-endpoint="POSTapi-admin-product-categories--productCategory_id-"
-               value="6"
+               value="9"
                data-component="body">
     <br>
-<p>optional The ID of the parent category. Example: <code>6</code></p>
+<p>optional The ID of the parent category. Example: <code>9</code></p>
         </div>
         </form>
 
@@ -4470,7 +4489,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"name\": \"cum\"
+    \"name\": \"ea\"
 }"
 </code></pre></div>
 
@@ -4487,7 +4506,7 @@ const headers = {
 };
 
 let body = {
-    "name": "cum"
+    "name": "ea"
 };
 
 fetch(url, {
@@ -4509,7 +4528,7 @@ $response = $client-&gt;post(
             'Accept' =&gt; 'application/json',
         ],
         'json' =&gt; [
-            'name' =&gt; 'cum',
+            'name' =&gt; 'ea',
         ],
     ]
 );
@@ -4629,10 +4648,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="name"                data-endpoint="POSTapi-admin-product-statuses"
-               value="cum"
+               value="ea"
                data-component="body">
     <br>
-<p>The name of the product status. Example: <code>cum</code></p>
+<p>The name of the product status. Example: <code>ea</code></p>
         </div>
         </form>
 
@@ -4828,7 +4847,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"name\": \"illum\"
+    \"name\": \"suscipit\"
 }"
 </code></pre></div>
 
@@ -4845,7 +4864,7 @@ const headers = {
 };
 
 let body = {
-    "name": "illum"
+    "name": "suscipit"
 };
 
 fetch(url, {
@@ -4867,7 +4886,7 @@ $response = $client-&gt;post(
             'Accept' =&gt; 'application/json',
         ],
         'json' =&gt; [
-            'name' =&gt; 'illum',
+            'name' =&gt; 'suscipit',
         ],
     ]
 );
@@ -4999,10 +5018,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="name"                data-endpoint="POSTapi-admin-product-statuses--productStatus_id-"
-               value="illum"
+               value="suscipit"
                data-component="body">
     <br>
-<p>The updated name of the product status. Example: <code>illum</code></p>
+<p>The updated name of the product status. Example: <code>suscipit</code></p>
         </div>
         </form>
 
@@ -5365,7 +5384,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"name\": \"ab\"
+    \"name\": \"est\"
 }"
 </code></pre></div>
 
@@ -5382,7 +5401,7 @@ const headers = {
 };
 
 let body = {
-    "name": "ab"
+    "name": "est"
 };
 
 fetch(url, {
@@ -5404,7 +5423,7 @@ $response = $client-&gt;post(
             'Accept' =&gt; 'application/json',
         ],
         'json' =&gt; [
-            'name' =&gt; 'ab',
+            'name' =&gt; 'est',
         ],
     ]
 );
@@ -5524,10 +5543,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="name"                data-endpoint="POSTapi-admin-product-tags"
-               value="ab"
+               value="est"
                data-component="body">
     <br>
-<p>The name of the product tag. Example: <code>ab</code></p>
+<p>The name of the product tag. Example: <code>est</code></p>
         </div>
         </form>
 
@@ -5723,7 +5742,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"name\": \"atque\"
+    \"name\": \"neque\"
 }"
 </code></pre></div>
 
@@ -5740,7 +5759,7 @@ const headers = {
 };
 
 let body = {
-    "name": "atque"
+    "name": "neque"
 };
 
 fetch(url, {
@@ -5762,7 +5781,7 @@ $response = $client-&gt;post(
             'Accept' =&gt; 'application/json',
         ],
         'json' =&gt; [
-            'name' =&gt; 'atque',
+            'name' =&gt; 'neque',
         ],
     ]
 );
@@ -5894,10 +5913,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="name"                data-endpoint="POSTapi-admin-product-tags--productTag_id-"
-               value="atque"
+               value="neque"
                data-component="body">
     <br>
-<p>The updated name of the product tag. Example: <code>atque</code></p>
+<p>The updated name of the product tag. Example: <code>neque</code></p>
         </div>
         </form>
 
@@ -6094,18 +6113,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"filter\": {
-        \"name\": \"rkgtzqatrlsqvwrnqxilvcqf\",
-        \"price\": \"32.42,175.61\",
-        \"category\": \"8\",
-        \"quantity\": 7,
-        \"created_at\": \"3521-28-66\",
-        \"updated_at\": \"3307-63-64\",
-        \"search\": \"dxhfauzzcwgxgx\",
-        \"include\": \"lxa,lkl)\"
+        \"name\": \"ohftisuz\",
+        \"price\": \"77022.33,1.92)))\",
+        \"category\": \"30,5\",
+        \"quantity\": 56,
+        \"created_at\": \"1683-77-01\",
+        \"updated_at\": \"0615-82-04\",
+        \"search\": \"ucfgizodavsefpnxzida\",
+        \"include\": \"\"
     },
-    \"page\": 57,
-    \"per_page\": 7,
-    \"sort\": \"-SSPTQMej\"
+    \"page\": 10,
+    \"per_page\": 9,
+    \"sort\": \"F1HA,mUC,-3UT\"
 }"
 </code></pre></div>
 
@@ -6123,18 +6142,18 @@ const headers = {
 
 let body = {
     "filter": {
-        "name": "rkgtzqatrlsqvwrnqxilvcqf",
-        "price": "32.42,175.61",
-        "category": "8",
-        "quantity": 7,
-        "created_at": "3521-28-66",
-        "updated_at": "3307-63-64",
-        "search": "dxhfauzzcwgxgx",
-        "include": "lxa,lkl)"
+        "name": "ohftisuz",
+        "price": "77022.33,1.92)))",
+        "category": "30,5",
+        "quantity": 56,
+        "created_at": "1683-77-01",
+        "updated_at": "0615-82-04",
+        "search": "ucfgizodavsefpnxzida",
+        "include": ""
     },
-    "page": 57,
-    "per_page": 7,
-    "sort": "-SSPTQMej"
+    "page": 10,
+    "per_page": 9,
+    "sort": "F1HA,mUC,-3UT"
 };
 
 fetch(url, {
@@ -6157,18 +6176,18 @@ $response = $client-&gt;get(
         ],
         'json' =&gt; [
             'filter' =&gt; [
-                'name' =&gt; 'rkgtzqatrlsqvwrnqxilvcqf',
-                'price' =&gt; '32.42,175.61',
-                'category' =&gt; '8',
-                'quantity' =&gt; 7,
-                'created_at' =&gt; '3521-28-66',
-                'updated_at' =&gt; '3307-63-64',
-                'search' =&gt; 'dxhfauzzcwgxgx',
-                'include' =&gt; 'lxa,lkl)',
+                'name' =&gt; 'ohftisuz',
+                'price' =&gt; '77022.33,1.92)))',
+                'category' =&gt; '30,5',
+                'quantity' =&gt; 56,
+                'created_at' =&gt; '1683-77-01',
+                'updated_at' =&gt; '0615-82-04',
+                'search' =&gt; 'ucfgizodavsefpnxzida',
+                'include' =&gt; '',
             ],
-            'page' =&gt; 57,
-            'per_page' =&gt; 7,
-            'sort' =&gt; '-SSPTQMej',
+            'page' =&gt; 10,
+            'per_page' =&gt; 9,
+            'sort' =&gt; 'F1HA,mUC,-3UT',
         ],
     ]
 );
@@ -6294,10 +6313,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="filter.name"                data-endpoint="GETapi-admin-products"
-               value="rkgtzqatrlsqvwrnqxilvcqf"
+               value="ohftisuz"
                data-component="body">
     <br>
-<p>Must not be greater than 255 characters. Example: <code>rkgtzqatrlsqvwrnqxilvcqf</code></p>
+<p>Must not be greater than 255 characters. Example: <code>ohftisuz</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>price</code></b>&nbsp;&nbsp;
@@ -6305,10 +6324,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="filter.price"                data-endpoint="GETapi-admin-products"
-               value="32.42,175.61"
+               value="77022.33,1.92)))"
                data-component="body">
     <br>
-<p>Must match the regex /^\d+(.\d{1,2})?(,\d+(.\d{1,2})?)*$/. Example: <code>32.42,175.61</code></p>
+<p>Must match the regex /^\d+(.\d{1,2})?(,\d+(.\d{1,2})?)*$/. Example: <code>77022.33,1.92)))</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>category</code></b>&nbsp;&nbsp;
@@ -6316,10 +6335,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="filter.category"                data-endpoint="GETapi-admin-products"
-               value="8"
+               value="30,5"
                data-component="body">
     <br>
-<p>Must match the regex /^(\d,?)+$/. Example: <code>8</code></p>
+<p>Must match the regex /^(\d,?)+$/. Example: <code>30,5</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>quantity</code></b>&nbsp;&nbsp;
@@ -6327,10 +6346,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="filter.quantity"                data-endpoint="GETapi-admin-products"
-               value="7"
+               value="56"
                data-component="body">
     <br>
-<p>Must be at least 0. Example: <code>7</code></p>
+<p>Must be at least 0. Example: <code>56</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>created_at</code></b>&nbsp;&nbsp;
@@ -6338,10 +6357,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="filter.created_at"                data-endpoint="GETapi-admin-products"
-               value="3521-28-66"
+               value="1683-77-01"
                data-component="body">
     <br>
-<p>Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/. Example: <code>3521-28-66</code></p>
+<p>Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/. Example: <code>1683-77-01</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>updated_at</code></b>&nbsp;&nbsp;
@@ -6349,10 +6368,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="filter.updated_at"                data-endpoint="GETapi-admin-products"
-               value="3307-63-64"
+               value="0615-82-04"
                data-component="body">
     <br>
-<p>Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/. Example: <code>3307-63-64</code></p>
+<p>Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/. Example: <code>0615-82-04</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>search</code></b>&nbsp;&nbsp;
@@ -6360,10 +6379,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="filter.search"                data-endpoint="GETapi-admin-products"
-               value="dxhfauzzcwgxgx"
+               value="ucfgizodavsefpnxzida"
                data-component="body">
     <br>
-<p>Must not be greater than 255 characters. Example: <code>dxhfauzzcwgxgx</code></p>
+<p>Must not be greater than 255 characters. Example: <code>ucfgizodavsefpnxzida</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>include</code></b>&nbsp;&nbsp;
@@ -6371,10 +6390,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="filter.include"                data-endpoint="GETapi-admin-products"
-               value="lxa,lkl)"
+               value=""
                data-component="body">
     <br>
-<p>Must match the regex /^(\w+(,\w+)*)?$/. Example: <code>lxa,lkl)</code></p>
+<p>Must match the regex /^(\w+(,\w+)*)?$/.</p>
                     </div>
                                     </details>
         </div>
@@ -6384,10 +6403,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="page"                data-endpoint="GETapi-admin-products"
-               value="57"
+               value="10"
                data-component="body">
     <br>
-<p>Must be at least 1. Example: <code>57</code></p>
+<p>Must be at least 1. Example: <code>10</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
@@ -6395,10 +6414,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="per_page"                data-endpoint="GETapi-admin-products"
-               value="7"
+               value="9"
                data-component="body">
     <br>
-<p>Must be at least 1. Must not be greater than 100. Example: <code>7</code></p>
+<p>Must be at least 1. Must not be greater than 100. Example: <code>9</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>sort</code></b>&nbsp;&nbsp;
@@ -6406,10 +6425,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-admin-products"
-               value="-SSPTQMej"
+               value="F1HA,mUC,-3UT"
                data-component="body">
     <br>
-<p>Must match the regex /^(-?[a-zA-Z0-9<em>]+)(,-?[a-zA-Z0-9</em>]+)*$/. Example: <code>-SSPTQMej</code></p>
+<p>Must match the regex /^(-?[a-zA-Z0-9<em>]+)(,-?[a-zA-Z0-9</em>]+)*$/. Example: <code>F1HA,mUC,-3UT</code></p>
         </div>
         </form>
 
@@ -6601,17 +6620,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "name=uyohsnbm"\
-    --form "description=Praesentium exercitationem consequatur eligendi sint consequatur consequuntur."\
-    --form "price=52"\
-    --form "product_category_id=atque"\
-    --form "product_status_id=dolores"\
-    --form "quantity=77"\
-    --form "product_variants[][product_attribute_id]=molestias"\
-    --form "product_variants[][value]=prslabdwvvyvsdwsnydm"\
-    --form "product_variants[][additional_price]=0"\
-    --form "product_variants[][quantity]=61"\
-    --form "media[featured_image]=@/tmp/phpTZuB5x"     --form "media[gallery][]=@/tmp/phpNvLJ8J" </code></pre></div>
+    --form "name=hluikezbpqvnyqi"\
+    --form "description=Autem voluptas fuga nemo explicabo."\
+    --form "price=85"\
+    --form "product_category_id=eum"\
+    --form "product_status_id=numquam"\
+    --form "quantity=11"\
+    --form "product_variants[][product_attribute_id]=sint"\
+    --form "product_variants[][value]=ybn"\
+    --form "product_variants[][additional_price]=55"\
+    --form "product_variants[][quantity]=66"\
+    --form "media[featured_image]=@/tmp/phpHpSuZA"     --form "media[gallery][]=@/tmp/phpvItMA0" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6626,16 +6645,16 @@ const headers = {
 };
 
 const body = new FormData();
-body.append('name', 'uyohsnbm');
-body.append('description', 'Praesentium exercitationem consequatur eligendi sint consequatur consequuntur.');
-body.append('price', '52');
-body.append('product_category_id', 'atque');
-body.append('product_status_id', 'dolores');
-body.append('quantity', '77');
-body.append('product_variants[][product_attribute_id]', 'molestias');
-body.append('product_variants[][value]', 'prslabdwvvyvsdwsnydm');
-body.append('product_variants[][additional_price]', '0');
-body.append('product_variants[][quantity]', '61');
+body.append('name', 'hluikezbpqvnyqi');
+body.append('description', 'Autem voluptas fuga nemo explicabo.');
+body.append('price', '85');
+body.append('product_category_id', 'eum');
+body.append('product_status_id', 'numquam');
+body.append('quantity', '11');
+body.append('product_variants[][product_attribute_id]', 'sint');
+body.append('product_variants[][value]', 'ybn');
+body.append('product_variants[][additional_price]', '55');
+body.append('product_variants[][quantity]', '66');
 body.append('media[featured_image]', document.querySelector('input[name="media[featured_image]"]').files[0]);
 body.append('media[gallery][]', document.querySelector('input[name="media[gallery][]"]').files[0]);
 
@@ -6660,51 +6679,51 @@ $response = $client-&gt;post(
         'multipart' =&gt; [
             [
                 'name' =&gt; 'name',
-                'contents' =&gt; 'uyohsnbm'
+                'contents' =&gt; 'hluikezbpqvnyqi'
             ],
             [
                 'name' =&gt; 'description',
-                'contents' =&gt; 'Praesentium exercitationem consequatur eligendi sint consequatur consequuntur.'
+                'contents' =&gt; 'Autem voluptas fuga nemo explicabo.'
             ],
             [
                 'name' =&gt; 'price',
-                'contents' =&gt; '52'
+                'contents' =&gt; '85'
             ],
             [
                 'name' =&gt; 'product_category_id',
-                'contents' =&gt; 'atque'
+                'contents' =&gt; 'eum'
             ],
             [
                 'name' =&gt; 'product_status_id',
-                'contents' =&gt; 'dolores'
+                'contents' =&gt; 'numquam'
             ],
             [
                 'name' =&gt; 'quantity',
-                'contents' =&gt; '77'
+                'contents' =&gt; '11'
             ],
             [
                 'name' =&gt; 'product_variants[][product_attribute_id]',
-                'contents' =&gt; 'molestias'
+                'contents' =&gt; 'sint'
             ],
             [
                 'name' =&gt; 'product_variants[][value]',
-                'contents' =&gt; 'prslabdwvvyvsdwsnydm'
+                'contents' =&gt; 'ybn'
             ],
             [
                 'name' =&gt; 'product_variants[][additional_price]',
-                'contents' =&gt; '0'
+                'contents' =&gt; '55'
             ],
             [
                 'name' =&gt; 'product_variants[][quantity]',
-                'contents' =&gt; '61'
+                'contents' =&gt; '66'
             ],
             [
                 'name' =&gt; 'media[featured_image]',
-                'contents' =&gt; fopen('/tmp/phpTZuB5x', 'r')
+                'contents' =&gt; fopen('/tmp/phpHpSuZA', 'r')
             ],
             [
                 'name' =&gt; 'media[gallery][]',
-                'contents' =&gt; fopen('/tmp/phpNvLJ8J', 'r')
+                'contents' =&gt; fopen('/tmp/phpvItMA0', 'r')
             ],
         ],
     ]
@@ -6822,10 +6841,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="name"                data-endpoint="POSTapi-admin-products"
-               value="uyohsnbm"
+               value="hluikezbpqvnyqi"
                data-component="body">
     <br>
-<p>Must not be greater than 255 characters. Example: <code>uyohsnbm</code></p>
+<p>Must not be greater than 255 characters. Example: <code>hluikezbpqvnyqi</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
@@ -6833,10 +6852,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="description"                data-endpoint="POSTapi-admin-products"
-               value="Praesentium exercitationem consequatur eligendi sint consequatur consequuntur."
+               value="Autem voluptas fuga nemo explicabo."
                data-component="body">
     <br>
-<p>Example: <code>Praesentium exercitationem consequatur eligendi sint consequatur consequuntur.</code></p>
+<p>Example: <code>Autem voluptas fuga nemo explicabo.</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>price</code></b>&nbsp;&nbsp;
@@ -6844,10 +6863,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="price"                data-endpoint="POSTapi-admin-products"
-               value="52"
+               value="85"
                data-component="body">
     <br>
-<p>Must be at least 0. Example: <code>52</code></p>
+<p>Must be at least 0. Example: <code>85</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>product_category_id</code></b>&nbsp;&nbsp;
@@ -6855,10 +6874,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="product_category_id"                data-endpoint="POSTapi-admin-products"
-               value="atque"
+               value="eum"
                data-component="body">
     <br>
-<p>The <code>id</code> of an existing record in the product_categories table. Example: <code>atque</code></p>
+<p>The <code>id</code> of an existing record in the product_categories table. Example: <code>eum</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>product_status_id</code></b>&nbsp;&nbsp;
@@ -6866,10 +6885,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="product_status_id"                data-endpoint="POSTapi-admin-products"
-               value="dolores"
+               value="numquam"
                data-component="body">
     <br>
-<p>The <code>id</code> of an existing record in the product_statuses table. Example: <code>dolores</code></p>
+<p>The <code>id</code> of an existing record in the product_statuses table. Example: <code>numquam</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>quantity</code></b>&nbsp;&nbsp;
@@ -6877,10 +6896,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="quantity"                data-endpoint="POSTapi-admin-products"
-               value="77"
+               value="11"
                data-component="body">
     <br>
-<p>Must be at least 0. Example: <code>77</code></p>
+<p>Must be at least 0. Example: <code>11</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>product_tags</code></b>&nbsp;&nbsp;
@@ -6910,10 +6929,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="product_variants.0.product_attribute_id"                data-endpoint="POSTapi-admin-products"
-               value="molestias"
+               value="sint"
                data-component="body">
     <br>
-<p>The <code>id</code> of an existing record in the product_attributes table. Example: <code>molestias</code></p>
+<p>The <code>id</code> of an existing record in the product_attributes table. Example: <code>sint</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>value</code></b>&nbsp;&nbsp;
@@ -6921,10 +6940,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="product_variants.0.value"                data-endpoint="POSTapi-admin-products"
-               value="prslabdwvvyvsdwsnydm"
+               value="ybn"
                data-component="body">
     <br>
-<p>This field is required when <code>product_variants</code> is present. Must not be greater than 255 characters. Example: <code>prslabdwvvyvsdwsnydm</code></p>
+<p>This field is required when <code>product_variants</code> is present. Must not be greater than 255 characters. Example: <code>ybn</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>additional_price</code></b>&nbsp;&nbsp;
@@ -6932,10 +6951,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="product_variants.0.additional_price"                data-endpoint="POSTapi-admin-products"
-               value="0"
+               value="55"
                data-component="body">
     <br>
-<p>Must be at least 0. Example: <code>0</code></p>
+<p>Must be at least 0. Example: <code>55</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>quantity</code></b>&nbsp;&nbsp;
@@ -6943,10 +6962,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="product_variants.0.quantity"                data-endpoint="POSTapi-admin-products"
-               value="61"
+               value="66"
                data-component="body">
     <br>
-<p>Must be at least 0. Example: <code>61</code></p>
+<p>Must be at least 0. Example: <code>66</code></p>
                     </div>
                                     </details>
         </div>
@@ -6968,7 +6987,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be a file. Must be an image. Must not be greater than 2048 kilobytes. Example: <code>/tmp/phpTZuB5x</code></p>
+<p>Must be a file. Must be an image. Must not be greater than 2048 kilobytes. Example: <code>/tmp/phpHpSuZA</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>gallery</code></b>&nbsp;&nbsp;
@@ -7005,17 +7024,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "name=cuypawwhsunk"\
-    --form "description=Eum sed totam dolorum hic vel."\
-    --form "price=75"\
-    --form "product_category_id=asperiores"\
-    --form "product_status_id=eos"\
-    --form "quantity=34"\
-    --form "product_variants[][product_attribute_id]=unde"\
-    --form "product_variants[][value]=nfwygelem"\
-    --form "product_variants[][additional_price]=59"\
-    --form "product_variants[][quantity]=52"\
-    --form "media[featured_image]=@/tmp/phpaRXRhg"     --form "media[gallery][]=@/tmp/phpWKUhQM" </code></pre></div>
+    --form "name=qvtpxnut"\
+    --form "description=Sint et non nihil."\
+    --form "price=47"\
+    --form "product_category_id=consectetur"\
+    --form "product_status_id=sit"\
+    --form "quantity=84"\
+    --form "product_variants[][product_attribute_id]=quibusdam"\
+    --form "product_variants[][value]=gveailkxnt"\
+    --form "product_variants[][additional_price]=42"\
+    --form "product_variants[][quantity]=12"\
+    --form "media[featured_image]=@/tmp/php8YGq1G"     --form "media[gallery][]=@/tmp/phpHO1c2U" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -7030,16 +7049,16 @@ const headers = {
 };
 
 const body = new FormData();
-body.append('name', 'cuypawwhsunk');
-body.append('description', 'Eum sed totam dolorum hic vel.');
-body.append('price', '75');
-body.append('product_category_id', 'asperiores');
-body.append('product_status_id', 'eos');
-body.append('quantity', '34');
-body.append('product_variants[][product_attribute_id]', 'unde');
-body.append('product_variants[][value]', 'nfwygelem');
-body.append('product_variants[][additional_price]', '59');
-body.append('product_variants[][quantity]', '52');
+body.append('name', 'qvtpxnut');
+body.append('description', 'Sint et non nihil.');
+body.append('price', '47');
+body.append('product_category_id', 'consectetur');
+body.append('product_status_id', 'sit');
+body.append('quantity', '84');
+body.append('product_variants[][product_attribute_id]', 'quibusdam');
+body.append('product_variants[][value]', 'gveailkxnt');
+body.append('product_variants[][additional_price]', '42');
+body.append('product_variants[][quantity]', '12');
 body.append('media[featured_image]', document.querySelector('input[name="media[featured_image]"]').files[0]);
 body.append('media[gallery][]', document.querySelector('input[name="media[gallery][]"]').files[0]);
 
@@ -7064,51 +7083,51 @@ $response = $client-&gt;post(
         'multipart' =&gt; [
             [
                 'name' =&gt; 'name',
-                'contents' =&gt; 'cuypawwhsunk'
+                'contents' =&gt; 'qvtpxnut'
             ],
             [
                 'name' =&gt; 'description',
-                'contents' =&gt; 'Eum sed totam dolorum hic vel.'
+                'contents' =&gt; 'Sint et non nihil.'
             ],
             [
                 'name' =&gt; 'price',
-                'contents' =&gt; '75'
+                'contents' =&gt; '47'
             ],
             [
                 'name' =&gt; 'product_category_id',
-                'contents' =&gt; 'asperiores'
+                'contents' =&gt; 'consectetur'
             ],
             [
                 'name' =&gt; 'product_status_id',
-                'contents' =&gt; 'eos'
+                'contents' =&gt; 'sit'
             ],
             [
                 'name' =&gt; 'quantity',
-                'contents' =&gt; '34'
+                'contents' =&gt; '84'
             ],
             [
                 'name' =&gt; 'product_variants[][product_attribute_id]',
-                'contents' =&gt; 'unde'
+                'contents' =&gt; 'quibusdam'
             ],
             [
                 'name' =&gt; 'product_variants[][value]',
-                'contents' =&gt; 'nfwygelem'
+                'contents' =&gt; 'gveailkxnt'
             ],
             [
                 'name' =&gt; 'product_variants[][additional_price]',
-                'contents' =&gt; '59'
+                'contents' =&gt; '42'
             ],
             [
                 'name' =&gt; 'product_variants[][quantity]',
-                'contents' =&gt; '52'
+                'contents' =&gt; '12'
             ],
             [
                 'name' =&gt; 'media[featured_image]',
-                'contents' =&gt; fopen('/tmp/phpaRXRhg', 'r')
+                'contents' =&gt; fopen('/tmp/php8YGq1G', 'r')
             ],
             [
                 'name' =&gt; 'media[gallery][]',
-                'contents' =&gt; fopen('/tmp/phpWKUhQM', 'r')
+                'contents' =&gt; fopen('/tmp/phpHO1c2U', 'r')
             ],
         ],
     ]
@@ -7238,10 +7257,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="name"                data-endpoint="POSTapi-admin-products--id-"
-               value="cuypawwhsunk"
+               value="qvtpxnut"
                data-component="body">
     <br>
-<p>Must not be greater than 255 characters. Example: <code>cuypawwhsunk</code></p>
+<p>Must not be greater than 255 characters. Example: <code>qvtpxnut</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
@@ -7249,10 +7268,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="description"                data-endpoint="POSTapi-admin-products--id-"
-               value="Eum sed totam dolorum hic vel."
+               value="Sint et non nihil."
                data-component="body">
     <br>
-<p>Example: <code>Eum sed totam dolorum hic vel.</code></p>
+<p>Example: <code>Sint et non nihil.</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>price</code></b>&nbsp;&nbsp;
@@ -7260,10 +7279,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="price"                data-endpoint="POSTapi-admin-products--id-"
-               value="75"
+               value="47"
                data-component="body">
     <br>
-<p>Must be at least 0. Example: <code>75</code></p>
+<p>Must be at least 0. Example: <code>47</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>product_category_id</code></b>&nbsp;&nbsp;
@@ -7271,10 +7290,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="product_category_id"                data-endpoint="POSTapi-admin-products--id-"
-               value="asperiores"
+               value="consectetur"
                data-component="body">
     <br>
-<p>The <code>id</code> of an existing record in the product_categories table. Example: <code>asperiores</code></p>
+<p>The <code>id</code> of an existing record in the product_categories table. Example: <code>consectetur</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>product_status_id</code></b>&nbsp;&nbsp;
@@ -7282,10 +7301,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="product_status_id"                data-endpoint="POSTapi-admin-products--id-"
-               value="eos"
+               value="sit"
                data-component="body">
     <br>
-<p>The <code>id</code> of an existing record in the product_statuses table. Example: <code>eos</code></p>
+<p>The <code>id</code> of an existing record in the product_statuses table. Example: <code>sit</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>quantity</code></b>&nbsp;&nbsp;
@@ -7293,10 +7312,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="quantity"                data-endpoint="POSTapi-admin-products--id-"
-               value="34"
+               value="84"
                data-component="body">
     <br>
-<p>Must be at least 0. Example: <code>34</code></p>
+<p>Must be at least 0. Example: <code>84</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>product_tags</code></b>&nbsp;&nbsp;
@@ -7326,10 +7345,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="product_variants.0.product_attribute_id"                data-endpoint="POSTapi-admin-products--id-"
-               value="unde"
+               value="quibusdam"
                data-component="body">
     <br>
-<p>The <code>id</code> of an existing record in the product_attributes table. Example: <code>unde</code></p>
+<p>The <code>id</code> of an existing record in the product_attributes table. Example: <code>quibusdam</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>value</code></b>&nbsp;&nbsp;
@@ -7337,10 +7356,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="product_variants.0.value"                data-endpoint="POSTapi-admin-products--id-"
-               value="nfwygelem"
+               value="gveailkxnt"
                data-component="body">
     <br>
-<p>This field is required when <code>product_variants</code> is present. Must not be greater than 255 characters. Example: <code>nfwygelem</code></p>
+<p>This field is required when <code>product_variants</code> is present. Must not be greater than 255 characters. Example: <code>gveailkxnt</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>additional_price</code></b>&nbsp;&nbsp;
@@ -7348,10 +7367,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="product_variants.0.additional_price"                data-endpoint="POSTapi-admin-products--id-"
-               value="59"
+               value="42"
                data-component="body">
     <br>
-<p>Must be at least 0. Example: <code>59</code></p>
+<p>Must be at least 0. Example: <code>42</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>quantity</code></b>&nbsp;&nbsp;
@@ -7359,10 +7378,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="product_variants.0.quantity"                data-endpoint="POSTapi-admin-products--id-"
-               value="52"
+               value="12"
                data-component="body">
     <br>
-<p>Must be at least 0. Example: <code>52</code></p>
+<p>Must be at least 0. Example: <code>12</code></p>
                     </div>
                                     </details>
         </div>
@@ -7384,7 +7403,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be a file. Must be an image. Must not be greater than 2048 kilobytes. Example: <code>/tmp/phpaRXRhg</code></p>
+<p>Must be a file. Must be an image. Must not be greater than 2048 kilobytes. Example: <code>/tmp/php8YGq1G</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>gallery</code></b>&nbsp;&nbsp;
@@ -7741,6 +7760,713 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                     </form>
 
+                <h1 id="roles">Roles</h1>
+
+    
+
+                                <h2 id="roles-GETapi-admin-roles">Retrieve all roles.</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-GETapi-admin-roles">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://marketplace.com/api/admin/roles" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://marketplace.com/api/admin/roles"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://marketplace.com/api/admin/roles';
+$response = $client-&gt;get(
+    $url,
+    [
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_AUTH_KEY}',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-admin-roles">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Roles retrieved successfully.&quot;,
+    &quot;data&quot;: []
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (403):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;You do not have the required permissions.&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-admin-roles" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-admin-roles"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-admin-roles"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-admin-roles" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-admin-roles">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-admin-roles" data-method="GET"
+      data-path="api/admin/roles"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-admin-roles', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-admin-roles"
+                    onclick="tryItOut('GETapi-admin-roles');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-admin-roles"
+                    onclick="cancelTryOut('GETapi-admin-roles');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-admin-roles"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/admin/roles</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-admin-roles"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-admin-roles"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-admin-roles"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        </form>
+
+                    <h2 id="roles-POSTapi-admin-roles">Create a new role.</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-POSTapi-admin-roles">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://marketplace.com/api/admin/roles" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"name\": \"\\\"admin\\\"\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://marketplace.com/api/admin/roles"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "name": "\"admin\""
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://marketplace.com/api/admin/roles';
+$response = $client-&gt;post(
+    $url,
+    [
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_AUTH_KEY}',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'name' =&gt; '"admin"',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-admin-roles">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Role created successfully.&quot;,
+    &quot;data&quot;: {}
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (403):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;You do not have the required permissions.&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-admin-roles" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-admin-roles"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-admin-roles"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-admin-roles" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-admin-roles">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-admin-roles" data-method="POST"
+      data-path="api/admin/roles"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-admin-roles', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-admin-roles"
+                    onclick="tryItOut('POSTapi-admin-roles');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-admin-roles"
+                    onclick="cancelTryOut('POSTapi-admin-roles');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-admin-roles"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/admin/roles</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-admin-roles"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-admin-roles"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-admin-roles"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="name"                data-endpoint="POSTapi-admin-roles"
+               value=""admin""
+               data-component="body">
+    <br>
+<p>The name of the role. Example: <code>"admin"</code></p>
+        </div>
+        </form>
+
+                    <h2 id="roles-POSTapi-admin-roles--id-">Update a role.</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-POSTapi-admin-roles--id-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://marketplace.com/api/admin/roles/1" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"name\": \"\\\"admin\\\"\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://marketplace.com/api/admin/roles/1"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "name": "\"admin\""
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://marketplace.com/api/admin/roles/1';
+$response = $client-&gt;post(
+    $url,
+    [
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_AUTH_KEY}',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'name' =&gt; '"admin"',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-admin-roles--id-">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Role updated successfully.&quot;,
+    &quot;data&quot;: {}
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (403):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;You do not have the required permissions.&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-admin-roles--id-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-admin-roles--id-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-admin-roles--id-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-admin-roles--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-admin-roles--id-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-admin-roles--id-" data-method="POST"
+      data-path="api/admin/roles/{id}"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-admin-roles--id-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-admin-roles--id-"
+                    onclick="tryItOut('POSTapi-admin-roles--id-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-admin-roles--id-"
+                    onclick="cancelTryOut('POSTapi-admin-roles--id-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-admin-roles--id-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/admin/roles/{id}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-admin-roles--id-"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-admin-roles--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-admin-roles--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="POSTapi-admin-roles--id-"
+               value="1"
+               data-component="url">
+    <br>
+<p>The ID of the role. Example: <code>1</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="name"                data-endpoint="POSTapi-admin-roles--id-"
+               value=""admin""
+               data-component="body">
+    <br>
+<p>The updated name of the role. Example: <code>"admin"</code></p>
+        </div>
+        </form>
+
+                    <h2 id="roles-DELETEapi-admin-roles--id-">Delete a role.</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+
+
+<span id="example-requests-DELETEapi-admin-roles--id-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request DELETE \
+    "http://marketplace.com/api/admin/roles/1" \
+    --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://marketplace.com/api/admin/roles/1"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_KEY}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "DELETE",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://marketplace.com/api/admin/roles/1';
+$response = $client-&gt;delete(
+    $url,
+    [
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_AUTH_KEY}',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+</span>
+
+<span id="example-responses-DELETEapi-admin-roles--id-">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Role deleted successfully.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (403):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;You do not have the required permissions.&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-DELETEapi-admin-roles--id-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-DELETEapi-admin-roles--id-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-DELETEapi-admin-roles--id-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-DELETEapi-admin-roles--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-DELETEapi-admin-roles--id-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-DELETEapi-admin-roles--id-" data-method="DELETE"
+      data-path="api/admin/roles/{id}"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('DELETEapi-admin-roles--id-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-DELETEapi-admin-roles--id-"
+                    onclick="tryItOut('DELETEapi-admin-roles--id-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-DELETEapi-admin-roles--id-"
+                    onclick="cancelTryOut('DELETEapi-admin-roles--id-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-DELETEapi-admin-roles--id-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-red">DELETE</small>
+            <b><code>api/admin/roles/{id}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="DELETEapi-admin-roles--id-"
+               value="Bearer {YOUR_AUTH_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_KEY}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="DELETEapi-admin-roles--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="DELETEapi-admin-roles--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="DELETEapi-admin-roles--id-"
+               value="1"
+               data-component="url">
+    <br>
+<p>The ID of the role. Example: <code>1</code></p>
+            </div>
+                    </form>
+
                 <h1 id="users">Users</h1>
 
     
@@ -7765,17 +8491,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Accept: application/json" \
     --data "{
     \"filter\": {
-        \"name\": \"ppktgw\",
-        \"email\": \"idoyle@example.org\",
-        \"role\": \"2,\",
-        \"created_at\": \"8125-54-65\",
-        \"updated_at\": \"3970-57-34\",
-        \"search\": \"bvbzmbguxximjnyis\",
-        \"include\": \"mg,xa,b\"
+        \"name\": \"lzzib\",
+        \"email\": \"cristobal.marquardt@example.net\",
+        \"role\": \"24,41,14,52,\",
+        \"created_at\": \"9876-75-19,4295-91-93\",
+        \"updated_at\": \"5413-16-98,5731-52-38\",
+        \"search\": \"ohoqnjzgozaedvnnkdc\",
+        \"include\": \"j,tjr,zk\"
     },
-    \"page\": 59,
-    \"per_page\": 19,
-    \"sort\": \"-W,D,-b,-V\"
+    \"page\": 14,
+    \"per_page\": 6,
+    \"sort\": \"-Nhy,-Er,-KP,-WU,QV,-C5,W4\"
 }"
 </code></pre></div>
 
@@ -7793,17 +8519,17 @@ const headers = {
 
 let body = {
     "filter": {
-        "name": "ppktgw",
-        "email": "idoyle@example.org",
-        "role": "2,",
-        "created_at": "8125-54-65",
-        "updated_at": "3970-57-34",
-        "search": "bvbzmbguxximjnyis",
-        "include": "mg,xa,b"
+        "name": "lzzib",
+        "email": "cristobal.marquardt@example.net",
+        "role": "24,41,14,52,",
+        "created_at": "9876-75-19,4295-91-93",
+        "updated_at": "5413-16-98,5731-52-38",
+        "search": "ohoqnjzgozaedvnnkdc",
+        "include": "j,tjr,zk"
     },
-    "page": 59,
-    "per_page": 19,
-    "sort": "-W,D,-b,-V"
+    "page": 14,
+    "per_page": 6,
+    "sort": "-Nhy,-Er,-KP,-WU,QV,-C5,W4"
 };
 
 fetch(url, {
@@ -7826,17 +8552,17 @@ $response = $client-&gt;get(
         ],
         'json' =&gt; [
             'filter' =&gt; [
-                'name' =&gt; 'ppktgw',
-                'email' =&gt; 'idoyle@example.org',
-                'role' =&gt; '2,',
-                'created_at' =&gt; '8125-54-65',
-                'updated_at' =&gt; '3970-57-34',
-                'search' =&gt; 'bvbzmbguxximjnyis',
-                'include' =&gt; 'mg,xa,b',
+                'name' =&gt; 'lzzib',
+                'email' =&gt; 'cristobal.marquardt@example.net',
+                'role' =&gt; '24,41,14,52,',
+                'created_at' =&gt; '9876-75-19,4295-91-93',
+                'updated_at' =&gt; '5413-16-98,5731-52-38',
+                'search' =&gt; 'ohoqnjzgozaedvnnkdc',
+                'include' =&gt; 'j,tjr,zk',
             ],
-            'page' =&gt; 59,
-            'per_page' =&gt; 19,
-            'sort' =&gt; '-W,D,-b,-V',
+            'page' =&gt; 14,
+            'per_page' =&gt; 6,
+            'sort' =&gt; '-Nhy,-Er,-KP,-WU,QV,-C5,W4',
         ],
     ]
 );
@@ -7962,10 +8688,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="filter.name"                data-endpoint="GETapi-admin-users"
-               value="ppktgw"
+               value="lzzib"
                data-component="body">
     <br>
-<p>Must not be greater than 255 characters. Example: <code>ppktgw</code></p>
+<p>Must not be greater than 255 characters. Example: <code>lzzib</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>email</code></b>&nbsp;&nbsp;
@@ -7973,10 +8699,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="filter.email"                data-endpoint="GETapi-admin-users"
-               value="idoyle@example.org"
+               value="cristobal.marquardt@example.net"
                data-component="body">
     <br>
-<p>Must be a valid email address. Must not be greater than 255 characters. Example: <code>idoyle@example.org</code></p>
+<p>Must be a valid email address. Must not be greater than 255 characters. Example: <code>cristobal.marquardt@example.net</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>role</code></b>&nbsp;&nbsp;
@@ -7984,10 +8710,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="filter.role"                data-endpoint="GETapi-admin-users"
-               value="2,"
+               value="24,41,14,52,"
                data-component="body">
     <br>
-<p>Must match the regex /^(\d,?)+$/. Example: <code>2,</code></p>
+<p>Must match the regex /^(\d,?)+$/. Example: <code>24,41,14,52,</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>created_at</code></b>&nbsp;&nbsp;
@@ -7995,10 +8721,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="filter.created_at"                data-endpoint="GETapi-admin-users"
-               value="8125-54-65"
+               value="9876-75-19,4295-91-93"
                data-component="body">
     <br>
-<p>Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/. Example: <code>8125-54-65</code></p>
+<p>Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/. Example: <code>9876-75-19,4295-91-93</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>updated_at</code></b>&nbsp;&nbsp;
@@ -8006,10 +8732,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="filter.updated_at"                data-endpoint="GETapi-admin-users"
-               value="3970-57-34"
+               value="5413-16-98,5731-52-38"
                data-component="body">
     <br>
-<p>Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/. Example: <code>3970-57-34</code></p>
+<p>Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/. Example: <code>5413-16-98,5731-52-38</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>search</code></b>&nbsp;&nbsp;
@@ -8017,10 +8743,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="filter.search"                data-endpoint="GETapi-admin-users"
-               value="bvbzmbguxximjnyis"
+               value="ohoqnjzgozaedvnnkdc"
                data-component="body">
     <br>
-<p>Must not be greater than 255 characters. Example: <code>bvbzmbguxximjnyis</code></p>
+<p>Must not be greater than 255 characters. Example: <code>ohoqnjzgozaedvnnkdc</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>include</code></b>&nbsp;&nbsp;
@@ -8028,10 +8754,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="filter.include"                data-endpoint="GETapi-admin-users"
-               value="mg,xa,b"
+               value="j,tjr,zk"
                data-component="body">
     <br>
-<p>Must match the regex /^(\w+(,\w+)*)?$/. Example: <code>mg,xa,b</code></p>
+<p>Must match the regex /^(\w+(,\w+)*)?$/. Example: <code>j,tjr,zk</code></p>
                     </div>
                                     </details>
         </div>
@@ -8041,10 +8767,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="page"                data-endpoint="GETapi-admin-users"
-               value="59"
+               value="14"
                data-component="body">
     <br>
-<p>Must be at least 1. Example: <code>59</code></p>
+<p>Must be at least 1. Example: <code>14</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
@@ -8052,10 +8778,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="per_page"                data-endpoint="GETapi-admin-users"
-               value="19"
+               value="6"
                data-component="body">
     <br>
-<p>Must be at least 1. Must not be greater than 100. Example: <code>19</code></p>
+<p>Must be at least 1. Must not be greater than 100. Example: <code>6</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>sort</code></b>&nbsp;&nbsp;
@@ -8063,10 +8789,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-admin-users"
-               value="-W,D,-b,-V"
+               value="-Nhy,-Er,-KP,-WU,QV,-C5,W4"
                data-component="body">
     <br>
-<p>Must match the regex /^(-?[a-zA-Z0-9<em>]+)(,-?[a-zA-Z0-9</em>]+)*$/. Example: <code>-W,D,-b,-V</code></p>
+<p>Must match the regex /^(-?[a-zA-Z0-9<em>]+)(,-?[a-zA-Z0-9</em>]+)*$/. Example: <code>-Nhy,-Er,-KP,-WU,QV,-C5,W4</code></p>
         </div>
         </form>
 
@@ -8259,17 +8985,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"name\": \"ehzihhmpqifxyjown\",
-    \"email\": \"shanelle53@example.com\",
-    \"password\": \"B;dY+_n+^\\\"0=,\\\"nGI\",
-    \"role_id\": \"reiciendis\",
+    \"name\": \"yi\",
+    \"email\": \"yhintz@example.com\",
+    \"password\": \"&amp;bXNASu\",
+    \"role_id\": \"est\",
     \"address\": {
-        \"address_line1\": \"htuntcnsixqzqpiuqqu\",
-        \"city\": \"zzojnotbali\",
-        \"country\": \"mwnmdxuysrwiugdxtknraplh\",
-        \"postal_code\": \"hhcgbnyxddaadedlxwk\",
-        \"address_line2\": \"sufkfxacquf\",
-        \"state\": \"ze\"
+        \"address_line1\": \"adby\",
+        \"city\": \"ycm\",
+        \"country\": \"mkewyndvbnltpbezjxreq\",
+        \"postal_code\": \"tcnubtcwzrazveoig\",
+        \"address_line2\": \"up\",
+        \"state\": \"mqeisadrcpubihnmvjzvfme\"
     }
 }"
 </code></pre></div>
@@ -8287,17 +9013,17 @@ const headers = {
 };
 
 let body = {
-    "name": "ehzihhmpqifxyjown",
-    "email": "shanelle53@example.com",
-    "password": "B;dY+_n+^\"0=,\"nGI",
-    "role_id": "reiciendis",
+    "name": "yi",
+    "email": "yhintz@example.com",
+    "password": "&amp;bXNASu",
+    "role_id": "est",
     "address": {
-        "address_line1": "htuntcnsixqzqpiuqqu",
-        "city": "zzojnotbali",
-        "country": "mwnmdxuysrwiugdxtknraplh",
-        "postal_code": "hhcgbnyxddaadedlxwk",
-        "address_line2": "sufkfxacquf",
-        "state": "ze"
+        "address_line1": "adby",
+        "city": "ycm",
+        "country": "mkewyndvbnltpbezjxreq",
+        "postal_code": "tcnubtcwzrazveoig",
+        "address_line2": "up",
+        "state": "mqeisadrcpubihnmvjzvfme"
     }
 };
 
@@ -8320,17 +9046,17 @@ $response = $client-&gt;post(
             'Accept' =&gt; 'application/json',
         ],
         'json' =&gt; [
-            'name' =&gt; 'ehzihhmpqifxyjown',
-            'email' =&gt; 'shanelle53@example.com',
-            'password' =&gt; 'B;dY+_n+^"0=,"nGI',
-            'role_id' =&gt; 'reiciendis',
+            'name' =&gt; 'yi',
+            'email' =&gt; 'yhintz@example.com',
+            'password' =&gt; '&amp;bXNASu',
+            'role_id' =&gt; 'est',
             'address' =&gt; [
-                'address_line1' =&gt; 'htuntcnsixqzqpiuqqu',
-                'city' =&gt; 'zzojnotbali',
-                'country' =&gt; 'mwnmdxuysrwiugdxtknraplh',
-                'postal_code' =&gt; 'hhcgbnyxddaadedlxwk',
-                'address_line2' =&gt; 'sufkfxacquf',
-                'state' =&gt; 'ze',
+                'address_line1' =&gt; 'adby',
+                'city' =&gt; 'ycm',
+                'country' =&gt; 'mkewyndvbnltpbezjxreq',
+                'postal_code' =&gt; 'tcnubtcwzrazveoig',
+                'address_line2' =&gt; 'up',
+                'state' =&gt; 'mqeisadrcpubihnmvjzvfme',
             ],
         ],
     ]
@@ -8448,10 +9174,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="name"                data-endpoint="POSTapi-admin-users"
-               value="ehzihhmpqifxyjown"
+               value="yi"
                data-component="body">
     <br>
-<p>Must not be greater than 255 characters. Example: <code>ehzihhmpqifxyjown</code></p>
+<p>Must not be greater than 255 characters. Example: <code>yi</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>email</code></b>&nbsp;&nbsp;
@@ -8459,10 +9185,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="email"                data-endpoint="POSTapi-admin-users"
-               value="shanelle53@example.com"
+               value="yhintz@example.com"
                data-component="body">
     <br>
-<p>Must be a valid email address. Example: <code>shanelle53@example.com</code></p>
+<p>Must be a valid email address. Example: <code>yhintz@example.com</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>password</code></b>&nbsp;&nbsp;
@@ -8470,10 +9196,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="password"                data-endpoint="POSTapi-admin-users"
-               value="B;dY+_n+^"0=,"nGI"
+               value="&bXNASu"
                data-component="body">
     <br>
-<p>Must be at least 8 characters. Example: <code>B;dY+_n+^"0=,"nGI</code></p>
+<p>Must be at least 8 characters. Example: <code>&amp;bXNASu</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>role_id</code></b>&nbsp;&nbsp;
@@ -8481,10 +9207,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="role_id"                data-endpoint="POSTapi-admin-users"
-               value="reiciendis"
+               value="est"
                data-component="body">
     <br>
-<p>The <code>id</code> of an existing record in the roles table. Example: <code>reiciendis</code></p>
+<p>The <code>id</code> of an existing record in the roles table. Example: <code>est</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
         <details>
@@ -8501,10 +9227,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="address.address_line1"                data-endpoint="POSTapi-admin-users"
-               value="htuntcnsixqzqpiuqqu"
+               value="adby"
                data-component="body">
     <br>
-<p>Must not be greater than 255 characters. Example: <code>htuntcnsixqzqpiuqqu</code></p>
+<p>Must not be greater than 255 characters. Example: <code>adby</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>city</code></b>&nbsp;&nbsp;
@@ -8512,10 +9238,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="address.city"                data-endpoint="POSTapi-admin-users"
-               value="zzojnotbali"
+               value="ycm"
                data-component="body">
     <br>
-<p>Must not be greater than 255 characters. Example: <code>zzojnotbali</code></p>
+<p>Must not be greater than 255 characters. Example: <code>ycm</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>country</code></b>&nbsp;&nbsp;
@@ -8523,10 +9249,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="address.country"                data-endpoint="POSTapi-admin-users"
-               value="mwnmdxuysrwiugdxtknraplh"
+               value="mkewyndvbnltpbezjxreq"
                data-component="body">
     <br>
-<p>Must not be greater than 255 characters. Example: <code>mwnmdxuysrwiugdxtknraplh</code></p>
+<p>Must not be greater than 255 characters. Example: <code>mkewyndvbnltpbezjxreq</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>postal_code</code></b>&nbsp;&nbsp;
@@ -8534,10 +9260,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="address.postal_code"                data-endpoint="POSTapi-admin-users"
-               value="hhcgbnyxddaadedlxwk"
+               value="tcnubtcwzrazveoig"
                data-component="body">
     <br>
-<p>Must not be greater than 20 characters. Example: <code>hhcgbnyxddaadedlxwk</code></p>
+<p>Must not be greater than 20 characters. Example: <code>tcnubtcwzrazveoig</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>address_line2</code></b>&nbsp;&nbsp;
@@ -8545,10 +9271,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="address.address_line2"                data-endpoint="POSTapi-admin-users"
-               value="sufkfxacquf"
+               value="up"
                data-component="body">
     <br>
-<p>Must not be greater than 255 characters. Example: <code>sufkfxacquf</code></p>
+<p>Must not be greater than 255 characters. Example: <code>up</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>state</code></b>&nbsp;&nbsp;
@@ -8556,10 +9282,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="address.state"                data-endpoint="POSTapi-admin-users"
-               value="ze"
+               value="mqeisadrcpubihnmvjzvfme"
                data-component="body">
     <br>
-<p>Must not be greater than 255 characters. Example: <code>ze</code></p>
+<p>Must not be greater than 255 characters. Example: <code>mqeisadrcpubihnmvjzvfme</code></p>
                     </div>
                                     </details>
         </div>
@@ -8584,16 +9310,16 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"name\": \"gynwqdsjnenuhri\",
-    \"email\": \"eleanore92@example.com\",
-    \"password\": \"\\\"T{p=:&amp;LmQ\\/\",
+    \"name\": \"hregkjiwnbvhsyy\",
+    \"email\": \"jpfannerstill@example.net\",
+    \"password\": \"p4F:N%=\",
     \"address\": {
-        \"address_line1\": \"yfvv\",
-        \"city\": \"rmakkcgyvcnzhzisfcypgzge\",
-        \"country\": \"ozxsryweqmvtslsbaxoj\",
-        \"postal_code\": \"fdnttmaejmkr\",
-        \"address_line2\": \"cfamppwzxstxyxecxc\",
-        \"state\": \"rmz\"
+        \"address_line1\": \"fkzbt\",
+        \"city\": \"zoqinhl\",
+        \"country\": \"ewwqacethmolrruwmfdmbfal\",
+        \"postal_code\": \"fjba\",
+        \"address_line2\": \"uvkwtobxohjivlgisj\",
+        \"state\": \"clcyqcaqnnpdbwutx\"
     }
 }"
 </code></pre></div>
@@ -8611,16 +9337,16 @@ const headers = {
 };
 
 let body = {
-    "name": "gynwqdsjnenuhri",
-    "email": "eleanore92@example.com",
-    "password": "\"T{p=:&amp;LmQ\/",
+    "name": "hregkjiwnbvhsyy",
+    "email": "jpfannerstill@example.net",
+    "password": "p4F:N%=",
     "address": {
-        "address_line1": "yfvv",
-        "city": "rmakkcgyvcnzhzisfcypgzge",
-        "country": "ozxsryweqmvtslsbaxoj",
-        "postal_code": "fdnttmaejmkr",
-        "address_line2": "cfamppwzxstxyxecxc",
-        "state": "rmz"
+        "address_line1": "fkzbt",
+        "city": "zoqinhl",
+        "country": "ewwqacethmolrruwmfdmbfal",
+        "postal_code": "fjba",
+        "address_line2": "uvkwtobxohjivlgisj",
+        "state": "clcyqcaqnnpdbwutx"
     }
 };
 
@@ -8643,16 +9369,16 @@ $response = $client-&gt;post(
             'Accept' =&gt; 'application/json',
         ],
         'json' =&gt; [
-            'name' =&gt; 'gynwqdsjnenuhri',
-            'email' =&gt; 'eleanore92@example.com',
-            'password' =&gt; '"T{p=:&amp;LmQ/',
+            'name' =&gt; 'hregkjiwnbvhsyy',
+            'email' =&gt; 'jpfannerstill@example.net',
+            'password' =&gt; 'p4F:N%=',
             'address' =&gt; [
-                'address_line1' =&gt; 'yfvv',
-                'city' =&gt; 'rmakkcgyvcnzhzisfcypgzge',
-                'country' =&gt; 'ozxsryweqmvtslsbaxoj',
-                'postal_code' =&gt; 'fdnttmaejmkr',
-                'address_line2' =&gt; 'cfamppwzxstxyxecxc',
-                'state' =&gt; 'rmz',
+                'address_line1' =&gt; 'fkzbt',
+                'city' =&gt; 'zoqinhl',
+                'country' =&gt; 'ewwqacethmolrruwmfdmbfal',
+                'postal_code' =&gt; 'fjba',
+                'address_line2' =&gt; 'uvkwtobxohjivlgisj',
+                'state' =&gt; 'clcyqcaqnnpdbwutx',
             ],
         ],
     ]
@@ -8782,10 +9508,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="name"                data-endpoint="POSTapi-admin-users--id-"
-               value="gynwqdsjnenuhri"
+               value="hregkjiwnbvhsyy"
                data-component="body">
     <br>
-<p>Must not be greater than 255 characters. Example: <code>gynwqdsjnenuhri</code></p>
+<p>Must not be greater than 255 characters. Example: <code>hregkjiwnbvhsyy</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>email</code></b>&nbsp;&nbsp;
@@ -8793,10 +9519,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="email"                data-endpoint="POSTapi-admin-users--id-"
-               value="eleanore92@example.com"
+               value="jpfannerstill@example.net"
                data-component="body">
     <br>
-<p>Must be a valid email address. Example: <code>eleanore92@example.com</code></p>
+<p>Must be a valid email address. Example: <code>jpfannerstill@example.net</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>password</code></b>&nbsp;&nbsp;
@@ -8804,10 +9530,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="password"                data-endpoint="POSTapi-admin-users--id-"
-               value=""T{p=:&LmQ/"
+               value="p4F:N%="
                data-component="body">
     <br>
-<p>Must be at least 8 characters. Example: <code>"T{p=:&amp;LmQ/</code></p>
+<p>Must be at least 8 characters. Example: <code>p4F:N%=</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>role_id</code></b>&nbsp;&nbsp;
@@ -8835,10 +9561,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="address.address_line1"                data-endpoint="POSTapi-admin-users--id-"
-               value="yfvv"
+               value="fkzbt"
                data-component="body">
     <br>
-<p>Must not be greater than 255 characters. Example: <code>yfvv</code></p>
+<p>Must not be greater than 255 characters. Example: <code>fkzbt</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>city</code></b>&nbsp;&nbsp;
@@ -8846,10 +9572,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="address.city"                data-endpoint="POSTapi-admin-users--id-"
-               value="rmakkcgyvcnzhzisfcypgzge"
+               value="zoqinhl"
                data-component="body">
     <br>
-<p>Must not be greater than 255 characters. Example: <code>rmakkcgyvcnzhzisfcypgzge</code></p>
+<p>Must not be greater than 255 characters. Example: <code>zoqinhl</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>country</code></b>&nbsp;&nbsp;
@@ -8857,10 +9583,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="address.country"                data-endpoint="POSTapi-admin-users--id-"
-               value="ozxsryweqmvtslsbaxoj"
+               value="ewwqacethmolrruwmfdmbfal"
                data-component="body">
     <br>
-<p>Must not be greater than 255 characters. Example: <code>ozxsryweqmvtslsbaxoj</code></p>
+<p>Must not be greater than 255 characters. Example: <code>ewwqacethmolrruwmfdmbfal</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>postal_code</code></b>&nbsp;&nbsp;
@@ -8868,10 +9594,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="address.postal_code"                data-endpoint="POSTapi-admin-users--id-"
-               value="fdnttmaejmkr"
+               value="fjba"
                data-component="body">
     <br>
-<p>Must not be greater than 20 characters. Example: <code>fdnttmaejmkr</code></p>
+<p>Must not be greater than 20 characters. Example: <code>fjba</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>address_line2</code></b>&nbsp;&nbsp;
@@ -8879,10 +9605,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="address.address_line2"                data-endpoint="POSTapi-admin-users--id-"
-               value="cfamppwzxstxyxecxc"
+               value="uvkwtobxohjivlgisj"
                data-component="body">
     <br>
-<p>Must not be greater than 255 characters. Example: <code>cfamppwzxstxyxecxc</code></p>
+<p>Must not be greater than 255 characters. Example: <code>uvkwtobxohjivlgisj</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>state</code></b>&nbsp;&nbsp;
@@ -8890,10 +9616,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="address.state"                data-endpoint="POSTapi-admin-users--id-"
-               value="rmz"
+               value="clcyqcaqnnpdbwutx"
                data-component="body">
     <br>
-<p>Must not be greater than 255 characters. Example: <code>rmz</code></p>
+<p>Must not be greater than 255 characters. Example: <code>clcyqcaqnnpdbwutx</code></p>
                     </div>
                                     </details>
         </div>
@@ -9418,10 +10144,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "user_id=quia"\
-    --form "name=fohgjkohipyfdzktjmqaaqute"\
-    --form "description=Nam in cumque non repudiandae rerum magnam nam."\
-    --form "logo=@/tmp/php1vZu3w" </code></pre></div>
+    --form "user_id=fuga"\
+    --form "name=kzoximfimdvddpmouztmpyil"\
+    --form "description=Facilis occaecati veniam dolore animi quas ut."\
+    --form "logo=@/tmp/phpqHqQv3" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -9436,9 +10162,9 @@ const headers = {
 };
 
 const body = new FormData();
-body.append('user_id', 'quia');
-body.append('name', 'fohgjkohipyfdzktjmqaaqute');
-body.append('description', 'Nam in cumque non repudiandae rerum magnam nam.');
+body.append('user_id', 'fuga');
+body.append('name', 'kzoximfimdvddpmouztmpyil');
+body.append('description', 'Facilis occaecati veniam dolore animi quas ut.');
 body.append('logo', document.querySelector('input[name="logo"]').files[0]);
 
 fetch(url, {
@@ -9462,19 +10188,19 @@ $response = $client-&gt;post(
         'multipart' =&gt; [
             [
                 'name' =&gt; 'user_id',
-                'contents' =&gt; 'quia'
+                'contents' =&gt; 'fuga'
             ],
             [
                 'name' =&gt; 'name',
-                'contents' =&gt; 'fohgjkohipyfdzktjmqaaqute'
+                'contents' =&gt; 'kzoximfimdvddpmouztmpyil'
             ],
             [
                 'name' =&gt; 'description',
-                'contents' =&gt; 'Nam in cumque non repudiandae rerum magnam nam.'
+                'contents' =&gt; 'Facilis occaecati veniam dolore animi quas ut.'
             ],
             [
                 'name' =&gt; 'logo',
-                'contents' =&gt; fopen('/tmp/php1vZu3w', 'r')
+                'contents' =&gt; fopen('/tmp/phpqHqQv3', 'r')
             ],
         ],
     ]
@@ -9592,10 +10318,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="user_id"                data-endpoint="POSTapi-admin-vendors"
-               value="quia"
+               value="fuga"
                data-component="body">
     <br>
-<p>The <code>id</code> of an existing record in the users table. Example: <code>quia</code></p>
+<p>The <code>id</code> of an existing record in the users table. Example: <code>fuga</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
@@ -9603,10 +10329,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="name"                data-endpoint="POSTapi-admin-vendors"
-               value="fohgjkohipyfdzktjmqaaqute"
+               value="kzoximfimdvddpmouztmpyil"
                data-component="body">
     <br>
-<p>Must not be greater than 255 characters. Example: <code>fohgjkohipyfdzktjmqaaqute</code></p>
+<p>Must not be greater than 255 characters. Example: <code>kzoximfimdvddpmouztmpyil</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
@@ -9614,10 +10340,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="description"                data-endpoint="POSTapi-admin-vendors"
-               value="Nam in cumque non repudiandae rerum magnam nam."
+               value="Facilis occaecati veniam dolore animi quas ut."
                data-component="body">
     <br>
-<p>Must not be greater than 1000 characters. Example: <code>Nam in cumque non repudiandae rerum magnam nam.</code></p>
+<p>Must not be greater than 1000 characters. Example: <code>Facilis occaecati veniam dolore animi quas ut.</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>logo</code></b>&nbsp;&nbsp;
@@ -9628,7 +10354,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>/tmp/php1vZu3w</code></p>
+<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>/tmp/phpqHqQv3</code></p>
         </div>
         </form>
 
@@ -9650,9 +10376,9 @@ You can check the Dev Tools console for debugging information.</code></pre>
     --header "Authorization: Bearer {YOUR_AUTH_KEY}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "name=umnibnjqrkpjpbhoxqvw"\
-    --form "description=Sed qui consectetur culpa vel."\
-    --form "logo=@/tmp/phppKcXqM" </code></pre></div>
+    --form "name=vavvxsexgdbzfzrregreqaese"\
+    --form "description=Aut nihil et nobis est."\
+    --form "logo=@/tmp/phpQBedbM" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -9667,8 +10393,8 @@ const headers = {
 };
 
 const body = new FormData();
-body.append('name', 'umnibnjqrkpjpbhoxqvw');
-body.append('description', 'Sed qui consectetur culpa vel.');
+body.append('name', 'vavvxsexgdbzfzrregreqaese');
+body.append('description', 'Aut nihil et nobis est.');
 body.append('logo', document.querySelector('input[name="logo"]').files[0]);
 
 fetch(url, {
@@ -9692,15 +10418,15 @@ $response = $client-&gt;post(
         'multipart' =&gt; [
             [
                 'name' =&gt; 'name',
-                'contents' =&gt; 'umnibnjqrkpjpbhoxqvw'
+                'contents' =&gt; 'vavvxsexgdbzfzrregreqaese'
             ],
             [
                 'name' =&gt; 'description',
-                'contents' =&gt; 'Sed qui consectetur culpa vel.'
+                'contents' =&gt; 'Aut nihil et nobis est.'
             ],
             [
                 'name' =&gt; 'logo',
-                'contents' =&gt; fopen('/tmp/phppKcXqM', 'r')
+                'contents' =&gt; fopen('/tmp/phpQBedbM', 'r')
             ],
         ],
     ]
@@ -9841,10 +10567,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="name"                data-endpoint="POSTapi-admin-vendors--id-"
-               value="umnibnjqrkpjpbhoxqvw"
+               value="vavvxsexgdbzfzrregreqaese"
                data-component="body">
     <br>
-<p>Must not be greater than 255 characters. Example: <code>umnibnjqrkpjpbhoxqvw</code></p>
+<p>Must not be greater than 255 characters. Example: <code>vavvxsexgdbzfzrregreqaese</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
@@ -9852,10 +10578,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="description"                data-endpoint="POSTapi-admin-vendors--id-"
-               value="Sed qui consectetur culpa vel."
+               value="Aut nihil et nobis est."
                data-component="body">
     <br>
-<p>Must not be greater than 1000 characters. Example: <code>Sed qui consectetur culpa vel.</code></p>
+<p>Must not be greater than 1000 characters. Example: <code>Aut nihil et nobis est.</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>logo</code></b>&nbsp;&nbsp;
@@ -9866,7 +10592,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>/tmp/phppKcXqM</code></p>
+<p>Must be an image. Must not be greater than 2048 kilobytes. Example: <code>/tmp/phpQBedbM</code></p>
         </div>
         </form>
 

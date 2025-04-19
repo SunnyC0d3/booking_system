@@ -144,7 +144,7 @@ endpoints:
         name: user_id
         description: 'The <code>id</code> of an existing record in the users table.'
         required: true
-        example: quia
+        example: fuga
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -154,7 +154,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: fohgjkohipyfdzktjmqaaqute
+        example: kzoximfimdvddpmouztmpyil
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -164,7 +164,7 @@ endpoints:
         name: description
         description: 'Must not be greater than 1000 characters.'
         required: true
-        example: 'Nam in cumque non repudiandae rerum magnam nam.'
+        example: 'Facilis occaecati veniam dolore animi quas ut.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -181,9 +181,9 @@ endpoints:
         nullable: true
         custom: []
     cleanBodyParameters:
-      user_id: quia
-      name: fohgjkohipyfdzktjmqaaqute
-      description: 'Nam in cumque non repudiandae rerum magnam nam.'
+      user_id: fuga
+      name: kzoximfimdvddpmouztmpyil
+      description: 'Facilis occaecati veniam dolore animi quas ut.'
     fileParameters:
       logo: null
     responses:
@@ -262,7 +262,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: umnibnjqrkpjpbhoxqvw
+        example: vavvxsexgdbzfzrregreqaese
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -272,7 +272,7 @@ endpoints:
         name: description
         description: 'Must not be greater than 1000 characters.'
         required: false
-        example: 'Sed qui consectetur culpa vel.'
+        example: 'Aut nihil et nobis est.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -289,8 +289,8 @@ endpoints:
         nullable: true
         custom: []
     cleanBodyParameters:
-      name: umnibnjqrkpjpbhoxqvw
-      description: 'Sed qui consectetur culpa vel.'
+      name: vavvxsexgdbzfzrregreqaese
+      description: 'Aut nihil et nobis est.'
     fileParameters:
       logo: null
     responses:

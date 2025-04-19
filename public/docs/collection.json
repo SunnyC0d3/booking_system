@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "E-Commerce API Documentation",
-        "_postman_id": "7b3af755-ad72-4daa-bc24-e9019bbff278",
+        "_postman_id": "14152c33-d912-4df5-81ce-a1740a1e4fc9",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -180,13 +180,13 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "suscipit",
+                                    "value": "eum",
                                     "description": "The ID of the verify."
                                 },
                                 {
                                     "id": "hash",
                                     "key": "hash",
-                                    "value": "tenetur",
+                                    "value": "eius",
                                     "description": ""
                                 }
                             ]
@@ -840,7 +840,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"dolor\",\"parent_id\":3}"
+                            "raw": "{\"name\":\"voluptatibus\",\"parent_id\":19}"
                         },
                         "description": ""
                     },
@@ -935,7 +935,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"quas\",\"parent_id\":6}"
+                            "raw": "{\"name\":\"quaerat\",\"parent_id\":9}"
                         },
                         "description": ""
                     },
@@ -1072,7 +1072,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"cum\"}"
+                            "raw": "{\"name\":\"ea\"}"
                         },
                         "description": ""
                     },
@@ -1167,7 +1167,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"illum\"}"
+                            "raw": "{\"name\":\"suscipit\"}"
                         },
                         "description": ""
                     },
@@ -1298,7 +1298,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"ab\"}"
+                            "raw": "{\"name\":\"est\"}"
                         },
                         "description": ""
                     },
@@ -1393,7 +1393,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"atque\"}"
+                            "raw": "{\"name\":\"neque\"}"
                         },
                         "description": ""
                     },
@@ -1486,7 +1486,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"rkgtzqatrlsqvwrnqxilvcqf\",\"price\":\"32.42,175.61\",\"category\":\"8\",\"quantity\":7,\"created_at\":\"3521-28-66\",\"updated_at\":\"3307-63-64\",\"search\":\"dxhfauzzcwgxgx\",\"include\":\"lxa,lkl)\"},\"page\":57,\"per_page\":7,\"sort\":\"-SSPTQMej\"}"
+                            "raw": "{\"filter\":{\"name\":\"ohftisuz\",\"price\":\"77022.33,1.92)))\",\"category\":\"30,5\",\"quantity\":56,\"created_at\":\"1683-77-01\",\"updated_at\":\"0615-82-04\",\"search\":\"ucfgizodavsefpnxzida\",\"include\":\"\"},\"page\":10,\"per_page\":9,\"sort\":\"F1HA,mUC,-3UT\"}"
                         },
                         "description": ""
                     },
@@ -1576,61 +1576,61 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "uyohsnbm",
+                                    "value": "hluikezbpqvnyqi",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Praesentium exercitationem consequatur eligendi sint consequatur consequuntur.",
+                                    "value": "Autem voluptas fuga nemo explicabo.",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "price",
-                                    "value": "52",
+                                    "value": "85",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_category_id",
-                                    "value": "atque",
+                                    "value": "eum",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_categories table."
                                 },
                                 {
                                     "key": "product_status_id",
-                                    "value": "dolores",
+                                    "value": "numquam",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_statuses table."
                                 },
                                 {
                                     "key": "quantity",
-                                    "value": "77",
+                                    "value": "11",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_variants[0][product_attribute_id]",
-                                    "value": "molestias",
+                                    "value": "sint",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][value]",
-                                    "value": "prslabdwvvyvsdwsnydm",
+                                    "value": "ybn",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][additional_price]",
-                                    "value": "0",
+                                    "value": "55",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][quantity]",
-                                    "value": "61",
+                                    "value": "66",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1691,61 +1691,61 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "cuypawwhsunk",
+                                    "value": "qvtpxnut",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Eum sed totam dolorum hic vel.",
+                                    "value": "Sint et non nihil.",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "price",
-                                    "value": "75",
+                                    "value": "47",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_category_id",
-                                    "value": "asperiores",
+                                    "value": "consectetur",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_categories table."
                                 },
                                 {
                                     "key": "product_status_id",
-                                    "value": "eos",
+                                    "value": "sit",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_statuses table."
                                 },
                                 {
                                     "key": "quantity",
-                                    "value": "34",
+                                    "value": "84",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_variants[0][product_attribute_id]",
-                                    "value": "unde",
+                                    "value": "quibusdam",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][value]",
-                                    "value": "nfwygelem",
+                                    "value": "gveailkxnt",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][additional_price]",
-                                    "value": "59",
+                                    "value": "42",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][quantity]",
-                                    "value": "52",
+                                    "value": "12",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -1868,6 +1868,186 @@
             ]
         },
         {
+            "name": "Roles",
+            "description": "",
+            "item": [
+                {
+                    "name": "Retrieve all roles.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/roles",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/roles"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Roles retrieved successfully.\",\n  \"data\": []\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a new role.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/roles",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/roles"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"\\\"admin\\\"\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Role created successfully.\",\n  \"data\": {}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update a role.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/roles\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/roles\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the role."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"\\\"admin\\\"\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Role updated successfully.\",\n  \"data\": {}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete a role.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/roles\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/roles\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the role."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Role deleted successfully.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "name": "Users",
             "description": "",
             "item": [
@@ -1893,7 +2073,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"ppktgw\",\"email\":\"idoyle@example.org\",\"role\":\"2,\",\"created_at\":\"8125-54-65\",\"updated_at\":\"3970-57-34\",\"search\":\"bvbzmbguxximjnyis\",\"include\":\"mg,xa,b\"},\"page\":59,\"per_page\":19,\"sort\":\"-W,D,-b,-V\"}"
+                            "raw": "{\"filter\":{\"name\":\"lzzib\",\"email\":\"cristobal.marquardt@example.net\",\"role\":\"24,41,14,52,\",\"created_at\":\"9876-75-19,4295-91-93\",\"updated_at\":\"5413-16-98,5731-52-38\",\"search\":\"ohoqnjzgozaedvnnkdc\",\"include\":\"j,tjr,zk\"},\"page\":14,\"per_page\":6,\"sort\":\"-Nhy,-Er,-KP,-WU,QV,-C5,W4\"}"
                         },
                         "description": ""
                     },
@@ -1980,7 +2160,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"ehzihhmpqifxyjown\",\"email\":\"shanelle53@example.com\",\"password\":\"B;dY+_n+^\\\"0=,\\\"nGI\",\"role_id\":\"reiciendis\",\"address\":{\"address_line1\":\"htuntcnsixqzqpiuqqu\",\"city\":\"zzojnotbali\",\"country\":\"mwnmdxuysrwiugdxtknraplh\",\"postal_code\":\"hhcgbnyxddaadedlxwk\",\"address_line2\":\"sufkfxacquf\",\"state\":\"ze\"}}"
+                            "raw": "{\"name\":\"yi\",\"email\":\"yhintz@example.com\",\"password\":\"&bXNASu\",\"role_id\":\"est\",\"address\":{\"address_line1\":\"adby\",\"city\":\"ycm\",\"country\":\"mkewyndvbnltpbezjxreq\",\"postal_code\":\"tcnubtcwzrazveoig\",\"address_line2\":\"up\",\"state\":\"mqeisadrcpubihnmvjzvfme\"}}"
                         },
                         "description": ""
                     },
@@ -2029,7 +2209,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"gynwqdsjnenuhri\",\"email\":\"eleanore92@example.com\",\"password\":\"\\\"T{p=:&LmQ\\\/\",\"address\":{\"address_line1\":\"yfvv\",\"city\":\"rmakkcgyvcnzhzisfcypgzge\",\"country\":\"ozxsryweqmvtslsbaxoj\",\"postal_code\":\"fdnttmaejmkr\",\"address_line2\":\"cfamppwzxstxyxecxc\",\"state\":\"rmz\"}}"
+                            "raw": "{\"name\":\"hregkjiwnbvhsyy\",\"email\":\"jpfannerstill@example.net\",\"password\":\"p4F:N%=\",\"address\":{\"address_line1\":\"fkzbt\",\"city\":\"zoqinhl\",\"country\":\"ewwqacethmolrruwmfdmbfal\",\"postal_code\":\"fjba\",\"address_line2\":\"uvkwtobxohjivlgisj\",\"state\":\"clcyqcaqnnpdbwutx\"}}"
                         },
                         "description": ""
                     },
@@ -2209,19 +2389,19 @@
                             "formdata": [
                                 {
                                     "key": "user_id",
-                                    "value": "quia",
+                                    "value": "fuga",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the users table."
                                 },
                                 {
                                     "key": "name",
-                                    "value": "fohgjkohipyfdzktjmqaaqute",
+                                    "value": "kzoximfimdvddpmouztmpyil",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Nam in cumque non repudiandae rerum magnam nam.",
+                                    "value": "Facilis occaecati veniam dolore animi quas ut.",
                                     "type": "text",
                                     "description": "Must not be greater than 1000 characters."
                                 },
@@ -2282,13 +2462,13 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "umnibnjqrkpjpbhoxqvw",
+                                    "value": "vavvxsexgdbzfzrregreqaese",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Sed qui consectetur culpa vel.",
+                                    "value": "Aut nihil et nobis est.",
                                     "type": "text",
                                     "description": "Must not be greater than 1000 characters."
                                 },
