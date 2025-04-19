@@ -67,11 +67,12 @@ Route::prefix('admin/roles')
 // Admin/RolePermission
 
 Route::prefix('admin')
-    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin', 'emailVerified'])
     ->controller(RolePermissionController::class)
     ->group(function () {
         Route::get('roles/{role}/permissions', 'index')->name('admin.rolepermission.index');
         Route::post('roles/{role}/permissions', 'assign')->name('admin.rolepermission.assign');
+        Route::post('roles/{role}/permissions/assign-all', 'assignAll')->name('admin.rolepermission.assignAll');
         Route::delete('roles/{role}/permissions/{permission}', 'revoke')->name('admin.rolepermission.revoke');
     });
 

@@ -5,41 +5,56 @@ namespace App\Http\Controllers\V1\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\Permission;
+use App\Requests\V1\AssignPermissionsRequest;
+use App\Services\V1\Auth\RolePermission;
+use App\Traits\V1\ApiResponses;
 use Illuminate\Http\Request;
+use \Exception;
 
 class RolePermissionController extends Controller
 {
-    public function index(Role $role)
+    use ApiResponses;
+
+    private $role_permission;
+
+    public function __construct(RolePermission $role_permission)
     {
-        return response()->json([
-            'role' => $role->name,
-            'permissions' => $role->permissions()->pluck('name')
-        ]);
+        $this->role_permission = $role_permission;
     }
 
-    public function assign(Request $request, Role $role)
+    public function index(Request $request, Role $role)
     {
-        $validated = $request->validate([
-            'permissions' => ['required', 'array'],
-            'permissions.*' => ['exists:permissions,name'],
-        ]);
-
-        $permissions = Permission::whereIn('name', $validated['permissions'])->get();
-        $role->permissions()->syncWithoutDetaching($permissions);
-
-        return response()->json(['message' => 'Permissions assigned successfully']);
+        try {
+            return $this->role_permission->all($request, $role);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
     }
 
-    public function assignAllPermissions(Role $role)
+    public function assign(AssignPermissionsRequest $request, Role $role)
     {
-        $role->permissions()->sync(Permission::pluck('id'));
-        return response()->json(['message' => 'All permissions assigned']);
+        try {
+            return $this->role_permission->assign($request, $role);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
     }
 
-    public function revoke(Role $role, Permission $permission)
+    public function assignAllPermissions(Request $request, Role $role)
     {
-        $role->permissions()->detach($permission->id);
+        try {
+            return $this->role_permission->assignAll($request, $role);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
+    }
 
-        return response()->json(['message' => 'Permission revoked successfully']);
+    public function revoke(Request $request, Role $role, Permission $permission)
+    {
+        try {
+            return $this->role_permission->revoke($request, $role, $permission);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
     }
 }
