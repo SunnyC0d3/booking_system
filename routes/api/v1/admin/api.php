@@ -64,6 +64,17 @@ Route::prefix('admin/roles')
         Route::delete('/{role}', 'destroy')->name('admin.roles.destroy');
     });
 
+// Admin/RolePermission
+
+Route::prefix('admin')
+    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->controller(RolePermissionController::class)
+    ->group(function () {
+        Route::get('roles/{role}/permissions', 'index')->name('admin.rolepermission.index');
+        Route::post('roles/{role}/permissions', 'assign')->name('admin.rolepermission.assign');
+        Route::delete('roles/{role}/permissions/{permission}', 'revoke')->name('admin.rolepermission.revoke');
+    });
+
 // Admin/Products
 
 Route::prefix('admin/products')
@@ -107,25 +118,25 @@ Route::prefix('admin/product-categories')
 // Admin/Product Statuses
 
 Route::prefix('admin/product-statuses')
-->middleware(['throttle:10,1', 'auth:api', 'roles:super admin,admin', 'emailVerified'])
-->controller(ProductStatusController::class)
-->group(function () {
-    Route::get('/', 'index')->name('admin.products.statuses.index');
-    Route::post('/', 'store')->name('admin.products.statuses.store');
-    Route::get('/{productStatus}', 'show')->name('admin.products.statuses.show');
-    Route::post('/{productStatus}', 'update')->name('admin.products.statuses.update');
-    Route::delete('/{productStatus}', 'destroy')->name('admin.products.statuses.destroy');
-});
+    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->controller(ProductStatusController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('admin.products.statuses.index');
+        Route::post('/', 'store')->name('admin.products.statuses.store');
+        Route::get('/{productStatus}', 'show')->name('admin.products.statuses.show');
+        Route::post('/{productStatus}', 'update')->name('admin.products.statuses.update');
+        Route::delete('/{productStatus}', 'destroy')->name('admin.products.statuses.destroy');
+    });
 
 // Admin/Product Tags
 
 Route::prefix('admin/product-tags')
-->middleware(['throttle:10,1', 'auth:api', 'roles:super admin,admin', 'emailVerified'])
-->controller(ProductTagController::class)
-->group(function () {
-    Route::get('/', 'index')->name('admin.products.tags.index');
-    Route::post('/', 'store')->name('admin.products.tags.store');
-    Route::get('/{productTag}', 'show')->name('admin.products.tags.show');
-    Route::post('/{productTag}', 'update')->name('admin.products.tags.update');
-    Route::delete('/{productTag}', 'destroy')->name('admin.products.tags.destroy');
-});
+    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->controller(ProductTagController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('admin.products.tags.index');
+        Route::post('/', 'store')->name('admin.products.tags.store');
+        Route::get('/{productTag}', 'show')->name('admin.products.tags.show');
+        Route::post('/{productTag}', 'update')->name('admin.products.tags.update');
+        Route::delete('/{productTag}', 'destroy')->name('admin.products.tags.destroy');
+    });
