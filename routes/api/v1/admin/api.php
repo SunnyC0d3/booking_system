@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\Admin\UserController;
 use App\Http\Controllers\V1\Admin\VendorController;
 use App\Http\Controllers\V1\Admin\PermissionController;
+use App\Http\Controllers\V1\Admin\RoleController;
 use App\Http\Controllers\V1\Admin\ProductController;
 use App\Http\Controllers\V1\Admin\ProductAttributeController;
 use App\Http\Controllers\V1\Admin\ProductCategoryController;
@@ -49,6 +50,18 @@ Route::prefix('admin/permissions')
         Route::post('/', 'store')->name('admin.permissions.store');
         Route::post('/{permission}', 'update')->name('admin.permissions.update');
         Route::delete('/{permission}', 'destroy')->name('admin.permissions.destroy');
+    });
+
+// Admin/Roles
+
+Route::prefix('admin/roles')
+    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->controller(RoleController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('admin.roles.index');
+        Route::post('/', 'store')->name('admin.roles.store');
+        Route::post('/{role}', 'update')->name('admin.roles.update');
+        Route::delete('/{role}', 'destroy')->name('admin.roles.destroy');
     });
 
 // Admin/Products

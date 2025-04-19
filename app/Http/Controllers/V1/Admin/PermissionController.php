@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\V1\Admin;
 
 use App\Models\Permission as DB;
+use App\Requests\V1\StorePermissionRequest;
+use App\Requests\V1\UpdatePermissionRequest;
 use App\Services\V1\Auth\Permission;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -61,7 +63,7 @@ class PermissionController extends Controller
      *     "message": "You do not have the required permissions."
      * }
      */
-    public function store(Request $request)
+    public function store(StorePermissionRequest $request)
     {
         try {
             return $this->permission->create($request);
@@ -87,7 +89,7 @@ class PermissionController extends Controller
      *     "message": "You do not have the required permissions."
      * }
      */
-    public function update(Request $request, DB $permission)
+    public function update(UpdatePermissionRequest $request, DB $permission)
     {
         try {
             return $this->permission->update($request, $permission);

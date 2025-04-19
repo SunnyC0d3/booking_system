@@ -18,4 +18,9 @@ class Role extends Model
     {
         return $this->belongsToMany(Permission::class, 'role_permission');
     }
+
+    public function setNameAttribute(string $value)
+    {
+        $this->attributes['name'] = strtolower($value);
+    }
 }
