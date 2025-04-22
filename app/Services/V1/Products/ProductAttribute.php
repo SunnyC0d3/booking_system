@@ -20,6 +20,8 @@ class ProductAttribute
             $attributes = DB::all();
             return $this->ok('Attributes retrieved successfully.', $attributes);
         }
+
+        return $this->error('You do not have the required permissions.', 403);
     }
 
     public function find(Request $request, DB $productAttribute)

@@ -146,7 +146,7 @@ endpoints:
         name: user_id
         description: 'The <code>id</code> of an existing record in the users table.'
         required: true
-        example: fuga
+        example: sapiente
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -156,7 +156,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: kzoximfimdvddpmouztmpyil
+        example: jedqmmekb
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -166,7 +166,7 @@ endpoints:
         name: description
         description: 'Must not be greater than 1000 characters.'
         required: true
-        example: 'Facilis occaecati veniam dolore animi quas ut.'
+        example: 'Culpa aliquam ex et non hic provident ut.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -183,9 +183,9 @@ endpoints:
         nullable: true
         custom: []
     cleanBodyParameters:
-      user_id: fuga
-      name: kzoximfimdvddpmouztmpyil
-      description: 'Facilis occaecati veniam dolore animi quas ut.'
+      user_id: sapiente
+      name: jedqmmekb
+      description: 'Culpa aliquam ex et non hic provident ut.'
     fileParameters:
       logo: null
     responses:
@@ -264,7 +264,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: vavvxsexgdbzfzrregreqaese
+        example: lgbftpfamzhpxhijyljngtx
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -274,7 +274,7 @@ endpoints:
         name: description
         description: 'Must not be greater than 1000 characters.'
         required: false
-        example: 'Aut nihil et nobis est.'
+        example: 'Ad incidunt maiores dolores cum.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -291,8 +291,8 @@ endpoints:
         nullable: true
         custom: []
     cleanBodyParameters:
-      name: vavvxsexgdbzfzrregreqaese
-      description: 'Aut nihil et nobis est.'
+      name: lgbftpfamzhpxhijyljngtx
+      description: 'Ad incidunt maiores dolores cum.'
     fileParameters:
       logo: null
     responses:

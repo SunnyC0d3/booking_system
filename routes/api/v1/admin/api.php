@@ -8,6 +8,7 @@ use App\Http\Controllers\V1\Admin\UserController;
 use App\Http\Controllers\V1\Admin\VendorController;
 use App\Http\Controllers\V1\Admin\PermissionController;
 use App\Http\Controllers\V1\Admin\RoleController;
+use App\Http\Controllers\V1\Admin\RolePermissionController;
 use App\Http\Controllers\V1\Admin\ProductController;
 use App\Http\Controllers\V1\Admin\ProductAttributeController;
 use App\Http\Controllers\V1\Admin\ProductCategoryController;
@@ -72,7 +73,7 @@ Route::prefix('admin')
     ->group(function () {
         Route::get('roles/{role}/permissions', 'index')->name('admin.rolepermission.index');
         Route::post('roles/{role}/permissions', 'assign')->name('admin.rolepermission.assign');
-        Route::post('roles/{role}/permissions/assign-all', 'assignAll')->name('admin.rolepermission.assignAll');
+        Route::post('roles/{role}/permissions/assign-all', 'assignAllPermissions')->name('admin.rolepermission.assignAll');
         Route::delete('roles/{role}/permissions/{permission}', 'revoke')->name('admin.rolepermission.revoke');
     });
 

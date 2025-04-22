@@ -20,6 +20,8 @@ class Permission
             $permissions = DB::all();
             return $this->ok('Permissions retrieved successfully.', $permissions);
         }
+
+        return $this->error('You do not have the required permissions.', 403);
     }
 
     public function find(Request $request, DB $permission)

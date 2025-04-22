@@ -4,7 +4,7 @@ namespace App\Requests\V1;
 
 use App\Requests\V1\BaseFormRequest;
 
-class AssignPermissionsRequest extends BaseFormRequest
+class AssignPermissionRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {

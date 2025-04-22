@@ -25,6 +25,8 @@ class RolePermission
                 'permissions' => $role->permissions()->pluck('name')
             ]);
         }
+
+        return $this->error('You do not have the required permissions.', 403);
     }
 
     public function assign(Request $request, Role $role)

@@ -20,6 +20,8 @@ class Role
             $roles = DB::all();
             return $this->ok('Roles retrieved successfully.', $roles);
         }
+
+        return $this->error('You do not have the required permissions.', 403);
     }
 
     public function find(Request $request, DB $role)
