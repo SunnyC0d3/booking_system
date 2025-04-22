@@ -14,6 +14,7 @@ use App\Http\Controllers\V1\Admin\ProductAttributeController;
 use App\Http\Controllers\V1\Admin\ProductCategoryController;
 use App\Http\Controllers\V1\Admin\ProductStatusController;
 use App\Http\Controllers\V1\Admin\ProductTagController;
+use App\Http\Controllers\V1\Admin\OrderController;
 
 // Admin/Users
 
@@ -141,4 +142,23 @@ Route::prefix('admin/product-tags')
         Route::get('/{productTag}', 'show')->name('admin.products.tags.show');
         Route::post('/{productTag}', 'update')->name('admin.products.tags.update');
         Route::delete('/{productTag}', 'destroy')->name('admin.products.tags.destroy');
+    });
+
+// Admin/Orders
+Route::prefix('admin')
+    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin', 'emailVerified'])
+    ->controller(OrderController::class)
+    ->group(function () {
+        Route::get('orders', 'index')->name('admin.orders.index');
+        Route::post('orders', 'store')->name('admin.orders.store');
+        Route::get('orders/{order}', 'show')->name('admin.orders.show');
+        Route::post('orders/{order}', 'update')->name('admin.orders.update');
+        Route::delete('orders/{order}', 'destroy')->name('admin.orders.destroy');
+        Route::delete('orders/{order}/force', 'forceDelete')->name('admin.orders.forceDelete');
+        Route::patch('orders/{order}/restore', 'restore')->name('admin.orders.restore');
+        Route::post('orders/{order}/status', 'updateStatus')->name('admin.orders.updateStatus');
+
+        Route::post('orders/{order}/items', 'addItem')->name('admin.orders.items.add');
+        Route::put('orders/{order}/items/{item}', 'updateItem')->name('admin.orders.items.update');
+        Route::delete('orders/{order}/items/{item}', 'removeItem')->name('admin.orders.items.remove');
     });
