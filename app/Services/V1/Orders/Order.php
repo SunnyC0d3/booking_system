@@ -52,7 +52,7 @@ class Order
 
         if ($user->hasPermission('create_orders')) {
             DB::transaction(function () use ($request, &$order) {
-                $order = Order::create([
+                $order = OrderDB::create([
                     'user_id' => $request->user_id,
                     'status_id' => $request->status_id,
                     'total_amount' => 0, // temp

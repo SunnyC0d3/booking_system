@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             OrderRefundStatusSeeder::class,
             OrderReturnStatusSeeder::class,
             OrderShipmentStatusSeeder::class,
+            PaymentMethodSeeder::class,
 
             UserSeeder::class,
             UserAddressSeeder::class,
@@ -28,6 +29,8 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
 
             OrderSeeder::class,
+
+            PaymentSeeder::class,
         ]);
     }
 }
