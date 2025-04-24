@@ -14,6 +14,7 @@ use App\Http\Controllers\V1\Admin\ProductAttributeController;
 use App\Http\Controllers\V1\Admin\ProductCategoryController;
 use App\Http\Controllers\V1\Admin\ProductStatusController;
 use App\Http\Controllers\V1\Admin\ProductTagController;
+use App\Http\Controllers\V1\Admin\PaymentMethodController;
 use App\Http\Controllers\V1\Admin\OrderController;
 
 // Admin/Users
@@ -142,6 +143,19 @@ Route::prefix('admin/product-tags')
         Route::get('/{productTag}', 'show')->name('admin.products.tags.show');
         Route::post('/{productTag}', 'update')->name('admin.products.tags.update');
         Route::delete('/{productTag}', 'destroy')->name('admin.products.tags.destroy');
+    });
+
+// Admin/Payment Methods
+
+Route::prefix('admin/payment-methods')
+    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->controller(PaymentMethodController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('admin.paymentmethods.tags.index');
+        Route::post('/', 'store')->name('admin.paymentmethods.tags.store');
+        Route::get('/{paymentMethod}', 'show')->name('admin.paymentmethods.tags.show');
+        Route::post('/{paymentMethod}', 'update')->name('admin.paymentmethods.tags.update');
+        Route::delete('/{paymentMethod}', 'destroy')->name('admin.paymentmethods.tags.destroy');
     });
 
 // Admin/Orders
