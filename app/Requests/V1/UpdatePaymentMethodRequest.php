@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Requests\V1;
 
 use App\Requests\V1\BaseFormRequest;
-use Illuminate\Validation\Rule;
 
 class UpdatePaymentMethodRequest extends BaseFormRequest
 {
@@ -17,7 +16,7 @@ class UpdatePaymentMethodRequest extends BaseFormRequest
         $paymentMethodId = $this->route('paymentMethod')?->id ?? 'null';
 
         return [
-            'name' => 'required|string|max:255|unique:payment_methods,name,' . $paymentMethodId,
+            'name' => 'required|string|max:255|in:Credit Card,PayPal,Bank Transfer,Apple Pay,Google Pay|unique:payment_methods,name,' . $paymentMethodId,
         ];
     }
 }

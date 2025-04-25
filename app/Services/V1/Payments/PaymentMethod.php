@@ -19,12 +19,9 @@ class PaymentMethod
         $user = $request->user();
 
         if ($user->hasPermission('view_payment_methods')) {
-            $methods = PaymentMethod::all();
+            $paymentMethods = DB::all();
 
-            return response()->json([
-                'message' => 'Payment methods retrieved successfully.',
-                'data' => $methods,
-            ]);
+            return $this->ok('Payment Methods retrieved successfully.', $paymentMethods);
         }
 
         return $this->error('You do not have the required permissions.', 403);
@@ -35,10 +32,7 @@ class PaymentMethod
         $user = $request->user();
 
         if ($user->hasPermission('view_payment_methods')) {
-            return response()->json([
-                'message' => 'Payment method retrieved successfully.',
-                'data' => $paymentMethod,
-            ]);
+            return $this->ok('Payment Method retrieved successfully.', $paymentMethod);
         }
 
         return $this->error('You do not have the required permissions.', 403);
@@ -49,12 +43,11 @@ class PaymentMethod
         $user = $request->user();
 
         if ($user->hasPermission('create_payment_methods')) {
-            $method = PaymentMethod::create($request->validated());
+            $data = $request->validated();
 
-            return response()->json([
-                'message' => 'Payment method created successfully.',
-                'data' => $method,
-            ], 201);
+            $paymentMethod = DB::create($data);
+
+            return $this->ok('Payment Method created successfully.', $paymentMethod);
         }
 
         return $this->error('You do not have the required permissions.', 403);
@@ -65,12 +58,11 @@ class PaymentMethod
         $user = $request->user();
 
         if ($user->hasPermission('edit_payment_methods')) {
-            $paymentMethod->update($request->validated());
+            $data = $request->validated();
 
-            return response()->json([
-                'message' => 'Payment method updated successfully.',
-                'data' => $paymentMethod,
-            ]);
+            $paymentMethod->update($data);
+
+            return $this->ok('Payment Method updated successfully.', $paymentMethod);
         }
 
         return $this->error('You do not have the required permissions.', 403);
@@ -81,11 +73,9 @@ class PaymentMethod
         $user = $request->user();
 
         if ($user->hasPermission('delete_payment_methods')) {
-            $paymentMethod->delete();
+            $paymentMethod->forceDelete();
 
-            return response()->json([
-                'message' => 'Payment method deleted successfully.',
-            ]);
+            return $this->ok('Payment Method deleted successfully.');
         }
 
         return $this->error('You do not have the required permissions.', 403);

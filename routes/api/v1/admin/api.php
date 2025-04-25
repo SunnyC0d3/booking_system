@@ -151,11 +151,11 @@ Route::prefix('admin/payment-methods')
     ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin,admin', 'emailVerified'])
     ->controller(PaymentMethodController::class)
     ->group(function () {
-        Route::get('/', 'index')->name('admin.paymentmethods.tags.index');
-        Route::post('/', 'store')->name('admin.paymentmethods.tags.store');
-        Route::get('/{paymentMethod}', 'show')->name('admin.paymentmethods.tags.show');
-        Route::post('/{paymentMethod}', 'update')->name('admin.paymentmethods.tags.update');
-        Route::delete('/{paymentMethod}', 'destroy')->name('admin.paymentmethods.tags.destroy');
+        Route::get('/', 'index')->name('admin.paymentmethods.index');
+        Route::post('/', 'store')->name('admin.paymentmethods.store');
+        Route::get('/{paymentMethod}', 'show')->name('admin.paymentmethods.show');
+        Route::post('/{paymentMethod}', 'update')->name('admin.paymentmethods.update');
+        Route::delete('/{paymentMethod}', 'destroy')->name('admin.paymentmethods.destroy');
     });
 
 // Admin/Orders
