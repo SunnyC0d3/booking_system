@@ -13,7 +13,7 @@ class OrderReturn extends Model
     protected $fillable = [
         'order_item_id',
         'reason',
-        'status',
+        'order_return_status_id',
     ];
 
     public function orderItem(): BelongsTo

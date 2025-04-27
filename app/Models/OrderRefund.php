@@ -13,7 +13,7 @@ class OrderRefund extends Model
     protected $fillable = [
         'order_return_id',
         'amount',
-        'status',
+        'order_refund_status_id',
         'processed_at',
     ];
 

@@ -15,7 +15,7 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
-        'status',
+        'status_id',
         'total_amount',
     ];
 
@@ -27,5 +27,10 @@ class Order extends Model
     public function orderItems(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function status(): BelongsTo
+    {
+        return $this->belongsTo(OrderStatus::class);
     }
 }

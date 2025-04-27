@@ -170,9 +170,4 @@ Route::prefix('admin')
         Route::delete('orders/{order}', 'destroy')->name('admin.orders.destroy');
         Route::delete('orders/{order}/force', 'forceDelete')->name('admin.orders.forceDelete');
         Route::patch('orders/{order}/restore', 'restore')->name('admin.orders.restore');
-        Route::post('orders/{order}/status', 'updateStatus')->name('admin.orders.updateStatus');
-
-        Route::post('orders/{order}/items', 'addItem')->name('admin.orders.items.add');
-        Route::put('orders/{order}/items/{item}', 'updateItem')->name('admin.orders.items.update');
-        Route::delete('orders/{order}/items/{item}', 'removeItem')->name('admin.orders.items.remove');
     });

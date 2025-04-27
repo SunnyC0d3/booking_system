@@ -25,6 +25,21 @@ class OrderController extends Controller
         $this->order = $order;
     }
 
+    /**
+     * Retrieve paginated list of orders.
+     *
+     * @group Orders
+     * @authenticated
+     *
+     * @response 200 {
+     *   "message": "Orders retrieved successfully.",
+     *   "data": []
+     * }
+     *
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function index(Request $request)
     {
         try {
@@ -34,6 +49,21 @@ class OrderController extends Controller
         }
     }
 
+    /**
+     * Create a new order.
+     *
+     * @group Orders
+     * @authenticated
+     *
+     * @response 200 {
+     *     "message": "Order created successfully.",
+     *     "data": {}
+     * }
+     *
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function store(StoreOrderRequest $request)
     {
         try {
@@ -43,6 +73,21 @@ class OrderController extends Controller
         }
     }
 
+    /**
+     * Retrieve a specific order.
+     *
+     * @group Orders
+     * @authenticated
+     *
+     * @response 200 {
+     *     "message": "Order retrieved successfully.",
+     *     "data": {}
+     * }
+     *
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function show(Request $request, DB $order)
     {
         try {
@@ -52,6 +97,21 @@ class OrderController extends Controller
         }
     }
 
+    /**
+     * Update an existing order.
+     *
+     * @group Orders
+     * @authenticated
+     *
+     * @response 200 {
+     *     "message": "Order updated successfully.",
+     *     "data": {}
+     * }
+     *
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function update(UpdateOrderRequest $request, DB $order)
     {
         try {
@@ -61,6 +121,20 @@ class OrderController extends Controller
         }
     }
 
+    /**
+     * Soft delete a order.
+     *
+     * @group Orders
+     * @authenticated
+     *
+     * @response 200 {
+     *     "message": "Order deleted successfully."
+     * }
+     *
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function destroy(Request $request, DB $order)
     {
         try {
@@ -70,55 +144,47 @@ class OrderController extends Controller
         }
     }
 
+    /**
+     * Restore a soft deleted order.
+     *
+     * @group Orders
+     * @authenticated
+     *
+     * @response 200 {
+     *     "message": "Order deleted successfully."
+     * }
+     *
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function restore(Request $request, DB $order)
     {
         try {
-            return $this->order->delete($request, $order);
+            return $this->order->restore($request, $order);
         } catch (\Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
     }
 
+    /**
+     * Permanently delete a order.
+     *
+     * @group Orders
+     * @authenticated
+     *
+     * @response 200 {
+     *     "message": "Order deleted successfully."
+     * }
+     *
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
     public function forceDelete(Request $request, DB $order)
     {
         try {
-            return $this->order->delete($request, $order);
-        } catch (\Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode() ?: 500);
-        }
-    }
-
-    public function updateStatus(Request $request, Order $order)
-    {
-        try {
-            return $this->order->updateStatus($request, $order);
-        } catch (\Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode() ?: 500);
-        }
-    }
-
-    public function addItem(StoreOrderItemRequest $request, DB $order)
-    {
-        try {
-            return $this->order->addItem($request, $order);
-        } catch (\Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode() ?: 500);
-        }
-    }
-
-    public function updateItem(UpdateOrderItemRequest $request, DB $order, OrderItem $item)
-    {
-        try {
-            return $this->order->updateItem($request, $order, $item);
-        } catch (\Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode() ?: 500);
-        }
-    }
-
-    public function removeItem(Request $request, DB $order, OrderItem $item)
-    {
-        try {
-            return $this->order->removeItem($request, $order, $item);
+            return $this->order->forceDelete($request, $order);
         } catch (\Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\OrderStatus;
 use App\Models\User;
 use App\Models\Order;
 use Illuminate\Support\Carbon;
@@ -14,7 +15,7 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            'status'       => fake()->word(),
+            'status_id'    => OrderStatus::factory(),
             'total_amount' => fake()->randomNumber(),
             'created_at'   => Carbon::now(),
             'updated_at'   => Carbon::now(),

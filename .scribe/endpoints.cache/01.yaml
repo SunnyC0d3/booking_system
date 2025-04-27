@@ -146,7 +146,7 @@ endpoints:
         name: user_id
         description: 'The <code>id</code> of an existing record in the users table.'
         required: true
-        example: tempora
+        example: praesentium
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -156,7 +156,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: zqdwjqnghofweqtkwukmyv
+        example: facqggqacghpznrimols
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -166,7 +166,7 @@ endpoints:
         name: description
         description: 'Must not be greater than 1000 characters.'
         required: true
-        example: 'Aut voluptatum molestias voluptas quisquam vel ut.'
+        example: 'Sed ut totam possimus debitis excepturi temporibus sed.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -183,9 +183,9 @@ endpoints:
         nullable: true
         custom: []
     cleanBodyParameters:
-      user_id: tempora
-      name: zqdwjqnghofweqtkwukmyv
-      description: 'Aut voluptatum molestias voluptas quisquam vel ut.'
+      user_id: praesentium
+      name: facqggqacghpznrimols
+      description: 'Sed ut totam possimus debitis excepturi temporibus sed.'
     fileParameters:
       logo: null
     responses:
@@ -264,7 +264,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: ybnvfnjxdptsjw
+        example: fnpglrivh
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -274,7 +274,7 @@ endpoints:
         name: description
         description: 'Must not be greater than 1000 characters.'
         required: false
-        example: 'Voluptate et nemo inventore est nihil qui quo.'
+        example: 'Aspernatur officia dolorem fugit commodi optio magni.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -291,8 +291,8 @@ endpoints:
         nullable: true
         custom: []
     cleanBodyParameters:
-      name: ybnvfnjxdptsjw
-      description: 'Voluptate et nemo inventore est nihil qui quo.'
+      name: fnpglrivh
+      description: 'Aspernatur officia dolorem fugit commodi optio magni.'
     fileParameters:
       logo: null
     responses:

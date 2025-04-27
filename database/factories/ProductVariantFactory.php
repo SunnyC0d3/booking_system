@@ -16,7 +16,7 @@ class ProductVariantFactory extends Factory
     {
         return [
             'value'            => fake()->word(),
-            'additional_price' => fake()->randomFloat(),
+            'additional_price' => $this->faker->randomFloat(2, 0, 500),
             'quantity'         => fake()->randomNumber(),
             'created_at'       => Carbon::now(),
             'updated_at'       => Carbon::now(),

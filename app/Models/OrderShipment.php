@@ -14,7 +14,7 @@ class OrderShipment extends Model
         'order_id',
         'tracking_number',
         'carrier',
-        'status',
+        'order_shipment_status_id',
         'shipped_at',
         'delivered_at',
     ];

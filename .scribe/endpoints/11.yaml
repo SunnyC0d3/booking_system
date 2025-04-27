@@ -1,4 +1,4 @@
-name: Endpoints
+name: Orders
 description: ''
 endpoints:
   -
@@ -6,15 +6,16 @@ endpoints:
       - GET
     uri: api/admin/orders
     metadata:
-      groupName: Endpoints
+      groupName: Orders
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
+      title: 'Retrieve paginated list of orders.'
       description: ''
-      authenticated: false
+      authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -26,16 +27,29 @@ endpoints:
     fileParameters: []
     responses:
       -
-        status: 401
-        content: '{"message":"Unauthenticated."}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          vary: Origin
-        description: null
+        status: 200
+        content: |-
+          {
+            "message": "Orders retrieved successfully.",
+            "data": []
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+              "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: ''
         custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
     controller: null
     method: null
     route: null
@@ -45,15 +59,16 @@ endpoints:
       - POST
     uri: api/admin/orders
     metadata:
-      groupName: Endpoints
+      groupName: Orders
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
+      title: 'Create a new order.'
       description: ''
-      authenticated: false
+      authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -65,7 +80,7 @@ endpoints:
         name: user_id
         description: 'The <code>id</code> of an existing record in the users table.'
         required: true
-        example: qui
+        example: ad
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -96,7 +111,7 @@ endpoints:
         name: 'order_items[].product_id'
         description: 'The <code>id</code> of an existing record in the products table.'
         required: true
-        example: nam
+        example: et
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -116,7 +131,7 @@ endpoints:
         name: 'order_items[].quantity'
         description: 'Must be at least 1.'
         required: true
-        example: 75
+        example: 46
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -126,23 +141,45 @@ endpoints:
         name: 'order_items[].price'
         description: 'Must be at least 0.'
         required: true
-        example: 76
+        example: 0
         type: number
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      user_id: qui
+      user_id: ad
       order_items:
         -
-          product_id: nam
-          quantity: 75
-          price: 76
+          product_id: et
+          quantity: 46
+          price: 0
     fileParameters: []
-    responses: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Order created successfully.",
+              "data": {}
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+              "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: ''
+        custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
     controller: null
     method: null
     route: null
@@ -152,15 +189,16 @@ endpoints:
       - GET
     uri: 'api/admin/orders/{id}'
     metadata:
-      groupName: Endpoints
+      groupName: Orders
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
+      title: 'Retrieve a specific order.'
       description: ''
-      authenticated: false
+      authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -183,16 +221,29 @@ endpoints:
     fileParameters: []
     responses:
       -
-        status: 401
-        content: '{"message":"Unauthenticated."}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          vary: Origin
-        description: null
+        status: 200
+        content: |-
+          {
+              "message": "Order retrieved successfully.",
+              "data": {}
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+              "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: ''
         custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
     controller: null
     method: null
     route: null
@@ -202,15 +253,16 @@ endpoints:
       - POST
     uri: 'api/admin/orders/{id}'
     metadata:
-      groupName: Endpoints
+      groupName: Orders
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
+      title: 'Update an existing order.'
       description: ''
-      authenticated: false
+      authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -253,14 +305,14 @@ endpoints:
         name: total_amount
         description: 'Must be at least 0.'
         required: true
-        example: 13
+        example: 75
         type: number
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
-      items:
-        name: items
+      order_items:
+        name: order_items
         description: 'Must have at least 1 items.'
         required: true
         example:
@@ -270,18 +322,18 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         custom: []
-      'items[].product_id':
-        name: 'items[].product_id'
+      'order_items[].product_id':
+        name: 'order_items[].product_id'
         description: 'The <code>id</code> of an existing record in the products table.'
         required: true
-        example: enim
+        example: odit
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
-      'items[].product_variant_id':
-        name: 'items[].product_variant_id'
+      'order_items[].product_variant_id':
+        name: 'order_items[].product_variant_id'
         description: 'The <code>id</code> of an existing record in the product_variants table.'
         required: false
         example: null
@@ -290,37 +342,59 @@ endpoints:
         exampleWasSpecified: false
         nullable: true
         custom: []
-      'items[].quantity':
-        name: 'items[].quantity'
+      'order_items[].quantity':
+        name: 'order_items[].quantity'
         description: 'Must be at least 1.'
         required: true
-        example: 12
+        example: 3
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
-      'items[].price':
-        name: 'items[].price'
+      'order_items[].price':
+        name: 'order_items[].price'
         description: 'Must be at least 0.'
         required: true
-        example: 20
+        example: 81
         type: number
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      total_amount: 13
-      items:
+      total_amount: 75
+      order_items:
         -
-          product_id: enim
-          quantity: 12
-          price: 20
+          product_id: odit
+          quantity: 3
+          price: 81
     fileParameters: []
-    responses: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Order updated successfully.",
+              "data": {}
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+              "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: ''
+        custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
     controller: null
     method: null
     route: null
@@ -330,15 +404,16 @@ endpoints:
       - DELETE
     uri: 'api/admin/orders/{id}'
     metadata:
-      groupName: Endpoints
+      groupName: Orders
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
+      title: 'Soft delete a order.'
       description: ''
-      authenticated: false
+      authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -359,9 +434,30 @@ endpoints:
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
-    responses: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Order deleted successfully."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+              "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: ''
+        custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
     controller: null
     method: null
     route: null
@@ -371,15 +467,16 @@ endpoints:
       - DELETE
     uri: 'api/admin/orders/{order_id}/force'
     metadata:
-      groupName: Endpoints
+      groupName: Orders
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
+      title: 'Permanently delete a order.'
       description: ''
-      authenticated: false
+      authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -400,9 +497,30 @@ endpoints:
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
-    responses: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Order deleted successfully."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+              "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: ''
+        custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
     controller: null
     method: null
     route: null
@@ -412,15 +530,16 @@ endpoints:
       - PATCH
     uri: 'api/admin/orders/{order_id}/restore'
     metadata:
-      groupName: Endpoints
+      groupName: Orders
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
+      title: 'Restore a soft deleted order.'
       description: ''
-      authenticated: false
+      authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -441,250 +560,30 @@ endpoints:
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
-    responses: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Order deleted successfully."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+              "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: ''
+        custom: []
     responseFields: []
-    auth: []
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: 'api/admin/orders/{order}/status'
-    metadata:
-      groupName: Endpoints
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: ''
-      description: ''
-      authenticated: false
-      custom: []
-    headers:
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      order:
-        name: order
-        description: 'The order.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      order: 1
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses: []
-    responseFields: []
-    auth: []
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: 'api/admin/orders/{order_id}/items'
-    metadata:
-      groupName: Endpoints
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: ''
-      description: ''
-      authenticated: false
-      custom: []
-    headers:
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      order_id:
-        name: order_id
-        description: 'The ID of the order.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      order_id: 1
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      product_id:
-        name: product_id
-        description: 'The <code>id</code> of an existing record in the products table.'
-        required: true
-        example: 9
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      quantity:
-        name: quantity
-        description: 'Must be at least 1.'
-        required: true
-        example: 67
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      price:
-        name: price
-        description: 'Must be at least 0.'
-        required: true
-        example: 35
-        type: number
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      product_id: 9
-      quantity: 67
-      price: 35
-    fileParameters: []
-    responses: []
-    responseFields: []
-    auth: []
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - PUT
-    uri: 'api/admin/orders/{order_id}/items/{id}'
-    metadata:
-      groupName: Endpoints
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: ''
-      description: ''
-      authenticated: false
-      custom: []
-    headers:
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      order_id:
-        name: order_id
-        description: 'The ID of the order.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      id:
-        name: id
-        description: 'The ID of the item.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      order_id: 1
-      id: 1
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      quantity:
-        name: quantity
-        description: 'Must be at least 1.'
-        required: false
-        example: 21
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      price:
-        name: price
-        description: 'Must be at least 0.'
-        required: false
-        example: 77
-        type: number
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      quantity: 21
-      price: 77
-    fileParameters: []
-    responses: []
-    responseFields: []
-    auth: []
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - DELETE
-    uri: 'api/admin/orders/{order_id}/items/{item_id}'
-    metadata:
-      groupName: Endpoints
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: ''
-      description: ''
-      authenticated: false
-      custom: []
-    headers:
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      order_id:
-        name: order_id
-        description: 'The ID of the order.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      item_id:
-        name: item_id
-        description: 'The ID of the item.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      order_id: 1
-      item_id: 1
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses: []
-    responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
     controller: null
     method: null
     route: null

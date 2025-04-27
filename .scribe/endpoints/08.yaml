@@ -83,14 +83,14 @@ endpoints:
         name: name
         description: 'The name of the product status.'
         required: true
-        example: suscipit
+        example: aperiam
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      name: suscipit
+      name: aperiam
     fileParameters: []
     responses:
       -
@@ -222,14 +222,14 @@ endpoints:
         name: name
         description: 'The updated name of the product status.'
         required: true
-        example: doloribus
+        example: at
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      name: doloribus
+      name: at
     fileParameters: []
     responses:
       -

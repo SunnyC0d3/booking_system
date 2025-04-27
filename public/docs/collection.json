@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "E-Commerce API Documentation",
-        "_postman_id": "020bbbee-cb03-4472-b9c1-ca3403cae343",
+        "_postman_id": "34b1060e-56c1-4b07-93b4-93807031fb24",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -180,13 +180,13 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "quisquam",
+                                    "value": "cumque",
                                     "description": "The ID of the verify."
                                 },
                                 {
                                     "id": "hash",
                                     "key": "hash",
-                                    "value": "error",
+                                    "value": "inventore",
                                     "description": ""
                                 }
                             ]
@@ -267,11 +267,11 @@
             ]
         },
         {
-            "name": "Endpoints",
+            "name": "Orders",
             "description": "",
             "item": [
                 {
-                    "name": "GET api\/admin\/orders",
+                    "name": "Retrieve paginated list of orders.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -291,35 +291,25 @@
                             }
                         ],
                         "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
                     "response": [
                         {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "vary",
-                                    "value": "Origin"
-                                }
-                            ],
-                            "code": 401,
-                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Orders retrieved successfully.\",\n  \"data\": []\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "POST api\/admin\/orders",
+                    "name": "Create a new order.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -340,17 +330,27 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"user_id\":\"qui\",\"order_items\":[{\"product_id\":\"nam\",\"quantity\":75,\"price\":76}]}"
+                            "raw": "{\"user_id\":\"ad\",\"order_items\":[{\"product_id\":\"et\",\"quantity\":46,\"price\":0}]}"
                         },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Order created successfully.\",\n    \"data\": {}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "GET api\/admin\/orders\/{id}",
+                    "name": "Retrieve a specific order.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -378,35 +378,25 @@
                             }
                         ],
                         "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
                     "response": [
                         {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "vary",
-                                    "value": "Origin"
-                                }
-                            ],
-                            "code": 401,
-                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Order retrieved successfully.\",\n    \"data\": {}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "POST api\/admin\/orders\/{id}",
+                    "name": "Update an existing order.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -435,17 +425,27 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"total_amount\":13,\"items\":[{\"product_id\":\"enim\",\"quantity\":12,\"price\":20}]}"
+                            "raw": "{\"total_amount\":75,\"order_items\":[{\"product_id\":\"odit\",\"quantity\":3,\"price\":81}]}"
                         },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Order updated successfully.\",\n    \"data\": {}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "DELETE api\/admin\/orders\/{id}",
+                    "name": "Soft delete a order.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -473,15 +473,25 @@
                             }
                         ],
                         "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Order deleted successfully.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "DELETE api\/admin\/orders\/{order_id}\/force",
+                    "name": "Permanently delete a order.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -509,15 +519,25 @@
                             }
                         ],
                         "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Order deleted successfully.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
                 },
                 {
-                    "name": "PATCH api\/admin\/orders\/{order_id}\/restore",
+                    "name": "Restore a soft deleted order.",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -545,174 +565,22 @@
                             }
                         ],
                         "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
-                    "response": []
-                },
-                {
-                    "name": "POST api\/admin\/orders\/{order}\/status",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/orders\/:order\/status",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/orders\/:order\/status",
-                            "variable": [
-                                {
-                                    "id": "order",
-                                    "key": "order",
-                                    "value": "1",
-                                    "description": "The order."
-                                }
-                            ]
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Order deleted successfully.\"\n}",
+                            "name": ""
                         },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
                         }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "POST api\/admin\/orders\/{order_id}\/items",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/orders\/:order_id\/items",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/orders\/:order_id\/items",
-                            "variable": [
-                                {
-                                    "id": "order_id",
-                                    "key": "order_id",
-                                    "value": "1",
-                                    "description": "The ID of the order."
-                                }
-                            ]
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"product_id\":9,\"quantity\":67,\"price\":35}"
-                        },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "PUT api\/admin\/orders\/{order_id}\/items\/{id}",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/orders\/:order_id\/items\/:id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/orders\/:order_id\/items\/:id",
-                            "variable": [
-                                {
-                                    "id": "order_id",
-                                    "key": "order_id",
-                                    "value": "1",
-                                    "description": "The ID of the order."
-                                },
-                                {
-                                    "id": "id",
-                                    "key": "id",
-                                    "value": "1",
-                                    "description": "The ID of the item."
-                                }
-                            ]
-                        },
-                        "method": "PUT",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"quantity\":21,\"price\":77}"
-                        },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "DELETE api\/admin\/orders\/{order_id}\/items\/{item_id}",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/orders\/:order_id\/items\/:item_id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/orders\/:order_id\/items\/:item_id",
-                            "variable": [
-                                {
-                                    "id": "order_id",
-                                    "key": "order_id",
-                                    "value": "1",
-                                    "description": "The ID of the order."
-                                },
-                                {
-                                    "id": "item_id",
-                                    "key": "item_id",
-                                    "value": "1",
-                                    "description": "The ID of the item."
-                                }
-                            ]
-                        },
-                        "method": "DELETE",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
+                    ]
                 }
             ]
         },
@@ -1470,7 +1338,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"et\",\"parent_id\":13}"
+                            "raw": "{\"name\":\"sed\",\"parent_id\":4}"
                         },
                         "description": ""
                     },
@@ -1565,7 +1433,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"excepturi\",\"parent_id\":5}"
+                            "raw": "{\"name\":\"voluptates\",\"parent_id\":17}"
                         },
                         "description": ""
                     },
@@ -1702,7 +1570,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"suscipit\"}"
+                            "raw": "{\"name\":\"aperiam\"}"
                         },
                         "description": ""
                     },
@@ -1797,7 +1665,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"doloribus\"}"
+                            "raw": "{\"name\":\"at\"}"
                         },
                         "description": ""
                     },
@@ -1928,7 +1796,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"id\"}"
+                            "raw": "{\"name\":\"voluptas\"}"
                         },
                         "description": ""
                     },
@@ -2023,7 +1891,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"id\"}"
+                            "raw": "{\"name\":\"est\"}"
                         },
                         "description": ""
                     },
@@ -2116,7 +1984,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"ckxae\",\"price\":\"69.96,49785844.29)\",\"category\":\"4,\",\"quantity\":10,\"created_at\":\"4124-43-93\",\"updated_at\":\"0970-40-31,2014-28-80\",\"search\":\"nfjzdvydtbwgtimcp\",\"include\":\"e,em,t\"},\"page\":18,\"per_page\":10,\"sort\":\"Sm,eX,Kr,-Lp,b2\"}"
+                            "raw": "{\"filter\":{\"name\":\"kmpsvs\",\"price\":\"46630.24,96.91)))))\",\"category\":\"7\",\"quantity\":5,\"created_at\":\"4949-24-80,5126-17-07\",\"updated_at\":\"5568-29-70\",\"search\":\"swfn\",\"include\":\"kgbxi,bbht,onxrqzaywt,tgfvv,jyvxv\"},\"page\":26,\"per_page\":25,\"sort\":\"-_1ZUc,-qfH_Ko,i6u01p\"}"
                         },
                         "description": ""
                     },
@@ -2206,61 +2074,61 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "jxumnut",
+                                    "value": "jwmzdge",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Sint nesciunt amet quia rerum.",
+                                    "value": "Ex unde maxime in nihil dolor voluptas consequatur.",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "price",
-                                    "value": "16",
+                                    "value": "66",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_category_id",
-                                    "value": "qui",
+                                    "value": "fugiat",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_categories table."
                                 },
                                 {
                                     "key": "product_status_id",
-                                    "value": "dolores",
+                                    "value": "qui",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_statuses table."
                                 },
                                 {
                                     "key": "quantity",
-                                    "value": "40",
+                                    "value": "53",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_variants[0][product_attribute_id]",
-                                    "value": "enim",
+                                    "value": "est",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][value]",
-                                    "value": "gzfecdxyntmzrmt",
+                                    "value": "ulehmjdbfyyvfes",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][additional_price]",
-                                    "value": "9",
+                                    "value": "22",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][quantity]",
-                                    "value": "54",
+                                    "value": "18",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -2321,61 +2189,61 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "hgyggqnirifagetvsyyrcksyx",
+                                    "value": "wahtdomubytjplw",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Doloribus minus nihil aperiam sed perferendis facere ea voluptatem.",
+                                    "value": "Qui suscipit dolores autem sunt.",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "price",
-                                    "value": "66",
+                                    "value": "53",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_category_id",
-                                    "value": "dignissimos",
+                                    "value": "mollitia",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_categories table."
                                 },
                                 {
                                     "key": "product_status_id",
-                                    "value": "corrupti",
+                                    "value": "omnis",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_statuses table."
                                 },
                                 {
                                     "key": "quantity",
-                                    "value": "23",
+                                    "value": "74",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_variants[0][product_attribute_id]",
-                                    "value": "odio",
+                                    "value": "molestiae",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][value]",
-                                    "value": "msgjulidhiloml",
+                                    "value": "zrup",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][additional_price]",
-                                    "value": "79",
+                                    "value": "85",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][quantity]",
-                                    "value": "56",
+                                    "value": "35",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -2932,7 +2800,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"dftbotxrqrllgyf\",\"email\":\"hgoldner@example.net\",\"role\":\"894,6,\",\"created_at\":\"1022-48-94\",\"updated_at\":\"8882-86-03,0168-70-91\",\"search\":\"bmdn\",\"include\":\"zzei,lw\"},\"page\":9,\"per_page\":2,\"sort\":\"boPQ,-o,-V\"}"
+                            "raw": "{\"filter\":{\"name\":\"chgsokkjpsgtxeoiaple\",\"email\":\"hintz.fiona@example.com\",\"role\":\"414,3,\",\"created_at\":\"3749-50-41,9953-65-92\",\"updated_at\":\"9125-87-47,1908-21-05\",\"search\":\"e\",\"include\":\"tcq,epgql,nwlcw,zmbd)\"},\"page\":19,\"per_page\":21,\"sort\":\"Vvf,-rp5\"}"
                         },
                         "description": ""
                     },
@@ -3019,7 +2887,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"zvzgmklzexcpawauwou\",\"email\":\"estelle55@example.net\",\"password\":\"_0\\\"&U$!\",\"role_id\":\"quibusdam\",\"address\":{\"address_line1\":\"pzjhzajphjyt\",\"city\":\"o\",\"country\":\"dzimhyisncovnggeasrfovfeb\",\"postal_code\":\"apghycrvmwfj\",\"address_line2\":\"otfajszfmaykzl\",\"state\":\"uaphbbscmgpkh\"}}"
+                            "raw": "{\"name\":\"fgoifspgkpnsesleybjrru\",\"email\":\"kaia96@example.net\",\"password\":\"7rM$UT?p:0%irP.U\",\"role_id\":\"tempore\",\"address\":{\"address_line1\":\"rohkpbdxfruicdqgawfwjdkl\",\"city\":\"gdgcaijiqjijyqegunz\",\"country\":\"kjmfwybztufvdk\",\"postal_code\":\"lntmizquidci\",\"address_line2\":\"mjxvvlehfe\",\"state\":\"jbffwjhouwhah\"}}"
                         },
                         "description": ""
                     },
@@ -3068,7 +2936,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"jgbvlkhjk\",\"email\":\"tmacejkovic@example.org\",\"password\":\"jzQ\\\\ex&Fl1)G=89eT3,\",\"address\":{\"address_line1\":\"hetwj\",\"city\":\"buh\",\"country\":\"vg\",\"postal_code\":\"gvgwgjpaar\",\"address_line2\":\"bjhgseophce\",\"state\":\"dirkjbflvktorh\"}}"
+                            "raw": "{\"name\":\"zebayjuw\",\"email\":\"perry.ullrich@example.net\",\"password\":\"uC%j=S]Qb\\\"NPBD%q\",\"address\":{\"address_line1\":\"et\",\"city\":\"ayzvssznhudndeewta\",\"country\":\"xebfklibkmp\",\"postal_code\":\"uhhtdoespisbavo\",\"address_line2\":\"jphg\",\"state\":\"pjvxbahikvemwapkpzohh\"}}"
                         },
                         "description": ""
                     },
@@ -3248,19 +3116,19 @@
                             "formdata": [
                                 {
                                     "key": "user_id",
-                                    "value": "tempora",
+                                    "value": "praesentium",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the users table."
                                 },
                                 {
                                     "key": "name",
-                                    "value": "zqdwjqnghofweqtkwukmyv",
+                                    "value": "facqggqacghpznrimols",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Aut voluptatum molestias voluptas quisquam vel ut.",
+                                    "value": "Sed ut totam possimus debitis excepturi temporibus sed.",
                                     "type": "text",
                                     "description": "Must not be greater than 1000 characters."
                                 },
@@ -3321,13 +3189,13 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "ybnvfnjxdptsjw",
+                                    "value": "fnpglrivh",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Voluptate et nemo inventore est nihil qui quo.",
+                                    "value": "Aspernatur officia dolorem fugit commodi optio magni.",
                                     "type": "text",
                                     "description": "Must not be greater than 1000 characters."
                                 },

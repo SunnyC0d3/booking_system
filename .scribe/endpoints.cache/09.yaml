@@ -85,14 +85,14 @@ endpoints:
         name: name
         description: 'The name of the product tag.'
         required: true
-        example: id
+        example: voluptas
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      name: id
+      name: voluptas
     fileParameters: []
     responses:
       -
@@ -224,14 +224,14 @@ endpoints:
         name: name
         description: 'The updated name of the product tag.'
         required: true
-        example: id
+        example: est
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      name: id
+      name: est
     fileParameters: []
     responses:
       -
