@@ -22,7 +22,27 @@ endpoints:
     cleanUrlParameters: []
     queryParameters: []
     cleanQueryParameters: []
-    bodyParameters: []
+    bodyParameters:
+      user_id:
+        name: user_id
+        description: 'The <code>id</code> of an existing record in the users table.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      status_id:
+        name: status_id
+        description: 'The <code>id</code> of an existing record in the order_statuses table.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
     cleanBodyParameters: []
     fileParameters: []
     responses:
@@ -80,7 +100,7 @@ endpoints:
         name: user_id
         description: 'The <code>id</code> of an existing record in the users table.'
         required: true
-        example: ad
+        example: ratione
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -111,7 +131,7 @@ endpoints:
         name: 'order_items[].product_id'
         description: 'The <code>id</code> of an existing record in the products table.'
         required: true
-        example: et
+        example: qui
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -131,7 +151,7 @@ endpoints:
         name: 'order_items[].quantity'
         description: 'Must be at least 1.'
         required: true
-        example: 46
+        example: 75
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -141,19 +161,19 @@ endpoints:
         name: 'order_items[].price'
         description: 'Must be at least 0.'
         required: true
-        example: 0
+        example: 38
         type: number
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      user_id: ad
+      user_id: ratione
       order_items:
         -
-          product_id: et
-          quantity: 46
-          price: 0
+          product_id: qui
+          quantity: 75
+          price: 38
     fileParameters: []
     responses:
       -
@@ -301,16 +321,6 @@ endpoints:
         exampleWasSpecified: false
         nullable: true
         custom: []
-      total_amount:
-        name: total_amount
-        description: 'Must be at least 0.'
-        required: true
-        example: 75
-        type: number
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
       order_items:
         name: order_items
         description: 'Must have at least 1 items.'
@@ -326,7 +336,7 @@ endpoints:
         name: 'order_items[].product_id'
         description: 'The <code>id</code> of an existing record in the products table.'
         required: true
-        example: odit
+        example: sit
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -346,7 +356,7 @@ endpoints:
         name: 'order_items[].quantity'
         description: 'Must be at least 1.'
         required: true
-        example: 3
+        example: 67
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -356,19 +366,18 @@ endpoints:
         name: 'order_items[].price'
         description: 'Must be at least 0.'
         required: true
-        example: 81
+        example: 87
         type: number
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      total_amount: 75
       order_items:
         -
-          product_id: odit
-          quantity: 3
-          price: 81
+          product_id: sit
+          quantity: 67
+          price: 87
     fileParameters: []
     responses:
       -
@@ -439,7 +448,7 @@ endpoints:
         status: 200
         content: |-
           {
-              "message": "Order deleted successfully."
+              "message": "Order deleted (soft)."
           }
         headers: []
         description: ''
@@ -465,7 +474,7 @@ endpoints:
   -
     httpMethods:
       - DELETE
-    uri: 'api/admin/orders/{order_id}/force'
+    uri: 'api/admin/orders/{id}/force-delete'
     metadata:
       groupName: Orders
       groupDescription: ''
@@ -480,8 +489,8 @@ endpoints:
       Content-Type: application/json
       Accept: application/json
     urlParameters:
-      order_id:
-        name: order_id
+      id:
+        name: id
         description: 'The ID of the order.'
         required: true
         example: 1
@@ -491,7 +500,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      order_id: 1
+      id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -502,7 +511,7 @@ endpoints:
         status: 200
         content: |-
           {
-              "message": "Order deleted successfully."
+              "message": "Order permanently deleted."
           }
         headers: []
         description: ''
@@ -528,7 +537,7 @@ endpoints:
   -
     httpMethods:
       - PATCH
-    uri: 'api/admin/orders/{order_id}/restore'
+    uri: 'api/admin/orders/{id}/restore'
     metadata:
       groupName: Orders
       groupDescription: ''
@@ -543,8 +552,8 @@ endpoints:
       Content-Type: application/json
       Accept: application/json
     urlParameters:
-      order_id:
-        name: order_id
+      id:
+        name: id
         description: 'The ID of the order.'
         required: true
         example: 1
@@ -554,7 +563,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      order_id: 1
+      id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -565,7 +574,7 @@ endpoints:
         status: 200
         content: |-
           {
-              "message": "Order deleted successfully."
+              "message": "Order restored successfully."
           }
         headers: []
         description: ''

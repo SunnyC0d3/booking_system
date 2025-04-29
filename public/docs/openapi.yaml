@@ -240,7 +240,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the verify.'
-        example: cumque
+        example: molestiae
         required: true
         schema:
           type: string
@@ -248,7 +248,7 @@ paths:
         in: path
         name: hash
         description: ''
-        example: inventore
+        example: natus
         required: true
         schema:
           type: string
@@ -331,6 +331,23 @@ paths:
                     example: 'You do not have the required permissions.'
       tags:
         - Orders
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the users table.'
+                  example: null
+                  nullable: true
+                status_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the order_statuses table.'
+                  example: null
+                  nullable: true
     post:
       summary: 'Create a new order.'
       operationId: createANewOrder
@@ -377,7 +394,7 @@ paths:
                 user_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the users table.'
-                  example: ad
+                  example: ratione
                   nullable: false
                 status_id:
                   type: string
@@ -395,7 +412,7 @@ paths:
                       product_id:
                         type: string
                         description: 'The <code>id</code> of an existing record in the products table.'
-                        example: et
+                        example: qui
                         nullable: false
                       product_variant_id:
                         type: string
@@ -405,12 +422,12 @@ paths:
                       quantity:
                         type: integer
                         description: 'Must be at least 1.'
-                        example: 46
+                        example: 75
                         nullable: false
                       price:
                         type: number
                         description: 'Must be at least 0.'
-                        example: 0
+                        example: 38
                         nullable: false
                     required:
                       - product_id
@@ -509,11 +526,6 @@ paths:
                   description: 'The <code>id</code> of an existing record in the order_statuses table.'
                   example: null
                   nullable: true
-                total_amount:
-                  type: number
-                  description: 'Must be at least 0.'
-                  example: 75
-                  nullable: false
                 order_items:
                   type: array
                   description: 'Must have at least 1 items.'
@@ -525,7 +537,7 @@ paths:
                       product_id:
                         type: string
                         description: 'The <code>id</code> of an existing record in the products table.'
-                        example: odit
+                        example: sit
                         nullable: false
                       product_variant_id:
                         type: string
@@ -535,19 +547,18 @@ paths:
                       quantity:
                         type: integer
                         description: 'Must be at least 1.'
-                        example: 3
+                        example: 67
                         nullable: false
                       price:
                         type: number
                         description: 'Must be at least 0.'
-                        example: 81
+                        example: 87
                         nullable: false
                     required:
                       - product_id
                       - quantity
                       - price
               required:
-                - total_amount
                 - order_items
     delete:
       summary: 'Soft delete a order.'
@@ -562,11 +573,11 @@ paths:
               schema:
                 type: object
                 example:
-                  message: 'Order deleted successfully.'
+                  message: 'Order deleted (soft).'
                 properties:
                   message:
                     type: string
-                    example: 'Order deleted successfully.'
+                    example: 'Order deleted (soft).'
         403:
           description: ''
           content:
@@ -590,7 +601,7 @@ paths:
         required: true
         schema:
           type: integer
-  '/api/admin/orders/{order_id}/force':
+  '/api/admin/orders/{id}/force-delete':
     delete:
       summary: 'Permanently delete a order.'
       operationId: permanentlyDeleteAOrder
@@ -604,11 +615,11 @@ paths:
               schema:
                 type: object
                 example:
-                  message: 'Order deleted successfully.'
+                  message: 'Order permanently deleted.'
                 properties:
                   message:
                     type: string
-                    example: 'Order deleted successfully.'
+                    example: 'Order permanently deleted.'
         403:
           description: ''
           content:
@@ -626,13 +637,13 @@ paths:
     parameters:
       -
         in: path
-        name: order_id
+        name: id
         description: 'The ID of the order.'
         example: 1
         required: true
         schema:
           type: integer
-  '/api/admin/orders/{order_id}/restore':
+  '/api/admin/orders/{id}/restore':
     patch:
       summary: 'Restore a soft deleted order.'
       operationId: restoreASoftDeletedOrder
@@ -646,11 +657,11 @@ paths:
               schema:
                 type: object
                 example:
-                  message: 'Order deleted successfully.'
+                  message: 'Order restored successfully.'
                 properties:
                   message:
                     type: string
-                    example: 'Order deleted successfully.'
+                    example: 'Order restored successfully.'
         403:
           description: ''
           content:
@@ -668,7 +679,7 @@ paths:
     parameters:
       -
         in: path
-        name: order_id
+        name: id
         description: 'The ID of the order.'
         example: 1
         required: true
@@ -1504,12 +1515,12 @@ paths:
                 name:
                   type: string
                   description: 'The name of the category.'
-                  example: sed
+                  example: tempora
                   nullable: false
                 parent_id:
                   type: integer
                   description: 'optional The ID of the parent category.'
-                  example: 4
+                  example: 1
                   nullable: true
               required:
                 - name
@@ -1620,12 +1631,12 @@ paths:
                 name:
                   type: string
                   description: 'The name of the category.'
-                  example: voluptates
+                  example: ea
                   nullable: false
                 parent_id:
                   type: integer
                   description: 'optional The ID of the parent category.'
-                  example: 17
+                  example: 5
                   nullable: true
               required:
                 - name
@@ -1794,7 +1805,7 @@ paths:
                 name:
                   type: string
                   description: 'The name of the product status.'
-                  example: aperiam
+                  example: est
                   nullable: false
               required:
                 - name
@@ -1897,7 +1908,7 @@ paths:
                 name:
                   type: string
                   description: 'The updated name of the product status.'
-                  example: at
+                  example: iste
                   nullable: false
               required:
                 - name
@@ -2054,7 +2065,7 @@ paths:
                 name:
                   type: string
                   description: 'The name of the product tag.'
-                  example: voluptas
+                  example: itaque
                   nullable: false
               required:
                 - name
@@ -2157,7 +2168,7 @@ paths:
                 name:
                   type: string
                   description: 'The updated name of the product tag.'
-                  example: est
+                  example: mollitia
                   nullable: false
               required:
                 - name
@@ -2255,57 +2266,57 @@ paths:
                     name:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: kmpsvs
+                      example: ndzdxmouzejnkhkpuujymgjkl
                       nullable: false
                     price:
                       type: string
                       description: 'Must match the regex /^\d+(\.\d{1,2})?(,\d+(\.\d{1,2})?)*$/.'
-                      example: '46630.24,96.91)))))'
+                      example: '57071,246.74))'
                       nullable: false
                     category:
                       type: string
                       description: 'Must match the regex /^(\d,?)+$/.'
-                      example: '7'
+                      example: '37,1,'
                       nullable: false
                     quantity:
                       type: integer
                       description: 'Must be at least 0.'
-                      example: 5
+                      example: 88
                       nullable: false
                     created_at:
                       type: string
                       description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
-                      example: '4949-24-80,5126-17-07'
+                      example: '9860-60-50'
                       nullable: false
                     updated_at:
                       type: string
                       description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
-                      example: '5568-29-70'
+                      example: '6638-16-32,3663-82-30'
                       nullable: false
                     search:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: swfn
+                      example: ewrrzgzebjmpparnshytl
                       nullable: false
                     include:
                       type: string
                       description: 'Must match the regex /^(\w+(,\w+)*)?$/.'
-                      example: 'kgbxi,bbht,onxrqzaywt,tgfvv,jyvxv'
+                      example: 'clujlhdx,dzwaynbqh)'
                       nullable: false
                 page:
                   type: integer
                   description: 'Must be at least 1.'
-                  example: 26
+                  example: 84
                   nullable: false
                 per_page:
                   type: integer
                   description: 'Must be at least 1. Must not be greater than 100.'
-                  example: 25
+                  example: 7
                   nullable: false
                 sort:
                   type: string
                   description: 'Must match the regex /^(-?[a-zA-Z0-9_]+)(,-?[a-zA-Z0-9_]+)*$/.'
-                  example: '-_1ZUc,-qfH_Ko,i6u01p'
+                  example: '4,R,-X,-E,-l,-r,-r'
                   nullable: false
     post:
       summary: 'Create a new product.'
@@ -2353,32 +2364,32 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: jwmzdge
+                  example: tfavtotrsvnblcqp
                   nullable: false
                 description:
                   type: string
                   description: ''
-                  example: 'Ex unde maxime in nihil dolor voluptas consequatur.'
+                  example: 'Cumque pariatur laborum mollitia amet inventore.'
                   nullable: true
                 price:
                   type: number
                   description: 'Must be at least 0.'
-                  example: 66
+                  example: 32
                   nullable: false
                 product_category_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the product_categories table.'
-                  example: fugiat
+                  example: rerum
                   nullable: false
                 product_status_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the product_statuses table.'
-                  example: qui
+                  example: ipsum
                   nullable: false
                 quantity:
                   type: integer
                   description: 'Must be at least 0.'
-                  example: 53
+                  example: 27
                   nullable: false
                 product_tags:
                   type: array
@@ -2396,22 +2407,22 @@ paths:
                       product_attribute_id:
                         type: string
                         description: 'The <code>id</code> of an existing record in the product_attributes table.'
-                        example: est
+                        example: iure
                         nullable: false
                       value:
                         type: string
                         description: 'This field is required when <code>product_variants</code> is present. Must not be greater than 255 characters.'
-                        example: ulehmjdbfyyvfes
+                        example: b
                         nullable: false
                       additional_price:
                         type: number
                         description: 'Must be at least 0.'
-                        example: 22
+                        example: 2
                         nullable: true
                       quantity:
                         type: integer
                         description: 'Must be at least 0.'
-                        example: 18
+                        example: 58
                         nullable: false
                     required:
                       - product_attribute_id
@@ -2522,32 +2533,32 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: wahtdomubytjplw
+                  example: q
                   nullable: false
                 description:
                   type: string
                   description: ''
-                  example: 'Qui suscipit dolores autem sunt.'
+                  example: 'Consequuntur rerum architecto voluptatem molestiae.'
                   nullable: true
                 price:
                   type: number
                   description: 'Must be at least 0.'
-                  example: 53
+                  example: 31
                   nullable: false
                 product_category_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the product_categories table.'
-                  example: mollitia
+                  example: consectetur
                   nullable: false
                 product_status_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the product_statuses table.'
-                  example: omnis
+                  example: ut
                   nullable: false
                 quantity:
                   type: integer
                   description: 'Must be at least 0.'
-                  example: 74
+                  example: 43
                   nullable: false
                 product_tags:
                   type: array
@@ -2565,22 +2576,22 @@ paths:
                       product_attribute_id:
                         type: string
                         description: 'The <code>id</code> of an existing record in the product_attributes table.'
-                        example: molestiae
+                        example: dolorem
                         nullable: false
                       value:
                         type: string
                         description: 'This field is required when <code>product_variants</code> is present. Must not be greater than 255 characters.'
-                        example: zrup
+                        example: f
                         nullable: false
                       additional_price:
                         type: number
                         description: 'Must be at least 0.'
-                        example: 85
+                        example: 44
                         nullable: true
                       quantity:
                         type: integer
                         description: 'Must be at least 0.'
-                        example: 35
+                        example: 14
                         nullable: false
                     required:
                       - product_attribute_id
@@ -3166,52 +3177,52 @@ paths:
                     name:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: chgsokkjpsgtxeoiaple
+                      example: wooegyydzknzbmhpklpdx
                       nullable: false
                     email:
                       type: string
                       description: 'Must be a valid email address. Must not be greater than 255 characters.'
-                      example: hintz.fiona@example.com
+                      example: kilback.malika@example.org
                       nullable: false
                     role:
                       type: string
                       description: 'Must match the regex /^(\d,?)+$/.'
-                      example: '414,3,'
+                      example: '4'
                       nullable: false
                     created_at:
                       type: string
                       description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
-                      example: '3749-50-41,9953-65-92'
+                      example: '6521-44-30,7354-51-24'
                       nullable: false
                     updated_at:
                       type: string
                       description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
-                      example: '9125-87-47,1908-21-05'
+                      example: '3513-84-93,6621-03-65'
                       nullable: false
                     search:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: e
+                      example: ixe
                       nullable: false
                     include:
                       type: string
                       description: 'Must match the regex /^(\w+(,\w+)*)?$/.'
-                      example: 'tcq,epgql,nwlcw,zmbd)'
+                      example: 'puh,ozdd,em)'
                       nullable: false
                 page:
                   type: integer
                   description: 'Must be at least 1.'
-                  example: 19
+                  example: 56
                   nullable: false
                 per_page:
                   type: integer
                   description: 'Must be at least 1. Must not be greater than 100.'
-                  example: 21
+                  example: 5
                   nullable: false
                 sort:
                   type: string
                   description: 'Must match the regex /^(-?[a-zA-Z0-9_]+)(,-?[a-zA-Z0-9_]+)*$/.'
-                  example: 'Vvf,-rp5'
+                  example: 'gr,CV,mg,-I3'
                   nullable: false
     post:
       summary: 'Create a new user.'
@@ -3226,12 +3237,12 @@ paths:
               schema:
                 type: object
                 example:
-                  message: 'Users created successfully!'
+                  message: 'User created successfully!'
                   data: {  }
                 properties:
                   message:
                     type: string
-                    example: 'Users created successfully!'
+                    example: 'User created successfully!'
                   data:
                     type: object
                     properties: {  }
@@ -3259,22 +3270,22 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: fgoifspgkpnsesleybjrru
+                  example: mxdqktetvofrwxajmhbgr
                   nullable: false
                 email:
                   type: string
                   description: 'Must be a valid email address.'
-                  example: kaia96@example.net
+                  example: clarabelle48@example.net
                   nullable: false
                 password:
                   type: string
                   description: 'Must be at least 8 characters.'
-                  example: '7rM$UT?p:0%irP.U'
+                  example: '{O9wXVWT]&L>z8/U'
                   nullable: false
                 role_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the roles table.'
-                  example: tempore
+                  example: neque
                   nullable: false
                 address:
                   type: object
@@ -3285,32 +3296,32 @@ paths:
                     address_line1:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: rohkpbdxfruicdqgawfwjdkl
+                      example: shiqhzvlxrqfdhnuoetnt
                       nullable: false
                     city:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: gdgcaijiqjijyqegunz
+                      example: gbdpjigmb
                       nullable: false
                     country:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: kjmfwybztufvdk
+                      example: osepkgxdcmbtqlkrnsr
                       nullable: false
                     postal_code:
                       type: string
                       description: 'Must not be greater than 20 characters.'
-                      example: lntmizquidci
+                      example: utlpazdyarjqsw
                       nullable: false
                     address_line2:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: mjxvvlehfe
+                      example: thqaarazpxg
                       nullable: true
                     state:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: jbffwjhouwhah
+                      example: ggkzmimkexygc
                       nullable: true
               required:
                 - name
@@ -3331,12 +3342,12 @@ paths:
               schema:
                 type: object
                 example:
-                  message: 'Users details retrieved.'
+                  message: 'User details retrieved.'
                   data: {  }
                 properties:
                   message:
                     type: string
-                    example: 'Users details retrieved.'
+                    example: 'User details retrieved.'
                   data:
                     type: object
                     properties: {  }
@@ -3367,12 +3378,12 @@ paths:
               schema:
                 type: object
                 example:
-                  message: 'Users updated successfully.'
+                  message: 'User updated successfully.'
                   data: {  }
                 properties:
                   message:
                     type: string
-                    example: 'Users updated successfully.'
+                    example: 'User updated successfully.'
                   data:
                     type: object
                     properties: {  }
@@ -3400,17 +3411,17 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: zebayjuw
+                  example: tgluuuz
                   nullable: false
                 email:
                   type: string
                   description: 'Must be a valid email address.'
-                  example: perry.ullrich@example.net
+                  example: madaline70@example.org
                   nullable: false
                 password:
                   type: string
                   description: 'Must be at least 8 characters.'
-                  example: 'uC%j=S]Qb"NPBD%q'
+                  example: 'n{[niyFw%c[L_Vb){e.Q'
                   nullable: true
                 role_id:
                   type: string
@@ -3426,32 +3437,32 @@ paths:
                     address_line1:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: et
+                      example: lcpjywmylg
                       nullable: false
                     city:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: ayzvssznhudndeewta
+                      example: pgsh
                       nullable: false
                     country:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: xebfklibkmp
+                      example: duz
                       nullable: false
                     postal_code:
                       type: string
                       description: 'Must not be greater than 20 characters.'
-                      example: uhhtdoespisbavo
+                      example: kopacnazpccmc
                       nullable: false
                     address_line2:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: jphg
+                      example: hdtuyepnwgzwhjjekgnvlydvf
                       nullable: true
                     state:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: pjvxbahikvemwapkpzohh
+                      example: kjmlpghtfr
                       nullable: true
     delete:
       summary: 'Permanently delete a user.'
@@ -3466,11 +3477,11 @@ paths:
               schema:
                 type: object
                 example:
-                  message: 'Users deleted successfully.'
+                  message: 'User deleted successfully.'
                 properties:
                   message:
                     type: string
-                    example: 'Users deleted successfully.'
+                    example: 'User deleted successfully.'
         403:
           description: ''
           content:
@@ -3544,12 +3555,12 @@ paths:
               schema:
                 type: object
                 example:
-                  message: 'Vendors created successfully!'
+                  message: 'Vendor created successfully!'
                   data: {  }
                 properties:
                   message:
                     type: string
-                    example: 'Vendors created successfully!'
+                    example: 'Vendor created successfully!'
                   data:
                     type: object
                     properties: {  }
@@ -3577,17 +3588,17 @@ paths:
                 user_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the users table.'
-                  example: praesentium
+                  example: placeat
                   nullable: false
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: facqggqacghpznrimols
+                  example: yehg
                   nullable: false
                 description:
                   type: string
                   description: 'Must not be greater than 1000 characters.'
-                  example: 'Sed ut totam possimus debitis excepturi temporibus sed.'
+                  example: 'Quasi dolor consequatur ut dolorem.'
                   nullable: false
                 logo:
                   type: string
@@ -3686,12 +3697,12 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: fnpglrivh
+                  example: zwajgaigkdxcnpw
                   nullable: false
                 description:
                   type: string
                   description: 'Must not be greater than 1000 characters.'
-                  example: 'Aspernatur officia dolorem fugit commodi optio magni.'
+                  example: 'Consequatur molestias nihil commodi.'
                   nullable: false
                 logo:
                   type: string

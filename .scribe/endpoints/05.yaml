@@ -37,7 +37,7 @@ endpoints:
         name: filter.name
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: kmpsvs
+        example: ndzdxmouzejnkhkpuujymgjkl
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -47,7 +47,7 @@ endpoints:
         name: filter.price
         description: 'Must match the regex /^\d+(\.\d{1,2})?(,\d+(\.\d{1,2})?)*$/.'
         required: false
-        example: '46630.24,96.91)))))'
+        example: '57071,246.74))'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -57,7 +57,7 @@ endpoints:
         name: filter.category
         description: 'Must match the regex /^(\d,?)+$/.'
         required: false
-        example: '7'
+        example: '37,1,'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -67,7 +67,7 @@ endpoints:
         name: filter.quantity
         description: 'Must be at least 0.'
         required: false
-        example: 5
+        example: 88
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -77,7 +77,7 @@ endpoints:
         name: filter.created_at
         description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
         required: false
-        example: '4949-24-80,5126-17-07'
+        example: '9860-60-50'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -87,7 +87,7 @@ endpoints:
         name: filter.updated_at
         description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
         required: false
-        example: '5568-29-70'
+        example: '6638-16-32,3663-82-30'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -97,7 +97,7 @@ endpoints:
         name: filter.search
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: swfn
+        example: ewrrzgzebjmpparnshytl
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -107,7 +107,7 @@ endpoints:
         name: filter.include
         description: 'Must match the regex /^(\w+(,\w+)*)?$/.'
         required: false
-        example: 'kgbxi,bbht,onxrqzaywt,tgfvv,jyvxv'
+        example: 'clujlhdx,dzwaynbqh)'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -117,7 +117,7 @@ endpoints:
         name: page
         description: 'Must be at least 1.'
         required: false
-        example: 26
+        example: 84
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -127,7 +127,7 @@ endpoints:
         name: per_page
         description: 'Must be at least 1. Must not be greater than 100.'
         required: false
-        example: 25
+        example: 7
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -137,7 +137,7 @@ endpoints:
         name: sort
         description: 'Must match the regex /^(-?[a-zA-Z0-9_]+)(,-?[a-zA-Z0-9_]+)*$/.'
         required: false
-        example: '-_1ZUc,-qfH_Ko,i6u01p'
+        example: '4,R,-X,-E,-l,-r,-r'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -145,17 +145,17 @@ endpoints:
         custom: []
     cleanBodyParameters:
       filter:
-        name: kmpsvs
-        price: '46630.24,96.91)))))'
-        category: '7'
-        quantity: 5
-        created_at: '4949-24-80,5126-17-07'
-        updated_at: '5568-29-70'
-        search: swfn
-        include: 'kgbxi,bbht,onxrqzaywt,tgfvv,jyvxv'
-      page: 26
-      per_page: 25
-      sort: '-_1ZUc,-qfH_Ko,i6u01p'
+        name: ndzdxmouzejnkhkpuujymgjkl
+        price: '57071,246.74))'
+        category: '37,1,'
+        quantity: 88
+        created_at: '9860-60-50'
+        updated_at: '6638-16-32,3663-82-30'
+        search: ewrrzgzebjmpparnshytl
+        include: 'clujlhdx,dzwaynbqh)'
+      page: 84
+      per_page: 7
+      sort: '4,R,-X,-E,-l,-r,-r'
     fileParameters: []
     responses:
       -
@@ -276,7 +276,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: jwmzdge
+        example: tfavtotrsvnblcqp
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -286,7 +286,7 @@ endpoints:
         name: description
         description: ''
         required: false
-        example: 'Ex unde maxime in nihil dolor voluptas consequatur.'
+        example: 'Cumque pariatur laborum mollitia amet inventore.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -296,7 +296,7 @@ endpoints:
         name: price
         description: 'Must be at least 0.'
         required: true
-        example: 66
+        example: 32
         type: number
         enumValues: []
         exampleWasSpecified: false
@@ -306,7 +306,7 @@ endpoints:
         name: product_category_id
         description: 'The <code>id</code> of an existing record in the product_categories table.'
         required: true
-        example: fugiat
+        example: rerum
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -316,7 +316,7 @@ endpoints:
         name: product_status_id
         description: 'The <code>id</code> of an existing record in the product_statuses table.'
         required: true
-        example: qui
+        example: ipsum
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -326,7 +326,7 @@ endpoints:
         name: quantity
         description: 'Must be at least 0.'
         required: true
-        example: 53
+        example: 27
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -376,7 +376,7 @@ endpoints:
         name: 'product_variants[].product_attribute_id'
         description: 'The <code>id</code> of an existing record in the product_attributes table.'
         required: true
-        example: est
+        example: iure
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -386,7 +386,7 @@ endpoints:
         name: 'product_variants[].value'
         description: 'This field is required when <code>product_variants</code> is present. Must not be greater than 255 characters.'
         required: false
-        example: ulehmjdbfyyvfes
+        example: b
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -396,7 +396,7 @@ endpoints:
         name: 'product_variants[].additional_price'
         description: 'Must be at least 0.'
         required: false
-        example: 22
+        example: 2
         type: number
         enumValues: []
         exampleWasSpecified: false
@@ -406,7 +406,7 @@ endpoints:
         name: 'product_variants[].quantity'
         description: 'Must be at least 0.'
         required: true
-        example: 18
+        example: 58
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -424,18 +424,18 @@ endpoints:
         nullable: false
         custom: []
     cleanBodyParameters:
-      name: jwmzdge
-      description: 'Ex unde maxime in nihil dolor voluptas consequatur.'
-      price: 66
-      product_category_id: fugiat
-      product_status_id: qui
-      quantity: 53
+      name: tfavtotrsvnblcqp
+      description: 'Cumque pariatur laborum mollitia amet inventore.'
+      price: 32
+      product_category_id: rerum
+      product_status_id: ipsum
+      quantity: 27
       product_variants:
         -
-          product_attribute_id: est
-          value: ulehmjdbfyyvfes
-          additional_price: 22
-          quantity: 18
+          product_attribute_id: iure
+          value: b
+          additional_price: 2
+          quantity: 58
     fileParameters:
       media:
         featured_image: null
@@ -507,7 +507,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: wahtdomubytjplw
+        example: q
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -517,7 +517,7 @@ endpoints:
         name: description
         description: ''
         required: false
-        example: 'Qui suscipit dolores autem sunt.'
+        example: 'Consequuntur rerum architecto voluptatem molestiae.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -527,7 +527,7 @@ endpoints:
         name: price
         description: 'Must be at least 0.'
         required: true
-        example: 53
+        example: 31
         type: number
         enumValues: []
         exampleWasSpecified: false
@@ -537,7 +537,7 @@ endpoints:
         name: product_category_id
         description: 'The <code>id</code> of an existing record in the product_categories table.'
         required: true
-        example: mollitia
+        example: consectetur
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -547,7 +547,7 @@ endpoints:
         name: product_status_id
         description: 'The <code>id</code> of an existing record in the product_statuses table.'
         required: true
-        example: omnis
+        example: ut
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -557,7 +557,7 @@ endpoints:
         name: quantity
         description: 'Must be at least 0.'
         required: true
-        example: 74
+        example: 43
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -607,7 +607,7 @@ endpoints:
         name: 'product_variants[].product_attribute_id'
         description: 'The <code>id</code> of an existing record in the product_attributes table.'
         required: true
-        example: molestiae
+        example: dolorem
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -617,7 +617,7 @@ endpoints:
         name: 'product_variants[].value'
         description: 'This field is required when <code>product_variants</code> is present. Must not be greater than 255 characters.'
         required: false
-        example: zrup
+        example: f
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -627,7 +627,7 @@ endpoints:
         name: 'product_variants[].additional_price'
         description: 'Must be at least 0.'
         required: false
-        example: 85
+        example: 44
         type: number
         enumValues: []
         exampleWasSpecified: false
@@ -637,7 +637,7 @@ endpoints:
         name: 'product_variants[].quantity'
         description: 'Must be at least 0.'
         required: true
-        example: 35
+        example: 14
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -655,18 +655,18 @@ endpoints:
         nullable: false
         custom: []
     cleanBodyParameters:
-      name: wahtdomubytjplw
-      description: 'Qui suscipit dolores autem sunt.'
-      price: 53
-      product_category_id: mollitia
-      product_status_id: omnis
-      quantity: 74
+      name: q
+      description: 'Consequuntur rerum architecto voluptatem molestiae.'
+      price: 31
+      product_category_id: consectetur
+      product_status_id: ut
+      quantity: 43
       product_variants:
         -
-          product_attribute_id: molestiae
-          value: zrup
-          additional_price: 85
-          quantity: 35
+          product_attribute_id: dolorem
+          value: f
+          additional_price: 44
+          quantity: 14
     fileParameters:
       media:
         featured_image: null

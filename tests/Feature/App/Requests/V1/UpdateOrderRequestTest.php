@@ -19,7 +19,6 @@ class UpdateOrderRequestTest extends TestCase
         $validator = Validator::make($data, $rules);
 
         $this->assertTrue($validator->fails(), 'Validation should fail when required fields are missing.');
-        $this->assertArrayHasKey('total_amount', $validator->errors()->toArray());
         $this->assertArrayHasKey('order_items', $validator->errors()->toArray());
     }
 

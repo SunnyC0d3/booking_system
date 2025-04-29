@@ -55,7 +55,7 @@ class UserController extends Controller
      * @authenticated
      *
      * @response 200 {
-     *     "message": "Users created successfully!",
+     *     "message": "User created successfully!",
      *     "data": {}
      * }
      *
@@ -79,7 +79,7 @@ class UserController extends Controller
      * @authenticated
      *
      * @response 200 {
-     *     "message": "Users details retrieved.",
+     *     "message": "User details retrieved.",
      *     "data": {}
      * }
      *
@@ -103,7 +103,7 @@ class UserController extends Controller
      * @authenticated
      *
      * @response 200 {
-     *     "message": "Users updated successfully.",
+     *     "message": "User updated successfully.",
      *     "data": {}
      * }
      *
@@ -127,7 +127,7 @@ class UserController extends Controller
      * @authenticated
      *
      * @response 200 {
-     *     "message": "Users deleted successfully."
+     *     "message": "User deleted successfully."
      * }
      *
      * @response 403 {

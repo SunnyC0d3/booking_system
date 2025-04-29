@@ -168,6 +168,6 @@ Route::prefix('admin')
         Route::get('orders/{order}', 'show')->name('admin.orders.show');
         Route::post('orders/{order}', 'update')->name('admin.orders.update');
         Route::delete('orders/{order}', 'destroy')->name('admin.orders.destroy');
-        Route::delete('orders/{order}/force', 'forceDelete')->name('admin.orders.forceDelete');
-        Route::patch('orders/{order}/restore', 'restore')->name('admin.orders.restore');
+        Route::delete('orders/{id}/force-delete', 'forceDelete')->name('admin.orders.forceDelete');
+        Route::patch('orders/{id}/restore', 'restore')->name('admin.orders.restore');
     });

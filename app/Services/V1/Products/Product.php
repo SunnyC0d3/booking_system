@@ -27,7 +27,7 @@ class Product
             $perPage = $request->input('per_page', 15);
             $products = $query->paginate($perPage);
 
-            return $this->ok(ProductResource::collection($products));
+            return $this->ok('Products retrieved successfully.', ProductResource::collection($products));
         }
 
         return $this->error('You do not have the required permissions.', 403);
@@ -39,7 +39,7 @@ class Product
 
         if ($user->hasPermission('view_products')) {
             $product->load(['vendor', 'variants', 'category', 'tags', 'media']);
-            return $this->ok(new ProductResource($product));
+            return $this->ok('Product retrieved successfully.', new ProductResource($product));
         }
 
         return $this->error('You do not have the required permissions.', 403);
@@ -100,7 +100,7 @@ class Product
                 return $product;
             });
 
-            return $this->ok('Product created successfully!', new ProductResource($product));
+            return $this->ok('Product created successfully.', new ProductResource($product));
         }
 
         return $this->error('You do not have the required permissions.', 403);
@@ -155,7 +155,7 @@ class Product
                 }
             });
 
-            return $this->ok('Product updated successfully!', new ProductResource($product));
+            return $this->ok('Product updated successfully.', new ProductResource($product));
         }
 
         return $this->error('You do not have the required permissions.', 403);

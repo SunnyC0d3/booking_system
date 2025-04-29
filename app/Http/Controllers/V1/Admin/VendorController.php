@@ -54,7 +54,7 @@ class VendorController extends Controller
      * @authenticated
      *
      * @response 200 {
-     *     "message": "Vendors created successfully!",
+     *     "message": "Vendor created successfully!",
      *     "data": {}
      * }
      *

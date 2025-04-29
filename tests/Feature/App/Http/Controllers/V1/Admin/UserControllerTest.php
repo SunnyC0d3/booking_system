@@ -85,7 +85,7 @@ class UserControllerTest extends TestCase
         $response = $this->postJson(route('admin.users.store'), $payload);
 
         $response->assertStatus(200)
-            ->assertJsonFragment(['message' => 'Users created successfully!']);
+            ->assertJsonFragment(['message' => 'User created successfully!']);
 
         $this->assertDatabaseHas('users', ['email' => 'jane@example.com']);
     }
@@ -97,7 +97,7 @@ class UserControllerTest extends TestCase
         $response = $this->getJson(route('admin.users.show', $this->user->id));
 
         $response->assertStatus(200)
-            ->assertJsonFragment(['message' => 'Users details retrieved.']);
+            ->assertJsonFragment(['message' => 'User details retrieved.']);
     }
 
     public function test_destroy_deletes_user_with_permission()
@@ -114,7 +114,7 @@ class UserControllerTest extends TestCase
         $response = $this->deleteJson(route('admin.users.destroy', $this->user->id));
 
         $response->assertStatus(200)
-            ->assertJsonFragment(['message' => 'Users deleted successfully.']);
+            ->assertJsonFragment(['message' => 'User deleted successfully.']);
 
         $this->assertModelMissing($this->user);
     }

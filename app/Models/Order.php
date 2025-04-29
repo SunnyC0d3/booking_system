@@ -19,6 +19,16 @@ class Order extends Model
         'total_amount',
     ];
 
+    public function getTotalAmountAttribute($value)
+    {
+        return round($value, 2);
+    }
+
+    public function setTotalAmountAttribute($value)
+    {
+        $this->attributes['total_amount'] = round($value, 2);
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

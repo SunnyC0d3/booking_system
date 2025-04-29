@@ -21,13 +21,15 @@ class Order
         $user = $request->user();
 
         if ($user->hasPermission('view_orders')) {
+            $data = $request->validated();
+
             $orders = OrderDB::with(['user', 'orderItems.product', 'orderItems.productVariant', 'status'])
-                ->when($request->input('status_id'), fn($q) => $q->where('status_id', $request->status_id))
-                ->when($request->input('user_id'), fn($q) => $q->where('user_id', $request->user_id))
+                ->when(!empty($data['status_id']), fn($query) => $query->where('status_id', $data['status_id']))
+                ->when(!empty($data['user_id']), fn($query) => $query->where('user_id', $data['user_id']))
                 ->latest()
                 ->paginate(15);
 
-            return $this->ok('Orders retrieved successfully.', $orders);
+            return $this->ok('Orders retrieved successfully.', OrderResource::collection($orders));
         }
 
         return $this->error('You do not have the required permissions.', 403);
@@ -39,7 +41,7 @@ class Order
 
         if ($user->hasPermission('view_orders')) {
             $order->load(['user', 'orderItems.product', 'orderItems.productVariant', 'status']);
-            return $this->ok(new OrderResource($order));
+            return $this->ok('Orders retrieved successfully.', new OrderResource($order));
         }
 
         return $this->error('You do not have the required permissions.', 403);
@@ -53,27 +55,33 @@ class Order
             $data = $request->validated();
 
             DB::transaction(function () use ($data, &$order) {
-                $order = OrderDB::create($data);
+                $order = OrderDB::create([
+                    'user_id' => $data['user_id'],
+                    'status_id' => $data['status_id'],
+                    'total_amount' => 0,
+                ]);
 
-                $total = 0;
+                if (!empty($data['order_items'])) {
+                    $total = 0;
 
-                foreach ($data['order_items'] as $item) {
-                    $price = $item['price'];
-                    $quantity = $item['quantity'];
-                    $total += $price * $quantity;
+                    foreach ($data['order_items'] as $item) {
+                        $price = $item['price'];
+                        $quantity = $item['quantity'];
+                        $total += $price * $quantity;
 
-                    $order->orderItems()->create([
-                        'product_id' => $item['product_id'],
-                        'product_variant_id' => $item['product_variant_id'] ?? null,
-                        'quantity' => $quantity,
-                        'price' => $price,
-                    ]);
+                        $order->orderItems()->create([
+                            'product_id' => $item['product_id'],
+                            'product_variant_id' => $item['product_variant_id'] ?? null,
+                            'quantity' => $quantity,
+                            'price' => $price,
+                        ]);
+                    }
+
+                    $order->update(['total_amount' => $total]);
                 }
-
-                $order->update(['total_amount' => $total]);
             });
 
-            $order->load('orderItems');
+            $order->load(['user', 'orderItems.product', 'orderItems.productVariant', 'status']);
 
             return $this->ok('Order created successfully.', new OrderResource($order));
         }
@@ -89,7 +97,11 @@ class Order
             $data = $request->validated();
 
             DB::transaction(function () use ($data, $order) {
-                $order->update($data);
+                $order->update([
+                    'user_id' => $data['user_id'],
+                    'status_id' => $data['status_id'],
+                    'total_amount' => 0,
+                ]);
 
                 if (!empty($data['order_items'])) {
                     $order->orderItems()->delete();
@@ -113,9 +125,9 @@ class Order
                 }
             });
 
-            $order->load('orderItems');
+            $order->load(['user', 'orderItems.product', 'orderItems.productVariant', 'status']);
 
-            return response()->json('Order updated successfully.', new OrderResource($order));
+            return $this->ok('Order updated successfully.', new OrderResource($order));
         }
 
         return $this->error('You do not have the required permissions.', 403);
@@ -133,28 +145,34 @@ class Order
         return $this->error('You do not have the required permissions.', 403);
     }
 
-    public function restore(Request $request, OrderDB $order)
+    public function restore(Request $request, int $id)
     {
         $user = $request->user();
 
         if ($user->hasPermission('restore_orders')) {
+            $order = OrderDB::withTrashed()->findOrFail($id);
+
             if (!$order->trashed()) {
                 return $this->error('Order is not deleted.', 400);
             }
 
             $order->restore();
 
-            return $this->success('Order restored successfully.', $order);
+            $order->load(['user', 'orderItems.product', 'orderItems.productVariant', 'status']);
+
+            return $this->success('Order restored successfully.', new OrderResource($order));
         }
 
         return $this->error('You do not have the required permissions.', 403);
     }
 
-    public function forceDelete(Request $request, OrderDB $order)
+    public function forceDelete(Request $request, int $id)
     {
         $user = $request->user();
 
         if ($user->hasPermission('force_delete_orders')) {
+            $order = OrderDB::withTrashed()->findOrFail($id);
+
             if (!$order->trashed()) {
                 return $this->error('Order must be soft deleted before force deleting.', 400);
             }

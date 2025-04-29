@@ -144,7 +144,7 @@ endpoints:
         name: user_id
         description: 'The <code>id</code> of an existing record in the users table.'
         required: true
-        example: praesentium
+        example: placeat
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -154,7 +154,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: facqggqacghpznrimols
+        example: yehg
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -164,7 +164,7 @@ endpoints:
         name: description
         description: 'Must not be greater than 1000 characters.'
         required: true
-        example: 'Sed ut totam possimus debitis excepturi temporibus sed.'
+        example: 'Quasi dolor consequatur ut dolorem.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -181,9 +181,9 @@ endpoints:
         nullable: true
         custom: []
     cleanBodyParameters:
-      user_id: praesentium
-      name: facqggqacghpznrimols
-      description: 'Sed ut totam possimus debitis excepturi temporibus sed.'
+      user_id: placeat
+      name: yehg
+      description: 'Quasi dolor consequatur ut dolorem.'
     fileParameters:
       logo: null
     responses:
@@ -191,7 +191,7 @@ endpoints:
         status: 200
         content: |-
           {
-              "message": "Vendors created successfully!",
+              "message": "Vendor created successfully!",
               "data": {}
           }
         headers: []
@@ -262,7 +262,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: fnpglrivh
+        example: zwajgaigkdxcnpw
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -272,7 +272,7 @@ endpoints:
         name: description
         description: 'Must not be greater than 1000 characters.'
         required: false
-        example: 'Aspernatur officia dolorem fugit commodi optio magni.'
+        example: 'Consequatur molestias nihil commodi.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -289,8 +289,8 @@ endpoints:
         nullable: true
         custom: []
     cleanBodyParameters:
-      name: fnpglrivh
-      description: 'Aspernatur officia dolorem fugit commodi optio magni.'
+      name: zwajgaigkdxcnpw
+      description: 'Consequatur molestias nihil commodi.'
     fileParameters:
       logo: null
     responses:

@@ -88,7 +88,7 @@ endpoints:
         name: name
         description: 'The name of the category.'
         required: true
-        example: sed
+        example: tempora
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -98,15 +98,15 @@ endpoints:
         name: parent_id
         description: 'optional The ID of the parent category.'
         required: false
-        example: 4
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: true
         custom: []
     cleanBodyParameters:
-      name: sed
-      parent_id: 4
+      name: tempora
+      parent_id: 1
     fileParameters: []
     responses:
       -
@@ -246,7 +246,7 @@ endpoints:
         name: name
         description: 'The name of the category.'
         required: true
-        example: voluptates
+        example: ea
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -256,15 +256,15 @@ endpoints:
         name: parent_id
         description: 'optional The ID of the parent category.'
         required: false
-        example: 17
+        example: 5
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: true
         custom: []
     cleanBodyParameters:
-      name: voluptates
-      parent_id: 17
+      name: ea
+      parent_id: 5
     fileParameters: []
     responses:
       -

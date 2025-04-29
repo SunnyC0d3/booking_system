@@ -5,8 +5,7 @@ namespace App\Http\Controllers\V1\Admin;
 use App\Services\V1\Orders\Order;
 use App\Requests\V1\StoreOrderRequest;
 use App\Requests\V1\UpdateOrderRequest;
-use App\Requests\V1\StoreOrderItemRequest;
-use App\Requests\V1\UpdateOrderItemRequest;
+use App\Requests\V1\IndexOrderRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Traits\V1\ApiResponses;
@@ -40,7 +39,7 @@ class OrderController extends Controller
      *     "message": "You do not have the required permissions."
      * }
      */
-    public function index(Request $request)
+    public function index(IndexOrderRequest $request)
     {
         try {
             return $this->order->all($request);
@@ -128,7 +127,7 @@ class OrderController extends Controller
      * @authenticated
      *
      * @response 200 {
-     *     "message": "Order deleted successfully."
+     *     "message": "Order deleted (soft)."
      * }
      *
      * @response 403 {
@@ -151,17 +150,17 @@ class OrderController extends Controller
      * @authenticated
      *
      * @response 200 {
-     *     "message": "Order deleted successfully."
+     *     "message": "Order restored successfully."
      * }
      *
      * @response 403 {
      *     "message": "You do not have the required permissions."
      * }
      */
-    public function restore(Request $request, DB $order)
+    public function restore(Request $request, int $id)
     {
         try {
-            return $this->order->restore($request, $order);
+            return $this->order->restore($request, $id);
         } catch (\Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
@@ -174,17 +173,17 @@ class OrderController extends Controller
      * @authenticated
      *
      * @response 200 {
-     *     "message": "Order deleted successfully."
+     *     "message": "Order permanently deleted."
      * }
      *
      * @response 403 {
      *     "message": "You do not have the required permissions."
      * }
      */
-    public function forceDelete(Request $request, DB $order)
+    public function forceDelete(Request $request, int $id)
     {
         try {
-            return $this->order->forceDelete($request, $order);
+            return $this->order->forceDelete($request, $id);
         } catch (\Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }

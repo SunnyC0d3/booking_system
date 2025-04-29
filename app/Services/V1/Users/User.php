@@ -40,7 +40,7 @@ class User
 
         if ($user->hasPermission('view_users')) {
             $_user->load(['role', 'vendors', 'userAddress']);
-            return $this->ok('Users details retrieved.', new UserResource($_user));
+            return $this->ok('User details retrieved.', new UserResource($_user));
         }
 
         return $this->error('You do not have the required permissions.', 403);
@@ -62,7 +62,7 @@ class User
 
             $_user->userAddress()->create($data['address']);
 
-            return $this->ok('Users created successfully!', new UserResource($_user));
+            return $this->ok('User created successfully!', new UserResource($_user));
         }
 
         return $this->error('You do not have the required permissions.', 403);
@@ -85,7 +85,7 @@ class User
                 $_user->userAddress()->updateOrCreate([], $data['address']);
             }
 
-            return $this->ok('Users updated successfully.', new UserResource($_user));
+            return $this->ok('User updated successfully.', new UserResource($_user));
         }
 
         return $this->error('You do not have the required permissions.', 403);
@@ -98,7 +98,7 @@ class User
         if ($user->hasPermission('delete_users')) {
             $_user->userAddress()->delete();
             $_user->delete();
-            return $this->ok('Users deleted successfully.');
+            return $this->ok('User deleted successfully.');
         }
 
         return $this->error('You do not have the required permissions.', 403);

@@ -16,7 +16,6 @@ class UpdateOrderRequest extends BaseFormRequest
         return [
             'user_id'      => 'nullable|exists:users,id',
             'status_id'    => 'nullable|exists:order_statuses,id',
-            'total_amount' => 'required|numeric|min:0',
             'order_items'        => 'required|array|min:1',
             'order_items.*.product_id' => 'required|exists:products,id',
             'order_items.*.product_variant_id' => 'nullable|exists:product_variants,id',
