@@ -2,6 +2,7 @@
 
 namespace App\Services\V1\Products;
 
+use App\Models\Order as OrderDB;
 use App\Models\Product as ProdDB;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -165,32 +166,56 @@ class Product
     {
         $user = $request->user();
 
-        if (!$user->hasPermission('delete_products')) {
-            return $this->error('You do not have the required permissions.', 403);
+        if ($user->hasPermission('delete_products')) {
+            $product->delete();
+            return $this->ok('Product deleted successfully.');
         }
 
-        DB::transaction(function () use ($product) {
-            $product->delete();
-        });
-
-        return $this->ok('Product deleted successfully.');
+        return $this->error('You do not have the required permissions.', 403);
     }
 
-    public function delete(Request $request, ProdDB $product)
+    public function restore(Request $request, int $id)
     {
         $user = $request->user();
 
-        if (!$user->hasPermission('delete_products')) {
-            return $this->error('You do not have the required permissions.', 403);
+        if ($user->hasPermission('restore_products')) {
+            $product = ProdDB::withTrashed()->findOrFail($id);
+
+            if (!$product->trashed()) {
+                return $this->error('Product is not deleted.', 400);
+            }
+
+            $product->restore();
+
+            $product->load(['user', 'orderItems.product', 'orderItems.productVariant', 'status']);
+
+            return $this->success('Product restored successfully.', new ProductResource($product));
         }
 
-        DB::transaction(function () use ($product) {
-            $product->clearMediaCollection('featured_image');
-            $product->clearMediaCollection('gallery');
-            $product->variants()->forceDelete();
-            $product->forceDelete();
-        });
+        return $this->error('You do not have the required permissions.', 403);
+    }
 
-        return $this->ok('Product deleted successfully.');
+    public function delete(Request $request, int $id)
+    {
+        $user = $request->user();
+
+        if ($user->hasPermission('force_delete_products')) {
+            $product = ProdDB::withTrashed()->findOrFail($id);
+
+            if (!$product->trashed()) {
+                return $this->error('Product must be soft deleted before force deleting.', 400);
+            }
+
+            DB::transaction(function () use ($product) {
+                $product->clearMediaCollection('featured_image');
+                $product->clearMediaCollection('gallery');
+                $product->variants()->forceDelete();
+                $product->forceDelete();
+            });
+
+            return $this->ok('Product deleted successfully.');
+        }
+
+        return $this->error('You do not have the required permissions.', 403);
     }
 }

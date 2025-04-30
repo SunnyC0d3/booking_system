@@ -144,6 +144,29 @@ class ProductController extends Controller
     }
 
     /**
+     * Restore a soft deleted product.
+     *
+     * @group Products
+     * @authenticated
+     *
+     * @response 200 {
+     *     "message": "Product restored successfully."
+     * }
+     *
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
+    public function restore(Request $request, int $id)
+    {
+        try {
+            return $this->product->restore($request, $id);
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
+    }
+
+    /**
      * Permanently delete a product.
      *
      * @group Products
@@ -157,10 +180,10 @@ class ProductController extends Controller
      *     "message": "You do not have the required permissions."
      * }
      */
-    public function destroy(Request $request, ProdDB $product)
+    public function destroy(Request $request, int $id)
     {
         try {
-            return $this->product->delete($request, $product);
+            return $this->product->delete($request, $id);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }

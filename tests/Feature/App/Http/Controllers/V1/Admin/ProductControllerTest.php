@@ -34,6 +34,7 @@ class ProductControllerTest extends TestCase
             ['name' => 'create_products'],
             ['name' => 'edit_products'],
             ['name' => 'delete_products'],
+            ['name' => 'force_delete_products'],
         ]);
 
         DB::table('role_permission')->insert([
@@ -52,6 +53,9 @@ class ProductControllerTest extends TestCase
             [
                 'role_id' => $this->user->role->id,
                 'permission_id' => DB::table('permissions')->where('name', 'delete_products')->first()->id,
+            ],            [
+                'role_id' => $this->user->role->id,
+                'permission_id' => DB::table('permissions')->where('name', 'force_delete_products')->first()->id,
             ],
         ]);
 
@@ -105,7 +109,10 @@ class ProductControllerTest extends TestCase
 
     public function test_user_can_permanently_delete_a_product()
     {
-        $response = $this->actingAs($this->user, 'api')->deleteJson(route('admin.products.destroy', $this->product));
+        $productId = $this->product->id;
+
+        $this->actingAs($this->user, 'api')->deleteJson(route('admin.products.softDestroy', $this->product));
+        $response = $this->actingAs($this->user, 'api')->deleteJson(route('admin.products.destroy', $productId));
 
         $response->assertStatus(200)
                  ->assertJson(['message' => 'Product deleted successfully.']);

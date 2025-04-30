@@ -90,7 +90,8 @@ Route::prefix('admin/products')
         Route::post('/', 'store')->name('admin.products.store');
         Route::post('/{product}', 'update')->name('admin.products.update');
         Route::delete('/soft-destroy/{product}', 'softDestroy')->name('admin.products.softDestroy');
-        Route::delete('/{product}', 'destroy')->name('admin.products.destroy');
+        Route::delete('/{id}', 'destroy')->name('admin.products.destroy');
+        Route::patch('/{id}/restore', 'restore')->name('admin.products.restore');
     });
 
 // Admin/Product Attributes
