@@ -240,7 +240,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the verify.'
-        example: molestiae
+        example: ut
         required: true
         schema:
           type: string
@@ -248,7 +248,7 @@ paths:
         in: path
         name: hash
         description: ''
-        example: natus
+        example: aut
         required: true
         schema:
           type: string
@@ -394,7 +394,7 @@ paths:
                 user_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the users table.'
-                  example: ratione
+                  example: non
                   nullable: false
                 status_id:
                   type: string
@@ -412,7 +412,7 @@ paths:
                       product_id:
                         type: string
                         description: 'The <code>id</code> of an existing record in the products table.'
-                        example: qui
+                        example: aut
                         nullable: false
                       product_variant_id:
                         type: string
@@ -422,12 +422,12 @@ paths:
                       quantity:
                         type: integer
                         description: 'Must be at least 1.'
-                        example: 75
+                        example: 74
                         nullable: false
                       price:
                         type: number
                         description: 'Must be at least 0.'
-                        example: 38
+                        example: 87
                         nullable: false
                     required:
                       - product_id
@@ -537,7 +537,7 @@ paths:
                       product_id:
                         type: string
                         description: 'The <code>id</code> of an existing record in the products table.'
-                        example: sit
+                        example: aut
                         nullable: false
                       product_variant_id:
                         type: string
@@ -547,12 +547,12 @@ paths:
                       quantity:
                         type: integer
                         description: 'Must be at least 1.'
-                        example: 67
+                        example: 7
                         nullable: false
                       price:
                         type: number
                         description: 'Must be at least 0.'
-                        example: 87
+                        example: 69
                         nullable: false
                     required:
                       - product_id
@@ -1515,12 +1515,12 @@ paths:
                 name:
                   type: string
                   description: 'The name of the category.'
-                  example: tempora
+                  example: beatae
                   nullable: false
                 parent_id:
                   type: integer
                   description: 'optional The ID of the parent category.'
-                  example: 1
+                  example: 18
                   nullable: true
               required:
                 - name
@@ -1631,12 +1631,12 @@ paths:
                 name:
                   type: string
                   description: 'The name of the category.'
-                  example: ea
+                  example: recusandae
                   nullable: false
                 parent_id:
                   type: integer
                   description: 'optional The ID of the parent category.'
-                  example: 5
+                  example: 3
                   nullable: true
               required:
                 - name
@@ -1805,7 +1805,7 @@ paths:
                 name:
                   type: string
                   description: 'The name of the product status.'
-                  example: est
+                  example: dolore
                   nullable: false
               required:
                 - name
@@ -1908,7 +1908,7 @@ paths:
                 name:
                   type: string
                   description: 'The updated name of the product status.'
-                  example: iste
+                  example: dolore
                   nullable: false
               required:
                 - name
@@ -2065,7 +2065,7 @@ paths:
                 name:
                   type: string
                   description: 'The name of the product tag.'
-                  example: itaque
+                  example: qui
                   nullable: false
               required:
                 - name
@@ -2168,7 +2168,7 @@ paths:
                 name:
                   type: string
                   description: 'The updated name of the product tag.'
-                  example: mollitia
+                  example: molestias
                   nullable: false
               required:
                 - name
@@ -2266,57 +2266,57 @@ paths:
                     name:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: ndzdxmouzejnkhkpuujymgjkl
+                      example: gqlb
                       nullable: false
                     price:
                       type: string
                       description: 'Must match the regex /^\d+(\.\d{1,2})?(,\d+(\.\d{1,2})?)*$/.'
-                      example: '57071,246.74))'
+                      example: '86.36,0958.5))'
                       nullable: false
                     category:
                       type: string
                       description: 'Must match the regex /^(\d,?)+$/.'
-                      example: '37,1,'
+                      example: '52'
                       nullable: false
                     quantity:
                       type: integer
                       description: 'Must be at least 0.'
-                      example: 88
+                      example: 62
                       nullable: false
                     created_at:
                       type: string
                       description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
-                      example: '9860-60-50'
+                      example: '8000-80-67,6967-21-46'
                       nullable: false
                     updated_at:
                       type: string
                       description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
-                      example: '6638-16-32,3663-82-30'
+                      example: '2457-75-68,4259-96-45'
                       nullable: false
                     search:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: ewrrzgzebjmpparnshytl
+                      example: tuvhhdarlhrkyxnjqdmp
                       nullable: false
                     include:
                       type: string
                       description: 'Must match the regex /^(\w+(,\w+)*)?$/.'
-                      example: 'clujlhdx,dzwaynbqh)'
+                      example: 'ssy,qjvvl'
                       nullable: false
                 page:
                   type: integer
                   description: 'Must be at least 1.'
-                  example: 84
+                  example: 1
                   nullable: false
                 per_page:
                   type: integer
                   description: 'Must be at least 1. Must not be greater than 100.'
-                  example: 7
+                  example: 6
                   nullable: false
                 sort:
                   type: string
                   description: 'Must match the regex /^(-?[a-zA-Z0-9_]+)(,-?[a-zA-Z0-9_]+)*$/.'
-                  example: '4,R,-X,-E,-l,-r,-r'
+                  example: 'd,-U8'
                   nullable: false
     post:
       summary: 'Create a new product.'
@@ -2364,32 +2364,32 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: tfavtotrsvnblcqp
+                  example: hsooghbrqxqsryewoybxb
                   nullable: false
                 description:
                   type: string
                   description: ''
-                  example: 'Cumque pariatur laborum mollitia amet inventore.'
+                  example: 'Consequatur qui quis sed architecto perspiciatis eum quidem perferendis.'
                   nullable: true
                 price:
                   type: number
                   description: 'Must be at least 0.'
-                  example: 32
+                  example: 66
                   nullable: false
                 product_category_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the product_categories table.'
-                  example: rerum
+                  example: adipisci
                   nullable: false
                 product_status_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the product_statuses table.'
-                  example: ipsum
+                  example: porro
                   nullable: false
                 quantity:
                   type: integer
                   description: 'Must be at least 0.'
-                  example: 27
+                  example: 19
                   nullable: false
                 product_tags:
                   type: array
@@ -2407,22 +2407,22 @@ paths:
                       product_attribute_id:
                         type: string
                         description: 'The <code>id</code> of an existing record in the product_attributes table.'
-                        example: iure
+                        example: laboriosam
                         nullable: false
                       value:
                         type: string
                         description: 'This field is required when <code>product_variants</code> is present. Must not be greater than 255 characters.'
-                        example: b
+                        example: yykxlincbkkhpswpr
                         nullable: false
                       additional_price:
                         type: number
                         description: 'Must be at least 0.'
-                        example: 2
+                        example: 90
                         nullable: true
                       quantity:
                         type: integer
                         description: 'Must be at least 0.'
-                        example: 58
+                        example: 50
                         nullable: false
                     required:
                       - product_attribute_id
@@ -2533,32 +2533,32 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: q
+                  example: risibzlqazekosby
                   nullable: false
                 description:
                   type: string
                   description: ''
-                  example: 'Consequuntur rerum architecto voluptatem molestiae.'
+                  example: 'Eligendi error libero rerum labore pariatur occaecati facilis.'
                   nullable: true
                 price:
                   type: number
                   description: 'Must be at least 0.'
-                  example: 31
+                  example: 63
                   nullable: false
                 product_category_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the product_categories table.'
-                  example: consectetur
+                  example: praesentium
                   nullable: false
                 product_status_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the product_statuses table.'
-                  example: ut
+                  example: corrupti
                   nullable: false
                 quantity:
                   type: integer
                   description: 'Must be at least 0.'
-                  example: 43
+                  example: 76
                   nullable: false
                 product_tags:
                   type: array
@@ -2576,22 +2576,22 @@ paths:
                       product_attribute_id:
                         type: string
                         description: 'The <code>id</code> of an existing record in the product_attributes table.'
-                        example: dolorem
+                        example: blanditiis
                         nullable: false
                       value:
                         type: string
                         description: 'This field is required when <code>product_variants</code> is present. Must not be greater than 255 characters.'
-                        example: f
+                        example: gvfqsrfavbs
                         nullable: false
                       additional_price:
                         type: number
                         description: 'Must be at least 0.'
-                        example: 44
+                        example: 32
                         nullable: true
                       quantity:
                         type: integer
                         description: 'Must be at least 0.'
-                        example: 14
+                        example: 1
                         nullable: false
                     required:
                       - product_attribute_id
@@ -2697,6 +2697,48 @@ paths:
       -
         in: path
         name: product_id
+        description: 'The ID of the product.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/admin/products/{id}/restore':
+    patch:
+      summary: 'Restore a soft deleted product.'
+      operationId: restoreASoftDeletedProduct
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Product restored successfully.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Product restored successfully.'
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You do not have the required permissions.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have the required permissions.'
+      tags:
+        - Products
+    parameters:
+      -
+        in: path
+        name: id
         description: 'The ID of the product.'
         example: 1
         required: true
@@ -3177,52 +3219,52 @@ paths:
                     name:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: wooegyydzknzbmhpklpdx
+                      example: ebu
                       nullable: false
                     email:
                       type: string
                       description: 'Must be a valid email address. Must not be greater than 255 characters.'
-                      example: kilback.malika@example.org
+                      example: mpfannerstill@example.com
                       nullable: false
                     role:
                       type: string
                       description: 'Must match the regex /^(\d,?)+$/.'
-                      example: '4'
+                      example: '9,'
                       nullable: false
                     created_at:
                       type: string
                       description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
-                      example: '6521-44-30,7354-51-24'
+                      example: '8265-86-13'
                       nullable: false
                     updated_at:
                       type: string
                       description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
-                      example: '3513-84-93,6621-03-65'
+                      example: '3946-22-98,9927-01-91'
                       nullable: false
                     search:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: ixe
+                      example: shsxcykvtjdldqpvcfxqzyi
                       nullable: false
                     include:
                       type: string
                       description: 'Must match the regex /^(\w+(,\w+)*)?$/.'
-                      example: 'puh,ozdd,em)'
+                      example: ''
                       nullable: false
                 page:
                   type: integer
                   description: 'Must be at least 1.'
-                  example: 56
+                  example: 75
                   nullable: false
                 per_page:
                   type: integer
                   description: 'Must be at least 1. Must not be greater than 100.'
-                  example: 5
+                  example: 13
                   nullable: false
                 sort:
                   type: string
                   description: 'Must match the regex /^(-?[a-zA-Z0-9_]+)(,-?[a-zA-Z0-9_]+)*$/.'
-                  example: 'gr,CV,mg,-I3'
+                  example: 'NDw3,R1zCc,-iRFN2,-G_eaL,fZwAt,lr6rg,-kL5In,Uxrfy'
                   nullable: false
     post:
       summary: 'Create a new user.'
@@ -3270,22 +3312,22 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: mxdqktetvofrwxajmhbgr
+                  example: jebvqrfmdxjcdzmo
                   nullable: false
                 email:
                   type: string
                   description: 'Must be a valid email address.'
-                  example: clarabelle48@example.net
+                  example: charley05@example.org
                   nullable: false
                 password:
                   type: string
                   description: 'Must be at least 8 characters.'
-                  example: '{O9wXVWT]&L>z8/U'
+                  example: '#,|yV('
                   nullable: false
                 role_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the roles table.'
-                  example: neque
+                  example: ut
                   nullable: false
                 address:
                   type: object
@@ -3296,32 +3338,32 @@ paths:
                     address_line1:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: shiqhzvlxrqfdhnuoetnt
+                      example: wu
                       nullable: false
                     city:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: gbdpjigmb
+                      example: hsygwhgubrtbdnfgnpzj
                       nullable: false
                     country:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: osepkgxdcmbtqlkrnsr
+                      example: jhtqccyrbffgonholga
                       nullable: false
                     postal_code:
                       type: string
                       description: 'Must not be greater than 20 characters.'
-                      example: utlpazdyarjqsw
+                      example: hnbjjz
                       nullable: false
                     address_line2:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: thqaarazpxg
+                      example: mxfqyszbau
                       nullable: true
                     state:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: ggkzmimkexygc
+                      example: yiwlgmupvpjaxpyxerdz
                       nullable: true
               required:
                 - name
@@ -3411,17 +3453,17 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: tgluuuz
+                  example: lbodymawjrlippfzw
                   nullable: false
                 email:
                   type: string
                   description: 'Must be a valid email address.'
-                  example: madaline70@example.org
+                  example: ylehner@example.org
                   nullable: false
                 password:
                   type: string
                   description: 'Must be at least 8 characters.'
-                  example: 'n{[niyFw%c[L_Vb){e.Q'
+                  example: 1@DwvwTpG
                   nullable: true
                 role_id:
                   type: string
@@ -3437,32 +3479,32 @@ paths:
                     address_line1:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: lcpjywmylg
+                      example: garhmkbqznxtv
                       nullable: false
                     city:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: pgsh
+                      example: klno
                       nullable: false
                     country:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: duz
+                      example: qmmhseswsdvzm
                       nullable: false
                     postal_code:
                       type: string
                       description: 'Must not be greater than 20 characters.'
-                      example: kopacnazpccmc
+                      example: ppct
                       nullable: false
                     address_line2:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: hdtuyepnwgzwhjjekgnvlydvf
+                      example: mo
                       nullable: true
                     state:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: kjmlpghtfr
+                      example: hdtuihbogcpe
                       nullable: true
     delete:
       summary: 'Permanently delete a user.'
@@ -3588,17 +3630,17 @@ paths:
                 user_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the users table.'
-                  example: placeat
+                  example: natus
                   nullable: false
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: yehg
+                  example: khyjhfqvpd
                   nullable: false
                 description:
                   type: string
                   description: 'Must not be greater than 1000 characters.'
-                  example: 'Quasi dolor consequatur ut dolorem.'
+                  example: 'Non odit animi omnis culpa quos beatae.'
                   nullable: false
                 logo:
                   type: string
@@ -3697,12 +3739,12 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: zwajgaigkdxcnpw
+                  example: idobriyjtivzla
                   nullable: false
                 description:
                   type: string
                   description: 'Must not be greater than 1000 characters.'
-                  example: 'Consequatur molestias nihil commodi.'
+                  example: 'Autem dolorum voluptas non distinctio ut in eligendi.'
                   nullable: false
                 logo:
                   type: string

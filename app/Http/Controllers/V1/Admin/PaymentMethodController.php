@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\V1\Admin;
 
 use App\Models\PaymentMethod as DB;
+use App\Requests\V1\StorePaymentMethodRequest;
+use App\Requests\V1\UpdatePaymentMethodRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Traits\V1\ApiResponses;
@@ -60,7 +62,7 @@ class PaymentMethodController extends Controller
      *     "message": "You do not have the required permissions."
      * }
      */
-    public function store(Request $request) {
+    public function store(StorePaymentMethodRequest $request) {
         try {
             return $this->paymentMethod->create($request);
         } catch (Exception $e) {
@@ -85,7 +87,7 @@ class PaymentMethodController extends Controller
      *     "message": "You do not have the required permissions."
      * }
      */
-    public function update(Request $request, DB $paymentMethod) {
+    public function update(UpdatePaymentMethodRequest $request, DB $paymentMethod) {
         try {
             return $this->paymentMethod->update($request, $paymentMethod);
         } catch (Exception $e) {

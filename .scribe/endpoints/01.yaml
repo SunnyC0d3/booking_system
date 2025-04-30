@@ -144,7 +144,7 @@ endpoints:
         name: user_id
         description: 'The <code>id</code> of an existing record in the users table.'
         required: true
-        example: placeat
+        example: natus
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -154,7 +154,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: yehg
+        example: khyjhfqvpd
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -164,7 +164,7 @@ endpoints:
         name: description
         description: 'Must not be greater than 1000 characters.'
         required: true
-        example: 'Quasi dolor consequatur ut dolorem.'
+        example: 'Non odit animi omnis culpa quos beatae.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -181,9 +181,9 @@ endpoints:
         nullable: true
         custom: []
     cleanBodyParameters:
-      user_id: placeat
-      name: yehg
-      description: 'Quasi dolor consequatur ut dolorem.'
+      user_id: natus
+      name: khyjhfqvpd
+      description: 'Non odit animi omnis culpa quos beatae.'
     fileParameters:
       logo: null
     responses:
@@ -262,7 +262,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: zwajgaigkdxcnpw
+        example: idobriyjtivzla
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -272,7 +272,7 @@ endpoints:
         name: description
         description: 'Must not be greater than 1000 characters.'
         required: false
-        example: 'Consequatur molestias nihil commodi.'
+        example: 'Autem dolorum voluptas non distinctio ut in eligendi.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -289,8 +289,8 @@ endpoints:
         nullable: true
         custom: []
     cleanBodyParameters:
-      name: zwajgaigkdxcnpw
-      description: 'Consequatur molestias nihil commodi.'
+      name: idobriyjtivzla
+      description: 'Autem dolorum voluptas non distinctio ut in eligendi.'
     fileParameters:
       logo: null
     responses:

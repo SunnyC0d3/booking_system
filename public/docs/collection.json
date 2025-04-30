@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "E-Commerce API Documentation",
-        "_postman_id": "64e24965-450f-499e-92a4-27650f020661",
+        "_postman_id": "cfb6c4fd-efb1-4174-a5a8-21729747d419",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -180,13 +180,13 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "molestiae",
+                                    "value": "ut",
                                     "description": "The ID of the verify."
                                 },
                                 {
                                     "id": "hash",
                                     "key": "hash",
-                                    "value": "natus",
+                                    "value": "aut",
                                     "description": ""
                                 }
                             ]
@@ -333,7 +333,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"user_id\":\"ratione\",\"order_items\":[{\"product_id\":\"qui\",\"quantity\":75,\"price\":38}]}"
+                            "raw": "{\"user_id\":\"non\",\"order_items\":[{\"product_id\":\"aut\",\"quantity\":74,\"price\":87}]}"
                         },
                         "description": ""
                     },
@@ -428,7 +428,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"order_items\":[{\"product_id\":\"sit\",\"quantity\":67,\"price\":87}]}"
+                            "raw": "{\"order_items\":[{\"product_id\":\"aut\",\"quantity\":7,\"price\":69}]}"
                         },
                         "description": ""
                     },
@@ -1341,7 +1341,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"tempora\",\"parent_id\":1}"
+                            "raw": "{\"name\":\"beatae\",\"parent_id\":18}"
                         },
                         "description": ""
                     },
@@ -1436,7 +1436,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"ea\",\"parent_id\":5}"
+                            "raw": "{\"name\":\"recusandae\",\"parent_id\":3}"
                         },
                         "description": ""
                     },
@@ -1573,7 +1573,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"est\"}"
+                            "raw": "{\"name\":\"dolore\"}"
                         },
                         "description": ""
                     },
@@ -1668,7 +1668,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"iste\"}"
+                            "raw": "{\"name\":\"dolore\"}"
                         },
                         "description": ""
                     },
@@ -1799,7 +1799,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"itaque\"}"
+                            "raw": "{\"name\":\"qui\"}"
                         },
                         "description": ""
                     },
@@ -1894,7 +1894,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"mollitia\"}"
+                            "raw": "{\"name\":\"molestias\"}"
                         },
                         "description": ""
                     },
@@ -1987,7 +1987,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"ndzdxmouzejnkhkpuujymgjkl\",\"price\":\"57071,246.74))\",\"category\":\"37,1,\",\"quantity\":88,\"created_at\":\"9860-60-50\",\"updated_at\":\"6638-16-32,3663-82-30\",\"search\":\"ewrrzgzebjmpparnshytl\",\"include\":\"clujlhdx,dzwaynbqh)\"},\"page\":84,\"per_page\":7,\"sort\":\"4,R,-X,-E,-l,-r,-r\"}"
+                            "raw": "{\"filter\":{\"name\":\"gqlb\",\"price\":\"86.36,0958.5))\",\"category\":\"52\",\"quantity\":62,\"created_at\":\"8000-80-67,6967-21-46\",\"updated_at\":\"2457-75-68,4259-96-45\",\"search\":\"tuvhhdarlhrkyxnjqdmp\",\"include\":\"ssy,qjvvl\"},\"page\":1,\"per_page\":6,\"sort\":\"d,-U8\"}"
                         },
                         "description": ""
                     },
@@ -2077,61 +2077,61 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "tfavtotrsvnblcqp",
+                                    "value": "hsooghbrqxqsryewoybxb",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Cumque pariatur laborum mollitia amet inventore.",
+                                    "value": "Consequatur qui quis sed architecto perspiciatis eum quidem perferendis.",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "price",
-                                    "value": "32",
+                                    "value": "66",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_category_id",
-                                    "value": "rerum",
+                                    "value": "adipisci",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_categories table."
                                 },
                                 {
                                     "key": "product_status_id",
-                                    "value": "ipsum",
+                                    "value": "porro",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_statuses table."
                                 },
                                 {
                                     "key": "quantity",
-                                    "value": "27",
+                                    "value": "19",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_variants[0][product_attribute_id]",
-                                    "value": "iure",
+                                    "value": "laboriosam",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][value]",
-                                    "value": "b",
+                                    "value": "yykxlincbkkhpswpr",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][additional_price]",
-                                    "value": "2",
+                                    "value": "90",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][quantity]",
-                                    "value": "58",
+                                    "value": "50",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -2192,61 +2192,61 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "q",
+                                    "value": "risibzlqazekosby",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Consequuntur rerum architecto voluptatem molestiae.",
+                                    "value": "Eligendi error libero rerum labore pariatur occaecati facilis.",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "price",
-                                    "value": "31",
+                                    "value": "63",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_category_id",
-                                    "value": "consectetur",
+                                    "value": "praesentium",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_categories table."
                                 },
                                 {
                                     "key": "product_status_id",
-                                    "value": "ut",
+                                    "value": "corrupti",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_statuses table."
                                 },
                                 {
                                     "key": "quantity",
-                                    "value": "43",
+                                    "value": "76",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_variants[0][product_attribute_id]",
-                                    "value": "dolorem",
+                                    "value": "blanditiis",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][value]",
-                                    "value": "f",
+                                    "value": "gvfqsrfavbs",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][additional_price]",
-                                    "value": "44",
+                                    "value": "32",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][quantity]",
-                                    "value": "14",
+                                    "value": "1",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -2356,6 +2356,52 @@
                             "header": [],
                             "code": 200,
                             "body": "{\n    \"message\": \"Product deleted successfully.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Restore a soft deleted product.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/products\/:id\/restore",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/products\/:id\/restore",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the product."
+                                }
+                            ]
+                        },
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Product restored successfully.\"\n}",
                             "name": ""
                         },
                         {
@@ -2803,7 +2849,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"wooegyydzknzbmhpklpdx\",\"email\":\"kilback.malika@example.org\",\"role\":\"4\",\"created_at\":\"6521-44-30,7354-51-24\",\"updated_at\":\"3513-84-93,6621-03-65\",\"search\":\"ixe\",\"include\":\"puh,ozdd,em)\"},\"page\":56,\"per_page\":5,\"sort\":\"gr,CV,mg,-I3\"}"
+                            "raw": "{\"filter\":{\"name\":\"ebu\",\"email\":\"mpfannerstill@example.com\",\"role\":\"9,\",\"created_at\":\"8265-86-13\",\"updated_at\":\"3946-22-98,9927-01-91\",\"search\":\"shsxcykvtjdldqpvcfxqzyi\",\"include\":\"\"},\"page\":75,\"per_page\":13,\"sort\":\"NDw3,R1zCc,-iRFN2,-G_eaL,fZwAt,lr6rg,-kL5In,Uxrfy\"}"
                         },
                         "description": ""
                     },
@@ -2890,7 +2936,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"mxdqktetvofrwxajmhbgr\",\"email\":\"clarabelle48@example.net\",\"password\":\"{O9wXVWT]&L>z8\\\/U\",\"role_id\":\"neque\",\"address\":{\"address_line1\":\"shiqhzvlxrqfdhnuoetnt\",\"city\":\"gbdpjigmb\",\"country\":\"osepkgxdcmbtqlkrnsr\",\"postal_code\":\"utlpazdyarjqsw\",\"address_line2\":\"thqaarazpxg\",\"state\":\"ggkzmimkexygc\"}}"
+                            "raw": "{\"name\":\"jebvqrfmdxjcdzmo\",\"email\":\"charley05@example.org\",\"password\":\"#,|yV(\",\"role_id\":\"ut\",\"address\":{\"address_line1\":\"wu\",\"city\":\"hsygwhgubrtbdnfgnpzj\",\"country\":\"jhtqccyrbffgonholga\",\"postal_code\":\"hnbjjz\",\"address_line2\":\"mxfqyszbau\",\"state\":\"yiwlgmupvpjaxpyxerdz\"}}"
                         },
                         "description": ""
                     },
@@ -2939,7 +2985,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"tgluuuz\",\"email\":\"madaline70@example.org\",\"password\":\"n{[niyFw%c[L_Vb){e.Q\",\"address\":{\"address_line1\":\"lcpjywmylg\",\"city\":\"pgsh\",\"country\":\"duz\",\"postal_code\":\"kopacnazpccmc\",\"address_line2\":\"hdtuyepnwgzwhjjekgnvlydvf\",\"state\":\"kjmlpghtfr\"}}"
+                            "raw": "{\"name\":\"lbodymawjrlippfzw\",\"email\":\"ylehner@example.org\",\"password\":\"1@DwvwTpG\",\"address\":{\"address_line1\":\"garhmkbqznxtv\",\"city\":\"klno\",\"country\":\"qmmhseswsdvzm\",\"postal_code\":\"ppct\",\"address_line2\":\"mo\",\"state\":\"hdtuihbogcpe\"}}"
                         },
                         "description": ""
                     },
@@ -3119,19 +3165,19 @@
                             "formdata": [
                                 {
                                     "key": "user_id",
-                                    "value": "placeat",
+                                    "value": "natus",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the users table."
                                 },
                                 {
                                     "key": "name",
-                                    "value": "yehg",
+                                    "value": "khyjhfqvpd",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Quasi dolor consequatur ut dolorem.",
+                                    "value": "Non odit animi omnis culpa quos beatae.",
                                     "type": "text",
                                     "description": "Must not be greater than 1000 characters."
                                 },
@@ -3192,13 +3238,13 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "zwajgaigkdxcnpw",
+                                    "value": "idobriyjtivzla",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Consequatur molestias nihil commodi.",
+                                    "value": "Autem dolorum voluptas non distinctio ut in eligendi.",
                                     "type": "text",
                                     "description": "Must not be greater than 1000 characters."
                                 },

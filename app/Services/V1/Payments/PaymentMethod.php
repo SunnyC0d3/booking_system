@@ -18,7 +18,7 @@ class PaymentMethod
     {
         $user = $request->user();
 
-        if ($user->hasPermission('view_payment_methods')) {
+        if ($user->hasPermission('view_users')) {
             $paymentMethods = DB::all();
 
             return $this->ok('Payment Methods retrieved successfully.', $paymentMethods);
@@ -31,7 +31,7 @@ class PaymentMethod
     {
         $user = $request->user();
 
-        if ($user->hasPermission('view_payment_methods')) {
+        if ($user->hasPermission('view_users')) {
             return $this->ok('Payment Method retrieved successfully.', $paymentMethod);
         }
 
@@ -42,7 +42,7 @@ class PaymentMethod
     {
         $user = $request->user();
 
-        if ($user->hasPermission('create_payment_methods')) {
+        if ($user->hasPermission('create_users')) {
             $data = $request->validated();
 
             $paymentMethod = DB::create($data);
@@ -57,7 +57,7 @@ class PaymentMethod
     {
         $user = $request->user();
 
-        if ($user->hasPermission('edit_payment_methods')) {
+        if ($user->hasPermission('edit_users')) {
             $data = $request->validated();
 
             $paymentMethod->update($data);
@@ -72,7 +72,7 @@ class PaymentMethod
     {
         $user = $request->user();
 
-        if ($user->hasPermission('delete_payment_methods')) {
+        if ($user->hasPermission('delete_users')) {
             $paymentMethod->forceDelete();
 
             return $this->ok('Payment Method deleted successfully.');

@@ -83,14 +83,14 @@ endpoints:
         name: name
         description: 'The name of the product status.'
         required: true
-        example: est
+        example: dolore
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      name: est
+      name: dolore
     fileParameters: []
     responses:
       -
@@ -222,14 +222,14 @@ endpoints:
         name: name
         description: 'The updated name of the product status.'
         required: true
-        example: iste
+        example: dolore
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      name: iste
+      name: dolore
     fileParameters: []
     responses:
       -

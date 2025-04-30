@@ -154,7 +154,6 @@ Route::prefix('admin/payment-methods')
     ->group(function () {
         Route::get('/', 'index')->name('admin.paymentmethods.index');
         Route::post('/', 'store')->name('admin.paymentmethods.store');
-        Route::get('/{paymentMethod}', 'show')->name('admin.paymentmethods.show');
         Route::post('/{paymentMethod}', 'update')->name('admin.paymentmethods.update');
         Route::delete('/{paymentMethod}', 'destroy')->name('admin.paymentmethods.destroy');
     });

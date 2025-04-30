@@ -100,7 +100,7 @@ endpoints:
         name: user_id
         description: 'The <code>id</code> of an existing record in the users table.'
         required: true
-        example: ratione
+        example: non
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -131,7 +131,7 @@ endpoints:
         name: 'order_items[].product_id'
         description: 'The <code>id</code> of an existing record in the products table.'
         required: true
-        example: qui
+        example: aut
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -151,7 +151,7 @@ endpoints:
         name: 'order_items[].quantity'
         description: 'Must be at least 1.'
         required: true
-        example: 75
+        example: 74
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -161,19 +161,19 @@ endpoints:
         name: 'order_items[].price'
         description: 'Must be at least 0.'
         required: true
-        example: 38
+        example: 87
         type: number
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      user_id: ratione
+      user_id: non
       order_items:
         -
-          product_id: qui
-          quantity: 75
-          price: 38
+          product_id: aut
+          quantity: 74
+          price: 87
     fileParameters: []
     responses:
       -
@@ -336,7 +336,7 @@ endpoints:
         name: 'order_items[].product_id'
         description: 'The <code>id</code> of an existing record in the products table.'
         required: true
-        example: sit
+        example: aut
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -356,7 +356,7 @@ endpoints:
         name: 'order_items[].quantity'
         description: 'Must be at least 1.'
         required: true
-        example: 67
+        example: 7
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -366,7 +366,7 @@ endpoints:
         name: 'order_items[].price'
         description: 'Must be at least 0.'
         required: true
-        example: 87
+        example: 69
         type: number
         enumValues: []
         exampleWasSpecified: false
@@ -375,9 +375,9 @@ endpoints:
     cleanBodyParameters:
       order_items:
         -
-          product_id: sit
-          quantity: 67
-          price: 87
+          product_id: aut
+          quantity: 7
+          price: 69
     fileParameters: []
     responses:
       -

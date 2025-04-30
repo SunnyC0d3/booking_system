@@ -22,7 +22,7 @@ endpoints:
         name: id
         description: 'The ID of the verify.'
         required: true
-        example: molestiae
+        example: ut
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -32,15 +32,15 @@ endpoints:
         name: hash
         description: ''
         required: true
-        example: natus
+        example: aut
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanUrlParameters:
-      id: molestiae
-      hash: natus
+      id: ut
+      hash: aut
     queryParameters:
       id:
         name: id
