@@ -2,8 +2,6 @@
 
 namespace App\Requests\V1;
 
-use App\Requests\V1\BaseFormRequest;
-
 class UpdateProductCategoryRequest extends BaseFormRequest
 {
     protected ?int $productCategoryId = null;

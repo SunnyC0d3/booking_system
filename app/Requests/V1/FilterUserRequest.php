@@ -2,8 +2,6 @@
 
 namespace App\Requests\V1;
 
-use App\Requests\V1\BaseFormRequest;
-
 class FilterUserRequest extends BaseFormRequest
 {
     public function rules(): array

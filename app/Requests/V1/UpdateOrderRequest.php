@@ -2,8 +2,6 @@
 
 namespace App\Requests\V1;
 
-use App\Requests\V1\BaseFormRequest;
-
 class UpdateOrderRequest extends BaseFormRequest
 {
     public function authorize(): bool

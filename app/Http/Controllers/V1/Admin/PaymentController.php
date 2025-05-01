@@ -3,24 +3,60 @@
 namespace App\Http\Controllers\V1\Admin;
 
 use Illuminate\Http\Request;
+use App\Requests\V1\StorePaymentRequest;
 use App\Http\Controllers\Controller;
+use App\Services\V1\Payments\StripePayment;
 use App\Traits\V1\ApiResponses;
+use App\Constants\PaymentGateways;
 use \Exception;
-use App\Models\Payment;
 
 class PaymentController extends Controller
 {
     use ApiResponses;
 
-    public function index() {}
+    public function __construct()
+    {
+    }
 
-    public function create() {}
+    public function stripeWebhook(Request $request)
+    {
+        try {
+            $handler = $this->handle(PaymentGateways::STRIPE);
 
-    public function store(Request $request) {}
+            if (!class_exists($handler)) {
+                return $this->error('Unsupported payment gateway', 400);
+            }
 
-    public function edit(Payment $payment) {}
+            $handler = app($handler);
 
-    public function update(Request $request, Payment $payment) {}
+            return $handler->webhook($request);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
+    }
 
-    public function destroy(Payment $payment) {}
+    public function store(StorePaymentRequest $request, string $gateway)
+    {
+        try {
+            $handler = $this->handle($gateway);
+
+            if (!class_exists($handler)) {
+                return $this->error('Unsupported payment gateway', 400);
+            }
+
+            $handler = app($handler);
+
+            return $handler->createPayment($request);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
+    }
+
+    private function handle(string $gateway)
+    {
+        return match ($gateway) {
+            PaymentGateways::STRIPE => StripePayment::class,
+            default => null,
+        };
+    }
 }

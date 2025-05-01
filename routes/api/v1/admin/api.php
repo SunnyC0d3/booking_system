@@ -15,6 +15,7 @@ use App\Http\Controllers\V1\Admin\ProductCategoryController;
 use App\Http\Controllers\V1\Admin\ProductStatusController;
 use App\Http\Controllers\V1\Admin\ProductTagController;
 use App\Http\Controllers\V1\Admin\PaymentMethodController;
+use App\Http\Controllers\V1\Admin\PaymentController;
 use App\Http\Controllers\V1\Admin\OrderController;
 
 // Admin/Users
@@ -159,15 +160,24 @@ Route::prefix('admin/payment-methods')
     });
 
 // Admin/Orders
-Route::prefix('admin')
+Route::prefix('admin/orders')
     ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin', 'emailVerified'])
     ->controller(OrderController::class)
     ->group(function () {
-        Route::get('orders', 'index')->name('admin.orders.index');
-        Route::post('orders', 'store')->name('admin.orders.store');
-        Route::get('orders/{order}', 'show')->name('admin.orders.show');
-        Route::post('orders/{order}', 'update')->name('admin.orders.update');
-        Route::delete('orders/{order}', 'destroy')->name('admin.orders.destroy');
-        Route::delete('orders/{id}/force-delete', 'forceDelete')->name('admin.orders.forceDelete');
-        Route::patch('orders/{id}/restore', 'restore')->name('admin.orders.restore');
+        Route::get('/', 'index')->name('admin.orders.index');
+        Route::post('/', 'store')->name('admin.orders.store');
+        Route::get('/{order}', 'show')->name('admin.orders.show');
+        Route::post('/{order}', 'update')->name('admin.orders.update');
+        Route::delete('/{order}', 'destroy')->name('admin.orders.destroy');
+        Route::delete('/{id}/force-delete', 'forceDelete')->name('admin.orders.forceDelete');
+        Route::patch('/{id}/restore', 'restore')->name('admin.orders.restore');
+    });
+
+// Admin/Payments
+Route::prefix('admin/payments')
+    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin', 'emailVerified'])
+    ->controller(PaymentController::class)
+    ->group(function () {
+        Route::post('/{gateway}/create', 'store')->name('admin.payments.store');
+        Route::post('/stripe/webhook', 'stripeWebhook')->name('admin.payments.stripe.webhook');
     });
