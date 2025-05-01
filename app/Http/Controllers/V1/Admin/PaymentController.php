@@ -9,6 +9,7 @@ use App\Services\V1\Payments\StripePayment;
 use App\Traits\V1\ApiResponses;
 use App\Constants\PaymentGateways;
 use \Exception;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
@@ -31,6 +32,7 @@ class PaymentController extends Controller
 
             return $handler->webhook($request);
         } catch (Exception $e) {
+            Log::error('Stripe webhook error: ' . $e->getMessage());
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
     }

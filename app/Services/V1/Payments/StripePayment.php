@@ -62,16 +62,11 @@ class StripePayment implements PaymentHandler
         $sigHeader = $request->header('Stripe-Signature');
         $secret = config('services.stripe.webhook_secret');
 
-        try {
-            $event = Webhook::constructEvent($payload, $sigHeader, $secret);
-        } catch (\Exception $e) {
-            Log::error('Stripe webhook error: ' . $e->getMessage());
-            return response()->json(['error' => 'Invalid webhook'], 400);
-        }
+        $event = Webhook::constructEvent($payload, $sigHeader, $secret);
 
         if ($event->type === 'payment_intent.succeeded') {
             $intent = $event->data->object;
-            $payment = Payment::where('transaction_reference', $intent->id)->first();
+            $payment = DB::where('transaction_reference', $intent->id)->first();
 
             if ($payment) {
                 $payment->status = 'paid';
@@ -83,7 +78,7 @@ class StripePayment implements PaymentHandler
 
         if ($event->type === 'payment_intent.payment_failed') {
             $intent = $event->data->object;
-            $payment = Payment::where('transaction_reference', $intent->id)->first();
+            $payment = DB::where('transaction_reference', $intent->id)->first();
 
             if ($payment) {
                 $payment->status = 'failed';
@@ -92,7 +87,7 @@ class StripePayment implements PaymentHandler
             }
         }
 
-        return response()->json(['received' => true]);
+        return $this->ok('Webhook update.', true);
     }
 
 }
