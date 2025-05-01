@@ -39,7 +39,7 @@ class EmailVerificationController
             $user->markEmailAsVerified();
         }
 
-        return redirect(env('APP_URL_FRONTEND') . env('APP_URL_FRONTEND_EMAIL_VERIFIED'));
+        return redirect(config('services.app_frontend_url') . config('services.app_frontend_email_verify'));
     }
 
     /**

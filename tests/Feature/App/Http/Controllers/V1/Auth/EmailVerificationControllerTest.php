@@ -23,7 +23,7 @@ class EmailVerificationControllerTest extends TestCase
 
         $response = $this->get($signedUrl);
 
-        $response->assertRedirect(env('APP_URL_FRONTEND') . env('APP_URL_FRONTEND_EMAIL_VERIFIED'));
+        $response->assertRedirect(config('app_frontend_url') . config('app_frontend_email_verify'));
         $this->assertNotNull($user->fresh()->email_verified_at);
     }
 

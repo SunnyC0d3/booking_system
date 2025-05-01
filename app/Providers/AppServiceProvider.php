@@ -24,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
         Passport::refreshTokensExpireIn(now()->addDays(7));
 
         ResetPassword::createUrlUsing(function (User $user, string $token) {
-            return env('APP_URL_FRONTEND') . env('APP_URL_FRONTEND_PASSWORD_RESET') . '?token=' . $token;
+            return config('services.app_frontend_url') . config('services.app_frontend_pwr') . '?token=' . $token;
         });
     }
 }

@@ -49,7 +49,7 @@ class VerifyHmacTest extends TestCase
     {
         $timestamp = time() - 600;
         $body = json_encode(['data' => 'test']);
-        $secretKey = env('HMAC_SECRET_KEY');
+        $secretKey = config('services.hmac_secret');
         $hmac = $this->generateHmac($timestamp, $body, $secretKey);
 
         $response = $this->postJson('/test-hmac', json_decode($body, true), [
@@ -85,7 +85,7 @@ class VerifyHmacTest extends TestCase
     {
         $timestamp = time();
         $body = '{"data":"test"}';
-        $secretKey = env('HMAC_SECRET_KEY');
+        $secretKey = config('services.hmac_secret');
         $hmac = $this->generateHmac($timestamp, $body, $secretKey);
 
         $response = $this->postJson('/test-hmac', ['data' => 'test'], [

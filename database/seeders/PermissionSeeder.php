@@ -39,15 +39,58 @@ class PermissionSeeder extends Seeder
             ['name' => 'create_products'],
             ['name' => 'edit_products'],
             ['name' => 'delete_products'],
+            ['name' => 'restore_products'],
+            ['name' => 'force_delete_products'],
+
+            // Product Attribute
+            ['name' => 'view_product_attributes'],
+            ['name' => 'create_product_attributes'],
+            ['name' => 'edit_product_attributes'],
+            ['name' => 'delete_product_attributes'],
+
+            // Product Category
+            ['name' => 'view_product_categories'],
+            ['name' => 'create_product_categories'],
+            ['name' => 'edit_product_categories'],
+            ['name' => 'delete_product_categories'],
+
+            // Product Status
+            ['name' => 'view_product_statuses'],
+            ['name' => 'create_product_statuses'],
+            ['name' => 'edit_product_statuses'],
+            ['name' => 'delete_product_statuses'],
+
+            // Product Tag
+            ['name' => 'view_product_tags'],
+            ['name' => 'create_product_tags'],
+            ['name' => 'edit_product_tags'],
+            ['name' => 'delete_product_tags'],
 
             // Category Management
             ['name' => 'view_categories'],
-            ['name' => 'manage_categories'],
+            ['name' => 'create_categories'],
+            ['name' => 'edit_categories'],
+            ['name' => 'delete_categories'],
 
             // Order Management
             ['name' => 'view_orders'],
-            ['name' => 'manage_orders'],
-            ['name' => 'cancel_orders'],
+            ['name' => 'create_orders'],
+            ['name' => 'edit_orders'],
+            ['name' => 'delete_orders'],
+            ['name' => 'restore_orders'],
+            ['name' => 'force_delete_orders'],
+
+            // Payment Methods
+            ['name' => 'view_payment_methods'],
+            ['name' => 'create_payment_methods'],
+            ['name' => 'edit_payment_methods'],
+            ['name' => 'delete_payment_methods'],
+
+            // Payment
+            ['name' => 'view_payments'],
+            ['name' => 'create_payments'],
+            ['name' => 'edit_payments'],
+            ['name' => 'delete_payments'],
 
             // Customer Service
             ['name' => 'view_customer_data'],

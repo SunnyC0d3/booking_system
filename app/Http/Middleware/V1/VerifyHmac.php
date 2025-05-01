@@ -12,7 +12,7 @@ class VerifyHmac
 
     public function handle(Request $request, Closure $next)
     {
-        $sharedSecretKey = env('HMAC_SECRET_KEY');
+        $sharedSecretKey = config('services.hmac_secret');
         $clientHmac = $request->header('X-Hmac');
         $timestamp = $request->header('X-Timestamp');
         $body = $request->getContent();

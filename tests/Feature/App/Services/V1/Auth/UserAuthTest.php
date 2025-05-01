@@ -25,8 +25,8 @@ class UserAuthTest extends TestCase
         $this->withoutMiddleware(VerifyHmac::class);
 
         DB::table('oauth_clients')->insert([
-            'id' => env('PASSPORT_PERSONAL_ACCESS_CLIENT_ID'),
-            'secret' => env('PASSPORT_PERSONAL_ACCESS_CLIENT_SECRET'),
+            'id' => config('services.passport_pa_id'),
+            'secret' => config('services.passport_pa_secret'),
             'name' => 'User Access Token',
             'redirect' => 'http://localhost',
             'personal_access_client' => true,
@@ -137,7 +137,7 @@ class UserAuthTest extends TestCase
         ]);
 
         $this->userAuth->register($request);
-        
+
         $request = Request::create('/reset-password', 'POST', [
             'email' => 'test@example.com',
             'token' => 'dummy-token',
