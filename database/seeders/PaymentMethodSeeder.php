@@ -10,11 +10,13 @@ class PaymentMethodSeeder extends Seeder
     public function run(): void
     {
         PaymentMethod::insert([
-            ['name' => 'Credit Card', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'PayPal', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Bank Transfer', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Apple Pay', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Google Pay', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'card', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'paypal', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'bank transfer', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'apple pay', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'google pay', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'stripe', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'amex', 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 }

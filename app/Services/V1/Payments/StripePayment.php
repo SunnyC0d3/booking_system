@@ -2,11 +2,14 @@
 
 namespace App\Services\V1\Payments;
 
-use App\Constants\PaymentGateways;
+use App\Constants\PaymentMethods;
 use Illuminate\Http\Request;
 use App\Models\Payment as DB;
+use App\Models\PaymentMethod;
 use App\Models\Order;
 use App\Traits\V1\ApiResponses;
+use Stripe\PaymentIntent;
+use Stripe\Stripe;
 
 class StripePayment implements PaymentHandler
 {
@@ -25,7 +28,7 @@ class StripePayment implements PaymentHandler
 
             $order = Order::findOrFail($data['order_id']);
 
-            Stripe::setApiKey(config('services.stripe.secret'));
+            Stripe::setApiKey(config('services.stripe_secret'));
 
             $intent = PaymentIntent::create([
                 'amount' => $order->total_amount * 100,
@@ -36,7 +39,7 @@ class StripePayment implements PaymentHandler
                 ],
             ]);
 
-            $stripeMethod = PaymentMethod::where('name', PaymentGateways::STRIPE)->firstOrFail();
+            $stripeMethod = PaymentMethod::where('name', PaymentMethods::STRIPE)->firstOrFail();
 
             $payment = DB::create([
                 'order_id' => $order->id,
@@ -44,7 +47,7 @@ class StripePayment implements PaymentHandler
                 'payment_method_id' => $stripeMethod->id,
                 'amount' => $order->total_amount,
                 'status' => 'pending',
-                'processed_at' => null,
+                'processed_at' => now(),
                 'transaction_reference' => $intent->id,
             ]);
 
@@ -60,7 +63,7 @@ class StripePayment implements PaymentHandler
     {
         $payload = $request->getContent();
         $sigHeader = $request->header('Stripe-Signature');
-        $secret = config('services.stripe.webhook_secret');
+        $secret = config('services.stripe_secret');
 
         $event = Webhook::constructEvent($payload, $sigHeader, $secret);
 

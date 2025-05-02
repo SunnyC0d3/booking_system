@@ -4,20 +4,23 @@ namespace App\Constants;
 
 class PaymentMethods
 {
-    public const CREDIT_CARD = 'Credit Card';
-    public const PAYPAL = 'PayPal';
-    public const BANK_TRANSFER = 'Bank Transfer';
-    public const APPLEPAY = 'Apple Pay';
-    public const GOOGLEPAY = 'Google Pay';
+    public const CARD = 'card';
+    public const PAYPAL = 'paypal';
+    public const BANK_TRANSFER = 'bank transfer';
+    public const APPLE_PAY = 'apple pay';
+    public const GOOGLE_PAY = 'google pay';
+
+    public const STRIPE = 'stripe';
 
     public static function all(): array
     {
         return [
-            self::CREDIT_CARD,
+            self::CARD,
             self::PAYPAL,
             self::BANK_TRANSFER,
-            self::APPLEPAY,
-            self::GOOGLEPAY,
+            self::APPLE_PAY,
+            self::GOOGLE_PAY,
+            self::STRIPE,
         ];
     }
 }

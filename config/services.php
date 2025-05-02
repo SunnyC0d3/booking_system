@@ -41,4 +41,6 @@ return [
     'hmac_secret' => env('HMAC_SECRET_KEY'),
     'passport_pa_id' => env('PASSPORT_PERSONAL_ACCESS_CLIENT_ID'),
     'passport_pa_secret' => env('PASSPORT_PERSONAL_ACCESS_CLIENT_SECRET'),
+    'stripe_key' => env('STRIPE_PUBLIC_KEY'),
+    'stripe_secret' => env('STRIPE_SECRET_KEY'),
 ];

@@ -7,7 +7,7 @@ use App\Requests\V1\StorePaymentRequest;
 use App\Http\Controllers\Controller;
 use App\Services\V1\Payments\StripePayment;
 use App\Traits\V1\ApiResponses;
-use App\Constants\PaymentGateways;
+use App\Constants\PaymentMethods;
 use \Exception;
 use Illuminate\Support\Facades\Log;
 
@@ -57,7 +57,7 @@ class PaymentController extends Controller
     private function handle(string $gateway)
     {
         return match ($gateway) {
-            PaymentGateways::STRIPE => StripePayment::class,
+            PaymentMethods::STRIPE => StripePayment::class,
             default => null,
         };
     }
