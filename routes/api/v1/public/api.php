@@ -45,3 +45,14 @@ Route::middleware(['throttle:10,1', 'hmac'])
         Route::post('/forgot-password', 'forgotPassword')->name('password.email');
         Route::post('/reset-password', 'passwordReset')->name('password.update');
     });
+
+// Payment Page Demo
+
+Route::middleware(['throttle:10,1'])
+    ->group(function () {
+        Route::get('/orders/{orderId}/pay', function($orderId) {
+            return view('app', [
+                'orderId' => $orderId
+            ]);
+        })->name('orders.pay');
+    });
