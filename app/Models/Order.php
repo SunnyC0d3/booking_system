@@ -26,7 +26,7 @@ class Order extends Model
 
     public function setTotalAmountAttribute($value)
     {
-        $this->attributes['total_amount'] = round($value, 2);
+        $this->attributes['total_amount'] = round($value, 2) * 100;
     }
 
     public function user(): BelongsTo

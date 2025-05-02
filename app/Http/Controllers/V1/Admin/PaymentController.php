@@ -22,7 +22,7 @@ class PaymentController extends Controller
     public function stripeWebhook(Request $request)
     {
         try {
-            $handler = $this->handle(PaymentGateways::STRIPE);
+            $handler = $this->handle(PaymentMethods::STRIPE);
 
             if (!class_exists($handler)) {
                 return $this->error('Unsupported payment gateway', 400);

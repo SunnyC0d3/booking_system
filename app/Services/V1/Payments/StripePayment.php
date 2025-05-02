@@ -3,6 +3,8 @@
 namespace App\Services\V1\Payments;
 
 use App\Constants\PaymentMethods;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use App\Models\Payment as DB;
 use App\Models\PaymentMethod;
@@ -15,8 +17,11 @@ class StripePayment implements PaymentHandler
 {
     use ApiResponses;
 
+    private $secret;
+
     public function __construct()
     {
+        $this->secret = config('services.stripe_secret');
     }
 
     public function createPayment(Request $request)
@@ -26,25 +31,32 @@ class StripePayment implements PaymentHandler
         if ($user->hasPermission('create_payments')) {
             $data = $request->validated();
 
-            $order = Order::findOrFail($data['order_id']);
+            $order = Order::with(['orderItems.product', 'user'])->findOrFail($data['order_id']);
 
-            Stripe::setApiKey(config('services.stripe_secret'));
+            Stripe::setApiKey($this->secret);
+
+            $metaData = [
+                'order_id' => $order->id,
+                'order_total' => (string) $order->total_amount,
+                'user' => json_encode($this->getUserDetails($order->user)),
+                'products' => json_encode($this->getProductDetails($order->orderItems)),
+            ];
 
             $intent = PaymentIntent::create([
-                'amount' => $order->total_amount * 100,
+                'amount' => $order->total_amount,
                 'currency' => 'gbp',
-                'metadata' => [
-                    'order_id' => $order->id,
-                    'user_id' => $user->id,
+                'automatic_payment_methods' => [
+                    'enabled' => true
                 ],
+                'metadata' => $metaData,
             ]);
 
-            $stripeMethod = PaymentMethod::where('name', PaymentMethods::STRIPE)->firstOrFail();
+            $paymentMethod = PaymentMethod::where('name', PaymentMethods::STRIPE)->firstOrFail();
 
             $payment = DB::create([
                 'order_id' => $order->id,
                 'user_id' => $user->id,
-                'payment_method_id' => $stripeMethod->id,
+                'payment_method_id' => $paymentMethod->id,
                 'amount' => $order->total_amount,
                 'status' => 'pending',
                 'processed_at' => now(),
@@ -63,9 +75,8 @@ class StripePayment implements PaymentHandler
     {
         $payload = $request->getContent();
         $sigHeader = $request->header('Stripe-Signature');
-        $secret = config('services.stripe_secret');
 
-        $event = Webhook::constructEvent($payload, $sigHeader, $secret);
+        $event = Webhook::constructEvent($payload, $sigHeader, $this->secret);
 
         if ($event->type === 'payment_intent.succeeded') {
             $intent = $event->data->object;
@@ -91,6 +102,43 @@ class StripePayment implements PaymentHandler
         }
 
         return $this->ok('Webhook update.', true);
+    }
+
+    private function getProductDetails(Collection $orderItems)
+    {
+        $products = [];
+
+        foreach ($orderItems as $item) {
+            $products[] = [
+                'product_id' => $item->product->id,
+                'product_name' => $item->product->name,
+                'quantity' => $item->quantity,
+                'price' => $item->price,
+            ];
+        }
+
+        return $products;
+    }
+
+    private function getUserDetails(User $user)
+    {
+        $userDetails = [
+            'user_id' => $user->id,
+            'user_name' => $user->name,
+            'user_email' => $user->email,
+        ];
+
+        if ($user->userAddress) {
+            $userDetails['user_address'] = [
+                'line1' => $user->userAddress->address_line1,
+                'line2' => $user->userAddress->address_line2,
+                'city' => $user->userAddress->city,
+                'postcode' => $user->userAddress->postal_code,
+                'country' => $user->userAddress->country,
+            ];
+        }
+
+        return $userDetails;
     }
 
 }
