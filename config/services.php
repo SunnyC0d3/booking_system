@@ -43,4 +43,5 @@ return [
     'passport_pa_secret' => env('PASSPORT_PERSONAL_ACCESS_CLIENT_SECRET'),
     'stripe_key' => env('STRIPE_PUBLIC_KEY'),
     'stripe_secret' => env('STRIPE_SECRET_KEY'),
+    'stripe_webhook_secret' => env('STRIPE_WEBHOOK_SECRET_KEY'),
 ];

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import React, {useState} from 'react';
+import {PaymentElement, useStripe, useElements} from '@stripe/react-stripe-js';
 
-const CheckoutForm = ({ clientSecret }) => {
+const CheckoutForm = () => {
     const stripe = useStripe();
     const elements = useElements();
     const [message, setMessage] = useState(null);
@@ -17,11 +17,11 @@ const CheckoutForm = ({ clientSecret }) => {
             return;
         }
 
-        const { error, paymentIntent } = await stripe.confirmPayment({
+        const {error, paymentIntent} = await stripe.confirmPayment({
             elements,
             confirmParams: {
-                return_url: window.location.href, // Handle post-payment redirection
-            },
+                return_url: window.location.href,
+            }
         });
 
         if (error) {
@@ -37,7 +37,7 @@ const CheckoutForm = ({ clientSecret }) => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <PaymentElement />
+            <PaymentElement/>
             <button
                 type="submit"
                 disabled={!stripe || loading}
@@ -53,7 +53,7 @@ const CheckoutForm = ({ clientSecret }) => {
             >
                 {loading ? 'Processing...' : 'Pay now'}
             </button>
-            {message && <div style={{ marginTop: '20px', color: 'red' }}>{message}</div>}
+            {message && <div style={{marginTop: '20px', color: 'red'}}>{message}</div>}
         </form>
     );
 };

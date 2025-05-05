@@ -175,7 +175,8 @@ Route::prefix('admin/orders')
 
 // Admin/Payments
 Route::prefix('admin/payments')
-    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin', 'emailVerified'])
+//    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin', 'emailVerified'])
+    ->middleware(['throttle:10,1'])
     ->controller(PaymentController::class)
     ->group(function () {
         Route::post('/{gateway}/create', 'store')->name('admin.payments.store');

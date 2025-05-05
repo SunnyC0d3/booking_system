@@ -19,14 +19,14 @@ class Order extends Model
         'total_amount',
     ];
 
-    public function getTotalAmountAttribute($value)
-    {
-        return round($value, 2);
-    }
-
-    public function setTotalAmountAttribute($value)
+    public function setTotalAmountAttribute(int|float $value)
     {
         $this->attributes['total_amount'] = round($value, 2) * 100;
+    }
+
+    public function getTotalAmountAttribute(int|float $value)
+    {
+        return round($value, 2) * 100;
     }
 
     public function user(): BelongsTo
