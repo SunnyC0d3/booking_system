@@ -20,14 +20,15 @@ class PaymentSeeder extends Seeder
         foreach ($orders as $order) {
             $createdAt = Carbon::parse($order->created_at);
             $payments[] = [
-                'order_id'          => $order->id,
-                'user_id'           => $order->user_id,
-                'payment_method_id' => $paymentMethods[array_rand($paymentMethods)],
-                'amount'            => $order->total_amount,
-                'status'            => fake()->randomElement(['completed', 'pending', 'failed']),
-                'processed_at'      => $createdAt->addMinutes(rand(1, 60)),
-                'created_at'        => $createdAt,
-                'updated_at'        => $createdAt,
+                'order_id'                  => $order->id,
+                'user_id'                   => $order->user_id,
+                'payment_method_id'         => $paymentMethods[array_rand($paymentMethods)],
+                'amount'                    => $order->total_amount,
+                'status'                    => fake()->randomElement(['completed', 'pending', 'failed']),
+                'transaction_reference'     => 'pi_' . fake()->regexify('[A-Za-z0-9]{24}'),
+                'processed_at'              => $createdAt->addMinutes(rand(1, 60)),
+                'created_at'                => $createdAt,
+                'updated_at'                => $createdAt,
             ];
         }
 

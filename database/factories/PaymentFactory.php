@@ -15,15 +15,15 @@ class PaymentFactory extends Factory
     public function definition(): array
     {
         return [
-            'amount'       => fake()->randomFloat(),
-            'method'       => fake()->word(),
-            'status'       => fake()->word(),
-            'processed_at' => Carbon::now(),
-            'created_at'   => Carbon::now(),
-            'updated_at'   => Carbon::now(),
-
-            'order_id' => Order::factory(),
-            'user_id'  => User::factory(),
+            'amount'                => fake()->randomFloat(),
+            'method'                => fake()->word(),
+            'status'                => fake()->word(),
+            'transaction_reference' => 'pi_' . $this->faker->regexify('[A-Za-z0-9]{24}'),
+            'processed_at'          => Carbon::now(),
+            'created_at'            => Carbon::now(),
+            'updated_at'            => Carbon::now(),
+            'order_id'              => Order::factory(),
+            'user_id'               => User::factory(),
         ];
     }
 }

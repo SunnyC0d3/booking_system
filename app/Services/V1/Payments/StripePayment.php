@@ -11,8 +11,12 @@ use App\Models\Payment as DB;
 use App\Models\PaymentMethod;
 use App\Models\Order;
 use App\Traits\V1\ApiResponses;
+use Illuminate\Support\Facades\Log;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
+use Stripe\Webhook;
+use Stripe\Exception\SignatureVerificationException;
+use UnexpectedValueException;
 
 class StripePayment implements PaymentHandler
 {
@@ -80,11 +84,20 @@ class StripePayment implements PaymentHandler
 
     public function webhook(Request $request)
     {
-        dd('here');
         $payload = $request->getContent();
         $sigHeader = $request->header('Stripe-Signature');
 
-        $event = Webhook::constructEvent($payload, $sigHeader, $this->webhook_secret);
+        try {
+            $event = Webhook::constructEvent($payload, $sigHeader, $this->webhook_secret);
+
+            Log::info('Stripe Webhook Event:', (array) $event);
+        } catch (UnexpectedValueException $e) {
+            Log::error('Invalid Stripe payload', ['error' => $e->getMessage()]);
+            return response('Invalid payload', 400);
+        } catch (SignatureVerificationException $e) {
+            Log::error('Invalid Stripe signature', ['error' => $e->getMessage()]);
+            return response('Invalid signature', 400);
+        }
 
         if ($event->type === 'payment_intent.succeeded') {
             $intent = $event->data->object;

@@ -12,8 +12,9 @@ return new class extends Migration {
             $table->foreignId('order_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('payment_method_id')->constrained()->noActionOnDelete();
-            $table->decimal('amount');
+            $table->decimal('amount', 12, 2)->unsigned();
             $table->string('status');
+            $table->string('transaction_reference')->unique()->nullable();
             $table->dateTime('processed_at');
             $table->timestamps();
         });
