@@ -55,7 +55,7 @@ class StripePayment implements PaymentHandler
 
             $paymentMethod = PaymentMethod::where('name', PaymentMethods::STRIPE)->firstOrFail();
 
-            $payment = DB::create([
+            DB::create([
                 'order_id' => $order->id,
                 'user_id' => $order->user->id,
                 'payment_method_id' => $paymentMethod->id,

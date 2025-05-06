@@ -36,7 +36,12 @@ const CheckoutForm = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} style={{
+            margin: '0 auto',
+            width: '100%',
+            maxWidth: '650px',
+            padding: '2rem'
+        }}>
             <PaymentElement/>
             <button
                 type="submit"

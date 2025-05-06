@@ -18,7 +18,7 @@ const Payment = ({orderId}) => {
                 setError('Failed to retrieve payment info');
                 console.error('Error fetching client secret:', err);
             });
-    }, [orderId, clientSecret]);
+    }, [orderId]);
 
     if (error) {
         return <div>Error: {error}</div>;
@@ -29,14 +29,11 @@ const Payment = ({orderId}) => {
     }
 
     const options = {
-        clientSecret,
-        appearance: {
-            theme: 'stripe',
-        },
+        clientSecret: clientSecret
     };
 
     return (
-        <Elements stripe={stripePromise}>
+        <Elements stripe={stripePromise} options={options}>
             <CheckoutForm />
         </Elements>
     );
