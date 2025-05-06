@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->string('status');
             $table->string('transaction_reference')->unique()->nullable();
             $table->dateTime('processed_at');
+            $table->longText('response_payload')->nullable();
             $table->timestamps();
         });
     }

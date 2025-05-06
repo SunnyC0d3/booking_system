@@ -89,8 +89,7 @@ class StripePayment implements PaymentHandler
 
         try {
             $event = Webhook::constructEvent($payload, $sigHeader, $this->webhook_secret);
-
-            Log::info('Stripe Webhook Event:', (array) $event);
+            Log::info('Stripe Webhook Event Type:', (array) $event);
         } catch (UnexpectedValueException $e) {
             Log::error('Invalid Stripe payload', ['error' => $e->getMessage()]);
             return response('Invalid payload', 400);

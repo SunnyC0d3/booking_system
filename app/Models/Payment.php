@@ -16,8 +16,10 @@ class Payment extends Model
         'payment_method_id',
         'amount',
         'method',
+        'transaction_reference',
         'status',
         'processed_at',
+        'response_payload'
     ];
 
     public function paymentMethod(): BelongsTo
