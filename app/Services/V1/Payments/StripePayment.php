@@ -3,6 +3,7 @@
 namespace App\Services\V1\Payments;
 
 use App\Constants\PaymentMethods;
+use App\Constants\OrderStatuses;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -31,15 +32,16 @@ class StripePayment implements PaymentHandler
         $user = $request->user();
 //BRING THIS BACK IN AFTER TESTING
 //        if ($user->hasPermission('create_payments')) {
-            $data = $request->validated();
+        $data = $request->validated();
 
-            $order = Order::with(['orderItems.product', 'user'])->findOrFail($data['order_id']);
+        $order = Order::with(['orderItems.product', 'user'])->findOrFail($data['order_id']);
 
-            Stripe::setApiKey($this->secret);
+        Stripe::setApiKey($this->secret);
 
+        if ($order->status->name === OrderStatuses::PENDING_PAYMENT) {
             $metaData = [
                 'order_id' => $order->id,
-                'order_total' => (string) $order->total_amount,
+                'order_total' => (string)$order->total_amount,
                 'user' => json_encode($this->getUserDetails($order->user)),
                 'products' => json_encode($this->getProductDetails($order->orderItems)),
             ];
@@ -68,6 +70,9 @@ class StripePayment implements PaymentHandler
             return $this->ok('PaymentIntent created successfully.', [
                 'client_secret' => $intent->client_secret,
             ]);
+        } else {
+            return $this->error('Payment has already been made for this order.', 400);
+        }
         //}
 
         //return $this->error('You do not have the required permissions.', 403);
@@ -75,6 +80,7 @@ class StripePayment implements PaymentHandler
 
     public function webhook(Request $request)
     {
+        dd('here');
         $payload = $request->getContent();
         $sigHeader = $request->header('Stripe-Signature');
 
