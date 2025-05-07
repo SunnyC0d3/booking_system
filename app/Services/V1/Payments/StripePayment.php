@@ -4,7 +4,9 @@ namespace App\Services\V1\Payments;
 
 use App\Constants\PaymentMethods;
 use App\Constants\OrderStatuses;
+use App\Constants\PaymentStatuses;
 use App\Models\User;
+use App\Models\OrderStatus;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use App\Models\Payment as DB;
@@ -66,7 +68,7 @@ class StripePayment implements PaymentHandler
                 'user_id' => $order->user->id,
                 'payment_method_id' => $paymentMethod->id,
                 'amount' => $order->total_amount,
-                'status' => 'pending',
+                'status' => PaymentStatuses::PENDING,
                 'processed_at' => now(),
                 'transaction_reference' => $intent->id,
             ]);
@@ -98,30 +100,32 @@ class StripePayment implements PaymentHandler
             return response('Invalid signature', 400);
         }
 
-        if ($event->type === 'payment_intent.succeeded') {
-            $intent = $event->data->object;
-            $payment = DB::where('transaction_reference', $intent->id)->first();
+        $intent = $event->data->object;
+        $payment = DB::where('transaction_reference', $intent->id)->first();
 
-            if ($payment) {
-                $payment->status = 'paid';
+        if ($payment) {
+            $order = $payment->order;
+
+            if ($order->status->name === OrderStatuses::PENDING_PAYMENT) {
+                if ($event->type === 'payment_intent.succeeded') {
+                    $payment->status = PaymentStatuses::PAID;
+                    $order->status_id = OrderStatus::where('name', OrderStatuses::CONFIRMED)->value('id');
+                    $order->save();
+                }
+
+                if ($event->type === 'payment_intent.payment_failed') {
+                    $payment->status = PaymentStatuses::FAILED;
+                    $order->status_id = OrderStatus::where('name', OrderStatuses::FAILED)->value('id');
+                    $order->save();
+                }
+
                 $payment->processed_at = now();
                 $payment->response_payload = json_encode($intent);
                 $payment->save();
             }
         }
 
-        if ($event->type === 'payment_intent.payment_failed') {
-            $intent = $event->data->object;
-            $payment = DB::where('transaction_reference', $intent->id)->first();
-
-            if ($payment) {
-                $payment->status = 'failed';
-                $payment->response_payload = json_encode($intent);
-                $payment->save();
-            }
-        }
-
-        return $this->ok('Webhook update.', true);
+        return $this->ok('Webhook update.');
     }
 
     private function getProductDetails(Collection $orderItems)

@@ -15,7 +15,7 @@ const Payment = ({orderId}) => {
                 setClientSecret(response.data.data.client_secret);
             })
             .catch(err => {
-                setError('Failed to retrieve payment info');
+                setError('Failed to retrieve payment info, look at network tab for more info.');
                 console.error('Error fetching client secret:', err);
             });
     }, [orderId]);
