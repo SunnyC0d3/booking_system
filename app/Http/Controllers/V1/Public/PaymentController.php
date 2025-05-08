@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\V1\Admin;
+namespace App\Http\Controllers\V1\Public;
 
 use Illuminate\Http\Request;
 use App\Requests\V1\StorePaymentRequest;

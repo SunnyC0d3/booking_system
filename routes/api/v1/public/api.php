@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 // Auth Controllers
 use App\Http\Controllers\V1\Auth\AuthController;
+use App\Http\Controllers\V1\Public\PaymentController;
 use App\Http\Controllers\V1\Auth\EmailVerificationController;
 
 // Auth
@@ -15,7 +16,7 @@ Route::middleware(['throttle:3,1', 'hmac'])
         Route::post('/login', 'login')->name('auth.login');
     });
 
-Route::middleware(['throttle:3,1', 'auth:api'])
+Route::middleware(['auth:api'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/logout', 'logout')->name('auth.logout');
@@ -46,13 +47,12 @@ Route::middleware(['throttle:10,1', 'hmac'])
         Route::post('/reset-password', 'passwordReset')->name('password.update');
     });
 
-// Payment Page Demo
+// Payments
 
-Route::middleware(['throttle:10,1'])
+Route::prefix('payments')
+//    ->middleware(['hmac'])
+    ->controller(PaymentController::class)
     ->group(function () {
-        Route::get('/orders/{orderId}/pay', function($orderId) {
-            return view('app', [
-                'orderId' => $orderId
-            ]);
-        })->name('order.pay');
+        Route::post('/{gateway}/create', 'store')->name('payments.store');
+        Route::post('/stripe/webhook', 'stripeWebhook')->name('payments.stripe.webhook');
     });

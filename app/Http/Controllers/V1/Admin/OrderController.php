@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Traits\V1\ApiResponses;
 use App\Models\Order as DB;
-use App\Models\OrderItem;
 use \Exception;
 
 class OrderController extends Controller

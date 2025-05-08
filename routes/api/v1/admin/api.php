@@ -15,13 +15,12 @@ use App\Http\Controllers\V1\Admin\ProductCategoryController;
 use App\Http\Controllers\V1\Admin\ProductStatusController;
 use App\Http\Controllers\V1\Admin\ProductTagController;
 use App\Http\Controllers\V1\Admin\PaymentMethodController;
-use App\Http\Controllers\V1\Admin\PaymentController;
 use App\Http\Controllers\V1\Admin\OrderController;
 
 // Admin/Users
 
 Route::prefix('admin/users')
-    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
     ->controller(UserController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.users.index');
@@ -34,7 +33,7 @@ Route::prefix('admin/users')
 // Admin/Vendors
 
 Route::prefix('admin/vendors')
-    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
     ->controller(VendorController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.vendors.index');
@@ -47,7 +46,7 @@ Route::prefix('admin/vendors')
 // Admin/Permissions
 
 Route::prefix('admin/permissions')
-    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:super admin', 'emailVerified'])
     ->controller(PermissionController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.permissions.index');
@@ -59,7 +58,7 @@ Route::prefix('admin/permissions')
 // Admin/Roles
 
 Route::prefix('admin/roles')
-    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:super admin', 'emailVerified'])
     ->controller(RoleController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.roles.index');
@@ -71,7 +70,7 @@ Route::prefix('admin/roles')
 // Admin/RolePermission
 
 Route::prefix('admin')
-    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:super admin', 'emailVerified'])
     ->controller(RolePermissionController::class)
     ->group(function () {
         Route::get('roles/{role}/permissions', 'index')->name('admin.rolepermission.index');
@@ -83,7 +82,7 @@ Route::prefix('admin')
 // Admin/Products
 
 Route::prefix('admin/products')
-    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
     ->controller(ProductController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.products.index');
@@ -98,7 +97,7 @@ Route::prefix('admin/products')
 // Admin/Product Attributes
 
 Route::prefix('admin/product-attributes')
-    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
     ->controller(ProductAttributeController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.products.attributes.index');
@@ -111,7 +110,7 @@ Route::prefix('admin/product-attributes')
 // Admin/Product Categories
 
 Route::prefix('admin/product-categories')
-    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
     ->controller(ProductCategoryController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.products.categories.index');
@@ -124,7 +123,7 @@ Route::prefix('admin/product-categories')
 // Admin/Product Statuses
 
 Route::prefix('admin/product-statuses')
-    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
     ->controller(ProductStatusController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.products.statuses.index');
@@ -137,7 +136,7 @@ Route::prefix('admin/product-statuses')
 // Admin/Product Tags
 
 Route::prefix('admin/product-tags')
-    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
     ->controller(ProductTagController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.products.tags.index');
@@ -150,7 +149,7 @@ Route::prefix('admin/product-tags')
 // Admin/Payment Methods
 
 Route::prefix('admin/payment-methods')
-    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
     ->controller(PaymentMethodController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.paymentmethods.index');
@@ -160,8 +159,9 @@ Route::prefix('admin/payment-methods')
     });
 
 // Admin/Orders
+
 Route::prefix('admin/orders')
-    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
     ->controller(OrderController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.orders.index');
@@ -171,14 +171,4 @@ Route::prefix('admin/orders')
         Route::delete('/{order}', 'destroy')->name('admin.orders.destroy');
         Route::delete('/{id}/force-delete', 'forceDelete')->name('admin.orders.forceDelete');
         Route::patch('/{id}/restore', 'restore')->name('admin.orders.restore');
-    });
-
-// Admin/Payments
-Route::prefix('admin/payments')
-//    ->middleware(['throttle:10,1', 'auth:api', 'roles:super admin', 'emailVerified'])
-    ->middleware(['throttle:10,1'])
-    ->controller(PaymentController::class)
-    ->group(function () {
-        Route::post('/{gateway}/create', 'store')->name('admin.payments.store');
-        Route::post('/stripe/webhook', 'stripeWebhook')->name('admin.payments.stripe.webhook');
     });

@@ -26,7 +26,7 @@ const Payment = ({ orderId }) => {
     useEffect(() => {
         const fetchPaymentIntent = async () => {
             try {
-                const response = await axios.post('/api/admin/payments/stripe/create', { order_id: orderId });
+                const response = await axios.post('/api/payments/stripe/create', { order_id: orderId });
                 const secret = response.data.data.client_secret;
 
                 if (secret) {
@@ -35,10 +35,8 @@ const Payment = ({ orderId }) => {
 
                     if (paymentIntent.status === 'requires_payment_method' || paymentIntent.status === 'requires_confirmation') {
                         setClientSecret(secret);
-                        console.log('1. here');
                     } else {
                         setPaymentStatus(paymentIntent.status);
-                        console.log('2. here');
                     }
                 } else {
                     setPaymentStatus('succeeded');
