@@ -16,6 +16,7 @@ use App\Traits\V1\ApiResponses;
 use Illuminate\Support\Facades\Log;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
+use Stripe\Customer;
 use Stripe\Webhook;
 use Stripe\Exception\SignatureVerificationException;
 use UnexpectedValueException;
@@ -35,16 +36,12 @@ class StripePayment implements PaymentHandler
 
     public function createPayment(Request $request)
     {
-        $user = $request->user();
-//BRING THIS BACK IN AFTER TESTING
-//        if ($user->hasPermission('create_payments')) {
         $data = $request->validated();
 
         $order = Order::with(['orderItems.product', 'user'])->findOrFail($data['order_id']);
+        $paymentMethod = PaymentMethod::where('name', PaymentMethods::STRIPE)->firstOrFail();
 
         Stripe::setApiKey($this->secret);
-
-        $paymentMethod = PaymentMethod::where('name', PaymentMethods::STRIPE)->firstOrFail();
 
         $existingPayment = DB::where('order_id', $order->id)
             ->where('payment_method_id', $paymentMethod->id)
@@ -62,12 +59,13 @@ class StripePayment implements PaymentHandler
             ]);
         }
 
-        $metaData = [
-            'order_id' => $order->id,
-            'order_total' => (string)$order->total_amount,
-            'user' => json_encode($this->getUserDetails($order->user)),
-            'products' => json_encode($this->getProductDetails($order->orderItems)),
-        ];
+        if (!$order->user->stripe_customer_id) {
+            $customer = Customer::create($this->getUserDetails($order->user));
+            $order->user->stripe_customer_id = $customer->id;
+            $order->user->save();
+        } else {
+            $customer = Customer::retrieve($order->user->stripe_customer_id);
+        }
 
         $intent = PaymentIntent::create([
             'amount' => $order->total_amount,
@@ -75,7 +73,11 @@ class StripePayment implements PaymentHandler
             'automatic_payment_methods' => [
                 'enabled' => true
             ],
-            'metadata' => $metaData,
+            'customer' => $customer->id,
+            'metadata' => [
+                'order_id' => $order->id,
+                'user_id' => $order->user->id
+            ]
         ]);
 
         DB::create([
@@ -91,9 +93,6 @@ class StripePayment implements PaymentHandler
         return $this->ok('PaymentIntent created successfully.', [
             'client_secret' => $intent->client_secret,
         ]);
-        //}
-
-        //return $this->error('You do not have the required permissions.', 403);
     }
 
     public function webhook(Request $request)
@@ -157,17 +156,16 @@ class StripePayment implements PaymentHandler
     private function getUserDetails(User $user)
     {
         $userDetails = [
-            'user_id' => $user->id,
-            'user_name' => $user->name,
-            'user_email' => $user->email,
+            'name' => $user->name,
+            'email' => $user->email,
         ];
 
         if ($user->userAddress) {
-            $userDetails['user_address'] = [
+            $userDetails['address'] = [
                 'line1' => $user->userAddress->address_line1,
                 'line2' => $user->userAddress->address_line2,
                 'city' => $user->userAddress->city,
-                'postcode' => $user->userAddress->postal_code,
+                'postal_code' => $user->userAddress->postal_code,
                 'country' => $user->userAddress->country,
             ];
         }
