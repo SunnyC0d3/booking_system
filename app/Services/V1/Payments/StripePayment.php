@@ -44,41 +44,53 @@ class StripePayment implements PaymentHandler
 
         Stripe::setApiKey($this->secret);
 
-        if ($order->status->name === OrderStatuses::PENDING_PAYMENT) {
-            $metaData = [
-                'order_id' => $order->id,
-                'order_total' => (string)$order->total_amount,
-                'user' => json_encode($this->getUserDetails($order->user)),
-                'products' => json_encode($this->getProductDetails($order->orderItems)),
-            ];
+        $paymentMethod = PaymentMethod::where('name', PaymentMethods::STRIPE)->firstOrFail();
 
-            $intent = PaymentIntent::create([
-                'amount' => $order->total_amount,
-                'currency' => 'gbp',
-                'automatic_payment_methods' => [
-                    'enabled' => true
-                ],
-                'metadata' => $metaData,
-            ]);
+        $existingPayment = DB::where('order_id', $order->id)
+            ->where('payment_method_id', $paymentMethod->id)
+            ->first();
 
-            $paymentMethod = PaymentMethod::where('name', PaymentMethods::STRIPE)->firstOrFail();
+        if ($existingPayment) {
+            if ($existingPayment->status === PaymentStatuses::PAID) {
+                return $this->ok('Payment has already been processed for this order.');
+            }
 
-            DB::create([
-                'order_id' => $order->id,
-                'user_id' => $order->user->id,
-                'payment_method_id' => $paymentMethod->id,
-                'amount' => $order->total_amount,
-                'status' => PaymentStatuses::PENDING,
-                'processed_at' => now(),
-                'transaction_reference' => $intent->id,
-            ]);
+            $intent = PaymentIntent::retrieve($existingPayment->transaction_reference);
 
-            return $this->ok('PaymentIntent created successfully.', [
+            return $this->ok('Existing PaymentIntent retrieved.', [
                 'client_secret' => $intent->client_secret,
             ]);
-        } else {
-            return $this->error('Payment has already been made for this order.', 400);
         }
+
+        $metaData = [
+            'order_id' => $order->id,
+            'order_total' => (string)$order->total_amount,
+            'user' => json_encode($this->getUserDetails($order->user)),
+            'products' => json_encode($this->getProductDetails($order->orderItems)),
+        ];
+
+        $intent = PaymentIntent::create([
+            'amount' => $order->total_amount,
+            'currency' => 'gbp',
+            'automatic_payment_methods' => [
+                'enabled' => true
+            ],
+            'metadata' => $metaData,
+        ]);
+
+        DB::create([
+            'order_id' => $order->id,
+            'user_id' => $order->user->id,
+            'payment_method_id' => $paymentMethod->id,
+            'amount' => $order->total_amount,
+            'status' => PaymentStatuses::PENDING,
+            'processed_at' => now(),
+            'transaction_reference' => $intent->id,
+        ]);
+
+        return $this->ok('PaymentIntent created successfully.', [
+            'client_secret' => $intent->client_secret,
+        ]);
         //}
 
         //return $this->error('You do not have the required permissions.', 403);
@@ -91,13 +103,13 @@ class StripePayment implements PaymentHandler
 
         try {
             $event = Webhook::constructEvent($payload, $sigHeader, $this->webhook_secret);
-            Log::info('Stripe Webhook Event Type:', (array) $event);
+            Log::info('Stripe Webhook Event Type:', (array)$event);
         } catch (UnexpectedValueException $e) {
             Log::error('Invalid Stripe payload', ['error' => $e->getMessage()]);
-            return response('Invalid payload', 400);
+            return $this->error($e->getMessage(), 400);
         } catch (SignatureVerificationException $e) {
             Log::error('Invalid Stripe signature', ['error' => $e->getMessage()]);
-            return response('Invalid signature', 400);
+            return $this->error($e->getMessage(), 400);
         }
 
         $intent = $event->data->object;
@@ -106,23 +118,21 @@ class StripePayment implements PaymentHandler
         if ($payment) {
             $order = $payment->order;
 
-            if ($order->status->name === OrderStatuses::PENDING_PAYMENT) {
-                if ($event->type === 'payment_intent.succeeded') {
-                    $payment->status = PaymentStatuses::PAID;
-                    $order->status_id = OrderStatus::where('name', OrderStatuses::CONFIRMED)->value('id');
-                    $order->save();
-                }
-
-                if ($event->type === 'payment_intent.payment_failed') {
-                    $payment->status = PaymentStatuses::FAILED;
-                    $order->status_id = OrderStatus::where('name', OrderStatuses::FAILED)->value('id');
-                    $order->save();
-                }
-
-                $payment->processed_at = now();
-                $payment->response_payload = json_encode($intent);
-                $payment->save();
+            if ($event->type === 'payment_intent.succeeded') {
+                $payment->status = PaymentStatuses::PAID;
+                $order->status_id = OrderStatus::where('name', OrderStatuses::CONFIRMED)->value('id');
+                $order->save();
             }
+
+            if ($event->type === 'payment_intent.payment_failed') {
+                $payment->status = PaymentStatuses::FAILED;
+                $order->status_id = OrderStatus::where('name', OrderStatuses::FAILED)->value('id');
+                $order->save();
+            }
+
+            $payment->processed_at = now();
+            $payment->response_payload = json_encode($intent);
+            $payment->save();
         }
 
         return $this->ok('Webhook update.');

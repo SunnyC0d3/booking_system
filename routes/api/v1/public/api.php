@@ -54,5 +54,5 @@ Route::middleware(['throttle:10,1'])
             return view('app', [
                 'orderId' => $orderId
             ]);
-        })->name('orders.pay');
+        })->name('order.pay');
     });
