@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\PaymentMethod;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Payment;
@@ -16,7 +17,7 @@ class PaymentFactory extends Factory
     {
         return [
             'amount'                => fake()->randomFloat(),
-            'method'                => fake()->word(),
+            'payment_method_id'     => PaymentMethod::factory(),
             'status'                => fake()->word(),
             'transaction_reference' => 'pi_' . $this->faker->regexify('[A-Za-z0-9]{24}'),
             'processed_at'          => Carbon::now(),
