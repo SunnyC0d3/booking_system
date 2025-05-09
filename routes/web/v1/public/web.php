@@ -9,7 +9,7 @@ Route::get('/demo-checkout/{orderId}/pay', function ($orderId) {
     $order = Order::with('orderItems.product')->findOrFail($orderId);
 
     if($order) {
-        return view('demo-checkout', [
+        return view('demo.demo-checkout', [
             'orderId' => $order->id,
             'orderItems' => json_encode($order->orderItems),
         ]);

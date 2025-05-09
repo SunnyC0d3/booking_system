@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import CheckoutForm from './CheckoutForm';
+import CheckoutForm from './CheckoutForm.jsx';
 import axios from 'axios';
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from '@stripe/react-stripe-js';
+import PaymentSuccess from "./PaymentSuccess.jsx";
+import PaymentCanceled from "./PaymentCanceled.jsx";
+import PaymentProcessing from "./PaymentProcessing.jsx";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
 const PaymentStatusMessage = ({ status }) => {
-    if (status === 'succeeded') {
-        return <div style={{ color: 'green' }}>✅ Payment was successful!</div>;
-    } else if (status === 'canceled') {
-        return <div style={{ color: 'red' }}>❌ Payment was canceled or failed.</div>;
-    } else if (status === 'processing') {
-        return <div>⏳ Payment is processing, please wait...</div>;
-    }
+    if (status === 'succeeded') return <PaymentSuccess />;
+    if (status === 'canceled') return <PaymentCanceled />;
+    if (status === 'processing') return <PaymentProcessing />;
     return null;
 };
 

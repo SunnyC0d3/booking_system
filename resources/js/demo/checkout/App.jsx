@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import Payment from './components/Payment';
+import Payment from './components/Payment.jsx';
 
 const rootElement = document.getElementById('app');
 const orderId = rootElement.getAttribute('data-order-id');

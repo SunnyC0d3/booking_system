@@ -5,7 +5,7 @@
         <title>Payment Page</title>
         @viteReactRefresh
         @vite(['resources/css/app.css'])
-        @vite(['resources/js/App.jsx'])
+        @vite(['resources/js/demo/checkout/App.jsx'])
     </head>
     <body>
         <div id="app"
