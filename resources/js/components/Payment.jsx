@@ -17,7 +17,7 @@ const PaymentStatusMessage = ({ status }) => {
     return null;
 };
 
-const Payment = ({ orderId }) => {
+const Payment = ({ orderId, orderItems }) => {
     const [clientSecret, setClientSecret] = useState(null);
     const [paymentStatus, setPaymentStatus] = useState(null);
     const [error, setError] = useState(null);
@@ -64,7 +64,7 @@ const Payment = ({ orderId }) => {
         const options = { clientSecret };
         return (
             <Elements stripe={stripePromise} options={options}>
-                <CheckoutForm />
+                <CheckoutForm orderItems={orderItems} />
             </Elements>
         );
     }
