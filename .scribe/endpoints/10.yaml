@@ -1,16 +1,16 @@
-name: 'Payment Methods'
+name: Orders
 description: ''
 endpoints:
   -
     httpMethods:
       - GET
-    uri: api/admin/payment-methods
+    uri: api/admin/orders
     metadata:
-      groupName: 'Payment Methods'
+      groupName: Orders
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Retrieve all payment methods.'
+      title: 'Retrieve paginated list of orders.'
       description: ''
       authenticated: true
       custom: []
@@ -20,6 +20,220 @@ endpoints:
       Accept: application/json
     urlParameters: []
     cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      user_id:
+        name: user_id
+        description: 'The <code>id</code> of an existing record in the users table.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      status_id:
+        name: status_id
+        description: 'The <code>id</code> of an existing record in the order_statuses table.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Orders retrieved successfully.",
+            "data": []
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+              "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/admin/orders
+    metadata:
+      groupName: Orders
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Create a new order.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      user_id:
+        name: user_id
+        description: 'The <code>id</code> of an existing record in the users table.'
+        required: true
+        example: blanditiis
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      status_id:
+        name: status_id
+        description: 'The <code>id</code> of an existing record in the order_statuses table.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      order_items:
+        name: order_items
+        description: 'Must have at least 1 items.'
+        required: true
+        example:
+          - []
+        type: 'object[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      'order_items[].product_id':
+        name: 'order_items[].product_id'
+        description: 'The <code>id</code> of an existing record in the products table.'
+        required: true
+        example: quaerat
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      'order_items[].product_variant_id':
+        name: 'order_items[].product_variant_id'
+        description: 'The <code>id</code> of an existing record in the product_variants table.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      'order_items[].quantity':
+        name: 'order_items[].quantity'
+        description: 'Must be at least 1.'
+        required: true
+        example: 41
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      'order_items[].price':
+        name: 'order_items[].price'
+        description: 'Must be at least 0.'
+        required: true
+        example: 41
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      user_id: blanditiis
+      order_items:
+        -
+          product_id: quaerat
+          quantity: 41
+          price: 41
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Order created successfully.",
+              "data": {}
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+              "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/admin/orders/{id}'
+    metadata:
+      groupName: Orders
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Retrieve a specific order.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the order.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -30,8 +244,8 @@ endpoints:
         status: 200
         content: |-
           {
-            "message": "Payment Methods retrieved successfully.",
-            "data": []
+              "message": "Order retrieved successfully.",
+              "data": {}
           }
         headers: []
         description: ''
@@ -57,77 +271,13 @@ endpoints:
   -
     httpMethods:
       - POST
-    uri: api/admin/payment-methods
+    uri: 'api/admin/orders/{id}'
     metadata:
-      groupName: 'Payment Methods'
+      groupName: Orders
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Create a new payment method.'
-      description: ''
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      name:
-        name: name
-        description: 'The name of the payment method.'
-        required: true
-        example: '"Google Pay"'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      name: '"Google Pay"'
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Payment Method created successfully.",
-            "data": []
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-              "message": "You do not have the required permissions."
-          }
-        headers: []
-        description: ''
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: 'api/admin/payment-methods/{paymentMethod_id}'
-    metadata:
-      groupName: 'Payment Methods'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Update a payment method.'
+      title: 'Update an existing order.'
       description: ''
       authenticated: true
       custom: []
@@ -136,9 +286,9 @@ endpoints:
       Content-Type: application/json
       Accept: application/json
     urlParameters:
-      paymentMethod_id:
-        name: paymentMethod_id
-        description: 'The ID of the paymentMethod.'
+      id:
+        name: id
+        description: 'The ID of the order.'
         required: true
         example: 1
         type: integer
@@ -147,30 +297,95 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      paymentMethod_id: 1
+      id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
-      name:
-        name: name
-        description: 'The name of the payment method.'
-        required: true
-        example: '"Google Pay"'
+      user_id:
+        name: user_id
+        description: 'The <code>id</code> of an existing record in the users table.'
+        required: false
+        example: null
         type: string
         enumValues: []
-        exampleWasSpecified: true
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      status_id:
+        name: status_id
+        description: 'The <code>id</code> of an existing record in the order_statuses table.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      order_items:
+        name: order_items
+        description: 'Must have at least 1 items.'
+        required: true
+        example:
+          - []
+        type: 'object[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      'order_items[].product_id':
+        name: 'order_items[].product_id'
+        description: 'The <code>id</code> of an existing record in the products table.'
+        required: true
+        example: ullam
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      'order_items[].product_variant_id':
+        name: 'order_items[].product_variant_id'
+        description: 'The <code>id</code> of an existing record in the product_variants table.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      'order_items[].quantity':
+        name: 'order_items[].quantity'
+        description: 'Must be at least 1.'
+        required: true
+        example: 9
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      'order_items[].price':
+        name: 'order_items[].price'
+        description: 'Must be at least 0.'
+        required: true
+        example: 48
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      name: '"Google Pay"'
+      order_items:
+        -
+          product_id: ullam
+          quantity: 9
+          price: 48
     fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
-            "message": "Payment Method updated successfully.",
-            "data": []
+              "message": "Order updated successfully.",
+              "data": {}
           }
         headers: []
         description: ''
@@ -196,13 +411,13 @@ endpoints:
   -
     httpMethods:
       - DELETE
-    uri: 'api/admin/payment-methods/{paymentMethod_id}'
+    uri: 'api/admin/orders/{id}'
     metadata:
-      groupName: 'Payment Methods'
+      groupName: Orders
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Delete a permission.'
+      title: 'Soft delete a order.'
       description: ''
       authenticated: true
       custom: []
@@ -211,9 +426,9 @@ endpoints:
       Content-Type: application/json
       Accept: application/json
     urlParameters:
-      paymentMethod_id:
-        name: paymentMethod_id
-        description: 'The ID of the paymentMethod.'
+      id:
+        name: id
+        description: 'The ID of the order.'
         required: true
         example: 1
         type: integer
@@ -222,7 +437,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      paymentMethod_id: 1
+      id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -233,8 +448,133 @@ endpoints:
         status: 200
         content: |-
           {
-            "message": "Payment Method deleted successfully.",
-            "data": []
+              "message": "Order deleted (soft)."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+              "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/admin/orders/{id}/force-delete'
+    metadata:
+      groupName: Orders
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Permanently delete a order.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the order.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Order permanently deleted."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+              "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PATCH
+    uri: 'api/admin/orders/{id}/restore'
+    metadata:
+      groupName: Orders
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Restore a soft deleted order.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the order.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Order restored successfully."
           }
         headers: []
         description: ''

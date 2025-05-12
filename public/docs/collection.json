@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "E-Commerce API Documentation",
-        "_postman_id": "cfb6c4fd-efb1-4174-a5a8-21729747d419",
+        "_postman_id": "5a4911d3-c1f4-4eb3-9380-86750dda1dde",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -180,13 +180,13 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "ut",
+                                    "value": "id",
                                     "description": "The ID of the verify."
                                 },
                                 {
                                     "id": "hash",
                                     "key": "hash",
-                                    "value": "aut",
+                                    "value": "officiis",
                                     "description": ""
                                 }
                             ]
@@ -333,7 +333,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"user_id\":\"non\",\"order_items\":[{\"product_id\":\"aut\",\"quantity\":74,\"price\":87}]}"
+                            "raw": "{\"user_id\":\"blanditiis\",\"order_items\":[{\"product_id\":\"quaerat\",\"quantity\":41,\"price\":41}]}"
                         },
                         "description": ""
                     },
@@ -428,7 +428,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"order_items\":[{\"product_id\":\"aut\",\"quantity\":7,\"price\":69}]}"
+                            "raw": "{\"order_items\":[{\"product_id\":\"ullam\",\"quantity\":9,\"price\":48}]}"
                         },
                         "description": ""
                     },
@@ -866,6 +866,134 @@
                             "code": 403,
                             "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
                             "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Payments",
+            "description": "",
+            "item": [
+                {
+                    "name": "Initiate Payment",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/payments\/:gateway\/create",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/payments\/:gateway\/create",
+                            "variable": [
+                                {
+                                    "id": "gateway",
+                                    "key": "gateway",
+                                    "value": "stripe",
+                                    "description": "The payment gateway to use. Currently supported: `stripe`."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"order_id\":123}"
+                        },
+                        "description": "Creates or retrieves a Stripe PaymentIntent for a given order. If a payment already exists,\nit will return the existing client secret to avoid duplicate charges.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": true,\n  \"message\": \"PaymentIntent created successfully.\",\n  \"data\": {\n    \"client_secret\": \"pi_1Hxxxxxxxxxxxx_secret_xxxxxxxxx\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": true,\n  \"message\": \"Payment has already been processed for this order.\",\n  \"data\": null\n}",
+                            "name": "Already Paid"
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"status\": false,\n  \"message\": \"Unsupported payment gateway\",\n  \"data\": null\n}",
+                            "name": "Unsupported Gateway"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": false,\n  \"message\": \"No query results for model [App\\\\Models\\\\Order] 999\",\n  \"data\": null\n}",
+                            "name": "Order Not Found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Stripe Webhook Listener",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/payments\/stripe\/webhook",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/payments\/stripe\/webhook",
+                            "variable": [
+                                {
+                                    "id": "none",
+                                    "key": "none",
+                                    "value": "maiores",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"object\":\"cumque\"}"
+                        },
+                        "description": "This endpoint is triggered by Stripe when a payment event occurs (e.g., payment succeeded, failed).\nIt verifies the webhook signature and processes the payment status accordingly.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": true,\n  \"message\": \"Webhook update.\",\n  \"data\": null\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"status\": false,\n  \"message\": \"Invalid Stripe signature\",\n  \"data\": null\n}",
+                            "name": "Invalid Signature or Payload"
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"status\": false,\n  \"message\": \"Invalid payload\",\n  \"data\": null\n}",
+                            "name": "Invalid Payload Format"
                         }
                     ]
                 }
@@ -1341,7 +1469,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"beatae\",\"parent_id\":18}"
+                            "raw": "{\"name\":\"culpa\",\"parent_id\":14}"
                         },
                         "description": ""
                     },
@@ -1436,7 +1564,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"recusandae\",\"parent_id\":3}"
+                            "raw": "{\"name\":\"illo\",\"parent_id\":17}"
                         },
                         "description": ""
                     },
@@ -1497,232 +1625,6 @@
                             "header": [],
                             "code": 400,
                             "body": "{\n    \"message\": \"Cannot delete a category with subcategories\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "Product Statuses",
-            "description": "",
-            "item": [
-                {
-                    "name": "Retrieve all product statuses.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/product-statuses",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/product-statuses"
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Statuses retrieved successfully.\",\n    \"data\": [\n        {\"id\": 1, \"name\": \"Available\"},\n        {\"id\": 2, \"name\": \"Out of Stock\"}\n    ]\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Create a new product status.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/product-statuses",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/product-statuses"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"name\":\"dolore\"}"
-                        },
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Product status created successfully.\",\n    \"data\": {\"id\": 3, \"name\": \"Discontinued\"}\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Retrieve a specific product status.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/product-statuses\/:productStatus_id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/product-statuses\/:productStatus_id",
-                            "variable": [
-                                {
-                                    "id": "productStatus_id",
-                                    "key": "productStatus_id",
-                                    "value": "1",
-                                    "description": "The ID of the productStatus."
-                                }
-                            ]
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Status retrieved successfully.\",\n    \"data\": {\"id\": 1, \"name\": \"Available\"}\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Update an existing product status.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/product-statuses\/:productStatus_id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/product-statuses\/:productStatus_id",
-                            "variable": [
-                                {
-                                    "id": "productStatus_id",
-                                    "key": "productStatus_id",
-                                    "value": "1",
-                                    "description": "The ID of the productStatus."
-                                }
-                            ]
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"name\":\"dolore\"}"
-                        },
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Product status updated successfully.\",\n    \"data\": {\"id\": 1, \"name\": \"Unavailable\"}\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Delete a product status.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/product-statuses\/:productStatus_id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/product-statuses\/:productStatus_id",
-                            "variable": [
-                                {
-                                    "id": "productStatus_id",
-                                    "key": "productStatus_id",
-                                    "value": "1",
-                                    "description": "The ID of the productStatus."
-                                }
-                            ]
-                        },
-                        "method": "DELETE",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Product status deleted successfully.\"\n}",
                             "name": ""
                         },
                         {
@@ -1799,7 +1701,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"qui\"}"
+                            "raw": "{\"name\":\"fuga\"}"
                         },
                         "description": ""
                     },
@@ -1894,7 +1796,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"molestias\"}"
+                            "raw": "{\"name\":\"illum\"}"
                         },
                         "description": ""
                     },
@@ -1987,7 +1889,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"gqlb\",\"price\":\"86.36,0958.5))\",\"category\":\"52\",\"quantity\":62,\"created_at\":\"8000-80-67,6967-21-46\",\"updated_at\":\"2457-75-68,4259-96-45\",\"search\":\"tuvhhdarlhrkyxnjqdmp\",\"include\":\"ssy,qjvvl\"},\"page\":1,\"per_page\":6,\"sort\":\"d,-U8\"}"
+                            "raw": "{\"filter\":{\"name\":\"kyeyokyxwqglpzgk\",\"price\":\"3470770.55,092524.8)))))\",\"category\":\"0\",\"quantity\":3,\"created_at\":\"2310-95-46,5130-56-50\",\"updated_at\":\"0102-85-13,1166-28-69\",\"search\":\"afhhbqenfukaehjsssrkuj\",\"include\":\"o,o\"},\"page\":86,\"per_page\":14,\"sort\":\"wj,H,-W,Q,-z,-s\"}"
                         },
                         "description": ""
                     },
@@ -2077,61 +1979,61 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "hsooghbrqxqsryewoybxb",
+                                    "value": "grxtnydjffjravjyvtncvdz",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Consequatur qui quis sed architecto perspiciatis eum quidem perferendis.",
+                                    "value": "Quidem necessitatibus quas aut.",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "price",
-                                    "value": "66",
+                                    "value": "35",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_category_id",
-                                    "value": "adipisci",
+                                    "value": "repellat",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_categories table."
                                 },
                                 {
                                     "key": "product_status_id",
-                                    "value": "porro",
+                                    "value": "qui",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_statuses table."
                                 },
                                 {
                                     "key": "quantity",
-                                    "value": "19",
+                                    "value": "35",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_variants[0][product_attribute_id]",
-                                    "value": "laboriosam",
+                                    "value": "sapiente",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][value]",
-                                    "value": "yykxlincbkkhpswpr",
+                                    "value": "nhzqzobp",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][additional_price]",
-                                    "value": "90",
+                                    "value": "88",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][quantity]",
-                                    "value": "50",
+                                    "value": "81",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -2192,31 +2094,31 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "risibzlqazekosby",
+                                    "value": "uluzmg",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Eligendi error libero rerum labore pariatur occaecati facilis.",
+                                    "value": "Inventore aut qui dolores quia et sint.",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "price",
-                                    "value": "63",
+                                    "value": "55",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_category_id",
-                                    "value": "praesentium",
+                                    "value": "libero",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_categories table."
                                 },
                                 {
                                     "key": "product_status_id",
-                                    "value": "corrupti",
+                                    "value": "reprehenderit",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_statuses table."
                                 },
@@ -2228,25 +2130,25 @@
                                 },
                                 {
                                     "key": "product_variants[0][product_attribute_id]",
-                                    "value": "blanditiis",
+                                    "value": "adipisci",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][value]",
-                                    "value": "gvfqsrfavbs",
+                                    "value": "imddxgrj",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][additional_price]",
-                                    "value": "32",
+                                    "value": "84",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][quantity]",
-                                    "value": "1",
+                                    "value": "31",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -2849,7 +2751,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"ebu\",\"email\":\"mpfannerstill@example.com\",\"role\":\"9,\",\"created_at\":\"8265-86-13\",\"updated_at\":\"3946-22-98,9927-01-91\",\"search\":\"shsxcykvtjdldqpvcfxqzyi\",\"include\":\"\"},\"page\":75,\"per_page\":13,\"sort\":\"NDw3,R1zCc,-iRFN2,-G_eaL,fZwAt,lr6rg,-kL5In,Uxrfy\"}"
+                            "raw": "{\"filter\":{\"name\":\"ckvjklmihzrp\",\"email\":\"nyah72@example.com\",\"role\":\"3,7,5\",\"created_at\":\"2544-20-88,5872-83-48\",\"updated_at\":\"7770-55-28,4573-42-82\",\"search\":\"ktndqakvmdzfubrxufftxdma\",\"include\":\"m,qpu,fy)\"},\"page\":17,\"per_page\":10,\"sort\":\"ynn,2JC4VT\"}"
                         },
                         "description": ""
                     },
@@ -2936,7 +2838,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"jebvqrfmdxjcdzmo\",\"email\":\"charley05@example.org\",\"password\":\"#,|yV(\",\"role_id\":\"ut\",\"address\":{\"address_line1\":\"wu\",\"city\":\"hsygwhgubrtbdnfgnpzj\",\"country\":\"jhtqccyrbffgonholga\",\"postal_code\":\"hnbjjz\",\"address_line2\":\"mxfqyszbau\",\"state\":\"yiwlgmupvpjaxpyxerdz\"}}"
+                            "raw": "{\"name\":\"lqlwnvxa\",\"email\":\"madaline.rippin@example.org\",\"password\":\"nPyh^*='9\\\"tD80x\",\"role_id\":\"sed\",\"address\":{\"address_line1\":\"lzcmlauc\",\"city\":\"vukvidymccbobuicndh\",\"country\":\"h\",\"postal_code\":\"urrrdvyixgnfjlm\",\"address_line2\":\"tapzog\",\"state\":\"upzlfexy\"}}"
                         },
                         "description": ""
                     },
@@ -2985,7 +2887,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"lbodymawjrlippfzw\",\"email\":\"ylehner@example.org\",\"password\":\"1@DwvwTpG\",\"address\":{\"address_line1\":\"garhmkbqznxtv\",\"city\":\"klno\",\"country\":\"qmmhseswsdvzm\",\"postal_code\":\"ppct\",\"address_line2\":\"mo\",\"state\":\"hdtuihbogcpe\"}}"
+                            "raw": "{\"name\":\"onqdibwtqlrxs\",\"email\":\"collin.schaefer@example.org\",\"password\":\"]*[4NV,o`;\",\"address\":{\"address_line1\":\"ewudawjsqe\",\"city\":\"umfdawyazxemew\",\"country\":\"aouqupmnnvmpqz\",\"postal_code\":\"srdrhnelhrnfwuau\",\"address_line2\":\"fmdnq\",\"state\":\"zcfetpjgliyaabuhsuilcnzn\"}}"
                         },
                         "description": ""
                     },
@@ -3165,19 +3067,19 @@
                             "formdata": [
                                 {
                                     "key": "user_id",
-                                    "value": "natus",
+                                    "value": "enim",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the users table."
                                 },
                                 {
                                     "key": "name",
-                                    "value": "khyjhfqvpd",
+                                    "value": "tlkzfyrlojoczbrokw",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Non odit animi omnis culpa quos beatae.",
+                                    "value": "Omnis sed sapiente rerum enim sed corporis.",
                                     "type": "text",
                                     "description": "Must not be greater than 1000 characters."
                                 },
@@ -3238,13 +3140,13 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "idobriyjtivzla",
+                                    "value": "flrshekdqbdphqunaiwjam",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Autem dolorum voluptas non distinctio ut in eligendi.",
+                                    "value": "Non molestiae qui velit magnam dolorem itaque.",
                                     "type": "text",
                                     "description": "Must not be greater than 1000 characters."
                                 },

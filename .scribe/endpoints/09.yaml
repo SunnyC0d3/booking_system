@@ -1,16 +1,16 @@
-name: 'Product Tags'
+name: 'Payment Methods'
 description: ''
 endpoints:
   -
     httpMethods:
       - GET
-    uri: api/admin/product-tags
+    uri: api/admin/payment-methods
     metadata:
-      groupName: 'Product Tags'
+      groupName: 'Payment Methods'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Retrieve all product tags.'
+      title: 'Retrieve all payment methods.'
       description: ''
       authenticated: true
       custom: []
@@ -30,11 +30,8 @@ endpoints:
         status: 200
         content: |-
           {
-              "message": "Tags retrieved successfully.",
-              "data": [
-                  {"id": 1, "name": "Electronics"},
-                  {"id": 2, "name": "Fashion"}
-              ]
+            "message": "Payment Methods retrieved successfully.",
+            "data": []
           }
         headers: []
         description: ''
@@ -60,13 +57,13 @@ endpoints:
   -
     httpMethods:
       - POST
-    uri: api/admin/product-tags
+    uri: api/admin/payment-methods
     metadata:
-      groupName: 'Product Tags'
+      groupName: 'Payment Methods'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Create a new product tag.'
+      title: 'Create a new payment method.'
       description: ''
       authenticated: true
       custom: []
@@ -81,88 +78,24 @@ endpoints:
     bodyParameters:
       name:
         name: name
-        description: 'The name of the product tag.'
+        description: 'The name of the payment method.'
         required: true
-        example: qui
+        example: '"Google Pay"'
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         custom: []
     cleanBodyParameters:
-      name: qui
+      name: '"Google Pay"'
     fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
-              "message": "Tag created successfully.",
-              "data": {"id": 3, "name": "Home Appliances"}
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-              "message": "You do not have the required permissions."
-          }
-        headers: []
-        description: ''
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - GET
-    uri: 'api/admin/product-tags/{productTag_id}'
-    metadata:
-      groupName: 'Product Tags'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Retrieve a specific product tag.'
-      description: ''
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      productTag_id:
-        name: productTag_id
-        description: 'The ID of the productTag.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      productTag_id: 1
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-              "message": "Tag retrieved successfully.",
-              "data": {"id": 1, "name": "Electronics"}
+            "message": "Payment Method created successfully.",
+            "data": []
           }
         headers: []
         description: ''
@@ -188,13 +121,13 @@ endpoints:
   -
     httpMethods:
       - POST
-    uri: 'api/admin/product-tags/{productTag_id}'
+    uri: 'api/admin/payment-methods/{paymentMethod_id}'
     metadata:
-      groupName: 'Product Tags'
+      groupName: 'Payment Methods'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Update an existing product tag.'
+      title: 'Update a payment method.'
       description: ''
       authenticated: true
       custom: []
@@ -203,9 +136,9 @@ endpoints:
       Content-Type: application/json
       Accept: application/json
     urlParameters:
-      productTag_id:
-        name: productTag_id
-        description: 'The ID of the productTag.'
+      paymentMethod_id:
+        name: paymentMethod_id
+        description: 'The ID of the paymentMethod.'
         required: true
         example: 1
         type: integer
@@ -214,30 +147,30 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      productTag_id: 1
+      paymentMethod_id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
       name:
         name: name
-        description: 'The updated name of the product tag.'
+        description: 'The name of the payment method.'
         required: true
-        example: molestias
+        example: '"Google Pay"'
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         custom: []
     cleanBodyParameters:
-      name: molestias
+      name: '"Google Pay"'
     fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
-              "message": "Tag updated successfully.",
-              "data": {"id": 1, "name": "Gadgets"}
+            "message": "Payment Method updated successfully.",
+            "data": []
           }
         headers: []
         description: ''
@@ -263,13 +196,13 @@ endpoints:
   -
     httpMethods:
       - DELETE
-    uri: 'api/admin/product-tags/{productTag_id}'
+    uri: 'api/admin/payment-methods/{paymentMethod_id}'
     metadata:
-      groupName: 'Product Tags'
+      groupName: 'Payment Methods'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Delete a product tag.'
+      title: 'Delete a permission.'
       description: ''
       authenticated: true
       custom: []
@@ -278,9 +211,9 @@ endpoints:
       Content-Type: application/json
       Accept: application/json
     urlParameters:
-      productTag_id:
-        name: productTag_id
-        description: 'The ID of the productTag.'
+      paymentMethod_id:
+        name: paymentMethod_id
+        description: 'The ID of the paymentMethod.'
         required: true
         example: 1
         type: integer
@@ -289,7 +222,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      productTag_id: 1
+      paymentMethod_id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -300,7 +233,8 @@ endpoints:
         status: 200
         content: |-
           {
-              "message": "Tag deleted successfully."
+            "message": "Payment Method deleted successfully.",
+            "data": []
           }
         headers: []
         description: ''

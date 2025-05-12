@@ -86,7 +86,7 @@ endpoints:
         name: name
         description: 'The name of the category.'
         required: true
-        example: beatae
+        example: culpa
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -96,15 +96,15 @@ endpoints:
         name: parent_id
         description: 'optional The ID of the parent category.'
         required: false
-        example: 18
+        example: 14
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: true
         custom: []
     cleanBodyParameters:
-      name: beatae
-      parent_id: 18
+      name: culpa
+      parent_id: 14
     fileParameters: []
     responses:
       -
@@ -244,7 +244,7 @@ endpoints:
         name: name
         description: 'The name of the category.'
         required: true
-        example: recusandae
+        example: illo
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -254,15 +254,15 @@ endpoints:
         name: parent_id
         description: 'optional The ID of the parent category.'
         required: false
-        example: 3
+        example: 17
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: true
         custom: []
     cleanBodyParameters:
-      name: recusandae
-      parent_id: 3
+      name: illo
+      parent_id: 17
     fileParameters: []
     responses:
       -

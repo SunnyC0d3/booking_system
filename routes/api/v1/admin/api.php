@@ -120,19 +120,6 @@ Route::prefix('admin/product-categories')
         Route::delete('/{productCategory}', 'destroy')->name('admin.products.categories.destroy');
     });
 
-// Admin/Product Statuses
-
-Route::prefix('admin/product-statuses')
-    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
-    ->controller(ProductStatusController::class)
-    ->group(function () {
-        Route::get('/', 'index')->name('admin.products.statuses.index');
-        Route::post('/', 'store')->name('admin.products.statuses.store');
-        Route::get('/{productStatus}', 'show')->name('admin.products.statuses.show');
-        Route::post('/{productStatus}', 'update')->name('admin.products.statuses.update');
-        Route::delete('/{productStatus}', 'destroy')->name('admin.products.statuses.destroy');
-    });
-
 // Admin/Product Tags
 
 Route::prefix('admin/product-tags')

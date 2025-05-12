@@ -19,6 +19,36 @@ class PaymentController extends Controller
     {
     }
 
+    /**
+     * Stripe Webhook Listener
+     *
+     * This endpoint is triggered by Stripe when a payment event occurs (e.g., payment succeeded, failed).
+     * It verifies the webhook signature and processes the payment status accordingly.
+     *
+     * @group Payments
+     *
+     * @bodyParam object $event Stripe webhook payload. The full JSON payload sent by Stripe will be validated internally.
+     *
+     * @response 200 {
+     *   "status": true,
+     *   "message": "Webhook update.",
+     *   "data": null
+     * }
+     *
+     * @response 400 scenario="Invalid Signature or Payload" {
+     *   "status": false,
+     *   "message": "Invalid Stripe signature",
+     *   "data": null
+     * }
+     *
+     * @response 400 scenario="Invalid Payload Format" {
+     *   "status": false,
+     *   "message": "Invalid payload",
+     *   "data": null
+     * }
+     *
+     * @urlParam none
+     */
     public function stripeWebhook(Request $request)
     {
         try {
@@ -37,6 +67,44 @@ class PaymentController extends Controller
         }
     }
 
+    /**
+     * Initiate Payment
+     *
+     * Creates or retrieves a Stripe PaymentIntent for a given order. If a payment already exists,
+     * it will return the existing client secret to avoid duplicate charges.
+     *
+     * @group Payments
+     *
+     * @bodyParam order_id int required The ID of the order being paid for. Example: 123
+     *
+     * @urlParam gateway string required The payment gateway to use. Currently supported: `stripe`. Example: stripe
+     *
+     * @response 200 {
+     *   "status": true,
+     *   "message": "PaymentIntent created successfully.",
+     *   "data": {
+     *     "client_secret": "pi_1Hxxxxxxxxxxxx_secret_xxxxxxxxx"
+     *   }
+     * }
+     *
+     * @response 200 scenario="Already Paid" {
+     *   "status": true,
+     *   "message": "Payment has already been processed for this order.",
+     *   "data": null
+     * }
+     *
+     * @response 400 scenario="Unsupported Gateway" {
+     *   "status": false,
+     *   "message": "Unsupported payment gateway",
+     *   "data": null
+     * }
+     *
+     * @response 404 scenario="Order Not Found" {
+     *   "status": false,
+     *   "message": "No query results for model [App\\Models\\Order] 999",
+     *   "data": null
+     * }
+     */
     public function store(StorePaymentRequest $request, string $gateway)
     {
         try {

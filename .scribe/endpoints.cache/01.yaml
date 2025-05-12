@@ -146,7 +146,7 @@ endpoints:
         name: user_id
         description: 'The <code>id</code> of an existing record in the users table.'
         required: true
-        example: natus
+        example: enim
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -156,7 +156,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: khyjhfqvpd
+        example: tlkzfyrlojoczbrokw
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -166,7 +166,7 @@ endpoints:
         name: description
         description: 'Must not be greater than 1000 characters.'
         required: true
-        example: 'Non odit animi omnis culpa quos beatae.'
+        example: 'Omnis sed sapiente rerum enim sed corporis.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -183,9 +183,9 @@ endpoints:
         nullable: true
         custom: []
     cleanBodyParameters:
-      user_id: natus
-      name: khyjhfqvpd
-      description: 'Non odit animi omnis culpa quos beatae.'
+      user_id: enim
+      name: tlkzfyrlojoczbrokw
+      description: 'Omnis sed sapiente rerum enim sed corporis.'
     fileParameters:
       logo: null
     responses:
@@ -264,7 +264,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: idobriyjtivzla
+        example: flrshekdqbdphqunaiwjam
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -274,7 +274,7 @@ endpoints:
         name: description
         description: 'Must not be greater than 1000 characters.'
         required: false
-        example: 'Autem dolorum voluptas non distinctio ut in eligendi.'
+        example: 'Non molestiae qui velit magnam dolorem itaque.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -291,8 +291,8 @@ endpoints:
         nullable: true
         custom: []
     cleanBodyParameters:
-      name: idobriyjtivzla
-      description: 'Autem dolorum voluptas non distinctio ut in eligendi.'
+      name: flrshekdqbdphqunaiwjam
+      description: 'Non molestiae qui velit magnam dolorem itaque.'
     fileParameters:
       logo: null
     responses:

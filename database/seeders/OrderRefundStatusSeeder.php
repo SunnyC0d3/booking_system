@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Constants\RefundStatuses;
 use App\Models\OrderRefundStatus;
 
 class OrderRefundStatusSeeder extends Seeder
@@ -10,13 +11,13 @@ class OrderRefundStatusSeeder extends Seeder
     public function run(): void
     {
         $statuses = [
-            'Pending',
-            'Processing',
-            'Partially Refunded',
-            'Refunded',
-            'Failed',
-            'Cancelled',
-            'Declined',
+            RefundStatuses::PENDING,
+            RefundStatuses::PROCESSING,
+            RefundStatuses::PARTIALLY_REFUNDED,
+            RefundStatuses::REFUNDED,
+            RefundStatuses::FAILED,
+            RefundStatuses::CANCELLED,
+            RefundStatuses::DECLINED
         ];
 
         OrderRefundStatus::insert(array_map(fn (string $name) => [
