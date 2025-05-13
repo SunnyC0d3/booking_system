@@ -19,6 +19,8 @@ endpoints:
       authenticated: false
       custom: []
     headers:
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -119,6 +121,8 @@ endpoints:
       authenticated: false
       custom: []
     headers:
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -126,14 +130,14 @@ endpoints:
         name: none
         description: ''
         required: false
-        example: maiores
+        example: dolor
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanUrlParameters:
-      none: maiores
+      none: dolor
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -141,14 +145,14 @@ endpoints:
         name: object
         description: 'Stripe webhook payload. The full JSON payload sent by Stripe will be validated internally.'
         required: false
-        example: cumque
+        example: rem
         type: $event
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      object: cumque
+      object: rem
     fileParameters: []
     responses:
       -

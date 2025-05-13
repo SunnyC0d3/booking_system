@@ -28,6 +28,9 @@ class PermissionController extends Controller
      * @group Permissions
      * @authenticated
      *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
+     *
      * @response 200 {
      *   "message": "Permissions retrieved successfully.",
      *   "data": []
@@ -51,6 +54,9 @@ class PermissionController extends Controller
      *
      * @group Permissions
      * @authenticated
+     *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
      *
      * @bodyParam name string required The name of the permission. Example: "create-vendor"
      *
@@ -78,6 +84,9 @@ class PermissionController extends Controller
      * @group Permissions
      * @authenticated
      *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
+     *
      * @bodyParam name string required The updated name of the permission. Example: "create-vendor"
      *
      * @response 200 {
@@ -103,6 +112,9 @@ class PermissionController extends Controller
      *
      * @group Permissions
      * @authenticated
+     *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
      *
      * @response 200 {
      *   "message": "Permission deleted successfully."

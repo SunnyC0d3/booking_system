@@ -16,6 +16,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -37,7 +39,7 @@ endpoints:
         name: filter.name
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: ckvjklmihzrp
+        example: ubpatqyozvl
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -47,7 +49,7 @@ endpoints:
         name: filter.email
         description: 'Must be a valid email address. Must not be greater than 255 characters.'
         required: false
-        example: nyah72@example.com
+        example: ehuels@example.net
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -57,7 +59,7 @@ endpoints:
         name: filter.role
         description: 'Must match the regex /^(\d,?)+$/.'
         required: false
-        example: '3,7,5'
+        example: '8,2,6,'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -67,7 +69,7 @@ endpoints:
         name: filter.created_at
         description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
         required: false
-        example: '2544-20-88,5872-83-48'
+        example: '0423-75-49'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -77,7 +79,7 @@ endpoints:
         name: filter.updated_at
         description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
         required: false
-        example: '7770-55-28,4573-42-82'
+        example: '5336-59-59,2330-04-82'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -87,7 +89,7 @@ endpoints:
         name: filter.search
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: ktndqakvmdzfubrxufftxdma
+        example: cxlboklup
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -97,7 +99,7 @@ endpoints:
         name: filter.include
         description: 'Must match the regex /^(\w+(,\w+)*)?$/.'
         required: false
-        example: 'm,qpu,fy)'
+        example: )
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -107,7 +109,7 @@ endpoints:
         name: page
         description: 'Must be at least 1.'
         required: false
-        example: 17
+        example: 38
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -117,7 +119,7 @@ endpoints:
         name: per_page
         description: 'Must be at least 1. Must not be greater than 100.'
         required: false
-        example: 10
+        example: 12
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -127,7 +129,7 @@ endpoints:
         name: sort
         description: 'Must match the regex /^(-?[a-zA-Z0-9_]+)(,-?[a-zA-Z0-9_]+)*$/.'
         required: false
-        example: 'ynn,2JC4VT'
+        example: '-Wciopgyte'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -135,16 +137,16 @@ endpoints:
         custom: []
     cleanBodyParameters:
       filter:
-        name: ckvjklmihzrp
-        email: nyah72@example.com
-        role: '3,7,5'
-        created_at: '2544-20-88,5872-83-48'
-        updated_at: '7770-55-28,4573-42-82'
-        search: ktndqakvmdzfubrxufftxdma
-        include: 'm,qpu,fy)'
-      page: 17
-      per_page: 10
-      sort: 'ynn,2JC4VT'
+        name: ubpatqyozvl
+        email: ehuels@example.net
+        role: '8,2,6,'
+        created_at: '0423-75-49'
+        updated_at: '5336-59-59,2330-04-82'
+        search: cxlboklup
+        include: )
+      page: 38
+      per_page: 12
+      sort: '-Wciopgyte'
     fileParameters: []
     responses:
       -
@@ -190,6 +192,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -254,6 +258,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -265,7 +271,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: lqlwnvxa
+        example: zxd
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -275,7 +281,7 @@ endpoints:
         name: email
         description: 'Must be a valid email address.'
         required: true
-        example: madaline.rippin@example.org
+        example: baumbach.kianna@example.net
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -285,7 +291,7 @@ endpoints:
         name: password
         description: 'Must be at least 8 characters.'
         required: true
-        example: 'nPyh^*=''9"tD80x'
+        example: yPCluei
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -295,7 +301,7 @@ endpoints:
         name: role_id
         description: 'The <code>id</code> of an existing record in the roles table.'
         required: true
-        example: sed
+        example: totam
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -315,7 +321,7 @@ endpoints:
         name: address.address_line1
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: lzcmlauc
+        example: qlaq
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -325,7 +331,7 @@ endpoints:
         name: address.city
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: vukvidymccbobuicndh
+        example: xrecapdsstwikjbqwlwbcel
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -335,7 +341,7 @@ endpoints:
         name: address.country
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: h
+        example: iyasoyherpcfmah
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -345,7 +351,7 @@ endpoints:
         name: address.postal_code
         description: 'Must not be greater than 20 characters.'
         required: true
-        example: urrrdvyixgnfjlm
+        example: ldgfhdkitjluq
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -355,7 +361,7 @@ endpoints:
         name: address.address_line2
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: tapzog
+        example: loqc
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -365,24 +371,24 @@ endpoints:
         name: address.state
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: upzlfexy
+        example: eengtujmoxmdfjm
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: true
         custom: []
     cleanBodyParameters:
-      name: lqlwnvxa
-      email: madaline.rippin@example.org
-      password: 'nPyh^*=''9"tD80x'
-      role_id: sed
+      name: zxd
+      email: baumbach.kianna@example.net
+      password: yPCluei
+      role_id: totam
       address:
-        address_line1: lzcmlauc
-        city: vukvidymccbobuicndh
-        country: h
-        postal_code: urrrdvyixgnfjlm
-        address_line2: tapzog
-        state: upzlfexy
+        address_line1: qlaq
+        city: xrecapdsstwikjbqwlwbcel
+        country: iyasoyherpcfmah
+        postal_code: ldgfhdkitjluq
+        address_line2: loqc
+        state: eengtujmoxmdfjm
     fileParameters: []
     responses:
       -
@@ -428,6 +434,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -450,7 +458,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: onqdibwtqlrxs
+        example: xibuiuzzzdnbxrhe
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -460,7 +468,7 @@ endpoints:
         name: email
         description: 'Must be a valid email address.'
         required: false
-        example: collin.schaefer@example.org
+        example: hjohnson@example.com
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -470,7 +478,7 @@ endpoints:
         name: password
         description: 'Must be at least 8 characters.'
         required: false
-        example: ']*[4NV,o`;'
+        example: 'yq<u(ca"+2cK[w}e_'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -500,7 +508,7 @@ endpoints:
         name: address.address_line1
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: ewudawjsqe
+        example: ifsxkeofyygbzagp
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -510,7 +518,7 @@ endpoints:
         name: address.city
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: umfdawyazxemew
+        example: vhuobqbegkbbrehsewu
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -520,7 +528,7 @@ endpoints:
         name: address.country
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: aouqupmnnvmpqz
+        example: jicemprfhhpl
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -530,7 +538,7 @@ endpoints:
         name: address.postal_code
         description: 'Must not be greater than 20 characters.'
         required: true
-        example: srdrhnelhrnfwuau
+        example: eb
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -540,7 +548,7 @@ endpoints:
         name: address.address_line2
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: fmdnq
+        example: smqmzy
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -550,23 +558,23 @@ endpoints:
         name: address.state
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: zcfetpjgliyaabuhsuilcnzn
+        example: trrzapgjcsynatpoehc
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: true
         custom: []
     cleanBodyParameters:
-      name: onqdibwtqlrxs
-      email: collin.schaefer@example.org
-      password: ']*[4NV,o`;'
+      name: xibuiuzzzdnbxrhe
+      email: hjohnson@example.com
+      password: 'yq<u(ca"+2cK[w}e_'
       address:
-        address_line1: ewudawjsqe
-        city: umfdawyazxemew
-        country: aouqupmnnvmpqz
-        postal_code: srdrhnelhrnfwuau
-        address_line2: fmdnq
-        state: zcfetpjgliyaabuhsuilcnzn
+        address_line1: ifsxkeofyygbzagp
+        city: vhuobqbegkbbrehsewu
+        country: jicemprfhhpl
+        postal_code: eb
+        address_line2: smqmzy
+        state: trrzapgjcsynatpoehc
     fileParameters: []
     responses:
       -
@@ -612,6 +620,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -638,6 +648,258 @@ endpoints:
         content: |-
           {
               "message": "User deleted successfully."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+              "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/users/{id}'
+    metadata:
+      groupName: Users
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Retrieve a specific user.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the user.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+              "message": "User details retrieved.",
+              "data": {}
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+              "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: 'api/users/{id}'
+    metadata:
+      groupName: Users
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update an existing user.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the user.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        name: name
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: hlqtxgpekjpndxc
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      email:
+        name: email
+        description: 'Must be a valid email address.'
+        required: false
+        example: vallie07@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      password:
+        name: password
+        description: 'Must be at least 8 characters.'
+        required: false
+        example: lm/4PJAE6\8Z
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      role_id:
+        name: role_id
+        description: 'The <code>id</code> of an existing record in the roles table.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      address:
+        name: address
+        description: ''
+        required: false
+        example: []
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      address.address_line1:
+        name: address.address_line1
+        description: 'Must not be greater than 255 characters.'
+        required: true
+        example: gadjbyuzx
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      address.city:
+        name: address.city
+        description: 'Must not be greater than 255 characters.'
+        required: true
+        example: bmor
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      address.country:
+        name: address.country
+        description: 'Must not be greater than 255 characters.'
+        required: true
+        example: hks
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      address.postal_code:
+        name: address.postal_code
+        description: 'Must not be greater than 20 characters.'
+        required: true
+        example: fcxltfihy
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      address.address_line2:
+        name: address.address_line2
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: hodszjctnlaxrn
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      address.state:
+        name: address.state
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: jgkqzsujxvkasakbmak
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+    cleanBodyParameters:
+      name: hlqtxgpekjpndxc
+      email: vallie07@example.com
+      password: lm/4PJAE6\8Z
+      address:
+        address_line1: gadjbyuzx
+        city: bmor
+        country: hks
+        postal_code: fcxltfihy
+        address_line2: hodszjctnlaxrn
+        state: jgkqzsujxvkasakbmak
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+              "message": "User updated successfully.",
+              "data": {}
           }
         headers: []
         description: ''

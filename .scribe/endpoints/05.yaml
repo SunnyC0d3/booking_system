@@ -16,6 +16,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -37,7 +39,7 @@ endpoints:
         name: filter.name
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: kyeyokyxwqglpzgk
+        example: r
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -47,7 +49,7 @@ endpoints:
         name: filter.price
         description: 'Must match the regex /^\d+(\.\d{1,2})?(,\d+(\.\d{1,2})?)*$/.'
         required: false
-        example: '3470770.55,092524.8)))))'
+        example: 2.4)))))
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -57,7 +59,7 @@ endpoints:
         name: filter.category
         description: 'Must match the regex /^(\d,?)+$/.'
         required: false
-        example: '0'
+        example: '9,5,3,47,4,7'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -67,7 +69,7 @@ endpoints:
         name: filter.quantity
         description: 'Must be at least 0.'
         required: false
-        example: 3
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -77,7 +79,7 @@ endpoints:
         name: filter.created_at
         description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
         required: false
-        example: '2310-95-46,5130-56-50'
+        example: '1052-47-52,9150-54-74'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -87,7 +89,7 @@ endpoints:
         name: filter.updated_at
         description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
         required: false
-        example: '0102-85-13,1166-28-69'
+        example: '4846-11-33'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -97,7 +99,7 @@ endpoints:
         name: filter.search
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: afhhbqenfukaehjsssrkuj
+        example: gvddynuamlamw
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -107,7 +109,7 @@ endpoints:
         name: filter.include
         description: 'Must match the regex /^(\w+(,\w+)*)?$/.'
         required: false
-        example: 'o,o'
+        example: ''
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -117,7 +119,7 @@ endpoints:
         name: page
         description: 'Must be at least 1.'
         required: false
-        example: 86
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -127,7 +129,7 @@ endpoints:
         name: per_page
         description: 'Must be at least 1. Must not be greater than 100.'
         required: false
-        example: 14
+        example: 9
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -137,7 +139,7 @@ endpoints:
         name: sort
         description: 'Must match the regex /^(-?[a-zA-Z0-9_]+)(,-?[a-zA-Z0-9_]+)*$/.'
         required: false
-        example: 'wj,H,-W,Q,-z,-s'
+        example: '-XEgHzij,-8S,st'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -145,17 +147,17 @@ endpoints:
         custom: []
     cleanBodyParameters:
       filter:
-        name: kyeyokyxwqglpzgk
-        price: '3470770.55,092524.8)))))'
-        category: '0'
-        quantity: 3
-        created_at: '2310-95-46,5130-56-50'
-        updated_at: '0102-85-13,1166-28-69'
-        search: afhhbqenfukaehjsssrkuj
-        include: 'o,o'
-      page: 86
-      per_page: 14
-      sort: 'wj,H,-W,Q,-z,-s'
+        name: r
+        price: 2.4)))))
+        category: '9,5,3,47,4,7'
+        quantity: 1
+        created_at: '1052-47-52,9150-54-74'
+        updated_at: '4846-11-33'
+        search: gvddynuamlamw
+        include: ''
+      page: 1
+      per_page: 9
+      sort: '-XEgHzij,-8S,st'
     fileParameters: []
     responses:
       -
@@ -201,6 +203,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -265,6 +269,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: multipart/form-data
       Accept: application/json
     urlParameters: []
@@ -276,7 +282,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: grxtnydjffjravjyvtncvdz
+        example: jmgrjkjlvhrsmjqm
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -286,7 +292,7 @@ endpoints:
         name: description
         description: ''
         required: false
-        example: 'Quidem necessitatibus quas aut.'
+        example: 'At sapiente distinctio quia occaecati in.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -296,7 +302,7 @@ endpoints:
         name: price
         description: 'Must be at least 0.'
         required: true
-        example: 35
+        example: 42
         type: number
         enumValues: []
         exampleWasSpecified: false
@@ -306,7 +312,7 @@ endpoints:
         name: product_category_id
         description: 'The <code>id</code> of an existing record in the product_categories table.'
         required: true
-        example: repellat
+        example: et
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -316,7 +322,7 @@ endpoints:
         name: product_status_id
         description: 'The <code>id</code> of an existing record in the product_statuses table.'
         required: true
-        example: qui
+        example: dolor
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -326,7 +332,7 @@ endpoints:
         name: quantity
         description: 'Must be at least 0.'
         required: true
-        example: 35
+        example: 54
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -376,7 +382,7 @@ endpoints:
         name: 'product_variants[].product_attribute_id'
         description: 'The <code>id</code> of an existing record in the product_attributes table.'
         required: true
-        example: sapiente
+        example: consequuntur
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -386,7 +392,7 @@ endpoints:
         name: 'product_variants[].value'
         description: 'This field is required when <code>product_variants</code> is present. Must not be greater than 255 characters.'
         required: false
-        example: nhzqzobp
+        example: bbebgirgjhqlxslcn
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -396,7 +402,7 @@ endpoints:
         name: 'product_variants[].additional_price'
         description: 'Must be at least 0.'
         required: false
-        example: 88
+        example: 74
         type: number
         enumValues: []
         exampleWasSpecified: false
@@ -406,7 +412,7 @@ endpoints:
         name: 'product_variants[].quantity'
         description: 'Must be at least 0.'
         required: true
-        example: 81
+        example: 49
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -424,18 +430,18 @@ endpoints:
         nullable: false
         custom: []
     cleanBodyParameters:
-      name: grxtnydjffjravjyvtncvdz
-      description: 'Quidem necessitatibus quas aut.'
-      price: 35
-      product_category_id: repellat
-      product_status_id: qui
-      quantity: 35
+      name: jmgrjkjlvhrsmjqm
+      description: 'At sapiente distinctio quia occaecati in.'
+      price: 42
+      product_category_id: et
+      product_status_id: dolor
+      quantity: 54
       product_variants:
         -
-          product_attribute_id: sapiente
-          value: nhzqzobp
-          additional_price: 88
-          quantity: 81
+          product_attribute_id: consequuntur
+          value: bbebgirgjhqlxslcn
+          additional_price: 74
+          quantity: 49
     fileParameters:
       media:
         featured_image: null
@@ -485,6 +491,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: multipart/form-data
       Accept: application/json
     urlParameters:
@@ -507,7 +515,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: uluzmg
+        example: cywvrsgjddxngqwwoyipvlrku
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -517,7 +525,7 @@ endpoints:
         name: description
         description: ''
         required: false
-        example: 'Inventore aut qui dolores quia et sint.'
+        example: 'Impedit tempore nam ut incidunt qui aut.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -527,7 +535,7 @@ endpoints:
         name: price
         description: 'Must be at least 0.'
         required: true
-        example: 55
+        example: 82
         type: number
         enumValues: []
         exampleWasSpecified: false
@@ -537,7 +545,7 @@ endpoints:
         name: product_category_id
         description: 'The <code>id</code> of an existing record in the product_categories table.'
         required: true
-        example: libero
+        example: fugit
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -547,7 +555,7 @@ endpoints:
         name: product_status_id
         description: 'The <code>id</code> of an existing record in the product_statuses table.'
         required: true
-        example: reprehenderit
+        example: eos
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -557,7 +565,7 @@ endpoints:
         name: quantity
         description: 'Must be at least 0.'
         required: true
-        example: 76
+        example: 62
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -607,7 +615,7 @@ endpoints:
         name: 'product_variants[].product_attribute_id'
         description: 'The <code>id</code> of an existing record in the product_attributes table.'
         required: true
-        example: adipisci
+        example: blanditiis
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -617,7 +625,7 @@ endpoints:
         name: 'product_variants[].value'
         description: 'This field is required when <code>product_variants</code> is present. Must not be greater than 255 characters.'
         required: false
-        example: imddxgrj
+        example: chksyh
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -627,7 +635,7 @@ endpoints:
         name: 'product_variants[].additional_price'
         description: 'Must be at least 0.'
         required: false
-        example: 84
+        example: 21
         type: number
         enumValues: []
         exampleWasSpecified: false
@@ -637,7 +645,7 @@ endpoints:
         name: 'product_variants[].quantity'
         description: 'Must be at least 0.'
         required: true
-        example: 31
+        example: 76
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -655,18 +663,18 @@ endpoints:
         nullable: false
         custom: []
     cleanBodyParameters:
-      name: uluzmg
-      description: 'Inventore aut qui dolores quia et sint.'
-      price: 55
-      product_category_id: libero
-      product_status_id: reprehenderit
-      quantity: 76
+      name: cywvrsgjddxngqwwoyipvlrku
+      description: 'Impedit tempore nam ut incidunt qui aut.'
+      price: 82
+      product_category_id: fugit
+      product_status_id: eos
+      quantity: 62
       product_variants:
         -
-          product_attribute_id: adipisci
-          value: imddxgrj
-          additional_price: 84
-          quantity: 31
+          product_attribute_id: blanditiis
+          value: chksyh
+          additional_price: 21
+          quantity: 76
     fileParameters:
       media:
         featured_image: null
@@ -716,6 +724,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -779,6 +789,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -842,6 +854,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -886,6 +900,251 @@ endpoints:
       - headers
       - Authorization
       - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/products
+    metadata:
+      groupName: Products
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Retrieve a paginated list of products.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      filter:
+        name: filter
+        description: ''
+        required: false
+        example: null
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.name:
+        name: filter.name
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: cniajuqmbhoclpfqhnzcjdcz
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.price:
+        name: filter.price
+        description: 'Must match the regex /^\d+(\.\d{1,2})?(,\d+(\.\d{1,2})?)*$/.'
+        required: false
+        example: 57)))
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.category:
+        name: filter.category
+        description: 'Must match the regex /^(\d,?)+$/.'
+        required: false
+        example: '7,42'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.quantity:
+        name: filter.quantity
+        description: 'Must be at least 0.'
+        required: false
+        example: 60
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.created_at:
+        name: filter.created_at
+        description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
+        required: false
+        example: '7531-71-53,2431-66-77'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.updated_at:
+        name: filter.updated_at
+        description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
+        required: false
+        example: '4574-39-02'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.search:
+        name: filter.search
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: xscrvfsiasbcmnac
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.include:
+        name: filter.include
+        description: 'Must match the regex /^(\w+(,\w+)*)?$/.'
+        required: false
+        example: 'u,kxid'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      page:
+        name: page
+        description: 'Must be at least 1.'
+        required: false
+        example: 15
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      per_page:
+        name: per_page
+        description: 'Must be at least 1. Must not be greater than 100.'
+        required: false
+        example: 18
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      sort:
+        name: sort
+        description: 'Must match the regex /^(-?[a-zA-Z0-9_]+)(,-?[a-zA-Z0-9_]+)*$/.'
+        required: false
+        example: '-H'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      filter:
+        name: cniajuqmbhoclpfqhnzcjdcz
+        price: 57)))
+        category: '7,42'
+        quantity: 60
+        created_at: '7531-71-53,2431-66-77'
+        updated_at: '4574-39-02'
+        search: xscrvfsiasbcmnac
+        include: 'u,kxid'
+      page: 15
+      per_page: 18
+      sort: '-H'
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Products retrieved successfully.",
+              "data": []
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+              "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/products/{id}'
+    metadata:
+      groupName: Products
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Retrieve a specific product.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the product.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Product retrieved successfully.",
+              "data": {}
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+              "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
     controller: null
     method: null
     route: null

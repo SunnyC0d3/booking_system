@@ -240,7 +240,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the verify.'
-        example: id
+        example: harum
         required: true
         schema:
           type: string
@@ -248,7 +248,7 @@ paths:
         in: path
         name: hash
         description: ''
-        example: officiis
+        example: debitis
         required: true
         schema:
           type: string
@@ -299,7 +299,21 @@ paths:
       summary: 'Retrieve paginated list of orders.'
       operationId: retrievePaginatedListOfOrders
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -352,7 +366,21 @@ paths:
       summary: 'Create a new order.'
       operationId: createANewOrder
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -394,7 +422,7 @@ paths:
                 user_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the users table.'
-                  example: blanditiis
+                  example: dolores
                   nullable: false
                 status_id:
                   type: string
@@ -412,7 +440,7 @@ paths:
                       product_id:
                         type: string
                         description: 'The <code>id</code> of an existing record in the products table.'
-                        example: quaerat
+                        example: assumenda
                         nullable: false
                       product_variant_id:
                         type: string
@@ -422,12 +450,12 @@ paths:
                       quantity:
                         type: integer
                         description: 'Must be at least 1.'
-                        example: 41
+                        example: 84
                         nullable: false
                       price:
                         type: number
                         description: 'Must be at least 0.'
-                        example: 41
+                        example: 75
                         nullable: false
                     required:
                       - product_id
@@ -441,7 +469,21 @@ paths:
       summary: 'Retrieve a specific order.'
       operationId: retrieveASpecificOrder
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -477,7 +519,21 @@ paths:
       summary: 'Update an existing order.'
       operationId: updateAnExistingOrder
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -537,7 +593,7 @@ paths:
                       product_id:
                         type: string
                         description: 'The <code>id</code> of an existing record in the products table.'
-                        example: ullam
+                        example: culpa
                         nullable: false
                       product_variant_id:
                         type: string
@@ -547,12 +603,12 @@ paths:
                       quantity:
                         type: integer
                         description: 'Must be at least 1.'
-                        example: 9
+                        example: 30
                         nullable: false
                       price:
                         type: number
                         description: 'Must be at least 0.'
-                        example: 48
+                        example: 80
                         nullable: false
                     required:
                       - product_id
@@ -564,7 +620,21 @@ paths:
       summary: 'Soft delete a order.'
       operationId: softDeleteAOrder
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -606,7 +676,21 @@ paths:
       summary: 'Permanently delete a order.'
       operationId: permanentlyDeleteAOrder
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -648,7 +732,21 @@ paths:
       summary: 'Restore a soft deleted order.'
       operationId: restoreASoftDeletedOrder
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -662,6 +760,66 @@ paths:
                   message:
                     type: string
                     example: 'Order restored successfully.'
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You do not have the required permissions.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have the required permissions.'
+      tags:
+        - Orders
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the order.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/orders/{id}':
+    get:
+      summary: 'Retrieve a specific order.'
+      operationId: retrieveASpecificOrder
+      description: ''
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Order retrieved successfully.'
+                  data: {  }
+                properties:
+                  message:
+                    type: string
+                    example: 'Order retrieved successfully.'
+                  data:
+                    type: object
+                    properties: {  }
         403:
           description: ''
           content:
@@ -828,7 +986,21 @@ paths:
       summary: 'Retrieve all payment methods.'
       operationId: retrieveAllPaymentMethods
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -864,7 +1036,21 @@ paths:
       summary: 'Create a new payment method.'
       operationId: createANewPaymentMethod
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -915,7 +1101,21 @@ paths:
       summary: 'Update a payment method.'
       operationId: updateAPaymentMethod
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -965,7 +1165,21 @@ paths:
       summary: 'Delete a permission.'
       operationId: deleteAPermission
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -1011,7 +1225,21 @@ paths:
       summary: 'Initiate Payment'
       operationId: initiatePayment
       description: "Creates or retrieves a Stripe PaymentIntent for a given order. If a payment already exists,\nit will return the existing client secret to avoid duplicate charges."
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -1128,7 +1356,21 @@ paths:
       summary: 'Stripe Webhook Listener'
       operationId: stripeWebhookListener
       description: "This endpoint is triggered by Stripe when a payment event occurs (e.g., payment succeeded, failed).\nIt verifies the webhook signature and processes the payment status accordingly."
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -1202,7 +1444,7 @@ paths:
                 object:
                   type: $event
                   description: 'Stripe webhook payload. The full JSON payload sent by Stripe will be validated internally.'
-                  example: cumque
+                  example: rem
                   nullable: false
       security: []
     parameters:
@@ -1219,13 +1461,27 @@ paths:
             value: ''
           present:
             summary: 'When the value is present'
-            value: maiores
+            value: dolor
   /api/admin/permissions:
     get:
       summary: 'Retrieve all permissions.'
       operationId: retrieveAllPermissions
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -1261,7 +1517,21 @@ paths:
       summary: 'Create a new permission.'
       operationId: createANewPermission
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -1312,7 +1582,21 @@ paths:
       summary: 'Update a permission.'
       operationId: updateAPermission
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -1362,7 +1646,21 @@ paths:
       summary: 'Delete a permission.'
       operationId: deleteAPermission
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -1404,7 +1702,21 @@ paths:
       summary: 'Retrieve all product attributes.'
       operationId: retrieveAllProductAttributes
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -1440,7 +1752,21 @@ paths:
       summary: 'Create a new product attribute.'
       operationId: createANewProductAttribute
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -1491,7 +1817,21 @@ paths:
       summary: 'Retrieve a specific product attribute.'
       operationId: retrieveASpecificProductAttribute
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -1527,7 +1867,21 @@ paths:
       summary: 'Update a product attribute.'
       operationId: updateAProductAttribute
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -1577,7 +1931,21 @@ paths:
       summary: 'Delete a product attribute.'
       operationId: deleteAProductAttribute
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -1619,7 +1987,21 @@ paths:
       summary: 'Get all product categories'
       operationId: getAllProductCategories
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -1675,7 +2057,21 @@ paths:
       summary: 'Store a new product category'
       operationId: storeANewProductCategory
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -1729,12 +2125,12 @@ paths:
                 name:
                   type: string
                   description: 'The name of the category.'
-                  example: culpa
+                  example: expedita
                   nullable: false
                 parent_id:
                   type: integer
                   description: 'optional The ID of the parent category.'
-                  example: 14
+                  example: 13
                   nullable: true
               required:
                 - name
@@ -1743,7 +2139,21 @@ paths:
       summary: 'Get a specific product category'
       operationId: getASpecificProductCategory
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -1791,7 +2201,21 @@ paths:
       summary: 'Update a product category'
       operationId: updateAProductCategory
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -1845,12 +2269,12 @@ paths:
                 name:
                   type: string
                   description: 'The name of the category.'
-                  example: illo
+                  example: natus
                   nullable: false
                 parent_id:
                   type: integer
                   description: 'optional The ID of the parent category.'
-                  example: 17
+                  example: 19
                   nullable: true
               required:
                 - name
@@ -1858,7 +2282,21 @@ paths:
       summary: 'Delete a product category'
       operationId: deleteAProductCategory
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -1912,7 +2350,21 @@ paths:
       summary: 'Retrieve all product tags.'
       operationId: retrieveAllProductTags
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -1969,7 +2421,21 @@ paths:
       summary: 'Create a new product tag.'
       operationId: createANewProductTag
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -2019,7 +2485,7 @@ paths:
                 name:
                   type: string
                   description: 'The name of the product tag.'
-                  example: fuga
+                  example: enim
                   nullable: false
               required:
                 - name
@@ -2028,7 +2494,21 @@ paths:
       summary: 'Retrieve a specific product tag.'
       operationId: retrieveASpecificProductTag
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -2072,7 +2552,21 @@ paths:
       summary: 'Update an existing product tag.'
       operationId: updateAnExistingProductTag
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -2122,7 +2616,7 @@ paths:
                 name:
                   type: string
                   description: 'The updated name of the product tag.'
-                  example: illum
+                  example: velit
                   nullable: false
               required:
                 - name
@@ -2130,7 +2624,21 @@ paths:
       summary: 'Delete a product tag.'
       operationId: deleteAProductTag
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -2172,7 +2680,21 @@ paths:
       summary: 'Retrieve a paginated list of products.'
       operationId: retrieveAPaginatedListOfProducts
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -2220,63 +2742,77 @@ paths:
                     name:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: kyeyokyxwqglpzgk
+                      example: r
                       nullable: false
                     price:
                       type: string
                       description: 'Must match the regex /^\d+(\.\d{1,2})?(,\d+(\.\d{1,2})?)*$/.'
-                      example: '3470770.55,092524.8)))))'
+                      example: 2.4)))))
                       nullable: false
                     category:
                       type: string
                       description: 'Must match the regex /^(\d,?)+$/.'
-                      example: '0'
+                      example: '9,5,3,47,4,7'
                       nullable: false
                     quantity:
                       type: integer
                       description: 'Must be at least 0.'
-                      example: 3
+                      example: 1
                       nullable: false
                     created_at:
                       type: string
                       description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
-                      example: '2310-95-46,5130-56-50'
+                      example: '1052-47-52,9150-54-74'
                       nullable: false
                     updated_at:
                       type: string
                       description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
-                      example: '0102-85-13,1166-28-69'
+                      example: '4846-11-33'
                       nullable: false
                     search:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: afhhbqenfukaehjsssrkuj
+                      example: gvddynuamlamw
                       nullable: false
                     include:
                       type: string
                       description: 'Must match the regex /^(\w+(,\w+)*)?$/.'
-                      example: 'o,o'
+                      example: ''
                       nullable: false
                 page:
                   type: integer
                   description: 'Must be at least 1.'
-                  example: 86
+                  example: 1
                   nullable: false
                 per_page:
                   type: integer
                   description: 'Must be at least 1. Must not be greater than 100.'
-                  example: 14
+                  example: 9
                   nullable: false
                 sort:
                   type: string
                   description: 'Must match the regex /^(-?[a-zA-Z0-9_]+)(,-?[a-zA-Z0-9_]+)*$/.'
-                  example: 'wj,H,-W,Q,-z,-s'
+                  example: '-XEgHzij,-8S,st'
                   nullable: false
     post:
       summary: 'Create a new product.'
       operationId: createANewProduct
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -2318,32 +2854,32 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: grxtnydjffjravjyvtncvdz
+                  example: jmgrjkjlvhrsmjqm
                   nullable: false
                 description:
                   type: string
                   description: ''
-                  example: 'Quidem necessitatibus quas aut.'
+                  example: 'At sapiente distinctio quia occaecati in.'
                   nullable: true
                 price:
                   type: number
                   description: 'Must be at least 0.'
-                  example: 35
+                  example: 42
                   nullable: false
                 product_category_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the product_categories table.'
-                  example: repellat
+                  example: et
                   nullable: false
                 product_status_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the product_statuses table.'
-                  example: qui
+                  example: dolor
                   nullable: false
                 quantity:
                   type: integer
                   description: 'Must be at least 0.'
-                  example: 35
+                  example: 54
                   nullable: false
                 product_tags:
                   type: array
@@ -2361,22 +2897,22 @@ paths:
                       product_attribute_id:
                         type: string
                         description: 'The <code>id</code> of an existing record in the product_attributes table.'
-                        example: sapiente
+                        example: consequuntur
                         nullable: false
                       value:
                         type: string
                         description: 'This field is required when <code>product_variants</code> is present. Must not be greater than 255 characters.'
-                        example: nhzqzobp
+                        example: bbebgirgjhqlxslcn
                         nullable: false
                       additional_price:
                         type: number
                         description: 'Must be at least 0.'
-                        example: 88
+                        example: 74
                         nullable: true
                       quantity:
                         type: integer
                         description: 'Must be at least 0.'
-                        example: 81
+                        example: 49
                         nullable: false
                     required:
                       - product_attribute_id
@@ -2409,7 +2945,21 @@ paths:
       summary: 'Retrieve a specific product.'
       operationId: retrieveASpecificProduct
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -2445,7 +2995,21 @@ paths:
       summary: 'Update an existing product.'
       operationId: updateAnExistingProduct
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -2487,32 +3051,32 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: uluzmg
+                  example: cywvrsgjddxngqwwoyipvlrku
                   nullable: false
                 description:
                   type: string
                   description: ''
-                  example: 'Inventore aut qui dolores quia et sint.'
+                  example: 'Impedit tempore nam ut incidunt qui aut.'
                   nullable: true
                 price:
                   type: number
                   description: 'Must be at least 0.'
-                  example: 55
+                  example: 82
                   nullable: false
                 product_category_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the product_categories table.'
-                  example: libero
+                  example: fugit
                   nullable: false
                 product_status_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the product_statuses table.'
-                  example: reprehenderit
+                  example: eos
                   nullable: false
                 quantity:
                   type: integer
                   description: 'Must be at least 0.'
-                  example: 76
+                  example: 62
                   nullable: false
                 product_tags:
                   type: array
@@ -2530,22 +3094,22 @@ paths:
                       product_attribute_id:
                         type: string
                         description: 'The <code>id</code> of an existing record in the product_attributes table.'
-                        example: adipisci
+                        example: blanditiis
                         nullable: false
                       value:
                         type: string
                         description: 'This field is required when <code>product_variants</code> is present. Must not be greater than 255 characters.'
-                        example: imddxgrj
+                        example: chksyh
                         nullable: false
                       additional_price:
                         type: number
                         description: 'Must be at least 0.'
-                        example: 84
+                        example: 21
                         nullable: true
                       quantity:
                         type: integer
                         description: 'Must be at least 0.'
-                        example: 31
+                        example: 76
                         nullable: false
                     required:
                       - product_attribute_id
@@ -2577,7 +3141,21 @@ paths:
       summary: 'Permanently delete a product.'
       operationId: permanentlyDeleteAProduct
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -2619,7 +3197,21 @@ paths:
       summary: 'Soft delete a product.'
       operationId: softDeleteAProduct
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -2661,7 +3253,21 @@ paths:
       summary: 'Restore a soft deleted product.'
       operationId: restoreASoftDeletedProduct
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -2698,12 +3304,207 @@ paths:
         required: true
         schema:
           type: integer
+  /api/products:
+    get:
+      summary: 'Retrieve a paginated list of products.'
+      operationId: retrieveAPaginatedListOfProducts
+      description: ''
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Products retrieved successfully.'
+                  data: []
+                properties:
+                  message:
+                    type: string
+                    example: 'Products retrieved successfully.'
+                  data:
+                    type: array
+                    example: []
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You do not have the required permissions.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have the required permissions.'
+      tags:
+        - Products
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                filter:
+                  type: object
+                  description: ''
+                  example: null
+                  nullable: false
+                  properties:
+                    name:
+                      type: string
+                      description: 'Must not be greater than 255 characters.'
+                      example: cniajuqmbhoclpfqhnzcjdcz
+                      nullable: false
+                    price:
+                      type: string
+                      description: 'Must match the regex /^\d+(\.\d{1,2})?(,\d+(\.\d{1,2})?)*$/.'
+                      example: 57)))
+                      nullable: false
+                    category:
+                      type: string
+                      description: 'Must match the regex /^(\d,?)+$/.'
+                      example: '7,42'
+                      nullable: false
+                    quantity:
+                      type: integer
+                      description: 'Must be at least 0.'
+                      example: 60
+                      nullable: false
+                    created_at:
+                      type: string
+                      description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
+                      example: '7531-71-53,2431-66-77'
+                      nullable: false
+                    updated_at:
+                      type: string
+                      description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
+                      example: '4574-39-02'
+                      nullable: false
+                    search:
+                      type: string
+                      description: 'Must not be greater than 255 characters.'
+                      example: xscrvfsiasbcmnac
+                      nullable: false
+                    include:
+                      type: string
+                      description: 'Must match the regex /^(\w+(,\w+)*)?$/.'
+                      example: 'u,kxid'
+                      nullable: false
+                page:
+                  type: integer
+                  description: 'Must be at least 1.'
+                  example: 15
+                  nullable: false
+                per_page:
+                  type: integer
+                  description: 'Must be at least 1. Must not be greater than 100.'
+                  example: 18
+                  nullable: false
+                sort:
+                  type: string
+                  description: 'Must match the regex /^(-?[a-zA-Z0-9_]+)(,-?[a-zA-Z0-9_]+)*$/.'
+                  example: '-H'
+                  nullable: false
+      security: []
+  '/api/products/{id}':
+    get:
+      summary: 'Retrieve a specific product.'
+      operationId: retrieveASpecificProduct
+      description: ''
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Product retrieved successfully.'
+                  data: {  }
+                properties:
+                  message:
+                    type: string
+                    example: 'Product retrieved successfully.'
+                  data:
+                    type: object
+                    properties: {  }
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You do not have the required permissions.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have the required permissions.'
+      tags:
+        - Products
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the product.'
+        example: 1
+        required: true
+        schema:
+          type: integer
   '/api/admin/roles/{role_id}/permissions':
     get:
       summary: 'Retrieve all permissions for a role.'
       operationId: retrieveAllPermissionsForARole
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -2739,7 +3540,21 @@ paths:
       summary: 'Assign specific permissions to a role.'
       operationId: assignSpecificPermissionsToARole
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -2822,7 +3637,21 @@ paths:
       summary: 'Assign all available permissions to a role.'
       operationId: assignAllAvailablePermissionsToARole
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -2876,7 +3705,21 @@ paths:
       summary: 'Revoke a specific permission from a role.'
       operationId: revokeASpecificPermissionFromARole
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -2946,7 +3789,21 @@ paths:
       summary: 'Retrieve all roles.'
       operationId: retrieveAllRoles
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -2982,7 +3839,21 @@ paths:
       summary: 'Create a new role.'
       operationId: createANewRole
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -3033,7 +3904,21 @@ paths:
       summary: 'Update a role.'
       operationId: updateARole
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -3083,7 +3968,21 @@ paths:
       summary: 'Delete a role.'
       operationId: deleteARole
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -3125,7 +4024,21 @@ paths:
       summary: 'Retrieve a paginated list of users.'
       operationId: retrieveAPaginatedListOfUsers
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -3173,58 +4086,72 @@ paths:
                     name:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: ckvjklmihzrp
+                      example: ubpatqyozvl
                       nullable: false
                     email:
                       type: string
                       description: 'Must be a valid email address. Must not be greater than 255 characters.'
-                      example: nyah72@example.com
+                      example: ehuels@example.net
                       nullable: false
                     role:
                       type: string
                       description: 'Must match the regex /^(\d,?)+$/.'
-                      example: '3,7,5'
+                      example: '8,2,6,'
                       nullable: false
                     created_at:
                       type: string
                       description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
-                      example: '2544-20-88,5872-83-48'
+                      example: '0423-75-49'
                       nullable: false
                     updated_at:
                       type: string
                       description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
-                      example: '7770-55-28,4573-42-82'
+                      example: '5336-59-59,2330-04-82'
                       nullable: false
                     search:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: ktndqakvmdzfubrxufftxdma
+                      example: cxlboklup
                       nullable: false
                     include:
                       type: string
                       description: 'Must match the regex /^(\w+(,\w+)*)?$/.'
-                      example: 'm,qpu,fy)'
+                      example: )
                       nullable: false
                 page:
                   type: integer
                   description: 'Must be at least 1.'
-                  example: 17
+                  example: 38
                   nullable: false
                 per_page:
                   type: integer
                   description: 'Must be at least 1. Must not be greater than 100.'
-                  example: 10
+                  example: 12
                   nullable: false
                 sort:
                   type: string
                   description: 'Must match the regex /^(-?[a-zA-Z0-9_]+)(,-?[a-zA-Z0-9_]+)*$/.'
-                  example: 'ynn,2JC4VT'
+                  example: '-Wciopgyte'
                   nullable: false
     post:
       summary: 'Create a new user.'
       operationId: createANewUser
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -3266,22 +4193,22 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: lqlwnvxa
+                  example: zxd
                   nullable: false
                 email:
                   type: string
                   description: 'Must be a valid email address.'
-                  example: madaline.rippin@example.org
+                  example: baumbach.kianna@example.net
                   nullable: false
                 password:
                   type: string
                   description: 'Must be at least 8 characters.'
-                  example: 'nPyh^*=''9"tD80x'
+                  example: yPCluei
                   nullable: false
                 role_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the roles table.'
-                  example: sed
+                  example: totam
                   nullable: false
                 address:
                   type: object
@@ -3292,32 +4219,32 @@ paths:
                     address_line1:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: lzcmlauc
+                      example: qlaq
                       nullable: false
                     city:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: vukvidymccbobuicndh
+                      example: xrecapdsstwikjbqwlwbcel
                       nullable: false
                     country:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: h
+                      example: iyasoyherpcfmah
                       nullable: false
                     postal_code:
                       type: string
                       description: 'Must not be greater than 20 characters.'
-                      example: urrrdvyixgnfjlm
+                      example: ldgfhdkitjluq
                       nullable: false
                     address_line2:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: tapzog
+                      example: loqc
                       nullable: true
                     state:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: upzlfexy
+                      example: eengtujmoxmdfjm
                       nullable: true
               required:
                 - name
@@ -3329,7 +4256,21 @@ paths:
       summary: 'Retrieve a specific user.'
       operationId: retrieveASpecificUser
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -3365,7 +4306,21 @@ paths:
       summary: 'Update an existing user.'
       operationId: updateAnExistingUser
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -3407,17 +4362,17 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: onqdibwtqlrxs
+                  example: xibuiuzzzdnbxrhe
                   nullable: false
                 email:
                   type: string
                   description: 'Must be a valid email address.'
-                  example: collin.schaefer@example.org
+                  example: hjohnson@example.com
                   nullable: false
                 password:
                   type: string
                   description: 'Must be at least 8 characters.'
-                  example: ']*[4NV,o`;'
+                  example: 'yq<u(ca"+2cK[w}e_'
                   nullable: true
                 role_id:
                   type: string
@@ -3433,38 +4388,52 @@ paths:
                     address_line1:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: ewudawjsqe
+                      example: ifsxkeofyygbzagp
                       nullable: false
                     city:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: umfdawyazxemew
+                      example: vhuobqbegkbbrehsewu
                       nullable: false
                     country:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: aouqupmnnvmpqz
+                      example: jicemprfhhpl
                       nullable: false
                     postal_code:
                       type: string
                       description: 'Must not be greater than 20 characters.'
-                      example: srdrhnelhrnfwuau
+                      example: eb
                       nullable: false
                     address_line2:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: fmdnq
+                      example: smqmzy
                       nullable: true
                     state:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: zcfetpjgliyaabuhsuilcnzn
+                      example: trrzapgjcsynatpoehc
                       nullable: true
     delete:
       summary: 'Permanently delete a user.'
       operationId: permanentlyDeleteAUser
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -3501,12 +4470,199 @@ paths:
         required: true
         schema:
           type: integer
+  '/api/users/{id}':
+    get:
+      summary: 'Retrieve a specific user.'
+      operationId: retrieveASpecificUser
+      description: ''
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'User details retrieved.'
+                  data: {  }
+                properties:
+                  message:
+                    type: string
+                    example: 'User details retrieved.'
+                  data:
+                    type: object
+                    properties: {  }
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You do not have the required permissions.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have the required permissions.'
+      tags:
+        - Users
+    post:
+      summary: 'Update an existing user.'
+      operationId: updateAnExistingUser
+      description: ''
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'User updated successfully.'
+                  data: {  }
+                properties:
+                  message:
+                    type: string
+                    example: 'User updated successfully.'
+                  data:
+                    type: object
+                    properties: {  }
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You do not have the required permissions.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have the required permissions.'
+      tags:
+        - Users
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: hlqtxgpekjpndxc
+                  nullable: false
+                email:
+                  type: string
+                  description: 'Must be a valid email address.'
+                  example: vallie07@example.com
+                  nullable: false
+                password:
+                  type: string
+                  description: 'Must be at least 8 characters.'
+                  example: lm/4PJAE6\8Z
+                  nullable: true
+                role_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the roles table.'
+                  example: null
+                  nullable: false
+                address:
+                  type: object
+                  description: ''
+                  example: []
+                  nullable: false
+                  properties:
+                    address_line1:
+                      type: string
+                      description: 'Must not be greater than 255 characters.'
+                      example: gadjbyuzx
+                      nullable: false
+                    city:
+                      type: string
+                      description: 'Must not be greater than 255 characters.'
+                      example: bmor
+                      nullable: false
+                    country:
+                      type: string
+                      description: 'Must not be greater than 255 characters.'
+                      example: hks
+                      nullable: false
+                    postal_code:
+                      type: string
+                      description: 'Must not be greater than 20 characters.'
+                      example: fcxltfihy
+                      nullable: false
+                    address_line2:
+                      type: string
+                      description: 'Must not be greater than 255 characters.'
+                      example: hodszjctnlaxrn
+                      nullable: true
+                    state:
+                      type: string
+                      description: 'Must not be greater than 255 characters.'
+                      example: jgkqzsujxvkasakbmak
+                      nullable: true
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the user.'
+        example: 1
+        required: true
+        schema:
+          type: integer
   /api/admin/vendors:
     get:
       summary: 'Retrieve a paginated list of vendors.'
       operationId: retrieveAPaginatedListOfVendors
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -3542,7 +4698,21 @@ paths:
       summary: 'Create a new vendor.'
       operationId: createANewVendor
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -3584,17 +4754,17 @@ paths:
                 user_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the users table.'
-                  example: enim
+                  example: non
                   nullable: false
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: tlkzfyrlojoczbrokw
+                  example: aqpsozhujmlg
                   nullable: false
                 description:
                   type: string
                   description: 'Must not be greater than 1000 characters.'
-                  example: 'Omnis sed sapiente rerum enim sed corporis.'
+                  example: 'Id est veritatis dolorum cupiditate iusto quia et.'
                   nullable: false
                 logo:
                   type: string
@@ -3610,7 +4780,21 @@ paths:
       summary: 'Retrieve a specific vendor.'
       operationId: retrieveASpecificVendor
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -3646,7 +4830,21 @@ paths:
       summary: 'Update an existing vendor.'
       operationId: updateAnExistingVendor
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -3693,12 +4891,12 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: flrshekdqbdphqunaiwjam
+                  example: u
                   nullable: false
                 description:
                   type: string
                   description: 'Must not be greater than 1000 characters.'
-                  example: 'Non molestiae qui velit magnam dolorem itaque.'
+                  example: 'Rerum maxime qui ipsam aut fugit.'
                   nullable: false
                 logo:
                   type: string
@@ -3709,7 +4907,21 @@ paths:
       summary: 'Permanently delete a vendor.'
       operationId: permanentlyDeleteAVendor
       description: ''
-      parameters: []
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
       responses:
         200:
           description: ''
@@ -3737,6 +4949,143 @@ paths:
                     example: 'You do not have the required permissions.'
       tags:
         - Vendors
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the vendor.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/vendors/{id}':
+    get:
+      summary: 'Retrieve a specific vendor.'
+      operationId: retrieveASpecificVendor
+      description: ''
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Vendor details retrieved.'
+                  data: {  }
+                properties:
+                  message:
+                    type: string
+                    example: 'Vendor details retrieved.'
+                  data:
+                    type: object
+                    properties: {  }
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You do not have the required permissions.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have the required permissions.'
+      tags:
+        - Vendors
+    post:
+      summary: 'Update an existing vendor.'
+      operationId: updateAnExistingVendor
+      description: ''
+      parameters:
+        -
+          in: header
+          name: X-Hmac
+          description: ''
+          example: 'HMAC signature of the request payload done via sha256.'
+          schema:
+            type: string
+        -
+          in: header
+          name: X-Timestamp
+          description: ''
+          example: 'Timestamp + Request body.'
+          schema:
+            type: string
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Vendor updated successfully.'
+                  data: {  }
+                properties:
+                  message:
+                    type: string
+                    example: 'Vendor updated successfully.'
+                  data:
+                    type: object
+                    properties: {  }
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You do not have the required permissions.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have the required permissions.'
+      tags:
+        - Vendors
+      requestBody:
+        required: false
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the users table.'
+                  example: null
+                  nullable: false
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: nsdodkekl
+                  nullable: false
+                description:
+                  type: string
+                  description: 'Must not be greater than 1000 characters.'
+                  example: 'Architecto esse beatae reprehenderit similique magni vero tenetur.'
+                  nullable: false
+                logo:
+                  type: string
+                  format: binary
+                  description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+                  nullable: true
     parameters:
       -
         in: path

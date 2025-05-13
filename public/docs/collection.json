@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "E-Commerce API Documentation",
-        "_postman_id": "5a4911d3-c1f4-4eb3-9380-86750dda1dde",
+        "_postman_id": "0ac65ebb-1919-4831-ade6-ef558c713aa3",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -180,13 +180,13 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "id",
+                                    "value": "harum",
                                     "description": "The ID of the verify."
                                 },
                                 {
                                     "id": "hash",
                                     "key": "hash",
-                                    "value": "officiis",
+                                    "value": "debitis",
                                     "description": ""
                                 }
                             ]
@@ -282,6 +282,14 @@
                         "method": "GET",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -323,6 +331,14 @@
                         "method": "POST",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -333,7 +349,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"user_id\":\"blanditiis\",\"order_items\":[{\"product_id\":\"quaerat\",\"quantity\":41,\"price\":41}]}"
+                            "raw": "{\"user_id\":\"dolores\",\"order_items\":[{\"product_id\":\"assumenda\",\"quantity\":84,\"price\":75}]}"
                         },
                         "description": ""
                     },
@@ -371,6 +387,14 @@
                         },
                         "method": "GET",
                         "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
                             {
                                 "key": "Content-Type",
                                 "value": "application\/json"
@@ -418,6 +442,14 @@
                         "method": "POST",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -428,7 +460,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"order_items\":[{\"product_id\":\"ullam\",\"quantity\":9,\"price\":48}]}"
+                            "raw": "{\"order_items\":[{\"product_id\":\"culpa\",\"quantity\":30,\"price\":80}]}"
                         },
                         "description": ""
                     },
@@ -466,6 +498,14 @@
                         },
                         "method": "DELETE",
                         "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
                             {
                                 "key": "Content-Type",
                                 "value": "application\/json"
@@ -513,6 +553,14 @@
                         "method": "DELETE",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -559,6 +607,14 @@
                         "method": "PATCH",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -575,6 +631,60 @@
                             "header": [],
                             "code": 200,
                             "body": "{\n    \"message\": \"Order restored successfully.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Retrieve a specific order.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/orders\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/orders\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the order."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Order retrieved successfully.\",\n    \"data\": {}\n}",
                             "name": ""
                         },
                         {
@@ -707,6 +817,14 @@
                         "method": "GET",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -744,6 +862,14 @@
                         },
                         "method": "POST",
                         "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
                             {
                                 "key": "Content-Type",
                                 "value": "application\/json"
@@ -794,6 +920,14 @@
                         "method": "POST",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -842,6 +976,14 @@
                         },
                         "method": "DELETE",
                         "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
                             {
                                 "key": "Content-Type",
                                 "value": "application\/json"
@@ -894,6 +1036,14 @@
                         },
                         "method": "POST",
                         "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
                             {
                                 "key": "Content-Type",
                                 "value": "application\/json"
@@ -951,13 +1101,21 @@
                                 {
                                     "id": "none",
                                     "key": "none",
-                                    "value": "maiores",
+                                    "value": "dolor",
                                     "description": ""
                                 }
                             ]
                         },
                         "method": "POST",
                         "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
                             {
                                 "key": "Content-Type",
                                 "value": "application\/json"
@@ -969,7 +1127,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"object\":\"cumque\"}"
+                            "raw": "{\"object\":\"rem\"}"
                         },
                         "description": "This endpoint is triggered by Stripe when a payment event occurs (e.g., payment succeeded, failed).\nIt verifies the webhook signature and processes the payment status accordingly.",
                         "auth": {
@@ -1015,6 +1173,14 @@
                         "method": "GET",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -1052,6 +1218,14 @@
                         },
                         "method": "POST",
                         "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
                             {
                                 "key": "Content-Type",
                                 "value": "application\/json"
@@ -1102,6 +1276,14 @@
                         "method": "POST",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -1151,6 +1333,14 @@
                         "method": "DELETE",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -1195,6 +1385,14 @@
                         "method": "GET",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -1232,6 +1430,14 @@
                         },
                         "method": "POST",
                         "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
                             {
                                 "key": "Content-Type",
                                 "value": "application\/json"
@@ -1282,6 +1488,14 @@
                         "method": "GET",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -1327,6 +1541,14 @@
                         },
                         "method": "POST",
                         "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
                             {
                                 "key": "Content-Type",
                                 "value": "application\/json"
@@ -1377,6 +1599,14 @@
                         "method": "DELETE",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -1421,6 +1651,14 @@
                         "method": "GET",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -1459,6 +1697,14 @@
                         "method": "POST",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -1469,7 +1715,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"culpa\",\"parent_id\":14}"
+                            "raw": "{\"name\":\"expedita\",\"parent_id\":13}"
                         },
                         "description": ""
                     },
@@ -1507,6 +1753,14 @@
                         },
                         "method": "GET",
                         "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
                             {
                                 "key": "Content-Type",
                                 "value": "application\/json"
@@ -1554,6 +1808,14 @@
                         "method": "POST",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -1564,7 +1826,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"illo\",\"parent_id\":17}"
+                            "raw": "{\"name\":\"natus\",\"parent_id\":19}"
                         },
                         "description": ""
                     },
@@ -1602,6 +1864,14 @@
                         },
                         "method": "DELETE",
                         "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
                             {
                                 "key": "Content-Type",
                                 "value": "application\/json"
@@ -1653,6 +1923,14 @@
                         "method": "GET",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -1691,6 +1969,14 @@
                         "method": "POST",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -1701,7 +1987,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"fuga\"}"
+                            "raw": "{\"name\":\"enim\"}"
                         },
                         "description": ""
                     },
@@ -1739,6 +2025,14 @@
                         },
                         "method": "GET",
                         "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
                             {
                                 "key": "Content-Type",
                                 "value": "application\/json"
@@ -1786,6 +2080,14 @@
                         "method": "POST",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -1796,7 +2098,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"illum\"}"
+                            "raw": "{\"name\":\"velit\"}"
                         },
                         "description": ""
                     },
@@ -1834,6 +2136,14 @@
                         },
                         "method": "DELETE",
                         "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
                             {
                                 "key": "Content-Type",
                                 "value": "application\/json"
@@ -1879,6 +2189,14 @@
                         "method": "GET",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -1889,7 +2207,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"kyeyokyxwqglpzgk\",\"price\":\"3470770.55,092524.8)))))\",\"category\":\"0\",\"quantity\":3,\"created_at\":\"2310-95-46,5130-56-50\",\"updated_at\":\"0102-85-13,1166-28-69\",\"search\":\"afhhbqenfukaehjsssrkuj\",\"include\":\"o,o\"},\"page\":86,\"per_page\":14,\"sort\":\"wj,H,-W,Q,-z,-s\"}"
+                            "raw": "{\"filter\":{\"name\":\"r\",\"price\":\"2.4)))))\",\"category\":\"9,5,3,47,4,7\",\"quantity\":1,\"created_at\":\"1052-47-52,9150-54-74\",\"updated_at\":\"4846-11-33\",\"search\":\"gvddynuamlamw\",\"include\":\"\"},\"page\":1,\"per_page\":9,\"sort\":\"-XEgHzij,-8S,st\"}"
                         },
                         "description": ""
                     },
@@ -1927,6 +2245,14 @@
                         },
                         "method": "GET",
                         "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
                             {
                                 "key": "Content-Type",
                                 "value": "application\/json"
@@ -1966,6 +2292,14 @@
                         "method": "POST",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "multipart\/form-data"
                             },
@@ -1979,61 +2313,61 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "grxtnydjffjravjyvtncvdz",
+                                    "value": "jmgrjkjlvhrsmjqm",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Quidem necessitatibus quas aut.",
+                                    "value": "At sapiente distinctio quia occaecati in.",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "price",
-                                    "value": "35",
+                                    "value": "42",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_category_id",
-                                    "value": "repellat",
+                                    "value": "et",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_categories table."
                                 },
                                 {
                                     "key": "product_status_id",
-                                    "value": "qui",
+                                    "value": "dolor",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_statuses table."
                                 },
                                 {
                                     "key": "quantity",
-                                    "value": "35",
+                                    "value": "54",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_variants[0][product_attribute_id]",
-                                    "value": "sapiente",
+                                    "value": "consequuntur",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][value]",
-                                    "value": "nhzqzobp",
+                                    "value": "bbebgirgjhqlxslcn",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][additional_price]",
-                                    "value": "88",
+                                    "value": "74",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][quantity]",
-                                    "value": "81",
+                                    "value": "49",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -2081,6 +2415,14 @@
                         "method": "POST",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "multipart\/form-data"
                             },
@@ -2094,61 +2436,61 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "uluzmg",
+                                    "value": "cywvrsgjddxngqwwoyipvlrku",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Inventore aut qui dolores quia et sint.",
+                                    "value": "Impedit tempore nam ut incidunt qui aut.",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "price",
-                                    "value": "55",
+                                    "value": "82",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_category_id",
-                                    "value": "libero",
+                                    "value": "fugit",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_categories table."
                                 },
                                 {
                                     "key": "product_status_id",
-                                    "value": "reprehenderit",
+                                    "value": "eos",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_statuses table."
                                 },
                                 {
                                     "key": "quantity",
-                                    "value": "76",
+                                    "value": "62",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_variants[0][product_attribute_id]",
-                                    "value": "adipisci",
+                                    "value": "blanditiis",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][value]",
-                                    "value": "imddxgrj",
+                                    "value": "chksyh",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][additional_price]",
-                                    "value": "84",
+                                    "value": "21",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][quantity]",
-                                    "value": "31",
+                                    "value": "76",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -2196,6 +2538,14 @@
                         "method": "DELETE",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -2241,6 +2591,14 @@
                         },
                         "method": "DELETE",
                         "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
                             {
                                 "key": "Content-Type",
                                 "value": "application\/json"
@@ -2288,6 +2646,14 @@
                         "method": "PATCH",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -2304,6 +2670,115 @@
                             "header": [],
                             "code": 200,
                             "body": "{\n    \"message\": \"Product restored successfully.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Retrieve a paginated list of products.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/products",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/products"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"filter\":{\"name\":\"cniajuqmbhoclpfqhnzcjdcz\",\"price\":\"57)))\",\"category\":\"7,42\",\"quantity\":60,\"created_at\":\"7531-71-53,2431-66-77\",\"updated_at\":\"4574-39-02\",\"search\":\"xscrvfsiasbcmnac\",\"include\":\"u,kxid\"},\"page\":15,\"per_page\":18,\"sort\":\"-H\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Products retrieved successfully.\",\n    \"data\": []\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Retrieve a specific product.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/products\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/products\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the product."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Product retrieved successfully.\",\n    \"data\": {}\n}",
                             "name": ""
                         },
                         {
@@ -2345,6 +2820,14 @@
                         },
                         "method": "GET",
                         "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
                             {
                                 "key": "Content-Type",
                                 "value": "application\/json"
@@ -2397,6 +2880,14 @@
                         },
                         "method": "POST",
                         "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
                             {
                                 "key": "Content-Type",
                                 "value": "application\/json"
@@ -2452,6 +2943,14 @@
                         },
                         "method": "POST",
                         "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
                             {
                                 "key": "Content-Type",
                                 "value": "application\/json"
@@ -2517,6 +3016,14 @@
                         "method": "DELETE",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -2561,6 +3068,14 @@
                         "method": "GET",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -2598,6 +3113,14 @@
                         },
                         "method": "POST",
                         "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
                             {
                                 "key": "Content-Type",
                                 "value": "application\/json"
@@ -2648,6 +3171,14 @@
                         "method": "POST",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -2697,6 +3228,14 @@
                         "method": "DELETE",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -2741,6 +3280,14 @@
                         "method": "GET",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -2751,7 +3298,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"ckvjklmihzrp\",\"email\":\"nyah72@example.com\",\"role\":\"3,7,5\",\"created_at\":\"2544-20-88,5872-83-48\",\"updated_at\":\"7770-55-28,4573-42-82\",\"search\":\"ktndqakvmdzfubrxufftxdma\",\"include\":\"m,qpu,fy)\"},\"page\":17,\"per_page\":10,\"sort\":\"ynn,2JC4VT\"}"
+                            "raw": "{\"filter\":{\"name\":\"ubpatqyozvl\",\"email\":\"ehuels@example.net\",\"role\":\"8,2,6,\",\"created_at\":\"0423-75-49\",\"updated_at\":\"5336-59-59,2330-04-82\",\"search\":\"cxlboklup\",\"include\":\")\"},\"page\":38,\"per_page\":12,\"sort\":\"-Wciopgyte\"}"
                         },
                         "description": ""
                     },
@@ -2789,6 +3336,14 @@
                         },
                         "method": "GET",
                         "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
                             {
                                 "key": "Content-Type",
                                 "value": "application\/json"
@@ -2828,6 +3383,14 @@
                         "method": "POST",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -2838,7 +3401,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"lqlwnvxa\",\"email\":\"madaline.rippin@example.org\",\"password\":\"nPyh^*='9\\\"tD80x\",\"role_id\":\"sed\",\"address\":{\"address_line1\":\"lzcmlauc\",\"city\":\"vukvidymccbobuicndh\",\"country\":\"h\",\"postal_code\":\"urrrdvyixgnfjlm\",\"address_line2\":\"tapzog\",\"state\":\"upzlfexy\"}}"
+                            "raw": "{\"name\":\"zxd\",\"email\":\"baumbach.kianna@example.net\",\"password\":\"yPCluei\",\"role_id\":\"totam\",\"address\":{\"address_line1\":\"qlaq\",\"city\":\"xrecapdsstwikjbqwlwbcel\",\"country\":\"iyasoyherpcfmah\",\"postal_code\":\"ldgfhdkitjluq\",\"address_line2\":\"loqc\",\"state\":\"eengtujmoxmdfjm\"}}"
                         },
                         "description": ""
                     },
@@ -2877,6 +3440,14 @@
                         "method": "POST",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -2887,7 +3458,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"onqdibwtqlrxs\",\"email\":\"collin.schaefer@example.org\",\"password\":\"]*[4NV,o`;\",\"address\":{\"address_line1\":\"ewudawjsqe\",\"city\":\"umfdawyazxemew\",\"country\":\"aouqupmnnvmpqz\",\"postal_code\":\"srdrhnelhrnfwuau\",\"address_line2\":\"fmdnq\",\"state\":\"zcfetpjgliyaabuhsuilcnzn\"}}"
+                            "raw": "{\"name\":\"xibuiuzzzdnbxrhe\",\"email\":\"hjohnson@example.com\",\"password\":\"yq<u(ca\\\"+2cK[w}e_\",\"address\":{\"address_line1\":\"ifsxkeofyygbzagp\",\"city\":\"vhuobqbegkbbrehsewu\",\"country\":\"jicemprfhhpl\",\"postal_code\":\"eb\",\"address_line2\":\"smqmzy\",\"state\":\"trrzapgjcsynatpoehc\"}}"
                         },
                         "description": ""
                     },
@@ -2926,6 +3497,14 @@
                         "method": "DELETE",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -2942,6 +3521,117 @@
                             "header": [],
                             "code": 200,
                             "body": "{\n    \"message\": \"User deleted successfully.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Retrieve a specific user.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/users\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/users\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the user."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"User details retrieved.\",\n    \"data\": {}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update an existing user.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/users\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/users\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the user."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"hlqtxgpekjpndxc\",\"email\":\"vallie07@example.com\",\"password\":\"lm\\\/4PJAE6\\\\8Z\",\"address\":{\"address_line1\":\"gadjbyuzx\",\"city\":\"bmor\",\"country\":\"hks\",\"postal_code\":\"fcxltfihy\",\"address_line2\":\"hodszjctnlaxrn\",\"state\":\"jgkqzsujxvkasakbmak\"}}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"User updated successfully.\",\n    \"data\": {}\n}",
                             "name": ""
                         },
                         {
@@ -2969,6 +3659,14 @@
                         },
                         "method": "GET",
                         "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
                             {
                                 "key": "Content-Type",
                                 "value": "application\/json"
@@ -3016,6 +3714,14 @@
                         "method": "GET",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -3054,6 +3760,14 @@
                         "method": "POST",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "multipart\/form-data"
                             },
@@ -3067,19 +3781,19 @@
                             "formdata": [
                                 {
                                     "key": "user_id",
-                                    "value": "enim",
+                                    "value": "non",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the users table."
                                 },
                                 {
                                     "key": "name",
-                                    "value": "tlkzfyrlojoczbrokw",
+                                    "value": "aqpsozhujmlg",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Omnis sed sapiente rerum enim sed corporis.",
+                                    "value": "Id est veritatis dolorum cupiditate iusto quia et.",
                                     "type": "text",
                                     "description": "Must not be greater than 1000 characters."
                                 },
@@ -3127,6 +3841,14 @@
                         "method": "POST",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "multipart\/form-data"
                             },
@@ -3140,13 +3862,13 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "flrshekdqbdphqunaiwjam",
+                                    "value": "u",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Non molestiae qui velit magnam dolorem itaque.",
+                                    "value": "Rerum maxime qui ipsam aut fugit.",
                                     "type": "text",
                                     "description": "Must not be greater than 1000 characters."
                                 },
@@ -3194,6 +3916,14 @@
                         "method": "DELETE",
                         "header": [
                             {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -3210,6 +3940,135 @@
                             "header": [],
                             "code": 200,
                             "body": "{\n    \"message\": \"Vendor deleted successfully.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Retrieve a specific vendor.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/vendors\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/vendors\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the vendor."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Vendor details retrieved.\",\n    \"data\": {}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update an existing vendor.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/vendors\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/vendors\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the vendor."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "X-Hmac",
+                                "value": "HMAC signature of the request payload done via sha256."
+                            },
+                            {
+                                "key": "X-Timestamp",
+                                "value": "Timestamp + Request body."
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "name",
+                                    "value": "nsdodkekl",
+                                    "type": "text",
+                                    "description": "Must not be greater than 255 characters."
+                                },
+                                {
+                                    "key": "description",
+                                    "value": "Architecto esse beatae reprehenderit similique magni vero tenetur.",
+                                    "type": "text",
+                                    "description": "Must not be greater than 1000 characters."
+                                },
+                                {
+                                    "key": "logo",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Vendor updated successfully.\",\n    \"data\": {}\n}",
                             "name": ""
                         },
                         {

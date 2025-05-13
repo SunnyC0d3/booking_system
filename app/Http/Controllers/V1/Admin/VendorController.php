@@ -29,6 +29,9 @@ class VendorController extends Controller
      * @group Vendors
      * @authenticated
      *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
+     *
      * @response 200 {
      *     "message": "Vendors retrieved successfully.",
      *     "data": []
@@ -52,6 +55,9 @@ class VendorController extends Controller
      *
      * @group Vendors
      * @authenticated
+     *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
      *
      * @response 200 {
      *     "message": "Vendor created successfully!",
@@ -77,6 +83,9 @@ class VendorController extends Controller
      * @group Vendors
      * @authenticated
      *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
+     *
      * @response 200 {
      *     "message": "Vendor details retrieved.",
      *     "data": {}
@@ -101,6 +110,9 @@ class VendorController extends Controller
      * @group Vendors
      * @authenticated
      *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
+     *
      * @response 200 {
      *     "message": "Vendor updated successfully.",
      *     "data": {}
@@ -124,6 +136,9 @@ class VendorController extends Controller
      *
      * @group Vendors
      * @authenticated
+     *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
      *
      * @response 200 {
      *     "message": "Vendor deleted successfully."

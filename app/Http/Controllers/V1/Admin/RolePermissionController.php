@@ -28,6 +28,9 @@ class RolePermissionController extends Controller
      * @group Role Permissions
      * @authenticated
      *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
+     *
      * @urlParam role integer required The ID of the role. Example: 1
      *
      * @response 200 {
@@ -54,6 +57,9 @@ class RolePermissionController extends Controller
      *
      * @group Role Permissions
      * @authenticated
+     *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
      *
      * @urlParam role integer required The ID of the role. Example: 1
      *
@@ -87,6 +93,9 @@ class RolePermissionController extends Controller
      * @group Role Permissions
      * @authenticated
      *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
+     *
      * @urlParam role integer required The ID of the role. Example: 1
      *
      * @response 200 {
@@ -112,6 +121,9 @@ class RolePermissionController extends Controller
      *
      * @group Role Permissions
      * @authenticated
+     *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
      *
      * @urlParam role integer required The ID of the role. Example: 1
      * @urlParam permission integer required The ID of the permission to revoke. Example: 5

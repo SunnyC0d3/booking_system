@@ -30,6 +30,9 @@ class ProductController extends Controller
      * @group Products
      * @authenticated
      *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
+     *
      * @response 200 {
      *     "message": "Products retrieved successfully.",
      *     "data": []
@@ -53,6 +56,9 @@ class ProductController extends Controller
      *
      * @group Products
      * @authenticated
+     *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
      *
      * @response 200 {
      *     "message": "Product retrieved successfully.",
@@ -78,6 +84,9 @@ class ProductController extends Controller
      * @group Products
      * @authenticated
      *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
+     *
      * @response 200 {
      *     "message": "Product created successfully.",
      *     "data": {}
@@ -101,6 +110,9 @@ class ProductController extends Controller
      *
      * @group Products
      * @authenticated
+     *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
      *
      * @response 200 {
      *     "message": "Product updated successfully.",
@@ -126,6 +138,9 @@ class ProductController extends Controller
      * @group Products
      * @authenticated
      *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
+     *
      * @response 200 {
      *     "message": "Product deleted successfully."
      * }
@@ -149,6 +164,9 @@ class ProductController extends Controller
      * @group Products
      * @authenticated
      *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
+     *
      * @response 200 {
      *     "message": "Product restored successfully."
      * }
@@ -171,6 +189,9 @@ class ProductController extends Controller
      *
      * @group Products
      * @authenticated
+     *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
      *
      * @response 200 {
      *     "message": "Product deleted successfully."

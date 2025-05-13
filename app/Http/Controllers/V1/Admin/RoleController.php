@@ -28,6 +28,9 @@ class RoleController extends Controller
      * @group Roles
      * @authenticated
      *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
+     *
      * @response 200 {
      *   "message": "Roles retrieved successfully.",
      *   "data": []
@@ -51,6 +54,9 @@ class RoleController extends Controller
      *
      * @group Roles
      * @authenticated
+     *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
      *
      * @bodyParam name string required The name of the role. Example: "admin"
      *
@@ -78,6 +84,9 @@ class RoleController extends Controller
      * @group Roles
      * @authenticated
      *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
+     *
      * @bodyParam name string required The updated name of the role. Example: "admin"
      *
      * @response 200 {
@@ -103,6 +112,9 @@ class RoleController extends Controller
      *
      * @group Roles
      * @authenticated
+     *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
      *
      * @response 200 {
      *   "message": "Role deleted successfully."

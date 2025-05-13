@@ -16,6 +16,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -91,6 +93,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -194,6 +198,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -269,6 +275,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:

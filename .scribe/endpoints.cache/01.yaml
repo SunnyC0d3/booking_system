@@ -18,6 +18,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -71,6 +73,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -135,6 +139,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: multipart/form-data
       Accept: application/json
     urlParameters: []
@@ -146,7 +152,7 @@ endpoints:
         name: user_id
         description: 'The <code>id</code> of an existing record in the users table.'
         required: true
-        example: enim
+        example: non
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -156,7 +162,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: tlkzfyrlojoczbrokw
+        example: aqpsozhujmlg
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -166,7 +172,7 @@ endpoints:
         name: description
         description: 'Must not be greater than 1000 characters.'
         required: true
-        example: 'Omnis sed sapiente rerum enim sed corporis.'
+        example: 'Id est veritatis dolorum cupiditate iusto quia et.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -183,9 +189,9 @@ endpoints:
         nullable: true
         custom: []
     cleanBodyParameters:
-      user_id: enim
-      name: tlkzfyrlojoczbrokw
-      description: 'Omnis sed sapiente rerum enim sed corporis.'
+      user_id: non
+      name: aqpsozhujmlg
+      description: 'Id est veritatis dolorum cupiditate iusto quia et.'
     fileParameters:
       logo: null
     responses:
@@ -232,6 +238,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: multipart/form-data
       Accept: application/json
     urlParameters:
@@ -264,7 +272,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: flrshekdqbdphqunaiwjam
+        example: u
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -274,7 +282,7 @@ endpoints:
         name: description
         description: 'Must not be greater than 1000 characters.'
         required: false
-        example: 'Non molestiae qui velit magnam dolorem itaque.'
+        example: 'Rerum maxime qui ipsam aut fugit.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -291,8 +299,8 @@ endpoints:
         nullable: true
         custom: []
     cleanBodyParameters:
-      name: flrshekdqbdphqunaiwjam
-      description: 'Non molestiae qui velit magnam dolorem itaque.'
+      name: u
+      description: 'Rerum maxime qui ipsam aut fugit.'
     fileParameters:
       logo: null
     responses:
@@ -339,6 +347,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -365,6 +375,181 @@ endpoints:
         content: |-
           {
               "message": "Vendor deleted successfully."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+              "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/vendors/{id}'
+    metadata:
+      groupName: Vendors
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Retrieve a specific vendor.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the vendor.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Vendor details retrieved.",
+              "data": {}
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+              "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: 'api/vendors/{id}'
+    metadata:
+      groupName: Vendors
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update an existing vendor.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
+      Content-Type: multipart/form-data
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the vendor.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      user_id:
+        name: user_id
+        description: 'The <code>id</code> of an existing record in the users table.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      name:
+        name: name
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: nsdodkekl
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      description:
+        name: description
+        description: 'Must not be greater than 1000 characters.'
+        required: false
+        example: 'Architecto esse beatae reprehenderit similique magni vero tenetur.'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      logo:
+        name: logo
+        description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+        required: false
+        example: null
+        type: file
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+    cleanBodyParameters:
+      name: nsdodkekl
+      description: 'Architecto esse beatae reprehenderit similique magni vero tenetur.'
+    fileParameters:
+      logo: null
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Vendor updated successfully.",
+              "data": {}
           }
         headers: []
         description: ''

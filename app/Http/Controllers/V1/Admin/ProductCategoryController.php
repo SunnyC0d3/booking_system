@@ -28,6 +28,9 @@ class ProductCategoryController extends Controller
      * @group Product Category
      * @authenticated
      *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
+     *
      * @response 200 {
      *     "message": "Categories retrieved successfully.",
      *     "data": [
@@ -57,6 +60,9 @@ class ProductCategoryController extends Controller
      *
      * @group Product Category
      * @authenticated
+     *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
      *
      * @bodyParam name string required The name of the category.
      * @bodyParam parent_id int optional The ID of the parent category.
@@ -89,6 +95,9 @@ class ProductCategoryController extends Controller
      * @group Product Category
      * @authenticated
      *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
+     *
      * @response 200 {
      *     "message": "Category retrieved successfully.",
      *     "data": {
@@ -116,6 +125,9 @@ class ProductCategoryController extends Controller
      *
      * @group Product Category
      * @authenticated
+     *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
      *
      * @bodyParam name string required The name of the category.
      * @bodyParam parent_id int optional The ID of the parent category.
@@ -147,6 +159,9 @@ class ProductCategoryController extends Controller
      *
      * @group Product Category
      * @authenticated
+     *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
      *
      * @response 200 {
      *     "message": "Category deleted successfully"

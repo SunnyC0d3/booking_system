@@ -18,6 +18,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -91,6 +93,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -102,7 +106,7 @@ endpoints:
         name: user_id
         description: 'The <code>id</code> of an existing record in the users table.'
         required: true
-        example: blanditiis
+        example: dolores
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -133,7 +137,7 @@ endpoints:
         name: 'order_items[].product_id'
         description: 'The <code>id</code> of an existing record in the products table.'
         required: true
-        example: quaerat
+        example: assumenda
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -153,7 +157,7 @@ endpoints:
         name: 'order_items[].quantity'
         description: 'Must be at least 1.'
         required: true
-        example: 41
+        example: 84
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -163,19 +167,19 @@ endpoints:
         name: 'order_items[].price'
         description: 'Must be at least 0.'
         required: true
-        example: 41
+        example: 75
         type: number
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      user_id: blanditiis
+      user_id: dolores
       order_items:
         -
-          product_id: quaerat
-          quantity: 41
-          price: 41
+          product_id: assumenda
+          quantity: 84
+          price: 75
     fileParameters: []
     responses:
       -
@@ -221,6 +225,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -285,6 +291,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -338,7 +346,7 @@ endpoints:
         name: 'order_items[].product_id'
         description: 'The <code>id</code> of an existing record in the products table.'
         required: true
-        example: ullam
+        example: culpa
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -358,7 +366,7 @@ endpoints:
         name: 'order_items[].quantity'
         description: 'Must be at least 1.'
         required: true
-        example: 9
+        example: 30
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -368,7 +376,7 @@ endpoints:
         name: 'order_items[].price'
         description: 'Must be at least 0.'
         required: true
-        example: 48
+        example: 80
         type: number
         enumValues: []
         exampleWasSpecified: false
@@ -377,9 +385,9 @@ endpoints:
     cleanBodyParameters:
       order_items:
         -
-          product_id: ullam
-          quantity: 9
-          price: 48
+          product_id: culpa
+          quantity: 30
+          price: 80
     fileParameters: []
     responses:
       -
@@ -425,6 +433,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -488,6 +498,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -551,6 +563,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -577,6 +591,72 @@ endpoints:
         content: |-
           {
               "message": "Order restored successfully."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+              "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/orders/{id}'
+    metadata:
+      groupName: Orders
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Retrieve a specific order.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the order.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Order retrieved successfully.",
+              "data": {}
           }
         headers: []
         description: ''

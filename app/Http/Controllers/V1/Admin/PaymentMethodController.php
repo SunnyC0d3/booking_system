@@ -28,6 +28,9 @@ class PaymentMethodController extends Controller
      * @group Payment Methods
      * @authenticated
      *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
+     *
      * @response 200 {
      *   "message": "Payment Methods retrieved successfully.",
      *   "data": []
@@ -50,6 +53,9 @@ class PaymentMethodController extends Controller
      *
      * @group Payment Methods
      * @authenticated
+     *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
      *
      * @bodyParam name string required The name of the payment method. Example: "Google Pay"
      *
@@ -76,6 +82,9 @@ class PaymentMethodController extends Controller
      * @group Payment Methods
      * @authenticated
      *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
+     *
      * @bodyParam name string required The name of the payment method. Example: "Google Pay"
      *
      * @response 200 {
@@ -100,6 +109,9 @@ class PaymentMethodController extends Controller
      *
      * @group Payment Methods
      * @authenticated
+     *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
      *
      * @response 200 {
      *   "message": "Payment Method deleted successfully.",

@@ -28,6 +28,9 @@ class ProductAttributeController extends Controller
      * @group Product Attributes
      * @authenticated
      *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
+     *
      * @response 200 {
      *   "message": "Attributes retrieved successfully.",
      *   "data": []
@@ -51,6 +54,9 @@ class ProductAttributeController extends Controller
      *
      * @group Product Attributes
      * @authenticated
+     *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
      *
      * @bodyParam name string required The name of the product attribute. Example: "Color"
      *
@@ -78,6 +84,9 @@ class ProductAttributeController extends Controller
      * @group Product Attributes
      * @authenticated
      *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
+     *
      * @response 200 {
      *   "message": "Attribute retrieved successfully.",
      *   "data": {}
@@ -101,6 +110,9 @@ class ProductAttributeController extends Controller
      *
      * @group Product Attributes
      * @authenticated
+     *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
      *
      * @bodyParam name string required The updated name of the product attribute. Example: "Size"
      *
@@ -127,6 +139,9 @@ class ProductAttributeController extends Controller
      *
      * @group Product Attributes
      * @authenticated
+     *
+     * @header X-Hmac HMAC signature of the request payload done via sha256.
+     * @header X-Timestamp Timestamp + Request body.
      *
      * @response 200 {
      *   "message": "Product attribute deleted successfully."

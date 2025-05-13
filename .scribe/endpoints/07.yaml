@@ -16,6 +16,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -75,6 +77,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -86,7 +90,7 @@ endpoints:
         name: name
         description: 'The name of the category.'
         required: true
-        example: culpa
+        example: expedita
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -96,15 +100,15 @@ endpoints:
         name: parent_id
         description: 'optional The ID of the parent category.'
         required: false
-        example: 14
+        example: 13
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: true
         custom: []
     cleanBodyParameters:
-      name: culpa
-      parent_id: 14
+      name: expedita
+      parent_id: 13
     fileParameters: []
     responses:
       -
@@ -154,6 +158,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -222,6 +228,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -244,7 +252,7 @@ endpoints:
         name: name
         description: 'The name of the category.'
         required: true
-        example: illo
+        example: natus
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -254,15 +262,15 @@ endpoints:
         name: parent_id
         description: 'optional The ID of the parent category.'
         required: false
-        example: 17
+        example: 19
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: true
         custom: []
     cleanBodyParameters:
-      name: illo
-      parent_id: 17
+      name: natus
+      parent_id: 19
     fileParameters: []
     responses:
       -
@@ -312,6 +320,8 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      X-Hmac: 'HMAC signature of the request payload done via sha256.'
+      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
