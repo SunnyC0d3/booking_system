@@ -2,11 +2,13 @@
 
 namespace App\Services\V1\Refunds;
 
+use App\Constants\OrderStatuses;
 use App\Constants\PaymentStatuses;
 use App\Constants\RefundStatuses;
 use App\Models\OrderRefund;
 use App\Models\OrderReturn;
 use App\Models\OrderRefundStatus;
+use App\Models\OrderStatus;
 use App\Traits\V1\ApiResponses;
 use Stripe\Refund;
 use Stripe\Stripe;
@@ -44,6 +46,10 @@ class StripeRefund implements RefundHandler
             'order_refund_status_id' => $refundStatusId,
             'processed_at' => now(),
         ]);
+
+        $refundedStatusId = OrderStatus::where('name', OrderStatuses::REFUNDED)->value('id');
+        $order->status_id = $refundedStatusId;
+        $order->save();
 
         $payment->status = PaymentStatuses::REFUNDED;
         $payment->save();
