@@ -9,6 +9,8 @@ class PaymentStatuses
     public const CANCELED = 'Canceled';
     public const FAILED = 'Failed';
 
+    public const REFUNDED = 'Refunded';
+
     public static function all(): array
     {
         return [
@@ -16,6 +18,7 @@ class PaymentStatuses
             self::PENDING,
             self::CANCELED,
             self::FAILED,
+            self::REFUNDED,
         ];
     }
 }

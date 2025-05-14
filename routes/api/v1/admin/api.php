@@ -15,6 +15,7 @@ use App\Http\Controllers\V1\Admin\ProductCategoryController;
 use App\Http\Controllers\V1\Admin\ProductTagController;
 use App\Http\Controllers\V1\Admin\PaymentMethodController;
 use App\Http\Controllers\V1\Admin\OrderController;
+use App\Http\Controllers\V1\Admin\RefundController;
 
 // Admin/Users
 
@@ -157,4 +158,13 @@ Route::prefix('admin/orders')
         Route::delete('/{order}', 'destroy')->name('admin.orders.destroy');
         Route::delete('/{id}/force-delete', 'forceDelete')->name('admin.orders.forceDelete');
         Route::patch('/{id}/restore', 'restore')->name('admin.orders.restore');
+    });
+
+// Admin/Refund
+
+Route::prefix('refund')
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'hmac'])
+    ->controller(RefundController::class)
+    ->group(function () {
+        Route::post('/{gateway}/{orderReturnId}', 'refund')->name('admin.refund');
     });

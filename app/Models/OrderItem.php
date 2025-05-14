@@ -32,4 +32,9 @@ class OrderItem extends Model
     {
         return $this->belongsTo(ProductVariant::class);
     }
+
+    public function scopeRefundAmount()
+    {
+        return ($this->price * $this->quantity) * 100;
+    }
 }

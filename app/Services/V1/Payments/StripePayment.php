@@ -32,6 +32,7 @@ class StripePayment implements PaymentHandler
     {
         $this->secret = config('services.stripe_secret');
         $this->webhook_secret = config('services.stripe_webhook_secret');
+        Stripe::setApiKey($this->secret);
     }
 
     public function createPayment(Request $request)
@@ -40,8 +41,6 @@ class StripePayment implements PaymentHandler
 
         $order = Order::with(['orderItems.product', 'user'])->findOrFail($data['order_id']);
         $paymentMethod = PaymentMethod::where('name', PaymentMethods::STRIPE)->firstOrFail();
-
-        Stripe::setApiKey($this->secret);
 
         $existingPayment = DB::where('order_id', $order->id)
             ->where('payment_method_id', $paymentMethod->id)
