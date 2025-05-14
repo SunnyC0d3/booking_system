@@ -12,7 +12,6 @@ use App\Http\Controllers\V1\Admin\RolePermissionController;
 use App\Http\Controllers\V1\Admin\ProductController;
 use App\Http\Controllers\V1\Admin\ProductAttributeController;
 use App\Http\Controllers\V1\Admin\ProductCategoryController;
-use App\Http\Controllers\V1\Admin\ProductStatusController;
 use App\Http\Controllers\V1\Admin\ProductTagController;
 use App\Http\Controllers\V1\Admin\PaymentMethodController;
 use App\Http\Controllers\V1\Admin\OrderController;

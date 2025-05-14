@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Constants\ProductStatuses;
 use App\Models\ProductStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -13,7 +14,11 @@ class ProductStatusFactory extends Factory
     {
         return [
             'name' => $this->faker->randomElement([
-                'Active', 'Inactive', 'Out Of Stock', 'Discontinued', 'Coming Soon'
+                ProductStatuses::ACTIVE,
+                ProductStatuses::INACTIVE,
+                ProductStatuses::OUT_OF_STOCK,
+                ProductStatuses::DISCONTINUED,
+                ProductStatuses::COMING_SOON
             ]),
             'created_at' => now(),
             'updated_at' => now(),
