@@ -24,7 +24,7 @@ class Returns
             $returns = OrderReturn::with([
                 'orderItem.product',
                 'orderItem.order.user',
-                'orderReturnStatus'
+                'status'
             ])->latest()->paginate(20);
 
             return $this->ok('Order returns retrieved.', $returns);
@@ -36,6 +36,12 @@ class Returns
     public function createReturn(Request $request)
     {
         $data = $request->validated();
+
+        $existingReturn = OrderReturn::where('order_item_id', $data['order_item_id'])->first();
+
+        if ($existingReturn) {
+            return $this->error('A return request has already been created for this item.', 409);
+        }
 
         $orderReturnStatusId = OrderReturnStatus::where('name', ReturnStatuses::REQUESTED)->value('id');
 

@@ -22,12 +22,14 @@ class Refund
 
     protected $order;
 
+    protected $payment;
+
     public function __construct() {}
 
     protected function getOrders(int $orderReturnId) {
         $this->orderReturn = OrderReturn::with(['orderItem.order.user'])->findOrFail($orderReturnId);
         $this->orderItem = $this->orderReturn->orderItem;
-        $this->order = $this->orderReturn->order;
+        $this->order = $this->orderItem->order;
     }
 
     protected function setState() {

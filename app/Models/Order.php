@@ -43,4 +43,10 @@ class Order extends Model
     {
         return $this->belongsTo(OrderStatus::class);
     }
+
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
 }

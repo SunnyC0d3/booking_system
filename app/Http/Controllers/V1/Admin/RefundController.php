@@ -23,7 +23,7 @@ class RefundController extends Controller
 
             $handler = app($handler);
 
-            return $handler->refund($orderReturnId);
+            return $handler->refund($request, $orderReturnId);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }

@@ -106,7 +106,7 @@ Route::prefix('orders')
 // Returns
 
 Route::prefix('returns')
-    ->middleware(['hmac'])
+    //->middleware(['hmac'])
     ->controller(ReturnsController::class)
     ->group(function () {
         Route::post('/', 'return')->name('returns');

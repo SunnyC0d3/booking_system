@@ -169,15 +169,14 @@ Route::prefix('admin/returns')
     ->controller(ReturnsController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.returns');
-        Route::post('/{returnId}/review', 'reviewReturn')->name('admin.returns.review');
-        Route::post('/{returnId}/approve', 'reviewReturn')->name('admin.returns.approve');
-        Route::post('/{returnId}/reject', 'reviewReturn')->name('admin.returns.reject');
+        Route::post('/{returnId}/{action}', 'reviewReturn')->name('admin.returns.action');
     });
 
 // Admin/Refund
 
 Route::prefix('admin/refund')
-    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'hmac'])
+//    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'hmac'])
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
     ->controller(RefundController::class)
     ->group(function () {
         Route::post('/{gateway}/{orderReturnId}', 'refund')->name('admin.refund');

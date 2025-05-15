@@ -16,6 +16,7 @@ class StripeRefund extends Refund implements RefundHandler
 
     public function __construct()
     {
+        parent::__construct();
         $this->secret = config('services.stripe_secret');
         Stripe::setApiKey($this->secret);
     }
@@ -36,10 +37,10 @@ class StripeRefund extends Refund implements RefundHandler
     }
 
     private function stripeRefund() {
-        $payment = $this->order->payments->where('status', PaymentStatuses::PAID)->firstOrFail();
+        $this->payment = $this->order->payments->where('status', PaymentStatuses::PAID)->firstOrFail();
 
         SR::create([
-            'payment_intent' => $payment->transaction_reference,
+            'payment_intent' => $this->payment->transaction_reference,
             'amount' => $this->orderItem->refundAmount(),
         ]);
     }
