@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services\V1\Refunds;
+namespace App\Services\V1\Orders\Refunds;
 
-use Illuminate\Http\Request;
 use App\Constants\PaymentStatuses;
 use App\Traits\V1\ApiResponses;
+use Illuminate\Http\Request;
 use Stripe\Refund as SR;
 use Stripe\Stripe;
 
