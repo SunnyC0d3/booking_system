@@ -22,7 +22,7 @@ class ReturnsController extends Controller
     public function index(Request $request)
     {
         try {
-            $this->returns->all($request);
+            return $this->returns->all($request);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
@@ -31,7 +31,7 @@ class ReturnsController extends Controller
     public function reviewReturn(Request $request, int $returnId, string $action)
     {
         try {
-            $this->returns->reviewReturn($request, $returnId, $action);
+            return $this->returns->reviewReturn($request, $returnId, $action);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }

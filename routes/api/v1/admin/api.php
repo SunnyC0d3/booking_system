@@ -163,11 +163,12 @@ Route::prefix('admin/orders')
 
 // Admin/Returns
 
-Route::prefix('returns')
-    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'hmac'])
+Route::prefix('admin/returns')
+//    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'hmac'])
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
     ->controller(ReturnsController::class)
     ->group(function () {
-        Route::post('/', 'index')->name('admin.returns');
+        Route::get('/', 'index')->name('admin.returns');
         Route::post('/{returnId}/review', 'reviewReturn')->name('admin.returns.review');
         Route::post('/{returnId}/approve', 'reviewReturn')->name('admin.returns.approve');
         Route::post('/{returnId}/reject', 'reviewReturn')->name('admin.returns.reject');
@@ -175,7 +176,7 @@ Route::prefix('returns')
 
 // Admin/Refund
 
-Route::prefix('refund')
+Route::prefix('admin/refund')
     ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'hmac'])
     ->controller(RefundController::class)
     ->group(function () {

@@ -22,7 +22,7 @@ class ReturnsController extends Controller
     public function return(StoreReturnRequest $request)
     {
         try {
-            $this->returns->createReturn($request);
+            return $this->returns->createReturn($request);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
