@@ -20,4 +20,9 @@ class OrderReturn extends Model
     {
         return $this->belongsTo(OrderItem::class);
     }
+
+    public function status(): BelongsTo
+    {
+        return $this->belongsTo(OrderReturnStatus::class, 'order_return_status_id');
+    }
 }

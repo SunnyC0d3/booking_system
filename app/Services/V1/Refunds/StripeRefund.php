@@ -3,18 +3,12 @@
 namespace App\Services\V1\Refunds;
 
 use Illuminate\Http\Request;
-use App\Constants\OrderStatuses;
 use App\Constants\PaymentStatuses;
-use App\Constants\RefundStatuses;
-use App\Models\OrderRefund;
-use App\Models\OrderReturn;
-use App\Models\OrderRefundStatus;
-use App\Models\OrderStatus;
 use App\Traits\V1\ApiResponses;
-use Stripe\Refund;
+use Stripe\Refund as SR;
 use Stripe\Stripe;
 
-class StripeRefund implements RefundHandler
+class StripeRefund extends Refund implements RefundHandler
 {
     use ApiResponses;
 
@@ -31,36 +25,22 @@ class StripeRefund implements RefundHandler
         $user = $request->user();
 
         if ($user->hasPermission('manage_refunds')) {
-            $orderReturn = OrderReturn::with(['orderItem.order.user'])->findOrFail($orderReturnId);
-            $orderItem = $orderReturn->orderItem;
-            $order = $orderReturn->order;
-
-            $payment = $order->payments->where('status', PaymentStatuses::PAID)->firstOrFail();
-
-            Refund::create([
-                'payment_intent' => $payment->transaction_reference,
-                'amount' => $orderItem->refundAmount(),
-            ]);
-
-            $refundStatusId = OrderRefundStatus::where('name', RefundStatuses::REFUNDED)->value('id');
-
-            OrderRefund::create([
-                'order_return_id' => $orderReturn->id,
-                'amount' => $orderItem->refundAmount(),
-                'order_refund_status_id' => $refundStatusId,
-                'processed_at' => now(),
-            ]);
-
-            $refundedStatusId = OrderStatus::where('name', OrderStatuses::REFUNDED)->value('id');
-            $order->status_id = $refundedStatusId;
-            $order->save();
-
-            $payment->status = PaymentStatuses::REFUNDED;
-            $payment->save();
+            $this->getOrders($orderReturnId);
+            $this->stripeRefund();
+            $this->setState();
 
             return $this->ok('Refund processed successfully.');
         }
 
         return $this->error('You do not have the required permissions.', 403);
+    }
+
+    private function stripeRefund() {
+        $payment = $this->order->payments->where('status', PaymentStatuses::PAID)->firstOrFail();
+
+        SR::create([
+            'payment_intent' => $payment->transaction_reference,
+            'amount' => $this->orderItem->refundAmount(),
+        ]);
     }
 }

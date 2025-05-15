@@ -1,17 +1,17 @@
 <?php
 
-use App\Http\Controllers\V1\Public\ReturnsController;
 use Illuminate\Support\Facades\Route;
 
 // Auth Controllers
 use App\Http\Controllers\V1\Auth\AuthController;
-use App\Http\Controllers\V1\Public\PaymentController;
 use App\Http\Controllers\V1\Auth\EmailVerificationController;
 
 use App\Http\Controllers\V1\Public\UserController;
 use App\Http\Controllers\V1\Public\VendorController;
 use App\Http\Controllers\V1\Public\ProductController;
 use App\Http\Controllers\V1\Public\OrderController;
+use App\Http\Controllers\V1\Public\PaymentController;
+use App\Http\Controllers\V1\Public\ReturnsController;
 
 // Auth
 
