@@ -95,6 +95,7 @@ class PermissionSeeder extends Seeder
             // Customer Service
             ['name' => 'view_customer_data'],
             ['name' => 'manage_refunds'],
+            ['name' => 'manage_returns']
         ];
 
         $permissionsToInsert = array_map(function ($permission) {

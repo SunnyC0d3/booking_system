@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\V1\Public\ReturnsController;
 use Illuminate\Support\Facades\Route;
 
 // Auth Controllers
@@ -99,4 +100,13 @@ Route::prefix('orders')
     ->controller(OrderController::class)
     ->group(function () {
         Route::get('/{order}', 'show')->name('orders.show');
+    });
+
+// Returns
+
+Route::prefix('returns')
+    ->middleware(['hmac'])
+    ->controller(ReturnsController::class)
+    ->group(function () {
+        Route::post('/', 'return')->name('returns');
     });
