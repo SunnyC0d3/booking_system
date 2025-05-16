@@ -47,7 +47,7 @@ class VendorSeeder extends Seeder
 
         foreach ($vendorsToInsert as $vendorData) {
             $vendor = Vendor::create($vendorData);
-            $this->attachMedia($vendor);
+            //$this->attachMedia($vendor);
         }
     }
 

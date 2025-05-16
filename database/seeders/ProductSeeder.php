@@ -150,7 +150,7 @@ class ProductSeeder extends Seeder
 
         foreach ($products as $productData) {
             $product = Product::create($productData);
-            $this->attachMedia($product);
+            //S$this->attachMedia($product);
         }
 
         // Bulk insert variants, and product-tag relationships
