@@ -57,7 +57,7 @@ Route::middleware(['throttle:3,1', 'hmac'])
 // Payments
 
 Route::prefix('payments')
-    ->middleware(['hmac'])
+    ->middleware(['auth:api', 'roles:user, vendor', 'emailVerified', 'hmac'])
     ->controller(PaymentController::class)
     ->group(function () {
         Route::post('/{gateway}/create', 'store')->name('payments.store');
@@ -106,7 +106,8 @@ Route::prefix('orders')
 // Returns
 
 Route::prefix('returns')
-    //->middleware(['hmac'])
+    //->middleware(['auth:api', 'roles:user, vendor', 'emailVerified', 'hmac'])
+    ->middleware(['auth:api', 'roles:user, vendor', 'emailVerified'])
     ->controller(ReturnsController::class)
     ->group(function () {
         Route::post('/', 'return')->name('returns');

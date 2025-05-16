@@ -3,6 +3,7 @@
 namespace App\Services\V1\Orders;
 
 use App\Constants\ReturnStatuses;
+use App\Models\OrderItem;
 use App\Models\OrderReturn;
 use App\Models\OrderReturnStatus;
 use Illuminate\Http\Request;
@@ -35,7 +36,15 @@ class Returns
 
     public function createReturn(Request $request)
     {
+        $user = $request->user();
         $data = $request->validated();
+
+        $orderItem = OrderItem::with('order')->findOrFail($data['order_item_id']);
+        $order = $orderItem->order;
+
+        if ($order->user_id !== $user->id) {
+            return $this->error('You are not authorized to return this item.', 403);
+        }
 
         $existingReturn = OrderReturn::where('order_item_id', $data['order_item_id'])->first();
 
