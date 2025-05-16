@@ -107,6 +107,7 @@ Route::prefix('orders')
 
 Route::prefix('returns')
     //->middleware(['auth:api', 'roles:user, vendor', 'emailVerified', 'hmac'])
+    ->middleware(['auth:api', 'roles:user, vendor', 'emailVerified'])
     ->controller(ReturnsController::class)
     ->group(function () {
         Route::post('/', 'return')->name('returns');

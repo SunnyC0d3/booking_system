@@ -12,6 +12,7 @@ use App\Models\OrderReturn;
 use App\Models\OrderReturnStatus;
 use App\Models\OrderStatus;
 use App\Traits\V1\ApiResponses;
+use \Exception;
 
 class Refund
 {
@@ -30,6 +31,12 @@ class Refund
         $this->orderReturn = OrderReturn::with(['orderItem.order.user'])->findOrFail($orderReturnId);
         $this->orderItem = $this->orderReturn->orderItem;
         $this->order = $this->orderItem->order;
+
+        $approvedStatusId = OrderReturnStatus::where('name', ReturnStatuses::APPROVED)->value('id');
+
+        if ($this->orderReturn->order_return_status_id !== $approvedStatusId) {
+            throw new Exception('This return has not been approved for refund.', 400);
+        }
     }
 
     protected function setState() {
