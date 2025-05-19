@@ -25,21 +25,33 @@ class Refund
 
     protected $payment;
 
-    public function __construct() {}
+    protected $webhookEnabled;
 
-    protected function getOrders(int $orderReturnId) {
+    public function __construct()
+    {
+        $this->webhookEnabled = false;
+    }
+
+    protected function getOrders(int $orderReturnId)
+    {
         $this->orderReturn = OrderReturn::with(['orderItem.order.user'])->findOrFail($orderReturnId);
         $this->orderItem = $this->orderReturn->orderItem;
         $this->order = $this->orderItem->order;
 
         $approvedStatusId = OrderReturnStatus::where('name', ReturnStatuses::APPROVED)->value('id');
 
+        if ($this->webhookEnabled) {
+            $this->orderReturn->order_return_status_id = $approvedStatusId;
+            $this->orderReturn->save();
+        }
+
         if ($this->orderReturn->order_return_status_id !== $approvedStatusId) {
             throw new Exception('This return has not been approved for refund.', 400);
         }
     }
 
-    protected function setState() {
+    protected function setState()
+    {
         $refundStatusId = OrderRefundStatus::where('name', RefundStatuses::REFUNDED)->value('id');
 
         OrderRefund::create([
@@ -60,7 +72,7 @@ class Refund
         $this->orderReturn->save();
     }
 
-    protected function refundMarkAsFailed(string $reason)
+    protected function refundMarkedAsFailed(string $reason)
     {
         $failedStatusId = OrderRefundStatus::where('name', RefundStatuses::FAILED)->value('id');
 
@@ -71,5 +83,15 @@ class Refund
             'processed_at' => now(),
             'notes' => $reason,
         ]);
+    }
+
+    public function enableWebhook()
+    {
+        $this->webhookEnabled = true;
+    }
+
+    public function disableWebhook()
+    {
+        $this->webhookEnabled = false;
     }
 }

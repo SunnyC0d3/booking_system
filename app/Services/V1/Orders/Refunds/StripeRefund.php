@@ -5,6 +5,7 @@ namespace App\Services\V1\Orders\Refunds;
 use App\Constants\PaymentStatuses;
 use App\Traits\V1\ApiResponses;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Stripe\Refund as SR;
 use Stripe\Stripe;
 use \Stripe\Exception\ApiErrorException;
@@ -22,38 +23,42 @@ class StripeRefund extends Refund implements RefundHandler
         Stripe::setApiKey($this->secret);
     }
 
-    public function refund(Request $request, int $orderReturnId, bool $webhookEnabled = false)
+    public function refund(Request $request, int $orderReturnId)
     {
-        $user = $request->user();
+        if (!$this->webhookEnabled) {
+            $user = $request->user();
 
-        if ($user->hasPermission('manage_refunds') || $webhookEnabled) {
-            $this->getOrders($orderReturnId);
-
-            if (!$this->stripeRefund()) {
-                return $this->error('Refund failed via Stripe. Please try again later.', 422);
+            if (!$user->hasPermission('manage_refunds')) {
+                return $this->error('You do not have the required permissions.', 403);
             }
-
-            $this->setState();
-
-            return $this->ok('Refund processed successfully.');
         }
 
-        return $this->error('You do not have the required permissions.', 403);
+        $this->getOrders($orderReturnId);
+
+        if (!$this->stripeRefund()) {
+            return $this->error('Refund failed via Stripe. Please try again later.', 422);
+        }
+
+        $this->setState();
+
+        return $this->ok('Refund processed successfully.');
     }
 
     private function stripeRefund()
     {
-        $this->payment = $this->order->payments->where('status', PaymentStatuses::PAID)->firstOrFail();
-
         try {
-            SR::create([
-                'payment_intent' => $this->payment->transaction_reference,
-                'amount' => $this->orderItem->refundAmount(),
-            ]);
+            $this->payment = $this->order->payments->where('status', PaymentStatuses::PAID)->firstOrFail();
+
+            if (!$this->webhookEnabled) {
+                SR::create([
+                    'payment_intent' => $this->payment->transaction_reference,
+                    'amount' => $this->orderItem->refundAmount(),
+                ]);
+            }
 
             return true;
         } catch (ApiErrorException $e) {
-            $this->refundMarkAsFailed($e->getMessage());
+            $this->refundMarkedAsFailed($e->getMessage());
             return false;
         }
     }

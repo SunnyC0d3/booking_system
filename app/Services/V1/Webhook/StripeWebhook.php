@@ -52,34 +52,39 @@ class StripeWebhook implements WebhookHandler
         $intent = $event->data->object;
         $payment = DB::where('transaction_reference', $intent->id)->first();
 
-        if ($payment) {
-            $order = $payment->order;
+        switch ($event->type) {
+            case 'payment_intent.succeeded':
+                if ($payment) {
+                    $order = $payment->order;
 
-            Log::error('1.');
+                    $payment->status = PaymentStatuses::PAID;
+                    $order->status_id = OrderStatus::where('name', OrderStatuses::CONFIRMED)->value('id');
+                    $order->save();
 
-            if ($event->type === 'payment_intent.succeeded') {
-                $payment->status = PaymentStatuses::PAID;
-                $order->status_id = OrderStatus::where('name', OrderStatuses::CONFIRMED)->value('id');
-                $order->save();
+                    $payment->processed_at = now();
+                    $payment->response_payload = json_encode($intent);
+                    $payment->save();
+                }
+                break;
+            case 'payment_intent.failed':
+                if ($payment) {
+                    $order = $payment->order;
 
-                $payment->processed_at = now();
-                $payment->response_payload = json_encode($intent);
-                $payment->save();
-            }
+                    $payment->status = PaymentStatuses::FAILED;
+                    $order->status_id = OrderStatus::where('name', OrderStatuses::FAILED)->value('id');
+                    $order->save();
 
-            if ($event->type === 'payment_intent.payment_failed') {
-                $payment->status = PaymentStatuses::FAILED;
-                $order->status_id = OrderStatus::where('name', OrderStatuses::FAILED)->value('id');
-                $order->save();
-
-                $payment->processed_at = now();
-                $payment->response_payload = json_encode($intent);
-                $payment->save();
-            }
-
-            if ($event->type === 'refund.created') {
-                $this->stripeRefund->refund($request, $event->data->object->metadata->order_id, true);
-            }
+                    $payment->processed_at = now();
+                    $payment->response_payload = json_encode($intent);
+                    $payment->save();
+                }
+                break;
+            case 'charge.refunded':
+                $this->stripeRefund->enableWebhook();
+                $this->stripeRefund->refund($request, $event->data->object->metadata->order_id);
+                break;
+            default:
+                break;
         }
 
         return $this->ok('Webhook update.');
