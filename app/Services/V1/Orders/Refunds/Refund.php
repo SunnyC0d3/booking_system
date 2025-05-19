@@ -59,4 +59,16 @@ class Refund
         $this->orderReturn->order_return_status_id = OrderReturnStatus::where('name', ReturnStatuses::COMPLETED)->value('id');
         $this->orderReturn->save();
     }
+
+    protected function refundMarkAsFailed(string $reason)
+    {
+        $failedStatusId = OrderRefundStatus::where('name', RefundStatuses::FAILED)->value('id');
+
+        OrderRefund::create([
+            'order_return_id' => $this->orderReturn->id,
+            'amount' => $this->orderItem->refundAmount(),
+            'order_refund_status_id' => $failedStatusId,
+            'processed_at' => now(),
+        ]);
+    }
 }

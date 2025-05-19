@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import React, {useState} from 'react';
+import {PaymentElement, useStripe, useElements} from '@stripe/react-stripe-js';
 
-const CheckoutForm = ({ orderItems }) => {
+const CheckoutForm = ({orderItems}) => {
     const stripe = useStripe();
     const elements = useElements();
     const [message, setMessage] = useState(null);
@@ -26,13 +26,13 @@ const CheckoutForm = ({ orderItems }) => {
     const [sameAsDelivery, setSameAsDelivery] = useState(true);
 
     const handleDeliveryChange = (e) => {
-        const updated = { ...delivery, [e.target.name]: e.target.value };
+        const updated = {...delivery, [e.target.name]: e.target.value};
         setDelivery(updated);
         if (sameAsDelivery) setBilling(updated);
     };
 
     const handleBillingChange = (e) => {
-        setBilling({ ...billing, [e.target.name]: e.target.value });
+        setBilling({...billing, [e.target.name]: e.target.value});
     };
 
     const handleSubmit = async (e) => {
@@ -56,7 +56,7 @@ const CheckoutForm = ({ orderItems }) => {
             }
         };
 
-        const { error, paymentIntent } = await stripe.confirmPayment({
+        const {error, paymentIntent} = await stripe.confirmPayment({
             elements,
             confirmParams: {
                 return_url: window.location.href,
@@ -77,7 +77,7 @@ const CheckoutForm = ({ orderItems }) => {
         setLoading(false);
     };
 
-    const Input = ({ label, name, value, onChange, placeholder }) => (
+    const Input = ({label, name, value, onChange, placeholder}) => (
         <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
             <input
@@ -93,19 +93,26 @@ const CheckoutForm = ({ orderItems }) => {
     );
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white max-w-xl mx-auto p-8 rounded-lg shadow-md border border-gray-200 space-y-6">
+        <form onSubmit={handleSubmit}
+              className="bg-white max-w-xl mx-auto p-8 rounded-lg shadow-md border border-gray-200 space-y-6">
             <h2 className="text-2xl font-semibold text-gray-800">Checkout</h2>
 
             <div className="space-y-2">
                 <h3 className="text-gray-700 font-medium">Order Summary</h3>
                 <ul className="text-sm divide-y divide-gray-200">
                     {orderItems && orderItems.length > 0 ? (
-                        orderItems.map((item, index) => (
-                            <li key={index} className="flex justify-between py-2">
-                                <span>{item.product.name} × {item.quantity}</span>
-                                <span className="font-medium">£{item.price}</span>
+                        <>
+                            {orderItems.map((item, index) => (
+                                <li key={index} className="flex justify-between py-2">
+                                    <span>{item.product.name} × {item.quantity}</span>
+                                    <span className="font-medium">£{(item.price)}</span>
+                                </li>
+                            ))}
+                            <li className="flex justify-between py-2 font-semibold">
+                                <span>Total</span>
+                                <span>£{orderItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)}</span>
                             </li>
-                        ))
+                        </>
                     ) : (
                         <li className="text-gray-500">No items in your order.</li>
                     )}
@@ -114,33 +121,45 @@ const CheckoutForm = ({ orderItems }) => {
 
             <div>
                 <h3 className="text-gray-700 font-medium mb-2">Delivery Address</h3>
-                <Input label="Full Name" name="name" value={delivery.name} onChange={handleDeliveryChange} placeholder="Jane Doe" />
-                <Input label="E-mail address" name="email" value={delivery.email} onChange={handleDeliveryChange} placeholder="johndoe@gmail.com" />
-                <Input label="Address" name="address" value={delivery.address} onChange={handleDeliveryChange} placeholder="123 Main St" />
-                <Input label="City" name="city" value={delivery.city} onChange={handleDeliveryChange} placeholder="London" />
-                <Input label="Postcode" name="postcode" value={delivery.postcode} onChange={handleDeliveryChange} placeholder="E1 6AN" />
+                <Input label="Full Name" name="name" value={delivery.name} onChange={handleDeliveryChange}
+                       placeholder="Jane Doe"/>
+                <Input label="E-mail address" name="email" value={delivery.email} onChange={handleDeliveryChange}
+                       placeholder="johndoe@gmail.com"/>
+                <Input label="Address" name="address" value={delivery.address} onChange={handleDeliveryChange}
+                       placeholder="123 Main St"/>
+                <Input label="City" name="city" value={delivery.city} onChange={handleDeliveryChange}
+                       placeholder="London"/>
+                <Input label="Postcode" name="postcode" value={delivery.postcode} onChange={handleDeliveryChange}
+                       placeholder="E1 6AN"/>
             </div>
 
             <div className="flex items-center">
-                <input type="checkbox" id="sameAsDelivery" checked={sameAsDelivery} onChange={(e) => setSameAsDelivery(e.target.checked)} className="mr-2" />
-                <label htmlFor="sameAsDelivery" className="text-sm text-gray-700">Billing address same as delivery</label>
+                <input type="checkbox" id="sameAsDelivery" checked={sameAsDelivery}
+                       onChange={(e) => setSameAsDelivery(e.target.checked)} className="mr-2"/>
+                <label htmlFor="sameAsDelivery" className="text-sm text-gray-700">Billing address same as
+                    delivery</label>
             </div>
 
             {!sameAsDelivery && (
                 <div>
                     <h3 className="text-gray-700 font-medium mb-2">Billing Address</h3>
-                    <Input label="Full Name" name="name" value={billing.name} onChange={handleBillingChange} placeholder="Jane Doe" />
-                    <Input label="E-mail address" name="email" value={billing.email} onChange={handleBillingChange} placeholder="johndoe@gmail.com" />
-                    <Input label="Address" name="address" value={billing.address} onChange={handleBillingChange} placeholder="456 Billing Rd" />
-                    <Input label="City" name="city" value={billing.city} onChange={handleBillingChange} placeholder="Birmingham" />
-                    <Input label="Postcode" name="postcode" value={billing.postcode} onChange={handleBillingChange} placeholder="B1 1AA" />
+                    <Input label="Full Name" name="name" value={billing.name} onChange={handleBillingChange}
+                           placeholder="Jane Doe"/>
+                    <Input label="E-mail address" name="email" value={billing.email} onChange={handleBillingChange}
+                           placeholder="johndoe@gmail.com"/>
+                    <Input label="Address" name="address" value={billing.address} onChange={handleBillingChange}
+                           placeholder="456 Billing Rd"/>
+                    <Input label="City" name="city" value={billing.city} onChange={handleBillingChange}
+                           placeholder="Birmingham"/>
+                    <Input label="Postcode" name="postcode" value={billing.postcode} onChange={handleBillingChange}
+                           placeholder="B1 1AA"/>
                 </div>
             )}
 
             <div>
                 <h3 className="text-gray-700 font-medium mb-2">Payment</h3>
                 <div className="p-4 border border-gray-300 rounded-md">
-                    <PaymentElement />
+                    <PaymentElement/>
                 </div>
             </div>
 

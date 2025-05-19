@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1\Public;
 
+use App\Services\V1\Webhook\StripeWebhook;
 use Illuminate\Http\Request;
 use App\Requests\V1\StorePaymentRequest;
 use App\Http\Controllers\Controller;
@@ -55,14 +56,7 @@ class PaymentController extends Controller
     public function stripeWebhook(Request $request)
     {
         try {
-            $handler = $this->handle(PaymentMethods::STRIPE);
-
-            if (!class_exists($handler)) {
-                return $this->error('Unsupported payment gateway', 400);
-            }
-
-            $handler = app($handler);
-
+            $handler = app(StripeWebhook::class);
             return $handler->webhook($request);
         } catch (Exception $e) {
             Log::error('Stripe webhook error: ' . $e->getMessage());
