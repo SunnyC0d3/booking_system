@@ -29,7 +29,7 @@ class StripeRefund extends Refund implements RefundHandler
         if ($user->hasPermission('manage_refunds') || $webhookEnabled) {
             $this->getOrders($orderReturnId);
 
-            if (!$this->stripeRefund($webhookEnabled)) {
+            if (!$this->stripeRefund()) {
                 return $this->error('Refund failed via Stripe. Please try again later.', 422);
             }
 
@@ -41,17 +41,16 @@ class StripeRefund extends Refund implements RefundHandler
         return $this->error('You do not have the required permissions.', 403);
     }
 
-    private function stripeRefund(bool $webhookEnabled)
+    private function stripeRefund()
     {
         $this->payment = $this->order->payments->where('status', PaymentStatuses::PAID)->firstOrFail();
 
         try {
-            if (!$webhookEnabled) {
-                SR::create([
-                    'payment_intent' => $this->payment->transaction_reference,
-                    'amount' => $this->orderItem->refundAmount(),
-                ]);
-            }
+            SR::create([
+                'payment_intent' => $this->payment->transaction_reference,
+                'amount' => $this->orderItem->refundAmount(),
+            ]);
+
             return true;
         } catch (ApiErrorException $e) {
             $this->refundMarkAsFailed($e->getMessage());

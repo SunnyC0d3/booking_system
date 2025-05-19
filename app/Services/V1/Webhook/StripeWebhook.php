@@ -55,6 +55,8 @@ class StripeWebhook implements WebhookHandler
         if ($payment) {
             $order = $payment->order;
 
+            Log::error('1.');
+
             if ($event->type === 'payment_intent.succeeded') {
                 $payment->status = PaymentStatuses::PAID;
                 $order->status_id = OrderStatus::where('name', OrderStatuses::CONFIRMED)->value('id');
@@ -75,7 +77,7 @@ class StripeWebhook implements WebhookHandler
                 $payment->save();
             }
 
-            if ($event->type === 'charge.refunded') {
+            if ($event->type === 'refund.created') {
                 $this->stripeRefund->refund($request, $event->data->object->metadata->order_id, true);
             }
         }

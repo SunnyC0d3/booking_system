@@ -15,6 +15,7 @@ class OrderRefund extends Model
         'amount',
         'order_refund_status_id',
         'processed_at',
+        'notes'
     ];
 
     public function orderReturn(): BelongsTo

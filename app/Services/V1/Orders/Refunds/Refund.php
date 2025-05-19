@@ -69,6 +69,7 @@ class Refund
             'amount' => $this->orderItem->refundAmount(),
             'order_refund_status_id' => $failedStatusId,
             'processed_at' => now(),
+            'notes' => $reason,
         ]);
     }
 }
