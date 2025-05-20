@@ -3,7 +3,7 @@
 namespace App\Services\V1\Webhook;
 
 use Illuminate\Http\Request;
-interface WebhookHandler
+interface WebhookHandlerInterface
 {
     public function webhook(Request $request);
 }

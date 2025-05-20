@@ -12,13 +12,12 @@ use Illuminate\Http\Request;
 use App\Models\Payment as DB;
 use App\Traits\V1\ApiResponses;
 use Illuminate\Support\Facades\Log;
-use Stripe\Refund;
 use Stripe\Stripe;
 use Stripe\Webhook;
 use Stripe\Exception\SignatureVerificationException;
 use UnexpectedValueException;
 
-class StripeWebhook implements WebhookHandler
+class StripeWebhookInterface implements WebhookHandlerInterface
 {
     use ApiResponses;
 

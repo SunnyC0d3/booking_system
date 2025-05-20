@@ -15,7 +15,7 @@ use Stripe\PaymentIntent;
 use Stripe\Stripe;
 use Stripe\Customer;
 
-class StripePayment implements PaymentHandler
+class StripePayment implements PaymentHandlerInterface
 {
     use ApiResponses;
 
