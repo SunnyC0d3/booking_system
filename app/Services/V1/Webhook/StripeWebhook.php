@@ -5,11 +5,14 @@ namespace App\Services\V1\Webhook;
 use App\Constants\OrderStatuses;
 use App\Constants\PaymentStatuses;
 use App\Models\OrderStatus;
-use App\Services\V1\Orders\Refunds\StripeRefund;
+use App\Services\V1\Orders\Refunds\RefundHandlerInterface;
+use App\Services\V1\Orders\Refunds\RefundProcessor;
+use App\Services\V1\Orders\Refunds\StripeRefundGateway;
 use Illuminate\Http\Request;
 use App\Models\Payment as DB;
 use App\Traits\V1\ApiResponses;
 use Illuminate\Support\Facades\Log;
+use Stripe\Refund;
 use Stripe\Stripe;
 use Stripe\Webhook;
 use Stripe\Exception\SignatureVerificationException;
@@ -22,15 +25,15 @@ class StripeWebhook implements WebhookHandler
     private $secret;
     private $webhook_secret;
 
-    private $stripeRefund;
+    private RefundHandlerInterface $refundProcessor;
 
-    public function __construct(StripeRefund $stripeRefund)
+    public function __construct()
     {
         $this->secret = config('services.stripe_secret');
         $this->webhook_secret = config('services.stripe_webhook_secret');
         Stripe::setApiKey($this->secret);
 
-        $this->stripeRefund = $stripeRefund;
+        $this->refundProcessor = new RefundProcessor(new StripeRefundGateway());
     }
 
     public function webhook(Request $request)
@@ -80,8 +83,8 @@ class StripeWebhook implements WebhookHandler
                 }
                 break;
             case 'charge.refunded':
-                $this->stripeRefund->enableWebhook();
-                $this->stripeRefund->refund($request, $event->data->object->metadata->order_id);
+                $this->refundProcessor->enableWebhook();
+                $this->refundProcessor->refund($request, $event->data->object->metadata->order_id);
                 break;
             default:
                 break;

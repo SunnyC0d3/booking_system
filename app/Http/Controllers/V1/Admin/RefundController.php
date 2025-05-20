@@ -4,7 +4,8 @@ namespace App\Http\Controllers\V1\Admin;
 
 use App\Constants\PaymentMethods;
 use App\Http\Controllers\Controller;
-use App\Services\V1\Orders\Refunds\StripeRefund;
+use App\Services\V1\Orders\Refunds\RefundProcessor;
+use App\Services\V1\Orders\Refunds\StripeRefundGateway;
 use App\Traits\V1\ApiResponses;
 use Exception;
 use Illuminate\Http\Request;
@@ -21,9 +22,9 @@ class RefundController extends Controller
                 return $this->error('Unsupported payment gateway', 400);
             }
 
-            $handler = app($handler);
+            $refundProcessor = new RefundProcessor(app($handler));
 
-            return $handler->refund($request, $orderReturnId);
+            return $refundProcessor->refund($request, $orderReturnId);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
@@ -32,7 +33,7 @@ class RefundController extends Controller
     private function handle(string $gateway)
     {
         return match ($gateway) {
-            PaymentMethods::STRIPE => StripeRefund::class,
+            PaymentMethods::STRIPE => StripeRefundGateway::class,
             default => null,
         };
     }
