@@ -86,25 +86,18 @@ class RefundProcessor implements RefundHandlerInterface
     {
         $refundedStatusId = OrderRefundStatus::where('name', RefundStatuses::REFUNDED)->value('id');
 
-        if (!empty($this->orderItem)) {
+        $items = $this->orderItem
+            ? collect([$this->orderItem])
+            : $this->orderItems->filter(fn ($item) => $item->orderReturn && $item->orderReturn->isApproved());
+
+        $items->each(function ($item) use ($refundedStatusId) {
             OrderRefund::create([
-                'order_return_id' => $this->orderReturn->id,
-                'amount' => $this->orderItem->refundAmount(),
+                'order_return_id' => $item->orderReturn->id,
+                'amount' => $item->refundAmount(),
                 'order_refund_status_id' => $refundedStatusId,
                 'processed_at' => now(),
             ]);
-        } elseif (!empty($this->orderItems)) {
-            foreach ($this->orderItems as $item) {
-                if ($item->orderReturn && $item->orderReturn->isApproved()) {
-                    OrderRefund::create([
-                        'order_return_id' => $item->orderReturn->id,
-                        'amount' => $item->refundAmount(),
-                        'order_refund_status_id' => $refundedStatusId,
-                        'processed_at' => now(),
-                    ]);
-                }
-            }
-        }
+        });
     }
 
     protected function updateOrderAndPaymentStatus(): void
