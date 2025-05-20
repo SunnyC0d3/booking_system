@@ -5,7 +5,6 @@ namespace App\Services\V1\Orders\Refunds;
 use App\Constants\PaymentStatuses;
 use App\Traits\V1\ApiResponses;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Stripe\Refund as SR;
 use Stripe\Stripe;
 use \Stripe\Exception\ApiErrorException;

@@ -20,6 +20,8 @@ class Refund
     use ApiResponses;
 
     protected $orderReturn;
+
+    protected $orderItems;
     protected $orderItem;
 
     protected $order;
@@ -27,6 +29,8 @@ class Refund
     protected $payment;
 
     protected $webhookEnabled;
+
+    protected $approvedCount = 0;
 
     public function __construct()
     {
@@ -39,29 +43,51 @@ class Refund
             $this->orderReturn = OrderReturn::with(['orderItem.order.user'])->findOrFail($id);
             $this->orderItem = $this->orderReturn->orderItem;
             $this->order = $this->orderItem->order;
+
+            $this->approvedCount = !$this->orderReturn->isApproved() && $this->orderReturn->orderReturn ? 0 : 1;
+
+            if ($this->approvedCount < 1) {
+                throw new Exception('This return has not been approved for refund.', 400);
+            }
         } else {
             $this->order = Order::with(['orderItems.orderReturn'])->findOrFail($id);
-            $this->orderItem = $this->order->orderItem;
-            $this->orderReturn = $this->orderItem->orderReturn;
-        }
+            $this->orderItems = $this->order->orderItems;
 
-        if ($this->orderReturn->isApproved()) {
-            throw new Exception('This return has not been approved for refund.', 400);
+            foreach($this->orderItems as $orderItem) {
+                if ($orderItem->orderReturn && $orderItem->orderReturn->isApproved()) {
+                    $this->approvedCount++;
+                }
+            }
+
+            if($this->approvedCount < 1) {
+                throw new Exception('One or more items have not been approved for refund.', 400);
+            }
         }
     }
 
     protected function setState()
     {
-        $refundStatusId = OrderRefundStatus::where('name', RefundStatuses::REFUNDED)->value('id');
+        $refundedStatusId = OrderRefundStatus::where('name', RefundStatuses::REFUNDED)->value('id');
 
-        OrderRefund::create([
-            'order_return_id' => $this->orderReturn->id,
-            'amount' => $this->orderItem->refundAmount(),
-            'order_refund_status_id' => $refundStatusId,
-            'processed_at' => now(),
-        ]);
+        if(!empty($this->orderItem)) {
+            OrderRefund::create([
+                'order_return_id' => $this->orderReturn->id,
+                'amount' => $this->orderItem->refundAmount(),
+                'order_refund_status_id' => $refundedStatusId,
+                'processed_at' => now(),
+            ]);
+        } else if(!empty($this->orderItems)) {
+            foreach($this->orderItems as $orderItem) {
+                OrderRefund::create([
+                    'order_return_id' => $orderItem->id,
+                    'amount' => $orderItem->refundAmount(),
+                    'order_refund_status_id' => $refundedStatusId,
+                    'processed_at' => now(),
+                ]);
+            }
+        }
 
-        $refundedStatusId = OrderStatus::where('name', OrderStatuses::REFUNDED)->value('id');
+        $refundedStatusId = $this->approvedCount === count($this->orderItems) && !empty($this->orderItems) ? OrderStatus::where('name', OrderStatuses::REFUNDED)->value('id') : OrderStatus::where('name', OrderStatuses::PARTIALLY_REFUNDED)->value('id');
         $this->order->status_id = $refundedStatusId;
         $this->order->save();
 

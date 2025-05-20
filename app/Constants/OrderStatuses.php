@@ -12,6 +12,7 @@ class OrderStatuses
     public const DELIVERED = 'Delivered';
     public const CANCELLED = 'Cancelled';
     public const REFUNDED = 'Refunded';
+    public const PARTIALLY_REFUNDED = 'Partially Refunded';
     public const FAILED = 'Failed';
     public const ON_HOLD = 'On Hold';
 
@@ -26,6 +27,7 @@ class OrderStatuses
             self::DELIVERED,
             self::CANCELLED,
             self::REFUNDED,
+            self::PARTIALLY_REFUNDED,
             self::FAILED,
             self::ON_HOLD,
         ];

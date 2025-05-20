@@ -6,7 +6,6 @@ class RefundStatuses
 {
     public const PENDING = 'Pending';
     public const PROCESSING = 'Processing';
-    public const PARTIALLY_REFUNDED = 'Partially Refunded';
     public const REFUNDED = 'Refunded';
     public const FAILED = 'Failed';
     public const CANCELLED = 'Cancelled';
@@ -17,7 +16,6 @@ class RefundStatuses
         return [
             self::PENDING,
             self::PROCESSING,
-            self::PARTIALLY_REFUNDED,
             self::REFUNDED,
             self::FAILED,
             self::CANCELLED,
