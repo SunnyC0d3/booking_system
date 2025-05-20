@@ -23,7 +23,7 @@ class StripeRefund extends Refund implements RefundHandler
         Stripe::setApiKey($this->secret);
     }
 
-    public function refund(Request $request, int $orderReturnId)
+    public function refund(Request $request, int $id)
     {
         if (!$this->webhookEnabled) {
             $user = $request->user();
@@ -33,7 +33,7 @@ class StripeRefund extends Refund implements RefundHandler
             }
         }
 
-        $this->getOrders($orderReturnId);
+        $this->getOrders($id);
 
         if (!$this->stripeRefund()) {
             return $this->error('Refund failed via Stripe. Please try again later.', 422);

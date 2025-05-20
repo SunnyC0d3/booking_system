@@ -6,6 +6,7 @@ use App\Constants\OrderStatuses;
 use App\Constants\PaymentStatuses;
 use App\Constants\RefundStatuses;
 use App\Constants\ReturnStatuses;
+use App\Models\Order;
 use App\Models\OrderRefund;
 use App\Models\OrderRefundStatus;
 use App\Models\OrderReturn;
@@ -32,20 +33,19 @@ class Refund
         $this->webhookEnabled = false;
     }
 
-    protected function getOrders(int $orderReturnId)
+    protected function getOrders(int $id)
     {
-        $this->orderReturn = OrderReturn::with(['orderItem.order.user'])->findOrFail($orderReturnId);
-        $this->orderItem = $this->orderReturn->orderItem;
-        $this->order = $this->orderItem->order;
-
-        $approvedStatusId = OrderReturnStatus::where('name', ReturnStatuses::APPROVED)->value('id');
-
-        if ($this->webhookEnabled) {
-            $this->orderReturn->order_return_status_id = $approvedStatusId;
-            $this->orderReturn->save();
+        if(!$this->webhookEnabled) {
+            $this->orderReturn = OrderReturn::with(['orderItem.order.user'])->findOrFail($id);
+            $this->orderItem = $this->orderReturn->orderItem;
+            $this->order = $this->orderItem->order;
+        } else {
+            $this->order = Order::with(['orderItems.orderReturn'])->findOrFail($id);
+            $this->orderItem = $this->order->orderItem;
+            $this->orderReturn = $this->orderItem->orderReturn;
         }
 
-        if ($this->orderReturn->order_return_status_id !== $approvedStatusId) {
+        if ($this->orderReturn->isApproved()) {
             throw new Exception('This return has not been approved for refund.', 400);
         }
     }
