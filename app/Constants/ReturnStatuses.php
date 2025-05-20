@@ -9,7 +9,7 @@ class ReturnStatuses
     public const APPROVED = 'Approved';
     public const REJECTED = 'Rejected';
     public const RETURN_SHIPPED = 'Return Shipped';
-    public const RETURN_RECIEVED = 'Return Recieved';
+    public const RETURN_RECIEVED = 'Return Received';
     public const COMPLETED = 'Completed';
     public const CANCELLED = 'Cancelled';
 

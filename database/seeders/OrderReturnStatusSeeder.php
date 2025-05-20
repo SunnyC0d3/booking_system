@@ -17,7 +17,7 @@ class OrderReturnStatusSeeder extends Seeder
             ReturnStatuses::APPROVED,
             ReturnStatuses::REJECTED,
             ReturnStatuses::RETURN_SHIPPED,
-            ReturnStatuses::RETURN_RECIEVED,
+            ReturnStatuses::RETURN_RECEIVED,
             ReturnStatuses::COMPLETED,
             ReturnStatuses::CANCELLED
         ];

@@ -8,7 +8,6 @@ class PaymentStatuses
     public const PENDING = 'Pending';
     public const CANCELED = 'Canceled';
     public const FAILED = 'Failed';
-
     public const REFUNDED = 'Refunded';
 
     public static function all(): array

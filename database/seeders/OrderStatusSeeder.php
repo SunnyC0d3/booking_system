@@ -19,6 +19,7 @@ class OrderStatusSeeder extends Seeder
             OrderStatuses::DELIVERED,
             OrderStatuses::CANCELLED,
             OrderStatuses::REFUNDED,
+            OrderStatuses::PARTIALLY_REFUNDED,
             OrderStatuses::FAILED,
             OrderStatuses::ON_HOLD,
         ];

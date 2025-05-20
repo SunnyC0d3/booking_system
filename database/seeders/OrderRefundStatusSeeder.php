@@ -13,7 +13,6 @@ class OrderRefundStatusSeeder extends Seeder
         $statuses = [
             RefundStatuses::PENDING,
             RefundStatuses::PROCESSING,
-            RefundStatuses::PARTIALLY_REFUNDED,
             RefundStatuses::REFUNDED,
             RefundStatuses::FAILED,
             RefundStatuses::CANCELLED,
