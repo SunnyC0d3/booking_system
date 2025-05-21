@@ -27,9 +27,6 @@ class UserController extends Controller
      * @group Users
      * @authenticated
      *
-     * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + Request body.
-     *
      * @response 200 {
      *     "message": "User details retrieved.",
      *     "data": {}
@@ -53,9 +50,6 @@ class UserController extends Controller
      *
      * @group Users
      * @authenticated
-     *
-     * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + Request body.
      *
      * @response 200 {
      *     "message": "User updated successfully.",

@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Middleware\V1\EnsureEmailIsVerified;
-use App\Http\Middleware\V1\VerifyHmac;
+use App\Http\Middleware\V1\VerifyProxyToken;
 use App\Http\Middleware\V1\Role;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -27,7 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'client' => CheckClientCredentials::class,
             'scopes' => CheckScopes::class,
             'scope' => CheckForAnyScope::class,
-            'hmac' => VerifyHmac::class,
+            'verifyProxy' => VerifyProxyToken::class,
             'roles' => Role::class,
             'emailVerified' => EnsureEmailIsVerified::class,
         ]);

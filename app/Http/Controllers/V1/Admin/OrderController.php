@@ -29,9 +29,6 @@ class OrderController extends Controller
      * @group Orders
      * @authenticated
      *
-     * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + Request body.
-     *
      * @response 200 {
      *   "message": "Orders retrieved successfully.",
      *   "data": []
@@ -55,9 +52,6 @@ class OrderController extends Controller
      *
      * @group Orders
      * @authenticated
-     *
-     * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + Request body.
      *
      * @response 200 {
      *     "message": "Order created successfully.",
@@ -83,9 +77,6 @@ class OrderController extends Controller
      * @group Orders
      * @authenticated
      *
-     * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + Request body.
-     *
      * @response 200 {
      *     "message": "Order retrieved successfully.",
      *     "data": {}
@@ -109,9 +100,6 @@ class OrderController extends Controller
      *
      * @group Orders
      * @authenticated
-     *
-     * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + Request body.
      *
      * @response 200 {
      *     "message": "Order updated successfully.",
@@ -137,9 +125,6 @@ class OrderController extends Controller
      * @group Orders
      * @authenticated
      *
-     * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + Request body.
-     *
      * @response 200 {
      *     "message": "Order deleted (soft)."
      * }
@@ -163,9 +148,6 @@ class OrderController extends Controller
      * @group Orders
      * @authenticated
      *
-     * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + Request body.
-     *
      * @response 200 {
      *     "message": "Order restored successfully."
      * }
@@ -188,9 +170,6 @@ class OrderController extends Controller
      *
      * @group Orders
      * @authenticated
-     *
-     * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + Request body.
      *
      * @response 200 {
      *     "message": "Order permanently deleted."

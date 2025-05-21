@@ -15,15 +15,14 @@ use App\Http\Controllers\V1\Public\ReturnsController;
 
 // Auth
 
-//Route::middleware(['throttle:3,1', 'hmac'])
-Route::middleware(['throttle:3,1'])
+Route::middleware(['throttle:3,1', 'verifyProxy'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/register', 'register')->name('auth.register');
         Route::post('/login', 'login')->name('auth.login');
     });
 
-Route::middleware(['auth:api', 'hmac'])
+Route::middleware(['auth:api'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/logout', 'logout')->name('auth.logout');
@@ -47,7 +46,7 @@ Route::prefix('email')
 
 // Password Reset
 
-Route::middleware(['throttle:3,1', 'hmac'])
+Route::middleware(['throttle:3,1', 'verifyProxy'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/forgot-password', 'forgotPassword')->name('password.email');
@@ -57,7 +56,7 @@ Route::middleware(['throttle:3,1', 'hmac'])
 // Payments
 
 Route::prefix('payments')
-    //->middleware(['auth:api', 'roles:user, vendor', 'emailVerified', 'hmac'])
+    ->middleware(['auth:api', 'roles:user, vendor', 'emailVerified'])
     ->controller(PaymentController::class)
     ->group(function () {
         Route::post('/{gateway}/create', 'store')->name('payments.store');
@@ -67,7 +66,7 @@ Route::prefix('payments')
 // Users
 
 Route::prefix('users')
-    ->middleware(['auth:api', 'roles:user', 'emailVerified', 'hmac'])
+    ->middleware(['auth:api', 'roles:user', 'emailVerified'])
     ->controller(UserController::class)
     ->group(function () {
         Route::get('/{user}', 'show')->name('users.show');
@@ -77,7 +76,7 @@ Route::prefix('users')
 // Vendors
 
 Route::prefix('vendors')
-    ->middleware(['auth:api', 'roles:vendor', 'emailVerified', 'hmac'])
+    ->middleware(['auth:api', 'roles:vendor', 'emailVerified'])
     ->controller(VendorController::class)
     ->group(function () {
         Route::get('/{vendor}', 'show')->name('vendors.show');
@@ -87,7 +86,7 @@ Route::prefix('vendors')
 // Products
 
 Route::prefix('products')
-    ->middleware(['hmac'])
+    ->middleware(['verifyProxy'])
     ->controller(ProductController::class)
     ->group(function () {
         Route::get('/', 'index')->name('products.index');
@@ -97,7 +96,7 @@ Route::prefix('products')
 // Orders
 
 Route::prefix('orders')
-    ->middleware(['auth:api', 'roles:user, vendor', 'emailVerified', 'hmac'])
+    ->middleware(['auth:api', 'roles:user, vendor', 'emailVerified'])
     ->controller(OrderController::class)
     ->group(function () {
         Route::get('/{order}', 'show')->name('orders.show');
@@ -106,7 +105,6 @@ Route::prefix('orders')
 // Returns
 
 Route::prefix('returns')
-    //->middleware(['auth:api', 'roles:user, vendor', 'emailVerified', 'hmac'])
     ->middleware(['auth:api', 'roles:user, vendor', 'emailVerified'])
     ->controller(ReturnsController::class)
     ->group(function () {

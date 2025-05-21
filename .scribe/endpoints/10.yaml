@@ -16,8 +16,6 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      X-Hmac: 'HMAC signature of the request payload done via sha256.'
-      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -91,8 +89,6 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      X-Hmac: 'HMAC signature of the request payload done via sha256.'
-      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -104,7 +100,7 @@ endpoints:
         name: user_id
         description: 'The <code>id</code> of an existing record in the users table.'
         required: true
-        example: dolores
+        example: cupiditate
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -135,7 +131,7 @@ endpoints:
         name: 'order_items[].product_id'
         description: 'The <code>id</code> of an existing record in the products table.'
         required: true
-        example: assumenda
+        example: quo
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -155,7 +151,7 @@ endpoints:
         name: 'order_items[].quantity'
         description: 'Must be at least 1.'
         required: true
-        example: 84
+        example: 59
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -165,19 +161,19 @@ endpoints:
         name: 'order_items[].price'
         description: 'Must be at least 0.'
         required: true
-        example: 75
+        example: 14
         type: number
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      user_id: dolores
+      user_id: cupiditate
       order_items:
         -
-          product_id: assumenda
-          quantity: 84
-          price: 75
+          product_id: quo
+          quantity: 59
+          price: 14
     fileParameters: []
     responses:
       -
@@ -223,8 +219,6 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      X-Hmac: 'HMAC signature of the request payload done via sha256.'
-      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -289,8 +283,6 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      X-Hmac: 'HMAC signature of the request payload done via sha256.'
-      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -344,7 +336,7 @@ endpoints:
         name: 'order_items[].product_id'
         description: 'The <code>id</code> of an existing record in the products table.'
         required: true
-        example: culpa
+        example: dolores
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -364,7 +356,7 @@ endpoints:
         name: 'order_items[].quantity'
         description: 'Must be at least 1.'
         required: true
-        example: 30
+        example: 71
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -374,7 +366,7 @@ endpoints:
         name: 'order_items[].price'
         description: 'Must be at least 0.'
         required: true
-        example: 80
+        example: 62
         type: number
         enumValues: []
         exampleWasSpecified: false
@@ -383,9 +375,9 @@ endpoints:
     cleanBodyParameters:
       order_items:
         -
-          product_id: culpa
-          quantity: 30
-          price: 80
+          product_id: dolores
+          quantity: 71
+          price: 62
     fileParameters: []
     responses:
       -
@@ -431,8 +423,6 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      X-Hmac: 'HMAC signature of the request payload done via sha256.'
-      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -496,8 +486,6 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      X-Hmac: 'HMAC signature of the request payload done via sha256.'
-      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -561,8 +549,6 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      X-Hmac: 'HMAC signature of the request payload done via sha256.'
-      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -626,8 +612,6 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      X-Hmac: 'HMAC signature of the request payload done via sha256.'
-      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:

@@ -28,9 +28,6 @@ class PaymentController extends Controller
      *
      * @group Payments
      *
-     * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + Request body.
-     *
      * @bodyParam object $event Stripe webhook payload. The full JSON payload sent by Stripe will be validated internally.
      *
      * @response 200 {
@@ -71,9 +68,6 @@ class PaymentController extends Controller
      * it will return the existing client secret to avoid duplicate charges.
      *
      * @group Payments
-     *
-     * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + Request body.
      *
      * @bodyParam order_id int required The ID of the order being paid for. Example: 123
      *

@@ -28,9 +28,6 @@ class ProductTagController extends Controller
      * @group Product Tags
      * @authenticated
      *
-     * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + Request body.
-     *
      * @response 200 {
      *     "message": "Tags retrieved successfully.",
      *     "data": [
@@ -58,9 +55,6 @@ class ProductTagController extends Controller
      * @group Product Tags
      * @authenticated
      *
-     * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + Request body.
-     *
      * @bodyParam name string required The name of the product tag.
      *
      * @response 200 {
@@ -87,9 +81,6 @@ class ProductTagController extends Controller
      * @group Product Tags
      * @authenticated
      *
-     * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + Request body.
-     *
      * @response 200 {
      *     "message": "Tag retrieved successfully.",
      *     "data": {"id": 1, "name": "Electronics"}
@@ -113,9 +104,6 @@ class ProductTagController extends Controller
      *
      * @group Product Tags
      * @authenticated
-     *
-     * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + Request body.
      *
      * @bodyParam name string required The updated name of the product tag.
      *
@@ -142,9 +130,6 @@ class ProductTagController extends Controller
      *
      * @group Product Tags
      * @authenticated
-     *
-     * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + Request body.
      *
      * @response 200 {
      *     "message": "Tag deleted successfully."

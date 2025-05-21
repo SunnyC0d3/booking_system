@@ -27,9 +27,6 @@ class ProductController extends Controller
      *
      * @group Products
      *
-     * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + Request body.
-     *
      * @response 200 {
      *     "message": "Products retrieved successfully.",
      *     "data": []
@@ -52,9 +49,6 @@ class ProductController extends Controller
      * Retrieve a specific product.
      *
      * @group Products
-     *
-     * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + Request body.
      *
      * @response 200 {
      *     "message": "Product retrieved successfully.",

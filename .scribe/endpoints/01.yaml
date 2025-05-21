@@ -16,8 +16,6 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      X-Hmac: 'HMAC signature of the request payload done via sha256.'
-      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -71,8 +69,6 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      X-Hmac: 'HMAC signature of the request payload done via sha256.'
-      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -137,8 +133,6 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      X-Hmac: 'HMAC signature of the request payload done via sha256.'
-      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: multipart/form-data
       Accept: application/json
     urlParameters: []
@@ -150,7 +144,7 @@ endpoints:
         name: user_id
         description: 'The <code>id</code> of an existing record in the users table.'
         required: true
-        example: non
+        example: sunt
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -160,7 +154,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: aqpsozhujmlg
+        example: homepzm
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -170,7 +164,7 @@ endpoints:
         name: description
         description: 'Must not be greater than 1000 characters.'
         required: true
-        example: 'Id est veritatis dolorum cupiditate iusto quia et.'
+        example: 'Et amet porro ea.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -187,9 +181,9 @@ endpoints:
         nullable: true
         custom: []
     cleanBodyParameters:
-      user_id: non
-      name: aqpsozhujmlg
-      description: 'Id est veritatis dolorum cupiditate iusto quia et.'
+      user_id: sunt
+      name: homepzm
+      description: 'Et amet porro ea.'
     fileParameters:
       logo: null
     responses:
@@ -236,8 +230,6 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      X-Hmac: 'HMAC signature of the request payload done via sha256.'
-      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: multipart/form-data
       Accept: application/json
     urlParameters:
@@ -270,7 +262,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: u
+        example: qpdxzygj
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -280,7 +272,7 @@ endpoints:
         name: description
         description: 'Must not be greater than 1000 characters.'
         required: false
-        example: 'Rerum maxime qui ipsam aut fugit.'
+        example: 'Eum doloribus doloremque soluta.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -297,8 +289,8 @@ endpoints:
         nullable: true
         custom: []
     cleanBodyParameters:
-      name: u
-      description: 'Rerum maxime qui ipsam aut fugit.'
+      name: qpdxzygj
+      description: 'Eum doloribus doloremque soluta.'
     fileParameters:
       logo: null
     responses:
@@ -345,8 +337,6 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      X-Hmac: 'HMAC signature of the request payload done via sha256.'
-      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -410,8 +400,6 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      X-Hmac: 'HMAC signature of the request payload done via sha256.'
-      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -476,8 +464,6 @@ endpoints:
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_KEY}'
-      X-Hmac: 'HMAC signature of the request payload done via sha256.'
-      X-Timestamp: 'Timestamp + Request body.'
       Content-Type: multipart/form-data
       Accept: application/json
     urlParameters:
@@ -510,7 +496,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: nsdodkekl
+        example: cdtaedtmvzfcduksiduvpl
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -520,7 +506,7 @@ endpoints:
         name: description
         description: 'Must not be greater than 1000 characters.'
         required: false
-        example: 'Architecto esse beatae reprehenderit similique magni vero tenetur.'
+        example: 'Iure iusto neque dolorem ipsa ipsa.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -537,8 +523,8 @@ endpoints:
         nullable: true
         custom: []
     cleanBodyParameters:
-      name: nsdodkekl
-      description: 'Architecto esse beatae reprehenderit similique magni vero tenetur.'
+      name: cdtaedtmvzfcduksiduvpl
+      description: 'Iure iusto neque dolorem ipsa ipsa.'
     fileParameters:
       logo: null
     responses:

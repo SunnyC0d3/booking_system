@@ -26,9 +26,6 @@ class OrderController extends Controller
      * @group Orders
      * @authenticated
      *
-     * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + Request body.
-     *
      * @response 200 {
      *     "message": "Order retrieved successfully.",
      *     "data": {}

@@ -1,104 +1,67 @@
-name: Payments
+name: 'Password Reset'
 description: ''
 endpoints:
   -
     httpMethods:
       - POST
-    uri: 'api/payments/{gateway}/create'
+    uri: api/forgot-password
     metadata:
-      groupName: Payments
+      groupName: 'Password Reset'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Initiate Payment'
-      description: |-
-        Creates or retrieves a Stripe PaymentIntent for a given order. If a payment already exists,
-        it will return the existing client secret to avoid duplicate charges.
-      authenticated: false
+      title: 'Request a password reset link.'
+      description: 'Sends a password reset email to the specified email address.'
+      authenticated: true
       custom: []
     headers:
-      X-Hmac: 'HMAC signature of the request payload done via sha256.'
-      X-Timestamp: 'Timestamp + Request body.'
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
       Content-Type: application/json
       Accept: application/json
-    urlParameters:
-      gateway:
-        name: gateway
-        description: 'The payment gateway to use. Currently supported: `stripe`.'
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      email:
+        name: email
+        description: "The user's email address."
         required: true
-        example: stripe
+        example: john.doe@example.com
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-    cleanUrlParameters:
-      gateway: stripe
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      order_id:
-        name: order_id
-        description: 'The ID of the order being paid for.'
-        required: true
-        example: 123
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
     cleanBodyParameters:
-      order_id: 123
+      email: john.doe@example.com
     fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
-            "status": true,
-            "message": "PaymentIntent created successfully.",
-            "data": {
-              "client_secret": "pi_1Hxxxxxxxxxxxx_secret_xxxxxxxxx"
-            }
+            "message": "Password reset link sent.",
+            "status": 200
           }
         headers: []
         description: ''
         custom: []
       -
-        status: 200
-        content: |-
-          {
-            "status": true,
-            "message": "Payment has already been processed for this order.",
-            "data": null
-          }
-        headers: []
-        description: 'Already Paid'
-        custom: []
-      -
         status: 400
         content: |-
           {
-            "status": false,
-            "message": "Unsupported payment gateway",
-            "data": null
+            "message": {ERROR_MESSAGE},
+            "status": 400
           }
         headers: []
-        description: 'Unsupported Gateway'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "status": false,
-            "message": "No query results for model [App\\Models\\Order] 999",
-            "data": null
-          }
-        headers: []
-        description: 'Order Not Found'
+        description: ''
         custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
     controller: null
     method: null
     route: null
@@ -106,60 +69,78 @@ endpoints:
   -
     httpMethods:
       - POST
-    uri: api/payments/stripe/webhook
+    uri: api/reset-password
     metadata:
-      groupName: Payments
+      groupName: 'Password Reset'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Stripe Webhook Listener'
-      description: |-
-        This endpoint is triggered by Stripe when a payment event occurs (e.g., payment succeeded, failed).
-        It verifies the webhook signature and processes the payment status accordingly.
-      authenticated: false
+      title: "Reset a user's password."
+      description: "Resets the user's password using the provided reset token."
+      authenticated: true
       custom: []
     headers:
-      X-Hmac: 'HMAC signature of the request payload done via sha256.'
-      X-Timestamp: 'Timestamp + Request body.'
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
       Content-Type: application/json
       Accept: application/json
-    urlParameters:
-      none:
-        name: none
-        description: ''
-        required: false
-        example: dolor
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      none: dolor
+    urlParameters: []
+    cleanUrlParameters: []
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
-      object:
-        name: object
-        description: 'Stripe webhook payload. The full JSON payload sent by Stripe will be validated internally.'
-        required: false
-        example: rem
-        type: $event
+      token:
+        name: token
+        description: 'The password reset token.'
+        required: true
+        example: abc123
+        type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      email:
+        name: email
+        description: "The user's email address."
+        required: true
+        example: john.doe@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      password:
+        name: password
+        description: 'The new password.'
+        required: true
+        example: newpassword123
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      password_confirmation:
+        name: password_confirmation
+        description: 'Must match the password.'
+        required: true
+        example: newpassword123
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
         nullable: false
         custom: []
     cleanBodyParameters:
-      object: rem
+      token: abc123
+      email: john.doe@example.com
+      password: newpassword123
+      password_confirmation: newpassword123
     fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
-            "status": true,
-            "message": "Webhook update.",
-            "data": null
+            "message": "Password has been reset.",
+            "status": 200
           }
         headers: []
         description: ''
@@ -168,26 +149,17 @@ endpoints:
         status: 400
         content: |-
           {
-            "status": false,
-            "message": "Invalid Stripe signature",
-            "data": null
+            "message": {ERROR_MESSAGE},
+            "status": 400
           }
         headers: []
-        description: 'Invalid Signature or Payload'
-        custom: []
-      -
-        status: 400
-        content: |-
-          {
-            "status": false,
-            "message": "Invalid payload",
-            "data": null
-          }
-        headers: []
-        description: 'Invalid Payload Format'
+        description: ''
         custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
     controller: null
     method: null
     route: null

@@ -30,9 +30,6 @@ class AuthController extends Controller
      *
      * @group Authentication
      *
-     * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + Request body.
-     *
      * @bodyParam name string required The user's full name. Example: John Doe
      * @bodyParam email string required The user's email address. Example: john.doe@example.com
      * @bodyParam password string required The user's password. Must be at least 8 characters. Example: password123
@@ -61,9 +58,6 @@ class AuthController extends Controller
      * Authenticates a user with email and password. Returns an API token with expiry timer.
      *
      * @group Authentication
-     *
-     * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + Request body.
      *
      * @bodyParam email string required The user's email. Example: john.doe@example.com
      * @bodyParam password string required The user's password. Example: password123
@@ -126,9 +120,6 @@ class AuthController extends Controller
      * @group Password Reset
      * @authenticated
      *
-     * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + Request body.
-     *
      * @bodyParam email string required The user's email address. Example: john.doe@example.com
      *
      * @response 200 {
@@ -159,9 +150,6 @@ class AuthController extends Controller
      *
      * @group Password Reset
      * @authenticated
-     *
-     * @header X-Hmac HMAC signature of the request payload done via sha256.
-     * @header X-Timestamp Timestamp + Request body.
      *
      * @bodyParam token string required The password reset token. Example: abc123
      * @bodyParam email string required The user's email address. Example: john.doe@example.com

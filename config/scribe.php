@@ -116,12 +116,12 @@ return [
         'placeholder' => '{YOUR_AUTH_KEY}',
 
         // Any extra authentication-related info for your users. Markdown and HTML are supported.
-        'extra_info' => 'You can retrieve your token by making sure **PASSPORT_PERSONAL_ACCESS_CLIENT_ID** and **PASSPORT_PERSONAL_ACCESS_CLIENT_SECRET** are included and a personal token is issued to create user tokens. Most paths will only need **HMAC** verification, this ensures all paths are secure.',
+        'extra_info' => 'You can retrieve your token by making sure **PASSPORT_PERSONAL_ACCESS_CLIENT_ID** and **PASSPORT_PERSONAL_ACCESS_CLIENT_SECRET** are included and a personal token is issued to create user tokens.',
     ],
 
     // Text to place in the "Introduction" section, right after the `description`. Markdown and HTML are supported.
     'intro_text' => <<<INTRO
-Welcome to the E-Commerce API Documentation. 
+Welcome to the E-Commerce API Documentation.
 
 This API allows you to interact with our e-commerce platform for managing products, orders, users, and more. Whether you're integrating with our product catalog, processing orders, or managing customer information, this documentation will guide you through every available endpoint.
 INTRO,
