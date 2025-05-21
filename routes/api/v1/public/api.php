@@ -22,7 +22,7 @@ Route::middleware(['throttle:3,1', 'verifyProxy'])
         Route::post('/login', 'login')->name('auth.login');
     });
 
-Route::middleware(['auth:api'])
+Route::middleware(['auth:api', 'verifyProxy'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/logout', 'logout')->name('auth.logout');
@@ -38,7 +38,7 @@ Route::prefix('email')
     });
 
 Route::prefix('email')
-    ->middleware(['auth:api'])
+    ->middleware(['auth:api', 'verifyProxy'])
     ->controller(EmailVerificationController::class)
     ->group(function () {
         Route::get('/resend', 'resend')->name('verification.resend');
@@ -56,7 +56,7 @@ Route::middleware(['throttle:3,1', 'verifyProxy'])
 // Payments
 
 Route::prefix('payments')
-    ->middleware(['auth:api', 'roles:user, vendor', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:user, vendor', 'emailVerified', 'verifyProxy'])
     ->controller(PaymentController::class)
     ->group(function () {
         Route::post('/{gateway}/create', 'store')->name('payments.store');
@@ -66,7 +66,7 @@ Route::prefix('payments')
 // Users
 
 Route::prefix('users')
-    ->middleware(['auth:api', 'roles:user', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:user', 'emailVerified', 'verifyProxy'])
     ->controller(UserController::class)
     ->group(function () {
         Route::get('/{user}', 'show')->name('users.show');
@@ -76,7 +76,7 @@ Route::prefix('users')
 // Vendors
 
 Route::prefix('vendors')
-    ->middleware(['auth:api', 'roles:vendor', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:vendor', 'emailVerified', 'verifyProxy'])
     ->controller(VendorController::class)
     ->group(function () {
         Route::get('/{vendor}', 'show')->name('vendors.show');
@@ -96,7 +96,7 @@ Route::prefix('products')
 // Orders
 
 Route::prefix('orders')
-    ->middleware(['auth:api', 'roles:user, vendor', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:user, vendor', 'emailVerified', 'verifyProxy'])
     ->controller(OrderController::class)
     ->group(function () {
         Route::get('/{order}', 'show')->name('orders.show');
@@ -105,7 +105,7 @@ Route::prefix('orders')
 // Returns
 
 Route::prefix('returns')
-    ->middleware(['auth:api', 'roles:user, vendor', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:user, vendor', 'emailVerified', 'verifyProxy'])
     ->controller(ReturnsController::class)
     ->group(function () {
         Route::post('/', 'return')->name('returns');
