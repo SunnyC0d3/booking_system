@@ -5,7 +5,6 @@ namespace App\Http\Middleware\V1;
 use App\Traits\V1\ApiResponses;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Crypt;
 
 class VerifyProxyToken
 {
@@ -20,7 +19,7 @@ class VerifyProxyToken
         }
 
         try {
-            $decrypted = Crypt::decrypt($proxyToken);
+            $decrypted = decrypt($proxyToken);
 
             if ($decrypted !== config('services.proxy_key')) {
                 return $this->error('Invalid proxy token', 401);
