@@ -15,7 +15,7 @@ use App\Http\Controllers\V1\Public\ReturnsController;
 
 // Auth
 
-Route::middleware(['throttle:3,1'])
+Route::middleware(['throttle:3,1', 'client'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/register', 'register')->name('auth.register');
@@ -46,7 +46,7 @@ Route::prefix('email')
 
 // Password Reset
 
-Route::middleware(['throttle:3,1'])
+Route::middleware(['throttle:3,1', 'client'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/forgot-password', 'forgotPassword')->name('password.email');
@@ -86,6 +86,7 @@ Route::prefix('vendors')
 // Products
 
 Route::prefix('products')
+    ->middleware(['client'])
     ->controller(ProductController::class)
     ->group(function () {
         Route::get('/', 'index')->name('products.index');
