@@ -7,7 +7,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Support\Facades\Password;
-use App\Http\Middleware\V1\VerifyHmac;
 use Illuminate\Support\Facades\DB;
 
 class AuthControllerTest extends TestCase
@@ -17,8 +16,6 @@ class AuthControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->withoutMiddleware(VerifyHmac::class);
 
         DB::table('oauth_clients')->insert([
             'id' => config('services.passport_pa_id'),

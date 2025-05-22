@@ -38,7 +38,6 @@ return [
     'app_frontend_url' => env('APP_URL_FRONTEND'),
     'app_frontend_pwr' => env('APP_URL_FRONTEND_PASSWORD_RESET'),
     'app_frontend_email_verify' => env('APP_URL_FRONTEND_EMAIL_VERIFIED'),
-    'hmac_secret' => env('HMAC_SECRET_KEY'),
     'proxy_key' => env('PROXY_LOGIN_KEY'),
     'passport_pa_id' => env('PASSPORT_PERSONAL_ACCESS_CLIENT_ID'),
     'passport_pa_secret' => env('PASSPORT_PERSONAL_ACCESS_CLIENT_SECRET'),
