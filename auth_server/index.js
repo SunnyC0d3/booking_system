@@ -12,8 +12,8 @@ app.use(cookieParser());
 const {
     PORT = 5001,
     LARAVEL_API_URL,
-    BFF_CLIENT_ID,
-    BFF_CLIENT_SECRET,
+    AUTH_SERVER_CLIENT_ID,
+    AUTH_SERVER_CLIENT_SECRET,
     FRONTEND_ORIGIN
 } = process.env;
 
@@ -30,21 +30,21 @@ app.use(cors({
     credentials: true
 }));
 
-// Middleware to verify BFF cookie (simulate session)
+// Middleware to verify auth server cookie (simulate session)
 const verifyFrontend = (req, res, next) => {
-    const token = req.cookies['bff_csrf'];
+    const token = req.cookies['auth_server_csrf'];
     if (!token || token !== 'frontend-access') {
         return res.status(401).json({ message: 'Unauthorized frontend' });
     }
     next();
 };
 
-// Step 1: BFF fetches access token from Laravel
+// Step 1: Auth server fetches access token from Laravel
 async function getClientAccessToken() {
     const response = await axios.post(`${LARAVEL_API_URL}/oauth/token`, {
         grant_type: 'client_credentials',
-        client_id: BFF_CLIENT_ID,
-        client_secret: BFF_CLIENT_SECRET,
+        client_id: AUTH_SERVER_CLIENT_ID,
+        client_secret: AUTH_SERVER_CLIENT_SECRET,
         scope: ''
     });
 
@@ -55,7 +55,7 @@ async function getClientAccessToken() {
 app.post('/api/public-token', async (req, res) => {
     try {
         res
-            .cookie('bff_csrf', 'frontend-access', {
+            .cookie('auth_server_csrf', 'frontend-access', {
                 httpOnly: true,
                 secure: true,
                 sameSite: 'Strict',
@@ -86,4 +86,4 @@ app.get('/api/products', verifyFrontend, async (req, res) => {
     }
 });
 
-app.listen(PORT, () => console.log(`🔐 BFF running on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`🔐 Auth server running on http://localhost:${PORT}`));
