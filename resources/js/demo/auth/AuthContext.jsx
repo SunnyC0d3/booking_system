@@ -19,9 +19,17 @@ export const AuthProvider = ({ children }) => {
         const payload = JSON.stringify({ email, password });
 
         try {
-            const response = await api.post('/login', { email, password });
+            const response = await api.post(
+                '/login',
+                {
+                    email,
+                    password
+                }
+            );
+
             setUser(response.data.user);
             setToken(response.data.token);
+
             return { success: true, role: response.data.user.role };
         } catch (error) {
             return { success: false, message: error.response?.data?.message || 'Login failed' };
