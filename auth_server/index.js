@@ -1,0 +1,89 @@
+require('dotenv').config();
+const express = require('express');
+const axios = require('axios');
+const cors = require('cors');
+const rateLimit = require('express-rate-limit');
+const cookieParser = require('cookie-parser');
+
+const app = express();
+app.use(express.json());
+app.use(cookieParser());
+
+const {
+    PORT = 5001,
+    LARAVEL_API_URL,
+    BFF_CLIENT_ID,
+    BFF_CLIENT_SECRET,
+    FRONTEND_ORIGIN
+} = process.env;
+
+// Rate limit
+app.use(rateLimit({
+    windowMs: 60 * 1000,
+    max: 30,
+    standardHeaders: true
+}));
+
+// CORS
+app.use(cors({
+    origin: FRONTEND_ORIGIN,
+    credentials: true
+}));
+
+// Middleware to verify BFF cookie (simulate session)
+const verifyFrontend = (req, res, next) => {
+    const token = req.cookies['bff_csrf'];
+    if (!token || token !== 'frontend-access') {
+        return res.status(401).json({ message: 'Unauthorized frontend' });
+    }
+    next();
+};
+
+// Step 1: BFF fetches access token from Laravel
+async function getClientAccessToken() {
+    const response = await axios.post(`${LARAVEL_API_URL}/oauth/token`, {
+        grant_type: 'client_credentials',
+        client_id: BFF_CLIENT_ID,
+        client_secret: BFF_CLIENT_SECRET,
+        scope: ''
+    });
+
+    return response.data.access_token;
+}
+
+// Endpoint React uses on load to set a secure cookie
+app.post('/api/public-token', async (req, res) => {
+    try {
+        res
+            .cookie('bff_csrf', 'frontend-access', {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'Strict',
+                maxAge: 5 * 60 * 1000
+            })
+            .json({ message: 'Frontend verified' });
+    } catch (err) {
+        return res.status(500).json({ message: 'Token setup failed' });
+    }
+});
+
+// Secure proxy to Laravel's protected public API
+app.get('/api/products', verifyFrontend, async (req, res) => {
+    try {
+        const token = await getClientAccessToken();
+
+        const response = await axios.get(`${LARAVEL_API_URL}/api/products`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        res.json(response.data);
+    } catch (err) {
+        res.status(err.response?.status || 500).json({
+            message: err.response?.data?.message || 'Failed to fetch products'
+        });
+    }
+});
+
+app.listen(PORT, () => console.log(`🔐 BFF running on http://localhost:${PORT}`));
