@@ -14,6 +14,7 @@ const {
     LARAVEL_API_URL,
     AUTH_SERVER_CLIENT_ID,
     AUTH_SERVER_CLIENT_SECRET,
+    AUTH_SERVER_PUBLIC_KEY,
     FRONTEND_ORIGIN
 } = process.env;
 
@@ -33,7 +34,7 @@ app.use(cors({
 // Middleware to verify auth server cookie (simulate session)
 const verifyFrontend = (req, res, next) => {
     const token = req.cookies['auth_server_csrf'];
-    if (!token || token !== 'frontend-access') {
+    if (!token || token !== AUTH_SERVER_PUBLIC_KEY) {
         return res.status(401).json({ message: 'Unauthorized frontend' });
     }
     next();
@@ -55,7 +56,7 @@ async function getClientAccessToken() {
 app.post('/api/public-token', async (req, res) => {
     try {
         res
-            .cookie('auth_server_csrf', 'frontend-access', {
+            .cookie('auth_server_csrf', AUTH_SERVER_PUBLIC_KEY, {
                 httpOnly: true,
                 secure: true,
                 sameSite: 'Strict',

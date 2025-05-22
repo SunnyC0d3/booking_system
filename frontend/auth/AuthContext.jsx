@@ -16,8 +16,6 @@ export const AuthProvider = ({ children }) => {
     }, [token]);
 
     const login = async (email, password) => {
-        const payload = JSON.stringify({ email, password });
-
         try {
             const response = await api.post(
                 '/login',
