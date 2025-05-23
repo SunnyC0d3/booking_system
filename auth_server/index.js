@@ -9,6 +9,9 @@ const crypto = require('crypto');
 const nonceStore = new Map();
 const cookieExpiryTime = 5 * 60 * 1000;
 
+const API_CLIENT = 'client';
+const API_AUTH = 'auth';
+
 setInterval(() => {
     const now = Date.now();
     for (const [key, expiry] of nonceStore.entries()) {
@@ -21,7 +24,7 @@ setInterval(() => {
 
 const {
     PORT = 5001,
-    LARAVEL_API_URL,
+    API_URL,
     AUTH_SERVER_CLIENT_ID,
     AUTH_SERVER_CLIENT_SECRET,
     AUTH_SERVER_SECRET,
@@ -99,6 +102,52 @@ app.post('/api/server-token', async (req, res) => {
             });
     } catch (err) {
         return res.status(500).json({message: 'Token setup failed'});
+    }
+});
+
+app.all('/proxy', verifyFrontend, async (req, res) => {
+    const { apiEndpoint, authType = 'client' } = req.body;
+
+    if (!apiEndpoint) {
+        return res.status(400).json({ message: 'Missing Endpoint URL' });
+    }
+
+    try {
+        let token;
+
+        if (authType === API_CLIENT) {
+            const response = await axios.post(`${API_URL}/oauth/token`, {
+                grant_type: 'client_credentials',
+                client_id: AUTH_SERVER_CLIENT_ID,
+                client_secret: AUTH_SERVER_CLIENT_SECRET,
+            });
+            token = response.data.access_token;
+        } else if (authType === API_AUTH) {
+            const authHeader = req.headers['authorization'];
+            if (!authHeader || !authHeader.startsWith('Bearer ')) {
+                return res.status(401).json({ message: 'Missing user token' });
+            }
+            token = authHeader.replace('Bearer ', '');
+        } else {
+            return res.status(400).json({ message: 'Invalid auth type' });
+        }
+
+        const response = await axios({
+            method: req.method,
+            url: `${API_URL}${apiEndpoint}`,
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/json',
+            },
+            data: req.body.data || {}
+        });
+
+        return res.status(response.status).json(response.data);
+    } catch (err) {
+        console.error('Endpoint proxy error:', err.response?.data || err.message);
+        return res.status(err.response?.status || 500).json({
+            message: err.response?.data?.message || 'Endpoint request failed',
+        });
     }
 });
 

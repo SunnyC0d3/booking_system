@@ -1,46 +1,39 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import api from '@api/axiosInstance';
+import callApi from "@api/callApi.jsx";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [token, setToken] = useState(() => localStorage.getItem('token'));
-
-    useEffect(() => {
-        if (token) {
-            localStorage.setItem('token', token);
-        } else {
-            localStorage.removeItem('token');
-        }
-    }, [token]);
 
     const login = async (email, password) => {
         try {
-            const response = await api.post(
-                '/login',
-                {
-                    email,
-                    password
-                }
-            );
-
+            const response = await callApi({
+                method: 'POST',
+                url: '/login',
+                data: { email, password }
+            });
             setUser(response.data.user);
-            setToken(response.data.token);
-
             return { success: true, role: response.data.user.role };
         } catch (error) {
             return { success: false, message: error.response?.data?.message || 'Login failed' };
         }
     };
 
-    const logout = () => {
-        setUser(null);
-        setToken(null);
+    const logout = async () => {
+        try {
+            await callApi({ method: 'POST', url: '/logout' });
+            setUser(null);
+        } catch (error) {
+            return {
+                success: false,
+                message: error.response?.data?.message || 'Login failed'
+            };
+        }
     };
 
     return (
-        <AuthContext.Provider value={{ user, token, login, logout }}>
+        <AuthContext.Provider value={{ user, login, logout }}>
             {children}
         </AuthContext.Provider>
     );
