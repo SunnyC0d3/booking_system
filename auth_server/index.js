@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 const crypto = require('crypto');
 
 const nonceStore = new Map();
-const cookieExpiryTime = 5 * 60 * 1000;
+const cookieExpiryTime = 2 * 60 * 1000;
 
 const API_CLIENT = 'client';
 const API_AUTH = 'auth';
@@ -53,23 +53,19 @@ const verifyFrontend = (req, res, next) => {
         return res.status(401).json({ message: 'Missing or invalid CSRF nonce' });
     }
 
-    const expiry = nonceStore.get(nonce);
+    const stored = nonceStore.get(nonce);
 
-    if (Date.now() > expiry) {
+    if (Date.now() > stored.expiry) {
         nonceStore.delete(nonce);
         return res.status(403).json({ message: 'Nonce expired' });
     }
 
-    if (!nonce || nonce !== AUTH_SERVER_SECRET) {
-        return res.status(401).json({message: 'Unauthorized frontend'});
+    if (stored.ip !== req.ip || stored.userAgent !== req.get('User-Agent')) {
+        return res.status(403).json({ message: 'Blocked: Fingerprint mismatch' });
     }
 
     if (req.get('Origin') !== FRONTEND_ORIGIN || !req.get('Origin')) {
-        return res.status(403).json({message: 'Blocked: invalid origin or UA'});
-    }
-
-    if (!req.get('User-Agent') || req.get('User-Agent').includes('Postman') || req.get('User-Agent').includes('curl')) {
-        return res.status(403).json({ message: 'Blocked: Invalid Client' });
+        return res.status(403).json({ message: 'Blocked: Invalid origin' });
     }
 
     next();
@@ -82,11 +78,11 @@ app.post('/api/server-token', async (req, res) => {
         return res.status(403).json({ message: 'Blocked: Invalid Origin' });
     }
 
-    if (!req.get('User-Agent') || req.get('User-Agent').includes('Postman') || req.get('User-Agent').includes('curl')) {
-        return res.status(403).json({ message: 'Blocked: Invalid Client' });
-    }
-
-    nonceStore.set(nonce, Date.now() + cookieExpiryTime);
+    nonceStore.set(nonce, {
+        expiry: Date.now() + cookieExpiryTime,
+        ip: req.ip,
+        userAgent: req.get('User-Agent')
+    });
 
     try {
         res
@@ -98,7 +94,7 @@ app.post('/api/server-token', async (req, res) => {
                 signed: true
             })
             .json({
-                message: 'Frontend verified'
+                message: 'Verified'
             });
     } catch (err) {
         return res.status(500).json({message: 'Token setup failed'});

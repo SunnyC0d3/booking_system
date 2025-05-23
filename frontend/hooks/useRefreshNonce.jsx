@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import api from '@api/axiosInstance';
 
-const nonceExpiryRefreshTimer = 4.5 * 60 * 1000;
+const nonceExpiryRefreshTimer = 1.5 * 60 * 1000;
 
 export function useRefreshNonce(intervalMinutes = nonceExpiryRefreshTimer) {
     useEffect(() => {
