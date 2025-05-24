@@ -8,9 +8,8 @@ export function useRefreshNonce(intervalMinutes = nonceExpiryRefreshTimer) {
         const refreshNonce = async () => {
             try {
                 await api.post('/server-token');
-                console.log('✅ CSRF cookie refreshed');
-            } catch (err) {
-                console.error('❌ Failed to refresh CSRF cookie', err);
+            } catch (error) {
+                throw new Error(error.response?.data?.message || error.message);
             }
         };
 
