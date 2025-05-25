@@ -7,24 +7,25 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
     const navigate = useNavigate();
-    const {login, isAuthenticated, getRedirectPath} = useAuth();
+    const {user, login, isAuthenticated, getRedirectPath} = useAuth();
 
     useEffect(() => {
         if (isAuthenticated()) {
-            navigate(getRedirectPath(), {replace: true})
-        } else {
-            navigate('/');
+            navigate(getRedirectPath(), { replace: true });
         }
-    }, []);
+    }, [user]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const result = await login(email, password);
 
-        if (result.success) {
-            navigate(getRedirectPath(), {replace: true});
-        } else {
-            setError(result.message);
+        try {
+            const result = await login(email, password);
+
+            if (!result.success) {
+                setError(result.message);
+            }
+        } catch (err) {
+            setError(err.message);
         }
     };
 

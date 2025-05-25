@@ -9,6 +9,7 @@ export function useRefreshNonce(intervalMinutes = nonceExpiryRefreshTimer) {
             try {
                 await api.post('/server-token');
             } catch (error) {
+                console.log(error);
                 throw new Error(error.response?.data?.message || error.message);
             }
         };

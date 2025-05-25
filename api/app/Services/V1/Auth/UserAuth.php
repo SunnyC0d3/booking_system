@@ -45,13 +45,11 @@ final class UserAuth
             throw new Exception('Invalid credentials.', 401);
         }
 
-        $tokenExpiration = $request->remember ? now()->addWeeks(1) : now();
-
         $tokenResult = $user->createToken('User Access Token');
         $accessToken = $tokenResult->accessToken;
-        $expiresIn = $tokenResult->token->expires_at->diffInSeconds($tokenExpiration);
+        $expiresAt = now()->addMinutes(30);
 
-        $tokenResult->token->expires_at = now()->addMinutes(30);
+        $tokenResult->token->expires_at = $expiresAt;
         $tokenResult->token->save();
 
         return $this->ok(
@@ -59,7 +57,7 @@ final class UserAuth
             [
                 'token_type' => 'Bearer',
                 'access_token' => $accessToken,
-                'expires_in' => $expiresIn,
+                'expires_at' => $expiresAt->timestamp * 1000,
                 'user' => [
                     'email' => $user->email,
                     'role' => $user->role->name
