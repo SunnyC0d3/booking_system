@@ -19,10 +19,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Passport::enablePasswordGrant();
-        Passport::tokensExpireIn(now()->addMinutes(30));
-        Passport::refreshTokensExpireIn(now()->addDays(7));
-
         ResetPassword::createUrlUsing(function (User $user, string $token) {
             return config('services.app_frontend_url') . config('services.app_frontend_pwr') . '?token=' . $token;
         });

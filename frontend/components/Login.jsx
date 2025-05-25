@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, {useState, useEffect} from 'react';
+import {useNavigate} from 'react-router-dom';
 import useAuth from '@auth/useAuth';
 
 const Login = () => {
@@ -7,14 +7,22 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const {login, isAuthenticated, getRedirectPath} = useAuth();
+
+    useEffect(() => {
+        if (isAuthenticated()) {
+            navigate(getRedirectPath(), {replace: true})
+        } else {
+            navigate('/');
+        }
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const result = await login(email, password);
 
         if (result.success) {
-            setError(result.message);
+            navigate(getRedirectPath(), {replace: true});
         } else {
             setError(result.message);
         }

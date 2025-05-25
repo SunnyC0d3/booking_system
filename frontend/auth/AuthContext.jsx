@@ -1,55 +1,27 @@
 import React, {createContext, useContext, useState, useEffect} from 'react';
 import callApi from '@api/callApi.jsx';
-import api from '@api/axiosInstance';
+import {checkAccessTokenExpiry} from '@assets/helper';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {
-    const [accessToken, setAccessToken] = useState(null);
+    const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        api.interceptors.request.use(
-            (config) => {
-                if (accessToken) {
-                    config.headers.Authorization = `Bearer ${accessToken}`;
-                }
-                return config;
-            },
-            (error) => Promise.reject(error)
-        );
+    const isAuthenticated = () => {
+        checkAccessTokenExpiry();
+    };
 
-        api.interceptors.response.use(
-            (response) => response,
-            async (error) => {
-                const originalRequest = error.config;
+    const getRedirectPath = () => {
+        if (!isAuthenticated() || !user)
+            return '/';
 
-                if (error.response?.status === 401 && !originalRequest._retry) {
-                    originalRequest._retry = true;
+        if (user.role === 'Admin')
+            return '/admin';
 
-                    try {
-                        const response = await callApi({
-                            method: 'POST',
-                            path: '/api/refresh-token',
-                            authType: 'client',
-                            data: {}
-                        });
-
-                        setAccessToken(response.data.access_token);
-                        originalRequest.headers.Authorization = `Bearer ${response.data.access_token}`;
-
-                        return api(originalRequest);
-                    } catch (error) {
-                        setAccessToken(null);
-
-                        return Promise.reject(error);
-                    }
-                }
-
-                return Promise.reject(error);
-            }
-        );
-    }, [accessToken]);
+        if (user.role === 'User')
+            return '/user';
+    };
 
     const login = async (email, password) => {
         setLoading(true);
@@ -62,10 +34,16 @@ export const AuthProvider = ({children}) => {
                 data: {email, password}
             });
 
-            setAccessToken(response.data.access_token);
+            const expiresInSeconds = response.data.expires_in;
+            const expiryTime = Date.now() + expiresInSeconds * 1000;
+
+            localStorage.setItem('access_token', response.data.access_token);
+            localStorage.setItem('access_token_expiry', expiryTime);
+
+            setUser(response.data.user);
             setLoading(false);
 
-            return {success: true, message: 'User logged in.'};
+            return {success: true, user: response.data.user, message: 'User logged in.'};
         } catch (error) {
             throw new Error(error.response?.data?.message || error.message);
         }
@@ -78,13 +56,22 @@ export const AuthProvider = ({children}) => {
                 path: '/api/logout'
             });
             setUser(null);
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('access_token_expiry');
         } catch (error) {
             throw new Error(error.response?.data?.message || error.message);
         }
     };
 
     return (
-        <AuthContext.Provider value={{login, logout, loading}}>
+        <AuthContext.Provider value={{
+            login,
+            logout,
+            isAuthenticated,
+            getRedirectPath,
+            user,
+            loading
+        }}>
             {children}
         </AuthContext.Provider>
     );

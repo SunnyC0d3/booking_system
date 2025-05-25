@@ -51,12 +51,19 @@ final class UserAuth
         $accessToken = $tokenResult->accessToken;
         $expiresIn = $tokenResult->token->expires_at->diffInSeconds($tokenExpiration);
 
+        $tokenResult->token->expires_at = now()->addMinutes(30);
+        $tokenResult->token->save();
+
         return $this->ok(
             'User logged in successfully.',
             [
                 'token_type' => 'Bearer',
                 'access_token' => $accessToken,
-                'expires_in' => $expiresIn
+                'expires_in' => $expiresIn,
+                'user' => [
+                    'email' => $user->email,
+                    'role' => $user->role->name
+                ]
             ]
         );
     }
