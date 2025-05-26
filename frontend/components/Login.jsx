@@ -7,10 +7,10 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
     const navigate = useNavigate();
-    const {user, login, isAuthenticated, getRedirectPath} = useAuth();
+    const {user, login, authenticated, getRedirectPath} = useAuth();
 
     useEffect(() => {
-        if (isAuthenticated()) {
+        if (authenticated) {
             navigate(getRedirectPath(), { replace: true });
         }
     }, [user]);

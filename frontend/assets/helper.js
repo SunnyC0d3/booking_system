@@ -5,7 +5,6 @@ export function checkAccessTokenExpiry() {
     if (!token || !expiry || Date.now() > parseInt(expiry, 10)) {
         localStorage.removeItem('access_token');
         localStorage.removeItem('access_token_expiry');
-
         return false;
     }
 
@@ -17,7 +16,6 @@ export function checkIfUserWasLoggedIn() {
 
     if (!user) {
         localStorage.removeItem('user');
-
         return false;
     }
 

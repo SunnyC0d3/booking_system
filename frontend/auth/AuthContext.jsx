@@ -8,22 +8,21 @@ import {
 const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {
+    const [authenticated, setAuthenticated] = useState(false);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    const isAuthenticated = () => {
-        let authenticated = false;
-
+    useEffect(() => {
         if(checkIfUserWasLoggedIn() && checkAccessTokenExpiry()) {
-            setUser(localStorage.getItem('user'));
-            authenticated = true;
+            setUser(JSON.parse(localStorage.getItem('user')));
+            setAuthenticated(true);
+        } else {
+            setAuthenticated(false);
         }
-
-        return authenticated;
-    };
+    }, [authenticated]);
 
     const getRedirectPath = () => {
-        if (!isAuthenticated())
+        if (!authenticated)
             return '/';
 
         if (user['role'] === 'Admin')
@@ -49,8 +48,9 @@ export const AuthProvider = ({children}) => {
 
             localStorage.setItem('access_token', response.data.access_token);
             localStorage.setItem('access_token_expiry', expiryTime.toString());
-            localStorage.setItem('user', response.data.user);
+            localStorage.setItem('user', JSON.stringify(response.data.user));
 
+            setAuthenticated(true);
             setUser(response.data.user);
             setLoading(false);
 
@@ -66,6 +66,7 @@ export const AuthProvider = ({children}) => {
                 method: 'POST',
                 path: '/api/logout'
             });
+            setAuthenticated(false);
             setUser(null);
             localStorage.removeItem('access_token');
             localStorage.removeItem('access_token_expiry');
@@ -79,8 +80,8 @@ export const AuthProvider = ({children}) => {
         <AuthContext.Provider value={{
             login,
             logout,
-            isAuthenticated,
             getRedirectPath,
+            authenticated,
             user,
             loading
         }}>
