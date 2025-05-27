@@ -10,10 +10,10 @@ const Login = () => {
     const {user, login, authenticated, getRedirectPath} = useAuth();
 
     useEffect(() => {
-        if (authenticated) {
-            navigate(getRedirectPath(), { replace: true });
+        if (authenticated && user) {
+            navigate(getRedirectPath());
         }
-    }, [user]);
+    }, [authenticated, user]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
