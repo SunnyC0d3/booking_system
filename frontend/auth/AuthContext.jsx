@@ -64,6 +64,7 @@ export const AuthProvider = ({children}) => {
         try {
             await callApi({
                 method: 'POST',
+                authType: 'auth',
                 path: '/api/logout'
             });
             setAuthenticated(false);
