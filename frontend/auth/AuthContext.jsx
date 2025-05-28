@@ -25,7 +25,7 @@ export const AuthProvider = ({children}) => {
         if (!authenticated)
             return '/';
 
-        if (user['role'] === 'Admin')
+        if (user['role'] === 'Admin' || user['role'] === 'Super Admin')
             return '/admin';
 
         if (user['role'] === 'User')
@@ -43,11 +43,8 @@ export const AuthProvider = ({children}) => {
                 data: {email, password}
             });
 
-            const expiresInSeconds = Math.floor(response.data.expires_at);
-            const expiryTime = Date.now() + expiresInSeconds * 1000;
-
             localStorage.setItem('access_token', response.data.access_token);
-            localStorage.setItem('access_token_expiry', expiryTime.toString());
+            localStorage.setItem('access_token_expiry', response.data.expires_at * 1000);
             localStorage.setItem('user', JSON.stringify(response.data.user));
 
             setAuthenticated(true);

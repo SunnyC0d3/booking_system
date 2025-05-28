@@ -57,7 +57,7 @@ final class UserAuth
             [
                 'token_type' => 'Bearer',
                 'access_token' => $accessToken,
-                'expires_at' => $expiresAt->timestamp * 1000,
+                'expires_at' => $expiresAt->timestamp,
                 'user' => [
                     'email' => $user->email,
                     'role' => $user->role->name

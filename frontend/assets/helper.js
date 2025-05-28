@@ -3,6 +3,7 @@ export function checkAccessTokenExpiry() {
     const expiry = localStorage.getItem('access_token_expiry');
 
     if (!token || !expiry || Date.now() > parseInt(expiry, 10)) {
+        localStorage.removeItem('user');
         localStorage.removeItem('access_token');
         localStorage.removeItem('access_token_expiry');
         return false;

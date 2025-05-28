@@ -31,8 +31,8 @@ setInterval(() => {
 const {
     PORT = 5001,
     API_URL,
-    AUTH_SERVER_CLIENT_ID,
-    AUTH_SERVER_CLIENT_SECRET,
+    API_CLIENT_ID,
+    API_CLIENT_SECRET,
     AUTH_SERVER_SECRET,
     FRONTEND_ORIGIN
 } = process.env;
@@ -127,8 +127,8 @@ app.post('/api/proxy', verifyFrontend, async (req, res) => {
             if (!clientTokenCache.token || clientTokenCache.expiry <= now) {
                 const response = await axios.post(`${API_URL}/oauth/token`, {
                     grant_type: 'client_credentials',
-                    client_id: AUTH_SERVER_CLIENT_ID,
-                    client_secret: AUTH_SERVER_CLIENT_SECRET,
+                    client_id: API_CLIENT_ID,
+                    client_secret: API_CLIENT_SECRET,
                 });
                 token = response.data.access_token;
 
