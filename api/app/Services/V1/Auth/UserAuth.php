@@ -9,6 +9,7 @@ use App\Traits\V1\ApiResponses;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Laravel\Passport\Token;
 use Laravel\Passport\TokenRepository;
 use Laravel\Passport\RefreshTokenRepository;
 use Illuminate\Support\Facades\Password;
@@ -76,8 +77,7 @@ final class UserAuth
             $tokenRepository = app(TokenRepository::class);
             $tokenRepository->revokeAccessToken($tokenId);
 
-            $refreshTokenRepository = app(RefreshTokenRepository::class);
-            $refreshTokenRepository->revokeRefreshTokensByAccessTokenId($tokenId);
+            Token::where('id', $tokenId)->delete();
         }
 
         return $this->ok(
