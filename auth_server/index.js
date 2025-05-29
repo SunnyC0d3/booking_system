@@ -132,6 +132,10 @@ app.post('/api/proxy', verifyFrontend, async (req, res) => {
                 });
                 token = response.data.access_token;
 
+                console.log(response.data.expires_in);
+                console.log(new Date(response.data.expires_in).toUTCString());
+                console.log(new Date(response.data.expires_in * 1000).toUTCString());
+
                 const expiresIn = response.data.expires_in || 3600;
 
                 clientTokenCache = {
