@@ -5,6 +5,7 @@ import Home from '@components/Home';
 import Login from '@components/Login';
 import UserDashboard from '@components/UserDashboard';
 import AdminDashboard from '@components/AdminDashboard';
+import Products from '@components/Products';
 import Payment from '@components/Payment.jsx';
 import { AuthProvider } from '@context/AuthContext';
 import '@assets/styles/index.css';
@@ -26,6 +27,7 @@ const App = () => {
                     <Route element={<ProtectedRoute allowedRoles={['User']} />}>
                         <Route path="/user" element={<UserDashboard />} />
                     </Route>
+                    <Route path="/products" element={<Products />} />
                     {/*<Route path="/payment" element={<Payment orderId={orderId} orderItems={orderItems} />} />*/}
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>

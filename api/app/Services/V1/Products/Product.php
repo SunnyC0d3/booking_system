@@ -19,31 +19,19 @@ class Product
 
     public function all(Request $request, ProductFilter $filter)
     {
-        $user = $request->user();
+        $request->validated();
 
-        if ($user->hasPermission('view_products')) {
-            $request->validated();
+        $query = ProdDB::with(['vendor', 'variants', 'category', 'tags', 'media'])->filter($filter);
+        $perPage = $request->input('per_page', 15);
+        $products = $query->paginate($perPage);
 
-            $query = ProdDB::with(['vendor', 'variants', 'category', 'tags', 'media'])->filter($filter);
-            $perPage = $request->input('per_page', 15);
-            $products = $query->paginate($perPage);
-
-            return $this->ok('Products retrieved successfully.', ProductResource::collection($products));
-        }
-
-        return $this->error('You do not have the required permissions.', 403);
+        return $this->ok('Products retrieved successfully.', ProductResource::collection($products));
     }
 
     public function find(Request $request, ProdDB $product)
     {
-        $user = $request->user();
-
-        if ($user->hasPermission('view_products')) {
-            $product->load(['vendor', 'variants', 'category', 'tags', 'media']);
-            return $this->ok('Product retrieved successfully.', new ProductResource($product));
-        }
-
-        return $this->error('You do not have the required permissions.', 403);
+        $product->load(['vendor', 'variants', 'category', 'tags', 'media']);
+        return $this->ok('Product retrieved successfully.', new ProductResource($product));
     }
 
     public function create(Request $request)

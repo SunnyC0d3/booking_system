@@ -146,13 +146,13 @@ app.post('/api/proxy', verifyFrontend, async (req, res) => {
         }
 
         const response = await axios({
-            method: req.method,
+            method: method,
             url: `${API_URL}${path}`,
             headers: {
                 Authorization: `Bearer ${token}`,
                 Accept: 'application/json',
             },
-            data: req.body.data || {}
+            data: data || {}
         });
 
         return res.status(response.status).json(response.data);

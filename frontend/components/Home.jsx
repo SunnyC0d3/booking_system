@@ -1,49 +1,50 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import useAuth from '@hooks/useAuth';
+import Container from '@components/Wrapper/Container';
 
 const Home = () => {
-    const { user, authenticated, logout } = useAuth();
+    const {authenticated} = useAuth();
     const navigate = useNavigate();
 
-    const handleLogin = () => {
-        navigate('/login');
-    };
-
-    const handleLogout = () => {
-        logout();
-        navigate('/login');
-    };
-
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
-            <div className="bg-white p-8 rounded shadow-md w-full max-w-md text-center">
-                {authenticated ? (
-                    <>
-                        <h2 className="text-2xl font-bold mb-4">Welcome, {user?.name || 'User'}!</h2>
-                        <p className="mb-6 text-gray-600">You are logged in.</p>
-                        <button
-                            onClick={handleLogout}
-                            className="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600"
-                        >
-                            Logout
-                        </button>
-                    </>
-                ) : (
-                    <>
-                        <h2 className="text-2xl font-bold mb-4">Welcome to Our App</h2>
-                        <p className="mb-6 text-gray-600">Please log in to continue.</p>
-                        <button
-                            onClick={handleLogin}
-                            className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700"
-                        >
-                            Login
-                        </button>
-                    </>
-                )}
-            </div>
-        </div>
+        <Container>
+            <main className="flex flex-col items-center justify-center flex-grow text-center px-6 py-12">
+                <h2 className="text-4xl font-bold text-gray-800 mb-4">Professional Digital Templates</h2>
+                <p className="text-lg text-gray-600 max-w-2xl mb-8">
+                    Empower your design and development process with premium digital templates. Whether you're building
+                    a landing page, mobile UI, or admin dashboard – we've got you covered.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-left max-w-4xl w-full">
+                    <Feature
+                        title="UI Kits"
+                        description="Modern, reusable UI components for rapid prototyping and product design."
+                    />
+                    <Feature
+                        title="Website Templates"
+                        description="Responsive HTML/CSS templates ready to launch for any industry."
+                    />
+                    <Feature
+                        title="Dashboard Layouts"
+                        description="Admin panel templates with rich components and clean code."
+                    />
+                </div>
+                <button
+                    onClick={() => navigate(authenticated ? '/user' : '/login')}
+                    className="mt-10 px-6 py-3 text-white bg-indigo-600 rounded hover:bg-indigo-700 text-lg font-semibold"
+                >
+                    {authenticated ? 'Go to Dashboard' : 'Browse Templates'}
+                </button>
+            </main>
+        </Container>
     );
 };
+
+const Feature = ({title, description}) => (
+    <div className="bg-white p-6 rounded shadow hover:shadow-md transition">
+        <h3 className="text-xl font-semibold text-indigo-700 mb-2">{title}</h3>
+        <p className="text-gray-600">{description}</p>
+    </div>
+);
 
 export default Home;
