@@ -6,7 +6,7 @@ import Login from '@components/Login';
 import UserDashboard from '@components/UserDashboard';
 import AdminDashboard from '@components/AdminDashboard';
 import Payment from '@components/Payment.jsx';
-import { AuthProvider } from '@auth/AuthContext';
+import { AuthProvider } from '@context/AuthContext';
 import '@assets/styles/index.css';
 import {useRefreshNonce} from './hooks/useRefreshNonce.jsx';
 import ProtectedRoute from "@components/Wrapper/ProtectedRoute.jsx";

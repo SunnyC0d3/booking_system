@@ -5,14 +5,12 @@ const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
 const crypto = require('crypto');
+const Redis = require('ioredis');
 
-let clientTokenCache = {
-    token: null,
-    expiry: 0,
-};
+const redis = new Redis();
 
 const nonceStore = new Map();
-const cookieExpiryTime = 2 * 60 * 1000;
+const nonceExpiryTime = 2 * 60 * 1000;
 
 const API_CLIENT = 'client';
 const API_AUTH = 'auth';
@@ -89,7 +87,7 @@ app.post('/api/server-token', async (req, res) => {
     }
 
     nonceStore.set(nonce, {
-        expiry: Date.now() + cookieExpiryTime,
+        expiry: Date.now() + nonceExpiryTime,
         ip: req.ip,
         userAgent: req.get('User-Agent')
     });
@@ -100,7 +98,7 @@ app.post('/api/server-token', async (req, res) => {
                 httpOnly: true,
                 secure: true,
                 sameSite: 'Strict',
-                maxAge: cookieExpiryTime,
+                maxAge: nonceExpiryTime,
                 signed: true
             })
             .json({
@@ -124,26 +122,18 @@ app.post('/api/proxy', verifyFrontend, async (req, res) => {
         if (authType === API_CLIENT) {
             const now = Date.now();
 
-            if (!clientTokenCache.token || clientTokenCache.expiry <= now) {
+            token = await redis.get('client_access_token');
+
+            if (!token) {
                 const response = await axios.post(`${API_URL}/oauth/token`, {
                     grant_type: 'client_credentials',
                     client_id: API_CLIENT_ID,
                     client_secret: API_CLIENT_SECRET,
                 });
+
                 token = response.data.access_token;
 
-                console.log(response.data.expires_in);
-                console.log(new Date(response.data.expires_in).toUTCString());
-                console.log(new Date(response.data.expires_in * 1000).toUTCString());
-
-                const expiresIn = response.data.expires_in || 3600;
-
-                clientTokenCache = {
-                    token,
-                    expiry: now + expiresIn * 1000
-                };
-            } else {
-                token = clientTokenCache.token;
+                await redis.set('client_access_token', token, 'EX', Date.now() + response.data.expires_in * 1000);
             }
         } else if (authType === API_AUTH) {
             const authHeader = req.headers['authorization'];
