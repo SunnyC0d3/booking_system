@@ -1,22 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import CheckoutForm from './CheckoutForm.jsx';
 import axios from 'axios';
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from '@stripe/react-stripe-js';
-import PaymentSuccess from "./PaymentSuccess.jsx";
-import PaymentCanceled from "./PaymentCanceled.jsx";
-import PaymentProcessing from "./PaymentProcessing.jsx";
+import {loadStripe} from '@stripe/stripe-js';
+import {Elements} from '@stripe/react-stripe-js';
+import PaymentSuccess from '@components/PaymentSuccess.jsx';
+import PaymentCanceled from '@components/PaymentCanceled.jsx';
+import PaymentProcessing from '@components/PaymentProcessing.jsx';
+import ErrorMessage from '@components/ErrorMessage';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
-const PaymentStatusMessage = ({ status }) => {
-    if (status === 'succeeded') return <PaymentSuccess />;
-    if (status === 'canceled') return <PaymentCanceled />;
-    if (status === 'processing') return <PaymentProcessing />;
+const PaymentStatusMessage = ({status}) => {
+    if (status === 'succeeded') return <PaymentSuccess/>;
+    if (status === 'canceled') return <PaymentCanceled/>;
+    if (status === 'processing') return <PaymentProcessing/>;
     return null;
 };
 
-const Payment = ({ orderId, orderItems }) => {
+const Payment = ({orderId, orderItems}) => {
     const [clientSecret, setClientSecret] = useState(null);
     const [paymentStatus, setPaymentStatus] = useState(null);
     const [error, setError] = useState(null);
@@ -25,12 +26,12 @@ const Payment = ({ orderId, orderItems }) => {
     useEffect(() => {
         const fetchPaymentIntent = async () => {
             try {
-                const response = await axios.post('/api/payments/stripe/create', { order_id: orderId });
+                const response = await axios.post('/api/payments/stripe/create', {order_id: orderId});
                 const secret = response.data.data.client_secret;
 
                 if (secret) {
                     const stripe = await stripePromise;
-                    const { paymentIntent } = await stripe.retrievePaymentIntent(secret);
+                    const {paymentIntent} = await stripe.retrievePaymentIntent(secret);
 
                     if (paymentIntent.status === 'requires_payment_method' || paymentIntent.status === 'requires_confirmation') {
                         setClientSecret(secret);
@@ -42,7 +43,7 @@ const Payment = ({ orderId, orderItems }) => {
                     console.log('No client_secret returned; assuming payment completed.');
                 }
             } catch (err) {
-                setError('Failed to retrieve payment info, check network tab for more info.');
+                setError('Failed to retrieve payment info.');
                 console.error('Error fetching client secret:', err);
             } finally {
                 setLoading(false);
@@ -52,19 +53,27 @@ const Payment = ({ orderId, orderItems }) => {
         fetchPaymentIntent();
     }, [orderId]);
 
-    if (error) return <div>Error: {error}</div>;
     if (loading) return <div>Loading payment...</div>;
 
     if (paymentStatus) {
-        return <PaymentStatusMessage status={paymentStatus} />;
+        return (
+            <Container>
+                <PaymentStatusMessage status={paymentStatus}/>
+            </Container>
+        );
     }
 
     if (clientSecret) {
-        const options = { clientSecret };
+        const options = {clientSecret};
         return (
-            <Elements stripe={stripePromise} options={options}>
-                <CheckoutForm orderItems={orderItems} />
-            </Elements>
+            <Container>
+                {error && <ErrorMessage message={error}/>}
+                {!error && (
+                    <Elements stripe={stripePromise} options={options}>
+                        <CheckoutForm orderItems={orderItems}/>
+                    </Elements>
+                )}
+            </Container>
         );
     }
 

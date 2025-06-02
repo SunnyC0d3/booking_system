@@ -12,7 +12,9 @@ const Login = lazy(() => import('@components/Login'));
 const UserDashboard = lazy(() => import('@components/UserDashboard'));
 const AdminDashboard = lazy(() => import('@components/AdminDashboard'));
 const Products = lazy(() => import('@components/Products'));
+const ProductDetail = lazy(() => import('@components/ProductDetail'));
 const Payment = lazy(() => import('@components/Payment.jsx'));
+const NotFound = lazy(() => import('@components/NotFound'));
 
 const App = () => {
     useRefreshNonce();
@@ -31,9 +33,9 @@ const App = () => {
                             <Route path="/user" element={<UserDashboard />} />
                         </Route>
                         <Route path="/products" element={<Products />} />
-                        {/* Uncomment and use as needed */}
-                        {/* <Route path="/payment" element={<Payment orderId={orderId} orderItems={orderItems} />} /> */}
-                        <Route path="*" element={<Navigate to="/" replace />} />
+                        <Route path="/products/:product" element={<ProductDetail />} />
+                        {/*<Route path="/payment" element={<Payment orderId={orderId} orderItems={orderItems} />} />*/}
+                        <Route path="*" element={<NotFound />} />
                     </Routes>
                 </Suspense>
             </Router>
