@@ -31,25 +31,11 @@ const Header = () => {
     return (
         <>
             <header className="flex justify-between items-center px-6 py-4 shadow-sm bg-white relative z-50">
-                <h1 className="text-xl font-bold text-indigo-600 cursor-pointer" onClick={() => navigate('/')}>
-                    TemplateHub
-                </h1>
+                <h1 className="text-xl font-bold text-indigo-600 cursor-pointer" onClick={() => navigate('/')}>TemplateHub</h1>
                 <div className="flex items-center space-x-4">
-                    {authenticated && (
-                        <button
-                            onClick={() => navigate('/basket')}
-                            className="relative"
-                            aria-label="View basket"
-                        >
-                            <ShoppingCart className="w-6 h-6 text-gray-800"/>
-                            {basketCount > 0 && (
-                                <span
-                                    className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold rounded-full px-1.5">
-                    {basketCount}
-                </span>
-                            )}
-                        </button>
-                    )}
+                    <button onClick={() => navigate('/basket')} className="relative" aria-label="View basket">
+                        <ShoppingCart className="w-6 h-6 text-gray-800"/>{basketCount > 0 && (<span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold rounded-full px-1.5">{basketCount}</span>)}
+                    </button>
                     <button onClick={toggleMenu}>
                         <Menu className="w-6 h-6 text-gray-800"/>
                     </button>
