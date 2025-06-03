@@ -1,24 +1,33 @@
-import React, {useEffect, useState} from 'react';
-import {useLocation} from 'react-router-dom';
-import CheckoutForm from './CheckoutForm.jsx';
-import axios from 'axios';
+import React, {useEffect, useState, lazy} from 'react';
+import {useLocation, useParams} from 'react-router-dom';
 import {loadStripe} from '@stripe/stripe-js';
 import {Elements} from '@stripe/react-stripe-js';
-import PaymentSuccess from '@components/PaymentSuccess.jsx';
-import PaymentCanceled from '@components/PaymentCanceled.jsx';
-import PaymentProcessing from '@components/PaymentProcessing.jsx';
+import CheckoutForm from '@components/CheckoutForm';
 import ErrorMessage from '@components/ErrorMessage';
+import Container from '@components/Wrapper/Container';
+import callApi from '@api/callApi';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
+const PaymentSuccess = lazy(() => import('@components/PaymentSuccess'));
+const PaymentCanceled = lazy(() => import('@components/PaymentCanceled'));
+const PaymentProcessing = lazy(() => import('@components/PaymentProcessing'));
+
 const PaymentStatusMessage = ({status}) => {
-    if (status === 'succeeded') return <PaymentSuccess/>;
-    if (status === 'canceled') return <PaymentCanceled/>;
-    if (status === 'processing') return <PaymentProcessing/>;
-    return null;
+    switch (status) {
+        case 'succeeded':
+            return <PaymentSuccess />;
+        case 'canceled':
+            return <PaymentCanceled />;
+        case 'processing':
+            return <PaymentProcessing />;
+        default:
+            return null;
+    }
 };
 
-const Payment = ({orderId}) => {
+const Payment = () => {
+    const {orderId} = useParams();
     const location = useLocation();
     const orderItems = location.state?.orderItems || [];
     const [clientSecret, setClientSecret] = useState(null);
@@ -29,8 +38,16 @@ const Payment = ({orderId}) => {
     useEffect(() => {
         const fetchPaymentIntent = async () => {
             try {
-                const response = await axios.post('/api/payments/stripe/create', {order_id: orderId});
-                const secret = response.data.data.client_secret;
+                const response = await callApi({
+                    method: 'POST',
+                    path: '/api/payments/stripe/create',
+                    authType: 'client',
+                    data: {
+                        order_id: orderId
+                    }
+                });
+
+                const secret = response.data.client_secret;
 
                 if (secret) {
                     const stripe = await stripePromise;

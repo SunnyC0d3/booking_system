@@ -94,7 +94,7 @@ const CheckoutForm = ({orderItems}) => {
 
     return (
         <form onSubmit={handleSubmit}
-              className="bg-white max-w-xl mx-auto p-8 rounded-lg shadow-md border border-gray-200 space-y-6">
+              className="max-w-4xl w-full mx-auto bg-white rounded-2xl shadow-md p-6 mt-10 mb-12">
             <h2 className="text-2xl font-semibold text-gray-800">Checkout</h2>
 
             <div className="space-y-2">
@@ -104,7 +104,7 @@ const CheckoutForm = ({orderItems}) => {
                         <>
                             {orderItems.map((item, index) => (
                                 <li key={index} className="flex justify-between py-2">
-                                    <span>{item.product.name} × {item.quantity}</span>
+                                    <span>{item.name} × {item.quantity}</span>
                                     <span className="font-medium">£{(item.price)}</span>
                                 </li>
                             ))}

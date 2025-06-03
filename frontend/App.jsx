@@ -1,10 +1,10 @@
 import React, {Suspense, lazy} from 'react';
 import ReactDOM from 'react-dom/client';
-import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import {AuthProvider} from '@context/AuthContext';
 import '@assets/styles/index.css';
-import {useRefreshNonce} from './hooks/useRefreshNonce.jsx';
-import ProtectedRoute from "@components/Wrapper/ProtectedRoute.jsx";
+import {useRefreshNonce} from '@hooks/useRefreshNonce';
+import ProtectedRoute from '@components/Wrapper/ProtectedRoute';
 import {BasketProvider} from '@context/BasketContext';
 
 // Lazy imports
@@ -15,7 +15,7 @@ const AdminDashboard = lazy(() => import('@components/AdminDashboard'));
 const Products = lazy(() => import('@components/Products'));
 const Basket = lazy(() => import('@components/Basket'));
 const ProductDetail = lazy(() => import('@components/ProductDetail'));
-const Payment = lazy(() => import('@components/Payment.jsx'));
+const Payment = lazy(() => import('@components/Payment'));
 const NotFound = lazy(() => import('@components/NotFound'));
 
 const App = () => {
@@ -37,8 +37,8 @@ const App = () => {
                             </Route>
                             <Route path="/products" element={<Products/>}/>
                             <Route path="/products/:product" element={<ProductDetail/>}/>
-                            <Route path="/basket" element={<Basket />} />
-                            <Route path="/payment/:orderId" element={<Payment />} />
+                            <Route path="/basket" element={<Basket/>}/>
+                            <Route path="/payment/:orderId" element={<Payment/>}/>
                             <Route path="*" element={<NotFound/>}/>
                         </Routes>
                     </Suspense>

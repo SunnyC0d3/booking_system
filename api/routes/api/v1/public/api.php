@@ -56,7 +56,7 @@ Route::middleware(['throttle:3,1', 'client'])
 // Payments
 
 Route::prefix('payments')
-    ->middleware(['auth:api', 'roles:user, vendor', 'emailVerified'])
+    ->middleware(['client'])
     ->controller(PaymentController::class)
     ->group(function () {
         Route::post('/{gateway}/create', 'store')->name('payments.store');
