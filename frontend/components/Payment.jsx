@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {useLocation} from 'react-router-dom';
 import CheckoutForm from './CheckoutForm.jsx';
 import axios from 'axios';
 import {loadStripe} from '@stripe/stripe-js';
@@ -17,7 +18,9 @@ const PaymentStatusMessage = ({status}) => {
     return null;
 };
 
-const Payment = ({orderId, orderItems}) => {
+const Payment = ({orderId}) => {
+    const location = useLocation();
+    const orderItems = location.state?.orderItems || [];
     const [clientSecret, setClientSecret] = useState(null);
     const [paymentStatus, setPaymentStatus] = useState(null);
     const [error, setError] = useState(null);
@@ -77,7 +80,11 @@ const Payment = ({orderId, orderItems}) => {
         );
     }
 
-    return <div>Unknown payment state.</div>;
+    return (
+        <Container>
+            <ErrorMessage message={"Unknown payment state."}/>
+        </Container>
+    );
 };
 
 export default Payment;

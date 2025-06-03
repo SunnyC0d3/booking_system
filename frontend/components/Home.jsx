@@ -30,7 +30,7 @@ const Home = () => {
                     />
                 </div>
                 <button
-                    onClick={() => navigate(authenticated ? '/user' : '/login')}
+                    onClick={() => navigate(authenticated ? '/user' : '/products')}
                     className="mt-10 px-6 py-3 text-white bg-indigo-600 rounded hover:bg-indigo-700 text-lg font-semibold"
                 >
                     {authenticated ? 'Go to Dashboard' : 'Browse Templates'}

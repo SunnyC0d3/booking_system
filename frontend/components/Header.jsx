@@ -1,9 +1,11 @@
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import useAuth from '@hooks/useAuth';
-import {UserCircle, LogOut, LogIn, Menu, X} from 'lucide-react';
+import {UserCircle, Menu, X, ShoppingCart} from 'lucide-react';
+import {useBasket} from '@context/BasketContext';
 
 const Header = () => {
+    const {basketCount} = useBasket();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const {user, authenticated, logout} = useAuth();
     const navigate = useNavigate();
@@ -33,8 +35,23 @@ const Header = () => {
                     TemplateHub
                 </h1>
                 <div className="flex items-center space-x-4">
+                    {authenticated && (
+                        <button
+                            onClick={() => navigate('/basket')}
+                            className="relative"
+                            aria-label="View basket"
+                        >
+                            <ShoppingCart className="w-6 h-6 text-gray-800"/>
+                            {basketCount > 0 && (
+                                <span
+                                    className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold rounded-full px-1.5">
+                    {basketCount}
+                </span>
+                            )}
+                        </button>
+                    )}
                     <button onClick={toggleMenu}>
-                        <Menu className="w-6 h-6 text-gray-800" />
+                        <Menu className="w-6 h-6 text-gray-800"/>
                     </button>
                 </div>
             </header>
@@ -48,21 +65,23 @@ const Header = () => {
                 <div className="flex justify-between items-center px-6 py-4 border-b">
                     <span className="text-lg font-semibold text-indigo-700">Menu</span>
                     <button onClick={toggleMenu}>
-                        <X className="w-5 h-5 text-gray-700" />
+                        <X className="w-5 h-5 text-gray-700"/>
                     </button>
                 </div>
                 <nav className="flex flex-col px-6 py-4 space-y-4">
-                    <button onClick={() => navigateAndClose('/')} className="text-gray-700 hover:text-indigo-600 text-left">
+                    <button onClick={() => navigateAndClose('/')}
+                            className="text-gray-700 hover:text-indigo-600 text-left">
                         Home
                     </button>
-                    <button onClick={() => navigateAndClose('/products')} className="text-gray-700 hover:text-indigo-600 text-left">
+                    <button onClick={() => navigateAndClose('/products')}
+                            className="text-gray-700 hover:text-indigo-600 text-left">
                         Products
                     </button>
 
                     {authenticated ? (
                         <>
                             <div className="flex items-center space-x-2 mt-6">
-                                <UserCircle className="w-5 h-5 text-gray-600" />
+                                <UserCircle className="w-5 h-5 text-gray-600"/>
                                 <span className="text-gray-700 font-medium">{user?.name || 'User'}</span>
                             </div>
                             <button
