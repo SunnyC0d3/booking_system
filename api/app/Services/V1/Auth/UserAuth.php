@@ -60,6 +60,7 @@ final class UserAuth
                 'access_token' => $accessToken,
                 'expires_at' => $expiresAt->timestamp,
                 'user' => [
+                    'id' => $user->id,
                     'email' => $user->email,
                     'role' => $user->role->name
                 ]

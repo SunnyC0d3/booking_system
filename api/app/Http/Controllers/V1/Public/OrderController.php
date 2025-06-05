@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1\Public;
 
+use App\Requests\V1\IndexOrderRequest;
 use App\Services\V1\Orders\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -18,6 +19,30 @@ class OrderController extends Controller
     public function __construct(Order $order)
     {
         $this->order = $order;
+    }
+
+    /**
+     * Retrieve paginated list of orders.
+     *
+     * @group Orders
+     * @authenticated
+     *
+     * @response 200 {
+     *   "message": "Orders retrieved successfully.",
+     *   "data": []
+     * }
+     *
+     * @response 403 {
+     *     "message": "You do not have the required permissions."
+     * }
+     */
+    public function index(IndexOrderRequest $request)
+    {
+        try {
+            return $this->order->all($request);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
     }
 
     /**

@@ -99,6 +99,7 @@ Route::prefix('orders')
     ->middleware(['auth:api', 'roles:user, vendor', 'emailVerified'])
     ->controller(OrderController::class)
     ->group(function () {
+        Route::get('/', 'index')->name('orders.index');
         Route::get('/{order}', 'show')->name('orders.show');
     });
 
