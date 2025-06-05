@@ -42,9 +42,9 @@ const OrderItemWithReturn = ({ item }) => {
 
     return (
         <div className="border-t pt-3 mt-3">
-            <p className="text-gray-700"><strong>Item:</strong> {item.name}</p>
+            <p><strong>Name:</strong> {item.product.name}</p>
             <p><strong>Qty:</strong> {item.quantity}</p>
-            <p><strong>Status:</strong> {status || 'Not requested'}</p>
+            <p><strong>Price:</strong> £{item.product.price}</p>
 
             {!status && !showForm && (
                 <button
@@ -109,6 +109,8 @@ const UserDashboard = () => {
                 }
             });
 
+            console.log(res.data);
+
             setOrders(res.data);
         } catch (err) {
             setError(err.message);
@@ -150,13 +152,12 @@ const UserDashboard = () => {
                                 {orders.map(order => (
                                     <li key={order.id} className="border p-4 rounded bg-white shadow-sm">
                                         <p><strong>Order #</strong> {order.id}</p>
-                                        <p>Status: <span className="text-sm text-indigo-600">{order.status}</span></p>
+                                        <p>Status: <span className="text-sm text-indigo-600">{order.status.name}</span></p>
                                         <p>Date: {new Date(order.created_at).toLocaleDateString()}</p>
-                                        <p>Total: ${order.total}</p>
+                                        <p>Total: £{(order.total_amount/100).toFixed(2)}</p>
 
                                         <div className="mt-4 space-y-3">
-                                            <h4 className="font-semibold">Items:</h4>
-                                            {order.order_items?.map(item => (
+                                            {order.orderItem.map(item => (
                                                 <OrderItemWithReturn key={item.id} item={item} />
                                             ))}
                                         </div>
