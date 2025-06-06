@@ -60,7 +60,15 @@ class Returns
             'order_return_status_id' => $orderReturnStatusId,
         ]);
 
-        return $this->ok('Orders return created.', $orderReturn);
+        $orderReturn->load('status');
+
+        return $this->ok('Orders return created.', [
+            'id' => $orderReturn->id,
+            'reason' => $orderReturn->reason,
+            'status' => $orderReturn->status->name,
+            'created_at' => $orderReturn->created_at,
+            'updated_at' => $orderReturn->updated_at,
+        ]);
     }
 
     public function reviewReturn(Request $request, int $returnId, string $action)

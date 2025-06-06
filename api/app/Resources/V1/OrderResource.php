@@ -16,18 +16,16 @@ class OrderResource extends JsonResource
             'orderItem' => $this->orderItems->map(function ($item) {
                 return [
                     'id' => $item->id,
-                    'product' => $item->product, // assume eager loaded
-                    'product_variant' => $item->productVariant, // assume eager loaded
+                    'product' => $item->product,
+                    'product_variant' => $item->productVariant,
                     'quantity' => $item->quantity,
-                    'order_returns' => $item->orderReturn?->map(function ($return) {
-                        return [
-                            'id' => $return->id,
-                            'reason' => $return->reason,
-                            'status' => $return->status->name ?? 'Unknown',
-                            'created_at' => $return->created_at,
-                            'updated_at' => $return->updated_at,
-                        ];
-                    }) ?? [],
+                    'order_returns' => $item->orderReturn ? [
+                        'id' => $item->orderReturn->id,
+                        'reason' => $item->orderReturn->reason,
+                        'status' => $item->orderReturn->status->name ?? 'Unknown',
+                        'created_at' => $item->orderReturn->created_at,
+                        'updated_at' => $item->orderReturn->updated_at,
+                    ] : null,
                 ];
             }),
             'status' => $this->status->name ?? null,

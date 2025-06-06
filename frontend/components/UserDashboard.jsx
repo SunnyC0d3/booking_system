@@ -3,13 +3,14 @@ import Container from '@components/Wrapper/Container';
 import {useAuthContext} from '@context/AuthContext';
 import callApi from '@api/callApi';
 import ErrorMessage from '@components/ErrorMessage';
+import {AlertTriangle} from "lucide-react";
 
 const TABS = ['Profile', 'Orders'];
 
 const OrderItemWithReturn = ({ item }) => {
     const [showForm, setShowForm] = useState(false);
     const [reason, setReason] = useState('');
-    const [status, setStatus] = useState(item.return_status || null);
+    const [orderReturn, setOrderReturn] = useState(item.order_returns || null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
@@ -30,7 +31,7 @@ const OrderItemWithReturn = ({ item }) => {
                 },
             });
 
-            setStatus('pending');
+            setOrderReturn(res.data);
             setSuccess(true);
             setShowForm(false);
         } catch (err) {
@@ -46,42 +47,62 @@ const OrderItemWithReturn = ({ item }) => {
             <p><strong>Qty:</strong> {item.quantity}</p>
             <p><strong>Price:</strong> £{item.product.price}</p>
 
-            {!status && !showForm && (
-                <button
-                    onClick={() => setShowForm(true)}
-                    className="mt-2 px-3 py-1 text-sm bg-yellow-500 text-white rounded hover:bg-yellow-600"
-                >
-                    Create Return
-                </button>
-            )}
-
-            {showForm && (
-                <div className="mt-2 space-y-2">
-                    <textarea
-                        className="w-full border rounded p-2"
-                        rows={3}
-                        value={reason}
-                        onChange={e => setReason(e.target.value)}
-                        placeholder="Enter return reason..."
-                    />
-                    <div className="flex gap-2">
-                        <button
-                            onClick={handleSubmit}
-                            className="px-3 py-1 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700"
-                            disabled={loading}
-                        >
-                            {loading ? 'Submitting...' : 'Submit'}
-                        </button>
-                        <button
-                            onClick={() => setShowForm(false)}
-                            className="px-3 py-1 text-sm bg-gray-300 rounded hover:bg-gray-400"
-                        >
-                            Cancel
-                        </button>
-                    </div>
-                    {error && <p className="text-red-500 text-sm">{error}</p>}
-                    {success && <p className="text-green-600 text-sm">Return submitted successfully!</p>}
+            {orderReturn ? (
+                <div className="mt-2 bg-gray-100 p-3 rounded">
+                    <p><strong>Return Status:</strong> <span className="text-indigo-600">{orderReturn.status}</span></p>
+                    <p><strong>Message:</strong> {orderReturn.reason}</p>
+                    <p className="text-sm text-gray-500">Submitted on: {new Date(orderReturn.created_at).toLocaleString()}</p>
                 </div>
+            ) : (
+                <>
+                    {!showForm && (
+                        <button
+                            onClick={() => setShowForm(true)}
+                            className="mt-2 px-3 py-1 text-sm bg-yellow-500 text-white rounded hover:bg-yellow-600"
+                        >
+                            Create Return
+                        </button>
+                    )}
+
+                    {showForm && (
+                        <div className="mt-2 space-y-2">
+                            {error && (
+                                <div className="max-w-full bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-md flex items-start space-x-3 shadow-sm">
+                                    <AlertTriangle className="w-5 h-5 text-red-500 mt-1" />
+                                    <div>
+                                        <p className="font-semibold">{error}</p>
+                                    </div>
+                                </div>
+                            )}
+
+                            <textarea
+                                className="w-full border rounded p-2"
+                                rows={3}
+                                value={reason}
+                                onChange={e => setReason(e.target.value)}
+                                placeholder="Enter return reason..."
+                                disabled={loading}
+                            />
+
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={handleSubmit}
+                                    className="px-3 py-1 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                                    disabled={loading || reason.trim() === ''}
+                                >
+                                    {loading ? 'Submitting...' : 'Submit'}
+                                </button>
+                                <button
+                                    onClick={() => setShowForm(false)}
+                                    className="px-3 py-1 text-sm bg-gray-300 rounded hover:bg-gray-400"
+                                    disabled={loading}
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </>
             )}
         </div>
     );
@@ -92,11 +113,9 @@ const UserDashboard = () => {
     const [error, setError] = useState(null);
     const [activeTab, setActiveTab] = useState('Profile');
     const [orders, setOrders] = useState([]);
-    const [returns, setReturns] = useState([]);
 
     useEffect(() => {
         if (activeTab === 'Orders') fetchOrders();
-        if (activeTab === 'Returns') fetchReturns();
     }, [activeTab]);
 
     const fetchOrders = async () => {
@@ -113,20 +132,6 @@ const UserDashboard = () => {
         } catch (err) {
             setError(err.message);
             console.error('Failed to load orders', err);
-        }
-    };
-
-    const fetchReturns = async () => {
-        try {
-            const res = await callApi({
-                path: '/api/returns',
-                authType: 'auth'
-            });
-
-            setReturns(res.data.returns);
-        } catch (err) {
-            setError(err.message);
-            console.error('Failed to load returns', err);
         }
     };
 
@@ -151,40 +156,16 @@ const UserDashboard = () => {
                                 {orders.map(order => (
                                     <li key={order.id} className="border p-4 rounded bg-white shadow-sm">
                                         <p><strong>Order #</strong> {order.id}</p>
-                                        <p>Status: <span className="text-sm text-indigo-600">{order.status.name}</span></p>
+                                        <p>Status: <span className="text-sm text-indigo-600">{order.status.name}</span>
+                                        </p>
                                         <p>Date: {new Date(order.created_at).toLocaleDateString()}</p>
-                                        <p>Total: £{(order.total_amount/100).toFixed(2)}</p>
+                                        <p>Total: £{(order.total_amount / 100).toFixed(2)}</p>
 
                                         <div className="mt-4 space-y-3">
                                             {order.orderItem.map(item => (
-                                                <OrderItemWithReturn key={item.id} item={item} />
+                                                <OrderItemWithReturn key={item.id} item={item}/>
                                             ))}
                                         </div>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                    </div>
-                );
-            case 'Returns':
-                return (
-                    <div>
-                        <h2 className="text-xl font-bold mb-4">Return Requests</h2>
-                        <button
-                            className="mb-4 px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
-                            onClick={() => alert('Return form coming soon!')}
-                        >
-                            Create New Return
-                        </button>
-                        {returns.length === 0 ? (
-                            <p>No return requests yet.</p>
-                        ) : (
-                            <ul className="space-y-3">
-                                {returns.map(ret => (
-                                    <li key={ret.id} className="border p-4 rounded bg-white shadow-sm">
-                                        <p>Return ID: {ret.id}</p>
-                                        <p>Reason: {ret.reason}</p>
-                                        <p>Status: <span className="text-sm text-red-600">{ret.status}</span></p>
                                     </li>
                                 ))}
                             </ul>
