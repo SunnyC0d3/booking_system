@@ -109,8 +109,6 @@ const UserDashboard = () => {
                 }
             });
 
-            console.log(res.data);
-
             setOrders(res.data);
         } catch (err) {
             setError(err.message);
@@ -124,6 +122,7 @@ const UserDashboard = () => {
                 path: '/api/returns',
                 authType: 'auth'
             });
+
             setReturns(res.data.returns);
         } catch (err) {
             setError(err.message);
