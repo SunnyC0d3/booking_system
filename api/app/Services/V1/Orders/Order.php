@@ -23,7 +23,7 @@ class Order
         if ($user->hasPermission('view_orders')) {
             $data = $request->validated();
 
-            $orders = OrderDB::with(['user', 'orderItems.product', 'orderItems.productVariant', 'status'])
+            $orders = OrderDB::with(['user', 'orderItems.product', 'orderItems.productVariant', 'orderItems.orderReturn.status', 'status'])
                 ->when(!empty($data['status_id']), fn($query) => $query->where('status_id', $data['status_id']))
                 ->when(!empty($data['user_id']), fn($query) => $query->where('user_id', $data['user_id']))
                 ->latest()
@@ -40,7 +40,7 @@ class Order
         $user = $request->user();
 
         if ($user->hasPermission('view_orders')) {
-            $order->load(['user', 'orderItems.product', 'orderItems.productVariant', 'status']);
+            $order->load(['user', 'orderItems.product', 'orderItems.productVariant', 'orderItems.orderReturn.status', 'status']);
             return $this->ok('Orders retrieved successfully.', new OrderResource($order));
         }
 
@@ -81,7 +81,7 @@ class Order
                 }
             });
 
-            $order->load(['user', 'orderItems.product', 'orderItems.productVariant', 'status']);
+            $order->load(['user', 'orderItems.product', 'orderItems.productVariant', 'orderItems.orderReturn.status', 'status']);
 
             return $this->ok('Order created successfully.', new OrderResource($order));
         }
@@ -125,7 +125,7 @@ class Order
                 }
             });
 
-            $order->load(['user', 'orderItems.product', 'orderItems.productVariant', 'status']);
+            $order->load(['user', 'orderItems.product', 'orderItems.productVariant', 'orderItems.orderReturn.status', 'status']);
 
             return $this->ok('Order updated successfully.', new OrderResource($order));
         }
@@ -158,7 +158,7 @@ class Order
 
             $order->restore();
 
-            $order->load(['user', 'orderItems.product', 'orderItems.productVariant', 'status']);
+            $order->load(['user', 'orderItems.product', 'orderItems.productVariant', 'orderItems.orderReturn.status', 'status']);
 
             return $this->success('Order restored successfully.', new OrderResource($order));
         }
