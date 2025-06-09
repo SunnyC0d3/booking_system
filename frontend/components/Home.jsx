@@ -4,7 +4,7 @@ import useAuth from '@hooks/useAuth';
 import Container from '@components/Wrapper/Container';
 
 const Home = () => {
-    const {authenticated} = useAuth();
+    const {authenticated, getRedirectPath} = useAuth();
     const navigate = useNavigate();
 
     return (
@@ -30,7 +30,7 @@ const Home = () => {
                     />
                 </div>
                 <button
-                    onClick={() => navigate(authenticated ? '/user' : '/products')}
+                    onClick={() => navigate(authenticated ? getRedirectPath() : '/products')}
                     className="mt-10 px-6 py-3 text-white bg-indigo-600 rounded hover:bg-indigo-700 text-lg font-semibold"
                 >
                     {authenticated ? 'Go to Dashboard' : 'Browse Templates'}

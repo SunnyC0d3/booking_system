@@ -24,8 +24,12 @@ const AdminDashboard = () => {
 
     const fetchReturns = async () => {
         try {
-            const res = await callApi({ path: '/api/admin/returns', authType: 'auth' });
-            setReturns(res.data);
+            const res = await callApi({
+                path: '/api/admin/returns',
+                authType: 'auth'
+            });
+
+            setReturns(res.data.data);
         } catch (err) {
             setError(err.message);
         }
@@ -33,7 +37,12 @@ const AdminDashboard = () => {
 
     const fetchOrders = async () => {
         try {
-            const res = await callApi({ path: '/api/admin/orders', authType: 'auth' });
+            const res = await callApi({
+                path: '/api/admin/orders',
+                authType: 'auth'
+            });
+
+            console.log(res);
             setOrders(res.data);
         } catch (err) {
             setError(err.message);
@@ -42,7 +51,12 @@ const AdminDashboard = () => {
 
     const fetchPayments = async () => {
         try {
-            const res = await callApi({ path: '/api/admin/payments', authType: 'auth' });
+            const res = await callApi({
+                path: '/api/admin/payments',
+                authType: 'auth'
+            });
+
+            console.log(res);
             setPayments(res.data);
         } catch (err) {
             setError(err.message);
@@ -51,7 +65,12 @@ const AdminDashboard = () => {
 
     const fetchRefunds = async () => {
         try {
-            const res = await callApi({ path: '/api/admin/refunds', authType: 'auth' });
+            const res = await callApi({
+                path: '/api/admin/refunds',
+                authType: 'auth'
+            });
+
+            console.log(res);
             setRefunds(res.data);
         } catch (err) {
             setError(err.message);
