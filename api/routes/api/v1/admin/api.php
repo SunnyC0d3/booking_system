@@ -173,9 +173,10 @@ Route::prefix('admin/returns')
 
 // Admin/Refund
 
-Route::prefix('admin/refund')
+Route::prefix('admin/refunds')
     ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
     ->controller(RefundController::class)
     ->group(function () {
+        Route::get('/', 'index')->name('admin.refunds');
         Route::post('/{gateway}/{id}', 'refund')->name('admin.refund');
     });

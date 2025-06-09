@@ -7,7 +7,7 @@ import {AlertTriangle} from "lucide-react";
 
 const TABS = ['Profile', 'Orders'];
 
-const OrderItemWithReturn = ({ item }) => {
+const OrderItemWithReturn = ({ item, orderStatus }) => {
     const [showForm, setShowForm] = useState(false);
     const [reason, setReason] = useState('');
     const [orderReturn, setOrderReturn] = useState(item.order_returns || null);
@@ -55,7 +55,7 @@ const OrderItemWithReturn = ({ item }) => {
                 </div>
             ) : (
                 <>
-                    {!showForm && (
+                    {!showForm && orderStatus !== 'Pending Payment' && (
                         <button
                             onClick={() => setShowForm(true)}
                             className="mt-2 px-3 py-1 text-sm bg-yellow-500 text-white rounded hover:bg-yellow-600"
@@ -156,14 +156,14 @@ const UserDashboard = () => {
                                 {orders.map(order => (
                                     <li key={order.id} className="border p-4 rounded bg-white shadow-sm">
                                         <p><strong>Order #</strong> {order.id}</p>
-                                        <p>Status: <span className="text-sm text-indigo-600">{order.status.name}</span>
+                                        <p>Status: <span className="text-sm text-indigo-600">{order.status}</span>
                                         </p>
                                         <p>Date: {new Date(order.created_at).toLocaleDateString()}</p>
                                         <p>Total: £{(order.total_amount / 100).toFixed(2)}</p>
 
                                         <div className="mt-4 space-y-3">
                                             {order.orderItem.map(item => (
-                                                <OrderItemWithReturn key={item.id} item={item}/>
+                                                <OrderItemWithReturn key={item.id} item={item} orderStatus={order.status} />
                                             ))}
                                         </div>
                                     </li>

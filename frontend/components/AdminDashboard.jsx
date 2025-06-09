@@ -3,13 +3,14 @@ import Container from '@components/Wrapper/Container';
 import callApi from '@api/callApi';
 import ErrorMessage from '@components/ErrorMessage';
 
-const TABS = ['Returns', 'Orders', 'Payments'];
+const TABS = ['Returns', 'Refunds', 'Orders', 'Payments'];
 
 const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState('Returns');
     const [returns, setReturns] = useState([]);
     const [orders, setOrders] = useState([]);
     const [payments, setPayments] = useState([]);
+    const [refunds, setRefunds] = useState([]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -22,6 +23,8 @@ const AdminDashboard = () => {
                 break;
             case 'Payments':
                 fetchPayments();
+            case 'Refunds':
+                fetchRefunds();
                 break;
         }
     }, [activeTab]);
@@ -47,7 +50,6 @@ const AdminDashboard = () => {
                 authType: 'auth'
             });
 
-            console.log(res);
             setOrders(res.data);
         } catch (err) {
             setError(err.message);
@@ -62,6 +64,19 @@ const AdminDashboard = () => {
             });
 
             setPayments(res.data);
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
+    const fetchRefunds = async () => {
+        try {
+            const res = await callApi({
+                path: '/api/admin/refunds',
+                authType: 'auth'
+            });
+
+            setRefunds(res.data);
         } catch (err) {
             setError(err.message);
         }
@@ -82,6 +97,9 @@ const AdminDashboard = () => {
     };
 
     const handleRefund = async (ret) => {
+        const order = ret?.order_item?.order;
+        const payments = order?.payments;
+
         try {
             const order = ret?.order_item?.order;
             const payments = order?.payments;
@@ -94,7 +112,7 @@ const AdminDashboard = () => {
             const gateway = payments[0].gateway;
 
             await callApi({
-                path: `/api/admin/refund/${gateway}/${ret.id}`,
+                path: `/api/admin/refunds/${gateway}/${ret.id}`,
                 method: 'POST',
                 authType: 'auth',
             });
@@ -117,7 +135,7 @@ const AdminDashboard = () => {
                 returns.map(ret => (
                     <div key={ret.id} className="border p-4 mb-4 rounded bg-white shadow">
                         <p><strong>Reason:</strong> {ret.reason}</p>
-                        <p><strong>Status:</strong> {ret.status}</p>
+                        <p><strong>Status:</strong> <span className="text-indigo-600">{ret.status}</span></p>
                         <p><strong>Product:</strong> {ret.order_item.product.name}</p>
                         <p className="text-sm text-gray-500">Submitted: {new Date(ret.created_at).toLocaleString()}</p>
                         {ret.status === 'Requested' && (
@@ -129,7 +147,7 @@ const AdminDashboard = () => {
                                     Approve
                                 </button>
                                 <button
-                                    onClick={() => handleReturnAction(ret.id, 'deny')}
+                                    onClick={() => handleReturnAction(ret.id, 'reject')}
                                     className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
                                 >
                                     Deny
@@ -190,6 +208,28 @@ const AdminDashboard = () => {
         </div>
     );
 
+    const renderRefunds = () => (
+        <div>
+            <h2 className="text-xl font-semibold mb-4">Refunds</h2>
+            {refunds.length === 0 ? (
+                <p>No refunds recorded.</p>
+            ) : (
+                refunds.map(refund => (
+                    <div key={refund.id} className="border p-4 mb-3 rounded bg-white shadow">
+                        <p><strong>Refund ID:</strong> {refund.id}</p>
+                        <p><strong>Order ID:</strong> {refund.order_return.order_item.order.id}</p>
+                        <p><strong>User:</strong> {refund.order_return.order_item.order.user.email}</p>
+                        <p><strong>Product:</strong> {refund.order_return.order_item.product.name}</p>
+                        <p><strong>Amount Refunded:</strong> £{(refund.amount / 100).toFixed(2)}</p>
+                        <p><strong>Status:</strong> {refund.status.name}</p>
+                        <p><strong>Processed At:</strong> {refund.processed_at ? new Date(refund.processed_at).toLocaleString() : 'N/A'}</p>
+                        {refund.notes && <p><strong>Notes:</strong> {refund.notes}</p>}
+                    </div>
+                ))
+            )}
+        </div>
+    );
+
     const renderContent = () => {
         if (error) return <ErrorMessage message={error}/>;
 
@@ -200,6 +240,8 @@ const AdminDashboard = () => {
                 return renderOrders();
             case 'Payments':
                 return renderPayments();
+            case 'Refunds':
+                return renderRefunds();
             default:
                 return null;
         }

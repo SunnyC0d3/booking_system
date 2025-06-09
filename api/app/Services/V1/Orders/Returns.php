@@ -2,10 +2,12 @@
 
 namespace App\Services\V1\Orders;
 
+use App\Constants\OrderStatuses;
 use App\Constants\ReturnStatuses;
 use App\Models\OrderItem;
 use App\Models\OrderReturn;
 use App\Models\OrderReturnStatus;
+use App\Models\OrderStatus;
 use App\Resources\V1\OrderReturnResource;
 use Illuminate\Http\Request;
 use App\Traits\V1\ApiResponses;
@@ -46,6 +48,10 @@ class Returns
 
         if ($order->user_id !== $user->id) {
             return $this->error('You are not authorized to return this item.', 403);
+        }
+
+        if($order->status->name === OrderStatuses::PENDING_PAYMENT){
+            return $this->error('Order has not been paid for.');
         }
 
         $existingReturn = OrderReturn::where('order_item_id', $data['order_item_id'])->first();

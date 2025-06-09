@@ -23,6 +23,11 @@ class OrderRefund extends Model
         return $this->belongsTo(OrderReturn::class);
     }
 
+    public function status(): BelongsTo
+    {
+        return $this->belongsTo(OrderRefundStatus::class, 'order_refund_status_id');
+    }
+
     protected function casts(): array
     {
         return [

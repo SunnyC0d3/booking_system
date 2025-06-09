@@ -5,6 +5,7 @@ namespace App\Services\V1\Orders\Refunds;
 use App\Constants\PaymentStatuses;
 use App\Models\Order;
 use App\Models\OrderReturn;
+use App\Resources\V1\OrderRefundResource;
 use App\Traits\V1\ApiResponses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -156,14 +157,14 @@ class RefundProcessor implements RefundHandlerInterface
         try {
             $this->initializeRefundContext($id);
 
-            if(!$this->webhookEnabled) {
-                $refundSuccessful = $this->gateway->refund($this->order, $this->orderItem);
-
-                if (!$refundSuccessful) {
-                    $this->markRefundAsFailed('Refund failed.');
-                    return $this->error('Refund failed. Please try again later.', 422);
-                }
-            }
+//            if(!$this->webhookEnabled) {
+//                $refundSuccessful = $this->gateway->refund($this->order, $this->orderItem);
+//
+//                if (!$refundSuccessful) {
+//                    $this->markRefundAsFailed('Refund failed.');
+//                    return $this->error('Refund failed. Please try again later.', 422);
+//                }
+//            }
 
             $this->finalizeRefund();
 
