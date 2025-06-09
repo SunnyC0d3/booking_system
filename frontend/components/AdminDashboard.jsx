@@ -36,7 +36,6 @@ const AdminDashboard = () => {
                 authType: 'auth'
             });
 
-            console.log(res);
             setReturns(res.data);
         } catch (err) {
             setError(err.message);
@@ -111,17 +110,18 @@ const AdminDashboard = () => {
 
             const gateway = payments[0].gateway;
 
-            await callApi({
+            const res = await callApi({
                 path: `/api/admin/refunds/${gateway}/${ret.id}`,
                 method: 'POST',
                 authType: 'auth',
             });
 
+            console.log(res);
+
             alert("Refund processed successfully.");
 
             fetchReturns();
         } catch (err) {
-            console.error(err);
             alert("Refund failed.");
         }
     };

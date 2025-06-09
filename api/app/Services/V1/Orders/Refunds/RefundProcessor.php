@@ -52,12 +52,14 @@ class RefundProcessor implements RefundHandlerInterface
         $this->orderReturn = OrderReturn::with(['orderItem.order.user'])->findOrFail($id);
         $this->orderItem = $this->orderReturn->orderItem;
         $this->order = $this->orderItem->order;
+        $this->payment = $this->order->payments->first();
     }
 
     protected function getOrderWithItems(int $id): void
     {
         $this->order = Order::with(['orderItems.orderReturn'])->findOrFail($id);
         $this->orderItems = $this->order->orderItems;
+        $this->payment = $this->order->payments->first();
     }
 
     protected function validateApprovalStatus(): void
@@ -103,7 +105,7 @@ class RefundProcessor implements RefundHandlerInterface
 
     protected function updateOrderAndPaymentStatus(): void
     {
-        $refundedStatusId = ($this->approvedCount === count($this->orderItems) && !empty($this->orderItems))
+        $refundedStatusId = (!empty($this->orderItems) && $this->approvedCount === count($this->orderItems))
             ? OrderStatus::where('name', OrderStatuses::REFUNDED)->value('id')
             : OrderStatus::where('name', OrderStatuses::PARTIALLY_REFUNDED)->value('id');
 
