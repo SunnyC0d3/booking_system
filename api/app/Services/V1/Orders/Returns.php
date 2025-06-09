@@ -6,6 +6,7 @@ use App\Constants\ReturnStatuses;
 use App\Models\OrderItem;
 use App\Models\OrderReturn;
 use App\Models\OrderReturnStatus;
+use App\Resources\V1\OrderReturnResource;
 use Illuminate\Http\Request;
 use App\Traits\V1\ApiResponses;
 
@@ -25,10 +26,11 @@ class Returns
             $returns = OrderReturn::with([
                 'orderItem.product',
                 'orderItem.order.user',
+                'orderItem.order.payments',
                 'status'
             ])->latest()->paginate(20);
 
-            return $this->ok('Order returns retrieved.', $returns);
+            return $this->ok('Order returns retrieved.', OrderReturnResource::collection($returns));
         }
 
         return $this->error('You do not have the required permissions.', 403);

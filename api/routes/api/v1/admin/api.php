@@ -177,5 +177,5 @@ Route::prefix('admin/refund')
     ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
     ->controller(RefundController::class)
     ->group(function () {
-        Route::post('/{gateway}/{orderReturnId}', 'refund')->name('admin.refund');
+        Route::post('/{gateway}/{id}', 'refund')->name('admin.refund');
     });

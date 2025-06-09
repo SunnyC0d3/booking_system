@@ -160,8 +160,8 @@ class RefundProcessor implements RefundHandlerInterface
                 $refundSuccessful = $this->gateway->refund($this->order, $this->orderItem);
 
                 if (!$refundSuccessful) {
-                    $this->markRefundAsFailed('Refund failed via Stripe. Please check Stripe.');
-                    return $this->error('Refund failed via Stripe. Please try again later.', 422);
+                    $this->markRefundAsFailed('Refund failed.');
+                    return $this->error('Refund failed. Please try again later.', 422);
                 }
             }
 

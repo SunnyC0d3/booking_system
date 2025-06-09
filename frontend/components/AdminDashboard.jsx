@@ -1,24 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Container from '@components/Wrapper/Container';
 import callApi from '@api/callApi';
 import ErrorMessage from '@components/ErrorMessage';
 
-const TABS = ['Returns', 'Orders', 'Payments', 'Refunds'];
+const TABS = ['Returns', 'Orders', 'Payments'];
 
 const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState('Returns');
     const [returns, setReturns] = useState([]);
     const [orders, setOrders] = useState([]);
     const [payments, setPayments] = useState([]);
-    const [refunds, setRefunds] = useState([]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         switch (activeTab) {
-            case 'Returns': fetchReturns(); break;
-            case 'Orders': fetchOrders(); break;
-            case 'Payments': fetchPayments(); break;
-            case 'Refunds': fetchRefunds(); break;
+            case 'Returns':
+                fetchReturns();
+                break;
+            case 'Orders':
+                fetchOrders();
+                break;
+            case 'Payments':
+                fetchPayments();
+                break;
         }
     }, [activeTab]);
 
@@ -29,7 +33,8 @@ const AdminDashboard = () => {
                 authType: 'auth'
             });
 
-            setReturns(res.data.data);
+            console.log(res);
+            setReturns(res.data);
         } catch (err) {
             setError(err.message);
         }
@@ -56,22 +61,7 @@ const AdminDashboard = () => {
                 authType: 'auth'
             });
 
-            console.log(res);
             setPayments(res.data);
-        } catch (err) {
-            setError(err.message);
-        }
-    };
-
-    const fetchRefunds = async () => {
-        try {
-            const res = await callApi({
-                path: '/api/admin/refunds',
-                authType: 'auth'
-            });
-
-            console.log(res);
-            setRefunds(res.data);
         } catch (err) {
             setError(err.message);
         }
@@ -84,9 +74,37 @@ const AdminDashboard = () => {
                 method: 'POST',
                 authType: 'auth',
             });
-            fetchReturns(); // Refresh list
+
+            fetchReturns();
         } catch (err) {
             alert(`Failed to ${action} return.`);
+        }
+    };
+
+    const handleRefund = async (ret) => {
+        try {
+            const order = ret?.order_item?.order;
+            const payments = order?.payments;
+
+            if (!payments || payments.length === 0) {
+                alert("No payment found to refund.");
+                return;
+            }
+
+            const gateway = payments[0].gateway;
+
+            await callApi({
+                path: `/api/admin/refund/${gateway}/${ret.id}`,
+                method: 'POST',
+                authType: 'auth',
+            });
+
+            alert("Refund processed successfully.");
+
+            fetchReturns();
+        } catch (err) {
+            console.error(err);
+            alert("Refund failed.");
         }
     };
 
@@ -99,10 +117,10 @@ const AdminDashboard = () => {
                 returns.map(ret => (
                     <div key={ret.id} className="border p-4 mb-4 rounded bg-white shadow">
                         <p><strong>Reason:</strong> {ret.reason}</p>
-                        <p><strong>Status:</strong> {ret.status.name}</p>
+                        <p><strong>Status:</strong> {ret.status}</p>
                         <p><strong>Product:</strong> {ret.order_item.product.name}</p>
                         <p className="text-sm text-gray-500">Submitted: {new Date(ret.created_at).toLocaleString()}</p>
-                        {ret.status.name === 'Requested' && (
+                        {ret.status === 'Requested' && (
                             <div className="mt-2 flex gap-2">
                                 <button
                                     onClick={() => handleReturnAction(ret.id, 'approve')}
@@ -115,6 +133,16 @@ const AdminDashboard = () => {
                                     className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
                                 >
                                     Deny
+                                </button>
+                            </div>
+                        )}
+                        {ret.status === 'Approved' && (
+                            <div className="mt-2">
+                                <button
+                                    onClick={() => handleRefund(ret)}
+                                    className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
+                                >
+                                    Refund
                                 </button>
                             </div>
                         )}
@@ -162,34 +190,18 @@ const AdminDashboard = () => {
         </div>
     );
 
-    const renderRefunds = () => (
-        <div>
-            <h2 className="text-xl font-semibold mb-4">Refunds</h2>
-            {refunds.length === 0 ? (
-                <p>No refunds issued.</p>
-            ) : (
-                refunds.map(refund => (
-                    <div key={refund.id} className="border p-4 mb-3 rounded bg-white shadow">
-                        <p><strong>Return ID:</strong> {refund.order_return_id}</p>
-                        <p><strong>Amount:</strong> £{(refund.amount / 100).toFixed(2)}</p>
-                        <p><strong>Status:</strong> {refund.status?.name || '—'}</p>
-                        <p><strong>Notes:</strong> {refund.notes || 'N/A'}</p>
-                        <p><strong>Processed:</strong> {refund.processed_at ? new Date(refund.processed_at).toLocaleString() : 'Pending'}</p>
-                    </div>
-                ))
-            )}
-        </div>
-    );
-
     const renderContent = () => {
-        if (error) return <ErrorMessage message={error} />;
+        if (error) return <ErrorMessage message={error}/>;
 
         switch (activeTab) {
-            case 'Returns': return renderReturns();
-            case 'Orders': return renderOrders();
-            case 'Payments': return renderPayments();
-            case 'Refunds': return renderRefunds();
-            default: return null;
+            case 'Returns':
+                return renderReturns();
+            case 'Orders':
+                return renderOrders();
+            case 'Payments':
+                return renderPayments();
+            default:
+                return null;
         }
     };
 

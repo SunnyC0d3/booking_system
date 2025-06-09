@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 class RefundController extends Controller
 {
     use ApiResponses;
-    public function refund(Request $request, string $gateway, int $orderReturnId)
+    public function refund(Request $request, string $gateway, int $id)
     {
         try {
             $handler = $this->handle($gateway);
@@ -24,7 +24,7 @@ class RefundController extends Controller
 
             $refundProcessor = new RefundProcessor(app($handler));
 
-            return $refundProcessor->refund($request, $orderReturnId);
+            return $refundProcessor->refund($request, $id);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
