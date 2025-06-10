@@ -9,6 +9,7 @@ class PaymentStatuses
     public const CANCELED = 'Canceled';
     public const FAILED = 'Failed';
     public const REFUNDED = 'Refunded';
+    public const PARTIALLY_REFUNDED = 'Partially Refunded';
 
     public static function all(): array
     {
@@ -18,6 +19,7 @@ class PaymentStatuses
             self::CANCELED,
             self::FAILED,
             self::REFUNDED,
+            self::PARTIALLY_REFUNDED,
         ];
     }
 }

@@ -14,6 +14,7 @@ class OrderRefundStatusSeeder extends Seeder
             RefundStatuses::PENDING,
             RefundStatuses::PROCESSING,
             RefundStatuses::REFUNDED,
+            RefundStatuses::PARTIALLY_REFUNDED,
             RefundStatuses::FAILED,
             RefundStatuses::CANCELLED,
             RefundStatuses::DECLINED

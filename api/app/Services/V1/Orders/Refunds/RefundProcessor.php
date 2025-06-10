@@ -105,12 +105,18 @@ class RefundProcessor implements RefundHandlerInterface
 
     protected function updateOrderAndPaymentStatus(): void
     {
-        $refundedStatusId = (!empty($this->orderItems) && $this->approvedCount === count($this->orderItems))
+        $isFullRefund = (!empty($this->orderItems) && $this->approvedCount === count($this->orderItems));
+
+        $refundedStatusId = $isFullRefund
             ? OrderStatus::where('name', OrderStatuses::REFUNDED)->value('id')
             : OrderStatus::where('name', OrderStatuses::PARTIALLY_REFUNDED)->value('id');
 
+        $paymentStatus = $isFullRefund
+            ? PaymentStatuses::REFUNDED
+            : PaymentStatuses::PARTIALLY_REFUNDED;
+
         $this->order->update(['status_id' => $refundedStatusId]);
-        $this->payment->update(['status' => PaymentStatuses::REFUNDED]);
+        $this->payment->update(['status' => $paymentStatus]);
     }
 
     protected function markReturnAsCompleted(): void
@@ -159,14 +165,14 @@ class RefundProcessor implements RefundHandlerInterface
         try {
             $this->initializeRefundContext($id);
 
-//            if(!$this->webhookEnabled) {
-//                $refundSuccessful = $this->gateway->refund($this->order, $this->orderItem);
-//
-//                if (!$refundSuccessful) {
-//                    $this->markRefundAsFailed('Refund failed.');
-//                    return $this->error('Refund failed. Please try again later.', 422);
-//                }
-//            }
+            if(!$this->webhookEnabled) {
+                $refundSuccessful = $this->gateway->refund($this->order, $this->orderItem);
+
+                if (!$refundSuccessful) {
+                    $this->markRefundAsFailed('Refund failed.');
+                    return $this->error('Refund failed. Please try again later.', 422);
+                }
+            }
 
             $this->finalizeRefund();
 
