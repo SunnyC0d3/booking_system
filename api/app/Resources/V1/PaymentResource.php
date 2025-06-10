@@ -11,6 +11,7 @@ class PaymentResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'gateway' => $this->paymentMethod->name,
             'amount' => $this->amount,
             'method' => $this->method,
             'status' => $this->status,
@@ -20,7 +21,6 @@ class PaymentResource extends JsonResource
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
             'user' => new UserResource($this->whenLoaded('user')),
             'order' => new OrderResource($this->whenLoaded('order')),
-            'gateway' => $this->paymentMethod->name,
         ];
     }
 }

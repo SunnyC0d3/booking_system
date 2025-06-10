@@ -13,7 +13,7 @@ class VendorResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'user' => $this->whenLoaded('user')
+            'user' => new UserResource($this->whenLoaded('user'))
         ];
     }
 }
