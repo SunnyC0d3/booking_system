@@ -1,4 +1,4 @@
-import React, {useEffect, useState, lazy} from 'react';
+import React, {useEffect, useState, useRef, lazy} from 'react';
 import {useLocation, useParams} from 'react-router-dom';
 import {loadStripe} from '@stripe/stripe-js';
 import {Elements} from '@stripe/react-stripe-js';
@@ -35,8 +35,16 @@ const Payment = () => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    // Prevent duplicate API calls
+    const hasFetched = useRef(false);
+
     useEffect(() => {
+        // Prevent duplicate calls in StrictMode or component re-renders
+        if (hasFetched.current) return;
+
         const fetchPaymentIntent = async () => {
+            hasFetched.current = true;
+
             try {
                 const response = await callApi({
                     method: 'POST',
@@ -65,6 +73,8 @@ const Payment = () => {
             } catch (err) {
                 setError('Failed to retrieve payment info.');
                 console.error('Error fetching client secret:', err);
+                // Reset the flag on error so user can retry
+                hasFetched.current = false;
             } finally {
                 setLoading(false);
             }
