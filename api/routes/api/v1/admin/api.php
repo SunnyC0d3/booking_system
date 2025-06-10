@@ -17,6 +17,7 @@ use App\Http\Controllers\V1\Admin\PaymentMethodController;
 use App\Http\Controllers\V1\Admin\OrderController;
 use App\Http\Controllers\V1\Admin\ReturnsController;
 use App\Http\Controllers\V1\Admin\RefundController;
+use App\Http\Controllers\V1\Admin\PaymentController;
 
 // Admin/Users
 
@@ -167,7 +168,7 @@ Route::prefix('admin/returns')
     ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
     ->controller(ReturnsController::class)
     ->group(function () {
-        Route::get('/', 'index')->name('admin.returns');
+        Route::get('/', 'index')->name('admin.returns.index');
         Route::post('/{returnId}/{action}', 'reviewReturn')->name('admin.returns.action');
     });
 
@@ -177,6 +178,15 @@ Route::prefix('admin/refunds')
     ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
     ->controller(RefundController::class)
     ->group(function () {
-        Route::get('/', 'index')->name('admin.refunds');
+        Route::get('/', 'index')->name('admin.refunds.index');
         Route::post('/{gateway}/{id}', 'refund')->name('admin.refund');
+    });
+
+// Admin/Refund
+
+Route::prefix('admin/payments')
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->controller(PaymentController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('admin.payments.index');
     });

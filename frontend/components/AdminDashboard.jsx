@@ -199,8 +199,8 @@ const AdminDashboard = () => {
                     <div key={pay.id} className="border p-4 mb-3 rounded bg-white shadow">
                         <p><strong>Order ID:</strong> {pay.order_id}</p>
                         <p><strong>Amount:</strong> £{(pay.amount / 100).toFixed(2)}</p>
-                        <p><strong>Status:</strong> {pay.status}</p>
-                        <p><strong>Method:</strong> {pay.gateway}</p>
+                        <p><strong>Status:</strong> <span className="text-indigo-600">{pay.status}</span></p>
+                        <p><strong>Method:</strong> {pay.gateway.charAt(0).toUpperCase() + pay.gateway.slice(1)}</p>
                         <p><strong>Date:</strong> {new Date(pay.created_at).toLocaleString()}</p>
                     </div>
                 ))

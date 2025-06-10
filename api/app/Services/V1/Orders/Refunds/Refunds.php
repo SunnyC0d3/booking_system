@@ -3,7 +3,7 @@
 namespace App\Services\V1\Orders\Refunds;
 
 
-use App\Models\OrderRefund;
+use App\Models\OrderRefund as OrderRefundDB;
 use App\Resources\V1\OrderRefundResource;
 use Illuminate\Http\Request;
 use App\Traits\V1\ApiResponses;
@@ -21,7 +21,7 @@ class Refunds
         $user = $request->user();
 
         if ($user->hasPermission('manage_refunds')) {
-            $returns = OrderRefund::with([
+            $returns = OrderRefundDB::with([
                 'orderReturn.orderItem.product',
                 'orderReturn.orderItem.order.user',
                 'orderReturn.orderItem.order.payments',
