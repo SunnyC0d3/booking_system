@@ -16,7 +16,6 @@ class DatabaseSeeder extends Seeder
             OrderStatusSeeder::class,
             OrderRefundStatusSeeder::class,
             OrderReturnStatusSeeder::class,
-            OrderShipmentStatusSeeder::class,
             PaymentMethodSeeder::class,
 
             UserSeeder::class,

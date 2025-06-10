@@ -10,11 +10,9 @@ use App\Models\OrderItem;
 use App\Models\OrderReturn;
 use App\Models\OrderRefund;
 use App\Models\OrderStatus;
-use App\Models\OrderShipment;
 use Illuminate\Database\Seeder;
 use App\Models\OrderReturnStatus;
 use App\Models\OrderRefundStatus;
-use App\Models\OrderShipmentStatus;
 
 class OrderSeeder extends Seeder
 {
@@ -25,11 +23,9 @@ class OrderSeeder extends Seeder
         $statuses = OrderStatus::pluck('id')->toArray();
         $returnStatuses = OrderReturnStatus::pluck('id', 'name')->toArray();
         $refundStatuses = OrderRefundStatus::pluck('id', 'name')->toArray();
-        $orderShipmentStatuses = OrderShipmentStatus::pluck('id')->toArray();
 
         $orders = [];
         $orderItems = [];
-        $shipments = [];
         $returns = [];
         $refunds = [];
 
@@ -68,25 +64,10 @@ class OrderSeeder extends Seeder
 
             // Update order total
             $orders[$i]['total_amount'] = $totalAmount;
-
-            if (rand(1, 100) <= 70) {
-                $shippedAt = Carbon::parse($createdAt)->addDays(rand(1, 3));
-                $shipments[] = [
-                    'order_id'        => $orderId,
-                    'tracking_number' => strtoupper(fake()->bothify('??##????##')),
-                    'carrier'         => fake()->randomElement(['FedEx', 'UPS', 'DHL', 'USPS']),
-                    'order_shipment_status_id' => $orderShipmentStatuses[array_rand($orderShipmentStatuses)],
-                    'shipped_at'      => $shippedAt,
-                    'delivered_at'    => rand(1, 100) <= 60 ? $shippedAt->addDays(rand(2, 5)) : null,
-                    'created_at'      => $createdAt,
-                    'updated_at'      => $createdAt,
-                ];
-            }
         }
 
         Order::insert($orders);
         OrderItem::insert($orderItems);
-        OrderShipment::insert($shipments);
 
         $allOrderItems = OrderItem::pluck('id')->toArray();
         $returnItemIds = array_rand(array_flip($allOrderItems), (int) (count($allOrderItems) * 0.2));
