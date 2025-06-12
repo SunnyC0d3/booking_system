@@ -14,7 +14,8 @@ class OrderRefundResource extends JsonResource
             'amount' => $this->amount,
             'processed_at' => $this->processed_at,
             'notes' => $this->notes,
-            'status' => $this->status->name
+            'status' => $this->status->name,
+            'order_return' => new OrderReturnResource($this->whenLoaded('orderReturn')),
         ];
     }
 }
