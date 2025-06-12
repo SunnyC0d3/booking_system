@@ -2,15 +2,19 @@
 
 namespace App\Services\V1\Payments;
 
+use App\Constants\OrderStatuses;
 use App\Constants\PaymentMethods;
 use App\Constants\PaymentStatuses;
+use App\Models\OrderStatus;
 use App\Models\User;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use App\Models\Payment as DB;
 use App\Models\PaymentMethod;
 use App\Models\Order;
 use App\Traits\V1\ApiResponses;
+use Illuminate\Support\Facades\Log;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
 use Stripe\Customer;
@@ -83,6 +87,47 @@ class StripePayment implements PaymentHandlerInterface
 
         return $this->ok('PaymentIntent created successfully.', [
             'client_secret' => $intent->client_secret,
+        ]);
+    }
+
+    public function verifyPayment(Request $request)
+    {
+        $paymentIntentId = $request->input('payment_intent_id');
+        $orderId = $request->input('order_id');
+
+        $payment = DB::where('transaction_reference', $paymentIntentId)->first();
+
+        if (!$payment) {
+            Log::warning('Payment verification failed: Payment not found', [
+                'payment_intent_id' => $paymentIntentId,
+                'order_id' => $orderId
+            ]);
+            return $this->error('Payment not found', 404);
+        }
+
+        Stripe::setApiKey(config('services.stripe_secret'));
+        $paymentIntent = PaymentIntent::retrieve($paymentIntentId);
+
+        if ($paymentIntent->status === 'succeeded' && $payment->status !== PaymentStatuses::PAID) {
+            $order = $payment->order;
+
+            $payment->status = PaymentStatuses::PAID;
+            $payment->processed_at = now();
+            $payment->response_payload = json_encode($paymentIntent);
+            $payment->save();
+
+            $order->status_id = OrderStatus::where('name', OrderStatuses::CONFIRMED)->value('id');
+            $order->save();
+
+            Log::info('Payment verified and updated via API', [
+                'payment_id' => $payment->id,
+                'order_id' => $order->id
+            ]);
+        }
+
+        return $this->ok('Payment verified', [
+            'payment_status' => $payment->status,
+            'order_status' => $payment->order->status->name ?? 'Unknown'
         ]);
     }
 

@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\V1\Public;
 
-use App\Services\V1\Webhook\StripeWebhookInterface;
+use App\Requests\V1\VerifyPaymentRequest;
+use App\Services\V1\Webhook\StripeWebhook;
 use Illuminate\Http\Request;
 use App\Requests\V1\StorePaymentRequest;
 use App\Http\Controllers\Controller;
@@ -53,7 +54,7 @@ class PaymentController extends Controller
     public function stripeWebhook(Request $request)
     {
         try {
-            $handler = app(StripeWebhookInterface::class);
+            $handler = app(StripeWebhook::class);
             return $handler->webhook($request);
         } catch (Exception $e) {
             Log::error('Stripe webhook error: ' . $e->getMessage());
@@ -111,6 +112,50 @@ class PaymentController extends Controller
             $handler = app($handler);
 
             return $handler->createPayment($request);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
+    }
+
+    /**
+     * Verify Payment Status
+     *
+     * Verifies the current status of a payment with the chosen payment gateway and updates
+     * the local database accordingly. This is useful for handling cases where webhooks might
+     * have failed or been delayed.
+     *
+     * @group Payments
+     *
+     * @bodyParam payment_intent_id string required The Stripe Payment Intent ID to verify. Example: pi_1Hxxxxxxxxxxxx
+     * @bodyParam order_id int required The ID of the order associated with this payment. Example: 123
+     *
+     * @response 200 {
+     *   "status": true,
+     *   "message": "Payment verified",
+     *   "data": {
+     *     "payment_status": "paid",
+     *     "order_status": "confirmed"
+     *   }
+     * }
+     *
+     * @response 500 scenario="Stripe API Error" {
+     *   "status": false,
+     *   "message": "Unable to retrieve payment from Stripe: No such payment_intent: 'pi_invalid'",
+     *   "data": null
+     * }
+     */
+    public function verify(VerifyPaymentRequest $request, string $gateway)
+    {
+        try {
+            $handler = $this->handle($gateway);
+
+            if (!class_exists($handler)) {
+                return $this->error('Unsupported payment gateway', 400);
+            }
+
+            $handler = app($handler);
+
+            return $handler->verifyPayment($request);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }

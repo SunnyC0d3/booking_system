@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {PaymentElement, useStripe, useElements} from '@stripe/react-stripe-js';
 
-const CheckoutForm = ({orderItems}) => {
+const CheckoutForm = ({orderItems, orderId, onPaymentSuccess}) => {
     const stripe = useStripe();
     const elements = useElements();
     const [message, setMessage] = useState(null);
@@ -38,6 +38,7 @@ const CheckoutForm = ({orderItems}) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        setMessage(null);
 
         if (!stripe || !elements) {
             setMessage('Stripe.js has not loaded yet.');
@@ -56,22 +57,40 @@ const CheckoutForm = ({orderItems}) => {
             }
         };
 
-        const {error, paymentIntent} = await stripe.confirmPayment({
-            elements,
-            confirmParams: {
-                return_url: window.location.href,
-                payment_method_data: {
-                    billing_details: billingDetails
-                }
-            }
-        });
+        try {
+            const {error} = await stripe.confirmPayment({
+                elements,
+                confirmParams: {
+                    return_url: `${window.location.origin}/payment/${orderId}?return=true`,
+                    payment_method_data: {
+                        billing_details: billingDetails
+                    }
+                },
+                redirect: 'if_required'
+            });
 
-        if (error) {
-            setMessage(error.message);
-        } else if (paymentIntent && paymentIntent.status === 'succeeded') {
-            setMessage('Payment successful!');
-        } else {
-            setMessage(`Payment status: ${paymentIntent?.status}`);
+            if (error) {
+                console.error('Payment confirmation error:', error);
+                if (error.type === 'card_error' || error.type === 'validation_error') {
+                    setMessage(error.message);
+                } else {
+                    setMessage('An unexpected error occurred.');
+                }
+            } else {
+                // Payment succeeded without redirect
+                console.log('Payment succeeded!');
+                setMessage('Payment successful! Processing...');
+
+                // Call the success callback after a short delay to allow webhook processing
+                setTimeout(() => {
+                    if (onPaymentSuccess) {
+                        onPaymentSuccess();
+                    }
+                }, 2000);
+            }
+        } catch (err) {
+            console.error('Unexpected error during payment:', err);
+            setMessage('An unexpected error occurred during payment.');
         }
 
         setLoading(false);
@@ -172,7 +191,13 @@ const CheckoutForm = ({orderItems}) => {
                 {loading ? 'Processing...' : 'Pay Now'}
             </button>
 
-            {message && <div className="text-center text-red-600 text-sm mt-4">{message}</div>}
+            {message && (
+                <div className={`text-center text-sm mt-4 ${
+                    message.includes('successful') ? 'text-green-600' : 'text-red-600'
+                }`}>
+                    {message}
+                </div>
+            )}
         </form>
     );
 };

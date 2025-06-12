@@ -6,4 +6,6 @@ use Illuminate\Http\Request;
 interface PaymentHandlerInterface
 {
     public function createPayment(Request $request);
+
+    public function verifyPayment(Request $request);
 }

@@ -56,11 +56,12 @@ Route::middleware(['throttle:3,1', 'client'])
 // Payments
 
 Route::prefix('payments')
-    ->middleware(['client'])
+//    ->middleware(['client'])
     ->controller(PaymentController::class)
     ->group(function () {
         Route::post('/{gateway}/create', 'store')->name('payments.store');
         Route::post('/stripe/webhook', 'stripeWebhook')->name('payments.stripe.webhook');
+        Route::post('/{gateway}/verify', 'verify')->name('payments.verify');
     });
 
 // Users
