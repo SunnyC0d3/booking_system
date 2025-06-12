@@ -77,11 +77,9 @@ const CheckoutForm = ({orderItems, orderId, onPaymentSuccess}) => {
                     setMessage('An unexpected error occurred.');
                 }
             } else {
-                // Payment succeeded without redirect
                 console.log('Payment succeeded!');
                 setMessage('Payment successful! Processing...');
 
-                // Call the success callback after a short delay to allow webhook processing
                 setTimeout(() => {
                     if (onPaymentSuccess) {
                         onPaymentSuccess();

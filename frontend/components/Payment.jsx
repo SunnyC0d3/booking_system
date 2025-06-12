@@ -120,7 +120,7 @@ const Payment = () => {
     if (paymentStatus === 'succeeded') {
         return (
             <Container>
-                <div className="text-center py-8">
+                <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4 text-center">
                     <h2 className="text-2xl font-bold text-green-600 mb-4">Payment Successful!</h2>
                     <p className="text-gray-600 mb-4">Your order has been confirmed.</p>
                     <button
@@ -137,7 +137,7 @@ const Payment = () => {
     if (paymentStatus === 'canceled') {
         return (
             <Container>
-                <div className="text-center py-8">
+                <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4 text-center">
                     <h2 className="text-2xl font-bold text-red-600 mb-4">Payment Canceled</h2>
                     <p className="text-gray-600 mb-4">Your payment was canceled.</p>
                     <button
