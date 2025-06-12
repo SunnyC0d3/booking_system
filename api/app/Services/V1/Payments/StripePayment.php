@@ -7,7 +7,6 @@ use App\Constants\PaymentMethods;
 use App\Constants\PaymentStatuses;
 use App\Models\OrderStatus;
 use App\Models\User;
-use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use App\Models\Payment as DB;
