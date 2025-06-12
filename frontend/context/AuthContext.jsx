@@ -19,7 +19,7 @@ export const AuthProvider = ({children}) => {
         } else {
             setAuthenticated(false);
         }
-    }, [authenticated]);
+    }, []);
 
     const getRedirectPath = () => {
         if (!authenticated)
