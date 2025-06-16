@@ -11,6 +11,7 @@ const callApi = async ({path, method = 'GET', data = {}, authType = 'client'}) =
         const response = await api.request({
             url: '/proxy',
             method: 'POST',
+            credentials: 'include',
             data: {
                 path,
                 method,

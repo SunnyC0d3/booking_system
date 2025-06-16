@@ -39,37 +39,55 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser(AUTH_SERVER_SECRET));
 
+app.use(cors({
+    origin: FRONTEND_ORIGIN,
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    exposedHeaders: ['Set-Cookie']
+}));
+
+app.options('/api/proxy', cors({
+    origin: FRONTEND_ORIGIN,
+    credentials: true
+}));
+
 app.use(rateLimit({
     windowMs: 60 * 1000,
     max: 30,
-    standardHeaders: true
-}));
-
-app.use(cors({
-    origin: FRONTEND_ORIGIN,
-    credentials: true
+    standardHeaders: true,
+    handler: (req, res) => {
+        res.status(429).json({
+            message: 'Too many requests, please try again later.',
+            retryAfter: Math.round(60)
+        });
+    }
 }));
 
 const verifyFrontend = (req, res, next) => {
     const nonce = req.signedCookies['auth_server_csrf'];
 
     if (!nonce || !nonceStore.has(nonce)) {
-        return res.status(401).json({message: 'Not authorised.'});
+        return res.status(401).json({message: 'Not authorised - missing or invalid nonce.'});
     }
 
     const stored = nonceStore.get(nonce);
 
     if (Date.now() > stored.expiry) {
         nonceStore.delete(nonce);
-        return res.status(403).json({message: 'Not authorised.'});
+        return res.status(403).json({message: 'Not authorised - nonce expired.'});
     }
 
-    if (stored.ip !== req.ip || stored.userAgent !== req.get('User-Agent')) {
-        return res.status(403).json({message: 'Not authorised.'});
+    if (stored.ip !== req.ip) {
+        return res.status(403).json({message: 'Not authorised - IP mismatch.'});
+    }
+
+    if (stored.userAgent !== req.get('User-Agent')) {
+        return res.status(403).json({message: 'Not authorised - user agent mismatch.'});
     }
 
     if (req.get('Origin') !== FRONTEND_ORIGIN || !req.get('Origin')) {
-        return res.status(403).json({message: 'Not authorised.'});
+        return res.status(403).json({message: 'Not authorised - origin mismatch.'});
     }
 
     next();
@@ -133,7 +151,7 @@ app.post('/api/proxy', verifyFrontend, async (req, res) => {
 
                 token = response.data.access_token;
 
-                await redis.set('client_access_token', token, 'EX', Date.now() + response.data.expires_in * 1000);
+                await redis.set('client_access_token', token, 'EX', response.data.expires_in);
             }
         } else if (authType === API_AUTH) {
             const authHeader = req.headers['authorization'];

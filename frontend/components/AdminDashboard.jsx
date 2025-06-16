@@ -23,6 +23,7 @@ const AdminDashboard = () => {
                 break;
             case 'Payments':
                 fetchPayments();
+                break;
             case 'Refunds':
                 fetchRefunds();
                 break;
@@ -75,8 +76,6 @@ const AdminDashboard = () => {
                 authType: 'auth'
             });
 
-            console.log(res.data);
-
             setRefunds(res.data);
         } catch (err) {
             setError(err.message);
@@ -117,8 +116,6 @@ const AdminDashboard = () => {
                 method: 'POST',
                 authType: 'auth',
             });
-
-            console.log(res);
 
             alert("Refund processed successfully.");
 
