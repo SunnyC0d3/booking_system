@@ -188,7 +188,3 @@ class RefundProcessor implements RefundHandlerInterface
         return $request->user()?->hasPermission('manage_refunds') ?? false;
     }
 }
-
-
-
-

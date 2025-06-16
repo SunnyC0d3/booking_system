@@ -25,27 +25,40 @@ class StripeRefundGateway implements PaymentGatewayRefundInterface
             return false;
         }
 
-        try {
-            if ($orderItem) {
-                StripeRefund::create([
-                    'payment_intent' => $payment->transaction_reference,
-                    'amount' => $orderItem->refundAmount(),
-                ]);
-            } else {
-                $totalRefundAmount = $order->orderItems
-                    ->filter(fn ($item) => $item->orderReturn && $item->orderReturn->isApproved())
-                    ->sum(fn ($item) => $item->refundAmount());
+        if ($orderItem) {
+            $refundAmount = $orderItem->refundAmount();
 
-                StripeRefund::create([
-                    'payment_intent' => $payment->transaction_reference,
-                    'amount' => $totalRefundAmount,
-                ]);
+            StripeRefund::create([
+                'payment_intent' => $payment->transaction_reference,
+                'amount' => $refundAmount,
+                'metadata' => [
+                    'order_id' => $order->id,
+                    'order_item_id' => $orderItem->id,
+                    'refund_type' => 'single_item'
+                ]
+            ]);
+        } else {
+            $approvedItems = $order->orderItems
+                ->filter(fn($item) => $item->orderReturn && $item->orderReturn->isApproved());
+
+            $totalRefundAmount = $approvedItems->sum(fn($item) => $item->refundAmount());
+
+            if ($totalRefundAmount <= 0) {
+                Log::warning("No refund amount calculated for bulk refund", ['order_id' => $order->id]);
+                return false;
             }
 
-            return true;
-        } catch (\Exception $e) {
-            Log::error("Stripe refund failed: " . $e->getMessage());
-            return false;
+            StripeRefund::create([
+                'payment_intent' => $payment->transaction_reference,
+                'amount' => $totalRefundAmount,
+                'metadata' => [
+                    'order_id' => $order->id,
+                    'refund_type' => 'bulk',
+                    'items_count' => $approvedItems->count()
+                ]
+            ]);
         }
+
+        return true;
     }
 }

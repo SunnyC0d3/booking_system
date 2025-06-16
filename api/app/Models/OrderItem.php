@@ -39,8 +39,13 @@ class OrderItem extends Model
         return $this->belongsTo(ProductVariant::class);
     }
 
-    public function scopeRefundAmount()
+    public function refundAmount(): int
     {
-        return ($this->price * $this->quantity) * 100;
+        return (int) (($this->price * $this->quantity) * 100);
+    }
+
+    public function scopeWithRefundAmount($query)
+    {
+        return $query->selectRaw('*, (price * quantity * 100) as refund_amount');
     }
 }

@@ -76,6 +76,8 @@ const AdminDashboard = () => {
                 authType: 'auth'
             });
 
+            console.log(res.data);
+
             setRefunds(res.data);
         } catch (err) {
             setError(err.message);
