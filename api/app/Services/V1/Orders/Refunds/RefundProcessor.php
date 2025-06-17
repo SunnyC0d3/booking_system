@@ -113,15 +113,10 @@ class RefundProcessor implements RefundHandlerInterface
         $items->each(function ($item) use ($refundedStatusId) {
             $refundData = [
                 'order_return_id' => $item->orderReturn->id,
-                'order_id' => $item->order_id,
                 'amount' => $item->refundAmount(),
                 'order_refund_status_id' => $refundedStatusId,
                 'processed_at' => now(),
             ];
-
-            if ($this->refundSource) {
-                $refundData['source'] = $this->refundSource;
-            }
 
             if ($this->refundNotes) {
                 $refundData['notes'] = $this->refundNotes;
@@ -192,12 +187,10 @@ class RefundProcessor implements RefundHandlerInterface
 
         OrderRefund::create([
             'order_return_id' => $this->orderReturn->id,
-            'order_id' => $this->order->id,
             'amount' => $this->orderItem->refundAmount(),
             'order_refund_status_id' => $failedStatusId,
             'processed_at' => now(),
             'notes' => $reason,
-            'source' => $this->refundSource ?? 'api'
         ]);
     }
 
@@ -224,9 +217,13 @@ class RefundProcessor implements RefundHandlerInterface
         try {
             $order = Order::findOrFail($orderId);
 
-            $matchingRefunds = OrderRefund::where('order_id', $orderId)
-                ->where('amount', $refundAmount)
+            $matchingRefunds = OrderRefund::where('amount', $refundAmount)
                 ->where('created_at', '>=', now()->subHours(24))
+                ->whereHas('orderReturn', function ($q) use ($orderId) {
+                    $q->whereHas('orderItem', function ($sq) use ($orderId) {
+                        $sq->where('order_id', $orderId);
+                    });
+                })
                 ->get();
 
             if ($matchingRefunds->isEmpty()) {
@@ -286,7 +283,11 @@ class RefundProcessor implements RefundHandlerInterface
             $pendingStatusId = OrderRefundStatus::where('name', RefundStatuses::PENDING)->value('id');
             $approvedStatusId = OrderReturnStatus::where('name', ReturnStatuses::APPROVED)->value('id');
 
-            $updatedRefunds = OrderRefund::where('order_id', $orderId)
+            $updatedRefunds = OrderRefund::whereHas('orderReturn', function ($q) use ($orderId) {
+                $q->whereHas('orderItem', function ($sq) use ($orderId) {
+                    $sq->where('order_id', $orderId);
+                });
+            })
                 ->where('order_refund_status_id', $pendingStatusId)
                 ->update([
                     'order_refund_status_id' => $failedStatusId,
@@ -294,7 +295,11 @@ class RefundProcessor implements RefundHandlerInterface
                 ]);
 
             if ($updatedRefunds > 0) {
-                $failedRefunds = OrderRefund::where('order_id', $orderId)
+                $failedRefunds = OrderRefund::whereHas('orderReturn', function ($q) use ($orderId) {
+                    $q->whereHas('orderItem', function ($sq) use ($orderId) {
+                        $sq->where('order_id', $orderId);
+                    });
+                })
                     ->where('order_refund_status_id', $failedStatusId)
                     ->whereNotNull('order_return_id')
                     ->get();
@@ -334,9 +339,11 @@ class RefundProcessor implements RefundHandlerInterface
         try {
             $order = Order::with('orderItems.orderReturn')->findOrFail($orderId);
 
+            $approvedStatusId = OrderReturnStatus::where('name', ReturnStatuses::APPROVED)->value('id');
+
             $approvedReturns = $order->orderItems()
-                ->whereHas('orderReturn', function ($q) {
-                    $q->where('status', ReturnStatuses::APPROVED);
+                ->whereHas('orderReturn', function ($q) use ($approvedStatusId) {
+                    $q->where('order_return_status_id', $approvedStatusId);
                 })
                 ->get();
 
@@ -345,15 +352,11 @@ class RefundProcessor implements RefundHandlerInterface
             if ($approvedReturns->isNotEmpty()) {
                 $this->createRefundRecordsForApprovedReturns($order, $approvedReturns, $amount, $notes, $source);
             } else {
-                OrderRefund::create([
+                Log::warning('Cannot create manual refund without approved returns - order_return_id is required', [
                     'order_id' => $orderId,
-                    'amount' => $amount,
-                    'order_refund_status_id' => $refundedStatusId,
-                    'processed_at' => now(),
-                    'notes' => $notes ?: 'Manual refund processed externally',
-                    'source' => $source,
-                    'is_manual' => true,
+                    'amount' => $amount / 100
                 ]);
+                return false;
             }
 
             $this->recalculateOrderStatus($order);
@@ -392,12 +395,10 @@ class RefundProcessor implements RefundHandlerInterface
 
             OrderRefund::create([
                 'order_return_id' => $orderItem->orderReturn->id,
-                'order_id' => $orderItem->order_id,
                 'amount' => $itemRefundAmount,
                 'order_refund_status_id' => $refundedStatusId,
                 'processed_at' => now(),
                 'notes' => $notes ?: 'Refund processed via payment gateway',
-                'source' => $source,
             ]);
 
             $orderItem->orderReturn->update([
@@ -419,10 +420,14 @@ class RefundProcessor implements RefundHandlerInterface
         $payment = $order->payments->first();
         if (!$payment) return;
 
-        $totalRefunded = OrderRefund::where('order_id', $order->id)
-            ->whereIn('order_refund_status_id', [
-                OrderRefundStatus::where('name', RefundStatuses::REFUNDED)->value('id')
-            ])
+        $totalRefunded = OrderRefund::whereHas('orderReturn', function ($q) use ($order) {
+            $q->whereHas('orderItem', function ($sq) use ($order) {
+                $sq->where('order_id', $order->id);
+            });
+        })
+            ->whereHas('status', function ($query) {
+                $query->where('name', RefundStatuses::REFUNDED);
+            })
             ->sum('amount');
 
         $isFullRefund = $totalRefunded >= $payment->amount;

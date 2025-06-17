@@ -6,6 +6,7 @@ use App\Constants\OrderStatuses;
 use App\Constants\PaymentStatuses;
 use App\Constants\ReturnStatuses;
 use App\Models\OrderStatus;
+use App\Models\OrderReturnStatus;
 use App\Services\V1\Orders\Refunds\RefundHandlerInterface;
 use App\Services\V1\Orders\Refunds\RefundProcessor;
 use App\Services\V1\Orders\Refunds\StripeRefundGateway;
@@ -175,12 +176,12 @@ class StripeWebhook implements WebhookHandlerInterface
                 'refund_id' => $refund->id
             ]);
 
+            $approvedStatusId = OrderReturnStatus::where('name', ReturnStatuses::APPROVED)->value('id');
+
             $approvedReturns = $order->orderItems()
-                ->whereHas('orderReturn', function ($q) {
-                    $q->whereHas('status', function ($sq) {
-                        $sq->where('name', ReturnStatuses::APPROVED);
-                    })
-                        ->whereDoesntHave('orderRefunds');
+                ->whereHas('orderReturn', function ($q) use ($approvedStatusId) {
+                    $q->where('order_return_status_id', $approvedStatusId)
+                        ->whereDoesntHave('orderRefund');
                 })
                 ->get();
 
@@ -203,18 +204,19 @@ class StripeWebhook implements WebhookHandlerInterface
                 );
 
                 if (!$success) {
-                    Log::error('Failed to create manual refund record', [
+                    Log::error('Failed to create manual refund record - no approved returns found', [
                         'order_id' => $order->id,
-                        'refund_id' => $refund->id
+                        'refund_id' => $refund->id,
+                        'note' => 'Manual refunds require approved returns due to database constraints'
+                    ]);
+                } else {
+                    Log::info('Manual Stripe refund processed', [
+                        'order_id' => $order->id,
+                        'refund_amount' => $refund->amount / 100,
+                        'refund_id' => $refund->id,
+                        'source' => 'stripe_dashboard'
                     ]);
                 }
-
-                Log::info('Manual Stripe refund processed', [
-                    'order_id' => $order->id,
-                    'refund_amount' => $refund->amount / 100,
-                    'refund_id' => $refund->id,
-                    'source' => 'stripe_dashboard'
-                ]);
             }
 
             return $this->ok('Successful refund processed.');

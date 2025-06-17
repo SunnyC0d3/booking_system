@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Constants\RefundStatuses;
 use App\Constants\ReturnStatuses;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OrderReturn extends Model
@@ -22,15 +24,15 @@ class OrderReturn extends Model
         return $this->belongsTo(OrderItem::class);
     }
 
-    public function orderRefunds(): HasMany
-    {
-        return $this->hasMany(OrderRefund::class, 'order_return_id');
-    }
-
     public function orderRefund(): BelongsTo
     {
         return $this->belongsTo(OrderRefund::class, 'id', 'order_return_id')
             ->latest();
+    }
+
+    public function orderRefunds(): HasMany
+    {
+        return $this->hasMany(OrderRefund::class, 'order_return_id');
     }
 
     public function hasRefunds(): bool
@@ -41,8 +43,8 @@ class OrderReturn extends Model
     public function getTotalRefundedAmount(): int
     {
         return $this->orderRefunds()
-            ->whereHas('orderRefundStatus', function ($query) {
-                $query->where('name', \App\Constants\RefundStatuses::REFUNDED);
+            ->whereHas('status', function ($query) {
+                $query->where('name', RefundStatuses::REFUNDED);
             })
             ->sum('amount');
     }
