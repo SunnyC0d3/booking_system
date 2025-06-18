@@ -135,25 +135,7 @@ class RefundProcessor implements RefundHandlerInterface
 
     protected function updateOrderAndPaymentStatus(): void
     {
-        $isFullRefund = (!empty($this->orderItems) && $this->approvedCount === count($this->orderItems));
-
-        $refundedStatusId = $isFullRefund
-            ? OrderStatus::where('name', OrderStatuses::REFUNDED)->value('id')
-            : OrderStatus::where('name', OrderStatuses::PARTIALLY_REFUNDED)->value('id');
-
-        $paymentStatus = $isFullRefund
-            ? PaymentStatuses::REFUNDED
-            : PaymentStatuses::PARTIALLY_REFUNDED;
-
-        $this->order->update(['status_id' => $refundedStatusId]);
-        $this->payment->update(['status' => $paymentStatus]);
-
-        Log::info('Updated order and payment status', [
-            'order_id' => $this->order->id,
-            'is_full_refund' => $isFullRefund,
-            'order_status' => $isFullRefund ? 'REFUNDED' : 'PARTIALLY_REFUNDED',
-            'payment_status' => $paymentStatus
-        ]);
+        $this->recalculateOrderStatus($this->order);
     }
 
     protected function markReturnAsCompleted(): void
@@ -215,51 +197,135 @@ class RefundProcessor implements RefundHandlerInterface
     public function cancelRefund(int $orderId, int $refundAmount): bool
     {
         try {
-            $order = Order::findOrFail($orderId);
+            $order = Order::with(['payments', 'orderItems.orderReturn'])->findOrFail($orderId);
+            $payment = $order->payments->first();
+
+            if (!$payment) {
+                Log::error('No payment found for order', ['order_id' => $orderId]);
+                return false;
+            }
+
+            Log::info('Starting refund cancellation', [
+                'order_id' => $orderId,
+                'refund_amount' => $refundAmount / 100,
+                'current_payment_status' => $payment->status,
+                'payment_amount' => $payment->amount / 100
+            ]);
+
+            $refundedStatusId = OrderRefundStatus::where('name', RefundStatuses::REFUNDED)->value('id');
+            $pendingStatusId = OrderRefundStatus::where('name', RefundStatuses::PENDING)->value('id');
+            $canceledStatusId = OrderRefundStatus::where('name', RefundStatuses::CANCELLED)->value('id');
+
+            $matchingRefunds = collect();
 
             $matchingRefunds = OrderRefund::where('amount', $refundAmount)
-                ->where('created_at', '>=', now()->subHours(24))
+                ->where('created_at', '>=', now()->subHours(48))
                 ->whereHas('orderReturn', function ($q) use ($orderId) {
                     $q->whereHas('orderItem', function ($sq) use ($orderId) {
                         $sq->where('order_id', $orderId);
                     });
                 })
+                ->whereIn('order_refund_status_id', [$refundedStatusId, $pendingStatusId])
                 ->get();
 
             if ($matchingRefunds->isEmpty()) {
-                Log::info('No matching refund record found for cancellation', [
+                Log::info('No exact amount match, looking for recent refunds', [
                     'order_id' => $orderId,
                     'refund_amount' => $refundAmount / 100
                 ]);
+
+                $matchingRefunds = OrderRefund::where('created_at', '>=', now()->subHours(48))
+                    ->whereHas('orderReturn', function ($q) use ($orderId) {
+                        $q->whereHas('orderItem', function ($sq) use ($orderId) {
+                            $sq->where('order_id', $orderId);
+                        });
+                    })
+                    ->whereIn('order_refund_status_id', [$refundedStatusId, $pendingStatusId])
+                    ->orderByDesc('created_at')
+                    ->get();
+            }
+
+            if ($matchingRefunds->isEmpty()) {
+                Log::info('Still no matches, looking for any successful refunds for this order', [
+                    'order_id' => $orderId
+                ]);
+
+                $matchingRefunds = OrderRefund::whereHas('orderReturn', function ($q) use ($orderId) {
+                    $q->whereHas('orderItem', function ($sq) use ($orderId) {
+                        $sq->where('order_id', $orderId);
+                    });
+                })
+                    ->where('order_refund_status_id', $refundedStatusId)
+                    ->orderByDesc('created_at')
+                    ->limit(1)
+                    ->get();
+            }
+
+            if ($matchingRefunds->isEmpty()) {
+                Log::warning('No refund records found to cancel', [
+                    'order_id' => $orderId,
+                    'refund_amount' => $refundAmount / 100,
+                    'note' => 'This refund may never have been recorded in our database'
+                ]);
+
+                $this->recalculateOrderStatus($order);
                 return false;
             }
 
-            $canceledStatusId = OrderRefundStatus::where('name', RefundStatuses::CANCELLED)->value('id');
-            $approvedStatusId = OrderReturnStatus::where('name', ReturnStatuses::APPROVED)->value('id');
-
             $refundToCancel = $matchingRefunds->sortByDesc('created_at')->first();
 
+            Log::info('Found refund to cancel', [
+                'refund_id' => $refundToCancel->id,
+                'refund_amount' => $refundToCancel->amount / 100,
+                'requested_amount' => $refundAmount / 100,
+                'created_at' => $refundToCancel->created_at,
+                'current_status' => $refundToCancel->orderRefundStatus->name ?? 'unknown'
+            ]);
+
+            $originalStatus = $refundToCancel->orderRefundStatus->name ?? 'unknown';
             $refundToCancel->update([
                 'order_refund_status_id' => $canceledStatusId,
-                'notes' => ($refundToCancel->notes ?? '') . ' | Refund canceled in payment gateway'
+                'notes' => ($refundToCancel->notes ?? '') . ' | Refund canceled in payment gateway on ' . now()->format('Y-m-d H:i:s')
             ]);
 
             if ($refundToCancel->order_return_id) {
-                OrderReturn::where('id', $refundToCancel->order_return_id)
-                    ->update(['order_return_status_id' => $approvedStatusId]);
+                $orderReturn = OrderReturn::find($refundToCancel->order_return_id);
 
-                Log::info('Reverted return status back to approved due to refund cancellation', [
-                    'return_id' => $refundToCancel->order_return_id,
-                    'order_id' => $orderId
-                ]);
+                if ($orderReturn) {
+                    $isDummyReturn = str_contains($orderReturn->reason ?? '', 'Stripe Dashboard refund') ||
+                        str_contains($orderReturn->reason ?? '', 'external refund') ||
+                        str_contains($orderReturn->reason ?? '', 'External Stripe refund');
+
+                    $approvedStatusId = OrderReturnStatus::where('name', ReturnStatuses::APPROVED)->value('id');
+                    $pendingReturnStatusId = OrderReturnStatus::where('name', ReturnStatuses::PENDING)->value('id');
+
+                    $newStatusId = $isDummyReturn ? $pendingReturnStatusId : $approvedStatusId;
+
+                    $orderReturn->update(['order_return_status_id' => $newStatusId]);
+
+                    Log::info('Reverted return status due to refund cancellation', [
+                        'return_id' => $refundToCancel->order_return_id,
+                        'order_id' => $orderId,
+                        'new_status' => $isDummyReturn ? 'PENDING' : 'APPROVED',
+                        'was_dummy_return' => $isDummyReturn
+                    ]);
+                }
             }
 
+            $originalPaymentStatus = $payment->status;
             $this->recalculateOrderStatus($order);
 
-            Log::info('Refund cancellation processed', [
+            $payment->refresh();
+            $order->refresh();
+
+            Log::info('Refund cancellation completed successfully', [
                 'order_id' => $orderId,
-                'refund_record_id' => $refundToCancel->id,
-                'amount' => $refundAmount / 100
+                'canceled_refund_id' => $refundToCancel->id,
+                'canceled_amount' => $refundToCancel->amount / 100,
+                'original_refund_status' => $originalStatus,
+                'original_payment_status' => $originalPaymentStatus,
+                'new_payment_status' => $payment->status,
+                'payment_status_changed' => $originalPaymentStatus !== $payment->status
             ]);
 
             return true;
@@ -268,7 +334,8 @@ class RefundProcessor implements RefundHandlerInterface
             Log::error('Failed to process refund cancellation', [
                 'order_id' => $orderId,
                 'amount' => $refundAmount,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
             return false;
         }
@@ -337,7 +404,13 @@ class RefundProcessor implements RefundHandlerInterface
     public function createManualRefund(int $orderId, int $amount, string $notes = '', string $source = 'manual'): bool
     {
         try {
-            $order = Order::with('orderItems.orderReturn')->findOrFail($orderId);
+            $order = Order::with(['orderItems.orderReturn', 'payments'])->findOrFail($orderId);
+
+            Log::info('Debug: Order loaded for manual refund', [
+                'order_id' => $orderId,
+                'payments_count' => $order->payments->count(),
+                'payments_data' => $order->payments->toArray()
+            ]);
 
             $approvedStatusId = OrderReturnStatus::where('name', ReturnStatuses::APPROVED)->value('id');
 
@@ -415,43 +488,76 @@ class RefundProcessor implements RefundHandlerInterface
         });
     }
 
-    protected function recalculateOrderStatus(Order $order): void
+    public function recalculateOrderStatus(Order $order): void
     {
-        $payment = $order->payments->first();
-        if (!$payment) return;
+        $order->load('payments');
 
-        $totalRefunded = OrderRefund::whereHas('orderReturn', function ($q) use ($order) {
+        $payment = $order->payments->first();
+        if (!$payment) {
+            Log::warning('No valid payment found for order', ['order_id' => $order->id]);
+            return;
+        }
+
+        $originalPaymentStatus = $payment->status;
+        $originalOrderStatus = $order->status->name ?? 'unknown';
+
+        Log::info('Recalculating order status', [
+            'order_id' => $order->id,
+            'payment_amount' => $payment->amount / 100,
+            'current_payment_status' => $payment->status,
+            'current_order_status' => $originalOrderStatus
+        ]);
+
+        $refundedStatusId = OrderRefundStatus::where('name', RefundStatuses::REFUNDED)->value('id');
+
+        $totalActiveRefunds = OrderRefund::whereHas('orderReturn', function ($q) use ($order) {
             $q->whereHas('orderItem', function ($sq) use ($order) {
                 $sq->where('order_id', $order->id);
             });
         })
-            ->whereHas('status', function ($query) {
-                $query->where('name', RefundStatuses::REFUNDED);
-            })
+            ->where('order_refund_status_id', $refundedStatusId)
             ->sum('amount');
 
-        $isFullRefund = $totalRefunded >= $payment->amount;
-        $isPartialRefund = $totalRefunded > 0 && $totalRefunded < $payment->amount;
+        $totalOrderItems = $order->orderItems()->count();
+        $itemsWithActiveRefunds = $order->orderItems()
+            ->whereHas('orderReturn.orderRefund', function ($q) use ($refundedStatusId) {
+                $q->where('order_refund_status_id', $refundedStatusId);
+            })
+            ->count();
+
+        $isFullRefundByAmount = $totalActiveRefunds >= $payment->amount;
+        $isFullRefundByItems = $itemsWithActiveRefunds >= $totalOrderItems;
+        $isFullRefund = $isFullRefundByAmount || $isFullRefundByItems;
+        $isPartialRefund = $totalActiveRefunds > 0 && !$isFullRefund;
 
         if ($isFullRefund) {
             $orderStatusId = OrderStatus::where('name', OrderStatuses::REFUNDED)->value('id');
             $paymentStatus = PaymentStatuses::REFUNDED;
+            $statusName = 'REFUNDED';
         } elseif ($isPartialRefund) {
             $orderStatusId = OrderStatus::where('name', OrderStatuses::PARTIALLY_REFUNDED)->value('id');
             $paymentStatus = PaymentStatuses::PARTIALLY_REFUNDED;
+            $statusName = 'PARTIALLY_REFUNDED';
         } else {
             $orderStatusId = OrderStatus::where('name', OrderStatuses::CONFIRMED)->value('id');
             $paymentStatus = PaymentStatuses::PAID;
+            $statusName = 'PAID';
         }
 
         $order->update(['status_id' => $orderStatusId]);
         $payment->update(['status' => $paymentStatus]);
 
-        Log::info('Recalculated order status', [
+        Log::info('Order status recalculation completed', [
             'order_id' => $order->id,
-            'total_refunded' => $totalRefunded / 100,
+            'total_active_refunds' => $totalActiveRefunds / 100,
             'payment_amount' => $payment->amount / 100,
-            'new_status' => $isFullRefund ? 'REFUNDED' : ($isPartialRefund ? 'PARTIALLY_REFUNDED' : 'CONFIRMED')
+            'total_items' => $totalOrderItems,
+            'items_with_active_refunds' => $itemsWithActiveRefunds,
+            'original_payment_status' => $originalPaymentStatus,
+            'new_payment_status' => $paymentStatus,
+            'original_order_status' => $originalOrderStatus,
+            'new_order_status' => $statusName,
+            'status_changed' => $originalPaymentStatus !== $paymentStatus
         ]);
     }
 

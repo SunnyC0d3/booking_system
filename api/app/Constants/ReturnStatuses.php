@@ -13,6 +13,8 @@ class ReturnStatuses
     public const COMPLETED = 'Completed';
     public const CANCELLED = 'Cancelled';
 
+    public const PENDING = 'Pending';
+
     public static function all(): array
     {
         return [
@@ -24,6 +26,7 @@ class ReturnStatuses
             self::RETURN_RECIEVED,
             self::COMPLETED,
             self::CANCELLED,
+            self::PENDING,
         ];
     }
 }

@@ -6,7 +6,7 @@ use App\Constants\PaymentMethods;
 use App\Http\Controllers\Controller;
 use App\Services\V1\Orders\Refunds\RefundProcessor;
 use App\Services\V1\Orders\Refunds\Refunds;
-use App\Services\V1\Orders\Refunds\StripeRefundGateway;
+use App\Services\V1\Orders\Refunds\ManualStripeRefund;
 use App\Traits\V1\ApiResponses;
 use Exception;
 use Illuminate\Http\Request;
@@ -51,7 +51,7 @@ class RefundController extends Controller
     private function handle(string $gateway)
     {
         return match ($gateway) {
-            PaymentMethods::STRIPE => StripeRefundGateway::class,
+            PaymentMethods::STRIPE => ManualStripeRefund::class,
             default => null,
         };
     }

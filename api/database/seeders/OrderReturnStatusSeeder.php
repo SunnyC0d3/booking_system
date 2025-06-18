@@ -17,9 +17,10 @@ class OrderReturnStatusSeeder extends Seeder
             ReturnStatuses::APPROVED,
             ReturnStatuses::REJECTED,
             ReturnStatuses::RETURN_SHIPPED,
-            ReturnStatuses::RETURN_RECEIVED,
+            ReturnStatuses::RETURN_RECIEVED,
             ReturnStatuses::COMPLETED,
-            ReturnStatuses::CANCELLED
+            ReturnStatuses::CANCELLED,
+            ReturnStatuses::PENDING,
         ];
 
         OrderReturnStatus::insert(array_map(fn ($name) => [

@@ -9,7 +9,7 @@ use App\Models\OrderStatus;
 use App\Models\OrderReturnStatus;
 use App\Services\V1\Orders\Refunds\RefundHandlerInterface;
 use App\Services\V1\Orders\Refunds\RefundProcessor;
-use App\Services\V1\Orders\Refunds\StripeRefundGateway;
+use App\Services\V1\Orders\Refunds\ManualStripeRefund;
 use Illuminate\Http\Request;
 use App\Models\Payment as DB;
 use App\Traits\V1\ApiResponses;
@@ -34,7 +34,7 @@ class StripeWebhook implements WebhookHandlerInterface
         $this->webhook_secret = config('services.stripe_webhook_secret');
         Stripe::setApiKey($this->secret);
 
-        $this->refundProcessor = new RefundProcessor(new StripeRefundGateway());
+        $this->refundProcessor = new RefundProcessor(new ManualStripeRefund());
         $this->refundProcessor->enableWebhook();
         $this->refundProcessor->skipGatewayProcessing();
         $this->refundProcessor->setRefundSource('stripe_webhook');
@@ -91,6 +91,9 @@ class StripeWebhook implements WebhookHandlerInterface
 
             case 'charge.refund.updated':
                 return $this->handleChargeRefundUpdated($eventObject);
+
+            case 'refund.failed':
+                return $this->handleRefundFailed($eventObject);
 
             default:
                 Log::info('Unhandled webhook event type', ['type' => $event->type]);
@@ -170,61 +173,66 @@ class StripeWebhook implements WebhookHandlerInterface
 
             $order = $payment->order;
 
-            Log::info('Processing successful refund', [
+            Log::info('Processing successful refund webhook', [
                 'order_id' => $order->id,
                 'refund_amount' => $refund->amount / 100,
-                'refund_id' => $refund->id
+                'refund_id' => $refund->id,
+                'stripe_metadata' => $refund->metadata ?? null
             ]);
 
-            $approvedStatusId = OrderReturnStatus::where('name', ReturnStatuses::APPROVED)->value('id');
+            $isManualRefund = isset($refund->metadata['order_id']) &&
+                isset($refund->metadata['order_item_id']) &&
+                isset($refund->metadata['return_id']);
 
-            $approvedReturns = $order->orderItems()
-                ->whereHas('orderReturn', function ($q) use ($approvedStatusId) {
-                    $q->where('order_return_status_id', $approvedStatusId)
-                        ->whereDoesntHave('orderRefund');
-                })
-                ->get();
-
-            if ($approvedReturns->isNotEmpty()) {
-                $this->refundProcessor->setRefundNotes('Refund processed via Stripe (internal)');
-                $result = $this->refundProcessor->refund(request(), $order->id);
-
-                Log::info('Internal refund processing completed via webhook', [
+            if ($isManualRefund) {
+                Log::info('Webhook received for our own manual refund - acknowledging only', [
                     'order_id' => $order->id,
-                    'approved_returns_count' => $approvedReturns->count(),
-                    'refund_id' => $refund->id
+                    'refund_id' => $refund->id,
+                    'order_item_id' => $refund->metadata['order_item_id'],
+                    'return_id' => $refund->metadata['return_id'],
+                    'note' => 'Not processing via webhook since refund records already created manually'
                 ]);
-            } else {
-                $notes = 'Manual refund processed via Stripe Dashboard (Refund ID: ' . $refund->id . ')';
-                $success = $this->refundProcessor->createManualRefund(
-                    $order->id,
-                    $refund->amount,
-                    $notes,
-                    'stripe_dashboard'
-                );
 
-                if (!$success) {
-                    Log::error('Failed to create manual refund record - no approved returns found', [
-                        'order_id' => $order->id,
-                        'refund_id' => $refund->id,
-                        'note' => 'Manual refunds require approved returns due to database constraints'
-                    ]);
-                } else {
-                    Log::info('Manual Stripe refund processed', [
-                        'order_id' => $order->id,
-                        'refund_amount' => $refund->amount / 100,
-                        'refund_id' => $refund->id,
-                        'source' => 'stripe_dashboard'
-                    ]);
-                }
+                return $this->ok('Manual refund webhook acknowledged.');
             }
 
-            return $this->ok('Successful refund processed.');
+            Log::info('Processing external Stripe refund', [
+                'order_id' => $order->id,
+                'refund_id' => $refund->id,
+                'refund_amount' => $refund->amount / 100,
+                'source' => 'external_stripe_refund'
+            ]);
+
+            $notes = 'External Stripe refund processed (Refund ID: ' . $refund->id . ')';
+            $success = $this->refundProcessor->createManualRefund(
+                $order->id,
+                $refund->amount,
+                $notes,
+                'external_stripe_refund'
+            );
+
+            if ($success) {
+                Log::info('External Stripe refund processed successfully', [
+                    'order_id' => $order->id,
+                    'refund_amount' => $refund->amount / 100,
+                    'refund_id' => $refund->id,
+                    'source' => 'external_stripe_refund'
+                ]);
+            } else {
+                Log::error('Failed to process external Stripe refund', [
+                    'order_id' => $order->id,
+                    'refund_id' => $refund->id,
+                    'note' => 'Could not create refund records for external refund'
+                ]);
+            }
+
+            return $this->ok('External refund processed.');
 
         } catch (\Exception $e) {
-            Log::error('Failed to process successful refund', [
+            Log::error('Failed to process successful refund webhook', [
                 'refund_id' => $refund->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
             return $this->error('Failed to process successful refund', 500);
         }
@@ -310,10 +318,12 @@ class StripeWebhook implements WebhookHandlerInterface
 
     private function handleRefundFailed($refund)
     {
-        Log::info('Processing failed refund', [
+        Log::info('Processing refund failure/cancellation', [
             'refund_id' => $refund->id,
             'charge_id' => $refund->charge,
-            'failure_reason' => $refund->failure_reason ?? 'unknown'
+            'status' => $refund->status,
+            'amount' => $refund->amount / 100,
+            'failure_reason' => $refund->failure_reason ?? 'canceled'
         ]);
 
         try {
@@ -321,39 +331,61 @@ class StripeWebhook implements WebhookHandlerInterface
             $payment = DB::where('transaction_reference', $charge->payment_intent)->first();
 
             if (!$payment) {
-                Log::warning('Payment not found for failed refund', [
+                Log::warning('Payment not found for failed/canceled refund', [
                     'refund_id' => $refund->id,
-                    'charge_id' => $refund->charge
+                    'charge_id' => $refund->charge,
+                    'payment_intent' => $charge->payment_intent
                 ]);
                 return $this->ok('Payment not found, but webhook processed.');
             }
 
             $order = $payment->order;
-            $failureReason = 'Refund failed in Stripe: ' . ($refund->failure_reason ?? 'unknown reason');
 
-            $success = $this->refundProcessor->failRefund($order->id, $failureReason);
+            Log::info('Processing refund cancellation for order', [
+                'order_id' => $order->id,
+                'refund_id' => $refund->id,
+                'refund_amount' => $refund->amount / 100,
+                'current_payment_status' => $payment->status,
+                'refund_status' => $refund->status
+            ]);
 
-            if ($success) {
-                Log::info('Failed refund processed successfully', [
+            if ($refund->status === 'canceled') {
+                $success = $this->refundProcessor->cancelRefund($order->id, $refund->amount);
+
+                if ($success) {
+                    $payment->refresh();
+                    Log::info('Refund cancellation processed successfully', [
+                        'order_id' => $order->id,
+                        'refund_id' => $refund->id,
+                        'new_payment_status' => $payment->status
+                    ]);
+                } else {
+                    Log::warning('Refund cancellation processing failed', [
+                        'order_id' => $order->id,
+                        'refund_id' => $refund->id,
+                        'note' => 'cancelRefund method returned false'
+                    ]);
+                }
+            } else {
+                $failureReason = 'Refund failed in Stripe: ' . ($refund->failure_reason ?? 'unknown reason');
+                $success = $this->refundProcessor->failRefund($order->id, $failureReason);
+
+                Log::info('Refund failure processed', [
                     'order_id' => $order->id,
                     'refund_id' => $refund->id,
-                    'failure_reason' => $refund->failure_reason ?? 'unknown'
-                ]);
-            } else {
-                Log::warning('No pending refunds found to mark as failed', [
-                    'order_id' => $order->id,
-                    'refund_id' => $refund->id
+                    'success' => $success
                 ]);
             }
 
-            return $this->ok('Failed refund processed successfully.');
+            return $this->ok('Refund failure/cancellation processed.');
 
         } catch (\Exception $e) {
-            Log::error('Failed to process failed refund', [
+            Log::error('Failed to process refund failure/cancellation', [
                 'refund_id' => $refund->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
-            return $this->error('Failed to process failed refund', 500);
+            return $this->error('Failed to process refund failure/cancellation', 500);
         }
     }
 
