@@ -52,7 +52,6 @@ class ProductSeeder extends Seeder
         $attributes = ProductAttribute::all();
         $statuses = ProductStatus::all();
 
-        // First, ensure all unique tags exist in product_tags table
         $allPossibleTags = $this->commonTags;
         foreach ($this->tagsByCategory as $categoryTags) {
             $allPossibleTags = array_merge($allPossibleTags, $categoryTags);
@@ -67,15 +66,12 @@ class ProductSeeder extends Seeder
 
         ProductTag::insert($tagRecords);
 
-        // Get all tags with their IDs
         $tagModels = ProductTag::all()->keyBy('name');
 
-        // Prepare products data
         for ($i = 0; $i < 50; $i++) {
             $productId = $lastProductId + $i + 1;
             $category = $categories->random();
 
-            // Find parent category if it's a subcategory
             $categoryName = $category->name;
             $parentCategory = null;
             if ($category->parent_id) {
@@ -88,24 +84,21 @@ class ProductSeeder extends Seeder
                 'product_category_id' => $category->id,
                 'name'              => "Product " . ($i + 1),
                 'description'       => "Description for product " . ($i + 1),
-                'price'             => rand(10, 1000) + 0.99,
+                'price'             => (rand(10, 1000) * 100) + 99,
                 'quantity'          => rand(10, 100),
                 'product_status_id' => $statuses->random()->id,
                 'created_at'        => now(),
                 'updated_at'        => now(),
             ];
 
-            // Generate tags for this product
             $selectedTags = [];
 
-            // Add category-specific tags
             if (isset($this->tagsByCategory[$categoryName])) {
                 $categoryTags = $this->tagsByCategory[$categoryName];
                 $numCategoryTags = rand(2, 4);
                 $selectedTags = array_merge($selectedTags, array_rand(array_flip($categoryTags), $numCategoryTags));
             }
 
-            // Add parent category tags if exists
             if ($parentCategory && isset($this->tagsByCategory[$parentCategory->name])) {
                 $numParentTags = rand(1, 3);
                 $randomTags = $numParentTags === 1
@@ -114,14 +107,12 @@ class ProductSeeder extends Seeder
                 $selectedTags = array_merge($selectedTags, $randomTags);
             }
 
-            // Add some common tags
             $numCommonTags = rand(1, 2);
             $randomTags = $numCommonTags === 1
                 ? [array_rand(array_flip($this->commonTags))]
                 : array_rand(array_flip($this->commonTags), $numCommonTags);
             $selectedTags = array_merge($selectedTags, $randomTags);
 
-            // Remove duplicates and prepare pivot records
             $selectedTags = array_unique($selectedTags);
             foreach ($selectedTags as $tag) {
                 $productTags[] = [
@@ -130,16 +121,16 @@ class ProductSeeder extends Seeder
                 ];
             }
 
-            // Prepare variants (variants code remains the same)
             $selectedAttributes = $attributes->random(rand(1, 3));
             foreach ($selectedAttributes as $attribute) {
                 $variantCount = rand(2, 4);
                 for ($j = 0; $j < $variantCount; $j++) {
+                    $additionalPrice = rand(0, 1) ? rand(5, 50) * 100 : null;
                     $variants[] = [
                         'product_id'       => $productId,
                         'product_attribute_id' => $attribute->id,
                         'value'            => $this->generateVariantValue($attribute->name),
-                        'additional_price' => rand(0, 1) ? rand(5, 50) : null,
+                        'additional_price' => $additionalPrice,
                         'quantity'         => rand(5, 30),
                         'created_at'       => now(),
                         'updated_at'       => now(),
@@ -150,10 +141,8 @@ class ProductSeeder extends Seeder
 
         foreach ($products as $productData) {
             $product = Product::create($productData);
-            //S$this->attachMedia($product);
         }
 
-        // Bulk insert variants, and product-tag relationships
         ProductVariant::insert($variants);
         DB::table('product_tag')->insert($productTags);
     }

@@ -19,6 +19,31 @@ class OrderRefund extends Model
         'notes'
     ];
 
+    public function getAmountInPennies(): int
+    {
+        return (int) $this->amount;
+    }
+
+    public function getAmountInPounds(): float
+    {
+        return $this->amount / 100;
+    }
+
+    public function setAmountFromPounds(float $pounds): void
+    {
+        $this->amount = (int) round($pounds * 100);
+    }
+
+    public function setAmountFromPennies(int $pennies): void
+    {
+        $this->amount = $pennies;
+    }
+
+    public function matchesStripeAmount(int $stripeAmountInPennies): bool
+    {
+        return $this->getAmountInPennies() === $stripeAmountInPennies;
+    }
+
     protected function casts(): array
     {
         return [
@@ -36,22 +61,27 @@ class OrderRefund extends Model
         return $this->belongsTo(OrderReturn::class);
     }
 
+    public function orderRefundStatus(): BelongsTo
+    {
+        return $this->belongsTo(OrderRefundStatus::class, 'order_refund_status_id');
+    }
+
     public function isSuccessful(): bool
     {
-        $refundedStatusId = OrderReturnStatus::where('name', RefundStatuses::REFUNDED)->value('id');
-        return $this->orderRefundStatus->id === $refundedStatusId;
+        $refundedStatusId = OrderRefundStatus::where('name', RefundStatuses::REFUNDED)->value('id');
+        return $this->order_refund_status_id === $refundedStatusId;
     }
 
     public function isFailed(): bool
     {
-        $failedStatusId = OrderReturnStatus::where('name', RefundStatuses::FAILED)->value('id');
-        return $this->orderRefundStatus->id === $failedStatusId;
+        $failedStatusId = OrderRefundStatus::where('name', RefundStatuses::FAILED)->value('id');
+        return $this->order_refund_status_id === $failedStatusId;
     }
 
     public function isCancelled(): bool
     {
-        $cancelledStatusId = OrderReturnStatus::where('name', RefundStatuses::CANCELLED)->value('id');
-        return $this->orderRefundStatus->id === $cancelledStatusId;
+        $cancelledStatusId = OrderRefundStatus::where('name', RefundStatuses::CANCELLED)->value('id');
+        return $this->order_refund_status_id === $cancelledStatusId;
     }
 
     public function status(): BelongsTo

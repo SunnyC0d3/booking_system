@@ -16,7 +16,7 @@ class PaymentFactory extends Factory
     public function definition(): array
     {
         return [
-            'amount'                => fake()->randomFloat(),
+            'amount'                => fake()->numberBetween(1000, 50000),
             'payment_method_id'     => PaymentMethod::factory(),
             'status'                => fake()->word(),
             'transaction_reference' => 'pi_' . $this->faker->regexify('[A-Za-z0-9]{24}'),

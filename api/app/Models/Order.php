@@ -19,9 +19,24 @@ class Order extends Model
         'total_amount',
     ];
 
-    public function getTotalAmountAttribute(int|float $value)
+    public function getTotalAmountInPennies(): int
     {
-        return round($value, 2) * 100;
+        return (int) $this->total_amount;
+    }
+
+    public function getTotalAmountInPounds(): float
+    {
+        return $this->total_amount / 100;
+    }
+
+    public function setTotalAmountFromPounds(float $pounds): void
+    {
+        $this->total_amount = (int) round($pounds * 100);
+    }
+
+    public function setTotalAmountFromPennies(int $pennies): void
+    {
+        $this->total_amount = $pennies;
     }
 
     public function user(): BelongsTo
@@ -38,7 +53,6 @@ class Order extends Model
     {
         return $this->belongsTo(OrderStatus::class);
     }
-
 
     public function payments(): HasMany
     {

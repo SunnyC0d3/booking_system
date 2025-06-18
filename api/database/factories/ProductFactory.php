@@ -18,8 +18,8 @@ class ProductFactory extends Factory
         return [
             'name'                  => fake()->name(),
             'description'           => fake()->text(),
-            'price'                 => fake()->randomFloat(2, 1, 100),
-            'quantity'              => fake()->randomNumber(3),
+            'price'                 => fake()->numberBetween(100, 10000),
+            'quantity'              => fake()->numberBetween(1, 999),
             'product_status_id'     => ProductStatus::factory(),
             'product_category_id'   => ProductCategory::factory(),
             'vendor_id'             => Vendor::factory(),

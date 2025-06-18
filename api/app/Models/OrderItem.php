@@ -19,6 +19,41 @@ class OrderItem extends Model
         'price',
     ];
 
+    public function refundAmount(): int
+    {
+        return (int) ($this->price * $this->quantity);
+    }
+
+    public function getPriceInPennies(): int
+    {
+        return (int) $this->price;
+    }
+
+    public function getPriceInPounds(): float
+    {
+        return $this->price / 100;
+    }
+
+    public function getLineTotalInPennies(): int
+    {
+        return $this->refundAmount();
+    }
+
+    public function getLineTotalInPounds(): float
+    {
+        return $this->getLineTotalInPennies() / 100;
+    }
+
+    public function setPriceFromPounds(float $pounds): void
+    {
+        $this->price = (int) round($pounds * 100);
+    }
+
+    public function setPriceFromPennies(int $pennies): void
+    {
+        $this->price = $pennies;
+    }
+
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
@@ -39,13 +74,8 @@ class OrderItem extends Model
         return $this->belongsTo(ProductVariant::class);
     }
 
-    public function refundAmount(): int
-    {
-        return (int) (($this->price * $this->quantity) * 100);
-    }
-
     public function scopeWithRefundAmount($query)
     {
-        return $query->selectRaw('*, (price * quantity * 100) as refund_amount');
+        return $query->selectRaw('*, (price * quantity) as refund_amount_pennies');
     }
 }

@@ -16,8 +16,8 @@ class OrderItemFactory extends Factory
     public function definition(): array
     {
         return [
-            'quantity'   => fake()->randomNumber(),
-            'price'      => fake()->randomFloat(),
+            'quantity'   => fake()->numberBetween(1, 10),
+            'price'      => fake()->numberBetween(500, 10000),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
 

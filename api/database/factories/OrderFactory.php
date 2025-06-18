@@ -16,7 +16,7 @@ class OrderFactory extends Factory
     {
         return [
             'status_id'    => OrderStatus::factory(),
-            'total_amount' => fake()->randomNumber(),
+            'total_amount' => fake()->numberBetween(1000, 50000),
             'created_at'   => Carbon::now(),
             'updated_at'   => Carbon::now(),
 

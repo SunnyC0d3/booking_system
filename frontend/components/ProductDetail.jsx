@@ -60,7 +60,7 @@ const ProductDetail = () => {
                         <div className="md:w-1/2 mt-6 md:mt-0">
                             <h1 className="text-3xl font-bold text-gray-800 mb-2">{product.name}</h1>
                             <p className="text-sm text-gray-500 mb-4">{product.category || 'Template'}</p>
-                            <p className="text-2xl text-indigo-600 font-semibold mb-4">${product.price}</p>
+                            <p className="text-2xl text-indigo-600 font-semibold mb-4">£{(product.price / 100).toFixed(2)}</p>
 
                             <div className="text-gray-700 mb-6 whitespace-pre-line">
                                 {product.description || 'No description available for this product.'}

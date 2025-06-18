@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Order as OrderDB;
 use App\Traits\V1\ApiResponses;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class Order
 {
@@ -62,22 +63,43 @@ class Order
                 ]);
 
                 if (!empty($data['order_items'])) {
-                    $total = 0;
+                    $totalInPennies = 0;
 
                     foreach ($data['order_items'] as $item) {
-                        $price = $item['price'];
-                        $quantity = $item['quantity'];
-                        $total += $price * $quantity;
+                        $priceInPennies = isset($item['price_pennies'])
+                            ? (int) $item['price_pennies']
+                            : (int) round($item['price'] * 100);
 
-                        $order->orderItems()->create([
+                        $quantity = $item['quantity'];
+                        $lineTotal = $priceInPennies * $quantity;
+                        $totalInPennies += $lineTotal;
+
+                        $orderItem = $order->orderItems()->create([
                             'product_id' => $item['product_id'],
                             'product_variant_id' => $item['product_variant_id'] ?? null,
                             'quantity' => $quantity,
-                            'price' => $price,
+                            'price' => $priceInPennies,
+                        ]);
+
+                        Log::info('Order item created', [
+                            'order_item_id' => $orderItem->id,
+                            'product_id' => $item['product_id'],
+                            'price_pennies' => $priceInPennies,
+                            'price_pounds' => $priceInPennies / 100,
+                            'quantity' => $quantity,
+                            'line_total_pennies' => $lineTotal,
+                            'line_total_pounds' => $lineTotal / 100
                         ]);
                     }
 
-                    $order->update(['total_amount' => $total]);
+                    $order->setTotalAmountFromPennies($totalInPennies);
+                    $order->save();
+
+                    Log::info('Order total calculated', [
+                        'order_id' => $order->id,
+                        'total_pennies' => $totalInPennies,
+                        'total_pounds' => $totalInPennies / 100
+                    ]);
                 }
             });
 
@@ -106,22 +128,33 @@ class Order
                 if (!empty($data['order_items'])) {
                     $order->orderItems()->delete();
 
-                    $total = 0;
+                    $totalInPennies = 0;
 
                     foreach ($data['order_items'] as $item) {
-                        $price = $item['price'];
+                        $priceInPennies = isset($item['price_pennies'])
+                            ? (int) $item['price_pennies']
+                            : (int) round($item['price'] * 100);
+
                         $quantity = $item['quantity'];
-                        $total += $price * $quantity;
+                        $lineTotal = $priceInPennies * $quantity;
+                        $totalInPennies += $lineTotal;
 
                         $order->orderItems()->create([
                             'product_id' => $item['product_id'],
                             'product_variant_id' => $item['product_variant_id'] ?? null,
                             'quantity' => $quantity,
-                            'price' => $price,
+                            'price' => $priceInPennies,
                         ]);
                     }
 
-                    $order->update(['total_amount' => $total]);
+                    $order->setTotalAmountFromPennies($totalInPennies);
+                    $order->save();
+
+                    Log::info('Order updated with new total', [
+                        'order_id' => $order->id,
+                        'total_pennies' => $totalInPennies,
+                        'total_pounds' => $totalInPennies / 100
+                    ]);
                 }
             });
 

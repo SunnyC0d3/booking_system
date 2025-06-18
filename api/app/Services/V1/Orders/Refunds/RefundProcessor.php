@@ -111,9 +111,11 @@ class RefundProcessor implements RefundHandlerInterface
             : $this->orderItems->filter(fn ($item) => $item->orderReturn && $item->orderReturn->isApproved());
 
         $items->each(function ($item) use ($refundedStatusId) {
+            $refundAmountInPennies = $item->refundAmount();
+
             $refundData = [
                 'order_return_id' => $item->orderReturn->id,
-                'amount' => $item->refundAmount(),
+                'amount' => $refundAmountInPennies,
                 'order_refund_status_id' => $refundedStatusId,
                 'processed_at' => now(),
             ];
@@ -127,7 +129,8 @@ class RefundProcessor implements RefundHandlerInterface
             Log::info('Refund record created', [
                 'order_item_id' => $item->id,
                 'return_id' => $item->orderReturn->id,
-                'amount' => $item->refundAmount() / 100,
+                'amount_pennies' => $refundAmountInPennies,
+                'amount_pounds' => $refundAmountInPennies / 100,
                 'source' => $this->refundSource ?? 'api'
             ]);
         });
@@ -166,10 +169,11 @@ class RefundProcessor implements RefundHandlerInterface
     protected function markRefundAsFailed(string $reason): void
     {
         $failedStatusId = OrderRefundStatus::where('name', RefundStatuses::FAILED)->value('id');
+        $refundAmountInPennies = $this->orderItem->refundAmount();
 
         OrderRefund::create([
             'order_return_id' => $this->orderReturn->id,
-            'amount' => $this->orderItem->refundAmount(),
+            'amount' => $refundAmountInPennies,
             'order_refund_status_id' => $failedStatusId,
             'processed_at' => now(),
             'notes' => $reason,
@@ -194,7 +198,7 @@ class RefundProcessor implements RefundHandlerInterface
         $this->markReturnAsCompleted();
     }
 
-    public function cancelRefund(int $orderId, int $refundAmount): bool
+    public function cancelRefund(int $orderId, int $refundAmountInPennies): bool
     {
         try {
             $order = Order::with(['payments', 'orderItems.orderReturn'])->findOrFail($orderId);
@@ -207,18 +211,18 @@ class RefundProcessor implements RefundHandlerInterface
 
             Log::info('Starting refund cancellation', [
                 'order_id' => $orderId,
-                'refund_amount' => $refundAmount / 100,
+                'refund_amount_pennies' => $refundAmountInPennies,
+                'refund_amount_pounds' => $refundAmountInPennies / 100,
                 'current_payment_status' => $payment->status,
-                'payment_amount' => $payment->amount / 100
+                'payment_amount_pennies' => $payment->getAmountInPennies(),
+                'payment_amount_pounds' => $payment->getAmountInPounds()
             ]);
 
             $refundedStatusId = OrderRefundStatus::where('name', RefundStatuses::REFUNDED)->value('id');
             $pendingStatusId = OrderRefundStatus::where('name', RefundStatuses::PENDING)->value('id');
             $canceledStatusId = OrderRefundStatus::where('name', RefundStatuses::CANCELLED)->value('id');
 
-            $matchingRefunds = collect();
-
-            $matchingRefunds = OrderRefund::where('amount', $refundAmount)
+            $matchingRefunds = OrderRefund::where('amount', $refundAmountInPennies)
                 ->where('created_at', '>=', now()->subHours(48))
                 ->whereHas('orderReturn', function ($q) use ($orderId) {
                     $q->whereHas('orderItem', function ($sq) use ($orderId) {
@@ -231,7 +235,7 @@ class RefundProcessor implements RefundHandlerInterface
             if ($matchingRefunds->isEmpty()) {
                 Log::info('No exact amount match, looking for recent refunds', [
                     'order_id' => $orderId,
-                    'refund_amount' => $refundAmount / 100
+                    'refund_amount_pennies' => $refundAmountInPennies
                 ]);
 
                 $matchingRefunds = OrderRefund::where('created_at', '>=', now()->subHours(48))
@@ -246,25 +250,9 @@ class RefundProcessor implements RefundHandlerInterface
             }
 
             if ($matchingRefunds->isEmpty()) {
-                Log::info('Still no matches, looking for any successful refunds for this order', [
-                    'order_id' => $orderId
-                ]);
-
-                $matchingRefunds = OrderRefund::whereHas('orderReturn', function ($q) use ($orderId) {
-                    $q->whereHas('orderItem', function ($sq) use ($orderId) {
-                        $sq->where('order_id', $orderId);
-                    });
-                })
-                    ->where('order_refund_status_id', $refundedStatusId)
-                    ->orderByDesc('created_at')
-                    ->limit(1)
-                    ->get();
-            }
-
-            if ($matchingRefunds->isEmpty()) {
                 Log::warning('No refund records found to cancel', [
                     'order_id' => $orderId,
-                    'refund_amount' => $refundAmount / 100,
+                    'refund_amount_pennies' => $refundAmountInPennies,
                     'note' => 'This refund may never have been recorded in our database'
                 ]);
 
@@ -276,8 +264,9 @@ class RefundProcessor implements RefundHandlerInterface
 
             Log::info('Found refund to cancel', [
                 'refund_id' => $refundToCancel->id,
-                'refund_amount' => $refundToCancel->amount / 100,
-                'requested_amount' => $refundAmount / 100,
+                'refund_amount_pennies' => $refundToCancel->getAmountInPennies(),
+                'refund_amount_pounds' => $refundToCancel->getAmountInPounds(),
+                'requested_amount_pennies' => $refundAmountInPennies,
                 'created_at' => $refundToCancel->created_at,
                 'current_status' => $refundToCancel->orderRefundStatus->name ?? 'unknown'
             ]);
@@ -321,7 +310,8 @@ class RefundProcessor implements RefundHandlerInterface
             Log::info('Refund cancellation completed successfully', [
                 'order_id' => $orderId,
                 'canceled_refund_id' => $refundToCancel->id,
-                'canceled_amount' => $refundToCancel->amount / 100,
+                'canceled_amount_pennies' => $refundToCancel->getAmountInPennies(),
+                'canceled_amount_pounds' => $refundToCancel->getAmountInPounds(),
                 'original_refund_status' => $originalStatus,
                 'original_payment_status' => $originalPaymentStatus,
                 'new_payment_status' => $payment->status,
@@ -333,7 +323,7 @@ class RefundProcessor implements RefundHandlerInterface
         } catch (\Exception $e) {
             Log::error('Failed to process refund cancellation', [
                 'order_id' => $orderId,
-                'amount' => $refundAmount,
+                'amount_pennies' => $refundAmountInPennies,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
@@ -401,7 +391,7 @@ class RefundProcessor implements RefundHandlerInterface
         }
     }
 
-    public function createManualRefund(int $orderId, int $amount, string $notes = '', string $source = 'manual'): bool
+    public function createManualRefund(int $orderId, int $amountInPennies, string $notes = '', string $source = 'manual'): bool
     {
         try {
             $order = Order::with(['orderItems.orderReturn', 'payments'])->findOrFail($orderId);
@@ -409,7 +399,8 @@ class RefundProcessor implements RefundHandlerInterface
             Log::info('Debug: Order loaded for manual refund', [
                 'order_id' => $orderId,
                 'payments_count' => $order->payments->count(),
-                'payments_data' => $order->payments->toArray()
+                'amount_pennies' => $amountInPennies,
+                'amount_pounds' => $amountInPennies / 100
             ]);
 
             $approvedStatusId = OrderReturnStatus::where('name', ReturnStatuses::APPROVED)->value('id');
@@ -420,14 +411,12 @@ class RefundProcessor implements RefundHandlerInterface
                 })
                 ->get();
 
-            $refundedStatusId = OrderRefundStatus::where('name', RefundStatuses::REFUNDED)->value('id');
-
             if ($approvedReturns->isNotEmpty()) {
-                $this->createRefundRecordsForApprovedReturns($order, $approvedReturns, $amount, $notes, $source);
+                $this->createRefundRecordsForApprovedReturns($order, $approvedReturns, $amountInPennies, $notes, $source);
             } else {
                 Log::warning('Cannot create manual refund without approved returns - order_return_id is required', [
                     'order_id' => $orderId,
-                    'amount' => $amount / 100
+                    'amount_pennies' => $amountInPennies
                 ]);
                 return false;
             }
@@ -436,7 +425,8 @@ class RefundProcessor implements RefundHandlerInterface
 
             Log::info('Manual refund created', [
                 'order_id' => $orderId,
-                'amount' => $amount / 100,
+                'amount_pennies' => $amountInPennies,
+                'amount_pounds' => $amountInPennies / 100,
                 'source' => $source,
                 'linked_returns' => $approvedReturns->count()
             ]);
@@ -446,25 +436,25 @@ class RefundProcessor implements RefundHandlerInterface
         } catch (\Exception $e) {
             Log::error('Failed to create manual refund', [
                 'order_id' => $orderId,
-                'amount' => $amount,
+                'amount_pennies' => $amountInPennies,
                 'error' => $e->getMessage()
             ]);
             return false;
         }
     }
 
-    protected function createRefundRecordsForApprovedReturns(Order $order, $approvedReturns, int $totalAmount, string $notes = '', string $source = 'webhook'): void
+    protected function createRefundRecordsForApprovedReturns(Order $order, $approvedReturns, int $totalAmountInPennies, string $notes = '', string $source = 'webhook'): void
     {
         $refundedStatusId = OrderRefundStatus::where('name', RefundStatuses::REFUNDED)->value('id');
         $completedStatusId = OrderReturnStatus::where('name', ReturnStatuses::COMPLETED)->value('id');
 
         $returnCount = $approvedReturns->count();
-        $remainingAmount = $totalAmount;
+        $remainingAmount = $totalAmountInPennies;
 
         $approvedReturns->each(function ($orderItem, $index) use ($refundedStatusId, $completedStatusId, &$remainingAmount, $returnCount, $notes, $source) {
             $itemRefundAmount = ($index === $returnCount - 1)
                 ? $remainingAmount
-                : intval($orderItem->refundAmount());
+                : $orderItem->refundAmount();
 
             OrderRefund::create([
                 'order_return_id' => $orderItem->orderReturn->id,
@@ -483,7 +473,8 @@ class RefundProcessor implements RefundHandlerInterface
             Log::info('Created refund record for approved return', [
                 'order_item_id' => $orderItem->id,
                 'return_id' => $orderItem->orderReturn->id,
-                'refund_amount' => $itemRefundAmount / 100
+                'refund_amount_pennies' => $itemRefundAmount,
+                'refund_amount_pounds' => $itemRefundAmount / 100
             ]);
         });
     }
@@ -503,7 +494,8 @@ class RefundProcessor implements RefundHandlerInterface
 
         Log::info('Recalculating order status', [
             'order_id' => $order->id,
-            'payment_amount' => $payment->amount / 100,
+            'payment_amount_pennies' => $payment->getAmountInPennies(),
+            'payment_amount_pounds' => $payment->getAmountInPounds(),
             'current_payment_status' => $payment->status,
             'current_order_status' => $originalOrderStatus
         ]);
@@ -525,7 +517,8 @@ class RefundProcessor implements RefundHandlerInterface
             })
             ->count();
 
-        $isFullRefundByAmount = $totalActiveRefunds >= $payment->amount;
+        $paymentAmountInPennies = $payment->getAmountInPennies();
+        $isFullRefundByAmount = $totalActiveRefunds >= $paymentAmountInPennies;
         $isFullRefundByItems = $itemsWithActiveRefunds >= $totalOrderItems;
         $isFullRefund = $isFullRefundByAmount || $isFullRefundByItems;
         $isPartialRefund = $totalActiveRefunds > 0 && !$isFullRefund;
@@ -549,8 +542,10 @@ class RefundProcessor implements RefundHandlerInterface
 
         Log::info('Order status recalculation completed', [
             'order_id' => $order->id,
-            'total_active_refunds' => $totalActiveRefunds / 100,
-            'payment_amount' => $payment->amount / 100,
+            'total_active_refunds_pennies' => $totalActiveRefunds,
+            'total_active_refunds_pounds' => $totalActiveRefunds / 100,
+            'payment_amount_pennies' => $paymentAmountInPennies,
+            'payment_amount_pounds' => $paymentAmountInPennies / 100,
             'total_items' => $totalOrderItems,
             'items_with_active_refunds' => $itemsWithActiveRefunds,
             'original_payment_status' => $originalPaymentStatus,

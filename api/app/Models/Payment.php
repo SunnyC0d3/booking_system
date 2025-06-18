@@ -22,6 +22,31 @@ class Payment extends Model
         'response_payload'
     ];
 
+    public function getAmountInPennies(): int
+    {
+        return (int) $this->amount;
+    }
+
+    public function getAmountInPounds(): float
+    {
+        return $this->amount / 100;
+    }
+
+    public function setAmountFromPounds(float $pounds): void
+    {
+        $this->amount = (int) round($pounds * 100);
+    }
+
+    public function setAmountFromPennies(int $pennies): void
+    {
+        $this->amount = $pennies;
+    }
+
+    public function matchesStripeAmount(int $stripeAmountInPennies): bool
+    {
+        return $this->getAmountInPennies() === $stripeAmountInPennies;
+    }
+
     public function paymentMethod(): BelongsTo
     {
         return $this->belongsTo(PaymentMethod::class);

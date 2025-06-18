@@ -32,13 +32,13 @@ class OrderSeeder extends Seeder
         for ($i = 0; $i < 100; $i++) {
             $orderId = $i + 1;
             $createdAt = Carbon::now()->subDays(rand(1, 90));
-            $totalAmount = 0;
+            $totalAmountInPennies = 0;
 
             $orders[] = [
                 'id'           => $orderId,
                 'user_id'      => $users[array_rand($users)],
                 'status_id'    => $statuses[array_rand($statuses)],
-                'total_amount' => 0, // Will update after calculating items
+                'total_amount' => 0,
                 'created_at'   => $createdAt,
                 'updated_at'   => $createdAt,
             ];
@@ -47,23 +47,22 @@ class OrderSeeder extends Seeder
             foreach ($orderProducts as $product) {
                 $quantity = rand(1, 5);
                 $variant = $product->variants->count() > 0 ? $product->variants->random() : null;
-                $price = $product->price + ($variant ? ($variant->additional_price ?? 0) : 0);
+                $priceInPennies = $product->price + ($variant ? ($variant->additional_price ?? 0) : 0);
 
                 $orderItems[] = [
                     'order_id'           => $orderId,
                     'product_id'         => $product->id,
                     'product_variant_id' => $variant ? $variant->id : null,
                     'quantity'           => $quantity,
-                    'price'              => $price,
+                    'price'              => $priceInPennies,
                     'created_at'         => $createdAt,
                     'updated_at'         => $createdAt,
                 ];
 
-                $totalAmount += $price * $quantity;
+                $totalAmountInPennies += $priceInPennies * $quantity;
             }
 
-            // Update order total
-            $orders[$i]['total_amount'] = $totalAmount;
+            $orders[$i]['total_amount'] = $totalAmountInPennies;
         }
 
         Order::insert($orders);
@@ -88,7 +87,7 @@ class OrderSeeder extends Seeder
             if (rand(1, 100) <= 60) {
                 $refunds[] = [
                     'order_return_id' => $returnId,
-                    'amount'          => rand(100, 1000),
+                    'amount'          => rand(100, 1000) * 100,
                     'order_refund_status_id' => $refundStatuses[array_rand($refundStatuses)],
                     'processed_at'    => $createdAt->addDays(rand(1, 5)),
                     'created_at'      => $createdAt,

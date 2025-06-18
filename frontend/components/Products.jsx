@@ -54,7 +54,7 @@ const Products = () => {
                                 />
                                 <h2 className="text-lg font-semibold text-gray-800">{product.name}</h2>
                                 <p className="text-sm text-gray-500 mb-2">{product.category || 'Template'}</p>
-                                <p className="text-indigo-600 font-bold">${product.price}</p>
+                                <p className="text-indigo-600 font-bold">£{(product.price / 100).toFixed(2)}</p>
                             </div>
                         ))}
                     </div>

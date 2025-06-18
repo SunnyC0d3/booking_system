@@ -33,7 +33,6 @@ class ManualStripeRefund implements PaymentGatewayRefundInterface
                 'order_id' => $order->id,
                 'payments_count' => $order->payments->count(),
                 'payment_statuses' => $order->payments->pluck('status')->toArray(),
-                'available_payments' => $order->payments->toArray(),
                 'required_statuses' => [PaymentStatuses::PAID, PaymentStatuses::PARTIALLY_REFUNDED],
             ]);
             return false;
@@ -44,6 +43,8 @@ class ManualStripeRefund implements PaymentGatewayRefundInterface
             'payment_id' => $payment->id,
             'payment_status' => $payment->status,
             'payment_intent' => $payment->transaction_reference,
+            'payment_amount_pennies' => $payment->getAmountInPennies(),
+            'payment_amount_pounds' => $payment->getAmountInPounds(),
             'refund_type' => $orderItem ? 'single_item_return' : 'bulk_approved_returns',
             'order_item_id' => $orderItem?->id,
             'return_id' => $orderItem?->orderReturn?->id
@@ -53,6 +54,11 @@ class ManualStripeRefund implements PaymentGatewayRefundInterface
             if ($orderItem) {
                 return $this->processSingleItemRefund($order, $orderItem, $payment);
             }
+
+            Log::warning('ManualStripeRefund called without orderItem - should use BulkStripeRefund instead', [
+                'order_id' => $order->id
+            ]);
+            return false;
 
         } catch (\Exception $e) {
             Log::error('Stripe refund failed', [
@@ -70,7 +76,6 @@ class ManualStripeRefund implements PaymentGatewayRefundInterface
 
     private function processSingleItemRefund(Order $order, OrderItem $orderItem, $payment): bool
     {
-        // Validate that this order item has an approved return
         if (!$orderItem->orderReturn || !$orderItem->orderReturn->isApproved()) {
             Log::warning("Order item does not have an approved return", [
                 'order_id' => $order->id,
@@ -81,26 +86,29 @@ class ManualStripeRefund implements PaymentGatewayRefundInterface
             return false;
         }
 
-        $refundAmount = $orderItem->refundAmount();
+        $refundAmountInPennies = $orderItem->refundAmount();
 
-        if ($refundAmount <= 0) {
+        if ($refundAmountInPennies <= 0) {
             Log::warning("Invalid refund amount for single item", [
                 'order_id' => $order->id,
                 'order_item_id' => $orderItem->id,
                 'return_id' => $orderItem->orderReturn->id,
-                'calculated_amount' => $refundAmount
+                'calculated_amount_pennies' => $refundAmountInPennies
             ]);
             return false;
         }
 
-        $remainingRefundable = $this->calculateRemainingRefundableAmount($order, $payment);
-        if ($refundAmount > $remainingRefundable) {
+        $remainingRefundableInPennies = $this->calculateRemainingRefundableAmount($order, $payment);
+
+        if ($refundAmountInPennies > $remainingRefundableInPennies) {
             Log::warning("Refund amount exceeds remaining refundable amount", [
                 'order_id' => $order->id,
                 'order_item_id' => $orderItem->id,
                 'return_id' => $orderItem->orderReturn->id,
-                'requested_amount' => $refundAmount / 100,
-                'remaining_refundable' => $remainingRefundable / 100,
+                'requested_amount_pennies' => $refundAmountInPennies,
+                'requested_amount_pounds' => $refundAmountInPennies / 100,
+                'remaining_refundable_pennies' => $remainingRefundableInPennies,
+                'remaining_refundable_pounds' => $remainingRefundableInPennies / 100,
                 'payment_status' => $payment->status
             ]);
             return false;
@@ -108,7 +116,7 @@ class ManualStripeRefund implements PaymentGatewayRefundInterface
 
         $stripeRefund = StripeRefund::create([
             'payment_intent' => $payment->transaction_reference,
-            'amount' => $refundAmount,
+            'amount' => $refundAmountInPennies,
             'metadata' => [
                 'order_id' => $order->id,
                 'order_item_id' => $orderItem->id,
@@ -124,9 +132,11 @@ class ManualStripeRefund implements PaymentGatewayRefundInterface
             'order_item_id' => $orderItem->id,
             'return_id' => $orderItem->orderReturn->id,
             'stripe_refund_id' => $stripeRefund->id,
-            'amount' => $refundAmount / 100,
+            'amount_pennies' => $refundAmountInPennies,
+            'amount_pounds' => $refundAmountInPennies / 100,
             'status' => $stripeRefund->status,
-            'remaining_after_refund' => ($remainingRefundable - $refundAmount) / 100
+            'remaining_after_refund_pennies' => ($remainingRefundableInPennies - $refundAmountInPennies),
+            'remaining_after_refund_pounds' => ($remainingRefundableInPennies - $refundAmountInPennies) / 100
         ]);
 
         return true;
@@ -136,7 +146,7 @@ class ManualStripeRefund implements PaymentGatewayRefundInterface
     {
         $refundedStatusId = OrderRefundStatus::where('name', RefundStatuses::REFUNDED)->value('id');
 
-        $totalAlreadyRefunded = OrderRefund::whereHas('orderReturn', function ($q) use ($order) {
+        $totalAlreadyRefundedInPennies = OrderRefund::whereHas('orderReturn', function ($q) use ($order) {
             $q->whereHas('orderItem', function ($sq) use ($order) {
                 $sq->where('order_id', $order->id);
             });
@@ -144,16 +154,20 @@ class ManualStripeRefund implements PaymentGatewayRefundInterface
             ->where('order_refund_status_id', $refundedStatusId)
             ->sum('amount');
 
-        $remainingRefundable = $payment->amount - $totalAlreadyRefunded;
+        $paymentAmountInPennies = $payment->getAmountInPennies();
+        $remainingRefundableInPennies = $paymentAmountInPennies - $totalAlreadyRefundedInPennies;
 
         Log::info('Calculated remaining refundable amount', [
             'order_id' => $order->id,
-            'payment_amount' => $payment->amount / 100,
-            'total_already_refunded' => $totalAlreadyRefunded / 100,
-            'remaining_refundable' => $remainingRefundable / 100,
+            'payment_amount_pennies' => $paymentAmountInPennies,
+            'payment_amount_pounds' => $paymentAmountInPennies / 100,
+            'total_already_refunded_pennies' => $totalAlreadyRefundedInPennies,
+            'total_already_refunded_pounds' => $totalAlreadyRefundedInPennies / 100,
+            'remaining_refundable_pennies' => $remainingRefundableInPennies,
+            'remaining_refundable_pounds' => $remainingRefundableInPennies / 100,
             'payment_status' => $payment->status
         ]);
 
-        return max(0, $remainingRefundable);
+        return max(0, $remainingRefundableInPennies);
     }
 }

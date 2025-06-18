@@ -15,6 +15,8 @@ const OrderItemWithReturn = ({ item, orderStatus }) => {
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
 
+    console.log(item);
+
     const handleSubmit = async () => {
         setLoading(true);
         setError(null);
@@ -45,7 +47,7 @@ const OrderItemWithReturn = ({ item, orderStatus }) => {
         <div className="border-t pt-3 mt-3">
             <p><strong>Name:</strong> {item.product.name}</p>
             <p><strong>Qty:</strong> {item.quantity}</p>
-            <p><strong>Price:</strong> £{item.product.price}</p>
+            <p><strong>Price:</strong> £{(item.product.price / 100).toFixed(2)}</p>
 
             {orderReturn ? (
                 <div className="mt-2 bg-gray-100 p-3 rounded">
