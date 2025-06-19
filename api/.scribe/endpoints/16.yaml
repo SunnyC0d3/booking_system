@@ -1,0 +1,166 @@
+name: 'Password Reset'
+description: ''
+endpoints:
+  -
+    httpMethods:
+      - POST
+    uri: api/forgot-password
+    metadata:
+      groupName: 'Password Reset'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Request a password reset link.'
+      description: 'Sends a password reset email to the specified email address.'
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      email:
+        name: email
+        description: "The user's email address."
+        required: true
+        example: john.doe@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      email: john.doe@example.com
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Password reset link sent.",
+            "status": 200
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 400
+        content: |-
+          {
+            "message": {ERROR_MESSAGE},
+            "status": 400
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/reset-password
+    metadata:
+      groupName: 'Password Reset'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: "Reset a user's password."
+      description: "Resets the user's password using the provided reset token."
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      token:
+        name: token
+        description: 'The password reset token.'
+        required: true
+        example: abc123
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      email:
+        name: email
+        description: "The user's email address."
+        required: true
+        example: john.doe@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      password:
+        name: password
+        description: 'The new password.'
+        required: true
+        example: newpassword123
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      password_confirmation:
+        name: password_confirmation
+        description: 'Must match the password.'
+        required: true
+        example: newpassword123
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      token: abc123
+      email: john.doe@example.com
+      password: newpassword123
+      password_confirmation: newpassword123
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Password has been reset.",
+            "status": 200
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 400
+        content: |-
+          {
+            "message": {ERROR_MESSAGE},
+            "status": 400
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
+    controller: null
+    method: null
+    route: null
+    custom: []

@@ -100,7 +100,7 @@ endpoints:
         name: user_id
         description: 'The <code>id</code> of an existing record in the users table.'
         required: true
-        example: cupiditate
+        example: debitis
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -131,7 +131,7 @@ endpoints:
         name: 'order_items[].product_id'
         description: 'The <code>id</code> of an existing record in the products table.'
         required: true
-        example: quo
+        example: a
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -151,7 +151,7 @@ endpoints:
         name: 'order_items[].quantity'
         description: 'Must be at least 1.'
         required: true
-        example: 59
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -161,19 +161,19 @@ endpoints:
         name: 'order_items[].price'
         description: 'Must be at least 0.'
         required: true
-        example: 14
+        example: 32
         type: number
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      user_id: cupiditate
+      user_id: debitis
       order_items:
         -
-          product_id: quo
-          quantity: 59
-          price: 14
+          product_id: a
+          quantity: 1
+          price: 32
     fileParameters: []
     responses:
       -
@@ -336,7 +336,7 @@ endpoints:
         name: 'order_items[].product_id'
         description: 'The <code>id</code> of an existing record in the products table.'
         required: true
-        example: dolores
+        example: quasi
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -356,7 +356,7 @@ endpoints:
         name: 'order_items[].quantity'
         description: 'Must be at least 1.'
         required: true
-        example: 71
+        example: 48
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -366,7 +366,7 @@ endpoints:
         name: 'order_items[].price'
         description: 'Must be at least 0.'
         required: true
-        example: 62
+        example: 46
         type: number
         enumValues: []
         exampleWasSpecified: false
@@ -375,9 +375,9 @@ endpoints:
     cleanBodyParameters:
       order_items:
         -
-          product_id: dolores
-          quantity: 71
-          price: 62
+          product_id: quasi
+          quantity: 48
+          price: 46
     fileParameters: []
     responses:
       -
@@ -575,6 +575,79 @@ endpoints:
         content: |-
           {
               "message": "Order restored successfully."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+              "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/orders
+    metadata:
+      groupName: Orders
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Retrieve paginated list of orders.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      user_id:
+        name: user_id
+        description: 'The <code>id</code> of an existing record in the users table.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      status_id:
+        name: status_id
+        description: 'The <code>id</code> of an existing record in the order_statuses table.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Orders retrieved successfully.",
+            "data": []
           }
         headers: []
         description: ''

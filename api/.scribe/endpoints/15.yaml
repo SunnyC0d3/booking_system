@@ -1,99 +1,89 @@
-name: Payments
+name: 'Email Verification'
 description: ''
 endpoints:
   -
     httpMethods:
-      - POST
-    uri: 'api/payments/{gateway}/create'
+      - GET
+    uri: 'api/email/verify/{id}/{hash}'
     metadata:
-      groupName: Payments
+      groupName: 'Email Verification'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Initiate Payment'
-      description: |-
-        Creates or retrieves a Stripe PaymentIntent for a given order. If a payment already exists,
-        it will return the existing client secret to avoid duplicate charges.
+      title: "Verify a user's email address."
+      description: 'Once a user registers, a notification is sent out to their specified email address, which requires them to verify.'
       authenticated: false
       custom: []
     headers:
       Content-Type: application/json
       Accept: application/json
     urlParameters:
-      gateway:
-        name: gateway
-        description: 'The payment gateway to use. Currently supported: `stripe`.'
+      id:
+        name: id
+        description: 'The ID of the verify.'
         required: true
-        example: stripe
+        example: qui
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      hash:
+        name: hash
+        description: ''
+        required: true
+        example: laborum
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: qui
+      hash: laborum
+    queryParameters:
+      id:
+        name: id
+        description: "The user's id."
+        required: true
+        example: '1'
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-    cleanUrlParameters:
-      gateway: stripe
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      order_id:
-        name: order_id
-        description: 'The ID of the order being paid for.'
+      hash:
+        name: hash
+        description: 'The hash to verify the email.'
         required: true
-        example: 123
-        type: integer
+        example: '1234567890'
+        type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-    cleanBodyParameters:
-      order_id: 123
+    cleanQueryParameters:
+      id: '1'
+      hash: '1234567890'
+    bodyParameters: []
+    cleanBodyParameters: []
     fileParameters: []
     responses:
       -
         status: 200
-        content: |-
-          {
-            "status": true,
-            "message": "PaymentIntent created successfully.",
-            "data": {
-              "client_secret": "pi_1Hxxxxxxxxxxxx_secret_xxxxxxxxx"
-            }
-          }
+        content: 'Redirected to specified URL'
         headers: []
         description: ''
         custom: []
       -
-        status: 200
+        status: 401
         content: |-
           {
-            "status": true,
-            "message": "Payment has already been processed for this order.",
-            "data": null
+            "message": "Invalid/Expired url provided.",
+            "status": 401
           }
         headers: []
-        description: 'Already Paid'
-        custom: []
-      -
-        status: 400
-        content: |-
-          {
-            "status": false,
-            "message": "Unsupported payment gateway",
-            "data": null
-          }
-        headers: []
-        description: 'Unsupported Gateway'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "status": false,
-            "message": "No query results for model [App\\Models\\Order] 999",
-            "data": null
-          }
-        headers: []
-        description: 'Order Not Found'
+        description: ''
         custom: []
     responseFields: []
     auth: []
@@ -103,84 +93,48 @@ endpoints:
     custom: []
   -
     httpMethods:
-      - POST
-    uri: api/payments/stripe/webhook
+      - GET
+    uri: api/email/resend
     metadata:
-      groupName: Payments
+      groupName: 'Email Verification'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Stripe Webhook Listener'
-      description: |-
-        This endpoint is triggered by Stripe when a payment event occurs (e.g., payment succeeded, failed).
-        It verifies the webhook signature and processes the payment status accordingly.
+      title: 'Resend email to user.'
+      description: 'Once a user registers, a notification is sent out to their specified email address, which requires them to verify. Incase they dont recieve one, they can request again.'
       authenticated: false
       custom: []
     headers:
+      Authorization: 'Bearer token required.'
       Content-Type: application/json
       Accept: application/json
-    urlParameters:
-      none:
-        name: none
-        description: ''
-        required: false
-        example: ex
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      none: ex
+    urlParameters: []
+    cleanUrlParameters: []
     queryParameters: []
     cleanQueryParameters: []
-    bodyParameters:
-      object:
-        name: object
-        description: 'Stripe webhook payload. The full JSON payload sent by Stripe will be validated internally.'
-        required: false
-        example: sit
-        type: $event
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      object: sit
+    bodyParameters: []
+    cleanBodyParameters: []
     fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
-            "status": true,
-            "message": "Webhook update.",
-            "data": null
+            "message": "Email verification link sent on your email id.",
+            "status": 200
           }
         headers: []
         description: ''
         custom: []
       -
-        status: 400
+        status: 401
         content: |-
           {
-            "status": false,
-            "message": "Invalid Stripe signature",
-            "data": null
+            "message": "Email already verified.",
+            "status": 400
           }
         headers: []
-        description: 'Invalid Signature or Payload'
-        custom: []
-      -
-        status: 400
-        content: |-
-          {
-            "status": false,
-            "message": "Invalid payload",
-            "data": null
-          }
-        headers: []
-        description: 'Invalid Payload Format'
+        description: ''
         custom: []
     responseFields: []
     auth: []

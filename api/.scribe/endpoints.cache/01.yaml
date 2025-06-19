@@ -146,7 +146,7 @@ endpoints:
         name: user_id
         description: 'The <code>id</code> of an existing record in the users table.'
         required: true
-        example: sunt
+        example: aut
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -156,7 +156,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: true
-        example: homepzm
+        example: ctfsvrqupadzsktgeiyiebfzp
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -166,7 +166,7 @@ endpoints:
         name: description
         description: 'Must not be greater than 1000 characters.'
         required: true
-        example: 'Et amet porro ea.'
+        example: 'Voluptates consequatur nostrum minima eaque eos blanditiis.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -183,9 +183,9 @@ endpoints:
         nullable: true
         custom: []
     cleanBodyParameters:
-      user_id: sunt
-      name: homepzm
-      description: 'Et amet porro ea.'
+      user_id: aut
+      name: ctfsvrqupadzsktgeiyiebfzp
+      description: 'Voluptates consequatur nostrum minima eaque eos blanditiis.'
     fileParameters:
       logo: null
     responses:
@@ -264,7 +264,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: qpdxzygj
+        example: txizsjhmvfqqspjvm
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -274,7 +274,7 @@ endpoints:
         name: description
         description: 'Must not be greater than 1000 characters.'
         required: false
-        example: 'Eum doloribus doloremque soluta.'
+        example: 'Repellendus temporibus maiores fugiat beatae a ut consequatur in.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -291,8 +291,8 @@ endpoints:
         nullable: true
         custom: []
     cleanBodyParameters:
-      name: qpdxzygj
-      description: 'Eum doloribus doloremque soluta.'
+      name: txizsjhmvfqqspjvm
+      description: 'Repellendus temporibus maiores fugiat beatae a ut consequatur in.'
     fileParameters:
       logo: null
     responses:
@@ -498,7 +498,7 @@ endpoints:
         name: name
         description: 'Must not be greater than 255 characters.'
         required: false
-        example: cdtaedtmvzfcduksiduvpl
+        example: ueyennbressltvn
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -508,7 +508,7 @@ endpoints:
         name: description
         description: 'Must not be greater than 1000 characters.'
         required: false
-        example: 'Iure iusto neque dolorem ipsa ipsa.'
+        example: 'Suscipit nemo est alias voluptatum ullam.'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -525,8 +525,8 @@ endpoints:
         nullable: true
         custom: []
     cleanBodyParameters:
-      name: cdtaedtmvzfcduksiduvpl
-      description: 'Iure iusto neque dolorem ipsa ipsa.'
+      name: ueyennbressltvn
+      description: 'Suscipit nemo est alias voluptatum ullam.'
     fileParameters:
       logo: null
     responses:

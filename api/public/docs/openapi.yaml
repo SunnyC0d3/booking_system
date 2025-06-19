@@ -212,7 +212,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the verify.'
-        example: maiores
+        example: qui
         required: true
         schema:
           type: string
@@ -220,7 +220,7 @@ paths:
         in: path
         name: hash
         description: ''
-        example: ratione
+        example: laborum
         required: true
         schema:
           type: string
@@ -265,112 +265,6 @@ paths:
                     example: 400
       tags:
         - 'Email Verification'
-      security: []
-  /api/admin/returns:
-    get:
-      summary: ''
-      operationId: getApiAdminReturns
-      description: ''
-      parameters: []
-      responses:
-        401:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: Unauthenticated.
-                properties:
-                  message:
-                    type: string
-                    example: Unauthenticated.
-      tags:
-        - Endpoints
-      security: []
-  '/api/admin/returns/{returnId}/{action}':
-    post:
-      summary: ''
-      operationId: postApiAdminReturnsReturnIdAction
-      description: ''
-      parameters: []
-      responses: {  }
-      tags:
-        - Endpoints
-      security: []
-    parameters:
-      -
-        in: path
-        name: returnId
-        description: ''
-        example: dolorum
-        required: true
-        schema:
-          type: string
-      -
-        in: path
-        name: action
-        description: ''
-        example: iure
-        required: true
-        schema:
-          type: string
-  '/api/admin/refund/{gateway}/{orderReturnId}':
-    post:
-      summary: ''
-      operationId: postApiAdminRefundGatewayOrderReturnId
-      description: ''
-      parameters: []
-      responses: {  }
-      tags:
-        - Endpoints
-      security: []
-    parameters:
-      -
-        in: path
-        name: gateway
-        description: ''
-        example: ab
-        required: true
-        schema:
-          type: string
-      -
-        in: path
-        name: orderReturnId
-        description: ''
-        example: occaecati
-        required: true
-        schema:
-          type: string
-  /api/returns:
-    post:
-      summary: ''
-      operationId: postApiReturns
-      description: ''
-      parameters: []
-      responses: {  }
-      tags:
-        - Endpoints
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                order_item_id:
-                  type: string
-                  description: 'The <code>id</code> of an existing record in the order_items table.'
-                  example: ullam
-                  nullable: false
-                reason:
-                  type: string
-                  description: 'Must not be greater than 1000 characters.'
-                  example: zjzeislamllj
-                  nullable: false
-              required:
-                - order_item_id
-                - reason
       security: []
   /api/admin/orders:
     get:
@@ -472,7 +366,7 @@ paths:
                 user_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the users table.'
-                  example: cupiditate
+                  example: debitis
                   nullable: false
                 status_id:
                   type: string
@@ -490,7 +384,7 @@ paths:
                       product_id:
                         type: string
                         description: 'The <code>id</code> of an existing record in the products table.'
-                        example: quo
+                        example: a
                         nullable: false
                       product_variant_id:
                         type: string
@@ -500,12 +394,12 @@ paths:
                       quantity:
                         type: integer
                         description: 'Must be at least 1.'
-                        example: 59
+                        example: 1
                         nullable: false
                       price:
                         type: number
                         description: 'Must be at least 0.'
-                        example: 14
+                        example: 32
                         nullable: false
                     required:
                       - product_id
@@ -615,7 +509,7 @@ paths:
                       product_id:
                         type: string
                         description: 'The <code>id</code> of an existing record in the products table.'
-                        example: dolores
+                        example: quasi
                         nullable: false
                       product_variant_id:
                         type: string
@@ -625,12 +519,12 @@ paths:
                       quantity:
                         type: integer
                         description: 'Must be at least 1.'
-                        example: 71
+                        example: 48
                         nullable: false
                       price:
                         type: number
                         description: 'Must be at least 0.'
-                        example: 62
+                        example: 46
                         nullable: false
                     required:
                       - product_id
@@ -763,6 +657,60 @@ paths:
         required: true
         schema:
           type: integer
+  /api/orders:
+    get:
+      summary: 'Retrieve paginated list of orders.'
+      operationId: retrievePaginatedListOfOrders
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Orders retrieved successfully.'
+                  data: []
+                properties:
+                  message:
+                    type: string
+                    example: 'Orders retrieved successfully.'
+                  data:
+                    type: array
+                    example: []
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You do not have the required permissions.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have the required permissions.'
+      tags:
+        - Orders
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the users table.'
+                  example: null
+                  nullable: true
+                status_id:
+                  type: string
+                  description: 'The <code>id</code> of an existing record in the order_statuses table.'
+                  example: null
+                  nullable: true
   '/api/orders/{id}':
     get:
       summary: 'Retrieve a specific order.'
@@ -919,6 +867,43 @@ paths:
                 - email
                 - password
                 - password_confirmation
+  /api/admin/payments:
+    get:
+      summary: 'Retrieve paginated list of payments.'
+      operationId: retrievePaginatedListOfPayments
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Payments retrieved successfully.'
+                  data: []
+                properties:
+                  message:
+                    type: string
+                    example: 'Payments retrieved successfully.'
+                  data:
+                    type: array
+                    example: []
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You do not have the required permissions.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have the required permissions.'
+      tags:
+        - Payment
   /api/admin/payment-methods:
     get:
       summary: 'Retrieve all payment methods.'
@@ -1298,7 +1283,7 @@ paths:
                 object:
                   type: $event
                   description: 'Stripe webhook payload. The full JSON payload sent by Stripe will be validated internally.'
-                  example: sit
+                  example: non
                   nullable: false
       security: []
     parameters:
@@ -1315,7 +1300,94 @@ paths:
             value: ''
           present:
             summary: 'When the value is present'
-            value: ex
+            value: vitae
+  '/api/payments/{gateway}/verify':
+    post:
+      summary: 'Verify Payment Status'
+      operationId: verifyPaymentStatus
+      description: "Verifies the current status of a payment with the chosen payment gateway and updates\nthe local database accordingly. This is useful for handling cases where webhooks might\nhave failed or been delayed."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: true
+                  message: 'Payment verified'
+                  data:
+                    payment_status: paid
+                    order_status: confirmed
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Payment verified'
+                  data:
+                    type: object
+                    properties:
+                      payment_status:
+                        type: string
+                        example: paid
+                      order_status:
+                        type: string
+                        example: confirmed
+        500:
+          description: 'Stripe API Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: "Unable to retrieve payment from Stripe: No such payment_intent: 'pi_invalid'"
+                  data: null
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Unable to retrieve payment from Stripe: No such payment_intent: 'pi_invalid'"
+                  data:
+                    type: string
+                    example: null
+      tags:
+        - Payments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payment_intent_id:
+                  type: string
+                  description: 'The Stripe Payment Intent ID to verify.'
+                  example: pi_1Hxxxxxxxxxxxx
+                  nullable: false
+                order_id:
+                  type: integer
+                  description: 'The ID of the order associated with this payment.'
+                  example: 123
+                  nullable: false
+              required:
+                - payment_intent_id
+                - order_id
+      security: []
+    parameters:
+      -
+        in: path
+        name: gateway
+        description: ''
+        example: suscipit
+        required: true
+        schema:
+          type: string
   /api/admin/permissions:
     get:
       summary: 'Retrieve all permissions.'
@@ -1825,12 +1897,12 @@ paths:
                 name:
                   type: string
                   description: 'The name of the category.'
-                  example: non
+                  example: veritatis
                   nullable: false
                 parent_id:
                   type: integer
                   description: 'optional The ID of the parent category.'
-                  example: 3
+                  example: 17
                   nullable: true
               required:
                 - name
@@ -1941,12 +2013,12 @@ paths:
                 name:
                   type: string
                   description: 'The name of the category.'
-                  example: non
+                  example: eos
                   nullable: false
                 parent_id:
                   type: integer
                   description: 'optional The ID of the parent category.'
-                  example: 18
+                  example: 20
                   nullable: true
               required:
                 - name
@@ -2115,7 +2187,7 @@ paths:
                 name:
                   type: string
                   description: 'The name of the product tag.'
-                  example: expedita
+                  example: veniam
                   nullable: false
               required:
                 - name
@@ -2218,7 +2290,7 @@ paths:
                 name:
                   type: string
                   description: 'The updated name of the product tag.'
-                  example: tempora
+                  example: dolorum
                   nullable: false
               required:
                 - name
@@ -2316,57 +2388,57 @@ paths:
                     name:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: qyhvrlzsrxhdfzmrkw
+                      example: zefaojctwjngvyayarjce
                       nullable: false
                     price:
                       type: string
                       description: 'Must match the regex /^\d+(\.\d{1,2})?(,\d+(\.\d{1,2})?)*$/.'
-                      example: '1.4'
+                      example: '9807,63053.7)))'
                       nullable: false
                     category:
                       type: string
                       description: 'Must match the regex /^(\d,?)+$/.'
-                      example: '0,'
+                      example: '6'
                       nullable: false
                     quantity:
                       type: integer
                       description: 'Must be at least 0.'
-                      example: 19
+                      example: 30
                       nullable: false
                     created_at:
                       type: string
                       description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
-                      example: '3071-67-62'
+                      example: '5972-82-27,9794-46-29'
                       nullable: false
                     updated_at:
                       type: string
                       description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
-                      example: '5392-24-38,2619-44-23'
+                      example: '9217-32-23'
                       nullable: false
                     search:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: mdpwjoeundqahbtesrrgsu
+                      example: mvmcj
                       nullable: false
                     include:
                       type: string
                       description: 'Must match the regex /^(\w+(,\w+)*)?$/.'
-                      example: 'whqss,npqmpmtpwpgpqup,obkqhkdjooysrj,uiy)'
+                      example: ''
                       nullable: false
                 page:
                   type: integer
                   description: 'Must be at least 1.'
-                  example: 4
+                  example: 65
                   nullable: false
                 per_page:
                   type: integer
                   description: 'Must be at least 1. Must not be greater than 100.'
-                  example: 6
+                  example: 5
                   nullable: false
                 sort:
                   type: string
                   description: 'Must match the regex /^(-?[a-zA-Z0-9_]+)(,-?[a-zA-Z0-9_]+)*$/.'
-                  example: '-lC,M1,-Hk'
+                  example: '-IS'
                   nullable: false
     post:
       summary: 'Create a new product.'
@@ -2414,32 +2486,32 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: yb
+                  example: vwszzcrwlsuszfvqcehhzmvb
                   nullable: false
                 description:
                   type: string
                   description: ''
-                  example: 'Officiis et atque eos atque.'
+                  example: 'Illo aut ut aut dignissimos molestiae et ipsam sit.'
                   nullable: true
                 price:
                   type: number
                   description: 'Must be at least 0.'
-                  example: 20
+                  example: 60
                   nullable: false
                 product_category_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the product_categories table.'
-                  example: ut
+                  example: aut
                   nullable: false
                 product_status_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the product_statuses table.'
-                  example: consequuntur
+                  example: in
                   nullable: false
                 quantity:
                   type: integer
                   description: 'Must be at least 0.'
-                  example: 6
+                  example: 14
                   nullable: false
                 product_tags:
                   type: array
@@ -2457,22 +2529,22 @@ paths:
                       product_attribute_id:
                         type: string
                         description: 'The <code>id</code> of an existing record in the product_attributes table.'
-                        example: deserunt
+                        example: enim
                         nullable: false
                       value:
                         type: string
                         description: 'This field is required when <code>product_variants</code> is present. Must not be greater than 255 characters.'
-                        example: dfa
+                        example: yuggos
                         nullable: false
                       additional_price:
                         type: number
                         description: 'Must be at least 0.'
-                        example: 81
+                        example: 42
                         nullable: true
                       quantity:
                         type: integer
                         description: 'Must be at least 0.'
-                        example: 45
+                        example: 70
                         nullable: false
                     required:
                       - product_attribute_id
@@ -2583,32 +2655,32 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: whsldmifqqhoha
+                  example: thfuoamziekqnqzlsv
                   nullable: false
                 description:
                   type: string
                   description: ''
-                  example: 'Vero id quis a velit sit ad inventore et.'
+                  example: 'Sapiente quis amet sunt at.'
                   nullable: true
                 price:
                   type: number
                   description: 'Must be at least 0.'
-                  example: 0
+                  example: 58
                   nullable: false
                 product_category_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the product_categories table.'
-                  example: laudantium
+                  example: impedit
                   nullable: false
                 product_status_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the product_statuses table.'
-                  example: dolores
+                  example: inventore
                   nullable: false
                 quantity:
                   type: integer
                   description: 'Must be at least 0.'
-                  example: 74
+                  example: 4
                   nullable: false
                 product_tags:
                   type: array
@@ -2626,22 +2698,22 @@ paths:
                       product_attribute_id:
                         type: string
                         description: 'The <code>id</code> of an existing record in the product_attributes table.'
-                        example: voluptates
+                        example: ab
                         nullable: false
                       value:
                         type: string
                         description: 'This field is required when <code>product_variants</code> is present. Must not be greater than 255 characters.'
-                        example: fixflhvweeavangacfjfd
+                        example: tkqlsmibefnpjvdpknwpnvu
                         nullable: false
                       additional_price:
                         type: number
                         description: 'Must be at least 0.'
-                        example: 3
+                        example: 62
                         nullable: true
                       quantity:
                         type: integer
                         description: 'Must be at least 0.'
-                        example: 38
+                        example: 5
                         nullable: false
                     required:
                       - product_attribute_id
@@ -2847,57 +2919,57 @@ paths:
                     name:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: bwbjfsmzlgmkaoc
+                      example: tpygwdpajuadhmqtvrx
                       nullable: false
                     price:
                       type: string
                       description: 'Must match the regex /^\d+(\.\d{1,2})?(,\d+(\.\d{1,2})?)*$/.'
-                      example: '101,3500565.8))'
+                      example: '4.34,2.74'
                       nullable: false
                     category:
                       type: string
                       description: 'Must match the regex /^(\d,?)+$/.'
-                      example: '8,'
+                      example: '0,2,33,2,3,9,'
                       nullable: false
                     quantity:
                       type: integer
                       description: 'Must be at least 0.'
-                      example: 0
+                      example: 6
                       nullable: false
                     created_at:
                       type: string
                       description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
-                      example: '9089-67-58,9352-22-36'
+                      example: '7186-97-37,4477-63-40'
                       nullable: false
                     updated_at:
                       type: string
                       description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
-                      example: '4741-00-41,2830-31-28'
+                      example: '7153-71-23,6014-85-01'
                       nullable: false
                     search:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: klai
+                      example: alnlysfc
                       nullable: false
                     include:
                       type: string
                       description: 'Must match the regex /^(\w+(,\w+)*)?$/.'
-                      example: 'r,vdntqqghefpnhtsm,bmouugl,jvnblpys,zppsknoj,jcgohwy)'
+                      example: 'pnzl,dohqgclp,pasjbxhk,hryodiy,mjhyz,xzohm)'
                       nullable: false
                 page:
                   type: integer
                   description: 'Must be at least 1.'
-                  example: 60
+                  example: 40
                   nullable: false
                 per_page:
                   type: integer
                   description: 'Must be at least 1. Must not be greater than 100.'
-                  example: 8
+                  example: 21
                   nullable: false
                 sort:
                   type: string
                   description: 'Must match the regex /^(-?[a-zA-Z0-9_]+)(,-?[a-zA-Z0-9_]+)*$/.'
-                  example: '-Q,-3,-r'
+                  example: 'j0t,-v0,j3,v0,Nq,-ZM,-8E,PC,-94'
                   nullable: false
       security: []
   '/api/products/{id}':
@@ -2947,6 +3019,674 @@ paths:
         required: true
         schema:
           type: integer
+  /api/admin/refunds:
+    get:
+      summary: 'Retrieve a paginated list of all refund records.'
+      operationId: retrieveAPaginatedListOfAllRefundRecords
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Refunds retrieved successfully.'
+                  data:
+                    data:
+                      -
+                        id: 1
+                        amount: 2999
+                        processed_at: '2025-01-15T14:45:00.000000Z'
+                        notes: 'Refund processed for damaged product'
+                        created_at: '2025-01-15T14:45:00.000000Z'
+                        updated_at: '2025-01-15T14:45:00.000000Z'
+                        status:
+                          id: 1
+                          name: Refunded
+                        order_return:
+                          id: 15
+                          reason: 'Product damaged on arrival'
+                          order_item:
+                            id: 25
+                            product:
+                              id: 12
+                              name: 'Wireless Headphones'
+                            order:
+                              id: 8
+                              total_amount: 5998
+                              user:
+                                id: 3
+                                email: customer@example.com
+                    current_page: 1
+                    per_page: 20
+                    total: 32
+                properties:
+                  message:
+                    type: string
+                    example: 'Refunds retrieved successfully.'
+                  data:
+                    type: object
+                    properties:
+                      data:
+                        type: array
+                        example:
+                          -
+                            id: 1
+                            amount: 2999
+                            processed_at: '2025-01-15T14:45:00.000000Z'
+                            notes: 'Refund processed for damaged product'
+                            created_at: '2025-01-15T14:45:00.000000Z'
+                            updated_at: '2025-01-15T14:45:00.000000Z'
+                            status:
+                              id: 1
+                              name: Refunded
+                            order_return:
+                              id: 15
+                              reason: 'Product damaged on arrival'
+                              order_item:
+                                id: 25
+                                product:
+                                  id: 12
+                                  name: 'Wireless Headphones'
+                                order:
+                                  id: 8
+                                  total_amount: 5998
+                                  user:
+                                    id: 3
+                                    email: customer@example.com
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            amount:
+                              type: integer
+                              example: 2999
+                            processed_at:
+                              type: string
+                              example: '2025-01-15T14:45:00.000000Z'
+                            notes:
+                              type: string
+                              example: 'Refund processed for damaged product'
+                            created_at:
+                              type: string
+                              example: '2025-01-15T14:45:00.000000Z'
+                            updated_at:
+                              type: string
+                              example: '2025-01-15T14:45:00.000000Z'
+                            status:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 1
+                                name:
+                                  type: string
+                                  example: Refunded
+                            order_return:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 15
+                                reason:
+                                  type: string
+                                  example: 'Product damaged on arrival'
+                                order_item:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                      example: 25
+                                    product:
+                                      type: object
+                                      properties: { id: { type: integer, example: 12 }, name: { type: string, example: 'Wireless Headphones' } }
+                                    order:
+                                      type: object
+                                      properties: { id: { type: integer, example: 8 }, total_amount: { type: integer, example: 5998 }, user: { type: object, properties: { id: { type: integer, example: 3 }, email: { type: string, example: customer@example.com } } } }
+                      current_page:
+                        type: integer
+                        example: 1
+                      per_page:
+                        type: integer
+                        example: 20
+                      total:
+                        type: integer
+                        example: 32
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You do not have the required permissions.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have the required permissions.'
+      tags:
+        - Refunds
+  '/api/admin/refunds/{gateway}/{id}':
+    post:
+      summary: 'Process a refund for an approved return through the specified payment gateway.'
+      operationId: processARefundForAnApprovedReturnThroughTheSpecifiedPaymentGateway
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Refund processed successfully.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Refund processed successfully.'
+        400:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'Unsupported payment gateway'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Unsupported payment gateway'
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'This return has not been approved for refund.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This return has not been approved for refund.'
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You do not have the required permissions.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have the required permissions.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Return request not found.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Return request not found.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Refund failed. Please try again later.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Refund failed. Please try again later.'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'An error occurred while processing the refund.'
+                properties:
+                  message:
+                    type: string
+                    example: 'An error occurred while processing the refund.'
+      tags:
+        - Refunds
+    parameters:
+      -
+        in: path
+        name: gateway
+        description: 'The payment gateway to process the refund through. Currently supports: stripe.'
+        example: stripe
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: id
+        description: 'The ID of the return request to refund.'
+        example: 15
+        required: true
+        schema:
+          type: integer
+  /api/admin/returns:
+    get:
+      summary: 'Retrieve a paginated list of all return requests.'
+      operationId: retrieveAPaginatedListOfAllReturnRequests
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Order returns retrieved.'
+                  data:
+                    data:
+                      -
+                        id: 1
+                        reason: 'Product damaged on arrival'
+                        status: Requested
+                        created_at: '2025-01-15T10:30:00.000000Z'
+                        updated_at: '2025-01-15T10:30:00.000000Z'
+                        order_item:
+                          id: 25
+                          quantity: 2
+                          price: 2999
+                          product:
+                            id: 12
+                            name: 'Wireless Headphones'
+                            price: 2999
+                          order:
+                            id: 8
+                            total_amount: 5998
+                            user:
+                              id: 3
+                              email: customer@example.com
+                    current_page: 1
+                    per_page: 20
+                    total: 45
+                properties:
+                  message:
+                    type: string
+                    example: 'Order returns retrieved.'
+                  data:
+                    type: object
+                    properties:
+                      data:
+                        type: array
+                        example:
+                          -
+                            id: 1
+                            reason: 'Product damaged on arrival'
+                            status: Requested
+                            created_at: '2025-01-15T10:30:00.000000Z'
+                            updated_at: '2025-01-15T10:30:00.000000Z'
+                            order_item:
+                              id: 25
+                              quantity: 2
+                              price: 2999
+                              product:
+                                id: 12
+                                name: 'Wireless Headphones'
+                                price: 2999
+                              order:
+                                id: 8
+                                total_amount: 5998
+                                user:
+                                  id: 3
+                                  email: customer@example.com
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            reason:
+                              type: string
+                              example: 'Product damaged on arrival'
+                            status:
+                              type: string
+                              example: Requested
+                            created_at:
+                              type: string
+                              example: '2025-01-15T10:30:00.000000Z'
+                            updated_at:
+                              type: string
+                              example: '2025-01-15T10:30:00.000000Z'
+                            order_item:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 25
+                                quantity:
+                                  type: integer
+                                  example: 2
+                                price:
+                                  type: integer
+                                  example: 2999
+                                product:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                      example: 12
+                                    name:
+                                      type: string
+                                      example: 'Wireless Headphones'
+                                    price:
+                                      type: integer
+                                      example: 2999
+                                order:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                      example: 8
+                                    total_amount:
+                                      type: integer
+                                      example: 5998
+                                    user:
+                                      type: object
+                                      properties: { id: { type: integer, example: 3 }, email: { type: string, example: customer@example.com } }
+                      current_page:
+                        type: integer
+                        example: 1
+                      per_page:
+                        type: integer
+                        example: 20
+                      total:
+                        type: integer
+                        example: 45
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You do not have the required permissions.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have the required permissions.'
+      tags:
+        - Returns
+  '/api/admin/returns/{returnId}/{action}':
+    post:
+      summary: 'Review and update the status of a return request.'
+      operationId: reviewAndUpdateTheStatusOfAReturnRequest
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Return status updated to Approved.'
+                  data:
+                    id: 15
+                    order_item_id: 25
+                    reason: 'Product damaged on arrival'
+                    order_return_status_id: 3
+                    created_at: '2025-01-15T10:30:00.000000Z'
+                    updated_at: '2025-01-15T14:45:00.000000Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Return status updated to Approved.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 15
+                      order_item_id:
+                        type: integer
+                        example: 25
+                      reason:
+                        type: string
+                        example: 'Product damaged on arrival'
+                      order_return_status_id:
+                        type: integer
+                        example: 3
+                      created_at:
+                        type: string
+                        example: '2025-01-15T10:30:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2025-01-15T14:45:00.000000Z'
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You do not have the required permissions.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have the required permissions.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Return request not found.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Return request not found.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'Return is already processed.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Return is already processed.'
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'Invalid action provided.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Invalid action provided.'
+      tags:
+        - Returns
+    parameters:
+      -
+        in: path
+        name: returnId
+        description: 'The ID of the return request.'
+        example: 15
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: action
+        description: 'The action to perform on the return. Must be one of: review, approve, reject.'
+        example: approve
+        required: true
+        schema:
+          type: string
+  /api/returns:
+    post:
+      summary: 'Create a new return request for an order item.'
+      operationId: createANewReturnRequestForAnOrderItem
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Orders return created.'
+                  data:
+                    id: 15
+                    reason: "The product arrived damaged and doesn't match the description."
+                    status: Requested
+                    created_at: '2025-01-15T10:30:00.000000Z'
+                    updated_at: '2025-01-15T10:30:00.000000Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Orders return created.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 15
+                      reason:
+                        type: string
+                        example: "The product arrived damaged and doesn't match the description."
+                      status:
+                        type: string
+                        example: Requested
+                      created_at:
+                        type: string
+                        example: '2025-01-15T10:30:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2025-01-15T10:30:00.000000Z'
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You are not authorized to return this item.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You are not authorized to return this item.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Order item not found.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Order item not found.'
+        409:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'A return request has already been created for this item.'
+                properties:
+                  message:
+                    type: string
+                    example: 'A return request has already been created for this item.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'Order has not been paid for.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Order has not been paid for.'
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'The order item id field is required.'
+                      errors:
+                        order_item_id:
+                          - 'The order item id field is required.'
+                        reason:
+                          - 'The reason field is required.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'The order item id field is required.'
+                      errors:
+                        type: object
+                        properties:
+                          order_item_id:
+                            type: array
+                            example:
+                              - 'The order item id field is required.'
+                            items:
+                              type: string
+                          reason:
+                            type: array
+                            example:
+                              - 'The reason field is required.'
+                            items:
+                              type: string
+      tags:
+        - Returns
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                order_item_id:
+                  type: integer
+                  description: 'The ID of the order item to return.'
+                  example: 25
+                  nullable: false
+                reason:
+                  type: string
+                  description: 'The reason for the return request. Must be between 10 and 500 characters.'
+                  example: "The product arrived damaged and doesn't match the description."
+                  nullable: false
+              required:
+                - order_item_id
+                - reason
   '/api/admin/roles/{role_id}/permissions':
     get:
       summary: 'Retrieve all permissions for a role.'
@@ -3422,52 +4162,52 @@ paths:
                     name:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: rulfih
+                      example: jtwvfrirbfdfezm
                       nullable: false
                     email:
                       type: string
                       description: 'Must be a valid email address. Must not be greater than 255 characters.'
-                      example: csipes@example.org
+                      example: jaylan17@example.org
                       nullable: false
                     role:
                       type: string
                       description: 'Must match the regex /^(\d,?)+$/.'
-                      example: '4,1,'
+                      example: '7,'
                       nullable: false
                     created_at:
                       type: string
                       description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
-                      example: '7494-79-25'
+                      example: '5765-88-19'
                       nullable: false
                     updated_at:
                       type: string
                       description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
-                      example: '7385-94-26,6938-91-13'
+                      example: '3726-79-63'
                       nullable: false
                     search:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: iavcojsm
+                      example: wlleagawgx
                       nullable: false
                     include:
                       type: string
                       description: 'Must match the regex /^(\w+(,\w+)*)?$/.'
-                      example: 'g,ep,q)'
+                      example: 't,j)'
                       nullable: false
                 page:
                   type: integer
                   description: 'Must be at least 1.'
-                  example: 3
+                  example: 13
                   nullable: false
                 per_page:
                   type: integer
                   description: 'Must be at least 1. Must not be greater than 100.'
-                  example: 16
+                  example: 13
                   nullable: false
                 sort:
                   type: string
                   description: 'Must match the regex /^(-?[a-zA-Z0-9_]+)(,-?[a-zA-Z0-9_]+)*$/.'
-                  example: '-y'
+                  example: 'zhV,fChsT,8GppD'
                   nullable: false
     post:
       summary: 'Create a new user.'
@@ -3515,22 +4255,22 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: fabw
+                  example: rfwizz
                   nullable: false
                 email:
                   type: string
                   description: 'Must be a valid email address.'
-                  example: slemke@example.org
+                  example: maudie.bergnaum@example.org
                   nullable: false
                 password:
                   type: string
                   description: 'Must be at least 8 characters.'
-                  example: 'Qt96_O2-?_FU&=?(F6'
+                  example: ',j-!mhuRE'
                   nullable: false
                 role_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the roles table.'
-                  example: molestiae
+                  example: veritatis
                   nullable: false
                 address:
                   type: object
@@ -3541,32 +4281,32 @@ paths:
                     address_line1:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: utlnd
+                      example: tjkpuha
                       nullable: false
                     city:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: cpujoewjjb
+                      example: xwv
                       nullable: false
                     country:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: fxptb
+                      example: odmw
                       nullable: false
                     postal_code:
                       type: string
                       description: 'Must not be greater than 20 characters.'
-                      example: kvwaaugusmjry
+                      example: gde
                       nullable: false
                     address_line2:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: kqehext
+                      example: vbu
                       nullable: true
                     state:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: jfsqspqvmt
+                      example: foi
                       nullable: true
               required:
                 - name
@@ -3656,17 +4396,17 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: tgpjarnuadyicbmufnerqucpd
+                  example: oyj
                   nullable: false
                 email:
                   type: string
                   description: 'Must be a valid email address.'
-                  example: drodriguez@example.com
+                  example: lindsey36@example.com
                   nullable: false
                 password:
                   type: string
                   description: 'Must be at least 8 characters.'
-                  example: 'fPeChG}9Ej^dP-D,lC'
+                  example: '&CSuy86zw}-h9'
                   nullable: true
                 role_id:
                   type: string
@@ -3682,32 +4422,32 @@ paths:
                     address_line1:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: diqvqrgmrmhjppgnvlbojxgqj
+                      example: ymadfce
                       nullable: false
                     city:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: woiokwccmvzyalpf
+                      example: exwsdyfrkmyvdacys
                       nullable: false
                     country:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: iixulbbn
+                      example: xaaovlgnsrntvsc
                       nullable: false
                     postal_code:
                       type: string
                       description: 'Must not be greater than 20 characters.'
-                      example: g
+                      example: zmgrvrrkvtzukcybba
                       nullable: false
                     address_line2:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: ldchorvwx
+                      example: nnnppneyefgbrxtbmd
                       nullable: true
                     state:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: tbpwkqzjlkwlgwkoicz
+                      example: kdngambsme
                       nullable: true
     delete:
       summary: 'Permanently delete a user.'
@@ -3833,17 +4573,17 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: ugkdrnigctnsdyugkjync
+                  example: dllgqqoguhwdestqjpsl
                   nullable: false
                 email:
                   type: string
                   description: 'Must be a valid email address.'
-                  example: elna.stamm@example.org
+                  example: nicolas.stefan@example.com
                   nullable: false
                 password:
                   type: string
                   description: 'Must be at least 8 characters.'
-                  example: '~6OjXW=Cl]+t!5&L]'
+                  example: 'p~![3{Mmv8Q3Xal>GigC'
                   nullable: true
                 role_id:
                   type: string
@@ -3859,32 +4599,32 @@ paths:
                     address_line1:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: wlnlgjhvnrtelcqihuexkebyo
+                      example: jbc
                       nullable: false
                     city:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: yhr
+                      example: onqnmd
                       nullable: false
                     country:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: sjpflrkcsy
+                      example: twj
                       nullable: false
                     postal_code:
                       type: string
                       description: 'Must not be greater than 20 characters.'
-                      example: acrwbvgasooeaneu
+                      example: bp
                       nullable: false
                     address_line2:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: ytdgvtuqirtestipavz
+                      example: k
                       nullable: true
                     state:
                       type: string
                       description: 'Must not be greater than 255 characters.'
-                      example: hbvxgqknjsyiemeopws
+                      example: ugafmyboqqoimhhvcxcq
                       nullable: true
     parameters:
       -
@@ -3978,17 +4718,17 @@ paths:
                 user_id:
                   type: string
                   description: 'The <code>id</code> of an existing record in the users table.'
-                  example: sunt
+                  example: aut
                   nullable: false
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: homepzm
+                  example: ctfsvrqupadzsktgeiyiebfzp
                   nullable: false
                 description:
                   type: string
                   description: 'Must not be greater than 1000 characters.'
-                  example: 'Et amet porro ea.'
+                  example: 'Voluptates consequatur nostrum minima eaque eos blanditiis.'
                   nullable: false
                 logo:
                   type: string
@@ -4087,12 +4827,12 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: qpdxzygj
+                  example: txizsjhmvfqqspjvm
                   nullable: false
                 description:
                   type: string
                   description: 'Must not be greater than 1000 characters.'
-                  example: 'Eum doloribus doloremque soluta.'
+                  example: 'Repellendus temporibus maiores fugiat beatae a ut consequatur in.'
                   nullable: false
                 logo:
                   type: string
@@ -4228,12 +4968,12 @@ paths:
                 name:
                   type: string
                   description: 'Must not be greater than 255 characters.'
-                  example: cdtaedtmvzfcduksiduvpl
+                  example: ueyennbressltvn
                   nullable: false
                 description:
                   type: string
                   description: 'Must not be greater than 1000 characters.'
-                  example: 'Iure iusto neque dolorem ipsa ipsa.'
+                  example: 'Suscipit nemo est alias voluptatum ullam.'
                   nullable: false
                 logo:
                   type: string
@@ -4257,13 +4997,13 @@ tags:
     name: 'Email Verification'
     description: ''
   -
-    name: Endpoints
-    description: ''
-  -
     name: Orders
     description: ''
   -
     name: 'Password Reset'
+    description: ''
+  -
+    name: Payment
     description: ''
   -
     name: 'Payment Methods'
@@ -4285,6 +5025,12 @@ tags:
     description: ''
   -
     name: Products
+    description: ''
+  -
+    name: Refunds
+    description: ''
+  -
+    name: Returns
     description: ''
   -
     name: 'Role Permissions'

@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "E-Commerce API Documentation",
-        "_postman_id": "55a667da-31c7-4948-9427-12f1da90d2d3",
+        "_postman_id": "fd06bf60-2af0-4f06-bf4d-87042565808d",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -164,13 +164,13 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "maiores",
+                                    "value": "qui",
                                     "description": "The ID of the verify."
                                 },
                                 {
                                     "id": "hash",
                                     "key": "hash",
-                                    "value": "ratione",
+                                    "value": "laborum",
                                     "description": ""
                                 }
                             ]
@@ -251,175 +251,6 @@
             ]
         },
         {
-            "name": "Endpoints",
-            "description": "",
-            "item": [
-                {
-                    "name": "GET api\/admin\/returns",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/returns",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/returns"
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": [
-                        {
-                            "header": [
-                                {
-                                    "key": "cache-control",
-                                    "value": "no-cache, private"
-                                },
-                                {
-                                    "key": "content-type",
-                                    "value": "application\/json"
-                                },
-                                {
-                                    "key": "vary",
-                                    "value": "Origin"
-                                }
-                            ],
-                            "code": 401,
-                            "body": "{\"message\":\"Unauthenticated.\"}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "POST api\/admin\/returns\/{returnId}\/{action}",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/returns\/:returnId\/:action",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/returns\/:returnId\/:action",
-                            "variable": [
-                                {
-                                    "id": "returnId",
-                                    "key": "returnId",
-                                    "value": "dolorum",
-                                    "description": ""
-                                },
-                                {
-                                    "id": "action",
-                                    "key": "action",
-                                    "value": "iure",
-                                    "description": ""
-                                }
-                            ]
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "POST api\/admin\/refund\/{gateway}\/{orderReturnId}",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/refund\/:gateway\/:orderReturnId",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/refund\/:gateway\/:orderReturnId",
-                            "variable": [
-                                {
-                                    "id": "gateway",
-                                    "key": "gateway",
-                                    "value": "ab",
-                                    "description": ""
-                                },
-                                {
-                                    "id": "orderReturnId",
-                                    "key": "orderReturnId",
-                                    "value": "occaecati",
-                                    "description": ""
-                                }
-                            ]
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                },
-                {
-                    "name": "POST api\/returns",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/returns",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/returns"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"order_item_id\":\"ullam\",\"reason\":\"zjzeislamllj\"}"
-                        },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
-                    },
-                    "response": []
-                }
-            ]
-        },
-        {
             "name": "Orders",
             "description": "",
             "item": [
@@ -486,7 +317,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"user_id\":\"cupiditate\",\"order_items\":[{\"product_id\":\"quo\",\"quantity\":59,\"price\":14}]}"
+                            "raw": "{\"user_id\":\"debitis\",\"order_items\":[{\"product_id\":\"a\",\"quantity\":1,\"price\":32}]}"
                         },
                         "description": ""
                     },
@@ -581,7 +412,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"order_items\":[{\"product_id\":\"dolores\",\"quantity\":71,\"price\":62}]}"
+                            "raw": "{\"order_items\":[{\"product_id\":\"quasi\",\"quantity\":48,\"price\":46}]}"
                         },
                         "description": ""
                     },
@@ -739,6 +570,47 @@
                     ]
                 },
                 {
+                    "name": "Retrieve paginated list of orders.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/orders",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/orders"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Orders retrieved successfully.\",\n  \"data\": []\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
                     "name": "Retrieve a specific order.",
                     "request": {
                         "url": {
@@ -868,6 +740,50 @@
                             "header": [],
                             "code": 400,
                             "body": "{\n  \"message\": {ERROR_MESSAGE},\n  \"status\": 400\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Payment",
+            "description": "",
+            "item": [
+                {
+                    "name": "Retrieve paginated list of payments.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/payments",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/payments"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Payments retrieved successfully.\",\n  \"data\": []\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
                             "name": ""
                         }
                     ]
@@ -1134,7 +1050,7 @@
                                 {
                                     "id": "none",
                                     "key": "none",
-                                    "value": "ex",
+                                    "value": "vitae",
                                     "description": ""
                                 }
                             ]
@@ -1152,7 +1068,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"object\":\"sit\"}"
+                            "raw": "{\"object\":\"non\"}"
                         },
                         "description": "This endpoint is triggered by Stripe when a payment event occurs (e.g., payment succeeded, failed).\nIt verifies the webhook signature and processes the payment status accordingly.",
                         "auth": {
@@ -1177,6 +1093,58 @@
                             "code": 400,
                             "body": "{\n  \"status\": false,\n  \"message\": \"Invalid payload\",\n  \"data\": null\n}",
                             "name": "Invalid Payload Format"
+                        }
+                    ]
+                },
+                {
+                    "name": "Verify Payment Status",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/payments\/:gateway\/verify",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/payments\/:gateway\/verify",
+                            "variable": [
+                                {
+                                    "id": "gateway",
+                                    "key": "gateway",
+                                    "value": "suscipit",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"payment_intent_id\":\"pi_1Hxxxxxxxxxxxx\",\"order_id\":123}"
+                        },
+                        "description": "Verifies the current status of a payment with the chosen payment gateway and updates\nthe local database accordingly. This is useful for handling cases where webhooks might\nhave failed or been delayed.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": true,\n  \"message\": \"Payment verified\",\n  \"data\": {\n    \"payment_status\": \"paid\",\n    \"order_status\": \"confirmed\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": false,\n  \"message\": \"Unable to retrieve payment from Stripe: No such payment_intent: 'pi_invalid'\",\n  \"data\": null\n}",
+                            "name": "Stripe API Error"
                         }
                     ]
                 }
@@ -1652,7 +1620,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"non\",\"parent_id\":3}"
+                            "raw": "{\"name\":\"veritatis\",\"parent_id\":17}"
                         },
                         "description": ""
                     },
@@ -1747,7 +1715,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"non\",\"parent_id\":18}"
+                            "raw": "{\"name\":\"eos\",\"parent_id\":20}"
                         },
                         "description": ""
                     },
@@ -1884,7 +1852,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"expedita\"}"
+                            "raw": "{\"name\":\"veniam\"}"
                         },
                         "description": ""
                     },
@@ -1979,7 +1947,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"tempora\"}"
+                            "raw": "{\"name\":\"dolorum\"}"
                         },
                         "description": ""
                     },
@@ -2072,7 +2040,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"qyhvrlzsrxhdfzmrkw\",\"price\":\"1.4\",\"category\":\"0,\",\"quantity\":19,\"created_at\":\"3071-67-62\",\"updated_at\":\"5392-24-38,2619-44-23\",\"search\":\"mdpwjoeundqahbtesrrgsu\",\"include\":\"whqss,npqmpmtpwpgpqup,obkqhkdjooysrj,uiy)\"},\"page\":4,\"per_page\":6,\"sort\":\"-lC,M1,-Hk\"}"
+                            "raw": "{\"filter\":{\"name\":\"zefaojctwjngvyayarjce\",\"price\":\"9807,63053.7)))\",\"category\":\"6\",\"quantity\":30,\"created_at\":\"5972-82-27,9794-46-29\",\"updated_at\":\"9217-32-23\",\"search\":\"mvmcj\",\"include\":\"\"},\"page\":65,\"per_page\":5,\"sort\":\"-IS\"}"
                         },
                         "description": ""
                     },
@@ -2162,61 +2130,61 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "yb",
+                                    "value": "vwszzcrwlsuszfvqcehhzmvb",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Officiis et atque eos atque.",
+                                    "value": "Illo aut ut aut dignissimos molestiae et ipsam sit.",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "price",
-                                    "value": "20",
+                                    "value": "60",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_category_id",
-                                    "value": "ut",
+                                    "value": "aut",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_categories table."
                                 },
                                 {
                                     "key": "product_status_id",
-                                    "value": "consequuntur",
+                                    "value": "in",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_statuses table."
                                 },
                                 {
                                     "key": "quantity",
-                                    "value": "6",
+                                    "value": "14",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_variants[0][product_attribute_id]",
-                                    "value": "deserunt",
+                                    "value": "enim",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][value]",
-                                    "value": "dfa",
+                                    "value": "yuggos",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][additional_price]",
-                                    "value": "81",
+                                    "value": "42",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][quantity]",
-                                    "value": "45",
+                                    "value": "70",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -2277,61 +2245,61 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "whsldmifqqhoha",
+                                    "value": "thfuoamziekqnqzlsv",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Vero id quis a velit sit ad inventore et.",
+                                    "value": "Sapiente quis amet sunt at.",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "price",
-                                    "value": "0",
+                                    "value": "58",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_category_id",
-                                    "value": "laudantium",
+                                    "value": "impedit",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_categories table."
                                 },
                                 {
                                     "key": "product_status_id",
-                                    "value": "dolores",
+                                    "value": "inventore",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_statuses table."
                                 },
                                 {
                                     "key": "quantity",
-                                    "value": "74",
+                                    "value": "4",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_variants[0][product_attribute_id]",
-                                    "value": "voluptates",
+                                    "value": "ab",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][value]",
-                                    "value": "fixflhvweeavangacfjfd",
+                                    "value": "tkqlsmibefnpjvdpknwpnvu",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][additional_price]",
-                                    "value": "3",
+                                    "value": "62",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][quantity]",
-                                    "value": "38",
+                                    "value": "5",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -2519,7 +2487,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"bwbjfsmzlgmkaoc\",\"price\":\"101,3500565.8))\",\"category\":\"8,\",\"quantity\":0,\"created_at\":\"9089-67-58,9352-22-36\",\"updated_at\":\"4741-00-41,2830-31-28\",\"search\":\"klai\",\"include\":\"r,vdntqqghefpnhtsm,bmouugl,jvnblpys,zppsknoj,jcgohwy)\"},\"page\":60,\"per_page\":8,\"sort\":\"-Q,-3,-r\"}"
+                            "raw": "{\"filter\":{\"name\":\"tpygwdpajuadhmqtvrx\",\"price\":\"4.34,2.74\",\"category\":\"0,2,33,2,3,9,\",\"quantity\":6,\"created_at\":\"7186-97-37,4477-63-40\",\"updated_at\":\"7153-71-23,6014-85-01\",\"search\":\"alnlysfc\",\"include\":\"pnzl,dohqgclp,pasjbxhk,hryodiy,mjhyz,xzohm)\"},\"page\":40,\"per_page\":21,\"sort\":\"j0t,-v0,j3,v0,Nq,-ZM,-8E,PC,-94\"}"
                         },
                         "description": "",
                         "auth": {
@@ -2586,6 +2554,311 @@
                             "header": [],
                             "code": 403,
                             "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Refunds",
+            "description": "",
+            "item": [
+                {
+                    "name": "Retrieve a paginated list of all refund records.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/refunds",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/refunds"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Refunds retrieved successfully.\",\n    \"data\": {\n        \"data\": [\n            {\n                \"id\": 1,\n                \"amount\": 2999,\n                \"processed_at\": \"2025-01-15T14:45:00.000000Z\",\n                \"notes\": \"Refund processed for damaged product\",\n                \"created_at\": \"2025-01-15T14:45:00.000000Z\",\n                \"updated_at\": \"2025-01-15T14:45:00.000000Z\",\n                \"status\": {\n                    \"id\": 1,\n                    \"name\": \"Refunded\"\n                },\n                \"order_return\": {\n                    \"id\": 15,\n                    \"reason\": \"Product damaged on arrival\",\n                    \"order_item\": {\n                        \"id\": 25,\n                        \"product\": {\n                            \"id\": 12,\n                            \"name\": \"Wireless Headphones\"\n                        },\n                        \"order\": {\n                            \"id\": 8,\n                            \"total_amount\": 5998,\n                            \"user\": {\n                                \"id\": 3,\n                                \"email\": \"customer@example.com\"\n                            }\n                        }\n                    }\n                }\n            }\n        ],\n        \"current_page\": 1,\n        \"per_page\": 20,\n        \"total\": 32\n    }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Process a refund for an approved return through the specified payment gateway.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/refunds\/:gateway\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/refunds\/:gateway\/:id",
+                            "variable": [
+                                {
+                                    "id": "gateway",
+                                    "key": "gateway",
+                                    "value": "stripe",
+                                    "description": "The payment gateway to process the refund through. Currently supports: stripe."
+                                },
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "15",
+                                    "description": "The ID of the return request to refund."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Refund processed successfully.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n    \"message\": \"Unsupported payment gateway\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n    \"message\": \"This return has not been approved for refund.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"message\": \"Return request not found.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"message\": \"Refund failed. Please try again later.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n    \"message\": \"An error occurred while processing the refund.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Returns",
+            "description": "",
+            "item": [
+                {
+                    "name": "Retrieve a paginated list of all return requests.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/returns",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/returns"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Order returns retrieved.\",\n    \"data\": {\n        \"data\": [\n            {\n                \"id\": 1,\n                \"reason\": \"Product damaged on arrival\",\n                \"status\": \"Requested\",\n                \"created_at\": \"2025-01-15T10:30:00.000000Z\",\n                \"updated_at\": \"2025-01-15T10:30:00.000000Z\",\n                \"order_item\": {\n                    \"id\": 25,\n                    \"quantity\": 2,\n                    \"price\": 2999,\n                    \"product\": {\n                        \"id\": 12,\n                        \"name\": \"Wireless Headphones\",\n                        \"price\": 2999\n                    },\n                    \"order\": {\n                        \"id\": 8,\n                        \"total_amount\": 5998,\n                        \"user\": {\n                            \"id\": 3,\n                            \"email\": \"customer@example.com\"\n                        }\n                    }\n                }\n            }\n        ],\n        \"current_page\": 1,\n        \"per_page\": 20,\n        \"total\": 45\n    }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Review and update the status of a return request.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/returns\/:returnId\/:action",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/returns\/:returnId\/:action",
+                            "variable": [
+                                {
+                                    "id": "returnId",
+                                    "key": "returnId",
+                                    "value": "15",
+                                    "description": "The ID of the return request."
+                                },
+                                {
+                                    "id": "action",
+                                    "key": "action",
+                                    "value": "approve",
+                                    "description": "The action to perform on the return. Must be one of: review, approve, reject."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Return status updated to Approved.\",\n    \"data\": {\n        \"id\": 15,\n        \"order_item_id\": 25,\n        \"reason\": \"Product damaged on arrival\",\n        \"order_return_status_id\": 3,\n        \"created_at\": \"2025-01-15T10:30:00.000000Z\",\n        \"updated_at\": \"2025-01-15T14:45:00.000000Z\"\n    }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"message\": \"Return request not found.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"message\": \"Return is already processed.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"message\": \"Invalid action provided.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a new return request for an order item.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/returns",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/returns"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"order_item_id\":25,\"reason\":\"The product arrived damaged and doesn't match the description.\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Orders return created.\",\n    \"data\": {\n        \"id\": 15,\n        \"reason\": \"The product arrived damaged and doesn't match the description.\",\n        \"status\": \"Requested\",\n        \"created_at\": \"2025-01-15T10:30:00.000000Z\",\n        \"updated_at\": \"2025-01-15T10:30:00.000000Z\"\n    }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You are not authorized to return this item.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"message\": \"Order item not found.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n    \"message\": \"A return request has already been created for this item.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"message\": \"Order has not been paid for.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"message\": \"The order item id field is required.\",\n    \"errors\": {\n        \"order_item_id\": [\n            \"The order item id field is required.\"\n        ],\n        \"reason\": [\n            \"The reason field is required.\"\n        ]\n    }\n}",
                             "name": ""
                         }
                     ]
@@ -3027,7 +3300,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"rulfih\",\"email\":\"csipes@example.org\",\"role\":\"4,1,\",\"created_at\":\"7494-79-25\",\"updated_at\":\"7385-94-26,6938-91-13\",\"search\":\"iavcojsm\",\"include\":\"g,ep,q)\"},\"page\":3,\"per_page\":16,\"sort\":\"-y\"}"
+                            "raw": "{\"filter\":{\"name\":\"jtwvfrirbfdfezm\",\"email\":\"jaylan17@example.org\",\"role\":\"7,\",\"created_at\":\"5765-88-19\",\"updated_at\":\"3726-79-63\",\"search\":\"wlleagawgx\",\"include\":\"t,j)\"},\"page\":13,\"per_page\":13,\"sort\":\"zhV,fChsT,8GppD\"}"
                         },
                         "description": ""
                     },
@@ -3114,7 +3387,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"fabw\",\"email\":\"slemke@example.org\",\"password\":\"Qt96_O2-?_FU&=?(F6\",\"role_id\":\"molestiae\",\"address\":{\"address_line1\":\"utlnd\",\"city\":\"cpujoewjjb\",\"country\":\"fxptb\",\"postal_code\":\"kvwaaugusmjry\",\"address_line2\":\"kqehext\",\"state\":\"jfsqspqvmt\"}}"
+                            "raw": "{\"name\":\"rfwizz\",\"email\":\"maudie.bergnaum@example.org\",\"password\":\",j-!mhuRE\",\"role_id\":\"veritatis\",\"address\":{\"address_line1\":\"tjkpuha\",\"city\":\"xwv\",\"country\":\"odmw\",\"postal_code\":\"gde\",\"address_line2\":\"vbu\",\"state\":\"foi\"}}"
                         },
                         "description": ""
                     },
@@ -3163,7 +3436,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"tgpjarnuadyicbmufnerqucpd\",\"email\":\"drodriguez@example.com\",\"password\":\"fPeChG}9Ej^dP-D,lC\",\"address\":{\"address_line1\":\"diqvqrgmrmhjppgnvlbojxgqj\",\"city\":\"woiokwccmvzyalpf\",\"country\":\"iixulbbn\",\"postal_code\":\"g\",\"address_line2\":\"ldchorvwx\",\"state\":\"tbpwkqzjlkwlgwkoicz\"}}"
+                            "raw": "{\"name\":\"oyj\",\"email\":\"lindsey36@example.com\",\"password\":\"&CSuy86zw}-h9\",\"address\":{\"address_line1\":\"ymadfce\",\"city\":\"exwsdyfrkmyvdacys\",\"country\":\"xaaovlgnsrntvsc\",\"postal_code\":\"zmgrvrrkvtzukcybba\",\"address_line2\":\"nnnppneyefgbrxtbmd\",\"state\":\"kdngambsme\"}}"
                         },
                         "description": ""
                     },
@@ -3304,7 +3577,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"ugkdrnigctnsdyugkjync\",\"email\":\"elna.stamm@example.org\",\"password\":\"~6OjXW=Cl]+t!5&L]\",\"address\":{\"address_line1\":\"wlnlgjhvnrtelcqihuexkebyo\",\"city\":\"yhr\",\"country\":\"sjpflrkcsy\",\"postal_code\":\"acrwbvgasooeaneu\",\"address_line2\":\"ytdgvtuqirtestipavz\",\"state\":\"hbvxgqknjsyiemeopws\"}}"
+                            "raw": "{\"name\":\"dllgqqoguhwdestqjpsl\",\"email\":\"nicolas.stefan@example.com\",\"password\":\"p~![3{Mmv8Q3Xal>GigC\",\"address\":{\"address_line1\":\"jbc\",\"city\":\"onqnmd\",\"country\":\"twj\",\"postal_code\":\"bp\",\"address_line2\":\"k\",\"state\":\"ugafmyboqqoimhhvcxcq\"}}"
                         },
                         "description": ""
                     },
@@ -3438,19 +3711,19 @@
                             "formdata": [
                                 {
                                     "key": "user_id",
-                                    "value": "sunt",
+                                    "value": "aut",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the users table."
                                 },
                                 {
                                     "key": "name",
-                                    "value": "homepzm",
+                                    "value": "ctfsvrqupadzsktgeiyiebfzp",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Et amet porro ea.",
+                                    "value": "Voluptates consequatur nostrum minima eaque eos blanditiis.",
                                     "type": "text",
                                     "description": "Must not be greater than 1000 characters."
                                 },
@@ -3511,13 +3784,13 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "qpdxzygj",
+                                    "value": "txizsjhmvfqqspjvm",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Eum doloribus doloremque soluta.",
+                                    "value": "Repellendus temporibus maiores fugiat beatae a ut consequatur in.",
                                     "type": "text",
                                     "description": "Must not be greater than 1000 characters."
                                 },
@@ -3670,13 +3943,13 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "cdtaedtmvzfcduksiduvpl",
+                                    "value": "ueyennbressltvn",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Iure iusto neque dolorem ipsa ipsa.",
+                                    "value": "Suscipit nemo est alias voluptatum ullam.",
                                     "type": "text",
                                     "description": "Must not be greater than 1000 characters."
                                 },

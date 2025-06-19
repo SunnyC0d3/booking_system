@@ -1,0 +1,281 @@
+name: Payments
+description: ''
+endpoints:
+  -
+    httpMethods:
+      - POST
+    uri: 'api/payments/{gateway}/create'
+    metadata:
+      groupName: Payments
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Initiate Payment'
+      description: |-
+        Creates or retrieves a Stripe PaymentIntent for a given order. If a payment already exists,
+        it will return the existing client secret to avoid duplicate charges.
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      gateway:
+        name: gateway
+        description: 'The payment gateway to use. Currently supported: `stripe`.'
+        required: true
+        example: stripe
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      gateway: stripe
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      order_id:
+        name: order_id
+        description: 'The ID of the order being paid for.'
+        required: true
+        example: 123
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      order_id: 123
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "status": true,
+            "message": "PaymentIntent created successfully.",
+            "data": {
+              "client_secret": "pi_1Hxxxxxxxxxxxx_secret_xxxxxxxxx"
+            }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 200
+        content: |-
+          {
+            "status": true,
+            "message": "Payment has already been processed for this order.",
+            "data": null
+          }
+        headers: []
+        description: 'Already Paid'
+        custom: []
+      -
+        status: 400
+        content: |-
+          {
+            "status": false,
+            "message": "Unsupported payment gateway",
+            "data": null
+          }
+        headers: []
+        description: 'Unsupported Gateway'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "status": false,
+            "message": "No query results for model [App\\Models\\Order] 999",
+            "data": null
+          }
+        headers: []
+        description: 'Order Not Found'
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/payments/stripe/webhook
+    metadata:
+      groupName: Payments
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Stripe Webhook Listener'
+      description: |-
+        This endpoint is triggered by Stripe when a payment event occurs (e.g., payment succeeded, failed).
+        It verifies the webhook signature and processes the payment status accordingly.
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      none:
+        name: none
+        description: ''
+        required: false
+        example: vitae
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      none: vitae
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      object:
+        name: object
+        description: 'Stripe webhook payload. The full JSON payload sent by Stripe will be validated internally.'
+        required: false
+        example: non
+        type: $event
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      object: non
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "status": true,
+            "message": "Webhook update.",
+            "data": null
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 400
+        content: |-
+          {
+            "status": false,
+            "message": "Invalid Stripe signature",
+            "data": null
+          }
+        headers: []
+        description: 'Invalid Signature or Payload'
+        custom: []
+      -
+        status: 400
+        content: |-
+          {
+            "status": false,
+            "message": "Invalid payload",
+            "data": null
+          }
+        headers: []
+        description: 'Invalid Payload Format'
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: 'api/payments/{gateway}/verify'
+    metadata:
+      groupName: Payments
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Verify Payment Status'
+      description: |-
+        Verifies the current status of a payment with the chosen payment gateway and updates
+        the local database accordingly. This is useful for handling cases where webhooks might
+        have failed or been delayed.
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      gateway:
+        name: gateway
+        description: ''
+        required: true
+        example: suscipit
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      gateway: suscipit
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      payment_intent_id:
+        name: payment_intent_id
+        description: 'The Stripe Payment Intent ID to verify.'
+        required: true
+        example: pi_1Hxxxxxxxxxxxx
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      order_id:
+        name: order_id
+        description: 'The ID of the order associated with this payment.'
+        required: true
+        example: 123
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      payment_intent_id: pi_1Hxxxxxxxxxxxx
+      order_id: 123
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "status": true,
+            "message": "Payment verified",
+            "data": {
+              "payment_status": "paid",
+              "order_status": "confirmed"
+            }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+            "status": false,
+            "message": "Unable to retrieve payment from Stripe: No such payment_intent: 'pi_invalid'",
+            "data": null
+          }
+        headers: []
+        description: 'Stripe API Error'
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []

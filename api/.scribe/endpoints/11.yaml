@@ -1,4 +1,4 @@
-name: Endpoints
+name: Returns
 description: ''
 endpoints:
   -
@@ -6,15 +6,16 @@ endpoints:
       - GET
     uri: api/admin/returns
     metadata:
-      groupName: Endpoints
+      groupName: Returns
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
+      title: 'Retrieve a paginated list of all return requests.'
       description: ''
-      authenticated: false
+      authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -26,16 +27,60 @@ endpoints:
     fileParameters: []
     responses:
       -
-        status: 401
-        content: '{"message":"Unauthenticated."}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          vary: Origin
-        description: null
+        status: 200
+        content: |-
+          {
+              "message": "Order returns retrieved.",
+              "data": {
+                  "data": [
+                      {
+                          "id": 1,
+                          "reason": "Product damaged on arrival",
+                          "status": "Requested",
+                          "created_at": "2025-01-15T10:30:00.000000Z",
+                          "updated_at": "2025-01-15T10:30:00.000000Z",
+                          "order_item": {
+                              "id": 25,
+                              "quantity": 2,
+                              "price": 2999,
+                              "product": {
+                                  "id": 12,
+                                  "name": "Wireless Headphones",
+                                  "price": 2999
+                              },
+                              "order": {
+                                  "id": 8,
+                                  "total_amount": 5998,
+                                  "user": {
+                                      "id": 3,
+                                      "email": "customer@example.com"
+                                  }
+                              }
+                          }
+                      }
+                  ],
+                  "current_page": 1,
+                  "per_page": 20,
+                  "total": 45
+              }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+              "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: ''
         custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
     controller: null
     method: null
     route: null
@@ -45,101 +90,106 @@ endpoints:
       - POST
     uri: 'api/admin/returns/{returnId}/{action}'
     metadata:
-      groupName: Endpoints
+      groupName: Returns
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
+      title: 'Review and update the status of a return request.'
       description: ''
-      authenticated: false
+      authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
       returnId:
         name: returnId
-        description: ''
+        description: 'The ID of the return request.'
         required: true
-        example: dolorum
-        type: string
+        example: 15
+        type: integer
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         custom: []
       action:
         name: action
-        description: ''
+        description: 'The action to perform on the return. Must be one of: review, approve, reject.'
         required: true
-        example: iure
+        example: approve
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         custom: []
     cleanUrlParameters:
-      returnId: dolorum
-      action: iure
+      returnId: 15
+      action: approve
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
-    responses: []
-    responseFields: []
-    auth: []
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: 'api/admin/refund/{gateway}/{orderReturnId}'
-    metadata:
-      groupName: Endpoints
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: ''
-      description: ''
-      authenticated: false
-      custom: []
-    headers:
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      gateway:
-        name: gateway
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Return status updated to Approved.",
+              "data": {
+                  "id": 15,
+                  "order_item_id": 25,
+                  "reason": "Product damaged on arrival",
+                  "order_return_status_id": 3,
+                  "created_at": "2025-01-15T10:30:00.000000Z",
+                  "updated_at": "2025-01-15T14:45:00.000000Z"
+              }
+          }
+        headers: []
         description: ''
-        required: true
-        example: ab
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
         custom: []
-      orderReturnId:
-        name: orderReturnId
+      -
+        status: 403
+        content: |-
+          {
+              "message": "You do not have the required permissions."
+          }
+        headers: []
         description: ''
-        required: true
-        example: occaecati
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
         custom: []
-    cleanUrlParameters:
-      gateway: ab
-      orderReturnId: occaecati
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses: []
+      -
+        status: 404
+        content: |-
+          {
+              "message": "Return request not found."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+              "message": "Return is already processed."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+              "message": "Invalid action provided."
+          }
+        headers: []
+        description: ''
+        custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
     controller: null
     method: null
     route: null
@@ -149,15 +199,16 @@ endpoints:
       - POST
     uri: api/returns
     metadata:
-      groupName: Endpoints
+      groupName: Returns
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: ''
+      title: 'Create a new return request for an order item.'
       description: ''
-      authenticated: false
+      authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -167,31 +218,103 @@ endpoints:
     bodyParameters:
       order_item_id:
         name: order_item_id
-        description: 'The <code>id</code> of an existing record in the order_items table.'
+        description: 'The ID of the order item to return.'
         required: true
-        example: ullam
-        type: string
+        example: 25
+        type: integer
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         custom: []
       reason:
         name: reason
-        description: 'Must not be greater than 1000 characters.'
+        description: 'The reason for the return request. Must be between 10 and 500 characters.'
         required: true
-        example: zjzeislamllj
+        example: "The product arrived damaged and doesn't match the description."
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         custom: []
     cleanBodyParameters:
-      order_item_id: ullam
-      reason: zjzeislamllj
+      order_item_id: 25
+      reason: "The product arrived damaged and doesn't match the description."
     fileParameters: []
-    responses: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Orders return created.",
+              "data": {
+                  "id": 15,
+                  "reason": "The product arrived damaged and doesn't match the description.",
+                  "status": "Requested",
+                  "created_at": "2025-01-15T10:30:00.000000Z",
+                  "updated_at": "2025-01-15T10:30:00.000000Z"
+              }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+              "message": "You are not authorized to return this item."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+              "message": "Order item not found."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 409
+        content: |-
+          {
+              "message": "A return request has already been created for this item."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+              "message": "Order has not been paid for."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+              "message": "The order item id field is required.",
+              "errors": {
+                  "order_item_id": [
+                      "The order item id field is required."
+                  ],
+                  "reason": [
+                      "The reason field is required."
+                  ]
+              }
+          }
+        headers: []
+        description: ''
+        custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 40|hoxHnWGSJUH7Y1Lizym0OEvkjc1HDrwRR80vx1Sv5fe3764a'
     controller: null
     method: null
     route: null
