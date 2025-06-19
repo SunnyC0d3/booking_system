@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Services\V1\Media\SecureMedia;
+use Illuminate\Http\UploadedFile;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -12,6 +14,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Filters\V1\QueryFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Product extends Model implements HasMedia
 {
@@ -52,5 +55,11 @@ class Product extends Model implements HasMedia
     public function scopeFilter(Builder $builder, QueryFilter $filters)
     {
         return $filters->apply($builder);
+    }
+
+    public function addSecureMedia(UploadedFile $file, string $collection = 'default'): Media
+    {
+        $mediaService = app(SecureMedia::class);
+        return $mediaService->addSecureMedia($this, $file, $collection);
     }
 }

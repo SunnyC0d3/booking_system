@@ -22,7 +22,7 @@ use App\Http\Controllers\V1\Admin\PaymentController;
 // Admin/Users
 
 Route::prefix('admin/users')
-    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'rate_limit:admin'])
     ->controller(UserController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.users.index');
@@ -35,7 +35,7 @@ Route::prefix('admin/users')
 // Admin/Vendors
 
 Route::prefix('admin/vendors')
-    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'rate_limit:admin'])
     ->controller(VendorController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.vendors.index');
@@ -48,7 +48,7 @@ Route::prefix('admin/vendors')
 // Admin/Permissions
 
 Route::prefix('admin/permissions')
-    ->middleware(['auth:api', 'roles:super admin', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:super admin', 'emailVerified', 'rate_limit:admin'])
     ->controller(PermissionController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.permissions.index');
@@ -60,7 +60,7 @@ Route::prefix('admin/permissions')
 // Admin/Roles
 
 Route::prefix('admin/roles')
-    ->middleware(['auth:api', 'roles:super admin', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:super admin', 'emailVerified', 'rate_limit:admin'])
     ->controller(RoleController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.roles.index');
@@ -72,7 +72,7 @@ Route::prefix('admin/roles')
 // Admin/RolePermission
 
 Route::prefix('admin')
-    ->middleware(['auth:api', 'roles:super admin', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:super admin', 'emailVerified', 'rate_limit:admin'])
     ->controller(RolePermissionController::class)
     ->group(function () {
         Route::get('roles/{role}/permissions', 'index')->name('admin.rolepermission.index');
@@ -84,7 +84,7 @@ Route::prefix('admin')
 // Admin/Products
 
 Route::prefix('admin/products')
-    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'rate_limit:admin'])
     ->controller(ProductController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.products.index');
@@ -99,7 +99,7 @@ Route::prefix('admin/products')
 // Admin/Product Attributes
 
 Route::prefix('admin/product-attributes')
-    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'rate_limit:admin'])
     ->controller(ProductAttributeController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.products.attributes.index');
@@ -112,7 +112,7 @@ Route::prefix('admin/product-attributes')
 // Admin/Product Categories
 
 Route::prefix('admin/product-categories')
-    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'rate_limit:admin'])
     ->controller(ProductCategoryController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.products.categories.index');
@@ -125,7 +125,7 @@ Route::prefix('admin/product-categories')
 // Admin/Product Tags
 
 Route::prefix('admin/product-tags')
-    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'rate_limit:admin'])
     ->controller(ProductTagController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.products.tags.index');
@@ -138,7 +138,7 @@ Route::prefix('admin/product-tags')
 // Admin/Payment Methods
 
 Route::prefix('admin/payment-methods')
-    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'rate_limit:admin'])
     ->controller(PaymentMethodController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.paymentmethods.index');
@@ -150,7 +150,7 @@ Route::prefix('admin/payment-methods')
 // Admin/Orders
 
 Route::prefix('admin/orders')
-    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'rate_limit:admin'])
     ->controller(OrderController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.orders.index');
@@ -165,7 +165,7 @@ Route::prefix('admin/orders')
 // Admin/Returns
 
 Route::prefix('admin/returns')
-    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'rate_limit:admin'])
     ->controller(ReturnsController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.returns.index');
@@ -175,7 +175,7 @@ Route::prefix('admin/returns')
 // Admin/Refund
 
 Route::prefix('admin/refunds')
-    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'rate_limit:admin'])
     ->controller(RefundController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.refunds.index');
@@ -185,7 +185,7 @@ Route::prefix('admin/refunds')
 // Admin/Refund
 
 Route::prefix('admin/payments')
-    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'rate_limit:admin'])
     ->controller(PaymentController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.payments.index');

@@ -29,8 +29,21 @@ class StoreProductRequest extends BaseFormRequest
             'product_variants.*.additional_price' => 'nullable|numeric|min:0',
             'product_variants.*.quantity' => 'required|integer|min:0',
             'media.*' => 'array',
-            'media.featured_image' => 'file|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'media.gallery.*' => 'file|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'media.featured_image' => [
+                'nullable',
+                'file',
+                'image',
+                'mimes:jpeg,png,jpg,gif,webp',
+                'max:5120',
+                'dimensions:min_width=100,min_height=100,max_width=4000,max_height=4000'
+            ],
+            'media.gallery.*' => [
+                'file',
+                'image',
+                'mimes:jpeg,png,jpg,gif,webp',
+                'max:5120',
+                'dimensions:min_width=100,min_height=100,max_width=4000,max_height=4000'
+            ],
         ];
     }
 }

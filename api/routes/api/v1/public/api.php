@@ -18,8 +18,8 @@ use App\Http\Controllers\V1\Public\ReturnsController;
 Route::middleware(['throttle:3,1', 'client'])
     ->controller(AuthController::class)
     ->group(function () {
-        Route::post('/register', 'register')->name('auth.register');
-        Route::post('/login', 'login')->name('auth.login');
+        Route::post('/register', 'register')->middleware('rate_limit:auth.register')->name('auth.register');
+        Route::post('/login', 'login')->middleware('rate_limit:auth.login')->name('auth.login');
     });
 
 Route::middleware(['auth:api'])
@@ -46,17 +46,17 @@ Route::prefix('email')
 
 // Password Reset
 
-Route::middleware(['throttle:3,1', 'client'])
+Route::middleware(['throttle:3,5', 'client'])
     ->controller(AuthController::class)
     ->group(function () {
-        Route::post('/forgot-password', 'forgotPassword')->name('password.email');
-        Route::post('/reset-password', 'passwordReset')->name('password.update');
+        Route::post('/forgot-password', 'forgotPassword')->middleware('rate_limit:auth.password_reset')->name('password.email');
+        Route::post('/reset-password', 'passwordReset')->middleware('rate_limit:auth.password_reset')->name('password.update');
     });
 
 // Payments
 
 Route::prefix('payments')
-//    ->middleware(['client'])
+    ->middleware(['rate_limit:payments'])
     ->controller(PaymentController::class)
     ->group(function () {
         Route::post('/{gateway}/create', 'store')->name('payments.store');
@@ -87,7 +87,7 @@ Route::prefix('vendors')
 // Products
 
 Route::prefix('products')
-    ->middleware(['client'])
+    ->middleware(['client', 'rate_limit:search'])
     ->controller(ProductController::class)
     ->group(function () {
         Route::get('/', 'index')->name('products.index');

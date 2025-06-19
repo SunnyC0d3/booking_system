@@ -7,22 +7,40 @@ use Illuminate\Database\Eloquent\Builder;
 class ProductFilter extends QueryFilter
 {
     protected array $sortable = [
-        'name',
-        'price',
-        'quantity',
-        'created_at',
-        'updated_at',
+        'name' => 'name',
+        'price' => 'price',
+        'quantity' => 'quantity',
+        'created_at' => 'created_at',
+        'updated_at' => 'updated_at',
     ];
 
     public function name(string $value)
     {
-        $likeStr = str_replace('*', '%', $value);
-        return $this->builder->where('name', 'like', $likeStr);
+        $this->safeLikeQuery('name', $value);
+        return $this->builder;
+    }
+
+    public function search(string $value)
+    {
+        return $this->builder->where(function (Builder $query) use ($value) {
+            $this->builder = $query;
+            $this->safeLikeQuery('name', $value);
+            $query->orWhere(function (Builder $subQuery) use ($value) {
+                $this->builder = $subQuery;
+                $this->safeLikeQuery('description', $value);
+            });
+        });
     }
 
     public function createdAt(string $value)
     {
         $dates = explode(',', $value);
+
+        foreach ($dates as $date) {
+            if (!$this->isValidDate($date)) {
+                return $this->builder;
+            }
+        }
 
         if (count($dates) > 1) {
             return $this->builder->whereBetween('created_at', $dates);
@@ -31,20 +49,15 @@ class ProductFilter extends QueryFilter
         return $this->builder->whereDate('created_at', $value);
     }
 
-    public function updatedAt(string $value)
-    {
-        $dates = explode(',', $value);
-
-        if (count($dates) > 1) {
-            return $this->builder->whereBetween('updated_at', $dates);
-        }
-
-        return $this->builder->whereDate('updated_at', $value);
-    }
-
     public function price(string $value)
     {
         $range = explode(',', $value);
+
+        foreach ($range as $price) {
+            if (!is_numeric($price)) {
+                return $this->builder;
+            }
+        }
 
         if (count($range) === 2) {
             return $this->builder->whereBetween('price', $range);
@@ -53,27 +66,25 @@ class ProductFilter extends QueryFilter
         return $this->builder->where('price', $value);
     }
 
-    public function quantity(int $value)
-    {
-        return $this->builder->where('quantity', $value);
-    }
-
     public function category(string $value)
     {
-        return $this->builder->whereHas('category', function (Builder $query) use ($value) {
-            $query->whereIn('id', explode(',', $value));
+        $categoryIds = explode(',', $value);
+
+        foreach ($categoryIds as $id) {
+            if (!is_numeric($id)) {
+                return $this->builder;
+            }
+        }
+
+        return $this->builder->whereHas('category', function (Builder $query) use ($categoryIds) {
+            $query->whereIn('id', $categoryIds);
         });
     }
 
-    public function include(string|array $value)
+    private function isValidDate(string $date): bool
     {
-        return $this->builder->with($value);
-    }
-
-    public function search(string $value)
-    {
-        $likeStr = str_replace('*', '%', $value);
-        return $this->builder->where('name', 'like', $likeStr)
-            ->orWhere('description', 'like', $likeStr);
+        $format = 'Y-m-d';
+        $dateTime = \DateTime::createFromFormat($format, $date);
+        return $dateTime && $dateTime->format($format) === $date;
     }
 }

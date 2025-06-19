@@ -21,7 +21,7 @@ abstract class QueryFilter
         $this->builder = $builder;
 
         foreach ($this->request->all() as $key => $value) {
-            if (method_exists($this, $key)) {
+            if (method_exists($this, $key) && $this->isAllowedFilter($key)) {
                 $this->$key($value);
             }
         }
@@ -29,13 +29,24 @@ abstract class QueryFilter
         return $builder;
     }
 
-    protected function filter(array $filters)
+    protected function isAllowedFilter(string $method): bool
     {
-        foreach ($filters as $key => $value) {
-            if (method_exists($this, $key)) {
-                $this->$key($value);
-            }
-        }
+        $allowedMethods = [
+            'name',
+            'email',
+            'createdAt',
+            'updatedAt',
+            'price',
+            'quantity',
+            'category',
+            'include',
+            'search',
+            'role',
+            'user',
+            'sort'
+        ];
+
+        return in_array($method, $allowedMethods);
     }
 
     protected function sort(string $value): void
@@ -50,11 +61,18 @@ abstract class QueryFilter
                 $sortAttribute = substr($sortAttribute, 1);
             }
 
-            $columnName = $this->sortable[$sortAttribute] ?? $sortAttribute;
-
-            if (in_array($columnName, $this->sortable, true) || array_key_exists($sortAttribute, $this->sortable)) {
-                $this->builder->orderBy($columnName, $direction);
+            if (in_array($sortAttribute, $this->sortable, true)) {
+                $columnName = $this->sortable[$sortAttribute] ?? $sortAttribute;
+                $this->builder->orderBy(DB::raw($columnName), $direction);
             }
         }
+    }
+
+    protected function safeLikeQuery(string $column, string $value): void
+    {
+        $escapedValue = str_replace(['%', '_'], ['\%', '\_'], $value);
+        $likeValue = str_replace('*', '%', $escapedValue);
+
+        $this->builder->where($column, 'like', $likeValue);
     }
 }

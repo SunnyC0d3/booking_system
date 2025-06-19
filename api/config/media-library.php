@@ -12,7 +12,7 @@ return [
      * The maximum file size of an item in bytes.
      * Adding a larger file will result in an exception.
      */
-    'max_file_size' => 1024 * 1024 * 10, // 10MB
+    'max_file_size' => 1024 * 1024 * 5, // 5MB
 
     /*
      * This queue connection will be used to generate derived and responsive images.
@@ -282,4 +282,25 @@ return [
      * disabled lazy loading globally in the service provider.
      */
     'force_lazy_loading' => env('FORCE_MEDIA_LIBRARY_LAZY_LOADING', true),
+
+    /*
+     * Allowed MIME types for uploads
+     */
+    'allowed_mime_types' => [
+        'image/jpeg',
+        'image/jpg',
+        'image/png',
+        'image/gif',
+        'image/webp',
+    ],
+
+    /*
+     * Allowed file extensions
+     */
+    'allowed_extensions' => ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+
+    /*
+     * Sanitize file names
+     */
+    'sanitize_file_names' => true,
 ];

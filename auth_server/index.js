@@ -7,24 +7,27 @@ const cookieParser = require('cookie-parser');
 const crypto = require('crypto');
 const Redis = require('ioredis');
 
-const redis = new Redis();
+const redis = new Redis({
+    host: process.env.REDIS_HOST || 'localhost',
+    port: process.env.REDIS_PORT || 6379,
+    password: process.env.REDIS_PASSWORD || null,
+    retryDelayOnFailover: 100,
+    maxRetriesPerRequest: 3,
+});
 
-const nonceStore = new Map();
-const nonceExpiryTime = 2 * 60 * 1000;
+redis.on('error', (err) => {
+    console.error('Redis connection error:', err);
+});
+
+redis.on('connect', () => {
+    console.log('✅ Redis connected successfully');
+});
+
+const nonceExpiryTime = 2 * 60;
 
 const API_CLIENT = 'client';
 const API_AUTH = 'auth';
 const IP_WHITELIST = (process.env.IP_WHITELIST || '').split(',').map(ip => ip.trim());
-
-setInterval(() => {
-    const now = Date.now();
-    for (const [key, expiry] of nonceStore.entries()) {
-        if (expiry < now) {
-            nonceStore.delete(key);
-        }
-    }
-}, 60 * 1000);
-
 
 const {
     PORT = 5001,
@@ -35,9 +38,54 @@ const {
     FRONTEND_ORIGIN
 } = process.env;
 
+const storeNonce = async (nonce, data) => {
+    try {
+        await redis.setex(`nonce:${nonce}`, nonceExpiryTime, JSON.stringify(data));
+        return true;
+    } catch (error) {
+        console.error('Failed to store nonce:', error);
+        return false;
+    }
+};
+
+const getNonce = async (nonce) => {
+    try {
+        const data = await redis.get(`nonce:${nonce}`);
+        return data ? JSON.parse(data) : null;
+    } catch (error) {
+        console.error('Failed to get nonce:', error);
+        return null;
+    }
+};
+
+const deleteNonce = async (nonce) => {
+    try {
+        await redis.del(`nonce:${nonce}`);
+        return true;
+    } catch (error) {
+        console.error('Failed to delete nonce:', error);
+        return false;
+    }
+};
+
 const app = express();
 app.use(express.json());
-app.use(cookieParser(AUTH_SERVER_SECRET));
+app.use(cookieParser(AUTH_SERVER_SECRET))
+
+app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    if (process.env.NODE_ENV === 'production') {
+        res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+    }
+    res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'");
+    res.removeHeader('X-Powered-By');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=()');
+
+    next();
+});
 
 app.use(cors({
     origin: FRONTEND_ORIGIN,
@@ -52,48 +100,64 @@ app.options('/api/proxy', cors({
     credentials: true
 }));
 
-app.use(rateLimit({
+const authLimiter = rateLimit({
+    windowMs: 60 * 1000,
+    max: 5,
+    standardHeaders: true,
+    keyGenerator: (req) => `auth:${req.ip}:${req.get('User-Agent')}`,
+    handler: (req, res) => {
+        res.status(429).json({
+            message: 'Too many authentication attempts, please try again later.',
+            retryAfter: 60
+        });
+    }
+});
+
+const proxyLimiter = rateLimit({
     windowMs: 60 * 1000,
     max: 30,
     standardHeaders: true,
+    keyGenerator: (req) => `proxy:${req.ip}`,
     handler: (req, res) => {
         res.status(429).json({
             message: 'Too many requests, please try again later.',
-            retryAfter: Math.round(60)
+            retryAfter: 60
         });
     }
-}));
+});
 
-const verifyFrontend = (req, res, next) => {
+const verifyFrontend = async (req, res, next) => {
     const nonce = req.signedCookies['auth_server_csrf'];
 
-    if (!nonce || !nonceStore.has(nonce)) {
-        return res.status(401).json({message: 'Not authorised - missing or invalid nonce.'});
+    if (!nonce) {
+        return res.status(401).json({message: 'Not authorised - missing nonce.'});
     }
 
-    const stored = nonceStore.get(nonce);
+    const stored = await getNonce(nonce);
 
-    if (Date.now() > stored.expiry) {
-        nonceStore.delete(nonce);
-        return res.status(403).json({message: 'Not authorised - nonce expired.'});
+    if (!stored) {
+        return res.status(401).json({message: 'Not authorised - invalid or expired nonce.'});
     }
 
     if (stored.ip !== req.ip) {
+        await deleteNonce(nonce);
         return res.status(403).json({message: 'Not authorised - IP mismatch.'});
     }
 
     if (stored.userAgent !== req.get('User-Agent')) {
+        await deleteNonce(nonce);
         return res.status(403).json({message: 'Not authorised - user agent mismatch.'});
     }
 
     if (req.get('Origin') !== FRONTEND_ORIGIN || !req.get('Origin')) {
+        await deleteNonce(nonce);
         return res.status(403).json({message: 'Not authorised - origin mismatch.'});
     }
 
     next();
 };
 
-app.post('/api/server-token', async (req, res) => {
+app.post('/api/server-token', authLimiter, async (req, res) => {
     const nonce = crypto.randomBytes(16).toString('hex');
 
     if (!IP_WHITELIST.includes(req.ip)) {
@@ -104,30 +168,37 @@ app.post('/api/server-token', async (req, res) => {
         return res.status(403).json({message: 'Not authorised.'});
     }
 
-    nonceStore.set(nonce, {
-        expiry: Date.now() + nonceExpiryTime,
+    const nonceData = {
         ip: req.ip,
-        userAgent: req.get('User-Agent')
-    });
+        userAgent: req.get('User-Agent'),
+        createdAt: Date.now()
+    };
+
+    const stored = await storeNonce(nonce, nonceData);
+
+    if (!stored) {
+        return res.status(500).json({message: 'Failed to create session.'});
+    }
 
     try {
         res
             .cookie('auth_server_csrf', nonce, {
                 httpOnly: true,
-                secure: true,
+                secure: process.env.NODE_ENV === 'production',
                 sameSite: 'Strict',
-                maxAge: nonceExpiryTime,
+                maxAge: nonceExpiryTime * 1000,
                 signed: true
             })
             .json({
                 message: 'Verified'
             });
     } catch (err) {
+        await deleteNonce(nonce);
         return res.status(500).json({message: 'Token setup failed'});
     }
 });
 
-app.post('/api/proxy', verifyFrontend, async (req, res) => {
+app.post('/api/proxy', proxyLimiter, verifyFrontend, async (req, res) => {
     const {path, authType, method, data} = req.body;
 
     if (!path) {
@@ -138,8 +209,6 @@ app.post('/api/proxy', verifyFrontend, async (req, res) => {
         let token;
 
         if (authType === API_CLIENT) {
-            const now = Date.now();
-
             token = await redis.get('client_access_token');
 
             if (!token) {

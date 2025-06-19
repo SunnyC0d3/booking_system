@@ -3,13 +3,16 @@
 namespace App\Models;
 
 use App\Filters\V1\QueryFilter;
+use App\Services\V1\Media\SecureMedia;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\UploadedFile;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Vendor extends Model implements HasMedia
 {
@@ -31,5 +34,11 @@ class Vendor extends Model implements HasMedia
     public function scopeFilter(Builder $builder, QueryFilter $filters)
     {
         return $filters->apply($builder);
+    }
+
+    public function addSecureMedia(UploadedFile $file, string $collection = 'default'): Media
+    {
+        $mediaService = app(SecureMedia::class);
+        return $mediaService->addSecureMedia($this, $file, $collection);
     }
 }

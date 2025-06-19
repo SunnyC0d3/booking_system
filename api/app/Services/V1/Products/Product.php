@@ -4,18 +4,25 @@ namespace App\Services\V1\Products;
 
 use App\Models\Order as OrderDB;
 use App\Models\Product as ProdDB;
+use App\Services\V1\Media\SecureMedia;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Traits\V1\ApiResponses;
 use App\Filters\V1\ProductFilter;
 use App\Resources\V1\ProductResource;
 use App\Models\Vendor;
+use Illuminate\Support\Facades\Log;
 
 class Product
 {
     use ApiResponses;
 
-    public function __construct() {}
+    protected SecureMedia $mediaService;
+
+    public function __construct(SecureMedia $mediaService)
+    {
+        $this->mediaService = $mediaService;
+    }
 
     public function all(Request $request, ProductFilter $filter)
     {
@@ -47,7 +54,7 @@ class Product
                 return $this->error('Vendor not found.', 404);
             }
 
-            $product = DB::transaction(function () use ($data, $vendor) {
+            $product = DB::transaction(function () use ($data, $vendor, $request) {
                 $product = ProdDB::create([
                     'name' => $data['name'],
                     'description' => $data['description'] ?? null,
@@ -75,15 +82,7 @@ class Product
                 }
 
                 if (!empty($data['media'])) {
-                    if (!empty($data['media']['featured_image'])) {
-                        $product->addMediaFromRequest('media.featured_image')->toMediaCollection('featured_image');
-                    }
-
-                    if (!empty($data['media']['gallery'])) {
-                        foreach ($data['media']['gallery'] as $media) {
-                            $product->addMedia($media)->toMediaCollection('gallery');
-                        }
-                    }
+                    $this->handleSecureMediaUpload($product, $request);
                 }
 
                 return $product;
@@ -102,7 +101,7 @@ class Product
         if ($user->hasPermission('edit_products')) {
             $data = $request->validated();
 
-            DB::transaction(function () use ($data, $product) {
+            DB::transaction(function () use ($data, $product, $request) {
                 $product->update([
                     'name' => $data['name'],
                     'description' => $data['description'] ?? null,
@@ -130,17 +129,7 @@ class Product
                 }
 
                 if (!empty($data['media'])) {
-                    if (!empty($data['media']['featured_image'])) {
-                        $product->clearMediaCollection('featured_image');
-                        $product->addMediaFromRequest('media.featured_image')->toMediaCollection('featured_image');
-                    }
-
-                    if (!empty($data['media']['gallery'])) {
-                        $product->clearMediaCollection('gallery');
-                        foreach ($data['media']['gallery'] as $galleryItem) {
-                            $product->addMedia($galleryItem)->toMediaCollection('gallery');
-                        }
-                    }
+                    $this->handleSecureMediaUpload($product, $request, true);
                 }
             });
 
@@ -148,6 +137,54 @@ class Product
         }
 
         return $this->error('You do not have the required permissions.', 403);
+    }
+
+    protected function handleSecureMediaUpload(ProdDB $product, Request $request, bool $isUpdate = false): void
+    {
+        try {
+            if ($request->hasFile('media.featured_image')) {
+                if ($isUpdate) {
+                    $product->clearMediaCollection('featured_image');
+                }
+
+                $this->mediaService->addSecureMedia(
+                    $product,
+                    $request->file('media.featured_image'),
+                    'featured_image'
+                );
+            }
+
+            if ($request->hasFile('media.gallery')) {
+                if ($isUpdate) {
+                    $product->clearMediaCollection('gallery');
+                }
+
+                $galleryFiles = $request->file('media.gallery');
+
+                if (!is_array($galleryFiles)) {
+                    $galleryFiles = [$galleryFiles];
+                }
+
+                foreach ($galleryFiles as $galleryFile) {
+                    if ($galleryFile && $galleryFile->isValid()) {
+                        $this->mediaService->addSecureMedia(
+                            $product,
+                            $galleryFile,
+                            'gallery'
+                        );
+                    }
+                }
+            }
+
+        } catch (\Exception $e) {
+            Log::error('Product media upload failed', [
+                'product_id' => $product->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            throw new \Exception('Failed to process media files: ' . $e->getMessage());
+        }
     }
 
     public function softDelete(Request $request, ProdDB $product)

@@ -7,45 +7,47 @@ use Illuminate\Database\Eloquent\Builder;
 class UserFilter extends QueryFilter
 {
     protected array $sortable = [
-        'name',
-        'email',
-        'created_at',
-        'updated_at',
+        'name' => 'name',
+        'email' => 'email',
+        'created_at' => 'created_at',
+        'updated_at' => 'updated_at',
     ];
 
     public function name(string $value)
     {
-        $likeStr = str_replace('*', '%', $value);
-        return $this->builder->where('name', 'like', $likeStr);
+        $this->safeLikeQuery('name', $value);
+        return $this->builder;
     }
 
     public function email(string $value)
     {
-        $likeStr = str_replace('*', '%', $value);
-        return $this->builder->where('email', 'like', $likeStr);
+        $this->safeLikeQuery('email', $value);
+        return $this->builder;
     }
 
-    public function createdAt(string $value)
+    public function search(string $value)
     {
-        $dates = explode(',', $value);
-
-        return count($dates) > 1
-            ? $this->builder->whereBetween('created_at', $dates)
-            : $this->builder->whereDate('created_at', $value);
-    }
-
-    public function updatedAt(string $value)
-    {
-        $dates = explode(',', $value);
-
-        return count($dates) > 1
-            ? $this->builder->whereBetween('updated_at', $dates)
-            : $this->builder->whereDate('updated_at', $value);
+        return $this->builder->where(function (Builder $query) use ($value) {
+            $this->builder = $query;
+            $this->safeLikeQuery('name', $value);
+            $query->orWhere(function (Builder $subQuery) use ($value) {
+                $this->builder = $subQuery;
+                $this->safeLikeQuery('email', $value);
+            });
+        });
     }
 
     public function role(string|array $value)
     {
         $ids = is_array($value) ? $value : explode(',', $value);
+
+        // 🛡️ Validate all IDs are numeric
+        foreach ($ids as $id) {
+            if (!is_numeric($id)) {
+                return $this->builder;
+            }
+        }
+
         return $this->builder->whereIn('role_id', $ids);
     }
 

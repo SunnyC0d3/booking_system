@@ -2,18 +2,24 @@
 
 namespace App\Services\V1\Users;
 
+use App\Models\Product as ProdDB;
 use App\Models\Vendor as DB;
 use App\Filters\V1\VendorFilter;
 use App\Resources\V1\VendorResource;
+use App\Services\V1\Media\SecureMedia;
 use Illuminate\Http\Request;
 use App\Traits\V1\ApiResponses;
+use Illuminate\Support\Facades\Log;
 
 class Vendor
 {
     use ApiResponses;
 
-    public function __construct()
+    protected SecureMedia $mediaService;
+
+    public function __construct(SecureMedia $mediaService)
     {
+        $this->mediaService = $mediaService;
     }
 
     public function all(Request $request, VendorFilter $filter)
@@ -52,8 +58,8 @@ class Vendor
 
             $vendor = DB::create($data);
 
-            if (!empty($data['logo'])) {
-                $vendor->addMediaFromRequest('logo')->toMediaCollection('logo');
+            if ($request->hasFile('logo')) {
+                $this->handleSecureLogoUpload($vendor, $request);
             }
 
             return $this->ok('Vendor created successfully', new VendorResource($vendor));
@@ -71,15 +77,38 @@ class Vendor
 
             $vendor->update($data);
 
-            if (!empty($data['logo'])) {
-                $vendor->clearMediaCollection('logo');
-                $vendor->addMediaFromRequest('logo')->toMediaCollection('logo');
+            if ($request->hasFile('logo')) {
+                $this->handleSecureLogoUpload($vendor, $request, true);
             }
 
             return $this->ok('Vendor updated successfully', new VendorResource($vendor));
         }
 
         return $this->error('You do not have the required permissions.', 403);
+    }
+
+    protected function handleSecureLogoUpload(DB $vendor, Request $request, bool $isUpdate = false): void
+    {
+        try {
+            if ($isUpdate) {
+                $vendor->clearMediaCollection('logo');
+            }
+
+            $this->mediaService->addSecureMedia(
+                $vendor,
+                $request->file('logo'),
+                'logo'
+            );
+
+        } catch (\Exception $e) {
+            \Log::error('Vendor logo upload failed', [
+                'vendor_id' => $vendor->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            throw new \Exception('Failed to process logo file: ' . $e->getMessage());
+        }
     }
 
     public function delete(Request $request, DB $vendor)
