@@ -40,10 +40,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'emailVerified' => EnsureEmailIsVerified::class,
             'rate_limit' => DynamicRateLimit::class,
             'security_logger' => SecurityLogger::class,
+            'security_monitor' => SecurityMonitoring::class,
             'secure_upload' => SecureFileUpload::class,
             'account_lock' => CheckAccountLock::class,
             'password_expiry' => CheckPasswordExpiry::class,
-            'security_monitor' => SecurityMonitoring::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

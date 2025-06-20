@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "E-Commerce API Documentation",
-        "_postman_id": "c1114c6b-2dbd-45ec-a48e-b417e93d9703",
+        "_postman_id": "db528c42-9f43-403b-a356-71b5295cffaa",
         "description": "Comprehensive API for managing products, orders, payments, users, vendors, and more in an e-commerce platform.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json",
         "version": "1.0.0"
@@ -332,26 +332,26 @@
             "description": "",
             "item": [
                 {
-                    "name": "Verify a user's email address.",
+                    "name": "Verify a user's email address",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
                             "path": "api\/email\/verify\/:id\/:hash",
                             "query": [
                                 {
-                                    "key": "id",
-                                    "value": "1",
-                                    "description": "The user's id.",
+                                    "key": "expires",
+                                    "value": "1640995200",
+                                    "description": "The expiration timestamp for the verification link. Automatically included.",
                                     "disabled": false
                                 },
                                 {
-                                    "key": "hash",
-                                    "value": "1234567890",
-                                    "description": "The hash to verify the email.",
+                                    "key": "signature",
+                                    "value": "xyz789abc123def456",
+                                    "description": "The signature that validates the signed URL. Automatically included.",
                                     "disabled": false
                                 }
                             ],
-                            "raw": "{{baseUrl}}\/api\/email\/verify\/:id\/:hash?id=1&hash=1234567890",
+                            "raw": "{{baseUrl}}\/api\/email\/verify\/:id\/:hash?expires=1640995200&signature=xyz789abc123def456",
                             "variable": [
                                 {
                                     "id": "id",
@@ -362,8 +362,14 @@
                                 {
                                     "id": "hash",
                                     "key": "hash",
-                                    "value": "architecto",
-                                    "description": ""
+                                    "value": "abc123def456ghi789",
+                                    "description": "The verification hash that ensures the link is valid and hasn't been tampered with. This is automatically included in the verification link."
+                                },
+                                {
+                                    "id": "user_id",
+                                    "key": "user_id",
+                                    "value": "123",
+                                    "description": "The ID of the user whose email is being verified. This is automatically included in the verification link."
                                 }
                             ]
                         },
@@ -379,25 +385,97 @@
                             }
                         ],
                         "body": null,
-                        "description": "Once a user registers, a notification is sent out to their specified email address, which requires them to verify."
+                        "description": "This endpoint verifies a user's email address using a signed URL that is sent to their email\nafter registration. The verification link contains the user ID and a hash for security.\nOnce verified, the user's email_verified_at timestamp is set and they can access protected features.",
+                        "auth": {
+                            "type": "noauth"
+                        }
                     },
                     "response": [
                         {
                             "header": [],
-                            "code": 200,
-                            "body": "Redirected to specified URL",
-                            "name": ""
+                            "code": 302,
+                            "body": "{\n  \"description\": \"User is redirected to the frontend email verification success page\",\n  \"headers\": {\n    \"Location\": \"https:\/\/yourfrontend.com\/email-verified\"\n  }\n}",
+                            "name": "Email verified successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 302,
+                            "body": "{\n  \"description\": \"User is redirected to the frontend (email was already verified previously)\",\n  \"headers\": {\n    \"Location\": \"https:\/\/yourfrontend.com\/email-verified\"\n  }\n}",
+                            "name": "Email already verified"
                         },
                         {
                             "header": [],
                             "code": 401,
                             "body": "{\n  \"message\": \"Invalid\/Expired url provided.\",\n  \"status\": 401\n}",
+                            "name": "Invalid or expired verification link"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"Invalid\/Expired url provided.\",\n  \"status\": 401\n}",
+                            "name": "Signature verification failed"
+                        },
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-content-type-options",
+                                    "value": "nosniff"
+                                },
+                                {
+                                    "key": "x-frame-options",
+                                    "value": "DENY"
+                                },
+                                {
+                                    "key": "x-xss-protection",
+                                    "value": "1; mode=block"
+                                },
+                                {
+                                    "key": "content-security-policy",
+                                    "value": "default-src 'none'; frame-ancestors 'none';"
+                                },
+                                {
+                                    "key": "referrer-policy",
+                                    "value": "strict-origin-when-cross-origin"
+                                },
+                                {
+                                    "key": "permissions-policy",
+                                    "value": "camera=(), microphone=(), geolocation=(), payment=()"
+                                },
+                                {
+                                    "key": "access-control-allow-origin",
+                                    "value": "http:\/\/marketplace.com"
+                                },
+                                {
+                                    "key": "access-control-allow-credentials",
+                                    "value": "true"
+                                },
+                                {
+                                    "key": "access-control-expose-headers",
+                                    "value": "Authorization, X-Custom-Header, Content-Type"
+                                }
+                            ],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"Invalid signature.\",\n    \"exception\": \"Illuminate\\\\Routing\\\\Exceptions\\\\InvalidSignatureException\",\n    \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Middleware\/ValidateSignature.php\",\n    \"line\": 73,\n    \"trace\": [\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Routing\\\\Middleware\\\\ValidateSignature\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/app\/Http\/Middleware\/V1\/SecurityMonitoring.php\",\n            \"line\": 27,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"App\\\\Http\\\\Middleware\\\\V1\\\\SecurityMonitoring\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/app\/Http\/Middleware\/V1\/SecurityLogger.php\",\n            \"line\": 23,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"App\\\\Http\\\\Middleware\\\\V1\\\\SecurityLogger\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/app\/Http\/Middleware\/V1\/SecurityHeaders.php\",\n            \"line\": 12,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"App\\\\Http\\\\Middleware\\\\V1\\\\SecurityHeaders\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Middleware\/SubstituteBindings.php\",\n            \"line\": 51,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Routing\\\\Middleware\\\\SubstituteBindings\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 127,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 807,\n            \"function\": \"then\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 786,\n            \"function\": \"runRouteWithinStack\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 750,\n            \"function\": \"runRoute\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 739,\n            \"function\": \"dispatchToRoute\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 201,\n            \"function\": \"dispatch\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 170,\n            \"function\": \"Illuminate\\\\Foundation\\\\Http\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TransformsRequest.php\",\n            \"line\": 21,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/ConvertEmptyStringsToNull.php\",\n            \"line\": 31,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TransformsRequest\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\ConvertEmptyStringsToNull\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TransformsRequest.php\",\n            \"line\": 21,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TrimStrings.php\",\n            \"line\": 51,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TransformsRequest\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TrimStrings\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/ValidatePostSize.php\",\n            \"line\": 27,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\ValidatePostSize\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/PreventRequestsDuringMaintenance.php\",\n            \"line\": 110,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\PreventRequestsDuringMaintenance\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/HandleCors.php\",\n            \"line\": 62,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\HandleCors\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/TrustProxies.php\",\n            \"line\": 58,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\TrustProxies\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/InvokeDeferredCallbacks.php\",\n            \"line\": 22,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\InvokeDeferredCallbacks\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 127,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 176,\n            \"function\": \"then\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 145,\n            \"function\": \"sendRequestThroughRouter\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 310,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 298,\n            \"function\": \"callLaravelOrLumenRoute\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 91,\n            \"function\": \"makeApiCall\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 44,\n            \"function\": \"makeResponseCall\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 35,\n            \"function\": \"makeResponseCallIfConditionsPass\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 237,\n            \"function\": \"__invoke\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 163,\n            \"function\": \"iterateThroughStrategies\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 95,\n            \"function\": \"fetchResponses\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 125,\n            \"function\": \"processRoute\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 72,\n            \"function\": \"extractEndpointsInfoFromLaravelApp\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 50,\n            \"function\": \"extractEndpointsInfoAndWriteToDisk\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Commands\/GenerateDocumentation.php\",\n            \"line\": 53,\n            \"function\": \"get\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 36,\n            \"function\": \"handle\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Commands\\\\GenerateDocumentation\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/Util.php\",\n            \"line\": 43,\n            \"function\": \"Illuminate\\\\Container\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 95,\n            \"function\": \"unwrapIfClosure\",\n            \"class\": \"Illuminate\\\\Container\\\\Util\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 35,\n            \"function\": \"callBoundMethod\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/Container.php\",\n            \"line\": 694,\n            \"function\": \"call\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Console\/Command.php\",\n            \"line\": 213,\n            \"function\": \"call\",\n            \"class\": \"Illuminate\\\\Container\\\\Container\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Command\/Command.php\",\n            \"line\": 279,\n            \"function\": \"execute\",\n            \"class\": \"Illuminate\\\\Console\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Console\/Command.php\",\n            \"line\": 182,\n            \"function\": \"run\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Command\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 1094,\n            \"function\": \"run\",\n            \"class\": \"Illuminate\\\\Console\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 342,\n            \"function\": \"doRunCommand\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 193,\n            \"function\": \"doRun\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Console\/Kernel.php\",\n            \"line\": 198,\n            \"function\": \"run\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Application.php\",\n            \"line\": 1208,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Console\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/artisan\",\n            \"line\": 13,\n            \"function\": \"handleCommand\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Application\",\n            \"type\": \"->\"\n        }\n    ]\n}",
                             "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\User] 123\"\n}",
+                            "name": "User not found"
                         }
                     ]
                 },
                 {
-                    "name": "Resend email to user.",
+                    "name": "Resend email verification notification",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -417,20 +495,38 @@
                             }
                         ],
                         "body": null,
-                        "description": "Once a user registers, a notification is sent out to their specified email address, which requires them to verify. Incase they dont recieve one, they can request again."
+                        "description": "Sends a new email verification link to the authenticated user's email address.\nThis is useful when users don't receive the initial verification email or when\nthe verification link has expired. The user must be authenticated to request a resend."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
                             "body": "{\n  \"message\": \"Email verification link sent on your email id.\",\n  \"status\": 200\n}",
-                            "name": ""
+                            "name": "Verification email sent successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"message\": \"Email already verified.\",\n  \"status\": 400\n}",
+                            "name": "Email already verified"
                         },
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"message\": \"Email already verified.\",\n  \"status\": 400\n}",
-                            "name": ""
+                            "body": "{\n  \"message\": \"Unauthenticated.\",\n  \"status\": 401\n}",
+                            "name": "User not authenticated"
+                        },
+                        {
+                            "header": [],
+                            "code": 429,
+                            "body": "{\n  \"message\": \"Too many verification emails sent. Please wait before requesting another.\",\n  \"status\": 429\n}",
+                            "name": "Too many requests"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"message\": \"Failed to send verification email. Please try again later.\",\n  \"status\": 500\n}",
+                            "name": "Email sending failed"
                         }
                     ]
                 }
@@ -889,17 +985,42 @@
             ]
         },
         {
-            "name": "Orders",
+            "name": "Order Management",
             "description": "",
             "item": [
                 {
-                    "name": "Retrieve paginated list of orders.",
+                    "name": "Retrieve paginated list of orders",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
                             "path": "api\/admin\/orders",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/orders"
+                            "query": [
+                                {
+                                    "key": "user_id",
+                                    "value": "123",
+                                    "description": "optional Filter orders by specific user ID.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "status_id",
+                                    "value": "2",
+                                    "description": "optional Filter orders by specific status ID.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "optional Page number for pagination. Default: 1.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "20",
+                                    "description": "optional Number of orders per page (max 50). Default: 15.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/admin\/orders?user_id=123&status_id=2&page=1&per_page=20"
                         },
                         "method": "GET",
                         "header": [
@@ -916,25 +1037,37 @@
                             "mode": "raw",
                             "raw": "[]"
                         },
-                        "description": ""
+                        "description": "Get a paginated list of all orders in the system. This endpoint supports filtering by user and status,\nand includes comprehensive order information including items, user details, and current status."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"message\": \"Orders retrieved successfully.\",\n  \"data\": []\n}",
-                            "name": ""
+                            "body": "{\n  \"message\": \"Orders retrieved successfully.\",\n  \"data\": {\n    \"data\": [\n      {\n        \"id\": 1,\n        \"total_amount\": 29.99,\n        \"total_amount_formatted\": \"\u00a329.99\",\n        \"created_at\": \"2025-01-15T10:30:00.000000Z\",\n        \"updated_at\": \"2025-01-15T10:35:00.000000Z\",\n        \"deleted_at\": null,\n        \"user\": {\n          \"id\": 5,\n          \"name\": \"John Smith\",\n          \"email\": \"john.smith@example.com\",\n          \"email_verified_at\": \"2025-01-10T08:00:00.000000Z\"\n        },\n        \"status\": {\n          \"id\": 2,\n          \"name\": \"Processing\"\n        },\n        \"order_items\": [\n          {\n            \"id\": 1,\n            \"quantity\": 2,\n            \"price\": 1499,\n            \"price_formatted\": \"\u00a314.99\",\n            \"line_total\": 2998,\n            \"line_total_formatted\": \"\u00a329.98\",\n            \"product\": {\n              \"id\": 10,\n              \"name\": \"Wireless Headphones\",\n              \"description\": \"High-quality wireless headphones with noise cancellation\"\n            },\n            \"product_variant\": {\n              \"id\": 3,\n              \"value\": \"Black\",\n              \"additional_price\": 0,\n              \"product_attribute\": {\n                \"id\": 1,\n                \"name\": \"Color\"\n              }\n            },\n            \"order_return\": null\n          }\n        ],\n        \"payments\": [\n          {\n            \"id\": 1,\n            \"amount\": 2999,\n            \"amount_formatted\": \"\u00a329.99\",\n            \"status\": \"Paid\",\n            \"method\": \"stripe\",\n            \"transaction_reference\": \"pi_1234567890abcdef\",\n            \"processed_at\": \"2025-01-15T10:32:00.000000Z\"\n          }\n        ]\n      }\n    ],\n    \"current_page\": 1,\n    \"per_page\": 15,\n    \"total\": 42,\n    \"last_page\": 3,\n    \"from\": 1,\n    \"to\": 15\n  }\n}",
+                            "name": "Success with orders"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Orders retrieved successfully.\",\n  \"data\": {\n    \"data\": [],\n    \"current_page\": 1,\n    \"per_page\": 15,\n    \"total\": 0,\n    \"last_page\": 1,\n    \"from\": null,\n    \"to\": null\n  }\n}",
+                            "name": "No orders found"
                         },
                         {
                             "header": [],
                             "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"errors\": [\n    \"The user id field must be an integer.\",\n    \"The status id field must exist in order_statuses table.\"\n  ]\n}",
+                            "name": "Invalid filter parameters"
                         }
                     ]
                 },
                 {
-                    "name": "Create a new order.",
+                    "name": "Create a new order",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -955,27 +1088,45 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"user_id\":\"architecto\",\"order_items\":[{\"product_id\":\"architecto\",\"quantity\":22,\"price\":84}]}"
+                            "raw": "{\"user_id\":5,\"status_id\":1,\"order_items\":[\"architecto\"]}"
                         },
-                        "description": ""
+                        "description": "Create a new order with multiple order items. The system will automatically calculate the total amount\nbased on the items and their quantities. All monetary values should be provided in pennies."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n    \"message\": \"Order created successfully.\",\n    \"data\": {}\n}",
-                            "name": ""
+                            "body": "{\n  \"message\": \"Order created successfully.\",\n  \"data\": {\n    \"id\": 43,\n    \"total_amount\": 2999,\n    \"total_amount_formatted\": \"\u00a329.99\",\n    \"created_at\": \"2025-01-15T14:20:00.000000Z\",\n    \"updated_at\": \"2025-01-15T14:20:00.000000Z\",\n    \"deleted_at\": null,\n    \"user\": {\n      \"id\": 5,\n      \"name\": \"John Smith\",\n      \"email\": \"john.smith@example.com\"\n    },\n    \"status\": {\n      \"id\": 1,\n      \"name\": \"Pending Payment\"\n    },\n    \"order_items\": [\n      {\n        \"id\": 85,\n        \"quantity\": 2,\n        \"price\": 1499,\n        \"price_formatted\": \"\u00a314.99\",\n        \"line_total\": 2998,\n        \"line_total_formatted\": \"\u00a329.98\",\n        \"product\": {\n          \"id\": 10,\n          \"name\": \"Wireless Headphones\",\n          \"price\": 1499,\n          \"price_formatted\": \"\u00a314.99\"\n        },\n        \"product_variant\": {\n          \"id\": 3,\n          \"value\": \"Black\",\n          \"additional_price\": 0\n        }\n      }\n    ],\n    \"payments\": []\n  }\n}",
+                            "name": "Order created successfully"
                         },
                         {
                             "header": [],
                             "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"The selected user id is invalid.\"\n}",
+                            "name": "User not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"errors\": [\n    \"The user id field is required.\",\n    \"The order items field is required.\",\n    \"The order items.0.product id field is required.\",\n    \"The order items.0.quantity must be at least 1.\",\n    \"The order items.0.price must be greater than 0.\"\n  ]\n}",
+                            "name": "Validation errors"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"message\": \"An error occurred while creating the order.\"\n}",
+                            "name": "Server error"
                         }
                     ]
                 },
                 {
-                    "name": "Retrieve a specific order.",
+                    "name": "Retrieve a specific order",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -988,6 +1139,12 @@
                                     "key": "id",
                                     "value": "1",
                                     "description": "The ID of the order."
+                                },
+                                {
+                                    "id": "order",
+                                    "key": "order",
+                                    "value": "43",
+                                    "description": "The ID of the order to retrieve."
                                 }
                             ]
                         },
@@ -1003,25 +1160,31 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Get detailed information about a specific order including all order items, user details,\npayment information, and any associated returns or refunds."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n    \"message\": \"Order retrieved successfully.\",\n    \"data\": {}\n}",
-                            "name": ""
+                            "body": "{\n  \"message\": \"Order retrieved successfully.\",\n  \"data\": {\n    \"id\": 43,\n    \"total_amount\": 5998,\n    \"total_amount_formatted\": \"\u00a359.98\",\n    \"created_at\": \"2025-01-15T14:20:00.000000Z\",\n    \"updated_at\": \"2025-01-15T14:25:00.000000Z\",\n    \"deleted_at\": null,\n    \"user\": {\n      \"id\": 5,\n      \"name\": \"John Smith\",\n      \"email\": \"john.smith@example.com\",\n      \"email_verified_at\": \"2025-01-10T08:00:00.000000Z\"\n    },\n    \"status\": {\n      \"id\": 3,\n      \"name\": \"Confirmed\"\n    },\n    \"order_items\": [\n      {\n        \"id\": 85,\n        \"quantity\": 2,\n        \"price\": 1499,\n        \"price_formatted\": \"\u00a314.99\",\n        \"line_total\": 2998,\n        \"line_total_formatted\": \"\u00a329.98\",\n        \"created_at\": \"2025-01-15T14:20:00.000000Z\",\n        \"product\": {\n          \"id\": 10,\n          \"name\": \"Wireless Headphones\",\n          \"description\": \"High-quality wireless headphones with noise cancellation\",\n          \"price\": 1499,\n          \"price_formatted\": \"\u00a314.99\"\n        },\n        \"product_variant\": {\n          \"id\": 3,\n          \"value\": \"Black\",\n          \"additional_price\": 0,\n          \"product_attribute\": {\n            \"id\": 1,\n            \"name\": \"Color\"\n          }\n        },\n        \"order_return\": {\n          \"id\": 12,\n          \"reason\": \"Product arrived damaged\",\n          \"status\": {\n            \"id\": 1,\n            \"name\": \"Requested\"\n          },\n          \"created_at\": \"2025-01-16T09:15:00.000000Z\"\n        }\n      },\n      {\n        \"id\": 86,\n        \"quantity\": 1,\n        \"price\": 2999,\n        \"price_formatted\": \"\u00a329.99\",\n        \"line_total\": 2999,\n        \"line_total_formatted\": \"\u00a329.99\",\n        \"created_at\": \"2025-01-15T14:20:00.000000Z\",\n        \"product\": {\n          \"id\": 15,\n          \"name\": \"Bluetooth Speaker\",\n          \"description\": \"Portable waterproof Bluetooth speaker\",\n          \"price\": 2999,\n          \"price_formatted\": \"\u00a329.99\"\n        },\n        \"product_variant\": null,\n        \"order_return\": null\n      }\n    ],\n    \"payments\": [\n      {\n        \"id\": 25,\n        \"amount\": 5998,\n        \"amount_formatted\": \"\u00a359.98\",\n        \"status\": \"Paid\",\n        \"method\": \"stripe\",\n        \"transaction_reference\": \"pi_1234567890abcdef\",\n        \"processed_at\": \"2025-01-15T14:22:00.000000Z\",\n        \"created_at\": \"2025-01-15T14:21:00.000000Z\"\n      }\n    ]\n  }\n}",
+                            "name": "Order found"
                         },
                         {
                             "header": [],
                             "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\Order] 999\"\n}",
+                            "name": "Order not found"
                         }
                     ]
                 },
                 {
-                    "name": "Update an existing order.",
+                    "name": "Update an existing order",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1034,6 +1197,12 @@
                                     "key": "id",
                                     "value": "1",
                                     "description": "The ID of the order."
+                                },
+                                {
+                                    "id": "order",
+                                    "key": "order",
+                                    "value": "43",
+                                    "description": "The ID of the order to update."
                                 }
                             ]
                         },
@@ -1050,27 +1219,45 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"order_items\":[{\"product_id\":\"architecto\",\"quantity\":22,\"price\":84}]}"
+                            "raw": "{\"user_id\":5,\"status_id\":2,\"order_items\":[\"architecto\"]}"
                         },
-                        "description": ""
+                        "description": "Update an existing order including its items. This will replace all existing order items with the new ones\nand recalculate the total amount. Use with caution as this will affect order history."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n    \"message\": \"Order updated successfully.\",\n    \"data\": {}\n}",
-                            "name": ""
+                            "body": "{\n  \"message\": \"Order updated successfully.\",\n  \"data\": {\n    \"id\": 43,\n    \"total_amount\": 4497,\n    \"total_amount_formatted\": \"\u00a344.97\",\n    \"created_at\": \"2025-01-15T14:20:00.000000Z\",\n    \"updated_at\": \"2025-01-15T15:30:00.000000Z\",\n    \"deleted_at\": null,\n    \"user\": {\n      \"id\": 5,\n      \"name\": \"John Smith\",\n      \"email\": \"john.smith@example.com\"\n    },\n    \"status\": {\n      \"id\": 2,\n      \"name\": \"Processing\"\n    },\n    \"order_items\": [\n      {\n        \"id\": 87,\n        \"quantity\": 3,\n        \"price\": 1499,\n        \"price_formatted\": \"\u00a314.99\",\n        \"line_total\": 4497,\n        \"line_total_formatted\": \"\u00a344.97\",\n        \"product\": {\n          \"id\": 10,\n          \"name\": \"Wireless Headphones\"\n        }\n      }\n    ],\n    \"payments\": []\n  }\n}",
+                            "name": "Order updated successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"message\": \"Cannot update order that has been shipped or completed.\"\n}",
+                            "name": "Order cannot be updated"
                         },
                         {
                             "header": [],
                             "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\Order] 999\"\n}",
+                            "name": "Order not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"errors\": [\n    \"The order items field is required.\",\n    \"The order items.0.quantity must be at least 1.\"\n  ]\n}",
+                            "name": "Validation errors"
                         }
                     ]
                 },
                 {
-                    "name": "Soft delete a order.",
+                    "name": "Soft delete an order",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1083,6 +1270,12 @@
                                     "key": "id",
                                     "value": "1",
                                     "description": "The ID of the order."
+                                },
+                                {
+                                    "id": "order",
+                                    "key": "order",
+                                    "value": "43",
+                                    "description": "The ID of the order to soft delete."
                                 }
                             ]
                         },
@@ -1098,25 +1291,37 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Soft delete an order, making it inactive but preserving the data for audit purposes.\nThe order will be hidden from normal queries but can be restored if needed."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n    \"message\": \"Order deleted (soft).\"\n}",
-                            "name": ""
+                            "body": "{\n  \"message\": \"Order deleted (soft).\"\n}",
+                            "name": "Order soft deleted successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"message\": \"Cannot delete order with active payments or shipments.\"\n}",
+                            "name": "Order cannot be deleted"
                         },
                         {
                             "header": [],
                             "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\Order] 999\"\n}",
+                            "name": "Order not found"
                         }
                     ]
                 },
                 {
-                    "name": "Permanently delete a order.",
+                    "name": "Permanently delete an order",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1127,8 +1332,8 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "1",
-                                    "description": "The ID of the order."
+                                    "value": "43",
+                                    "description": "The ID of the soft deleted order to permanently delete."
                                 }
                             ]
                         },
@@ -1144,25 +1349,43 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Permanently remove an order from the database. This action is irreversible and should be used\nwith extreme caution. The order must be soft deleted first before it can be permanently deleted."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n    \"message\": \"Order permanently deleted.\"\n}",
-                            "name": ""
+                            "body": "{\n  \"message\": \"Order permanently deleted.\"\n}",
+                            "name": "Order permanently deleted"
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"message\": \"Order must be soft deleted before force deleting.\"\n}",
+                            "name": "Order must be soft deleted first"
                         },
                         {
                             "header": [],
                             "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\Order] 43\"\n}",
+                            "name": "Order not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n  \"message\": \"Cannot permanently delete order with associated payments or returns.\"\n}",
+                            "name": "Order has dependencies"
                         }
                     ]
                 },
                 {
-                    "name": "Restore a soft deleted order.",
+                    "name": "Restore a soft deleted order",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1173,8 +1396,8 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "1",
-                                    "description": "The ID of the order."
+                                    "value": "43",
+                                    "description": "The ID of the soft deleted order to restore."
                                 }
                             ]
                         },
@@ -1190,31 +1413,68 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Restore a previously soft deleted order, making it active again in the system.\nOnly orders that have been soft deleted can be restored."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n    \"message\": \"Order restored successfully.\"\n}",
-                            "name": ""
+                            "body": "{\n  \"message\": \"Order restored successfully.\",\n  \"data\": {\n    \"id\": 43,\n    \"total_amount\": 2999,\n    \"total_amount_formatted\": \"\u00a329.99\",\n    \"created_at\": \"2025-01-15T14:20:00.000000Z\",\n    \"updated_at\": \"2025-01-15T16:45:00.000000Z\",\n    \"deleted_at\": null,\n    \"user\": {\n      \"id\": 5,\n      \"name\": \"John Smith\",\n      \"email\": \"john.smith@example.com\"\n    },\n    \"status\": {\n      \"id\": 1,\n      \"name\": \"Pending Payment\"\n    }\n  }\n}",
+                            "name": "Order restored successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"message\": \"Order is not deleted.\"\n}",
+                            "name": "Order not deleted"
                         },
                         {
                             "header": [],
                             "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\Order] 43\"\n}",
+                            "name": "Order not found"
                         }
                     ]
                 },
                 {
-                    "name": "Retrieve paginated list of orders.",
+                    "name": "Retrieve paginated list of orders",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
                             "path": "api\/orders",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/orders"
+                            "query": [
+                                {
+                                    "key": "user_id",
+                                    "value": "123",
+                                    "description": "optional Filter orders by specific user ID.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "status_id",
+                                    "value": "2",
+                                    "description": "optional Filter orders by specific status ID.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "optional Page number for pagination. Default: 1.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "20",
+                                    "description": "optional Number of orders per page (max 50). Default: 15.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/orders?user_id=123&status_id=2&page=1&per_page=20"
                         },
                         "method": "GET",
                         "header": [
@@ -1231,25 +1491,37 @@
                             "mode": "raw",
                             "raw": "[]"
                         },
-                        "description": ""
+                        "description": "Get a paginated list of all orders in the system. This endpoint supports filtering by user and status,\nand includes comprehensive order information including items, user details, and current status."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"message\": \"Orders retrieved successfully.\",\n  \"data\": []\n}",
-                            "name": ""
+                            "body": "{\n  \"message\": \"Orders retrieved successfully.\",\n  \"data\": {\n    \"data\": [\n      {\n        \"id\": 1,\n        \"total_amount\": 29.99,\n        \"total_amount_formatted\": \"\u00a329.99\",\n        \"created_at\": \"2025-01-15T10:30:00.000000Z\",\n        \"updated_at\": \"2025-01-15T10:35:00.000000Z\",\n        \"deleted_at\": null,\n        \"user\": {\n          \"id\": 5,\n          \"name\": \"John Smith\",\n          \"email\": \"john.smith@example.com\",\n          \"email_verified_at\": \"2025-01-10T08:00:00.000000Z\"\n        },\n        \"status\": {\n          \"id\": 2,\n          \"name\": \"Processing\"\n        },\n        \"order_items\": [\n          {\n            \"id\": 1,\n            \"quantity\": 2,\n            \"price\": 1499,\n            \"price_formatted\": \"\u00a314.99\",\n            \"line_total\": 2998,\n            \"line_total_formatted\": \"\u00a329.98\",\n            \"product\": {\n              \"id\": 10,\n              \"name\": \"Wireless Headphones\",\n              \"description\": \"High-quality wireless headphones with noise cancellation\"\n            },\n            \"product_variant\": {\n              \"id\": 3,\n              \"value\": \"Black\",\n              \"additional_price\": 0,\n              \"product_attribute\": {\n                \"id\": 1,\n                \"name\": \"Color\"\n              }\n            },\n            \"order_return\": null\n          }\n        ],\n        \"payments\": [\n          {\n            \"id\": 1,\n            \"amount\": 2999,\n            \"amount_formatted\": \"\u00a329.99\",\n            \"status\": \"Paid\",\n            \"method\": \"stripe\",\n            \"transaction_reference\": \"pi_1234567890abcdef\",\n            \"processed_at\": \"2025-01-15T10:32:00.000000Z\"\n          }\n        ]\n      }\n    ],\n    \"current_page\": 1,\n    \"per_page\": 15,\n    \"total\": 42,\n    \"last_page\": 3,\n    \"from\": 1,\n    \"to\": 15\n  }\n}",
+                            "name": "Success with orders"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Orders retrieved successfully.\",\n  \"data\": {\n    \"data\": [],\n    \"current_page\": 1,\n    \"per_page\": 15,\n    \"total\": 0,\n    \"last_page\": 1,\n    \"from\": null,\n    \"to\": null\n  }\n}",
+                            "name": "No orders found"
                         },
                         {
                             "header": [],
                             "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"errors\": [\n    \"The user id field must be an integer.\",\n    \"The status id field must exist in order_statuses table.\"\n  ]\n}",
+                            "name": "Invalid filter parameters"
                         }
                     ]
                 },
                 {
-                    "name": "Retrieve a specific order.",
+                    "name": "Retrieve a specific order",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1262,6 +1534,12 @@
                                     "key": "id",
                                     "value": "1",
                                     "description": "The ID of the order."
+                                },
+                                {
+                                    "id": "order",
+                                    "key": "order",
+                                    "value": "43",
+                                    "description": "The ID of the order to retrieve."
                                 }
                             ]
                         },
@@ -1277,20 +1555,202 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Get detailed information about a specific order including all order items, user details,\npayment information, and any associated returns or refunds."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n    \"message\": \"Order retrieved successfully.\",\n    \"data\": {}\n}",
-                            "name": ""
+                            "body": "{\n  \"message\": \"Order retrieved successfully.\",\n  \"data\": {\n    \"id\": 43,\n    \"total_amount\": 5998,\n    \"total_amount_formatted\": \"\u00a359.98\",\n    \"created_at\": \"2025-01-15T14:20:00.000000Z\",\n    \"updated_at\": \"2025-01-15T14:25:00.000000Z\",\n    \"deleted_at\": null,\n    \"user\": {\n      \"id\": 5,\n      \"name\": \"John Smith\",\n      \"email\": \"john.smith@example.com\",\n      \"email_verified_at\": \"2025-01-10T08:00:00.000000Z\"\n    },\n    \"status\": {\n      \"id\": 3,\n      \"name\": \"Confirmed\"\n    },\n    \"order_items\": [\n      {\n        \"id\": 85,\n        \"quantity\": 2,\n        \"price\": 1499,\n        \"price_formatted\": \"\u00a314.99\",\n        \"line_total\": 2998,\n        \"line_total_formatted\": \"\u00a329.98\",\n        \"created_at\": \"2025-01-15T14:20:00.000000Z\",\n        \"product\": {\n          \"id\": 10,\n          \"name\": \"Wireless Headphones\",\n          \"description\": \"High-quality wireless headphones with noise cancellation\",\n          \"price\": 1499,\n          \"price_formatted\": \"\u00a314.99\"\n        },\n        \"product_variant\": {\n          \"id\": 3,\n          \"value\": \"Black\",\n          \"additional_price\": 0,\n          \"product_attribute\": {\n            \"id\": 1,\n            \"name\": \"Color\"\n          }\n        },\n        \"order_return\": {\n          \"id\": 12,\n          \"reason\": \"Product arrived damaged\",\n          \"status\": {\n            \"id\": 1,\n            \"name\": \"Requested\"\n          },\n          \"created_at\": \"2025-01-16T09:15:00.000000Z\"\n        }\n      },\n      {\n        \"id\": 86,\n        \"quantity\": 1,\n        \"price\": 2999,\n        \"price_formatted\": \"\u00a329.99\",\n        \"line_total\": 2999,\n        \"line_total_formatted\": \"\u00a329.99\",\n        \"created_at\": \"2025-01-15T14:20:00.000000Z\",\n        \"product\": {\n          \"id\": 15,\n          \"name\": \"Bluetooth Speaker\",\n          \"description\": \"Portable waterproof Bluetooth speaker\",\n          \"price\": 2999,\n          \"price_formatted\": \"\u00a329.99\"\n        },\n        \"product_variant\": null,\n        \"order_return\": null\n      }\n    ],\n    \"payments\": [\n      {\n        \"id\": 25,\n        \"amount\": 5998,\n        \"amount_formatted\": \"\u00a359.98\",\n        \"status\": \"Paid\",\n        \"method\": \"stripe\",\n        \"transaction_reference\": \"pi_1234567890abcdef\",\n        \"processed_at\": \"2025-01-15T14:22:00.000000Z\",\n        \"created_at\": \"2025-01-15T14:21:00.000000Z\"\n      }\n    ]\n  }\n}",
+                            "name": "Order found"
                         },
                         {
                             "header": [],
                             "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\Order] 999\"\n}",
+                            "name": "Order not found"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Payment Processing",
+            "description": "",
+            "item": [
+                {
+                    "name": "Create or retrieve payment intent",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/payments\/:gateway\/create",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/payments\/:gateway\/create",
+                            "variable": [
+                                {
+                                    "id": "gateway",
+                                    "key": "gateway",
+                                    "value": "stripe",
+                                    "description": "The payment gateway to use. Currently only \"stripe\" is supported."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"order_id\":123}"
+                        },
+                        "description": "Creates a new Stripe PaymentIntent for the specified order, or returns an existing one if already created.\nThis prevents duplicate payment intents for the same order. The client secret returned should be used\non the frontend to complete the payment with Stripe's client-side libraries."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": true,\n  \"message\": \"PaymentIntent created successfully.\",\n  \"data\": {\n    \"client_secret\": \"pi_1234567890abcdef_secret_xyz789abc123\"\n  }\n}",
+                            "name": "New PaymentIntent created"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": true,\n  \"message\": \"Existing PaymentIntent retrieved.\",\n  \"data\": {\n    \"client_secret\": \"pi_1234567890abcdef_secret_xyz789abc123\"\n  }\n}",
+                            "name": "Existing PaymentIntent retrieved"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": true,\n  \"message\": \"Payment has already been processed for this order.\",\n  \"data\": null\n}",
+                            "name": "Order already paid"
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"status\": false,\n  \"message\": \"Unsupported payment gateway\",\n  \"data\": null\n}",
+                            "name": "Unsupported gateway"
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"status\": false,\n  \"message\": \"Order has already been paid or is not in a payable state.\",\n  \"data\": null\n}",
+                            "name": "Order not eligible for payment"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": false,\n  \"message\": \"No query results for model [App\\\\Models\\\\Order] 999\",\n  \"data\": null\n}",
+                            "name": "Order not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"errors\": [\n    \"The order id field is required.\",\n    \"The order id must be an integer.\",\n    \"The selected order id is invalid.\"\n  ]\n}",
+                            "name": "Invalid order data"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": false,\n  \"message\": \"Unable to create payment intent with Stripe. Please try again.\",\n  \"data\": null\n}",
+                            "name": "Stripe API error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Verify payment status",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/payments\/:gateway\/verify",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/payments\/:gateway\/verify",
+                            "variable": [
+                                {
+                                    "id": "gateway",
+                                    "key": "gateway",
+                                    "value": "stripe",
+                                    "description": "The payment gateway used. Currently only \"stripe\" is supported."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"payment_intent_id\":\"pi_1234567890abcdef\",\"order_id\":123}"
+                        },
+                        "description": "Manually verifies the status of a payment with Stripe and updates the local database accordingly.\nThis is useful for handling cases where webhooks might have failed or been delayed.\nIt fetches the latest payment status directly from Stripe and synchronizes it with your database."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": true,\n  \"message\": \"Payment verified\",\n  \"data\": {\n    \"payment_status\": \"Paid\",\n    \"order_status\": \"Confirmed\"\n  }\n}",
+                            "name": "Payment verified as successful"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": true,\n  \"message\": \"Payment verified\",\n  \"data\": {\n    \"payment_status\": \"Pending\",\n    \"order_status\": \"Pending Payment\"\n  }\n}",
+                            "name": "Payment still pending"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": true,\n  \"message\": \"Payment verified\",\n  \"data\": {\n    \"payment_status\": \"Failed\",\n    \"order_status\": \"Failed\"\n  }\n}",
+                            "name": "Payment failed"
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"status\": false,\n  \"message\": \"Unsupported payment gateway\",\n  \"data\": null\n}",
+                            "name": "Unsupported gateway"
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"status\": false,\n  \"message\": \"Payment amount mismatch\",\n  \"data\": null\n}",
+                            "name": "Payment amount mismatch"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": false,\n  \"message\": \"Payment not found\",\n  \"data\": null\n}",
+                            "name": "Payment not found in database"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"errors\": [\n    \"The payment intent id field is required.\",\n    \"The payment intent id format is invalid. Must be a valid Stripe payment intent ID.\",\n    \"The order id field is required.\",\n    \"The selected order id is invalid.\"\n  ]\n}",
+                            "name": "Validation errors"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": false,\n  \"message\": \"Unable to retrieve payment from Stripe: No such payment_intent: 'pi_invalid'\",\n  \"data\": null\n}",
+                            "name": "Stripe API error"
                         }
                     ]
                 }
@@ -1521,86 +1981,17 @@
             ]
         },
         {
-            "name": "Payments",
+            "name": "Payment Webhooks",
             "description": "",
             "item": [
                 {
-                    "name": "Initiate Payment",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/payments\/:gateway\/create",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/payments\/:gateway\/create",
-                            "variable": [
-                                {
-                                    "id": "gateway",
-                                    "key": "gateway",
-                                    "value": "stripe",
-                                    "description": "The payment gateway to use. Currently supported: `stripe`."
-                                }
-                            ]
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"order_id\":123}"
-                        },
-                        "description": "Creates or retrieves a Stripe PaymentIntent for a given order. If a payment already exists,\nit will return the existing client secret to avoid duplicate charges."
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"status\": true,\n  \"message\": \"PaymentIntent created successfully.\",\n  \"data\": {\n    \"client_secret\": \"pi_1Hxxxxxxxxxxxx_secret_xxxxxxxxx\"\n  }\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"status\": true,\n  \"message\": \"Payment has already been processed for this order.\",\n  \"data\": null\n}",
-                            "name": "Already Paid"
-                        },
-                        {
-                            "header": [],
-                            "code": 400,
-                            "body": "{\n  \"status\": false,\n  \"message\": \"Unsupported payment gateway\",\n  \"data\": null\n}",
-                            "name": "Unsupported Gateway"
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\n  \"status\": false,\n  \"message\": \"No query results for model [App\\\\Models\\\\Order] 999\",\n  \"data\": null\n}",
-                            "name": "Order Not Found"
-                        }
-                    ]
-                },
-                {
-                    "name": "Stripe Webhook Listener",
+                    "name": "Stripe webhook listener",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
                             "path": "api\/payments\/stripe\/webhook",
                             "query": [],
-                            "raw": "{{baseUrl}}\/api\/payments\/stripe\/webhook",
-                            "variable": [
-                                {
-                                    "id": "none",
-                                    "key": "none",
-                                    "value": "architecto",
-                                    "description": ""
-                                }
-                            ]
+                            "raw": "{{baseUrl}}\/api\/payments\/stripe\/webhook"
                         },
                         "method": "POST",
                         "header": [
@@ -1615,77 +2006,49 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"object\":\"architecto\"}"
+                            "raw": "{\"id\":\"evt_1234567890abcdef\",\"object\":\"event\",\"type\":\"payment_intent.succeeded\",\"data\":{\"object\":[]},\"created\":1640995200,\"livemode\":false}"
                         },
-                        "description": "This endpoint is triggered by Stripe when a payment event occurs (e.g., payment succeeded, failed).\nIt verifies the webhook signature and processes the payment status accordingly."
+                        "description": "This endpoint receives webhook events from Stripe when payment-related events occur.\nIt automatically processes payment status updates, handles refunds, and manages order status changes.\nThis endpoint is called directly by Stripe's servers and requires proper webhook signature verification.\n\n**Important**: This endpoint should be excluded from CSRF protection and rate limiting.",
+                        "auth": {
+                            "type": "noauth"
+                        }
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
                             "body": "{\n  \"status\": true,\n  \"message\": \"Webhook update.\",\n  \"data\": null\n}",
-                            "name": ""
+                            "name": "Webhook processed successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": true,\n  \"message\": \"Payment success webhook processed.\",\n  \"data\": null\n}",
+                            "name": "Payment success webhook"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": true,\n  \"message\": \"External refund processed.\",\n  \"data\": null\n}",
+                            "name": "Refund webhook processed"
                         },
                         {
                             "header": [],
                             "code": 400,
                             "body": "{\n  \"status\": false,\n  \"message\": \"Invalid Stripe signature\",\n  \"data\": null\n}",
-                            "name": "Invalid Signature or Payload"
+                            "name": "Invalid Stripe signature"
                         },
                         {
                             "header": [],
                             "code": 400,
                             "body": "{\n  \"status\": false,\n  \"message\": \"Invalid payload\",\n  \"data\": null\n}",
-                            "name": "Invalid Payload Format"
-                        }
-                    ]
-                },
-                {
-                    "name": "Verify Payment Status",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/payments\/:gateway\/verify",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/payments\/:gateway\/verify",
-                            "variable": [
-                                {
-                                    "id": "gateway",
-                                    "key": "gateway",
-                                    "value": "architecto",
-                                    "description": ""
-                                }
-                            ]
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"payment_intent_id\":\"pi_1Hxxxxxxxxxxxx\",\"order_id\":123}"
-                        },
-                        "description": "Verifies the current status of a payment with the chosen payment gateway and updates\nthe local database accordingly. This is useful for handling cases where webhooks might\nhave failed or been delayed."
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"status\": true,\n  \"message\": \"Payment verified\",\n  \"data\": {\n    \"payment_status\": \"paid\",\n    \"order_status\": \"confirmed\"\n  }\n}",
-                            "name": ""
+                            "name": "Invalid payload format"
                         },
                         {
                             "header": [],
                             "code": 500,
-                            "body": "{\n  \"status\": false,\n  \"message\": \"Unable to retrieve payment from Stripe: No such payment_intent: 'pi_invalid'\",\n  \"data\": null\n}",
-                            "name": "Stripe API Error"
+                            "body": "{\n  \"status\": false,\n  \"message\": \"An error occurred while processing the webhook.\",\n  \"data\": null\n}",
+                            "name": "Webhook processing error"
                         }
                     ]
                 }

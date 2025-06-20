@@ -720,42 +720,75 @@ paths:
       security: []
   '/api/email/verify/{id}/{hash}':
     get:
-      summary: "Verify a user's email address."
+      summary: "Verify a user's email address"
       operationId: verifyAUsersEmailAddress
-      description: 'Once a user registers, a notification is sent out to their specified email address, which requires them to verify.'
+      description: "This endpoint verifies a user's email address using a signed URL that is sent to their email\nafter registration. The verification link contains the user ID and a hash for security.\nOnce verified, the user's email_verified_at timestamp is set and they can access protected features."
       parameters:
         -
           in: query
-          name: id
-          description: "The user's id."
-          example: '1'
+          name: expires
+          description: 'The expiration timestamp for the verification link. Automatically included.'
+          example: 1640995200
           required: true
           schema:
-            type: string
-            description: "The user's id."
-            example: '1'
+            type: integer
+            description: 'The expiration timestamp for the verification link. Automatically included.'
+            example: 1640995200
             nullable: false
         -
           in: query
-          name: hash
-          description: 'The hash to verify the email.'
-          example: '1234567890'
+          name: signature
+          description: 'The signature that validates the signed URL. Automatically included.'
+          example: xyz789abc123def456
           required: true
           schema:
             type: string
-            description: 'The hash to verify the email.'
-            example: '1234567890'
+            description: 'The signature that validates the signed URL. Automatically included.'
+            example: xyz789abc123def456
             nullable: false
       responses:
-        200:
+        302:
           description: ''
           content:
-            text/plain:
+            application/json:
               schema:
-                type: string
-                example: 'Redirected to specified URL'
+                oneOf:
+                  -
+                    description: 'Email verified successfully'
+                    type: object
+                    example:
+                      description: 'User is redirected to the frontend email verification success page'
+                      headers:
+                        Location: 'https://yourfrontend.com/email-verified'
+                    properties:
+                      description:
+                        type: string
+                        example: 'User is redirected to the frontend email verification success page'
+                      headers:
+                        type: object
+                        properties:
+                          Location:
+                            type: string
+                            example: 'https://yourfrontend.com/email-verified'
+                  -
+                    description: 'Email already verified'
+                    type: object
+                    example:
+                      description: 'User is redirected to the frontend (email was already verified previously)'
+                      headers:
+                        Location: 'https://yourfrontend.com/email-verified'
+                    properties:
+                      description:
+                        type: string
+                        example: 'User is redirected to the frontend (email was already verified previously)'
+                      headers:
+                        type: object
+                        properties:
+                          Location:
+                            type: string
+                            example: 'https://yourfrontend.com/email-verified'
         401:
-          description: ''
+          description: 'Invalid or expired verification link'
           content:
             application/json:
               schema:
@@ -770,8 +803,815 @@ paths:
                   status:
                     type: integer
                     example: 401
+        403:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Signature verification failed'
+                    type: object
+                    example:
+                      message: 'Invalid/Expired url provided.'
+                      status: 401
+                    properties:
+                      message:
+                        type: string
+                        example: 'Invalid/Expired url provided.'
+                      status:
+                        type: integer
+                        example: 401
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'Invalid signature.'
+                      exception: Illuminate\Routing\Exceptions\InvalidSignatureException
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ValidateSignature.php
+                      line: 73
+                      trace:
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                          line: 209
+                          function: handle
+                          class: Illuminate\Routing\Middleware\ValidateSignature
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityMonitoring.php
+                          line: 27
+                          function: 'Illuminate\Pipeline\{closure}'
+                          class: Illuminate\Pipeline\Pipeline
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                          line: 209
+                          function: handle
+                          class: App\Http\Middleware\V1\SecurityMonitoring
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityLogger.php
+                          line: 23
+                          function: 'Illuminate\Pipeline\{closure}'
+                          class: Illuminate\Pipeline\Pipeline
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                          line: 209
+                          function: handle
+                          class: App\Http\Middleware\V1\SecurityLogger
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityHeaders.php
+                          line: 12
+                          function: 'Illuminate\Pipeline\{closure}'
+                          class: Illuminate\Pipeline\Pipeline
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                          line: 209
+                          function: handle
+                          class: App\Http\Middleware\V1\SecurityHeaders
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php
+                          line: 51
+                          function: 'Illuminate\Pipeline\{closure}'
+                          class: Illuminate\Pipeline\Pipeline
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                          line: 209
+                          function: handle
+                          class: Illuminate\Routing\Middleware\SubstituteBindings
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                          line: 127
+                          function: 'Illuminate\Pipeline\{closure}'
+                          class: Illuminate\Pipeline\Pipeline
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php
+                          line: 807
+                          function: then
+                          class: Illuminate\Pipeline\Pipeline
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php
+                          line: 786
+                          function: runRouteWithinStack
+                          class: Illuminate\Routing\Router
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php
+                          line: 750
+                          function: runRoute
+                          class: Illuminate\Routing\Router
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php
+                          line: 739
+                          function: dispatchToRoute
+                          class: Illuminate\Routing\Router
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
+                          line: 201
+                          function: dispatch
+                          class: Illuminate\Routing\Router
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                          line: 170
+                          function: 'Illuminate\Foundation\Http\{closure}'
+                          class: Illuminate\Foundation\Http\Kernel
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php
+                          line: 21
+                          function: 'Illuminate\Pipeline\{closure}'
+                          class: Illuminate\Pipeline\Pipeline
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php
+                          line: 31
+                          function: handle
+                          class: Illuminate\Foundation\Http\Middleware\TransformsRequest
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                          line: 209
+                          function: handle
+                          class: Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php
+                          line: 21
+                          function: 'Illuminate\Pipeline\{closure}'
+                          class: Illuminate\Pipeline\Pipeline
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php
+                          line: 51
+                          function: handle
+                          class: Illuminate\Foundation\Http\Middleware\TransformsRequest
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                          line: 209
+                          function: handle
+                          class: Illuminate\Foundation\Http\Middleware\TrimStrings
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php
+                          line: 27
+                          function: 'Illuminate\Pipeline\{closure}'
+                          class: Illuminate\Pipeline\Pipeline
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                          line: 209
+                          function: handle
+                          class: Illuminate\Http\Middleware\ValidatePostSize
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php
+                          line: 110
+                          function: 'Illuminate\Pipeline\{closure}'
+                          class: Illuminate\Pipeline\Pipeline
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                          line: 209
+                          function: handle
+                          class: Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php
+                          line: 62
+                          function: 'Illuminate\Pipeline\{closure}'
+                          class: Illuminate\Pipeline\Pipeline
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                          line: 209
+                          function: handle
+                          class: Illuminate\Http\Middleware\HandleCors
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php
+                          line: 58
+                          function: 'Illuminate\Pipeline\{closure}'
+                          class: Illuminate\Pipeline\Pipeline
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                          line: 209
+                          function: handle
+                          class: Illuminate\Http\Middleware\TrustProxies
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php
+                          line: 22
+                          function: 'Illuminate\Pipeline\{closure}'
+                          class: Illuminate\Pipeline\Pipeline
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                          line: 209
+                          function: handle
+                          class: Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                          line: 127
+                          function: 'Illuminate\Pipeline\{closure}'
+                          class: Illuminate\Pipeline\Pipeline
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
+                          line: 176
+                          function: then
+                          class: Illuminate\Pipeline\Pipeline
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
+                          line: 145
+                          function: sendRequestThroughRouter
+                          class: Illuminate\Foundation\Http\Kernel
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                          line: 310
+                          function: handle
+                          class: Illuminate\Foundation\Http\Kernel
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                          line: 298
+                          function: callLaravelOrLumenRoute
+                          class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                          line: 91
+                          function: makeApiCall
+                          class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                          line: 44
+                          function: makeResponseCall
+                          class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                          line: 35
+                          function: makeResponseCallIfConditionsPass
+                          class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
+                          line: 237
+                          function: __invoke
+                          class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
+                          line: 163
+                          function: iterateThroughStrategies
+                          class: Knuckles\Scribe\Extracting\Extractor
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
+                          line: 95
+                          function: fetchResponses
+                          class: Knuckles\Scribe\Extracting\Extractor
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
+                          line: 125
+                          function: processRoute
+                          class: Knuckles\Scribe\Extracting\Extractor
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
+                          line: 72
+                          function: extractEndpointsInfoFromLaravelApp
+                          class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
+                          line: 50
+                          function: extractEndpointsInfoAndWriteToDisk
+                          class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Commands/GenerateDocumentation.php
+                          line: 53
+                          function: get
+                          class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
+                          line: 36
+                          function: handle
+                          class: Knuckles\Scribe\Commands\GenerateDocumentation
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Util.php
+                          line: 43
+                          function: 'Illuminate\Container\{closure}'
+                          class: Illuminate\Container\BoundMethod
+                          type: '::'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
+                          line: 95
+                          function: unwrapIfClosure
+                          class: Illuminate\Container\Util
+                          type: '::'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
+                          line: 35
+                          function: callBoundMethod
+                          class: Illuminate\Container\BoundMethod
+                          type: '::'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Container.php
+                          line: 694
+                          function: call
+                          class: Illuminate\Container\BoundMethod
+                          type: '::'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php
+                          line: 213
+                          function: call
+                          class: Illuminate\Container\Container
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/symfony/console/Command/Command.php
+                          line: 279
+                          function: execute
+                          class: Illuminate\Console\Command
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php
+                          line: 182
+                          function: run
+                          class: Symfony\Component\Console\Command\Command
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/symfony/console/Application.php
+                          line: 1094
+                          function: run
+                          class: Illuminate\Console\Command
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/symfony/console/Application.php
+                          line: 342
+                          function: doRunCommand
+                          class: Symfony\Component\Console\Application
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/symfony/console/Application.php
+                          line: 193
+                          function: doRun
+                          class: Symfony\Component\Console\Application
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php
+                          line: 198
+                          function: run
+                          class: Symfony\Component\Console\Application
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Application.php
+                          line: 1208
+                          function: handle
+                          class: Illuminate\Foundation\Console\Kernel
+                          type: '->'
+                        -
+                          file: /var/www/ecommerce_api/api/artisan
+                          line: 13
+                          function: handleCommand
+                          class: Illuminate\Foundation\Application
+                          type: '->'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Invalid signature.'
+                      exception:
+                        type: string
+                        example: Illuminate\Routing\Exceptions\InvalidSignatureException
+                      file:
+                        type: string
+                        example: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ValidateSignature.php
+                      line:
+                        type: integer
+                        example: 73
+                      trace:
+                        type: array
+                        example:
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                            line: 209
+                            function: handle
+                            class: Illuminate\Routing\Middleware\ValidateSignature
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityMonitoring.php
+                            line: 27
+                            function: 'Illuminate\Pipeline\{closure}'
+                            class: Illuminate\Pipeline\Pipeline
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                            line: 209
+                            function: handle
+                            class: App\Http\Middleware\V1\SecurityMonitoring
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityLogger.php
+                            line: 23
+                            function: 'Illuminate\Pipeline\{closure}'
+                            class: Illuminate\Pipeline\Pipeline
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                            line: 209
+                            function: handle
+                            class: App\Http\Middleware\V1\SecurityLogger
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityHeaders.php
+                            line: 12
+                            function: 'Illuminate\Pipeline\{closure}'
+                            class: Illuminate\Pipeline\Pipeline
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                            line: 209
+                            function: handle
+                            class: App\Http\Middleware\V1\SecurityHeaders
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php
+                            line: 51
+                            function: 'Illuminate\Pipeline\{closure}'
+                            class: Illuminate\Pipeline\Pipeline
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                            line: 209
+                            function: handle
+                            class: Illuminate\Routing\Middleware\SubstituteBindings
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                            line: 127
+                            function: 'Illuminate\Pipeline\{closure}'
+                            class: Illuminate\Pipeline\Pipeline
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php
+                            line: 807
+                            function: then
+                            class: Illuminate\Pipeline\Pipeline
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php
+                            line: 786
+                            function: runRouteWithinStack
+                            class: Illuminate\Routing\Router
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php
+                            line: 750
+                            function: runRoute
+                            class: Illuminate\Routing\Router
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php
+                            line: 739
+                            function: dispatchToRoute
+                            class: Illuminate\Routing\Router
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
+                            line: 201
+                            function: dispatch
+                            class: Illuminate\Routing\Router
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                            line: 170
+                            function: 'Illuminate\Foundation\Http\{closure}'
+                            class: Illuminate\Foundation\Http\Kernel
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php
+                            line: 21
+                            function: 'Illuminate\Pipeline\{closure}'
+                            class: Illuminate\Pipeline\Pipeline
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php
+                            line: 31
+                            function: handle
+                            class: Illuminate\Foundation\Http\Middleware\TransformsRequest
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                            line: 209
+                            function: handle
+                            class: Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php
+                            line: 21
+                            function: 'Illuminate\Pipeline\{closure}'
+                            class: Illuminate\Pipeline\Pipeline
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php
+                            line: 51
+                            function: handle
+                            class: Illuminate\Foundation\Http\Middleware\TransformsRequest
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                            line: 209
+                            function: handle
+                            class: Illuminate\Foundation\Http\Middleware\TrimStrings
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php
+                            line: 27
+                            function: 'Illuminate\Pipeline\{closure}'
+                            class: Illuminate\Pipeline\Pipeline
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                            line: 209
+                            function: handle
+                            class: Illuminate\Http\Middleware\ValidatePostSize
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php
+                            line: 110
+                            function: 'Illuminate\Pipeline\{closure}'
+                            class: Illuminate\Pipeline\Pipeline
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                            line: 209
+                            function: handle
+                            class: Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php
+                            line: 62
+                            function: 'Illuminate\Pipeline\{closure}'
+                            class: Illuminate\Pipeline\Pipeline
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                            line: 209
+                            function: handle
+                            class: Illuminate\Http\Middleware\HandleCors
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php
+                            line: 58
+                            function: 'Illuminate\Pipeline\{closure}'
+                            class: Illuminate\Pipeline\Pipeline
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                            line: 209
+                            function: handle
+                            class: Illuminate\Http\Middleware\TrustProxies
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php
+                            line: 22
+                            function: 'Illuminate\Pipeline\{closure}'
+                            class: Illuminate\Pipeline\Pipeline
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                            line: 209
+                            function: handle
+                            class: Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                            line: 127
+                            function: 'Illuminate\Pipeline\{closure}'
+                            class: Illuminate\Pipeline\Pipeline
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
+                            line: 176
+                            function: then
+                            class: Illuminate\Pipeline\Pipeline
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
+                            line: 145
+                            function: sendRequestThroughRouter
+                            class: Illuminate\Foundation\Http\Kernel
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                            line: 310
+                            function: handle
+                            class: Illuminate\Foundation\Http\Kernel
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                            line: 298
+                            function: callLaravelOrLumenRoute
+                            class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                            line: 91
+                            function: makeApiCall
+                            class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                            line: 44
+                            function: makeResponseCall
+                            class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                            line: 35
+                            function: makeResponseCallIfConditionsPass
+                            class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
+                            line: 237
+                            function: __invoke
+                            class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
+                            line: 163
+                            function: iterateThroughStrategies
+                            class: Knuckles\Scribe\Extracting\Extractor
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
+                            line: 95
+                            function: fetchResponses
+                            class: Knuckles\Scribe\Extracting\Extractor
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
+                            line: 125
+                            function: processRoute
+                            class: Knuckles\Scribe\Extracting\Extractor
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
+                            line: 72
+                            function: extractEndpointsInfoFromLaravelApp
+                            class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
+                            line: 50
+                            function: extractEndpointsInfoAndWriteToDisk
+                            class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Commands/GenerateDocumentation.php
+                            line: 53
+                            function: get
+                            class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
+                            line: 36
+                            function: handle
+                            class: Knuckles\Scribe\Commands\GenerateDocumentation
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Util.php
+                            line: 43
+                            function: 'Illuminate\Container\{closure}'
+                            class: Illuminate\Container\BoundMethod
+                            type: '::'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
+                            line: 95
+                            function: unwrapIfClosure
+                            class: Illuminate\Container\Util
+                            type: '::'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
+                            line: 35
+                            function: callBoundMethod
+                            class: Illuminate\Container\BoundMethod
+                            type: '::'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Container.php
+                            line: 694
+                            function: call
+                            class: Illuminate\Container\BoundMethod
+                            type: '::'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php
+                            line: 213
+                            function: call
+                            class: Illuminate\Container\Container
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/symfony/console/Command/Command.php
+                            line: 279
+                            function: execute
+                            class: Illuminate\Console\Command
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php
+                            line: 182
+                            function: run
+                            class: Symfony\Component\Console\Command\Command
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/symfony/console/Application.php
+                            line: 1094
+                            function: run
+                            class: Illuminate\Console\Command
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/symfony/console/Application.php
+                            line: 342
+                            function: doRunCommand
+                            class: Symfony\Component\Console\Application
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/symfony/console/Application.php
+                            line: 193
+                            function: doRun
+                            class: Symfony\Component\Console\Application
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php
+                            line: 198
+                            function: run
+                            class: Symfony\Component\Console\Application
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Application.php
+                            line: 1208
+                            function: handle
+                            class: Illuminate\Foundation\Console\Kernel
+                            type: '->'
+                          -
+                            file: /var/www/ecommerce_api/api/artisan
+                            line: 13
+                            function: handleCommand
+                            class: Illuminate\Foundation\Application
+                            type: '->'
+                        items:
+                          type: object
+                          properties:
+                            file:
+                              type: string
+                              example: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                            line:
+                              type: integer
+                              example: 209
+                            function:
+                              type: string
+                              example: handle
+                            class:
+                              type: string
+                              example: Illuminate\Routing\Middleware\ValidateSignature
+                            type:
+                              type: string
+                              example: '->'
+        404:
+          description: 'User not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No query results for model [App\Models\User] 123'
+                properties:
+                  message:
+                    type: string
+                    example: 'No query results for model [App\Models\User] 123'
       tags:
         - 'Email Verification'
+      security: []
     parameters:
       -
         in: path
@@ -784,20 +1624,28 @@ paths:
       -
         in: path
         name: hash
-        description: ''
-        example: architecto
+        description: "The verification hash that ensures the link is valid and hasn't been tampered with. This is automatically included in the verification link."
+        example: abc123def456ghi789
         required: true
         schema:
           type: string
+      -
+        in: path
+        name: user_id
+        description: 'The ID of the user whose email is being verified. This is automatically included in the verification link.'
+        example: 123
+        required: true
+        schema:
+          type: integer
   /api/email/resend:
     get:
-      summary: 'Resend email to user.'
-      operationId: resendEmailToUser
-      description: 'Once a user registers, a notification is sent out to their specified email address, which requires them to verify. Incase they dont recieve one, they can request again.'
+      summary: 'Resend email verification notification'
+      operationId: resendEmailVerificationNotification
+      description: "Sends a new email verification link to the authenticated user's email address.\nThis is useful when users don't receive the initial verification email or when\nthe verification link has expired. The user must be authenticated to request a resend."
       parameters: []
       responses:
         200:
-          description: ''
+          description: 'Verification email sent successfully'
           content:
             application/json:
               schema:
@@ -812,8 +1660,8 @@ paths:
                   status:
                     type: integer
                     example: 200
-        401:
-          description: ''
+        400:
+          description: 'Email already verified'
           content:
             application/json:
               schema:
@@ -828,6 +1676,54 @@ paths:
                   status:
                     type: integer
                     example: 400
+        401:
+          description: 'User not authenticated'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                  status: 401
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+                  status:
+                    type: integer
+                    example: 401
+        429:
+          description: 'Too many requests'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Too many verification emails sent. Please wait before requesting another.'
+                  status: 429
+                properties:
+                  message:
+                    type: string
+                    example: 'Too many verification emails sent. Please wait before requesting another.'
+                  status:
+                    type: integer
+                    example: 429
+        500:
+          description: 'Email sending failed'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Failed to send verification email. Please try again later.'
+                  status: 500
+                properties:
+                  message:
+                    type: string
+                    example: 'Failed to send verification email. Please try again later.'
+                  status:
+                    type: integer
+                    example: 500
       tags:
         - 'Email Verification'
   /api/admin/product-attributes:
@@ -1307,29 +2203,322 @@ paths:
           type: integer
   /api/admin/orders:
     get:
-      summary: 'Retrieve paginated list of orders.'
+      summary: 'Retrieve paginated list of orders'
       operationId: retrievePaginatedListOfOrders
-      description: ''
-      parameters: []
+      description: "Get a paginated list of all orders in the system. This endpoint supports filtering by user and status,\nand includes comprehensive order information including items, user details, and current status."
+      parameters:
+        -
+          in: query
+          name: user_id
+          description: 'optional Filter orders by specific user ID.'
+          example: 123
+          required: false
+          schema:
+            type: integer
+            description: 'optional Filter orders by specific user ID.'
+            example: 123
+            nullable: false
+        -
+          in: query
+          name: status_id
+          description: 'optional Filter orders by specific status ID.'
+          example: 2
+          required: false
+          schema:
+            type: integer
+            description: 'optional Filter orders by specific status ID.'
+            example: 2
+            nullable: false
+        -
+          in: query
+          name: page
+          description: 'optional Page number for pagination. Default: 1.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'optional Page number for pagination. Default: 1.'
+            example: 1
+            nullable: false
+        -
+          in: query
+          name: per_page
+          description: 'optional Number of orders per page (max 50). Default: 15.'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'optional Number of orders per page (max 50). Default: 15.'
+            example: 20
+            nullable: false
       responses:
         200:
           description: ''
           content:
             application/json:
               schema:
-                type: object
-                example:
-                  message: 'Orders retrieved successfully.'
-                  data: []
-                properties:
-                  message:
-                    type: string
-                    example: 'Orders retrieved successfully.'
-                  data:
-                    type: array
-                    example: []
+                oneOf:
+                  -
+                    description: 'Success with orders'
+                    type: object
+                    example:
+                      message: 'Orders retrieved successfully.'
+                      data:
+                        data:
+                          -
+                            id: 1
+                            total_amount: 29.99
+                            total_amount_formatted: £29.99
+                            created_at: '2025-01-15T10:30:00.000000Z'
+                            updated_at: '2025-01-15T10:35:00.000000Z'
+                            deleted_at: null
+                            user:
+                              id: 5
+                              name: 'John Smith'
+                              email: john.smith@example.com
+                              email_verified_at: '2025-01-10T08:00:00.000000Z'
+                            status:
+                              id: 2
+                              name: Processing
+                            order_items:
+                              -
+                                id: 1
+                                quantity: 2
+                                price: 1499
+                                price_formatted: £14.99
+                                line_total: 2998
+                                line_total_formatted: £29.98
+                                product:
+                                  id: 10
+                                  name: 'Wireless Headphones'
+                                  description: 'High-quality wireless headphones with noise cancellation'
+                                product_variant:
+                                  id: 3
+                                  value: Black
+                                  additional_price: 0
+                                  product_attribute:
+                                    id: 1
+                                    name: Color
+                                order_return: null
+                            payments:
+                              -
+                                id: 1
+                                amount: 2999
+                                amount_formatted: £29.99
+                                status: Paid
+                                method: stripe
+                                transaction_reference: pi_1234567890abcdef
+                                processed_at: '2025-01-15T10:32:00.000000Z'
+                        current_page: 1
+                        per_page: 15
+                        total: 42
+                        last_page: 3
+                        from: 1
+                        to: 15
+                    properties:
+                      message:
+                        type: string
+                        example: 'Orders retrieved successfully.'
+                      data:
+                        type: object
+                        properties:
+                          data:
+                            type: array
+                            example:
+                              -
+                                id: 1
+                                total_amount: 29.99
+                                total_amount_formatted: £29.99
+                                created_at: '2025-01-15T10:30:00.000000Z'
+                                updated_at: '2025-01-15T10:35:00.000000Z'
+                                deleted_at: null
+                                user:
+                                  id: 5
+                                  name: 'John Smith'
+                                  email: john.smith@example.com
+                                  email_verified_at: '2025-01-10T08:00:00.000000Z'
+                                status:
+                                  id: 2
+                                  name: Processing
+                                order_items:
+                                  -
+                                    id: 1
+                                    quantity: 2
+                                    price: 1499
+                                    price_formatted: £14.99
+                                    line_total: 2998
+                                    line_total_formatted: £29.98
+                                    product:
+                                      id: 10
+                                      name: 'Wireless Headphones'
+                                      description: 'High-quality wireless headphones with noise cancellation'
+                                    product_variant:
+                                      id: 3
+                                      value: Black
+                                      additional_price: 0
+                                      product_attribute: { id: 1, name: Color }
+                                    order_return: null
+                                payments:
+                                  -
+                                    id: 1
+                                    amount: 2999
+                                    amount_formatted: £29.99
+                                    status: Paid
+                                    method: stripe
+                                    transaction_reference: pi_1234567890abcdef
+                                    processed_at: '2025-01-15T10:32:00.000000Z'
+                            items:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 1
+                                total_amount:
+                                  type: number
+                                  example: 29.99
+                                total_amount_formatted:
+                                  type: string
+                                  example: £29.99
+                                created_at:
+                                  type: string
+                                  example: '2025-01-15T10:30:00.000000Z'
+                                updated_at:
+                                  type: string
+                                  example: '2025-01-15T10:35:00.000000Z'
+                                deleted_at:
+                                  type: string
+                                  example: null
+                                user:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                      example: 5
+                                    name:
+                                      type: string
+                                      example: 'John Smith'
+                                    email:
+                                      type: string
+                                      example: john.smith@example.com
+                                    email_verified_at:
+                                      type: string
+                                      example: '2025-01-10T08:00:00.000000Z'
+                                status:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                      example: 2
+                                    name:
+                                      type: string
+                                      example: Processing
+                                order_items:
+                                  type: array
+                                  example:
+                                    -
+                                      id: 1
+                                      quantity: 2
+                                      price: 1499
+                                      price_formatted: £14.99
+                                      line_total: 2998
+                                      line_total_formatted: £29.98
+                                      product: { id: 10, name: 'Wireless Headphones', description: 'High-quality wireless headphones with noise cancellation' }
+                                      product_variant: { id: 3, value: Black, additional_price: 0, product_attribute: { id: 1, name: Color } }
+                                      order_return: null
+                                  items:
+                                    type: object
+                                    properties:
+                                      id: { type: integer, example: 1 }
+                                      quantity: { type: integer, example: 2 }
+                                      price: { type: integer, example: 1499 }
+                                      price_formatted: { type: string, example: £14.99 }
+                                      line_total: { type: integer, example: 2998 }
+                                      line_total_formatted: { type: string, example: £29.98 }
+                                      product: { type: object, properties: { id: { type: integer, example: 10 }, name: { type: string, example: 'Wireless Headphones' }, description: { type: string, example: 'High-quality wireless headphones with noise cancellation' } } }
+                                      product_variant: { type: object, properties: { id: { type: integer, example: 3 }, value: { type: string, example: Black }, additional_price: { type: integer, example: 0 }, product_attribute: { type: object, properties: { id: { type: integer, example: 1 }, name: { type: string, example: Color } } } } }
+                                      order_return: { type: string, example: null }
+                                payments:
+                                  type: array
+                                  example:
+                                    -
+                                      id: 1
+                                      amount: 2999
+                                      amount_formatted: £29.99
+                                      status: Paid
+                                      method: stripe
+                                      transaction_reference: pi_1234567890abcdef
+                                      processed_at: '2025-01-15T10:32:00.000000Z'
+                                  items:
+                                    type: object
+                                    properties:
+                                      id: { type: integer, example: 1 }
+                                      amount: { type: integer, example: 2999 }
+                                      amount_formatted: { type: string, example: £29.99 }
+                                      status: { type: string, example: Paid }
+                                      method: { type: string, example: stripe }
+                                      transaction_reference: { type: string, example: pi_1234567890abcdef }
+                                      processed_at: { type: string, example: '2025-01-15T10:32:00.000000Z' }
+                          current_page:
+                            type: integer
+                            example: 1
+                          per_page:
+                            type: integer
+                            example: 15
+                          total:
+                            type: integer
+                            example: 42
+                          last_page:
+                            type: integer
+                            example: 3
+                          from:
+                            type: integer
+                            example: 1
+                          to:
+                            type: integer
+                            example: 15
+                  -
+                    description: 'No orders found'
+                    type: object
+                    example:
+                      message: 'Orders retrieved successfully.'
+                      data:
+                        data: []
+                        current_page: 1
+                        per_page: 15
+                        total: 0
+                        last_page: 1
+                        from: null
+                        to: null
+                    properties:
+                      message:
+                        type: string
+                        example: 'Orders retrieved successfully.'
+                      data:
+                        type: object
+                        properties:
+                          data:
+                            type: array
+                            example: []
+                          current_page:
+                            type: integer
+                            example: 1
+                          per_page:
+                            type: integer
+                            example: 15
+                          total:
+                            type: integer
+                            example: 0
+                          last_page:
+                            type: integer
+                            example: 1
+                          from:
+                            type: string
+                            example: null
+                          to:
+                            type: string
+                            example: null
         403:
-          description: ''
+          description: 'Insufficient permissions'
           content:
             application/json:
               schema:
@@ -1340,8 +2529,26 @@ paths:
                   message:
                     type: string
                     example: 'You do not have the required permissions.'
+        422:
+          description: 'Invalid filter parameters'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    - 'The user id field must be an integer.'
+                    - 'The status id field must exist in order_statuses table.'
+                properties:
+                  errors:
+                    type: array
+                    example:
+                      - 'The user id field must be an integer.'
+                      - 'The status id field must exist in order_statuses table.'
+                    items:
+                      type: string
       tags:
-        - Orders
+        - 'Order Management'
       requestBody:
         required: false
         content:
@@ -1360,29 +2567,169 @@ paths:
                   example: null
                   nullable: true
     post:
-      summary: 'Create a new order.'
+      summary: 'Create a new order'
       operationId: createANewOrder
-      description: ''
+      description: "Create a new order with multiple order items. The system will automatically calculate the total amount\nbased on the items and their quantities. All monetary values should be provided in pennies."
       parameters: []
       responses:
         200:
-          description: ''
+          description: 'Order created successfully'
           content:
             application/json:
               schema:
                 type: object
                 example:
                   message: 'Order created successfully.'
-                  data: {  }
+                  data:
+                    id: 43
+                    total_amount: 2999
+                    total_amount_formatted: £29.99
+                    created_at: '2025-01-15T14:20:00.000000Z'
+                    updated_at: '2025-01-15T14:20:00.000000Z'
+                    deleted_at: null
+                    user:
+                      id: 5
+                      name: 'John Smith'
+                      email: john.smith@example.com
+                    status:
+                      id: 1
+                      name: 'Pending Payment'
+                    order_items:
+                      -
+                        id: 85
+                        quantity: 2
+                        price: 1499
+                        price_formatted: £14.99
+                        line_total: 2998
+                        line_total_formatted: £29.98
+                        product:
+                          id: 10
+                          name: 'Wireless Headphones'
+                          price: 1499
+                          price_formatted: £14.99
+                        product_variant:
+                          id: 3
+                          value: Black
+                          additional_price: 0
+                    payments: []
                 properties:
                   message:
                     type: string
                     example: 'Order created successfully.'
                   data:
                     type: object
-                    properties: {  }
+                    properties:
+                      id:
+                        type: integer
+                        example: 43
+                      total_amount:
+                        type: integer
+                        example: 2999
+                      total_amount_formatted:
+                        type: string
+                        example: £29.99
+                      created_at:
+                        type: string
+                        example: '2025-01-15T14:20:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2025-01-15T14:20:00.000000Z'
+                      deleted_at:
+                        type: string
+                        example: null
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 5
+                          name:
+                            type: string
+                            example: 'John Smith'
+                          email:
+                            type: string
+                            example: john.smith@example.com
+                      status:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          name:
+                            type: string
+                            example: 'Pending Payment'
+                      order_items:
+                        type: array
+                        example:
+                          -
+                            id: 85
+                            quantity: 2
+                            price: 1499
+                            price_formatted: £14.99
+                            line_total: 2998
+                            line_total_formatted: £29.98
+                            product:
+                              id: 10
+                              name: 'Wireless Headphones'
+                              price: 1499
+                              price_formatted: £14.99
+                            product_variant:
+                              id: 3
+                              value: Black
+                              additional_price: 0
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 85
+                            quantity:
+                              type: integer
+                              example: 2
+                            price:
+                              type: integer
+                              example: 1499
+                            price_formatted:
+                              type: string
+                              example: £14.99
+                            line_total:
+                              type: integer
+                              example: 2998
+                            line_total_formatted:
+                              type: string
+                              example: £29.98
+                            product:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 10
+                                name:
+                                  type: string
+                                  example: 'Wireless Headphones'
+                                price:
+                                  type: integer
+                                  example: 1499
+                                price_formatted:
+                                  type: string
+                                  example: £14.99
+                            product_variant:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 3
+                                value:
+                                  type: string
+                                  example: Black
+                                additional_price:
+                                  type: integer
+                                  example: 0
+                      payments:
+                        type: array
+                        example: []
         403:
-          description: ''
+          description: 'Insufficient permissions'
           content:
             application/json:
               schema:
@@ -1393,8 +2740,56 @@ paths:
                   message:
                     type: string
                     example: 'You do not have the required permissions.'
+        404:
+          description: 'User not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The selected user id is invalid.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The selected user id is invalid.'
+        422:
+          description: 'Validation errors'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    - 'The user id field is required.'
+                    - 'The order items field is required.'
+                    - 'The order items.0.product id field is required.'
+                    - 'The order items.0.quantity must be at least 1.'
+                    - 'The order items.0.price must be greater than 0.'
+                properties:
+                  errors:
+                    type: array
+                    example:
+                      - 'The user id field is required.'
+                      - 'The order items field is required.'
+                      - 'The order items.0.product id field is required.'
+                      - 'The order items.0.quantity must be at least 1.'
+                      - 'The order items.0.price must be greater than 0.'
+                    items:
+                      type: string
+        500:
+          description: 'Server error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'An error occurred while creating the order.'
+                properties:
+                  message:
+                    type: string
+                    example: 'An error occurred while creating the order.'
       tags:
-        - Orders
+        - 'Order Management'
       requestBody:
         required: true
         content:
@@ -1403,75 +2798,331 @@ paths:
               type: object
               properties:
                 user_id:
-                  type: string
-                  description: 'The <code>id</code> of an existing record in the users table.'
-                  example: architecto
+                  type: integer
+                  description: 'The ID of the user placing the order.'
+                  example: 5
                   nullable: false
                 status_id:
-                  type: string
-                  description: 'The <code>id</code> of an existing record in the order_statuses table.'
-                  example: null
+                  type: integer
+                  description: 'optional The initial status ID for the order. If not provided, defaults to "Pending Payment".'
+                  example: 1
                   nullable: true
                 order_items:
                   type: array
-                  description: 'Must have at least 1 items.'
+                  description: 'Array of order items. Must contain at least one item.'
                   example:
-                    - []
+                    - architecto
                   items:
-                    type: object
-                    properties:
-                      product_id:
-                        type: string
-                        description: 'The <code>id</code> of an existing record in the products table.'
-                        example: architecto
-                        nullable: false
-                      product_variant_id:
-                        type: string
-                        description: 'The <code>id</code> of an existing record in the product_variants table.'
-                        example: null
-                        nullable: true
-                      quantity:
-                        type: integer
-                        description: 'Must be at least 1.'
-                        example: 22
-                        nullable: false
-                      price:
-                        type: number
-                        description: 'Must be at least 0.'
-                        example: 84
-                        nullable: false
-                    required:
-                      - product_id
-                      - quantity
-                      - price
+                    type: string
               required:
                 - user_id
                 - order_items
   '/api/admin/orders/{id}':
     get:
-      summary: 'Retrieve a specific order.'
+      summary: 'Retrieve a specific order'
       operationId: retrieveASpecificOrder
-      description: ''
+      description: "Get detailed information about a specific order including all order items, user details,\npayment information, and any associated returns or refunds."
       parameters: []
       responses:
         200:
-          description: ''
+          description: 'Order found'
           content:
             application/json:
               schema:
                 type: object
                 example:
                   message: 'Order retrieved successfully.'
-                  data: {  }
+                  data:
+                    id: 43
+                    total_amount: 5998
+                    total_amount_formatted: £59.98
+                    created_at: '2025-01-15T14:20:00.000000Z'
+                    updated_at: '2025-01-15T14:25:00.000000Z'
+                    deleted_at: null
+                    user:
+                      id: 5
+                      name: 'John Smith'
+                      email: john.smith@example.com
+                      email_verified_at: '2025-01-10T08:00:00.000000Z'
+                    status:
+                      id: 3
+                      name: Confirmed
+                    order_items:
+                      -
+                        id: 85
+                        quantity: 2
+                        price: 1499
+                        price_formatted: £14.99
+                        line_total: 2998
+                        line_total_formatted: £29.98
+                        created_at: '2025-01-15T14:20:00.000000Z'
+                        product:
+                          id: 10
+                          name: 'Wireless Headphones'
+                          description: 'High-quality wireless headphones with noise cancellation'
+                          price: 1499
+                          price_formatted: £14.99
+                        product_variant:
+                          id: 3
+                          value: Black
+                          additional_price: 0
+                          product_attribute:
+                            id: 1
+                            name: Color
+                        order_return:
+                          id: 12
+                          reason: 'Product arrived damaged'
+                          status:
+                            id: 1
+                            name: Requested
+                          created_at: '2025-01-16T09:15:00.000000Z'
+                      -
+                        id: 86
+                        quantity: 1
+                        price: 2999
+                        price_formatted: £29.99
+                        line_total: 2999
+                        line_total_formatted: £29.99
+                        created_at: '2025-01-15T14:20:00.000000Z'
+                        product:
+                          id: 15
+                          name: 'Bluetooth Speaker'
+                          description: 'Portable waterproof Bluetooth speaker'
+                          price: 2999
+                          price_formatted: £29.99
+                        product_variant: null
+                        order_return: null
+                    payments:
+                      -
+                        id: 25
+                        amount: 5998
+                        amount_formatted: £59.98
+                        status: Paid
+                        method: stripe
+                        transaction_reference: pi_1234567890abcdef
+                        processed_at: '2025-01-15T14:22:00.000000Z'
+                        created_at: '2025-01-15T14:21:00.000000Z'
                 properties:
                   message:
                     type: string
                     example: 'Order retrieved successfully.'
                   data:
                     type: object
-                    properties: {  }
+                    properties:
+                      id:
+                        type: integer
+                        example: 43
+                      total_amount:
+                        type: integer
+                        example: 5998
+                      total_amount_formatted:
+                        type: string
+                        example: £59.98
+                      created_at:
+                        type: string
+                        example: '2025-01-15T14:20:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2025-01-15T14:25:00.000000Z'
+                      deleted_at:
+                        type: string
+                        example: null
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 5
+                          name:
+                            type: string
+                            example: 'John Smith'
+                          email:
+                            type: string
+                            example: john.smith@example.com
+                          email_verified_at:
+                            type: string
+                            example: '2025-01-10T08:00:00.000000Z'
+                      status:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 3
+                          name:
+                            type: string
+                            example: Confirmed
+                      order_items:
+                        type: array
+                        example:
+                          -
+                            id: 85
+                            quantity: 2
+                            price: 1499
+                            price_formatted: £14.99
+                            line_total: 2998
+                            line_total_formatted: £29.98
+                            created_at: '2025-01-15T14:20:00.000000Z'
+                            product:
+                              id: 10
+                              name: 'Wireless Headphones'
+                              description: 'High-quality wireless headphones with noise cancellation'
+                              price: 1499
+                              price_formatted: £14.99
+                            product_variant:
+                              id: 3
+                              value: Black
+                              additional_price: 0
+                              product_attribute:
+                                id: 1
+                                name: Color
+                            order_return:
+                              id: 12
+                              reason: 'Product arrived damaged'
+                              status:
+                                id: 1
+                                name: Requested
+                              created_at: '2025-01-16T09:15:00.000000Z'
+                          -
+                            id: 86
+                            quantity: 1
+                            price: 2999
+                            price_formatted: £29.99
+                            line_total: 2999
+                            line_total_formatted: £29.99
+                            created_at: '2025-01-15T14:20:00.000000Z'
+                            product:
+                              id: 15
+                              name: 'Bluetooth Speaker'
+                              description: 'Portable waterproof Bluetooth speaker'
+                              price: 2999
+                              price_formatted: £29.99
+                            product_variant: null
+                            order_return: null
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 85
+                            quantity:
+                              type: integer
+                              example: 2
+                            price:
+                              type: integer
+                              example: 1499
+                            price_formatted:
+                              type: string
+                              example: £14.99
+                            line_total:
+                              type: integer
+                              example: 2998
+                            line_total_formatted:
+                              type: string
+                              example: £29.98
+                            created_at:
+                              type: string
+                              example: '2025-01-15T14:20:00.000000Z'
+                            product:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 10
+                                name:
+                                  type: string
+                                  example: 'Wireless Headphones'
+                                description:
+                                  type: string
+                                  example: 'High-quality wireless headphones with noise cancellation'
+                                price:
+                                  type: integer
+                                  example: 1499
+                                price_formatted:
+                                  type: string
+                                  example: £14.99
+                            product_variant:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 3
+                                value:
+                                  type: string
+                                  example: Black
+                                additional_price:
+                                  type: integer
+                                  example: 0
+                                product_attribute:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                      example: 1
+                                    name:
+                                      type: string
+                                      example: Color
+                            order_return:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 12
+                                reason:
+                                  type: string
+                                  example: 'Product arrived damaged'
+                                status:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                      example: 1
+                                    name:
+                                      type: string
+                                      example: Requested
+                                created_at:
+                                  type: string
+                                  example: '2025-01-16T09:15:00.000000Z'
+                      payments:
+                        type: array
+                        example:
+                          -
+                            id: 25
+                            amount: 5998
+                            amount_formatted: £59.98
+                            status: Paid
+                            method: stripe
+                            transaction_reference: pi_1234567890abcdef
+                            processed_at: '2025-01-15T14:22:00.000000Z'
+                            created_at: '2025-01-15T14:21:00.000000Z'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 25
+                            amount:
+                              type: integer
+                              example: 5998
+                            amount_formatted:
+                              type: string
+                              example: £59.98
+                            status:
+                              type: string
+                              example: Paid
+                            method:
+                              type: string
+                              example: stripe
+                            transaction_reference:
+                              type: string
+                              example: pi_1234567890abcdef
+                            processed_at:
+                              type: string
+                              example: '2025-01-15T14:22:00.000000Z'
+                            created_at:
+                              type: string
+                              example: '2025-01-15T14:21:00.000000Z'
         403:
-          description: ''
+          description: 'Insufficient permissions'
           content:
             application/json:
               schema:
@@ -1482,32 +3133,166 @@ paths:
                   message:
                     type: string
                     example: 'You do not have the required permissions.'
+        404:
+          description: 'Order not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No query results for model [App\Models\Order] 999'
+                properties:
+                  message:
+                    type: string
+                    example: 'No query results for model [App\Models\Order] 999'
       tags:
-        - Orders
+        - 'Order Management'
     post:
-      summary: 'Update an existing order.'
+      summary: 'Update an existing order'
       operationId: updateAnExistingOrder
-      description: ''
+      description: "Update an existing order including its items. This will replace all existing order items with the new ones\nand recalculate the total amount. Use with caution as this will affect order history."
       parameters: []
       responses:
         200:
-          description: ''
+          description: 'Order updated successfully'
           content:
             application/json:
               schema:
                 type: object
                 example:
                   message: 'Order updated successfully.'
-                  data: {  }
+                  data:
+                    id: 43
+                    total_amount: 4497
+                    total_amount_formatted: £44.97
+                    created_at: '2025-01-15T14:20:00.000000Z'
+                    updated_at: '2025-01-15T15:30:00.000000Z'
+                    deleted_at: null
+                    user:
+                      id: 5
+                      name: 'John Smith'
+                      email: john.smith@example.com
+                    status:
+                      id: 2
+                      name: Processing
+                    order_items:
+                      -
+                        id: 87
+                        quantity: 3
+                        price: 1499
+                        price_formatted: £14.99
+                        line_total: 4497
+                        line_total_formatted: £44.97
+                        product:
+                          id: 10
+                          name: 'Wireless Headphones'
+                    payments: []
                 properties:
                   message:
                     type: string
                     example: 'Order updated successfully.'
                   data:
                     type: object
-                    properties: {  }
+                    properties:
+                      id:
+                        type: integer
+                        example: 43
+                      total_amount:
+                        type: integer
+                        example: 4497
+                      total_amount_formatted:
+                        type: string
+                        example: £44.97
+                      created_at:
+                        type: string
+                        example: '2025-01-15T14:20:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2025-01-15T15:30:00.000000Z'
+                      deleted_at:
+                        type: string
+                        example: null
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 5
+                          name:
+                            type: string
+                            example: 'John Smith'
+                          email:
+                            type: string
+                            example: john.smith@example.com
+                      status:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 2
+                          name:
+                            type: string
+                            example: Processing
+                      order_items:
+                        type: array
+                        example:
+                          -
+                            id: 87
+                            quantity: 3
+                            price: 1499
+                            price_formatted: £14.99
+                            line_total: 4497
+                            line_total_formatted: £44.97
+                            product:
+                              id: 10
+                              name: 'Wireless Headphones'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 87
+                            quantity:
+                              type: integer
+                              example: 3
+                            price:
+                              type: integer
+                              example: 1499
+                            price_formatted:
+                              type: string
+                              example: £14.99
+                            line_total:
+                              type: integer
+                              example: 4497
+                            line_total_formatted:
+                              type: string
+                              example: £44.97
+                            product:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 10
+                                name:
+                                  type: string
+                                  example: 'Wireless Headphones'
+                      payments:
+                        type: array
+                        example: []
+        400:
+          description: 'Order cannot be updated'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Cannot update order that has been shipped or completed.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Cannot update order that has been shipped or completed.'
         403:
-          description: ''
+          description: 'Insufficient permissions'
           content:
             application/json:
               schema:
@@ -1518,8 +3303,38 @@ paths:
                   message:
                     type: string
                     example: 'You do not have the required permissions.'
+        404:
+          description: 'Order not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No query results for model [App\Models\Order] 999'
+                properties:
+                  message:
+                    type: string
+                    example: 'No query results for model [App\Models\Order] 999'
+        422:
+          description: 'Validation errors'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    - 'The order items field is required.'
+                    - 'The order items.0.quantity must be at least 1.'
+                properties:
+                  errors:
+                    type: array
+                    example:
+                      - 'The order items field is required.'
+                      - 'The order items.0.quantity must be at least 1.'
+                    items:
+                      type: string
       tags:
-        - Orders
+        - 'Order Management'
       requestBody:
         required: true
         content:
@@ -1528,57 +3343,32 @@ paths:
               type: object
               properties:
                 user_id:
-                  type: string
-                  description: 'The <code>id</code> of an existing record in the users table.'
-                  example: null
+                  type: integer
+                  description: 'optional The ID of the user (can be changed if needed).'
+                  example: 5
                   nullable: true
                 status_id:
-                  type: string
-                  description: 'The <code>id</code> of an existing record in the order_statuses table.'
-                  example: null
+                  type: integer
+                  description: 'optional The new status ID for the order.'
+                  example: 2
                   nullable: true
                 order_items:
                   type: array
-                  description: 'Must have at least 1 items.'
+                  description: 'Array of order items (replaces existing items).'
                   example:
-                    - []
+                    - architecto
                   items:
-                    type: object
-                    properties:
-                      product_id:
-                        type: string
-                        description: 'The <code>id</code> of an existing record in the products table.'
-                        example: architecto
-                        nullable: false
-                      product_variant_id:
-                        type: string
-                        description: 'The <code>id</code> of an existing record in the product_variants table.'
-                        example: null
-                        nullable: true
-                      quantity:
-                        type: integer
-                        description: 'Must be at least 1.'
-                        example: 22
-                        nullable: false
-                      price:
-                        type: number
-                        description: 'Must be at least 0.'
-                        example: 84
-                        nullable: false
-                    required:
-                      - product_id
-                      - quantity
-                      - price
+                    type: string
               required:
                 - order_items
     delete:
-      summary: 'Soft delete a order.'
-      operationId: softDeleteAOrder
-      description: ''
+      summary: 'Soft delete an order'
+      operationId: softDeleteAnOrder
+      description: "Soft delete an order, making it inactive but preserving the data for audit purposes.\nThe order will be hidden from normal queries but can be restored if needed."
       parameters: []
       responses:
         200:
-          description: ''
+          description: 'Order soft deleted successfully'
           content:
             application/json:
               schema:
@@ -1589,8 +3379,20 @@ paths:
                   message:
                     type: string
                     example: 'Order deleted (soft).'
+        400:
+          description: 'Order cannot be deleted'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Cannot delete order with active payments or shipments.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Cannot delete order with active payments or shipments.'
         403:
-          description: ''
+          description: 'Insufficient permissions'
           content:
             application/json:
               schema:
@@ -1601,8 +3403,20 @@ paths:
                   message:
                     type: string
                     example: 'You do not have the required permissions.'
+        404:
+          description: 'Order not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No query results for model [App\Models\Order] 999'
+                properties:
+                  message:
+                    type: string
+                    example: 'No query results for model [App\Models\Order] 999'
       tags:
-        - Orders
+        - 'Order Management'
     parameters:
       -
         in: path
@@ -1612,15 +3426,23 @@ paths:
         required: true
         schema:
           type: integer
+      -
+        in: path
+        name: order
+        description: 'The ID of the order to retrieve.'
+        example: 43
+        required: true
+        schema:
+          type: integer
   '/api/admin/orders/{id}/force-delete':
     delete:
-      summary: 'Permanently delete a order.'
-      operationId: permanentlyDeleteAOrder
-      description: ''
+      summary: 'Permanently delete an order'
+      operationId: permanentlyDeleteAnOrder
+      description: "Permanently remove an order from the database. This action is irreversible and should be used\nwith extreme caution. The order must be soft deleted first before it can be permanently deleted."
       parameters: []
       responses:
         200:
-          description: ''
+          description: 'Order permanently deleted'
           content:
             application/json:
               schema:
@@ -1631,8 +3453,20 @@ paths:
                   message:
                     type: string
                     example: 'Order permanently deleted.'
+        400:
+          description: 'Order must be soft deleted first'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Order must be soft deleted before force deleting.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Order must be soft deleted before force deleting.'
         403:
-          description: ''
+          description: 'Insufficient permissions'
           content:
             application/json:
               schema:
@@ -1643,38 +3477,130 @@ paths:
                   message:
                     type: string
                     example: 'You do not have the required permissions.'
+        404:
+          description: 'Order not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No query results for model [App\Models\Order] 43'
+                properties:
+                  message:
+                    type: string
+                    example: 'No query results for model [App\Models\Order] 43'
+        409:
+          description: 'Order has dependencies'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Cannot permanently delete order with associated payments or returns.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Cannot permanently delete order with associated payments or returns.'
       tags:
-        - Orders
+        - 'Order Management'
     parameters:
       -
         in: path
         name: id
-        description: 'The ID of the order.'
-        example: 1
+        description: 'The ID of the soft deleted order to permanently delete.'
+        example: 43
         required: true
         schema:
           type: integer
   '/api/admin/orders/{id}/restore':
     patch:
-      summary: 'Restore a soft deleted order.'
+      summary: 'Restore a soft deleted order'
       operationId: restoreASoftDeletedOrder
-      description: ''
+      description: "Restore a previously soft deleted order, making it active again in the system.\nOnly orders that have been soft deleted can be restored."
       parameters: []
       responses:
         200:
-          description: ''
+          description: 'Order restored successfully'
           content:
             application/json:
               schema:
                 type: object
                 example:
                   message: 'Order restored successfully.'
+                  data:
+                    id: 43
+                    total_amount: 2999
+                    total_amount_formatted: £29.99
+                    created_at: '2025-01-15T14:20:00.000000Z'
+                    updated_at: '2025-01-15T16:45:00.000000Z'
+                    deleted_at: null
+                    user:
+                      id: 5
+                      name: 'John Smith'
+                      email: john.smith@example.com
+                    status:
+                      id: 1
+                      name: 'Pending Payment'
                 properties:
                   message:
                     type: string
                     example: 'Order restored successfully.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 43
+                      total_amount:
+                        type: integer
+                        example: 2999
+                      total_amount_formatted:
+                        type: string
+                        example: £29.99
+                      created_at:
+                        type: string
+                        example: '2025-01-15T14:20:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2025-01-15T16:45:00.000000Z'
+                      deleted_at:
+                        type: string
+                        example: null
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 5
+                          name:
+                            type: string
+                            example: 'John Smith'
+                          email:
+                            type: string
+                            example: john.smith@example.com
+                      status:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          name:
+                            type: string
+                            example: 'Pending Payment'
+        400:
+          description: 'Order not deleted'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Order is not deleted.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Order is not deleted.'
         403:
-          description: ''
+          description: 'Insufficient permissions'
           content:
             application/json:
               schema:
@@ -1685,42 +3611,347 @@ paths:
                   message:
                     type: string
                     example: 'You do not have the required permissions.'
+        404:
+          description: 'Order not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No query results for model [App\Models\Order] 43'
+                properties:
+                  message:
+                    type: string
+                    example: 'No query results for model [App\Models\Order] 43'
       tags:
-        - Orders
+        - 'Order Management'
     parameters:
       -
         in: path
         name: id
-        description: 'The ID of the order.'
-        example: 1
+        description: 'The ID of the soft deleted order to restore.'
+        example: 43
         required: true
         schema:
           type: integer
   /api/orders:
     get:
-      summary: 'Retrieve paginated list of orders.'
+      summary: 'Retrieve paginated list of orders'
       operationId: retrievePaginatedListOfOrders
-      description: ''
-      parameters: []
+      description: "Get a paginated list of all orders in the system. This endpoint supports filtering by user and status,\nand includes comprehensive order information including items, user details, and current status."
+      parameters:
+        -
+          in: query
+          name: user_id
+          description: 'optional Filter orders by specific user ID.'
+          example: 123
+          required: false
+          schema:
+            type: integer
+            description: 'optional Filter orders by specific user ID.'
+            example: 123
+            nullable: false
+        -
+          in: query
+          name: status_id
+          description: 'optional Filter orders by specific status ID.'
+          example: 2
+          required: false
+          schema:
+            type: integer
+            description: 'optional Filter orders by specific status ID.'
+            example: 2
+            nullable: false
+        -
+          in: query
+          name: page
+          description: 'optional Page number for pagination. Default: 1.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'optional Page number for pagination. Default: 1.'
+            example: 1
+            nullable: false
+        -
+          in: query
+          name: per_page
+          description: 'optional Number of orders per page (max 50). Default: 15.'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'optional Number of orders per page (max 50). Default: 15.'
+            example: 20
+            nullable: false
       responses:
         200:
           description: ''
           content:
             application/json:
               schema:
-                type: object
-                example:
-                  message: 'Orders retrieved successfully.'
-                  data: []
-                properties:
-                  message:
-                    type: string
-                    example: 'Orders retrieved successfully.'
-                  data:
-                    type: array
-                    example: []
+                oneOf:
+                  -
+                    description: 'Success with orders'
+                    type: object
+                    example:
+                      message: 'Orders retrieved successfully.'
+                      data:
+                        data:
+                          -
+                            id: 1
+                            total_amount: 29.99
+                            total_amount_formatted: £29.99
+                            created_at: '2025-01-15T10:30:00.000000Z'
+                            updated_at: '2025-01-15T10:35:00.000000Z'
+                            deleted_at: null
+                            user:
+                              id: 5
+                              name: 'John Smith'
+                              email: john.smith@example.com
+                              email_verified_at: '2025-01-10T08:00:00.000000Z'
+                            status:
+                              id: 2
+                              name: Processing
+                            order_items:
+                              -
+                                id: 1
+                                quantity: 2
+                                price: 1499
+                                price_formatted: £14.99
+                                line_total: 2998
+                                line_total_formatted: £29.98
+                                product:
+                                  id: 10
+                                  name: 'Wireless Headphones'
+                                  description: 'High-quality wireless headphones with noise cancellation'
+                                product_variant:
+                                  id: 3
+                                  value: Black
+                                  additional_price: 0
+                                  product_attribute:
+                                    id: 1
+                                    name: Color
+                                order_return: null
+                            payments:
+                              -
+                                id: 1
+                                amount: 2999
+                                amount_formatted: £29.99
+                                status: Paid
+                                method: stripe
+                                transaction_reference: pi_1234567890abcdef
+                                processed_at: '2025-01-15T10:32:00.000000Z'
+                        current_page: 1
+                        per_page: 15
+                        total: 42
+                        last_page: 3
+                        from: 1
+                        to: 15
+                    properties:
+                      message:
+                        type: string
+                        example: 'Orders retrieved successfully.'
+                      data:
+                        type: object
+                        properties:
+                          data:
+                            type: array
+                            example:
+                              -
+                                id: 1
+                                total_amount: 29.99
+                                total_amount_formatted: £29.99
+                                created_at: '2025-01-15T10:30:00.000000Z'
+                                updated_at: '2025-01-15T10:35:00.000000Z'
+                                deleted_at: null
+                                user:
+                                  id: 5
+                                  name: 'John Smith'
+                                  email: john.smith@example.com
+                                  email_verified_at: '2025-01-10T08:00:00.000000Z'
+                                status:
+                                  id: 2
+                                  name: Processing
+                                order_items:
+                                  -
+                                    id: 1
+                                    quantity: 2
+                                    price: 1499
+                                    price_formatted: £14.99
+                                    line_total: 2998
+                                    line_total_formatted: £29.98
+                                    product:
+                                      id: 10
+                                      name: 'Wireless Headphones'
+                                      description: 'High-quality wireless headphones with noise cancellation'
+                                    product_variant:
+                                      id: 3
+                                      value: Black
+                                      additional_price: 0
+                                      product_attribute: { id: 1, name: Color }
+                                    order_return: null
+                                payments:
+                                  -
+                                    id: 1
+                                    amount: 2999
+                                    amount_formatted: £29.99
+                                    status: Paid
+                                    method: stripe
+                                    transaction_reference: pi_1234567890abcdef
+                                    processed_at: '2025-01-15T10:32:00.000000Z'
+                            items:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 1
+                                total_amount:
+                                  type: number
+                                  example: 29.99
+                                total_amount_formatted:
+                                  type: string
+                                  example: £29.99
+                                created_at:
+                                  type: string
+                                  example: '2025-01-15T10:30:00.000000Z'
+                                updated_at:
+                                  type: string
+                                  example: '2025-01-15T10:35:00.000000Z'
+                                deleted_at:
+                                  type: string
+                                  example: null
+                                user:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                      example: 5
+                                    name:
+                                      type: string
+                                      example: 'John Smith'
+                                    email:
+                                      type: string
+                                      example: john.smith@example.com
+                                    email_verified_at:
+                                      type: string
+                                      example: '2025-01-10T08:00:00.000000Z'
+                                status:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                      example: 2
+                                    name:
+                                      type: string
+                                      example: Processing
+                                order_items:
+                                  type: array
+                                  example:
+                                    -
+                                      id: 1
+                                      quantity: 2
+                                      price: 1499
+                                      price_formatted: £14.99
+                                      line_total: 2998
+                                      line_total_formatted: £29.98
+                                      product: { id: 10, name: 'Wireless Headphones', description: 'High-quality wireless headphones with noise cancellation' }
+                                      product_variant: { id: 3, value: Black, additional_price: 0, product_attribute: { id: 1, name: Color } }
+                                      order_return: null
+                                  items:
+                                    type: object
+                                    properties:
+                                      id: { type: integer, example: 1 }
+                                      quantity: { type: integer, example: 2 }
+                                      price: { type: integer, example: 1499 }
+                                      price_formatted: { type: string, example: £14.99 }
+                                      line_total: { type: integer, example: 2998 }
+                                      line_total_formatted: { type: string, example: £29.98 }
+                                      product: { type: object, properties: { id: { type: integer, example: 10 }, name: { type: string, example: 'Wireless Headphones' }, description: { type: string, example: 'High-quality wireless headphones with noise cancellation' } } }
+                                      product_variant: { type: object, properties: { id: { type: integer, example: 3 }, value: { type: string, example: Black }, additional_price: { type: integer, example: 0 }, product_attribute: { type: object, properties: { id: { type: integer, example: 1 }, name: { type: string, example: Color } } } } }
+                                      order_return: { type: string, example: null }
+                                payments:
+                                  type: array
+                                  example:
+                                    -
+                                      id: 1
+                                      amount: 2999
+                                      amount_formatted: £29.99
+                                      status: Paid
+                                      method: stripe
+                                      transaction_reference: pi_1234567890abcdef
+                                      processed_at: '2025-01-15T10:32:00.000000Z'
+                                  items:
+                                    type: object
+                                    properties:
+                                      id: { type: integer, example: 1 }
+                                      amount: { type: integer, example: 2999 }
+                                      amount_formatted: { type: string, example: £29.99 }
+                                      status: { type: string, example: Paid }
+                                      method: { type: string, example: stripe }
+                                      transaction_reference: { type: string, example: pi_1234567890abcdef }
+                                      processed_at: { type: string, example: '2025-01-15T10:32:00.000000Z' }
+                          current_page:
+                            type: integer
+                            example: 1
+                          per_page:
+                            type: integer
+                            example: 15
+                          total:
+                            type: integer
+                            example: 42
+                          last_page:
+                            type: integer
+                            example: 3
+                          from:
+                            type: integer
+                            example: 1
+                          to:
+                            type: integer
+                            example: 15
+                  -
+                    description: 'No orders found'
+                    type: object
+                    example:
+                      message: 'Orders retrieved successfully.'
+                      data:
+                        data: []
+                        current_page: 1
+                        per_page: 15
+                        total: 0
+                        last_page: 1
+                        from: null
+                        to: null
+                    properties:
+                      message:
+                        type: string
+                        example: 'Orders retrieved successfully.'
+                      data:
+                        type: object
+                        properties:
+                          data:
+                            type: array
+                            example: []
+                          current_page:
+                            type: integer
+                            example: 1
+                          per_page:
+                            type: integer
+                            example: 15
+                          total:
+                            type: integer
+                            example: 0
+                          last_page:
+                            type: integer
+                            example: 1
+                          from:
+                            type: string
+                            example: null
+                          to:
+                            type: string
+                            example: null
         403:
-          description: ''
+          description: 'Insufficient permissions'
           content:
             application/json:
               schema:
@@ -1731,8 +3962,26 @@ paths:
                   message:
                     type: string
                     example: 'You do not have the required permissions.'
+        422:
+          description: 'Invalid filter parameters'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    - 'The user id field must be an integer.'
+                    - 'The status id field must exist in order_statuses table.'
+                properties:
+                  errors:
+                    type: array
+                    example:
+                      - 'The user id field must be an integer.'
+                      - 'The status id field must exist in order_statuses table.'
+                    items:
+                      type: string
       tags:
-        - Orders
+        - 'Order Management'
       requestBody:
         required: false
         content:
@@ -1752,29 +4001,310 @@ paths:
                   nullable: true
   '/api/orders/{id}':
     get:
-      summary: 'Retrieve a specific order.'
+      summary: 'Retrieve a specific order'
       operationId: retrieveASpecificOrder
-      description: ''
+      description: "Get detailed information about a specific order including all order items, user details,\npayment information, and any associated returns or refunds."
       parameters: []
       responses:
         200:
-          description: ''
+          description: 'Order found'
           content:
             application/json:
               schema:
                 type: object
                 example:
                   message: 'Order retrieved successfully.'
-                  data: {  }
+                  data:
+                    id: 43
+                    total_amount: 5998
+                    total_amount_formatted: £59.98
+                    created_at: '2025-01-15T14:20:00.000000Z'
+                    updated_at: '2025-01-15T14:25:00.000000Z'
+                    deleted_at: null
+                    user:
+                      id: 5
+                      name: 'John Smith'
+                      email: john.smith@example.com
+                      email_verified_at: '2025-01-10T08:00:00.000000Z'
+                    status:
+                      id: 3
+                      name: Confirmed
+                    order_items:
+                      -
+                        id: 85
+                        quantity: 2
+                        price: 1499
+                        price_formatted: £14.99
+                        line_total: 2998
+                        line_total_formatted: £29.98
+                        created_at: '2025-01-15T14:20:00.000000Z'
+                        product:
+                          id: 10
+                          name: 'Wireless Headphones'
+                          description: 'High-quality wireless headphones with noise cancellation'
+                          price: 1499
+                          price_formatted: £14.99
+                        product_variant:
+                          id: 3
+                          value: Black
+                          additional_price: 0
+                          product_attribute:
+                            id: 1
+                            name: Color
+                        order_return:
+                          id: 12
+                          reason: 'Product arrived damaged'
+                          status:
+                            id: 1
+                            name: Requested
+                          created_at: '2025-01-16T09:15:00.000000Z'
+                      -
+                        id: 86
+                        quantity: 1
+                        price: 2999
+                        price_formatted: £29.99
+                        line_total: 2999
+                        line_total_formatted: £29.99
+                        created_at: '2025-01-15T14:20:00.000000Z'
+                        product:
+                          id: 15
+                          name: 'Bluetooth Speaker'
+                          description: 'Portable waterproof Bluetooth speaker'
+                          price: 2999
+                          price_formatted: £29.99
+                        product_variant: null
+                        order_return: null
+                    payments:
+                      -
+                        id: 25
+                        amount: 5998
+                        amount_formatted: £59.98
+                        status: Paid
+                        method: stripe
+                        transaction_reference: pi_1234567890abcdef
+                        processed_at: '2025-01-15T14:22:00.000000Z'
+                        created_at: '2025-01-15T14:21:00.000000Z'
                 properties:
                   message:
                     type: string
                     example: 'Order retrieved successfully.'
                   data:
                     type: object
-                    properties: {  }
+                    properties:
+                      id:
+                        type: integer
+                        example: 43
+                      total_amount:
+                        type: integer
+                        example: 5998
+                      total_amount_formatted:
+                        type: string
+                        example: £59.98
+                      created_at:
+                        type: string
+                        example: '2025-01-15T14:20:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2025-01-15T14:25:00.000000Z'
+                      deleted_at:
+                        type: string
+                        example: null
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 5
+                          name:
+                            type: string
+                            example: 'John Smith'
+                          email:
+                            type: string
+                            example: john.smith@example.com
+                          email_verified_at:
+                            type: string
+                            example: '2025-01-10T08:00:00.000000Z'
+                      status:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 3
+                          name:
+                            type: string
+                            example: Confirmed
+                      order_items:
+                        type: array
+                        example:
+                          -
+                            id: 85
+                            quantity: 2
+                            price: 1499
+                            price_formatted: £14.99
+                            line_total: 2998
+                            line_total_formatted: £29.98
+                            created_at: '2025-01-15T14:20:00.000000Z'
+                            product:
+                              id: 10
+                              name: 'Wireless Headphones'
+                              description: 'High-quality wireless headphones with noise cancellation'
+                              price: 1499
+                              price_formatted: £14.99
+                            product_variant:
+                              id: 3
+                              value: Black
+                              additional_price: 0
+                              product_attribute:
+                                id: 1
+                                name: Color
+                            order_return:
+                              id: 12
+                              reason: 'Product arrived damaged'
+                              status:
+                                id: 1
+                                name: Requested
+                              created_at: '2025-01-16T09:15:00.000000Z'
+                          -
+                            id: 86
+                            quantity: 1
+                            price: 2999
+                            price_formatted: £29.99
+                            line_total: 2999
+                            line_total_formatted: £29.99
+                            created_at: '2025-01-15T14:20:00.000000Z'
+                            product:
+                              id: 15
+                              name: 'Bluetooth Speaker'
+                              description: 'Portable waterproof Bluetooth speaker'
+                              price: 2999
+                              price_formatted: £29.99
+                            product_variant: null
+                            order_return: null
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 85
+                            quantity:
+                              type: integer
+                              example: 2
+                            price:
+                              type: integer
+                              example: 1499
+                            price_formatted:
+                              type: string
+                              example: £14.99
+                            line_total:
+                              type: integer
+                              example: 2998
+                            line_total_formatted:
+                              type: string
+                              example: £29.98
+                            created_at:
+                              type: string
+                              example: '2025-01-15T14:20:00.000000Z'
+                            product:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 10
+                                name:
+                                  type: string
+                                  example: 'Wireless Headphones'
+                                description:
+                                  type: string
+                                  example: 'High-quality wireless headphones with noise cancellation'
+                                price:
+                                  type: integer
+                                  example: 1499
+                                price_formatted:
+                                  type: string
+                                  example: £14.99
+                            product_variant:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 3
+                                value:
+                                  type: string
+                                  example: Black
+                                additional_price:
+                                  type: integer
+                                  example: 0
+                                product_attribute:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                      example: 1
+                                    name:
+                                      type: string
+                                      example: Color
+                            order_return:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 12
+                                reason:
+                                  type: string
+                                  example: 'Product arrived damaged'
+                                status:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                      example: 1
+                                    name:
+                                      type: string
+                                      example: Requested
+                                created_at:
+                                  type: string
+                                  example: '2025-01-16T09:15:00.000000Z'
+                      payments:
+                        type: array
+                        example:
+                          -
+                            id: 25
+                            amount: 5998
+                            amount_formatted: £59.98
+                            status: Paid
+                            method: stripe
+                            transaction_reference: pi_1234567890abcdef
+                            processed_at: '2025-01-15T14:22:00.000000Z'
+                            created_at: '2025-01-15T14:21:00.000000Z'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 25
+                            amount:
+                              type: integer
+                              example: 5998
+                            amount_formatted:
+                              type: string
+                              example: £59.98
+                            status:
+                              type: string
+                              example: Paid
+                            method:
+                              type: string
+                              example: stripe
+                            transaction_reference:
+                              type: string
+                              example: pi_1234567890abcdef
+                            processed_at:
+                              type: string
+                              example: '2025-01-15T14:22:00.000000Z'
+                            created_at:
+                              type: string
+                              example: '2025-01-15T14:21:00.000000Z'
         403:
-          description: ''
+          description: 'Insufficient permissions'
           content:
             application/json:
               schema:
@@ -1785,8 +4315,20 @@ paths:
                   message:
                     type: string
                     example: 'You do not have the required permissions.'
+        404:
+          description: 'Order not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No query results for model [App\Models\Order] 999'
+                properties:
+                  message:
+                    type: string
+                    example: 'No query results for model [App\Models\Order] 999'
       tags:
-        - Orders
+        - 'Order Management'
     parameters:
       -
         in: path
@@ -1796,6 +4338,432 @@ paths:
         required: true
         schema:
           type: integer
+      -
+        in: path
+        name: order
+        description: 'The ID of the order to retrieve.'
+        example: 43
+        required: true
+        schema:
+          type: integer
+  '/api/payments/{gateway}/create':
+    post:
+      summary: 'Create or retrieve payment intent'
+      operationId: createOrRetrievePaymentIntent
+      description: "Creates a new Stripe PaymentIntent for the specified order, or returns an existing one if already created.\nThis prevents duplicate payment intents for the same order. The client secret returned should be used\non the frontend to complete the payment with Stripe's client-side libraries."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'New PaymentIntent created'
+                    type: object
+                    example:
+                      status: true
+                      message: 'PaymentIntent created successfully.'
+                      data:
+                        client_secret: pi_1234567890abcdef_secret_xyz789abc123
+                    properties:
+                      status:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: 'PaymentIntent created successfully.'
+                      data:
+                        type: object
+                        properties:
+                          client_secret:
+                            type: string
+                            example: pi_1234567890abcdef_secret_xyz789abc123
+                  -
+                    description: 'Existing PaymentIntent retrieved'
+                    type: object
+                    example:
+                      status: true
+                      message: 'Existing PaymentIntent retrieved.'
+                      data:
+                        client_secret: pi_1234567890abcdef_secret_xyz789abc123
+                    properties:
+                      status:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: 'Existing PaymentIntent retrieved.'
+                      data:
+                        type: object
+                        properties:
+                          client_secret:
+                            type: string
+                            example: pi_1234567890abcdef_secret_xyz789abc123
+                  -
+                    description: 'Order already paid'
+                    type: object
+                    example:
+                      status: true
+                      message: 'Payment has already been processed for this order.'
+                      data: null
+                    properties:
+                      status:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: 'Payment has already been processed for this order.'
+                      data:
+                        type: string
+                        example: null
+        400:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Unsupported gateway'
+                    type: object
+                    example:
+                      status: false
+                      message: 'Unsupported payment gateway'
+                      data: null
+                    properties:
+                      status:
+                        type: boolean
+                        example: false
+                      message:
+                        type: string
+                        example: 'Unsupported payment gateway'
+                      data:
+                        type: string
+                        example: null
+                  -
+                    description: 'Order not eligible for payment'
+                    type: object
+                    example:
+                      status: false
+                      message: 'Order has already been paid or is not in a payable state.'
+                      data: null
+                    properties:
+                      status:
+                        type: boolean
+                        example: false
+                      message:
+                        type: string
+                        example: 'Order has already been paid or is not in a payable state.'
+                      data:
+                        type: string
+                        example: null
+        404:
+          description: 'Order not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: 'No query results for model [App\Models\Order] 999'
+                  data: null
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'No query results for model [App\Models\Order] 999'
+                  data:
+                    type: string
+                    example: null
+        422:
+          description: 'Invalid order data'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    - 'The order id field is required.'
+                    - 'The order id must be an integer.'
+                    - 'The selected order id is invalid.'
+                properties:
+                  errors:
+                    type: array
+                    example:
+                      - 'The order id field is required.'
+                      - 'The order id must be an integer.'
+                      - 'The selected order id is invalid.'
+                    items:
+                      type: string
+        500:
+          description: 'Stripe API error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: 'Unable to create payment intent with Stripe. Please try again.'
+                  data: null
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Unable to create payment intent with Stripe. Please try again.'
+                  data:
+                    type: string
+                    example: null
+      tags:
+        - 'Payment Processing'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                order_id:
+                  type: integer
+                  description: 'The ID of the order to create payment for. Must be a valid, unpaid order.'
+                  example: 123
+                  nullable: false
+              required:
+                - order_id
+    parameters:
+      -
+        in: path
+        name: gateway
+        description: 'The payment gateway to use. Currently only "stripe" is supported.'
+        example: stripe
+        required: true
+        schema:
+          type: string
+  '/api/payments/{gateway}/verify':
+    post:
+      summary: 'Verify payment status'
+      operationId: verifyPaymentStatus
+      description: "Manually verifies the status of a payment with Stripe and updates the local database accordingly.\nThis is useful for handling cases where webhooks might have failed or been delayed.\nIt fetches the latest payment status directly from Stripe and synchronizes it with your database."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Payment verified as successful'
+                    type: object
+                    example:
+                      status: true
+                      message: 'Payment verified'
+                      data:
+                        payment_status: Paid
+                        order_status: Confirmed
+                    properties:
+                      status:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: 'Payment verified'
+                      data:
+                        type: object
+                        properties:
+                          payment_status:
+                            type: string
+                            example: Paid
+                          order_status:
+                            type: string
+                            example: Confirmed
+                  -
+                    description: 'Payment still pending'
+                    type: object
+                    example:
+                      status: true
+                      message: 'Payment verified'
+                      data:
+                        payment_status: Pending
+                        order_status: 'Pending Payment'
+                    properties:
+                      status:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: 'Payment verified'
+                      data:
+                        type: object
+                        properties:
+                          payment_status:
+                            type: string
+                            example: Pending
+                          order_status:
+                            type: string
+                            example: 'Pending Payment'
+                  -
+                    description: 'Payment failed'
+                    type: object
+                    example:
+                      status: true
+                      message: 'Payment verified'
+                      data:
+                        payment_status: Failed
+                        order_status: Failed
+                    properties:
+                      status:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: 'Payment verified'
+                      data:
+                        type: object
+                        properties:
+                          payment_status:
+                            type: string
+                            example: Failed
+                          order_status:
+                            type: string
+                            example: Failed
+        400:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Unsupported gateway'
+                    type: object
+                    example:
+                      status: false
+                      message: 'Unsupported payment gateway'
+                      data: null
+                    properties:
+                      status:
+                        type: boolean
+                        example: false
+                      message:
+                        type: string
+                        example: 'Unsupported payment gateway'
+                      data:
+                        type: string
+                        example: null
+                  -
+                    description: 'Payment amount mismatch'
+                    type: object
+                    example:
+                      status: false
+                      message: 'Payment amount mismatch'
+                      data: null
+                    properties:
+                      status:
+                        type: boolean
+                        example: false
+                      message:
+                        type: string
+                        example: 'Payment amount mismatch'
+                      data:
+                        type: string
+                        example: null
+        404:
+          description: 'Payment not found in database'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: 'Payment not found'
+                  data: null
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Payment not found'
+                  data:
+                    type: string
+                    example: null
+        422:
+          description: 'Validation errors'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    - 'The payment intent id field is required.'
+                    - 'The payment intent id format is invalid. Must be a valid Stripe payment intent ID.'
+                    - 'The order id field is required.'
+                    - 'The selected order id is invalid.'
+                properties:
+                  errors:
+                    type: array
+                    example:
+                      - 'The payment intent id field is required.'
+                      - 'The payment intent id format is invalid. Must be a valid Stripe payment intent ID.'
+                      - 'The order id field is required.'
+                      - 'The selected order id is invalid.'
+                    items:
+                      type: string
+        500:
+          description: 'Stripe API error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: false
+                  message: "Unable to retrieve payment from Stripe: No such payment_intent: 'pi_invalid'"
+                  data: null
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Unable to retrieve payment from Stripe: No such payment_intent: 'pi_invalid'"
+                  data:
+                    type: string
+                    example: null
+      tags:
+        - 'Payment Processing'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payment_intent_id:
+                  type: string
+                  description: 'The Stripe PaymentIntent ID to verify. Must be a valid Stripe PaymentIntent ID format.'
+                  example: pi_1234567890abcdef
+                  nullable: false
+                order_id:
+                  type: integer
+                  description: 'The ID of the order associated with this payment for verification.'
+                  example: 123
+                  nullable: false
+              required:
+                - payment_intent_id
+                - order_id
+    parameters:
+      -
+        in: path
+        name: gateway
+        description: 'The payment gateway used. Currently only "stripe" is supported.'
+        example: stripe
+        required: true
+        schema:
+          type: string
   /api/admin/payments:
     get:
       summary: 'Retrieve paginated list of payments.'
@@ -2016,11 +4984,11 @@ paths:
         required: true
         schema:
           type: integer
-  '/api/payments/{gateway}/create':
+  /api/payments/stripe/webhook:
     post:
-      summary: 'Initiate Payment'
-      operationId: initiatePayment
-      description: "Creates or retrieves a Stripe PaymentIntent for a given order. If a payment already exists,\nit will return the existing client secret to avoid duplicate charges."
+      summary: 'Stripe webhook listener'
+      operationId: stripeWebhookListener
+      description: "This endpoint receives webhook events from Stripe when payment-related events occur.\nIt automatically processes payment status updates, handles refunds, and manages order status changes.\nThis endpoint is called directly by Stripe's servers and requires proper webhook signature verification.\n\n**Important**: This endpoint should be excluded from CSRF protection and rate limiting."
       parameters: []
       responses:
         200:
@@ -2030,32 +4998,11 @@ paths:
               schema:
                 oneOf:
                   -
-                    description: ''
+                    description: 'Webhook processed successfully'
                     type: object
                     example:
                       status: true
-                      message: 'PaymentIntent created successfully.'
-                      data:
-                        client_secret: pi_1Hxxxxxxxxxxxx_secret_xxxxxxxxx
-                    properties:
-                      status:
-                        type: boolean
-                        example: true
-                      message:
-                        type: string
-                        example: 'PaymentIntent created successfully.'
-                      data:
-                        type: object
-                        properties:
-                          client_secret:
-                            type: string
-                            example: pi_1Hxxxxxxxxxxxx_secret_xxxxxxxxx
-                  -
-                    description: 'Already Paid'
-                    type: object
-                    example:
-                      status: true
-                      message: 'Payment has already been processed for this order.'
+                      message: 'Webhook update.'
                       data: null
                     properties:
                       status:
@@ -2063,102 +5010,44 @@ paths:
                         example: true
                       message:
                         type: string
-                        example: 'Payment has already been processed for this order.'
+                        example: 'Webhook update.'
                       data:
                         type: string
                         example: null
-        400:
-          description: 'Unsupported Gateway'
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  status: false
-                  message: 'Unsupported payment gateway'
-                  data: null
-                properties:
-                  status:
-                    type: boolean
-                    example: false
-                  message:
-                    type: string
-                    example: 'Unsupported payment gateway'
-                  data:
-                    type: string
-                    example: null
-        404:
-          description: 'Order Not Found'
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  status: false
-                  message: 'No query results for model [App\Models\Order] 999'
-                  data: null
-                properties:
-                  status:
-                    type: boolean
-                    example: false
-                  message:
-                    type: string
-                    example: 'No query results for model [App\Models\Order] 999'
-                  data:
-                    type: string
-                    example: null
-      tags:
-        - Payments
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                order_id:
-                  type: integer
-                  description: 'The ID of the order being paid for.'
-                  example: 123
-                  nullable: false
-              required:
-                - order_id
-    parameters:
-      -
-        in: path
-        name: gateway
-        description: 'The payment gateway to use. Currently supported: `stripe`.'
-        example: stripe
-        required: true
-        schema:
-          type: string
-  /api/payments/stripe/webhook:
-    post:
-      summary: 'Stripe Webhook Listener'
-      operationId: stripeWebhookListener
-      description: "This endpoint is triggered by Stripe when a payment event occurs (e.g., payment succeeded, failed).\nIt verifies the webhook signature and processes the payment status accordingly."
-      parameters: []
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  status: true
-                  message: 'Webhook update.'
-                  data: null
-                properties:
-                  status:
-                    type: boolean
-                    example: true
-                  message:
-                    type: string
-                    example: 'Webhook update.'
-                  data:
-                    type: string
-                    example: null
+                  -
+                    description: 'Payment success webhook'
+                    type: object
+                    example:
+                      status: true
+                      message: 'Payment success webhook processed.'
+                      data: null
+                    properties:
+                      status:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: 'Payment success webhook processed.'
+                      data:
+                        type: string
+                        example: null
+                  -
+                    description: 'Refund webhook processed'
+                    type: object
+                    example:
+                      status: true
+                      message: 'External refund processed.'
+                      data: null
+                    properties:
+                      status:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: 'External refund processed.'
+                      data:
+                        type: string
+                        example: null
         400:
           description: ''
           content:
@@ -2166,7 +5055,7 @@ paths:
               schema:
                 oneOf:
                   -
-                    description: 'Invalid Signature or Payload'
+                    description: 'Invalid Stripe signature'
                     type: object
                     example:
                       status: false
@@ -2183,7 +5072,7 @@ paths:
                         type: string
                         example: null
                   -
-                    description: 'Invalid Payload Format'
+                    description: 'Invalid payload format'
                     type: object
                     example:
                       status: false
@@ -2199,79 +5088,15 @@ paths:
                       data:
                         type: string
                         example: null
-      tags:
-        - Payments
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                object:
-                  type: $event
-                  description: 'Stripe webhook payload. The full JSON payload sent by Stripe will be validated internally.'
-                  example: architecto
-                  nullable: false
-    parameters:
-      -
-        in: path
-        name: none
-        description: 'Optional parameter.'
-        required: true
-        schema:
-          type: string
-        examples:
-          omitted:
-            summary: 'When the value is omitted'
-            value: ''
-          present:
-            summary: 'When the value is present'
-            value: architecto
-  '/api/payments/{gateway}/verify':
-    post:
-      summary: 'Verify Payment Status'
-      operationId: verifyPaymentStatus
-      description: "Verifies the current status of a payment with the chosen payment gateway and updates\nthe local database accordingly. This is useful for handling cases where webhooks might\nhave failed or been delayed."
-      parameters: []
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  status: true
-                  message: 'Payment verified'
-                  data:
-                    payment_status: paid
-                    order_status: confirmed
-                properties:
-                  status:
-                    type: boolean
-                    example: true
-                  message:
-                    type: string
-                    example: 'Payment verified'
-                  data:
-                    type: object
-                    properties:
-                      payment_status:
-                        type: string
-                        example: paid
-                      order_status:
-                        type: string
-                        example: confirmed
         500:
-          description: 'Stripe API Error'
+          description: 'Webhook processing error'
           content:
             application/json:
               schema:
                 type: object
                 example:
                   status: false
-                  message: "Unable to retrieve payment from Stripe: No such payment_intent: 'pi_invalid'"
+                  message: 'An error occurred while processing the webhook.'
                   data: null
                 properties:
                   status:
@@ -2279,12 +5104,12 @@ paths:
                     example: false
                   message:
                     type: string
-                    example: "Unable to retrieve payment from Stripe: No such payment_intent: 'pi_invalid'"
+                    example: 'An error occurred while processing the webhook.'
                   data:
                     type: string
                     example: null
       tags:
-        - Payments
+        - 'Payment Webhooks'
       requestBody:
         required: true
         content:
@@ -2292,28 +5117,51 @@ paths:
             schema:
               type: object
               properties:
-                payment_intent_id:
+                id:
                   type: string
-                  description: 'The Stripe Payment Intent ID to verify.'
-                  example: pi_1Hxxxxxxxxxxxx
+                  description: 'The unique identifier for the webhook event.'
+                  example: evt_1234567890abcdef
                   nullable: false
-                order_id:
+                object:
+                  type: string
+                  description: 'Always "event" for webhook events.'
+                  example: event
+                  nullable: false
+                type:
+                  type: string
+                  description: 'The type of event (e.g., payment_intent.succeeded, charge.refunded).'
+                  example: payment_intent.succeeded
+                  nullable: false
+                data:
+                  type: object
+                  description: 'The event data containing the relevant object (payment_intent, charge, etc.).'
+                  example: []
+                  nullable: false
+                  properties:
+                    object:
+                      type: object
+                      description: 'The main object for this event (PaymentIntent, Charge, Refund, etc.).'
+                      example: []
+                      nullable: false
+                      properties: {  }
+                created:
                   type: integer
-                  description: 'The ID of the order associated with this payment.'
-                  example: 123
+                  description: 'Unix timestamp when the event was created.'
+                  example: 1640995200
+                  nullable: false
+                livemode:
+                  type: boolean
+                  description: 'Whether this event is from live mode (true) or test mode (false).'
+                  example: false
                   nullable: false
               required:
-                - payment_intent_id
-                - order_id
-    parameters:
-      -
-        in: path
-        name: gateway
-        description: ''
-        example: architecto
-        required: true
-        schema:
-          type: string
+                - id
+                - object
+                - type
+                - data
+                - created
+                - livemode
+      security: []
   /api/admin/permissions:
     get:
       summary: 'Retrieve all permissions.'
@@ -5452,7 +8300,10 @@ tags:
     name: 'Product Tags'
     description: ''
   -
-    name: Orders
+    name: 'Order Management'
+    description: ''
+  -
+    name: 'Payment Processing'
     description: ''
   -
     name: Payment
@@ -5461,7 +8312,7 @@ tags:
     name: 'Payment Methods'
     description: ''
   -
-    name: Payments
+    name: 'Payment Webhooks'
     description: ''
   -
     name: Permissions

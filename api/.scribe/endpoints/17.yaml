@@ -1,0 +1,181 @@
+name: 'Payment Webhooks'
+description: ''
+endpoints:
+  -
+    httpMethods:
+      - POST
+    uri: api/payments/stripe/webhook
+    metadata:
+      groupName: 'Payment Webhooks'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Stripe webhook listener'
+      description: |-
+        This endpoint receives webhook events from Stripe when payment-related events occur.
+        It automatically processes payment status updates, handles refunds, and manages order status changes.
+        This endpoint is called directly by Stripe's servers and requires proper webhook signature verification.
+
+        **Important**: This endpoint should be excluded from CSRF protection and rate limiting.
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      id:
+        name: id
+        description: 'The unique identifier for the webhook event.'
+        required: true
+        example: evt_1234567890abcdef
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      object:
+        name: object
+        description: 'Always "event" for webhook events.'
+        required: true
+        example: event
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      type:
+        name: type
+        description: 'The type of event (e.g., payment_intent.succeeded, charge.refunded).'
+        required: true
+        example: payment_intent.succeeded
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      data:
+        name: data
+        description: 'The event data containing the relevant object (payment_intent, charge, etc.).'
+        required: true
+        example: []
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      data.object:
+        name: data.object
+        description: 'The main object for this event (PaymentIntent, Charge, Refund, etc.).'
+        required: true
+        example: []
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      created:
+        name: created
+        description: 'Unix timestamp when the event was created.'
+        required: true
+        example: 1640995200
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      livemode:
+        name: livemode
+        description: 'Whether this event is from live mode (true) or test mode (false).'
+        required: true
+        example: false
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      id: evt_1234567890abcdef
+      object: event
+      type: payment_intent.succeeded
+      data:
+        object: []
+      created: 1640995200
+      livemode: false
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "status": true,
+            "message": "Webhook update.",
+            "data": null
+          }
+        headers: []
+        description: 'Webhook processed successfully'
+        custom: []
+      -
+        status: 200
+        content: |-
+          {
+            "status": true,
+            "message": "Payment success webhook processed.",
+            "data": null
+          }
+        headers: []
+        description: 'Payment success webhook'
+        custom: []
+      -
+        status: 200
+        content: |-
+          {
+            "status": true,
+            "message": "External refund processed.",
+            "data": null
+          }
+        headers: []
+        description: 'Refund webhook processed'
+        custom: []
+      -
+        status: 400
+        content: |-
+          {
+            "status": false,
+            "message": "Invalid Stripe signature",
+            "data": null
+          }
+        headers: []
+        description: 'Invalid Stripe signature'
+        custom: []
+      -
+        status: 400
+        content: |-
+          {
+            "status": false,
+            "message": "Invalid payload",
+            "data": null
+          }
+        headers: []
+        description: 'Invalid payload format'
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+            "status": false,
+            "message": "An error occurred while processing the webhook.",
+            "data": null
+          }
+        headers: []
+        description: 'Webhook processing error'
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
