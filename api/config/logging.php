@@ -65,6 +65,33 @@ return [
             'replace_placeholders' => true,
         ],
 
+        'security' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/security/security.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 90,
+            'replace_placeholders' => true,
+            'permission' => 0600,
+        ],
+
+        'audit' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/audit/audit.log'),
+            'level' => env('LOG_LEVEL', 'info'),
+            'days' => 365,
+            'replace_placeholders' => true,
+            'permission' => 0600,
+        ],
+
+        'suspicious' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/security/suspicious.log'),
+            'level' => env('LOG_LEVEL', 'warning'),
+            'days' => 180,
+            'replace_placeholders' => true,
+            'permission' => 0600,
+        ],
+
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),

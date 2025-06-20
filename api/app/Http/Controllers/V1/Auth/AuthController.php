@@ -8,18 +8,22 @@ use App\Requests\V1\LoginUserRequest;
 use App\Requests\V1\RegisterUserRequest;
 use App\Requests\V1\ForgotPasswordRequest;
 use App\Requests\V1\PasswordResetRequest;
+use App\Services\V1\Logger\SecurityLog;
 use App\Traits\V1\ApiResponses;
 use \Exception;
+
 
 class AuthController extends Controller
 {
     use ApiResponses;
 
     protected $userAuth;
+    protected SecurityLog $securityLogger;
 
-    public function __construct(UserAuth $userAuth)
+    public function __construct(UserAuth $userAuth, SecurityLog $securityLogger)
     {
         $this->userAuth = $userAuth;
+        $this->securityLogger = $securityLogger;
     }
 
     /**
@@ -46,8 +50,19 @@ class AuthController extends Controller
         $request->validated($request->only(['name', 'email', 'password', 'password_confirmation']));
 
         try {
-            return $this->userAuth->register($request);
+            $result = $this->userAuth->register($request);
+
+            $this->securityLogger->logAuthEvent('registration_success', $request, [
+                'user_email' => $request->email
+            ]);
+
+            return $result;
         } catch (Exception $e) {
+            $this->securityLogger->logAuthEvent('registration_failed', $request, [
+                'error' => $e->getMessage(),
+                'email' => $request->email
+            ]);
+
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
     }
@@ -82,8 +97,21 @@ class AuthController extends Controller
         $request->validated($request->only(['email', 'password', 'remember']));
 
         try {
-            return $this->userAuth->login($request);
+            $result = $this->userAuth->login($request);
+
+            $this->securityLogger->logAuthEvent('logout_success', request());
+
+            $this->securityLogger->logAuthEvent('login_success', $request, [
+                'user_email' => $request->email
+            ]);
+
+            return $result;
         } catch (Exception $e) {
+            $this->securityLogger->logAuthEvent('login_failed', $request, [
+                'error' => $e->getMessage(),
+                'email' => $request->email
+            ]);
+
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
     }

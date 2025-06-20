@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\V1\Logger\SecurityLog;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 use App\Models\User;
@@ -21,6 +22,10 @@ class AppServiceProvider extends ServiceProvider
     {
         ResetPassword::createUrlUsing(function (User $user, string $token) {
             return config('services.app_frontend_url') . config('services.app_frontend_pwr') . '?token=' . $token;
+        });
+
+        $this->app->singleton(SecurityLog::class, function ($app) {
+            return new SecurityLog();
         });
     }
 }

@@ -2,8 +2,11 @@
 
 namespace App\Http\Middleware\V1;
 
+use App\Services\V1\Logger\SecurityLog;
 use Closure;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
 
 class SecureFileUpload
@@ -42,6 +45,11 @@ class SecureFileUpload
         '\x00\x00\x01\xBA',
     ];
 
+    public function __construct(SecurityLog $securityLogger)
+    {
+        $this->securityLogger = $securityLogger;
+    }
+
     public function handle(Request $request, Closure $next): Response
     {
         foreach ($request->allFiles() as $key => $files) {
@@ -59,11 +67,28 @@ class SecureFileUpload
 
     protected function validateFile(UploadedFile $file, string $fieldName): void
     {
-        $this->validateFileSize($file, $fieldName);
-        $this->validateFileExtension($file);
-        $this->validateMimeType($file);
-        $this->validateFileContent($file);
-        $this->scanForThreats($file);
+        try {
+            $this->validateFileSize($file, $fieldName);
+            $this->validateFileExtension($file);
+            $this->validateMimeType($file);
+            $this->validateFileContent($file);
+            $this->scanForThreats($file);
+
+            $this->securityLogger->logFileUpload(request(), 'success', [
+                'filename' => $file->getClientOriginalName(),
+                'size' => $file->getSize(),
+                'mime_type' => $file->getMimeType(),
+                'field' => $fieldName
+            ]);
+        } catch (Exception $e) {
+            $this->securityLogger->logFileUpload(request(), 'blocked', [
+                'filename' => $file->getClientOriginalName(),
+                'size' => $file->getSize(),
+                'mime_type' => $file->getMimeType(),
+                'field' => $fieldName,
+                'reason' => $e->getMessage()
+            ]);
+        }
     }
 
     protected function validateFileSize(UploadedFile $file, string $fieldName): void

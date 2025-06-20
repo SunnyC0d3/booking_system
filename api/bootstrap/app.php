@@ -3,7 +3,9 @@
 use App\Http\Middleware\V1\DynamicRateLimit;
 use App\Http\Middleware\V1\EnsureEmailIsVerified;
 use App\Http\Middleware\V1\Role;
+use App\Http\Middleware\V1\SecureFileUpload;
 use App\Http\Middleware\V1\SecurityHeaders;
+use App\Http\Middleware\V1\SecurityLogger;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -23,6 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->api(append: [
             SecurityHeaders::class,
+            SecurityLogger::class
         ]);
 
         $middleware->alias([
@@ -32,6 +35,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'roles' => Role::class,
             'emailVerified' => EnsureEmailIsVerified::class,
             'rate_limit' => DynamicRateLimit::class,
+            'security_logger' => SecurityLogger::class,
+            'secure_upload' => SecureFileUpload::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
