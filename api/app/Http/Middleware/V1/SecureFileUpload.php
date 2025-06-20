@@ -180,7 +180,6 @@ class SecureFileUpload
 
     protected function scanForThreats(UploadedFile $file): void
     {
-        // For images, check for embedded scripts
         if (str_starts_with($file->getMimeType(), 'image/')) {
             $this->scanImageForThreats($file);
         }

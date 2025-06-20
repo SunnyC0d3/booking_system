@@ -1,11 +1,14 @@
 <?php
 
+use App\Http\Middleware\V1\CheckAccountLock;
+use App\Http\Middleware\V1\CheckPasswordExpiry;
 use App\Http\Middleware\V1\DynamicRateLimit;
 use App\Http\Middleware\V1\EnsureEmailIsVerified;
 use App\Http\Middleware\V1\Role;
 use App\Http\Middleware\V1\SecureFileUpload;
 use App\Http\Middleware\V1\SecurityHeaders;
 use App\Http\Middleware\V1\SecurityLogger;
+use App\Http\Middleware\V1\SecurityMonitoring;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -25,7 +28,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->api(append: [
             SecurityHeaders::class,
-            SecurityLogger::class
+            SecurityLogger::class,
+            SecurityMonitoring::class,
         ]);
 
         $middleware->alias([
@@ -37,6 +41,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'rate_limit' => DynamicRateLimit::class,
             'security_logger' => SecurityLogger::class,
             'secure_upload' => SecureFileUpload::class,
+            'account_lock' => CheckAccountLock::class,
+            'password_expiry' => CheckPasswordExpiry::class,
+            'security_monitor' => SecurityMonitoring::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

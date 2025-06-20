@@ -10,11 +10,7 @@ use Intervention\Image\Facades\Image;
 
 class SecureMedia
 {
-    public function addSecureMedia(
-        HasMedia     $model,
-        UploadedFile $file,
-        string       $collection = 'default'
-    ): Media
+    public function addSecureMedia(HasMedia $model, UploadedFile $file, string $collection = 'default'): Media
     {
         $secureFilename = $this->generateSecureFilename($file);
         $processedFile = $this->processFile($file);
