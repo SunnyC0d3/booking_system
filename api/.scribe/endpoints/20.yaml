@@ -1,0 +1,691 @@
+name: 'Product Catalog'
+description: ''
+endpoints:
+  -
+    httpMethods:
+      - GET
+    uri: api/products
+    metadata:
+      groupName: 'Product Catalog'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Retrieve paginated list of products'
+      description: |-
+        Get a paginated and filtered list of active products available for purchase.
+        This endpoint supports advanced filtering by name, price range, category, search terms, and more.
+        Products include detailed information such as variants, media, categories, tags, and vendor details.
+        This is the main endpoint for product browsing and search functionality.
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      filter:
+        name: filter
+        description: 'optional Array of filter parameters to narrow down results.'
+        required: false
+        example:
+          - architecto
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      'filter[name]':
+        name: 'filter[name]'
+        description: 'optional Filter products by name (partial match supported).'
+        required: false
+        example: wireless
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      'filter[search]':
+        name: 'filter[search]'
+        description: 'optional Search across product names and descriptions.'
+        required: false
+        example: 'bluetooth headphones'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      'filter[price]':
+        name: 'filter[price]'
+        description: 'optional Filter by price range in pounds. Single value or comma-separated min,max.'
+        required: false
+        example: '10.00,50.00'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      'filter[category]':
+        name: 'filter[category]'
+        description: 'optional Filter by category ID(s). Single ID or comma-separated multiple IDs.'
+        required: false
+        example: '5,12,18'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      'filter[created_at]':
+        name: 'filter[created_at]'
+        description: 'optional Filter by creation date. Single date or comma-separated date range (YYYY-MM-DD).'
+        required: false
+        example: '2025-01-01,2025-01-31'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      'filter[include]':
+        name: 'filter[include]'
+        description: 'optional Include related data. Comma-separated values: vendor,variants,category,tags,media.'
+        required: false
+        example: 'vendor,variants,category'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      page:
+        name: page
+        description: 'optional Page number for pagination. Default: 1.'
+        required: false
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      per_page:
+        name: per_page
+        description: 'optional Number of products per page (max 100). Default: 15.'
+        required: false
+        example: 24
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      sort:
+        name: sort
+        description: "optional Sort products. Prefix with '-' for descending. Available: name, price, created_at, updated_at."
+        required: false
+        example: '-price,name'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanQueryParameters:
+      filter:
+        - architecto
+      'filter[name]': wireless
+      'filter[search]': 'bluetooth headphones'
+      'filter[price]': '10.00,50.00'
+      'filter[category]': '5,12,18'
+      'filter[created_at]': '2025-01-01,2025-01-31'
+      'filter[include]': 'vendor,variants,category'
+      page: 2
+      per_page: 24
+      sort: '-price,name'
+    bodyParameters:
+      filter:
+        name: filter
+        description: ''
+        required: false
+        example: null
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.name:
+        name: filter.name
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: b
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.price:
+        name: filter.price
+        description: 'Must match the regex /^\d+(\.\d{1,2})?(,\d+(\.\d{1,2})?)*$/.'
+        required: false
+        example: '9,3.1)'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.category:
+        name: filter.category
+        description: 'Must match the regex /^(\d,?)+$/.'
+        required: false
+        example: '9,31'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.quantity:
+        name: filter.quantity
+        description: 'Must be at least 0.'
+        required: false
+        example: 8
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.created_at:
+        name: filter.created_at
+        description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
+        required: false
+        example: '2559-31-42'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.updated_at:
+        name: filter.updated_at
+        description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
+        required: false
+        example: '2559-31-42'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.search:
+        name: filter.search
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: h
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.include:
+        name: filter.include
+        description: 'Must match the regex /^(\w+(,\w+)*)?$/.'
+        required: false
+        example: 'uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      page:
+        name: page
+        description: 'Must be at least 1.'
+        required: false
+        example: 4
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      per_page:
+        name: per_page
+        description: 'Must be at least 1. Must not be greater than 100.'
+        required: false
+        example: 9
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      sort:
+        name: sort
+        description: 'Must match the regex /^(-?[a-zA-Z0-9_]+)(,-?[a-zA-Z0-9_]+)*$/.'
+        required: false
+        example: 'y8p,Bm,-dp,-Zm,-GH'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      filter:
+        name: b
+        price: '9,3.1)'
+        category: '9,31'
+        quantity: 8
+        created_at: '2559-31-42'
+        updated_at: '2559-31-42'
+        search: h
+        include: 'uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv'
+      page: 4
+      per_page: 9
+      sort: 'y8p,Bm,-dp,-Zm,-GH'
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Products retrieved successfully.",
+            "data": {
+              "data": [
+                {
+                  "id": 15,
+                  "name": "Wireless Bluetooth Headphones",
+                  "description": "Premium quality wireless headphones with active noise cancellation and 30-hour battery life.",
+                  "price": 7999,
+                  "price_formatted": "£79.99",
+                  "quantity": 45,
+                  "created_at": "2025-01-10T14:30:00.000000Z",
+                  "updated_at": "2025-01-15T09:22:00.000000Z",
+                  "deleted_at": null,
+                  "product_status": {
+                    "id": 1,
+                    "name": "Active"
+                  },
+                  "category": {
+                    "id": 5,
+                    "name": "Audio Devices",
+                    "parent_id": 2
+                  },
+                  "vendor": {
+                    "id": 8,
+                    "name": "AudioTech Solutions",
+                    "description": "Premium audio equipment manufacturer",
+                    "logo": "https://yourapi.com/storage/vendor-logos/audiotech-logo.jpg"
+                  },
+                  "variants": [
+                    {
+                      "id": 23,
+                      "value": "Black",
+                      "additional_price": 0,
+                      "additional_price_formatted": null,
+                      "quantity": 25,
+                      "product_attribute": {
+                        "id": 1,
+                        "name": "Color"
+                      }
+                    },
+                    {
+                      "id": 24,
+                      "value": "White",
+                      "additional_price": 500,
+                      "additional_price_formatted": "£5.00",
+                      "quantity": 20,
+                      "product_attribute": {
+                        "id": 1,
+                        "name": "Color"
+                      }
+                    }
+                  ],
+                  "tags": [
+                    {
+                      "id": 3,
+                      "name": "wireless"
+                    },
+                    {
+                      "id": 7,
+                      "name": "bluetooth"
+                    },
+                    {
+                      "id": 12,
+                      "name": "noise-cancelling"
+                    }
+                  ],
+                  "featured_image": "https://yourapi.com/storage/products/headphones-featured.jpg",
+                  "gallery": [
+                    {
+                      "id": 45,
+                      "url": "https://yourapi.com/storage/products/headphones-gallery-1.jpg",
+                      "name": "Front view",
+                      "file_name": "headphones-front.jpg",
+                      "mime_type": "image/jpeg",
+                      "size": 245760
+                    },
+                    {
+                      "id": 46,
+                      "url": "https://yourapi.com/storage/products/headphones-gallery-2.jpg",
+                      "name": "Side view",
+                      "file_name": "headphones-side.jpg",
+                      "mime_type": "image/jpeg",
+                      "size": 198432
+                    }
+                  ],
+                  "media_count": {
+                    "featured_image": 1,
+                    "gallery": 2
+                  }
+                },
+                {
+                  "id": 22,
+                  "name": "Bluetooth Portable Speaker",
+                  "description": "Compact waterproof speaker with 12-hour battery and crystal clear sound.",
+                  "price": 4999,
+                  "price_formatted": "£49.99",
+                  "quantity": 32,
+                  "created_at": "2025-01-08T11:15:00.000000Z",
+                  "updated_at": "2025-01-14T16:45:00.000000Z",
+                  "deleted_at": null,
+                  "product_status": {
+                    "id": 1,
+                    "name": "Active"
+                  },
+                  "category": {
+                    "id": 5,
+                    "name": "Audio Devices",
+                    "parent_id": 2
+                  },
+                  "vendor": {
+                    "id": 12,
+                    "name": "SoundWave Electronics",
+                    "description": "Innovative portable audio solutions"
+                  },
+                  "variants": [],
+                  "tags": [
+                    {
+                      "id": 3,
+                      "name": "wireless"
+                    },
+                    {
+                      "id": 7,
+                      "name": "bluetooth"
+                    },
+                    {
+                      "id": 15,
+                      "name": "waterproof"
+                    }
+                  ],
+                  "featured_image": "https://yourapi.com/storage/products/speaker-featured.jpg",
+                  "gallery": [],
+                  "media_count": {
+                    "featured_image": 1,
+                    "gallery": 0
+                  }
+                }
+              ],
+              "current_page": 1,
+              "per_page": 15,
+              "total": 28,
+              "last_page": 2,
+              "from": 1,
+              "to": 15,
+              "path": "https://yourapi.com/api/v1/products",
+              "first_page_url": "https://yourapi.com/api/v1/products?page=1",
+              "last_page_url": "https://yourapi.com/api/v1/products?page=2",
+              "next_page_url": "https://yourapi.com/api/v1/products?page=2",
+              "prev_page_url": null
+            }
+          }
+        headers: []
+        description: 'Products found with filters'
+        custom: []
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Products retrieved successfully.",
+            "data": {
+              "data": [],
+              "current_page": 1,
+              "per_page": 15,
+              "total": 0,
+              "last_page": 1,
+              "from": null,
+              "to": null
+            }
+          }
+        headers: []
+        description: 'No products found'
+        custom: []
+      -
+        status: 400
+        content: |-
+          {
+            "message": "Invalid sort field. Available fields: name, price, created_at, updated_at"
+          }
+        headers: []
+        description: 'Invalid sort parameter'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "errors": [
+              "The filter.price field must match the format: number or number,number.",
+              "The filter.category field must contain only comma-separated numbers.",
+              "The filter.created_at field must be a valid date or date range in YYYY-MM-DD format."
+            ]
+          }
+        headers: []
+        description: 'Invalid filter parameters'
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/products/{id}'
+    metadata:
+      groupName: 'Product Catalog'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Retrieve a specific product'
+      description: |-
+        Get detailed information about a specific product including all variants, media, category details,
+        vendor information, and tags. This endpoint provides complete product data needed for product detail pages,
+        including high-resolution images, pricing for all variants, and inventory levels.
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the product.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      product:
+        name: product
+        description: 'The ID of the product to retrieve.'
+        required: true
+        example: 15
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+      product: 15
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Product retrieved successfully.",
+            "data": {
+              "id": 15,
+              "name": "Wireless Bluetooth Headphones",
+              "description": "Premium quality wireless headphones with active noise cancellation, 30-hour battery life, and superior sound quality. Features include touch controls, voice assistant support, and comfortable over-ear design perfect for long listening sessions.",
+              "price": 7999,
+              "price_formatted": "£79.99",
+              "quantity": 45,
+              "created_at": "2025-01-10T14:30:00.000000Z",
+              "updated_at": "2025-01-15T09:22:00.000000Z",
+              "deleted_at": null,
+              "product_status": {
+                "id": 1,
+                "name": "Active"
+              },
+              "category": {
+                "id": 5,
+                "name": "Audio Devices",
+                "parent_id": 2
+              },
+              "vendor": {
+                "id": 8,
+                "name": "AudioTech Solutions",
+                "description": "Premium audio equipment manufacturer specializing in wireless technology",
+                "logo": "https://yourapi.com/storage/vendor-logos/audiotech-logo.jpg",
+                "media": [
+                  {
+                    "id": 12,
+                    "url": "https://yourapi.com/storage/vendor-logos/audiotech-logo.jpg",
+                    "name": "AudioTech Logo",
+                    "file_name": "audiotech-logo.jpg",
+                    "mime_type": "image/jpeg",
+                    "size": 45672
+                  }
+                ],
+                "products_count": 23
+              },
+              "variants": [
+                {
+                  "id": 23,
+                  "value": "Black",
+                  "additional_price": 0,
+                  "additional_price_formatted": null,
+                  "quantity": 25,
+                  "created_at": "2025-01-10T14:35:00.000000Z",
+                  "updated_at": "2025-01-15T09:22:00.000000Z",
+                  "product_attribute": {
+                    "id": 1,
+                    "name": "Color"
+                  }
+                },
+                {
+                  "id": 24,
+                  "value": "White",
+                  "additional_price": 500,
+                  "additional_price_formatted": "£5.00",
+                  "quantity": 20,
+                  "created_at": "2025-01-10T14:35:00.000000Z",
+                  "updated_at": "2025-01-15T09:22:00.000000Z",
+                  "product_attribute": {
+                    "id": 1,
+                    "name": "Color"
+                  }
+                },
+                {
+                  "id": 25,
+                  "value": "32GB",
+                  "additional_price": 2000,
+                  "additional_price_formatted": "£20.00",
+                  "quantity": 15,
+                  "created_at": "2025-01-10T14:35:00.000000Z",
+                  "updated_at": "2025-01-15T09:22:00.000000Z",
+                  "product_attribute": {
+                    "id": 4,
+                    "name": "Storage"
+                  }
+                }
+              ],
+              "tags": [
+                {
+                  "id": 3,
+                  "name": "wireless",
+                  "products_count": 12
+                },
+                {
+                  "id": 7,
+                  "name": "bluetooth",
+                  "products_count": 15
+                },
+                {
+                  "id": 12,
+                  "name": "noise-cancelling",
+                  "products_count": 6
+                },
+                {
+                  "id": 18,
+                  "name": "premium",
+                  "products_count": 8
+                }
+              ],
+              "featured_image": "https://yourapi.com/storage/products/headphones-featured.jpg",
+              "gallery": [
+                {
+                  "id": 45,
+                  "url": "https://yourapi.com/storage/products/headphones-gallery-1.jpg",
+                  "name": "Front view",
+                  "file_name": "headphones-front.jpg",
+                  "mime_type": "image/jpeg",
+                  "size": 245760
+                },
+                {
+                  "id": 46,
+                  "url": "https://yourapi.com/storage/products/headphones-gallery-2.jpg",
+                  "name": "Side view",
+                  "file_name": "headphones-side.jpg",
+                  "mime_type": "image/jpeg",
+                  "size": 198432
+                },
+                {
+                  "id": 47,
+                  "url": "https://yourapi.com/storage/products/headphones-gallery-3.jpg",
+                  "name": "Package contents",
+                  "file_name": "headphones-package.jpg",
+                  "mime_type": "image/jpeg",
+                  "size": 312584
+                }
+              ],
+              "media_count": {
+                "featured_image": 1,
+                "gallery": 3
+              }
+            }
+          }
+        headers: []
+        description: 'Product found'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\Product] 999"
+          }
+        headers: []
+        description: 'Product not found'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "Product is not available for viewing"
+          }
+        headers: []
+        description: 'Product not active'
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []

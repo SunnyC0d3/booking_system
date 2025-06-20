@@ -1,4 +1,4 @@
-name: 'Product Category'
+name: 'Product Category Management'
 description: ''
 endpoints:
   -
@@ -6,12 +6,16 @@ endpoints:
       - GET
     uri: api/admin/product-categories
     metadata:
-      groupName: 'Product Category'
+      groupName: 'Product Category Management'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
       title: 'Get all product categories'
-      description: ''
+      description: |-
+        Retrieve a complete hierarchical list of all product categories in the system. Categories
+        help organize products for better navigation and filtering. This endpoint returns both
+        parent categories and their child subcategories, enabling administrators to understand
+        the complete category structure and manage product organization effectively.
       authenticated: true
       custom: []
     headers:
@@ -35,12 +39,92 @@ endpoints:
                   {
                       "id": 1,
                       "name": "Electronics",
-                      "children": []
+                      "parent_id": null,
+                      "created_at": "2024-12-01T10:00:00.000000Z",
+                      "updated_at": "2024-12-01T10:00:00.000000Z",
+                      "children": [
+                          {
+                              "id": 2,
+                              "name": "Smartphones",
+                              "parent_id": 1,
+                              "created_at": "2024-12-01T10:05:00.000000Z",
+                              "updated_at": "2024-12-01T10:05:00.000000Z",
+                              "children": []
+                          },
+                          {
+                              "id": 3,
+                              "name": "Laptops",
+                              "parent_id": 1,
+                              "created_at": "2024-12-01T10:10:00.000000Z",
+                              "updated_at": "2024-12-01T10:10:00.000000Z",
+                              "children": []
+                          },
+                          {
+                              "id": 4,
+                              "name": "Audio Devices",
+                              "parent_id": 1,
+                              "created_at": "2024-12-01T10:15:00.000000Z",
+                              "updated_at": "2024-12-01T10:15:00.000000Z",
+                              "children": [
+                                  {
+                                      "id": 5,
+                                      "name": "Headphones",
+                                      "parent_id": 4,
+                                      "created_at": "2024-12-01T10:20:00.000000Z",
+                                      "updated_at": "2024-12-01T10:20:00.000000Z",
+                                      "children": []
+                                  },
+                                  {
+                                      "id": 6,
+                                      "name": "Speakers",
+                                      "parent_id": 4,
+                                      "created_at": "2024-12-01T10:25:00.000000Z",
+                                      "updated_at": "2024-12-01T10:25:00.000000Z",
+                                      "children": []
+                                  }
+                              ]
+                          }
+                      ]
+                  },
+                  {
+                      "id": 7,
+                      "name": "Clothing",
+                      "parent_id": null,
+                      "created_at": "2024-12-01T10:30:00.000000Z",
+                      "updated_at": "2024-12-01T10:30:00.000000Z",
+                      "children": [
+                          {
+                              "id": 8,
+                              "name": "Men's Clothing",
+                              "parent_id": 7,
+                              "created_at": "2024-12-01T10:35:00.000000Z",
+                              "updated_at": "2024-12-01T10:35:00.000000Z",
+                              "children": []
+                          },
+                          {
+                              "id": 9,
+                              "name": "Women's Clothing",
+                              "parent_id": 7,
+                              "created_at": "2024-12-01T10:40:00.000000Z",
+                              "updated_at": "2024-12-01T10:40:00.000000Z",
+                              "children": []
+                          }
+                      ]
                   }
               ]
           }
         headers: []
-        description: ''
+        description: 'Categories retrieved successfully'
+        custom: []
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Categories retrieved successfully.",
+              "data": []
+          }
+        headers: []
+        description: 'No categories found'
         custom: []
       -
         status: 403
@@ -49,7 +133,7 @@ endpoints:
               "message": "You do not have the required permissions."
           }
         headers: []
-        description: ''
+        description: 'Insufficient permissions'
         custom: []
     responseFields: []
     auth:
@@ -65,12 +149,16 @@ endpoints:
       - POST
     uri: api/admin/product-categories
     metadata:
-      groupName: 'Product Category'
+      groupName: 'Product Category Management'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
       title: 'Store a new product category'
-      description: ''
+      description: |-
+        Create a new product category in the system. Categories can be created as top-level
+        categories (with no parent) or as subcategories under existing categories. This hierarchical
+        structure helps organize products for better navigation and filtering. Category names
+        must be unique across the entire system to avoid confusion.
       authenticated: true
       custom: []
     headers:
@@ -84,27 +172,27 @@ endpoints:
     bodyParameters:
       name:
         name: name
-        description: 'The name of the category.'
+        description: 'The name of the category. Must be unique across all categories.'
         required: true
-        example: architecto
+        example: '"Laptops"'
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         custom: []
       parent_id:
         name: parent_id
-        description: 'optional The ID of the parent category.'
+        description: 'optional The ID of the parent category. Omit for top-level categories.'
         required: false
-        example: 16
+        example: 1
         type: integer
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: true
         custom: []
     cleanBodyParameters:
-      name: architecto
-      parent_id: 16
+      name: '"Laptops"'
+      parent_id: 1
     fileParameters: []
     responses:
       -
@@ -113,13 +201,31 @@ endpoints:
           {
               "message": "Category created successfully.",
               "data": {
-                  "id": 2,
+                  "id": 10,
                   "name": "Laptops",
-                  "parent_id": 1
+                  "parent_id": 1,
+                  "created_at": "2025-01-16T14:30:00.000000Z",
+                  "updated_at": "2025-01-16T14:30:00.000000Z"
               }
           }
         headers: []
-        description: ''
+        description: 'Category created successfully'
+        custom: []
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Category created successfully.",
+              "data": {
+                  "id": 11,
+                  "name": "Home & Garden",
+                  "parent_id": null,
+                  "created_at": "2025-01-16T14:35:00.000000Z",
+                  "updated_at": "2025-01-16T14:35:00.000000Z"
+              }
+          }
+        headers: []
+        description: 'Top-level category created'
         custom: []
       -
         status: 403
@@ -128,7 +234,43 @@ endpoints:
               "message": "You do not have the required permissions."
           }
         headers: []
-        description: ''
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+              "errors": [
+                  "The name field is required.",
+                  "The name has already been taken.",
+                  "The parent id must exist in product_categories table.",
+                  "The name may not be greater than 255 characters."
+              ]
+          }
+        headers: []
+        description: 'Validation errors'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+              "errors": [
+                  "The name has already been taken."
+              ]
+          }
+        headers: []
+        description: 'Duplicate category name'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+              "errors": [
+                  "The selected parent id is invalid."
+              ]
+          }
+        headers: []
+        description: 'Invalid parent category'
         custom: []
     responseFields: []
     auth:
@@ -144,12 +286,15 @@ endpoints:
       - GET
     uri: 'api/admin/product-categories/{productCategory_id}'
     metadata:
-      groupName: 'Product Category'
+      groupName: 'Product Category Management'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
       title: 'Get a specific product category'
-      description: ''
+      description: |-
+        Retrieve detailed information about a specific product category including its subcategories.
+        This endpoint is useful for examining category hierarchies and understanding the structure
+        of product organization within a particular category branch.
       authenticated: true
       custom: []
     headers:
@@ -167,8 +312,19 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         custom: []
+      productCategory:
+        name: productCategory
+        description: 'The ID of the product category to retrieve.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
     cleanUrlParameters:
       productCategory_id: 1
+      productCategory: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -183,11 +339,48 @@ endpoints:
               "data": {
                   "id": 1,
                   "name": "Electronics",
+                  "parent_id": null,
+                  "created_at": "2024-12-01T10:00:00.000000Z",
+                  "updated_at": "2024-12-01T10:00:00.000000Z",
+                  "children": [
+                      {
+                          "id": 2,
+                          "name": "Smartphones",
+                          "parent_id": 1,
+                          "created_at": "2024-12-01T10:05:00.000000Z",
+                          "updated_at": "2024-12-01T10:05:00.000000Z",
+                          "children": []
+                      },
+                      {
+                          "id": 3,
+                          "name": "Laptops",
+                          "parent_id": 1,
+                          "created_at": "2024-12-01T10:10:00.000000Z",
+                          "updated_at": "2024-12-01T10:10:00.000000Z",
+                          "children": []
+                      }
+                  ]
+              }
+          }
+        headers: []
+        description: 'Category retrieved successfully'
+        custom: []
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Category retrieved successfully.",
+              "data": {
+                  "id": 2,
+                  "name": "Smartphones",
+                  "parent_id": 1,
+                  "created_at": "2024-12-01T10:05:00.000000Z",
+                  "updated_at": "2024-12-01T10:05:00.000000Z",
                   "children": []
               }
           }
         headers: []
-        description: ''
+        description: 'Leaf category with no children'
         custom: []
       -
         status: 403
@@ -196,7 +389,16 @@ endpoints:
               "message": "You do not have the required permissions."
           }
         headers: []
-        description: ''
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+              "message": "No query results for model [App\\Models\\ProductCategory] 999"
+          }
+        headers: []
+        description: 'Category not found'
         custom: []
     responseFields: []
     auth:
@@ -212,12 +414,15 @@ endpoints:
       - POST
     uri: 'api/admin/product-categories/{productCategory_id}'
     metadata:
-      groupName: 'Product Category'
+      groupName: 'Product Category Management'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
       title: 'Update a product category'
-      description: ''
+      description: |-
+        Modify an existing product category's name or parent relationship. When changing the parent,
+        ensure that circular references are not created (a category cannot be its own ancestor).
+        The system prevents self-referencing to maintain a valid hierarchical structure.
       authenticated: true
       custom: []
     headers:
@@ -235,34 +440,45 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         custom: []
+      productCategory:
+        name: productCategory
+        description: 'The ID of the product category to update.'
+        required: true
+        example: 10
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
     cleanUrlParameters:
       productCategory_id: 1
+      productCategory: 10
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
       name:
         name: name
-        description: 'The name of the category.'
+        description: 'The updated name of the category. Must be unique across all categories.'
         required: true
-        example: architecto
+        example: '"Updated Category Name"'
         type: string
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         custom: []
       parent_id:
         name: parent_id
-        description: 'optional The ID of the parent category.'
+        description: 'optional The ID of the parent category. Cannot be the same as the category being updated.'
         required: false
-        example: 16
+        example: 2
         type: integer
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: true
         custom: []
     cleanBodyParameters:
-      name: architecto
-      parent_id: 16
+      name: '"Updated Category Name"'
+      parent_id: 2
     fileParameters: []
     responses:
       -
@@ -271,13 +487,31 @@ endpoints:
           {
               "message": "Category updated successfully.",
               "data": {
-                  "id": 1,
+                  "id": 10,
                   "name": "Updated Category Name",
-                  "parent_id": null
+                  "parent_id": 2,
+                  "created_at": "2025-01-16T14:30:00.000000Z",
+                  "updated_at": "2025-01-16T15:45:00.000000Z"
               }
           }
         headers: []
-        description: ''
+        description: 'Category updated successfully'
+        custom: []
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Category updated successfully.",
+              "data": {
+                  "id": 10,
+                  "name": "Independent Category",
+                  "parent_id": null,
+                  "created_at": "2025-01-16T14:30:00.000000Z",
+                  "updated_at": "2025-01-16T15:50:00.000000Z"
+              }
+          }
+        headers: []
+        description: 'Category made top-level'
         custom: []
       -
         status: 403
@@ -286,7 +520,52 @@ endpoints:
               "message": "You do not have the required permissions."
           }
         headers: []
-        description: ''
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+              "message": "No query results for model [App\\Models\\ProductCategory] 999"
+          }
+        headers: []
+        description: 'Category not found'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+              "errors": [
+                  "The name field is required.",
+                  "The name has already been taken.",
+                  "The parent id must exist in product_categories table.",
+                  "The parent id field cannot reference the current category (self-reference not allowed)."
+              ]
+          }
+        headers: []
+        description: 'Validation errors'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+              "errors": [
+                  "A category cannot be its own parent."
+              ]
+          }
+        headers: []
+        description: 'Self-reference attempt'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+              "errors": [
+                  "Cannot set parent category as it would create a circular reference in the hierarchy."
+              ]
+          }
+        headers: []
+        description: 'Circular reference prevention'
         custom: []
     responseFields: []
     auth:
@@ -302,12 +581,19 @@ endpoints:
       - DELETE
     uri: 'api/admin/product-categories/{productCategory_id}'
     metadata:
-      groupName: 'Product Category'
+      groupName: 'Product Category Management'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
       title: 'Delete a product category'
-      description: ''
+      description: |-
+        Permanently remove a product category from the system. Categories can only be deleted
+        if they have no subcategories (children). If a category contains subcategories, those
+        must be deleted first or moved to another parent category. This prevents orphaned
+        categories and maintains the integrity of the hierarchical structure.
+
+        **Warning**: Deleting a category may affect products that are currently assigned to it.
+        Ensure products are reassigned to appropriate categories before deletion.
       authenticated: true
       custom: []
     headers:
@@ -325,8 +611,19 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         custom: []
+      productCategory:
+        name: productCategory
+        description: 'The ID of the product category to delete.'
+        required: true
+        example: 10
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
     cleanUrlParameters:
       productCategory_id: 1
+      productCategory: 10
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -340,7 +637,7 @@ endpoints:
               "message": "Category deleted successfully"
           }
         headers: []
-        description: ''
+        description: 'Category deleted successfully'
         custom: []
       -
         status: 400
@@ -349,7 +646,7 @@ endpoints:
               "message": "Cannot delete a category with subcategories"
           }
         headers: []
-        description: ''
+        description: 'Category has subcategories'
         custom: []
       -
         status: 403
@@ -358,7 +655,43 @@ endpoints:
               "message": "You do not have the required permissions."
           }
         headers: []
-        description: ''
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+              "message": "No query results for model [App\\Models\\ProductCategory] 999"
+          }
+        headers: []
+        description: 'Category not found'
+        custom: []
+      -
+        status: 409
+        content: |-
+          {
+              "message": "Cannot delete category that has products assigned to it. Please reassign products to other categories first."
+          }
+        headers: []
+        description: 'Category has associated products'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+              "message": "This category cannot be deleted as it has associated products or subcategories."
+          }
+        headers: []
+        description: 'Category has dependencies'
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+              "message": "An error occurred while deleting the category."
+          }
+        headers: []
+        description: 'Deletion failed'
         custom: []
     responseFields: []
     auth:
