@@ -211,19 +211,19 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function isAccountLocked(): bool
     {
-        $accountLockService = app(\App\Services\V1\Auth\AccountLockService::class);
+        $accountLockService = app(AccountLock::class);
         return $accountLockService->isAccountLocked($this);
     }
 
     public function getAccountLockInfo(): ?array
     {
-        $accountLockService = app(\App\Services\V1\Auth\AccountLockService::class);
+        $accountLockService = app(AccountLock::class);
         return $accountLockService->getAccountLockInfo($this);
     }
 
     public function unlockAccount(): bool
     {
-        $accountLockService = app(\App\Services\V1\Auth\AccountLockService::class);
+        $accountLockService = app(AccountLock::class);
         return $accountLockService->unlockAccount($this);
     }
 
@@ -234,13 +234,13 @@ class User extends Authenticatable implements MustVerifyEmail
             'last_login_ip' => request()->ip(),
         ]);
 
-        $accountLockService = app(\App\Services\V1\Auth\AccountLockService::class);
+        $accountLockService = app(AccountLock::class);
         $accountLockService->recordSuccessfulLogin($this);
     }
 
     public function recordFailedLoginAttempt(array $metadata = []): void
     {
-        $accountLockService = app(\App\Services\V1\Auth\AccountLockService::class);
+        $accountLockService = app(AccountLock::class);
         $accountLockService->recordFailedAttempt($this, $metadata);
     }
 
