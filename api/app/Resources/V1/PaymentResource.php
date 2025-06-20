@@ -11,9 +11,14 @@ class PaymentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'gateway' => $this->paymentMethod->name,
+            'gateway' => $this->whenLoaded('paymentMethod', function() {
+                return $this->paymentMethod->name;
+            }),
             'amount' => $this->amount,
-            'method' => $this->method,
+            'amount_formatted' => $this->formatPrice($this->amount),
+            'method' => $this->method ?? $this->whenLoaded('paymentMethod', function() {
+                    return $this->paymentMethod->name;
+                }),
             'status' => $this->status,
             'transaction_reference' => $this->transaction_reference,
             'processed_at' => $this->processed_at?->format('Y-m-d H:i:s'),
@@ -21,6 +26,17 @@ class PaymentResource extends JsonResource
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
             'user' => new UserResource($this->whenLoaded('user')),
             'order' => new OrderResource($this->whenLoaded('order')),
+            'payment_method' => $this->whenLoaded('paymentMethod', function() {
+                return [
+                    'id' => $this->paymentMethod->id,
+                    'name' => $this->paymentMethod->name
+                ];
+            }),
         ];
+    }
+
+    private function formatPrice(int $priceInPennies): string
+    {
+        return '£' . number_format($priceInPennies / 100, 2);
     }
 }

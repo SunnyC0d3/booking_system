@@ -12,10 +12,21 @@ class OrderItemResource extends JsonResource
         return [
             'id' => $this->id,
             'product' => new ProductResource($this->whenLoaded('product')),
-            'product_variant' => $this->whenLoaded('productVariant'),
+            'product_variant' => new ProductVariantResource($this->whenLoaded('productVariant')),
             'quantity' => $this->quantity,
-            'order_returns' => new OrderReturnResource($this->whenLoaded('orderReturn')),
+            'price' => $this->price,
+            'price_formatted' => $this->formatPrice($this->price),
+            'line_total' => $this->getLineTotalInPennies(),
+            'line_total_formatted' => $this->formatPrice($this->getLineTotalInPennies()),
+            'order_return' => new OrderReturnResource($this->whenLoaded('orderReturn')),
             'order' => new OrderResource($this->whenLoaded('order')),
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
+    }
+
+    private function formatPrice(int $priceInPennies): string
+    {
+        return '£' . number_format($priceInPennies / 100, 2);
     }
 }
