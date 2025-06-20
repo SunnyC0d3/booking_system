@@ -22,10 +22,12 @@ Route::middleware(['throttle:3,1', 'client'])
         Route::post('/login', 'login')->middleware('rate_limit:auth.login')->name('auth.login');
     });
 
-Route::middleware(['auth:api'])
+Route::middleware(['auth:api', 'account_lock', 'password_expiry'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/logout', 'logout')->name('auth.logout');
+        Route::post('/change-password', 'changePassword')->middleware('rate_limit:auth.password_reset')->name('password.change');
+        Route::get('/security-info', 'getSecurityInfo')->name('auth.security-info');
     });
 
 // Email Verification
