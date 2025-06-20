@@ -12,9 +12,10 @@ endpoints:
       subgroupDescription: ''
       title: "Verify a user's email address."
       description: 'Once a user registers, a notification is sent out to their specified email address, which requires them to verify.'
-      authenticated: false
+      authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -22,7 +23,7 @@ endpoints:
         name: id
         description: 'The ID of the verify.'
         required: true
-        example: qui
+        example: architecto
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -32,15 +33,15 @@ endpoints:
         name: hash
         description: ''
         required: true
-        example: laborum
+        example: architecto
         type: string
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanUrlParameters:
-      id: qui
-      hash: laborum
+      id: architecto
+      hash: architecto
     queryParameters:
       id:
         name: id
@@ -86,7 +87,10 @@ endpoints:
         description: ''
         custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
     controller: null
     method: null
     route: null
@@ -102,7 +106,7 @@ endpoints:
       subgroupDescription: ''
       title: 'Resend email to user.'
       description: 'Once a user registers, a notification is sent out to their specified email address, which requires them to verify. Incase they dont recieve one, they can request again.'
-      authenticated: false
+      authenticated: true
       custom: []
     headers:
       Authorization: 'Bearer token required.'
@@ -137,7 +141,10 @@ endpoints:
         description: ''
         custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
     controller: null
     method: null
     route: null

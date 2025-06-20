@@ -10,9 +10,10 @@
     ],
     "info": {
         "name": "E-Commerce API Documentation",
-        "_postman_id": "fd06bf60-2af0-4f06-bf4d-87042565808d",
-        "description": "",
-        "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
+        "_postman_id": "c1114c6b-2dbd-45ec-a48e-b417e93d9703",
+        "description": "Comprehensive API for managing products, orders, payments, users, vendors, and more in an e-commerce platform.",
+        "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json",
+        "version": "1.0.0"
     },
     "item": [
         {
@@ -20,7 +21,7 @@
             "description": "",
             "item": [
                 {
-                    "name": "Register a new user and return their API token.",
+                    "name": "Register a new user",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -41,9 +42,9 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"John Doe\",\"email\":\"john.doe@example.com\",\"password\":\"password123\",\"password_confirmation\":\"password123\"}"
+                            "raw": "{\"name\":\"John Doe\",\"email\":\"john@example.com\",\"password\":\"MySecurePass123!\",\"password_confirmation\":\"MySecurePass123!\"}"
                         },
-                        "description": "This endpoint is used to register a new user, including their name, email, password,\nand password confirmation.",
+                        "description": "Creates a new user account with email verification. The user will receive an email to verify their account.\nPasswords must meet security requirements including minimum length, character diversity, and cannot be common passwords.",
                         "auth": {
                             "type": "noauth"
                         }
@@ -52,13 +53,25 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": [],\n  \"message\": \"User registered successfully\",\n  \"status\": 200\n}",
+                            "body": "{\n  \"data\": [],\n  \"message\": \"User registered successfully.\",\n  \"status\": 200\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"Password does not meet security requirements.\",\n  \"errors\": [\n    \"Password must contain at least 1 uppercase letter(s).\",\n    \"Password cannot contain common words or patterns that are not secure.\"\n  ],\n  \"strength\": {\n    \"score\": 45,\n    \"strength\": \"medium\",\n    \"feedback\": [\"Add special characters\", \"Use more unique characters\"]\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 423,
+                            "body": "{\n  \"message\": \"Registration temporarily blocked. Please try again later.\",\n  \"time_remaining_minutes\": 15\n}",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "Login a user.",
+                    "name": "User login",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -79,9 +92,9 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"email\":\"john.doe@example.com\",\"password\":\"password123\",\"remember\":true}"
+                            "raw": "{\"email\":\"john@example.com\",\"password\":\"MySecurePass123!\",\"remember\":true}"
                         },
-                        "description": "Authenticates a user with email and password. Returns an API token with expiry timer.",
+                        "description": "Authenticates a user and returns an access token. Implements account lockout protection and tracks failed attempts.",
                         "auth": {
                             "type": "noauth"
                         }
@@ -90,19 +103,31 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": {\n      \"token_type\": \"Bearer,\n      \"token\": \"{YOUR_AUTH_KEY}\",\n      \"expires_in\": \"{YOUR_EXPIRY_TIMER}\"\n  },\n  \"message\": \"Authenticated\",\n  \"status\": 200\n}",
+                            "body": "{\n  \"data\": {\n    \"token_type\": \"Bearer\",\n    \"access_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...\",\n    \"expires_at\": 1640995200,\n    \"user\": {\n      \"id\": 1,\n      \"email\": \"john@example.com\",\n      \"role\": \"user\"\n    }\n  },\n  \"message\": \"User logged in successfully.\",\n  \"status\": 200\n}",
                             "name": ""
                         },
                         {
                             "header": [],
                             "code": 401,
-                            "body": "{\n  \"message\": \"Invalid credentials\",\n  \"status\": 401\n}",
+                            "body": "{\n  \"message\": \"Invalid credentials\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 423,
+                            "body": "{\n  \"message\": \"Account is temporarily locked due to multiple failed login attempts.\",\n  \"locked_until\": \"2024-01-15T15:30:00.000000Z\",\n  \"time_remaining_seconds\": 1800,\n  \"time_remaining_minutes\": 30,\n  \"lockout_count\": 2\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 426,
+                            "body": "{\n  \"message\": \"Your password has expired and must be changed before logging in.\",\n  \"password_expired\": true,\n  \"change_password_required\": true\n}",
                             "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "Logout a user.",
+                    "name": "User logout",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -122,13 +147,180 @@
                             }
                         ],
                         "body": null,
-                        "description": "Logs out the currently authenticated user by invalidating their API token."
+                        "description": "Logs out the authenticated user and revokes their access token."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"message\": \"User logged out successfully\",\n  \"status\": 200\n}",
+                            "body": "{\n  \"data\": [],\n  \"message\": \"User logged out successfully\",\n  \"status\": 200\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Change password",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/change-password",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/change-password"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"current_password\":\"MyOldPass123!\",\"new_password\":\"MyNewSecurePass456!\",\"new_password_confirmation\":\"MyNewSecurePass456!\"}"
+                        },
+                        "description": "Changes the authenticated user's password. Requires current password verification and validates new password strength."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"password_strength\": {\n      \"score\": 85,\n      \"strength\": \"very strong\",\n      \"feedback\": []\n    },\n    \"security_score\": {\n      \"score\": 95,\n      \"level\": \"excellent\",\n      \"issues\": []\n    }\n  },\n  \"message\": \"Password changed successfully\",\n  \"status\": 200\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Current password is incorrect\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"New password does not meet security requirements.\",\n  \"errors\": [\n    \"Password cannot be the same as your last 5 passwords.\"\n  ],\n  \"strength\": {\n    \"score\": 45,\n    \"strength\": \"medium\",\n    \"feedback\": [\"Add special characters\"]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get security information",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/security-info",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/security-info"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieves comprehensive security information for the authenticated user including account lock status, security score, and password expiry details."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": {\n    \"account_lock\": {\n      \"is_locked\": false,\n      \"failed_attempts\": 0,\n      \"max_attempts\": 5,\n      \"lockout_count\": 0,\n      \"locked_until\": null,\n      \"time_until_unlock\": null,\n      \"last_attempt_at\": null,\n      \"last_successful_login\": \"2024-01-15T10:30:00.000000Z\",\n      \"should_reset\": false\n    },\n    \"security_score\": {\n      \"score\": 85,\n      \"level\": \"good\",\n      \"issues\": [\"Medium strength password\"]\n    },\n    \"password_expiry\": {\n      \"requires_change\": false,\n      \"days_until_expiry\": 45,\n      \"last_changed\": \"2024-01-01T12:00:00.000000Z\"\n    },\n    \"login_history\": {\n      \"last_login\": \"2024-01-15T10:30:00.000000Z\",\n      \"last_login_ip\": \"192.168.1.100\"\n    }\n  },\n  \"message\": \"Security information retrieved\",\n  \"status\": 200\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Forgot password",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/forgot-password",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/forgot-password"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"email\":\"john@example.com\"}"
+                        },
+                        "description": "Sends a password reset link to the user's email address.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [],\n  \"message\": \"We have emailed your password reset link!\",\n  \"status\": 200\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 423,
+                            "body": "{\n  \"message\": \"Password reset temporarily blocked. Please try again later.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Reset password",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/reset-password",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/reset-password"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"token\":\"abc123def456\",\"email\":\"john@example.com\",\"password\":\"MyNewSecurePass456!\",\"password_confirmation\":\"MyNewSecurePass456!\"}"
+                        },
+                        "description": "Resets the user's password using a valid reset token from the forgot password email.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"data\": [],\n  \"message\": \"Your password has been reset!\",\n  \"status\": 200\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"New password does not meet security requirements.\",\n  \"errors\": [\n    \"Password must contain at least 1 special character(s).\"\n  ],\n  \"strength\": {\n    \"score\": 60,\n    \"strength\": \"strong\",\n    \"feedback\": [\"Add special characters\"]\n  }\n}",
                             "name": ""
                         }
                     ]
@@ -164,13 +356,13 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "qui",
+                                    "value": "architecto",
                                     "description": "The ID of the verify."
                                 },
                                 {
                                     "id": "hash",
                                     "key": "hash",
-                                    "value": "laborum",
+                                    "value": "architecto",
                                     "description": ""
                                 }
                             ]
@@ -187,10 +379,7 @@
                             }
                         ],
                         "body": null,
-                        "description": "Once a user registers, a notification is sent out to their specified email address, which requires them to verify.",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": "Once a user registers, a notification is sent out to their specified email address, which requires them to verify."
                     },
                     "response": [
                         {
@@ -228,10 +417,7 @@
                             }
                         ],
                         "body": null,
-                        "description": "Once a user registers, a notification is sent out to their specified email address, which requires them to verify. Incase they dont recieve one, they can request again.",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": "Once a user registers, a notification is sent out to their specified email address, which requires them to verify. Incase they dont recieve one, they can request again."
                     },
                     "response": [
                         {
@@ -244,6 +430,458 @@
                             "header": [],
                             "code": 401,
                             "body": "{\n  \"message\": \"Email already verified.\",\n  \"status\": 400\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Product Attributes",
+            "description": "",
+            "item": [
+                {
+                    "name": "Retrieve all product attributes.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-attributes",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-attributes"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Attributes retrieved successfully.\",\n  \"data\": []\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a new product attribute.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-attributes",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-attributes"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"\\\"Color\\\"\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Product attribute created successfully.\",\n  \"data\": {}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Retrieve a specific product attribute.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-attributes\/:productAttribute_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-attributes\/:productAttribute_id",
+                            "variable": [
+                                {
+                                    "id": "productAttribute_id",
+                                    "key": "productAttribute_id",
+                                    "value": "1",
+                                    "description": "The ID of the productAttribute."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Attribute retrieved successfully.\",\n  \"data\": {}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update a product attribute.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-attributes\/:productAttribute_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-attributes\/:productAttribute_id",
+                            "variable": [
+                                {
+                                    "id": "productAttribute_id",
+                                    "key": "productAttribute_id",
+                                    "value": "1",
+                                    "description": "The ID of the productAttribute."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"\\\"Size\\\"\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Product attribute updated successfully.\",\n  \"data\": {}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete a product attribute.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-attributes\/:productAttribute_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-attributes\/:productAttribute_id",
+                            "variable": [
+                                {
+                                    "id": "productAttribute_id",
+                                    "key": "productAttribute_id",
+                                    "value": "1",
+                                    "description": "The ID of the productAttribute."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Product attribute deleted successfully.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Product Tags",
+            "description": "",
+            "item": [
+                {
+                    "name": "Retrieve all product tags.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-tags",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-tags"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Tags retrieved successfully.\",\n    \"data\": [\n        {\"id\": 1, \"name\": \"Electronics\"},\n        {\"id\": 2, \"name\": \"Fashion\"}\n    ]\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a new product tag.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-tags",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-tags"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"architecto\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Tag created successfully.\",\n    \"data\": {\"id\": 3, \"name\": \"Home Appliances\"}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Retrieve a specific product tag.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-tags\/:productTag_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-tags\/:productTag_id",
+                            "variable": [
+                                {
+                                    "id": "productTag_id",
+                                    "key": "productTag_id",
+                                    "value": "1",
+                                    "description": "The ID of the productTag."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Tag retrieved successfully.\",\n    \"data\": {\"id\": 1, \"name\": \"Electronics\"}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update an existing product tag.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-tags\/:productTag_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-tags\/:productTag_id",
+                            "variable": [
+                                {
+                                    "id": "productTag_id",
+                                    "key": "productTag_id",
+                                    "value": "1",
+                                    "description": "The ID of the productTag."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"architecto\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Tag updated successfully.\",\n    \"data\": {\"id\": 1, \"name\": \"Gadgets\"}\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete a product tag.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-tags\/:productTag_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-tags\/:productTag_id",
+                            "variable": [
+                                {
+                                    "id": "productTag_id",
+                                    "key": "productTag_id",
+                                    "value": "1",
+                                    "description": "The ID of the productTag."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Tag deleted successfully.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
                             "name": ""
                         }
                     ]
@@ -317,7 +955,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"user_id\":\"debitis\",\"order_items\":[{\"product_id\":\"a\",\"quantity\":1,\"price\":32}]}"
+                            "raw": "{\"user_id\":\"architecto\",\"order_items\":[{\"product_id\":\"architecto\",\"quantity\":22,\"price\":84}]}"
                         },
                         "description": ""
                     },
@@ -412,7 +1050,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"order_items\":[{\"product_id\":\"quasi\",\"quantity\":48,\"price\":46}]}"
+                            "raw": "{\"order_items\":[{\"product_id\":\"architecto\",\"quantity\":22,\"price\":84}]}"
                         },
                         "description": ""
                     },
@@ -652,94 +1290,6 @@
                             "header": [],
                             "code": 403,
                             "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "Password Reset",
-            "description": "",
-            "item": [
-                {
-                    "name": "Request a password reset link.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/forgot-password",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/forgot-password"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"email\":\"john.doe@example.com\"}"
-                        },
-                        "description": "Sends a password reset email to the specified email address."
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"message\": \"Password reset link sent.\",\n  \"status\": 200\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 400,
-                            "body": "{\n  \"message\": {ERROR_MESSAGE},\n  \"status\": 400\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Reset a user's password.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/reset-password",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/reset-password"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"token\":\"abc123\",\"email\":\"john.doe@example.com\",\"password\":\"newpassword123\",\"password_confirmation\":\"newpassword123\"}"
-                        },
-                        "description": "Resets the user's password using the provided reset token."
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"message\": \"Password has been reset.\",\n  \"status\": 200\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 400,
-                            "body": "{\n  \"message\": {ERROR_MESSAGE},\n  \"status\": 400\n}",
                             "name": ""
                         }
                     ]
@@ -1006,10 +1556,7 @@
                             "mode": "raw",
                             "raw": "{\"order_id\":123}"
                         },
-                        "description": "Creates or retrieves a Stripe PaymentIntent for a given order. If a payment already exists,\nit will return the existing client secret to avoid duplicate charges.",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": "Creates or retrieves a Stripe PaymentIntent for a given order. If a payment already exists,\nit will return the existing client secret to avoid duplicate charges."
                     },
                     "response": [
                         {
@@ -1050,7 +1597,7 @@
                                 {
                                     "id": "none",
                                     "key": "none",
-                                    "value": "vitae",
+                                    "value": "architecto",
                                     "description": ""
                                 }
                             ]
@@ -1068,12 +1615,9 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"object\":\"non\"}"
+                            "raw": "{\"object\":\"architecto\"}"
                         },
-                        "description": "This endpoint is triggered by Stripe when a payment event occurs (e.g., payment succeeded, failed).\nIt verifies the webhook signature and processes the payment status accordingly.",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": "This endpoint is triggered by Stripe when a payment event occurs (e.g., payment succeeded, failed).\nIt verifies the webhook signature and processes the payment status accordingly."
                     },
                     "response": [
                         {
@@ -1108,7 +1652,7 @@
                                 {
                                     "id": "gateway",
                                     "key": "gateway",
-                                    "value": "suscipit",
+                                    "value": "architecto",
                                     "description": ""
                                 }
                             ]
@@ -1128,10 +1672,7 @@
                             "mode": "raw",
                             "raw": "{\"payment_intent_id\":\"pi_1Hxxxxxxxxxxxx\",\"order_id\":123}"
                         },
-                        "description": "Verifies the current status of a payment with the chosen payment gateway and updates\nthe local database accordingly. This is useful for handling cases where webhooks might\nhave failed or been delayed.",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": "Verifies the current status of a payment with the chosen payment gateway and updates\nthe local database accordingly. This is useful for handling cases where webhooks might\nhave failed or been delayed."
                     },
                     "response": [
                         {
@@ -1331,232 +1872,6 @@
             ]
         },
         {
-            "name": "Product Attributes",
-            "description": "",
-            "item": [
-                {
-                    "name": "Retrieve all product attributes.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/product-attributes",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/product-attributes"
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"message\": \"Attributes retrieved successfully.\",\n  \"data\": []\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Create a new product attribute.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/product-attributes",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/product-attributes"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"name\":\"\\\"Color\\\"\"}"
-                        },
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"message\": \"Product attribute created successfully.\",\n  \"data\": {}\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Retrieve a specific product attribute.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/product-attributes\/:productAttribute_id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/product-attributes\/:productAttribute_id",
-                            "variable": [
-                                {
-                                    "id": "productAttribute_id",
-                                    "key": "productAttribute_id",
-                                    "value": "1",
-                                    "description": "The ID of the productAttribute."
-                                }
-                            ]
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"message\": \"Attribute retrieved successfully.\",\n  \"data\": {}\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Update a product attribute.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/product-attributes\/:productAttribute_id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/product-attributes\/:productAttribute_id",
-                            "variable": [
-                                {
-                                    "id": "productAttribute_id",
-                                    "key": "productAttribute_id",
-                                    "value": "1",
-                                    "description": "The ID of the productAttribute."
-                                }
-                            ]
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"name\":\"\\\"Size\\\"\"}"
-                        },
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"message\": \"Product attribute updated successfully.\",\n  \"data\": {}\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Delete a product attribute.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/product-attributes\/:productAttribute_id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/product-attributes\/:productAttribute_id",
-                            "variable": [
-                                {
-                                    "id": "productAttribute_id",
-                                    "key": "productAttribute_id",
-                                    "value": "1",
-                                    "description": "The ID of the productAttribute."
-                                }
-                            ]
-                        },
-                        "method": "DELETE",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"message\": \"Product attribute deleted successfully.\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                }
-            ]
-        },
-        {
             "name": "Product Category",
             "description": "",
             "item": [
@@ -1620,7 +1935,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"veritatis\",\"parent_id\":17}"
+                            "raw": "{\"name\":\"architecto\",\"parent_id\":16}"
                         },
                         "description": ""
                     },
@@ -1715,7 +2030,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"eos\",\"parent_id\":20}"
+                            "raw": "{\"name\":\"architecto\",\"parent_id\":16}"
                         },
                         "description": ""
                     },
@@ -1789,232 +2104,6 @@
             ]
         },
         {
-            "name": "Product Tags",
-            "description": "",
-            "item": [
-                {
-                    "name": "Retrieve all product tags.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/product-tags",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/product-tags"
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Tags retrieved successfully.\",\n    \"data\": [\n        {\"id\": 1, \"name\": \"Electronics\"},\n        {\"id\": 2, \"name\": \"Fashion\"}\n    ]\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Create a new product tag.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/product-tags",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/product-tags"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"name\":\"veniam\"}"
-                        },
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Tag created successfully.\",\n    \"data\": {\"id\": 3, \"name\": \"Home Appliances\"}\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Retrieve a specific product tag.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/product-tags\/:productTag_id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/product-tags\/:productTag_id",
-                            "variable": [
-                                {
-                                    "id": "productTag_id",
-                                    "key": "productTag_id",
-                                    "value": "1",
-                                    "description": "The ID of the productTag."
-                                }
-                            ]
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Tag retrieved successfully.\",\n    \"data\": {\"id\": 1, \"name\": \"Electronics\"}\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Update an existing product tag.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/product-tags\/:productTag_id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/product-tags\/:productTag_id",
-                            "variable": [
-                                {
-                                    "id": "productTag_id",
-                                    "key": "productTag_id",
-                                    "value": "1",
-                                    "description": "The ID of the productTag."
-                                }
-                            ]
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"name\":\"dolorum\"}"
-                        },
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Tag updated successfully.\",\n    \"data\": {\"id\": 1, \"name\": \"Gadgets\"}\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Delete a product tag.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/product-tags\/:productTag_id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/product-tags\/:productTag_id",
-                            "variable": [
-                                {
-                                    "id": "productTag_id",
-                                    "key": "productTag_id",
-                                    "value": "1",
-                                    "description": "The ID of the productTag."
-                                }
-                            ]
-                        },
-                        "method": "DELETE",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Tag deleted successfully.\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                }
-            ]
-        },
-        {
             "name": "Products",
             "description": "",
             "item": [
@@ -2040,7 +2129,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"zefaojctwjngvyayarjce\",\"price\":\"9807,63053.7)))\",\"category\":\"6\",\"quantity\":30,\"created_at\":\"5972-82-27,9794-46-29\",\"updated_at\":\"9217-32-23\",\"search\":\"mvmcj\",\"include\":\"\"},\"page\":65,\"per_page\":5,\"sort\":\"-IS\"}"
+                            "raw": "{\"filter\":{\"name\":\"b\",\"price\":\"9,3.1)\",\"category\":\"9,31\",\"quantity\":8,\"created_at\":\"2559-31-42\",\"updated_at\":\"2559-31-42\",\"search\":\"h\",\"include\":\"uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv\"},\"page\":4,\"per_page\":9,\"sort\":\"y8p,Bm,-dp,-Zm,-GH\"}"
                         },
                         "description": ""
                     },
@@ -2130,13 +2219,13 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "vwszzcrwlsuszfvqcehhzmvb",
+                                    "value": "b",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Illo aut ut aut dignissimos molestiae et ipsam sit.",
+                                    "value": "Eius et animi quos velit et.",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -2148,43 +2237,43 @@
                                 },
                                 {
                                     "key": "product_category_id",
-                                    "value": "aut",
+                                    "value": "architecto",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_categories table."
                                 },
                                 {
                                     "key": "product_status_id",
-                                    "value": "in",
+                                    "value": "architecto",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_statuses table."
                                 },
                                 {
                                     "key": "quantity",
-                                    "value": "14",
+                                    "value": "39",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_variants[0][product_attribute_id]",
-                                    "value": "enim",
+                                    "value": "architecto",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][value]",
-                                    "value": "yuggos",
+                                    "value": "n",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][additional_price]",
-                                    "value": "42",
+                                    "value": "84",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][quantity]",
-                                    "value": "70",
+                                    "value": "12",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -2245,61 +2334,61 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "thfuoamziekqnqzlsv",
+                                    "value": "b",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Sapiente quis amet sunt at.",
+                                    "value": "Eius et animi quos velit et.",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "price",
-                                    "value": "58",
+                                    "value": "60",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_category_id",
-                                    "value": "impedit",
+                                    "value": "architecto",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_categories table."
                                 },
                                 {
                                     "key": "product_status_id",
-                                    "value": "inventore",
+                                    "value": "architecto",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the product_statuses table."
                                 },
                                 {
                                     "key": "quantity",
-                                    "value": "4",
+                                    "value": "39",
                                     "type": "text",
                                     "description": "Must be at least 0."
                                 },
                                 {
                                     "key": "product_variants[0][product_attribute_id]",
-                                    "value": "ab",
+                                    "value": "architecto",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][value]",
-                                    "value": "tkqlsmibefnpjvdpknwpnvu",
+                                    "value": "n",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][additional_price]",
-                                    "value": "62",
+                                    "value": "84",
                                     "type": "text",
                                     "description": ""
                                 },
                                 {
                                     "key": "product_variants[0][quantity]",
-                                    "value": "5",
+                                    "value": "12",
                                     "type": "text",
                                     "description": ""
                                 },
@@ -2487,12 +2576,9 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"tpygwdpajuadhmqtvrx\",\"price\":\"4.34,2.74\",\"category\":\"0,2,33,2,3,9,\",\"quantity\":6,\"created_at\":\"7186-97-37,4477-63-40\",\"updated_at\":\"7153-71-23,6014-85-01\",\"search\":\"alnlysfc\",\"include\":\"pnzl,dohqgclp,pasjbxhk,hryodiy,mjhyz,xzohm)\"},\"page\":40,\"per_page\":21,\"sort\":\"j0t,-v0,j3,v0,Nq,-ZM,-8E,PC,-94\"}"
+                            "raw": "{\"filter\":{\"name\":\"b\",\"price\":\"9,3.1)\",\"category\":\"9,31\",\"quantity\":8,\"created_at\":\"2559-31-42\",\"updated_at\":\"2559-31-42\",\"search\":\"h\",\"include\":\"uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv\"},\"page\":4,\"per_page\":9,\"sort\":\"y8p,Bm,-dp,-Zm,-GH\"}"
                         },
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
                     "response": [
                         {
@@ -2538,10 +2624,7 @@
                             }
                         ],
                         "body": null,
-                        "description": "",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "description": ""
                     },
                     "response": [
                         {
@@ -3300,7 +3383,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"jtwvfrirbfdfezm\",\"email\":\"jaylan17@example.org\",\"role\":\"7,\",\"created_at\":\"5765-88-19\",\"updated_at\":\"3726-79-63\",\"search\":\"wlleagawgx\",\"include\":\"t,j)\"},\"page\":13,\"per_page\":13,\"sort\":\"zhV,fChsT,8GppD\"}"
+                            "raw": "{\"filter\":{\"name\":\"b\",\"email\":\"zbailey@example.net\",\"role\":\"9,31\",\"created_at\":\"2559-31-42\",\"updated_at\":\"2559-31-42\",\"search\":\"h\",\"include\":\"uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv\"},\"page\":4,\"per_page\":9,\"sort\":\"y8p,Bm,-dp,-Zm,-GH\"}"
                         },
                         "description": ""
                     },
@@ -3387,7 +3470,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"rfwizz\",\"email\":\"maudie.bergnaum@example.org\",\"password\":\",j-!mhuRE\",\"role_id\":\"veritatis\",\"address\":{\"address_line1\":\"tjkpuha\",\"city\":\"xwv\",\"country\":\"odmw\",\"postal_code\":\"gde\",\"address_line2\":\"vbu\",\"state\":\"foi\"}}"
+                            "raw": "{\"name\":\"b\",\"email\":\"zbailey@example.net\",\"password\":\"-0pBNvYgxw\",\"role_id\":\"architecto\",\"address\":{\"address_line1\":\"n\",\"city\":\"g\",\"country\":\"z\",\"postal_code\":\"miyvdljnikhwaykc\",\"address_line2\":\"m\",\"state\":\"y\"}}"
                         },
                         "description": ""
                     },
@@ -3436,7 +3519,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"oyj\",\"email\":\"lindsey36@example.com\",\"password\":\"&CSuy86zw}-h9\",\"address\":{\"address_line1\":\"ymadfce\",\"city\":\"exwsdyfrkmyvdacys\",\"country\":\"xaaovlgnsrntvsc\",\"postal_code\":\"zmgrvrrkvtzukcybba\",\"address_line2\":\"nnnppneyefgbrxtbmd\",\"state\":\"kdngambsme\"}}"
+                            "raw": "{\"name\":\"b\",\"email\":\"zbailey@example.net\",\"password\":\"-0pBNvYgxw\",\"address\":{\"address_line1\":\"a\",\"city\":\"y\",\"country\":\"k\",\"postal_code\":\"cmyuwpwlvqwrsitc\",\"address_line2\":\"p\",\"state\":\"s\"}}"
                         },
                         "description": ""
                     },
@@ -3577,7 +3660,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"name\":\"dllgqqoguhwdestqjpsl\",\"email\":\"nicolas.stefan@example.com\",\"password\":\"p~![3{Mmv8Q3Xal>GigC\",\"address\":{\"address_line1\":\"jbc\",\"city\":\"onqnmd\",\"country\":\"twj\",\"postal_code\":\"bp\",\"address_line2\":\"k\",\"state\":\"ugafmyboqqoimhhvcxcq\"}}"
+                            "raw": "{\"name\":\"b\",\"email\":\"zbailey@example.net\",\"password\":\"-0pBNvYgxw\",\"address\":{\"address_line1\":\"a\",\"city\":\"y\",\"country\":\"k\",\"postal_code\":\"cmyuwpwlvqwrsitc\",\"address_line2\":\"p\",\"state\":\"s\"}}"
                         },
                         "description": ""
                     },
@@ -3711,19 +3794,19 @@
                             "formdata": [
                                 {
                                     "key": "user_id",
-                                    "value": "aut",
+                                    "value": "architecto",
                                     "type": "text",
                                     "description": "The <code>id<\/code> of an existing record in the users table."
                                 },
                                 {
                                     "key": "name",
-                                    "value": "ctfsvrqupadzsktgeiyiebfzp",
+                                    "value": "n",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Voluptates consequatur nostrum minima eaque eos blanditiis.",
+                                    "value": "Animi quos velit et fugiat.",
                                     "type": "text",
                                     "description": "Must not be greater than 1000 characters."
                                 },
@@ -3784,13 +3867,13 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "txizsjhmvfqqspjvm",
+                                    "value": "b",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Repellendus temporibus maiores fugiat beatae a ut consequatur in.",
+                                    "value": "Et animi quos velit et fugiat.",
                                     "type": "text",
                                     "description": "Must not be greater than 1000 characters."
                                 },
@@ -3943,13 +4026,13 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "ueyennbressltvn",
+                                    "value": "b",
                                     "type": "text",
                                     "description": "Must not be greater than 255 characters."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "Suscipit nemo est alias voluptatum ullam.",
+                                    "value": "Et animi quos velit et fugiat.",
                                     "type": "text",
                                     "description": "Must not be greater than 1000 characters."
                                 },
