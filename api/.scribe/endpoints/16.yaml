@@ -1,45 +1,49 @@
-name: 'Payment Processing'
+name: 'Email Verification'
 description: ''
 endpoints:
   -
     httpMethods:
-      - POST
-    uri: 'api/payments/{gateway}/create'
+      - GET
+    uri: 'api/email/verify/{id}/{hash}'
     metadata:
-      groupName: 'Payment Processing'
+      groupName: 'Email Verification'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Create or retrieve payment intent'
+      title: "Verify a user's email address"
       description: |-
-        Creates a new Stripe PaymentIntent for the specified order, or returns an existing one if already created.
-        This prevents duplicate payment intents for the same order. The client secret returned should be used
-        on the frontend to complete the payment with Stripe's client-side libraries.
-      authenticated: true
+        This endpoint verifies a user's email address using a signed URL that is sent to their email
+        after registration. The verification link contains the user ID and a hash for security.
+        Once verified, the user's email_verified_at timestamp is set and they can access protected features.
+      authenticated: false
       custom: []
     headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
-      gateway:
-        name: gateway
-        description: 'The payment gateway to use. Currently only "stripe" is supported.'
+      id:
+        name: id
+        description: 'The ID of the verify.'
         required: true
-        example: stripe
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      hash:
+        name: hash
+        description: "The verification hash that ensures the link is valid and hasn't been tampered with. This is automatically included in the verification link."
+        required: true
+        example: abc123def456ghi789
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-    cleanUrlParameters:
-      gateway: stripe
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      order_id:
-        name: order_id
-        description: 'The ID of the order to create payment for. Must be a valid, unpaid order.'
+      user_id:
+        name: user_id
+        description: 'The ID of the user whose email is being verified. This is automatically included in the verification link.'
         required: true
         example: 123
         type: integer
@@ -47,273 +51,626 @@ endpoints:
         exampleWasSpecified: true
         nullable: false
         custom: []
-    cleanBodyParameters:
-      order_id: 123
+    cleanUrlParameters:
+      id: architecto
+      hash: abc123def456ghi789
+      user_id: 123
+    queryParameters:
+      expires:
+        name: expires
+        description: 'The expiration timestamp for the verification link. Automatically included.'
+        required: true
+        example: 1640995200
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      signature:
+        name: signature
+        description: 'The signature that validates the signed URL. Automatically included.'
+        required: true
+        example: xyz789abc123def456
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanQueryParameters:
+      expires: 1640995200
+      signature: xyz789abc123def456
+    bodyParameters: []
+    cleanBodyParameters: []
     fileParameters: []
     responses:
       -
-        status: 200
+        status: 302
         content: |-
           {
-            "status": true,
-            "message": "PaymentIntent created successfully.",
-            "data": {
-              "client_secret": "pi_1234567890abcdef_secret_xyz789abc123"
+            "description": "User is redirected to the frontend email verification success page",
+            "headers": {
+              "Location": "https://yourfrontend.com/email-verified"
             }
           }
         headers: []
-        description: 'New PaymentIntent created'
+        description: 'Email verified successfully'
         custom: []
       -
-        status: 200
+        status: 302
         content: |-
           {
-            "status": true,
-            "message": "Existing PaymentIntent retrieved.",
-            "data": {
-              "client_secret": "pi_1234567890abcdef_secret_xyz789abc123"
+            "description": "User is redirected to the frontend (email was already verified previously)",
+            "headers": {
+              "Location": "https://yourfrontend.com/email-verified"
             }
           }
         headers: []
-        description: 'Existing PaymentIntent retrieved'
+        description: 'Email already verified'
         custom: []
       -
-        status: 200
+        status: 401
         content: |-
           {
-            "status": true,
-            "message": "Payment has already been processed for this order.",
-            "data": null
+            "message": "Invalid/Expired url provided.",
+            "status": 401
           }
         headers: []
-        description: 'Order already paid'
+        description: 'Invalid or expired verification link'
         custom: []
       -
-        status: 400
+        status: 403
         content: |-
           {
-            "status": false,
-            "message": "Unsupported payment gateway",
-            "data": null
+            "message": "Invalid/Expired url provided.",
+            "status": 401
           }
         headers: []
-        description: 'Unsupported gateway'
+        description: 'Signature verification failed'
         custom: []
       -
-        status: 400
+        status: 403
         content: |-
           {
-            "status": false,
-            "message": "Order has already been paid or is not in a payable state.",
-            "data": null
+              "message": "Invalid signature.",
+              "exception": "Illuminate\\Routing\\Exceptions\\InvalidSignatureException",
+              "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ValidateSignature.php",
+              "line": 73,
+              "trace": [
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Routing\\Middleware\\ValidateSignature",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityMonitoring.php",
+                      "line": 27,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "App\\Http\\Middleware\\V1\\SecurityMonitoring",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityLogger.php",
+                      "line": 23,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "App\\Http\\Middleware\\V1\\SecurityLogger",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityHeaders.php",
+                      "line": 12,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "App\\Http\\Middleware\\V1\\SecurityHeaders",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php",
+                      "line": 51,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Routing\\Middleware\\SubstituteBindings",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 127,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+                      "line": 807,
+                      "function": "then",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+                      "line": 786,
+                      "function": "runRouteWithinStack",
+                      "class": "Illuminate\\Routing\\Router",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+                      "line": 750,
+                      "function": "runRoute",
+                      "class": "Illuminate\\Routing\\Router",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+                      "line": 739,
+                      "function": "dispatchToRoute",
+                      "class": "Illuminate\\Routing\\Router",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php",
+                      "line": 201,
+                      "function": "dispatch",
+                      "class": "Illuminate\\Routing\\Router",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 170,
+                      "function": "Illuminate\\Foundation\\Http\\{closure}",
+                      "class": "Illuminate\\Foundation\\Http\\Kernel",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php",
+                      "line": 21,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php",
+                      "line": 31,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php",
+                      "line": 21,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php",
+                      "line": 51,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Middleware\\TrimStrings",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php",
+                      "line": 27,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Http\\Middleware\\ValidatePostSize",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php",
+                      "line": 110,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php",
+                      "line": 62,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Http\\Middleware\\HandleCors",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php",
+                      "line": 58,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Http\\Middleware\\TrustProxies",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php",
+                      "line": 22,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Middleware\\InvokeDeferredCallbacks",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 127,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php",
+                      "line": 176,
+                      "function": "then",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php",
+                      "line": 145,
+                      "function": "sendRequestThroughRouter",
+                      "class": "Illuminate\\Foundation\\Http\\Kernel",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
+                      "line": 310,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Kernel",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
+                      "line": 298,
+                      "function": "callLaravelOrLumenRoute",
+                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
+                      "line": 91,
+                      "function": "makeApiCall",
+                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
+                      "line": 44,
+                      "function": "makeResponseCall",
+                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
+                      "line": 35,
+                      "function": "makeResponseCallIfConditionsPass",
+                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php",
+                      "line": 237,
+                      "function": "__invoke",
+                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php",
+                      "line": 163,
+                      "function": "iterateThroughStrategies",
+                      "class": "Knuckles\\Scribe\\Extracting\\Extractor",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php",
+                      "line": 95,
+                      "function": "fetchResponses",
+                      "class": "Knuckles\\Scribe\\Extracting\\Extractor",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php",
+                      "line": 125,
+                      "function": "processRoute",
+                      "class": "Knuckles\\Scribe\\Extracting\\Extractor",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php",
+                      "line": 72,
+                      "function": "extractEndpointsInfoFromLaravelApp",
+                      "class": "Knuckles\\Scribe\\GroupedEndpoints\\GroupedEndpointsFromApp",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php",
+                      "line": 50,
+                      "function": "extractEndpointsInfoAndWriteToDisk",
+                      "class": "Knuckles\\Scribe\\GroupedEndpoints\\GroupedEndpointsFromApp",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Commands/GenerateDocumentation.php",
+                      "line": 53,
+                      "function": "get",
+                      "class": "Knuckles\\Scribe\\GroupedEndpoints\\GroupedEndpointsFromApp",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php",
+                      "line": 36,
+                      "function": "handle",
+                      "class": "Knuckles\\Scribe\\Commands\\GenerateDocumentation",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Util.php",
+                      "line": 43,
+                      "function": "Illuminate\\Container\\{closure}",
+                      "class": "Illuminate\\Container\\BoundMethod",
+                      "type": "::"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php",
+                      "line": 95,
+                      "function": "unwrapIfClosure",
+                      "class": "Illuminate\\Container\\Util",
+                      "type": "::"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php",
+                      "line": 35,
+                      "function": "callBoundMethod",
+                      "class": "Illuminate\\Container\\BoundMethod",
+                      "type": "::"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Container.php",
+                      "line": 694,
+                      "function": "call",
+                      "class": "Illuminate\\Container\\BoundMethod",
+                      "type": "::"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php",
+                      "line": 213,
+                      "function": "call",
+                      "class": "Illuminate\\Container\\Container",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/symfony/console/Command/Command.php",
+                      "line": 279,
+                      "function": "execute",
+                      "class": "Illuminate\\Console\\Command",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php",
+                      "line": 182,
+                      "function": "run",
+                      "class": "Symfony\\Component\\Console\\Command\\Command",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/symfony/console/Application.php",
+                      "line": 1094,
+                      "function": "run",
+                      "class": "Illuminate\\Console\\Command",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/symfony/console/Application.php",
+                      "line": 342,
+                      "function": "doRunCommand",
+                      "class": "Symfony\\Component\\Console\\Application",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/symfony/console/Application.php",
+                      "line": 193,
+                      "function": "doRun",
+                      "class": "Symfony\\Component\\Console\\Application",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php",
+                      "line": 198,
+                      "function": "run",
+                      "class": "Symfony\\Component\\Console\\Application",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Application.php",
+                      "line": 1208,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Console\\Kernel",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/artisan",
+                      "line": 13,
+                      "function": "handleCommand",
+                      "class": "Illuminate\\Foundation\\Application",
+                      "type": "->"
+                  }
+              ]
           }
-        headers: []
-        description: 'Order not eligible for payment'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-content-type-options: nosniff
+          x-frame-options: DENY
+          x-xss-protection: '1; mode=block'
+          content-security-policy: "default-src 'none'; frame-ancestors 'none';"
+          referrer-policy: strict-origin-when-cross-origin
+          permissions-policy: 'camera=(), microphone=(), geolocation=(), payment=()'
+          access-control-allow-origin: 'http://marketplace.com'
+          access-control-allow-credentials: 'true'
+          access-control-expose-headers: 'Authorization, X-Custom-Header, Content-Type'
+        description: null
         custom: []
       -
         status: 404
         content: |-
           {
-            "status": false,
-            "message": "No query results for model [App\\Models\\Order] 999",
-            "data": null
+            "message": "No query results for model [App\\Models\\User] 123"
           }
         headers: []
-        description: 'Order not found'
-        custom: []
-      -
-        status: 422
-        content: |-
-          {
-            "errors": [
-              "The order id field is required.",
-              "The order id must be an integer.",
-              "The selected order id is invalid."
-            ]
-          }
-        headers: []
-        description: 'Invalid order data'
-        custom: []
-      -
-        status: 500
-        content: |-
-          {
-            "status": false,
-            "message": "Unable to create payment intent with Stripe. Please try again.",
-            "data": null
-          }
-        headers: []
-        description: 'Stripe API error'
+        description: 'User not found'
         custom: []
     responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    auth: []
     controller: null
     method: null
     route: null
     custom: []
   -
     httpMethods:
-      - POST
-    uri: 'api/payments/{gateway}/verify'
+      - GET
+    uri: api/email/resend
     metadata:
-      groupName: 'Payment Processing'
+      groupName: 'Email Verification'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Verify payment status'
+      title: 'Resend email verification notification'
       description: |-
-        Manually verifies the status of a payment with Stripe and updates the local database accordingly.
-        This is useful for handling cases where webhooks might have failed or been delayed.
-        It fetches the latest payment status directly from Stripe and synchronizes it with your database.
+        Sends a new email verification link to the authenticated user's email address.
+        This is useful when users don't receive the initial verification email or when
+        the verification link has expired. The user must be authenticated to request a resend.
       authenticated: true
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
-    urlParameters:
-      gateway:
-        name: gateway
-        description: 'The payment gateway used. Currently only "stripe" is supported.'
-        required: true
-        example: stripe
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      gateway: stripe
+    urlParameters: []
+    cleanUrlParameters: []
     queryParameters: []
     cleanQueryParameters: []
-    bodyParameters:
-      payment_intent_id:
-        name: payment_intent_id
-        description: 'The Stripe PaymentIntent ID to verify. Must be a valid Stripe PaymentIntent ID format.'
-        required: true
-        example: pi_1234567890abcdef
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      order_id:
-        name: order_id
-        description: 'The ID of the order associated with this payment for verification.'
-        required: true
-        example: 123
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      payment_intent_id: pi_1234567890abcdef
-      order_id: 123
+    bodyParameters: []
+    cleanBodyParameters: []
     fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
-            "status": true,
-            "message": "Payment verified",
-            "data": {
-              "payment_status": "Paid",
-              "order_status": "Confirmed"
-            }
+            "message": "Email verification link sent on your email id.",
+            "status": 200
           }
         headers: []
-        description: 'Payment verified as successful'
-        custom: []
-      -
-        status: 200
-        content: |-
-          {
-            "status": true,
-            "message": "Payment verified",
-            "data": {
-              "payment_status": "Pending",
-              "order_status": "Pending Payment"
-            }
-          }
-        headers: []
-        description: 'Payment still pending'
-        custom: []
-      -
-        status: 200
-        content: |-
-          {
-            "status": true,
-            "message": "Payment verified",
-            "data": {
-              "payment_status": "Failed",
-              "order_status": "Failed"
-            }
-          }
-        headers: []
-        description: 'Payment failed'
+        description: 'Verification email sent successfully'
         custom: []
       -
         status: 400
         content: |-
           {
-            "status": false,
-            "message": "Unsupported payment gateway",
-            "data": null
+            "message": "Email already verified.",
+            "status": 400
           }
         headers: []
-        description: 'Unsupported gateway'
+        description: 'Email already verified'
         custom: []
       -
-        status: 400
+        status: 401
         content: |-
           {
-            "status": false,
-            "message": "Payment amount mismatch",
-            "data": null
+            "message": "Unauthenticated.",
+            "status": 401
           }
         headers: []
-        description: 'Payment amount mismatch'
+        description: 'User not authenticated'
         custom: []
       -
-        status: 404
+        status: 429
         content: |-
           {
-            "status": false,
-            "message": "Payment not found",
-            "data": null
+            "message": "Too many verification emails sent. Please wait before requesting another.",
+            "status": 429
           }
         headers: []
-        description: 'Payment not found in database'
-        custom: []
-      -
-        status: 422
-        content: |-
-          {
-            "errors": [
-              "The payment intent id field is required.",
-              "The payment intent id format is invalid. Must be a valid Stripe payment intent ID.",
-              "The order id field is required.",
-              "The selected order id is invalid."
-            ]
-          }
-        headers: []
-        description: 'Validation errors'
+        description: 'Too many requests'
         custom: []
       -
         status: 500
         content: |-
           {
-            "status": false,
-            "message": "Unable to retrieve payment from Stripe: No such payment_intent: 'pi_invalid'",
-            "data": null
+            "message": "Failed to send verification email. Please try again later.",
+            "status": 500
           }
         headers: []
-        description: 'Stripe API error'
+        description: 'Email sending failed'
         custom: []
     responseFields: []
     auth:

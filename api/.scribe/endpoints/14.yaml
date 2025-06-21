@@ -1,408 +1,21 @@
-name: Authentication
+name: 'Payment Management'
 description: ''
 endpoints:
   -
     httpMethods:
-      - POST
-    uri: api/register
-    metadata:
-      groupName: Authentication
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Register a new user'
-      description: |-
-        Creates a new user account with email verification. The user will receive an email to verify their account.
-        Passwords must meet security requirements including minimum length, character diversity, and cannot be common passwords.
-      authenticated: false
-      custom: []
-    headers:
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      name:
-        name: name
-        description: "The user's full name."
-        required: true
-        example: 'John Doe'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      email:
-        name: email
-        description: "The user's email address. Must be unique."
-        required: true
-        example: john@example.com
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      password:
-        name: password
-        description: "The user's password. Must be at least 12 characters with uppercase, lowercase, numbers, and symbols."
-        required: true
-        example: MySecurePass123!
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      password_confirmation:
-        name: password_confirmation
-        description: 'Password confirmation. Must match the password field.'
-        required: true
-        example: MySecurePass123!
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      name: 'John Doe'
-      email: john@example.com
-      password: MySecurePass123!
-      password_confirmation: MySecurePass123!
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "data": [],
-            "message": "User registered successfully.",
-            "status": 200
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 422
-        content: |-
-          {
-            "message": "Password does not meet security requirements.",
-            "errors": [
-              "Password must contain at least 1 uppercase letter(s).",
-              "Password cannot contain common words or patterns that are not secure."
-            ],
-            "strength": {
-              "score": 45,
-              "strength": "medium",
-              "feedback": ["Add special characters", "Use more unique characters"]
-            }
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 423
-        content: |-
-          {
-            "message": "Registration temporarily blocked. Please try again later.",
-            "time_remaining_minutes": 15
-          }
-        headers: []
-        description: ''
-        custom: []
-    responseFields: []
-    auth: []
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/login
-    metadata:
-      groupName: Authentication
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'User login'
-      description: 'Authenticates a user and returns an access token. Implements account lockout protection and tracks failed attempts.'
-      authenticated: false
-      custom: []
-    headers:
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      email:
-        name: email
-        description: "The user's email address."
-        required: true
-        example: john@example.com
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      password:
-        name: password
-        description: "The user's password."
-        required: true
-        example: MySecurePass123!
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      remember:
-        name: remember
-        description: 'optional Whether to remember the user for extended period.'
-        required: false
-        example: true
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        custom: []
-    cleanBodyParameters:
-      email: john@example.com
-      password: MySecurePass123!
-      remember: true
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "data": {
-              "token_type": "Bearer",
-              "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...",
-              "expires_at": 1640995200,
-              "user": {
-                "id": 1,
-                "email": "john@example.com",
-                "role": "user"
-              }
-            },
-            "message": "User logged in successfully.",
-            "status": 200
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 401
-        content: |-
-          {
-            "message": "Invalid credentials"
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 423
-        content: |-
-          {
-            "message": "Account is temporarily locked due to multiple failed login attempts.",
-            "locked_until": "2024-01-15T15:30:00.000000Z",
-            "time_remaining_seconds": 1800,
-            "time_remaining_minutes": 30,
-            "lockout_count": 2
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 426
-        content: |-
-          {
-            "message": "Your password has expired and must be changed before logging in.",
-            "password_expired": true,
-            "change_password_required": true
-          }
-        headers: []
-        description: ''
-        custom: []
-    responseFields: []
-    auth: []
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/logout
-    metadata:
-      groupName: Authentication
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'User logout'
-      description: 'Logs out the authenticated user and revokes their access token.'
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "data": [],
-            "message": "User logged out successfully",
-            "status": 200
-          }
-        headers: []
-        description: ''
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/change-password
-    metadata:
-      groupName: Authentication
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Change password'
-      description: "Changes the authenticated user's password. Requires current password verification and validates new password strength."
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      current_password:
-        name: current_password
-        description: "The user's current password."
-        required: true
-        example: MyOldPass123!
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      new_password:
-        name: new_password
-        description: 'The new password. Must meet security requirements.'
-        required: true
-        example: MyNewSecurePass456!
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      new_password_confirmation:
-        name: new_password_confirmation
-        description: 'Confirmation of the new password.'
-        required: true
-        example: MyNewSecurePass456!
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      current_password: MyOldPass123!
-      new_password: MyNewSecurePass456!
-      new_password_confirmation: MyNewSecurePass456!
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "data": {
-              "password_strength": {
-                "score": 85,
-                "strength": "very strong",
-                "feedback": []
-              },
-              "security_score": {
-                "score": 95,
-                "level": "excellent",
-                "issues": []
-              }
-            },
-            "message": "Password changed successfully",
-            "status": 200
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 401
-        content: |-
-          {
-            "message": "Current password is incorrect"
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 422
-        content: |-
-          {
-            "message": "New password does not meet security requirements.",
-            "errors": [
-              "Password cannot be the same as your last 5 passwords."
-            ],
-            "strength": {
-              "score": 45,
-              "strength": "medium",
-              "feedback": ["Add special characters"]
-            }
-          }
-        headers: []
-        description: ''
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
       - GET
-    uri: api/security-info
+    uri: api/admin/payments
     metadata:
-      groupName: Authentication
+      groupName: 'Payment Management'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Get security information'
-      description: 'Retrieves comprehensive security information for the authenticated user including account lock status, security score, and password expiry details.'
+      title: 'Retrieve paginated list of payments'
+      description: |-
+        Get a comprehensive list of all payments in the system with pagination support.
+        This endpoint provides administrators with detailed payment information including
+        transaction details, payment methods, amounts, statuses, and associated order information.
+        Essential for financial reporting, payment reconciliation, and transaction monitoring.
       authenticated: true
       custom: []
     headers:
@@ -411,8 +24,118 @@ endpoints:
       Accept: application/json
     urlParameters: []
     cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
+    queryParameters:
+      page:
+        name: page
+        description: 'optional Page number for pagination. Default: 1.'
+        required: false
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      per_page:
+        name: per_page
+        description: 'optional Number of payments per page (max 100). Default: 15.'
+        required: false
+        example: 25
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      status:
+        name: status
+        description: 'optional Filter by payment status. Available: Paid, Pending, Failed, Canceled, Refunded, Partially Refunded.'
+        required: false
+        example: Paid
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      method:
+        name: method
+        description: 'optional Filter by payment method. Available: stripe, paypal, card, bank transfer, apple pay, google pay.'
+        required: false
+        example: stripe
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      user_id:
+        name: user_id
+        description: 'optional Filter payments by specific user ID.'
+        required: false
+        example: 123
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      order_id:
+        name: order_id
+        description: 'optional Filter payments by specific order ID.'
+        required: false
+        example: 456
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      date_from:
+        name: date_from
+        description: 'optional Filter payments from this date (YYYY-MM-DD format).'
+        required: false
+        example: '2025-01-01'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      date_to:
+        name: date_to
+        description: 'optional Filter payments to this date (YYYY-MM-DD format).'
+        required: false
+        example: '2025-01-31'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      amount_min:
+        name: amount_min
+        description: 'numeric optional Filter payments with minimum amount in pounds.'
+        required: false
+        example: '10.00'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      amount_max:
+        name: amount_max
+        description: 'numeric optional Filter payments with maximum amount in pounds.'
+        required: false
+        example: '500.00'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanQueryParameters:
+      page: 2
+      per_page: 25
+      status: Paid
+      method: stripe
+      user_id: 123
+      order_id: 456
+      date_from: '2025-01-01'
+      date_to: '2025-01-31'
+      amount_min: '10.00'
+      amount_max: '500.00'
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
@@ -421,207 +144,220 @@ endpoints:
         status: 200
         content: |-
           {
+            "message": "Payments retrieved successfully.",
             "data": {
-              "account_lock": {
-                "is_locked": false,
-                "failed_attempts": 0,
-                "max_attempts": 5,
-                "lockout_count": 0,
-                "locked_until": null,
-                "time_until_unlock": null,
-                "last_attempt_at": null,
-                "last_successful_login": "2024-01-15T10:30:00.000000Z",
-                "should_reset": false
-              },
-              "security_score": {
-                "score": 85,
-                "level": "good",
-                "issues": ["Medium strength password"]
-              },
-              "password_expiry": {
-                "requires_change": false,
-                "days_until_expiry": 45,
-                "last_changed": "2024-01-01T12:00:00.000000Z"
-              },
-              "login_history": {
-                "last_login": "2024-01-15T10:30:00.000000Z",
-                "last_login_ip": "192.168.1.100"
-              }
-            },
-            "message": "Security information retrieved",
-            "status": 200
+              "data": [
+                {
+                  "id": 267,
+                  "gateway": "stripe",
+                  "amount": 8498,
+                  "amount_formatted": "£84.98",
+                  "method": "stripe",
+                  "status": "Paid",
+                  "transaction_reference": "pi_1Hxxxxxxxxxxxx",
+                  "processed_at": "2025-01-15T14:22:00",
+                  "created_at": "2025-01-15T14:21:00",
+                  "updated_at": "2025-01-15T14:22:00",
+                  "user": {
+                    "id": 123,
+                    "name": "Sarah Johnson",
+                    "email": "sarah.johnson@example.com",
+                    "email_verified_at": "2025-01-10T08:00:00.000000Z"
+                  },
+                  "order": {
+                    "id": 45,
+                    "total_amount": 8498,
+                    "total_amount_formatted": "£84.98",
+                    "status": {
+                      "id": 3,
+                      "name": "Confirmed"
+                    },
+                    "created_at": "2025-01-15T14:20:00.000000Z",
+                    "updated_at": "2025-01-15T14:22:00.000000Z"
+                  },
+                  "payment_method": {
+                    "id": 1,
+                    "name": "stripe"
+                  }
+                },
+                {
+                  "id": 265,
+                  "gateway": "stripe",
+                  "amount": 2999,
+                  "amount_formatted": "£29.99",
+                  "method": "stripe",
+                  "status": "Partially Refunded",
+                  "transaction_reference": "pi_1Gxxxxxxxxxx",
+                  "processed_at": "2025-01-10T16:32:00",
+                  "created_at": "2025-01-10T16:31:00",
+                  "updated_at": "2025-01-14T11:25:00",
+                  "user": {
+                    "id": 89,
+                    "name": "Michael Chen",
+                    "email": "michael.chen@example.com",
+                    "email_verified_at": "2025-01-08T12:00:00.000000Z"
+                  },
+                  "order": {
+                    "id": 38,
+                    "total_amount": 2999,
+                    "total_amount_formatted": "£29.99",
+                    "status": {
+                      "id": 9,
+                      "name": "Partially Refunded"
+                    },
+                    "created_at": "2025-01-10T16:30:00.000000Z",
+                    "updated_at": "2025-01-14T11:25:00.000000Z"
+                  },
+                  "payment_method": {
+                    "id": 1,
+                    "name": "stripe"
+                  }
+                },
+                {
+                  "id": 263,
+                  "gateway": "stripe",
+                  "amount": 15500,
+                  "amount_formatted": "£155.00",
+                  "method": "stripe",
+                  "status": "Failed",
+                  "transaction_reference": "pi_1Fxxxxxxxxxx",
+                  "processed_at": "2025-01-08T09:15:00",
+                  "created_at": "2025-01-08T09:14:00",
+                  "updated_at": "2025-01-08T09:15:00",
+                  "user": {
+                    "id": 67,
+                    "name": "Emma Wilson",
+                    "email": "emma.wilson@example.com",
+                    "email_verified_at": "2025-01-05T14:00:00.000000Z"
+                  },
+                  "order": {
+                    "id": 34,
+                    "total_amount": 15500,
+                    "total_amount_formatted": "£155.00",
+                    "status": {
+                      "id": 10,
+                      "name": "Failed"
+                    },
+                    "created_at": "2025-01-08T09:12:00.000000Z",
+                    "updated_at": "2025-01-08T09:15:00.000000Z"
+                  },
+                  "payment_method": {
+                    "id": 1,
+                    "name": "stripe"
+                  }
+                }
+              ],
+              "current_page": 1,
+              "per_page": 15,
+              "total": 1247,
+              "last_page": 84,
+              "from": 1,
+              "to": 15,
+              "path": "https://yourapi.com/api/v1/admin/payments",
+              "first_page_url": "https://yourapi.com/api/v1/admin/payments?page=1",
+              "last_page_url": "https://yourapi.com/api/v1/admin/payments?page=84",
+              "next_page_url": "https://yourapi.com/api/v1/admin/payments?page=2",
+              "prev_page_url": null
+            }
           }
         headers: []
-        description: ''
+        description: 'Payments retrieved successfully'
+        custom: []
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Payments retrieved successfully.",
+            "data": {
+              "data": [
+                {
+                  "id": 268,
+                  "gateway": "stripe",
+                  "amount": 5999,
+                  "amount_formatted": "£59.99",
+                  "method": "stripe",
+                  "status": "Pending",
+                  "transaction_reference": "pi_1Jxxxxxxxxxx",
+                  "processed_at": "2025-01-16T10:30:00",
+                  "created_at": "2025-01-16T10:29:00",
+                  "updated_at": "2025-01-16T10:30:00",
+                  "user": {
+                    "id": 156,
+                    "name": "David Rodriguez",
+                    "email": "david.rodriguez@example.com"
+                  },
+                  "order": {
+                    "id": 47,
+                    "total_amount": 5999,
+                    "total_amount_formatted": "£59.99",
+                    "status": {
+                      "id": 1,
+                      "name": "Pending Payment"
+                    }
+                  },
+                  "payment_method": {
+                    "id": 1,
+                    "name": "stripe"
+                  }
+                }
+              ],
+              "current_page": 1,
+              "per_page": 15,
+              "total": 23,
+              "last_page": 2,
+              "from": 1,
+              "to": 15
+            }
+          }
+        headers: []
+        description: 'Filtered payments with specific status'
+        custom: []
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Payments retrieved successfully.",
+            "data": {
+              "data": [],
+              "current_page": 1,
+              "per_page": 15,
+              "total": 0,
+              "last_page": 1,
+              "from": null,
+              "to": null
+            }
+          }
+        headers: []
+        description: 'No payments found'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "errors": [
+              "The status field must be one of: Paid, Pending, Failed, Canceled, Refunded, Partially Refunded.",
+              "The date from field must be a valid date in YYYY-MM-DD format.",
+              "The amount min field must be a number greater than 0.",
+              "The user id field must be an integer."
+            ]
+          }
+        headers: []
+        description: 'Invalid filter parameters'
         custom: []
     responseFields: []
     auth:
       - headers
       - Authorization
       - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/forgot-password
-    metadata:
-      groupName: Authentication
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Forgot password'
-      description: "Sends a password reset link to the user's email address."
-      authenticated: false
-      custom: []
-    headers:
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      email:
-        name: email
-        description: "The user's email address."
-        required: true
-        example: john@example.com
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      email: john@example.com
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "data": [],
-            "message": "We have emailed your password reset link!",
-            "status": 200
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 423
-        content: |-
-          {
-            "message": "Password reset temporarily blocked. Please try again later."
-          }
-        headers: []
-        description: ''
-        custom: []
-    responseFields: []
-    auth: []
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/reset-password
-    metadata:
-      groupName: Authentication
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Reset password'
-      description: "Resets the user's password using a valid reset token from the forgot password email."
-      authenticated: false
-      custom: []
-    headers:
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      token:
-        name: token
-        description: 'The password reset token from the email.'
-        required: true
-        example: abc123def456
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      email:
-        name: email
-        description: "The user's email address."
-        required: true
-        example: john@example.com
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      password:
-        name: password
-        description: 'The new password. Must meet security requirements.'
-        required: true
-        example: MyNewSecurePass456!
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      password_confirmation:
-        name: password_confirmation
-        description: 'Confirmation of the new password.'
-        required: true
-        example: MyNewSecurePass456!
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      token: abc123def456
-      email: john@example.com
-      password: MyNewSecurePass456!
-      password_confirmation: MyNewSecurePass456!
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "data": [],
-            "message": "Your password has been reset!",
-            "status": 200
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 422
-        content: |-
-          {
-            "message": "New password does not meet security requirements.",
-            "errors": [
-              "Password must contain at least 1 special character(s)."
-            ],
-            "strength": {
-              "score": 60,
-              "strength": "strong",
-              "feedback": ["Add special characters"]
-            }
-          }
-        headers: []
-        description: ''
-        custom: []
-    responseFields: []
-    auth: []
     controller: null
     method: null
     route: null

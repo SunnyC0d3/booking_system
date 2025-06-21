@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "E-Commerce API Documentation",
-        "_postman_id": "e90f0d23-ba8b-4b55-b262-3bf8eead63a1",
+        "_postman_id": "c97d5533-64ea-4e27-81f8-3b5aee6acbd4",
         "description": "Comprehensive API for managing products, orders, payments, users, vendors, and more in an e-commerce platform.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json",
         "version": "1.0.0"
@@ -1155,232 +1155,6 @@
             ]
         },
         {
-            "name": "Product Tags",
-            "description": "",
-            "item": [
-                {
-                    "name": "Retrieve all product tags.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/product-tags",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/product-tags"
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Tags retrieved successfully.\",\n    \"data\": [\n        {\"id\": 1, \"name\": \"Electronics\"},\n        {\"id\": 2, \"name\": \"Fashion\"}\n    ]\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Create a new product tag.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/product-tags",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/product-tags"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"name\":\"architecto\"}"
-                        },
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Tag created successfully.\",\n    \"data\": {\"id\": 3, \"name\": \"Home Appliances\"}\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Retrieve a specific product tag.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/product-tags\/:productTag_id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/product-tags\/:productTag_id",
-                            "variable": [
-                                {
-                                    "id": "productTag_id",
-                                    "key": "productTag_id",
-                                    "value": "1",
-                                    "description": "The ID of the productTag."
-                                }
-                            ]
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Tag retrieved successfully.\",\n    \"data\": {\"id\": 1, \"name\": \"Electronics\"}\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Update an existing product tag.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/product-tags\/:productTag_id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/product-tags\/:productTag_id",
-                            "variable": [
-                                {
-                                    "id": "productTag_id",
-                                    "key": "productTag_id",
-                                    "value": "1",
-                                    "description": "The ID of the productTag."
-                                }
-                            ]
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"name\":\"architecto\"}"
-                        },
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Tag updated successfully.\",\n    \"data\": {\"id\": 1, \"name\": \"Gadgets\"}\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Delete a product tag.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/product-tags\/:productTag_id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/product-tags\/:productTag_id",
-                            "variable": [
-                                {
-                                    "id": "productTag_id",
-                                    "key": "productTag_id",
-                                    "value": "1",
-                                    "description": "The ID of the productTag."
-                                }
-                            ]
-                        },
-                        "method": "DELETE",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Tag deleted successfully.\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                }
-            ]
-        },
-        {
             "name": "Order Management",
             "description": "",
             "item": [
@@ -2011,6 +1785,117 @@
                             "code": 500,
                             "body": "{\n  \"status\": false,\n  \"message\": \"Unable to retrieve payment from Stripe: No such payment_intent: 'pi_invalid'\",\n  \"data\": null\n}",
                             "name": "Stripe API error"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Refund Management",
+            "description": "",
+            "item": [
+                {
+                    "name": "Retrieve a paginated list of all refund records",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/refunds",
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "2",
+                                    "description": "optional Page number for pagination. Default: 1.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "25",
+                                    "description": "optional Number of refunds per page (max 100). Default: 20.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "Refunded",
+                                    "description": "optional Filter by refund status. Available: Pending, Processing, Refunded, Partially Refunded, Failed, Cancelled, Declined.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "date_from",
+                                    "value": "2025-01-01",
+                                    "description": "optional Filter refunds from this date (YYYY-MM-DD format).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "date_to",
+                                    "value": "2025-01-31",
+                                    "description": "optional Filter refunds to this date (YYYY-MM-DD format).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "order_id",
+                                    "value": "45",
+                                    "description": "optional Filter refunds by specific order ID.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "user_id",
+                                    "value": "123",
+                                    "description": "optional Filter refunds by specific customer ID.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "amount_min",
+                                    "value": "10.00",
+                                    "description": "numeric optional Filter refunds with minimum amount in pounds.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "amount_max",
+                                    "value": "500.00",
+                                    "description": "numeric optional Filter refunds with maximum amount in pounds.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/admin\/refunds?page=2&per_page=25&status=Refunded&date_from=2025-01-01&date_to=2025-01-31&order_id=45&user_id=123&amount_min=10.00&amount_max=500.00"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Get a comprehensive list of all refunds processed in the system with detailed information\nabout amounts, statuses, associated orders, and processing details. This endpoint is essential\nfor financial reporting, refund tracking, customer service, and administrative oversight\nof refund operations. Includes complete audit trail for each refund transaction."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Refunds retrieved successfully.\",\n    \"data\": {\n        \"data\": [\n            {\n                \"id\": 1,\n                \"amount\": 2999,\n                \"amount_formatted\": \"\u00a329.99\",\n                \"processed_at\": \"2025-01-15T14:45:00.000000Z\",\n                \"notes\": \"Refund processed for damaged product - customer reported speaker crackling at high volume\",\n                \"status\": {\n                    \"id\": 3,\n                    \"name\": \"Refunded\"\n                },\n                \"order_return\": {\n                    \"id\": 15,\n                    \"reason\": \"Product damaged on arrival - speaker has crackling sound at any volume level\",\n                    \"status\": {\n                        \"id\": 7,\n                        \"name\": \"Completed\"\n                    },\n                    \"created_at\": \"2025-01-14T09:30:00.000000Z\",\n                    \"updated_at\": \"2025-01-15T14:45:00.000000Z\",\n                    \"order_item\": {\n                        \"id\": 25,\n                        \"quantity\": 1,\n                        \"price\": 2999,\n                        \"price_formatted\": \"\u00a329.99\",\n                        \"product\": {\n                            \"id\": 12,\n                            \"name\": \"Wireless Headphones\",\n                            \"description\": \"Premium quality wireless headphones with active noise cancellation\"\n                        },\n                        \"order\": {\n                            \"id\": 8,\n                            \"total_amount\": 5998,\n                            \"total_amount_formatted\": \"\u00a359.98\",\n                            \"created_at\": \"2025-01-10T16:30:00.000000Z\",\n                            \"user\": {\n                                \"id\": 3,\n                                \"name\": \"Sarah Johnson\",\n                                \"email\": \"sarah@example.com\",\n                                \"email_verified_at\": \"2025-01-05T12:00:00.000000Z\"\n                            }\n                        }\n                    }\n                },\n                \"created_at\": \"2025-01-15T14:45:00.000000Z\",\n                \"updated_at\": \"2025-01-15T14:45:00.000000Z\"\n            },\n            {\n                \"id\": 2,\n                \"amount\": 7999,\n                \"amount_formatted\": \"\u00a379.99\",\n                \"processed_at\": \"2025-01-14T11:20:00.000000Z\",\n                \"notes\": \"Customer changed mind within return period - full refund approved\",\n                \"status\": {\n                    \"id\": 3,\n                    \"name\": \"Refunded\"\n                },\n                \"order_return\": {\n                    \"id\": 12,\n                    \"reason\": \"Changed mind about purchase - no longer needed\",\n                    \"status\": {\n                        \"id\": 7,\n                        \"name\": \"Completed\"\n                    },\n                    \"order_item\": {\n                        \"id\": 18,\n                        \"quantity\": 1,\n                        \"price\": 7999,\n                        \"price_formatted\": \"\u00a379.99\",\n                        \"product\": {\n                            \"id\": 23,\n                            \"name\": \"Premium Bluetooth Speaker\"\n                        },\n                        \"order\": {\n                            \"id\": 6,\n                            \"total_amount\": 7999,\n                            \"total_amount_formatted\": \"\u00a379.99\",\n                            \"user\": {\n                                \"id\": 7,\n                                \"name\": \"Michael Chen\",\n                                \"email\": \"michael@example.com\"\n                            }\n                        }\n                    }\n                },\n                \"created_at\": \"2025-01-14T11:20:00.000000Z\",\n                \"updated_at\": \"2025-01-14T11:20:00.000000Z\"\n            },\n            {\n                \"id\": 3,\n                \"amount\": 1500,\n                \"amount_formatted\": \"\u00a315.00\",\n                \"processed_at\": null,\n                \"notes\": \"Partial refund for shipping delay compensation\",\n                \"status\": {\n                    \"id\": 1,\n                    \"name\": \"Processing\"\n                },\n                \"order_return\": {\n                    \"id\": 18,\n                    \"reason\": \"Shipping delay compensation request\",\n                    \"status\": {\n                        \"id\": 3,\n                        \"name\": \"Approved\"\n                    },\n                    \"order_item\": {\n                        \"id\": 32,\n                        \"product\": {\n                            \"id\": 45,\n                            \"name\": \"Wireless Charging Pad\"\n                        },\n                        \"order\": {\n                            \"id\": 12,\n                            \"user\": {\n                                \"id\": 15,\n                                \"name\": \"Emma Wilson\",\n                                \"email\": \"emma@example.com\"\n                            }\n                        }\n                    }\n                },\n                \"created_at\": \"2025-01-16T09:15:00.000000Z\",\n                \"updated_at\": \"2025-01-16T09:15:00.000000Z\"\n            }\n        ],\n        \"current_page\": 1,\n        \"per_page\": 20,\n        \"total\": 127,\n        \"last_page\": 7,\n        \"from\": 1,\n        \"to\": 20,\n        \"path\": \"https:\/\/yourapi.com\/api\/v1\/admin\/refunds\",\n        \"first_page_url\": \"https:\/\/yourapi.com\/api\/v1\/admin\/refunds?page=1\",\n        \"last_page_url\": \"https:\/\/yourapi.com\/api\/v1\/admin\/refunds?page=7\",\n        \"next_page_url\": \"https:\/\/yourapi.com\/api\/v1\/admin\/refunds?page=2\",\n        \"prev_page_url\": null\n    }\n}",
+                            "name": "Refunds retrieved successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Refunds retrieved successfully.\",\n    \"data\": {\n        \"data\": [],\n        \"current_page\": 1,\n        \"per_page\": 20,\n        \"total\": 0,\n        \"last_page\": 1,\n        \"from\": null,\n        \"to\": null\n    }\n}",
+                            "name": "No refunds found"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"errors\": [\n        \"The status field must be one of: Pending, Processing, Refunded, Partially Refunded, Failed, Cancelled, Declined.\",\n        \"The date from field must be a valid date in YYYY-MM-DD format.\",\n        \"The amount min field must be a number greater than 0.\",\n        \"The order id field must be an integer.\"\n    ]\n}",
+                            "name": "Invalid filter parameters"
                         }
                     ]
                 }
@@ -3641,17 +3526,17 @@
             ]
         },
         {
-            "name": "Refunds",
+            "name": "Product Tag Management",
             "description": "",
             "item": [
                 {
-                    "name": "Retrieve a paginated list of all refund records.",
+                    "name": "Retrieve all product tags",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
-                            "path": "api\/admin\/refunds",
+                            "path": "api\/admin\/product-tags",
                             "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/refunds"
+                            "raw": "{{baseUrl}}\/api\/admin\/product-tags"
                         },
                         "method": "GET",
                         "header": [
@@ -3665,25 +3550,303 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Get a complete list of all product tags in the system. Product tags are used to label\nand categorize products for better searchability and organization. Tags help customers\nfind products through filtering and search functionality. This endpoint provides\nadministrators with an overview of all available tags and their usage statistics."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n    \"message\": \"Refunds retrieved successfully.\",\n    \"data\": {\n        \"data\": [\n            {\n                \"id\": 1,\n                \"amount\": 2999,\n                \"processed_at\": \"2025-01-15T14:45:00.000000Z\",\n                \"notes\": \"Refund processed for damaged product\",\n                \"created_at\": \"2025-01-15T14:45:00.000000Z\",\n                \"updated_at\": \"2025-01-15T14:45:00.000000Z\",\n                \"status\": {\n                    \"id\": 1,\n                    \"name\": \"Refunded\"\n                },\n                \"order_return\": {\n                    \"id\": 15,\n                    \"reason\": \"Product damaged on arrival\",\n                    \"order_item\": {\n                        \"id\": 25,\n                        \"product\": {\n                            \"id\": 12,\n                            \"name\": \"Wireless Headphones\"\n                        },\n                        \"order\": {\n                            \"id\": 8,\n                            \"total_amount\": 5998,\n                            \"user\": {\n                                \"id\": 3,\n                                \"email\": \"customer@example.com\"\n                            }\n                        }\n                    }\n                }\n            }\n        ],\n        \"current_page\": 1,\n        \"per_page\": 20,\n        \"total\": 32\n    }\n}",
-                            "name": ""
+                            "body": "{\n    \"message\": \"Tags retrieved successfully.\",\n    \"data\": [\n        {\n            \"id\": 1,\n            \"name\": \"electronics\",\n            \"created_at\": \"2024-12-01T09:00:00.000000Z\",\n            \"updated_at\": \"2024-12-01T09:00:00.000000Z\"\n        },\n        {\n            \"id\": 2,\n            \"name\": \"wireless\",\n            \"created_at\": \"2024-12-01T09:05:00.000000Z\",\n            \"updated_at\": \"2024-12-01T09:05:00.000000Z\"\n        },\n        {\n            \"id\": 3,\n            \"name\": \"bluetooth\",\n            \"created_at\": \"2024-12-01T09:10:00.000000Z\",\n            \"updated_at\": \"2024-12-01T09:10:00.000000Z\"\n        },\n        {\n            \"id\": 4,\n            \"name\": \"waterproof\",\n            \"created_at\": \"2024-12-01T09:15:00.000000Z\",\n            \"updated_at\": \"2024-12-01T09:15:00.000000Z\"\n        },\n        {\n            \"id\": 5,\n            \"name\": \"premium\",\n            \"created_at\": \"2024-12-01T09:20:00.000000Z\",\n            \"updated_at\": \"2024-12-01T09:20:00.000000Z\"\n        },\n        {\n            \"id\": 6,\n            \"name\": \"noise-cancelling\",\n            \"created_at\": \"2024-12-01T09:25:00.000000Z\",\n            \"updated_at\": \"2024-12-01T09:25:00.000000Z\"\n        },\n        {\n            \"id\": 7,\n            \"name\": \"portable\",\n            \"created_at\": \"2024-12-01T09:30:00.000000Z\",\n            \"updated_at\": \"2024-12-01T09:30:00.000000Z\"\n        },\n        {\n            \"id\": 8,\n            \"name\": \"gaming\",\n            \"created_at\": \"2024-12-01T09:35:00.000000Z\",\n            \"updated_at\": \"2024-12-01T09:35:00.000000Z\"\n        }\n    ]\n}",
+                            "name": "Product tags retrieved successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Tags retrieved successfully.\",\n    \"data\": []\n}",
+                            "name": "No tags found"
                         },
                         {
                             "header": [],
                             "code": 403,
                             "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
+                            "name": "Insufficient permissions"
                         }
                     ]
                 },
                 {
-                    "name": "Process a refund for an approved return through the specified payment gateway.",
+                    "name": "Create a new product tag",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-tags",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-tags"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"\\\"wireless-charging\\\"\"}"
+                        },
+                        "description": "Add a new product tag to the system. Tags should be descriptive, concise, and follow\nconsistent naming conventions (typically lowercase, hyphen-separated for multi-word tags).\nOnce created, tags can be assigned to products to improve searchability and organization.\nTag names must be unique across the system."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Tag created successfully.\",\n    \"data\": {\n        \"id\": 9,\n        \"name\": \"wireless-charging\",\n        \"created_at\": \"2025-01-16T14:30:00.000000Z\",\n        \"updated_at\": \"2025-01-16T14:30:00.000000Z\"\n    }\n}",
+                            "name": "Product tag created successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"errors\": [\n        \"The name field is required.\",\n        \"The name has already been taken.\",\n        \"The name may not be greater than 255 characters.\"\n    ]\n}",
+                            "name": "Validation errors"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"errors\": [\n        \"The name has already been taken.\"\n    ]\n}",
+                            "name": "Duplicate tag name"
+                        }
+                    ]
+                },
+                {
+                    "name": "Retrieve a specific product tag",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-tags\/:productTag_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-tags\/:productTag_id",
+                            "variable": [
+                                {
+                                    "id": "productTag_id",
+                                    "key": "productTag_id",
+                                    "value": "1",
+                                    "description": "The ID of the productTag."
+                                },
+                                {
+                                    "id": "productTag",
+                                    "key": "productTag",
+                                    "value": "9",
+                                    "description": "The ID of the product tag to retrieve."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Get detailed information about a specific product tag including its associated products.\nThis endpoint is useful for examining tag usage and understanding which products are\ncurrently tagged with specific labels. Helpful for tag management and optimization."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Tag retrieved successfully.\",\n    \"data\": {\n        \"id\": 9,\n        \"name\": \"wireless-charging\",\n        \"products\": [\n            {\n                \"id\": 15,\n                \"name\": \"Wireless Bluetooth Headphones\",\n                \"price\": 7999,\n                \"price_formatted\": \"\u00a379.99\",\n                \"created_at\": \"2025-01-10T14:30:00.000000Z\"\n            },\n            {\n                \"id\": 23,\n                \"name\": \"Smartphone Wireless Charger\",\n                \"price\": 2999,\n                \"price_formatted\": \"\u00a329.99\",\n                \"created_at\": \"2025-01-12T16:20:00.000000Z\"\n            }\n        ],\n        \"products_count\": 2,\n        \"created_at\": \"2025-01-16T14:30:00.000000Z\",\n        \"updated_at\": \"2025-01-16T14:30:00.000000Z\"\n    }\n}",
+                            "name": "Product tag found with associated products"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Tag retrieved successfully.\",\n    \"data\": {\n        \"id\": 9,\n        \"name\": \"wireless-charging\",\n        \"products\": [],\n        \"products_count\": 0,\n        \"created_at\": \"2025-01-16T14:30:00.000000Z\",\n        \"updated_at\": \"2025-01-16T14:30:00.000000Z\"\n    }\n}",
+                            "name": "Product tag with no associated products"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"message\": \"No query results for model [App\\\\Models\\\\ProductTag] 999\"\n}",
+                            "name": "Product tag not found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update an existing product tag",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-tags\/:productTag_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-tags\/:productTag_id",
+                            "variable": [
+                                {
+                                    "id": "productTag_id",
+                                    "key": "productTag_id",
+                                    "value": "1",
+                                    "description": "The ID of the productTag."
+                                },
+                                {
+                                    "id": "productTag",
+                                    "key": "productTag",
+                                    "value": "9",
+                                    "description": "The ID of the product tag to update."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"\\\"fast-wireless-charging\\\"\"}"
+                        },
+                        "description": "Modify an existing product tag name. Exercise caution when updating tags as they may\nbe referenced by multiple products and affect search functionality. Ensure that any\nname changes maintain consistency with existing tagging conventions and don't create\nconfusion for customers or administrators."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Tag updated successfully.\",\n    \"data\": {\n        \"id\": 9,\n        \"name\": \"fast-wireless-charging\",\n        \"created_at\": \"2025-01-16T14:30:00.000000Z\",\n        \"updated_at\": \"2025-01-16T15:45:00.000000Z\"\n    }\n}",
+                            "name": "Product tag updated successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"message\": \"No query results for model [App\\\\Models\\\\ProductTag] 999\"\n}",
+                            "name": "Product tag not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"errors\": [\n        \"The name field is required.\",\n        \"The name has already been taken.\",\n        \"The name may not be greater than 255 characters.\"\n    ]\n}",
+                            "name": "Validation errors"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"errors\": [\n        \"The name has already been taken.\"\n    ]\n}",
+                            "name": "Name already exists"
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete a product tag",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/product-tags\/:productTag_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/product-tags\/:productTag_id",
+                            "variable": [
+                                {
+                                    "id": "productTag_id",
+                                    "key": "productTag_id",
+                                    "value": "1",
+                                    "description": "The ID of the productTag."
+                                },
+                                {
+                                    "id": "productTag",
+                                    "key": "productTag",
+                                    "value": "9",
+                                    "description": "The ID of the product tag to delete."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Permanently remove a product tag from the system. This action is irreversible and will\nautomatically remove the tag from all products that currently have it assigned. Before\ndeletion, consider the impact on product searchability and organization. Customers may\nno longer be able to find products using this tag for filtering or search.\n\n**Warning**: Deleting a widely-used tag may significantly affect product discoverability\nand customer search experience."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Tag deleted successfully.\"\n}",
+                            "name": "Product tag deleted successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"message\": \"No query results for model [App\\\\Models\\\\ProductTag] 999\"\n}",
+                            "name": "Product tag not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n    \"message\": \"Cannot delete product tag that is currently assigned to products. Please remove the tag from all products first.\"\n}",
+                            "name": "Tag in use by products"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"message\": \"This tag is currently being used by active products and cannot be deleted.\"\n}",
+                            "name": "Tag has dependencies"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n    \"message\": \"An error occurred while deleting the product tag.\"\n}",
+                            "name": "Deletion failed"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Refund Processing",
+            "description": "",
+            "item": [
+                {
+                    "name": "Process a refund for an approved return through the specified payment gateway",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -3701,7 +3864,7 @@
                                     "id": "id",
                                     "key": "id",
                                     "value": "15",
-                                    "description": "The ID of the return request to refund."
+                                    "description": "The ID of the return request to refund. Must be an approved return."
                                 }
                             ]
                         },
@@ -3717,50 +3880,86 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Execute a refund transaction for an approved return request through the specified payment\ngateway. This endpoint handles the actual refund processing, updates order statuses, and\nmaintains audit trails. Only approved returns can be processed for refunds. The system\nautomatically calculates refund amounts and updates payment statuses accordingly."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
                             "body": "{\n    \"message\": \"Refund processed successfully.\"\n}",
-                            "name": ""
+                            "name": "Refund processed successfully"
                         },
                         {
                             "header": [],
                             "code": 400,
                             "body": "{\n    \"message\": \"Unsupported payment gateway\"\n}",
-                            "name": ""
+                            "name": "Unsupported payment gateway"
                         },
                         {
                             "header": [],
                             "code": 400,
                             "body": "{\n    \"message\": \"This return has not been approved for refund.\"\n}",
-                            "name": ""
+                            "name": "Return not approved for refund"
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n    \"message\": \"Refund amount exceeds the remaining refundable balance for this order.\"\n}",
+                            "name": "Insufficient refundable amount"
                         },
                         {
                             "header": [],
                             "code": 403,
                             "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
+                            "name": "Insufficient permissions"
                         },
                         {
                             "header": [],
                             "code": 404,
                             "body": "{\n    \"message\": \"Return request not found.\"\n}",
-                            "name": ""
+                            "name": "Return request not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"message\": \"No valid payment found for this order. Cannot process refund.\"\n}",
+                            "name": "No payment found for order"
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n    \"message\": \"A refund has already been processed for this return request.\"\n}",
+                            "name": "Refund already processed"
                         },
                         {
                             "header": [],
                             "code": 422,
                             "body": "{\n    \"message\": \"Refund failed. Please try again later.\"\n}",
-                            "name": ""
+                            "name": "Refund failed at gateway"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"message\": \"Payment intent not found in payment gateway. Cannot process refund.\"\n}",
+                            "name": "Payment intent not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"message\": \"Order is not in a state that allows refunds (must be paid or partially refunded).\"\n}",
+                            "name": "Order not in refundable state"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n    \"message\": \"Unable to communicate with payment gateway. Please try again later.\"\n}",
+                            "name": "Gateway communication error"
                         },
                         {
                             "header": [],
                             "code": 500,
                             "body": "{\n    \"message\": \"An error occurred while processing the refund.\"\n}",
-                            "name": ""
+                            "name": "Refund processing error"
                         }
                     ]
                 }

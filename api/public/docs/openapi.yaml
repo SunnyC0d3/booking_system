@@ -3571,266 +3571,6 @@ paths:
         required: true
         schema:
           type: integer
-  /api/admin/product-tags:
-    get:
-      summary: 'Retrieve all product tags.'
-      operationId: retrieveAllProductTags
-      description: ''
-      parameters: []
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'Tags retrieved successfully.'
-                  data:
-                    -
-                      id: 1
-                      name: Electronics
-                    -
-                      id: 2
-                      name: Fashion
-                properties:
-                  message:
-                    type: string
-                    example: 'Tags retrieved successfully.'
-                  data:
-                    type: array
-                    example:
-                      -
-                        id: 1
-                        name: Electronics
-                      -
-                        id: 2
-                        name: Fashion
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: integer
-                          example: 1
-                        name:
-                          type: string
-                          example: Electronics
-        403:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'You do not have the required permissions.'
-                properties:
-                  message:
-                    type: string
-                    example: 'You do not have the required permissions.'
-      tags:
-        - 'Product Tags'
-    post:
-      summary: 'Create a new product tag.'
-      operationId: createANewProductTag
-      description: ''
-      parameters: []
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'Tag created successfully.'
-                  data:
-                    id: 3
-                    name: 'Home Appliances'
-                properties:
-                  message:
-                    type: string
-                    example: 'Tag created successfully.'
-                  data:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                        example: 3
-                      name:
-                        type: string
-                        example: 'Home Appliances'
-        403:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'You do not have the required permissions.'
-                properties:
-                  message:
-                    type: string
-                    example: 'You do not have the required permissions.'
-      tags:
-        - 'Product Tags'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: 'The name of the product tag.'
-                  example: architecto
-                  nullable: false
-              required:
-                - name
-  '/api/admin/product-tags/{productTag_id}':
-    get:
-      summary: 'Retrieve a specific product tag.'
-      operationId: retrieveASpecificProductTag
-      description: ''
-      parameters: []
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'Tag retrieved successfully.'
-                  data:
-                    id: 1
-                    name: Electronics
-                properties:
-                  message:
-                    type: string
-                    example: 'Tag retrieved successfully.'
-                  data:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                        example: 1
-                      name:
-                        type: string
-                        example: Electronics
-        403:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'You do not have the required permissions.'
-                properties:
-                  message:
-                    type: string
-                    example: 'You do not have the required permissions.'
-      tags:
-        - 'Product Tags'
-    post:
-      summary: 'Update an existing product tag.'
-      operationId: updateAnExistingProductTag
-      description: ''
-      parameters: []
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'Tag updated successfully.'
-                  data:
-                    id: 1
-                    name: Gadgets
-                properties:
-                  message:
-                    type: string
-                    example: 'Tag updated successfully.'
-                  data:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                        example: 1
-                      name:
-                        type: string
-                        example: Gadgets
-        403:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'You do not have the required permissions.'
-                properties:
-                  message:
-                    type: string
-                    example: 'You do not have the required permissions.'
-      tags:
-        - 'Product Tags'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: 'The updated name of the product tag.'
-                  example: architecto
-                  nullable: false
-              required:
-                - name
-    delete:
-      summary: 'Delete a product tag.'
-      operationId: deleteAProductTag
-      description: ''
-      parameters: []
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'Tag deleted successfully.'
-                properties:
-                  message:
-                    type: string
-                    example: 'Tag deleted successfully.'
-        403:
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: 'You do not have the required permissions.'
-                properties:
-                  message:
-                    type: string
-                    example: 'You do not have the required permissions.'
-      tags:
-        - 'Product Tags'
-    parameters:
-      -
-        in: path
-        name: productTag_id
-        description: 'The ID of the productTag.'
-        example: 1
-        required: true
-        schema:
-          type: integer
   /api/admin/orders:
     get:
       summary: 'Retrieve paginated list of orders'
@@ -5682,6 +5422,498 @@ paths:
         required: true
         schema:
           type: string
+  /api/admin/refunds:
+    get:
+      summary: 'Retrieve a paginated list of all refund records'
+      operationId: retrieveAPaginatedListOfAllRefundRecords
+      description: "Get a comprehensive list of all refunds processed in the system with detailed information\nabout amounts, statuses, associated orders, and processing details. This endpoint is essential\nfor financial reporting, refund tracking, customer service, and administrative oversight\nof refund operations. Includes complete audit trail for each refund transaction."
+      parameters:
+        -
+          in: query
+          name: page
+          description: 'optional Page number for pagination. Default: 1.'
+          example: 2
+          required: false
+          schema:
+            type: integer
+            description: 'optional Page number for pagination. Default: 1.'
+            example: 2
+            nullable: false
+        -
+          in: query
+          name: per_page
+          description: 'optional Number of refunds per page (max 100). Default: 20.'
+          example: 25
+          required: false
+          schema:
+            type: integer
+            description: 'optional Number of refunds per page (max 100). Default: 20.'
+            example: 25
+            nullable: false
+        -
+          in: query
+          name: status
+          description: 'optional Filter by refund status. Available: Pending, Processing, Refunded, Partially Refunded, Failed, Cancelled, Declined.'
+          example: Refunded
+          required: false
+          schema:
+            type: string
+            description: 'optional Filter by refund status. Available: Pending, Processing, Refunded, Partially Refunded, Failed, Cancelled, Declined.'
+            example: Refunded
+            nullable: false
+        -
+          in: query
+          name: date_from
+          description: 'optional Filter refunds from this date (YYYY-MM-DD format).'
+          example: '2025-01-01'
+          required: false
+          schema:
+            type: string
+            description: 'optional Filter refunds from this date (YYYY-MM-DD format).'
+            example: '2025-01-01'
+            nullable: false
+        -
+          in: query
+          name: date_to
+          description: 'optional Filter refunds to this date (YYYY-MM-DD format).'
+          example: '2025-01-31'
+          required: false
+          schema:
+            type: string
+            description: 'optional Filter refunds to this date (YYYY-MM-DD format).'
+            example: '2025-01-31'
+            nullable: false
+        -
+          in: query
+          name: order_id
+          description: 'optional Filter refunds by specific order ID.'
+          example: 45
+          required: false
+          schema:
+            type: integer
+            description: 'optional Filter refunds by specific order ID.'
+            example: 45
+            nullable: false
+        -
+          in: query
+          name: user_id
+          description: 'optional Filter refunds by specific customer ID.'
+          example: 123
+          required: false
+          schema:
+            type: integer
+            description: 'optional Filter refunds by specific customer ID.'
+            example: 123
+            nullable: false
+        -
+          in: query
+          name: amount_min
+          description: 'numeric optional Filter refunds with minimum amount in pounds.'
+          example: '10.00'
+          required: false
+          schema:
+            type: string
+            description: 'numeric optional Filter refunds with minimum amount in pounds.'
+            example: '10.00'
+            nullable: false
+        -
+          in: query
+          name: amount_max
+          description: 'numeric optional Filter refunds with maximum amount in pounds.'
+          example: '500.00'
+          required: false
+          schema:
+            type: string
+            description: 'numeric optional Filter refunds with maximum amount in pounds.'
+            example: '500.00'
+            nullable: false
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Refunds retrieved successfully'
+                    type: object
+                    example:
+                      message: 'Refunds retrieved successfully.'
+                      data:
+                        data:
+                          -
+                            id: 1
+                            amount: 2999
+                            amount_formatted: £29.99
+                            processed_at: '2025-01-15T14:45:00.000000Z'
+                            notes: 'Refund processed for damaged product - customer reported speaker crackling at high volume'
+                            status:
+                              id: 3
+                              name: Refunded
+                            order_return:
+                              id: 15
+                              reason: 'Product damaged on arrival - speaker has crackling sound at any volume level'
+                              status:
+                                id: 7
+                                name: Completed
+                              created_at: '2025-01-14T09:30:00.000000Z'
+                              updated_at: '2025-01-15T14:45:00.000000Z'
+                              order_item:
+                                id: 25
+                                quantity: 1
+                                price: 2999
+                                price_formatted: £29.99
+                                product:
+                                  id: 12
+                                  name: 'Wireless Headphones'
+                                  description: 'Premium quality wireless headphones with active noise cancellation'
+                                order:
+                                  id: 8
+                                  total_amount: 5998
+                                  total_amount_formatted: £59.98
+                                  created_at: '2025-01-10T16:30:00.000000Z'
+                                  user:
+                                    id: 3
+                                    name: 'Sarah Johnson'
+                                    email: sarah@example.com
+                                    email_verified_at: '2025-01-05T12:00:00.000000Z'
+                            created_at: '2025-01-15T14:45:00.000000Z'
+                            updated_at: '2025-01-15T14:45:00.000000Z'
+                          -
+                            id: 2
+                            amount: 7999
+                            amount_formatted: £79.99
+                            processed_at: '2025-01-14T11:20:00.000000Z'
+                            notes: 'Customer changed mind within return period - full refund approved'
+                            status:
+                              id: 3
+                              name: Refunded
+                            order_return:
+                              id: 12
+                              reason: 'Changed mind about purchase - no longer needed'
+                              status:
+                                id: 7
+                                name: Completed
+                              order_item:
+                                id: 18
+                                quantity: 1
+                                price: 7999
+                                price_formatted: £79.99
+                                product:
+                                  id: 23
+                                  name: 'Premium Bluetooth Speaker'
+                                order:
+                                  id: 6
+                                  total_amount: 7999
+                                  total_amount_formatted: £79.99
+                                  user:
+                                    id: 7
+                                    name: 'Michael Chen'
+                                    email: michael@example.com
+                            created_at: '2025-01-14T11:20:00.000000Z'
+                            updated_at: '2025-01-14T11:20:00.000000Z'
+                          -
+                            id: 3
+                            amount: 1500
+                            amount_formatted: £15.00
+                            processed_at: null
+                            notes: 'Partial refund for shipping delay compensation'
+                            status:
+                              id: 1
+                              name: Processing
+                            order_return:
+                              id: 18
+                              reason: 'Shipping delay compensation request'
+                              status:
+                                id: 3
+                                name: Approved
+                              order_item:
+                                id: 32
+                                product:
+                                  id: 45
+                                  name: 'Wireless Charging Pad'
+                                order:
+                                  id: 12
+                                  user:
+                                    id: 15
+                                    name: 'Emma Wilson'
+                                    email: emma@example.com
+                            created_at: '2025-01-16T09:15:00.000000Z'
+                            updated_at: '2025-01-16T09:15:00.000000Z'
+                        current_page: 1
+                        per_page: 20
+                        total: 127
+                        last_page: 7
+                        from: 1
+                        to: 20
+                        path: 'https://yourapi.com/api/v1/admin/refunds'
+                        first_page_url: 'https://yourapi.com/api/v1/admin/refunds?page=1'
+                        last_page_url: 'https://yourapi.com/api/v1/admin/refunds?page=7'
+                        next_page_url: 'https://yourapi.com/api/v1/admin/refunds?page=2'
+                        prev_page_url: null
+                    properties:
+                      message:
+                        type: string
+                        example: 'Refunds retrieved successfully.'
+                      data:
+                        type: object
+                        properties:
+                          data:
+                            type: array
+                            example:
+                              -
+                                id: 1
+                                amount: 2999
+                                amount_formatted: £29.99
+                                processed_at: '2025-01-15T14:45:00.000000Z'
+                                notes: 'Refund processed for damaged product - customer reported speaker crackling at high volume'
+                                status:
+                                  id: 3
+                                  name: Refunded
+                                order_return:
+                                  id: 15
+                                  reason: 'Product damaged on arrival - speaker has crackling sound at any volume level'
+                                  status:
+                                    id: 7
+                                    name: Completed
+                                  created_at: '2025-01-14T09:30:00.000000Z'
+                                  updated_at: '2025-01-15T14:45:00.000000Z'
+                                  order_item:
+                                    id: 25
+                                    quantity: 1
+                                    price: 2999
+                                    price_formatted: £29.99
+                                    product:
+                                      id: 12
+                                      name: 'Wireless Headphones'
+                                      description: 'Premium quality wireless headphones with active noise cancellation'
+                                    order:
+                                      id: 8
+                                      total_amount: 5998
+                                      total_amount_formatted: £59.98
+                                      created_at: '2025-01-10T16:30:00.000000Z'
+                                      user: { id: 3, name: 'Sarah Johnson', email: sarah@example.com, email_verified_at: '2025-01-05T12:00:00.000000Z' }
+                                created_at: '2025-01-15T14:45:00.000000Z'
+                                updated_at: '2025-01-15T14:45:00.000000Z'
+                              -
+                                id: 2
+                                amount: 7999
+                                amount_formatted: £79.99
+                                processed_at: '2025-01-14T11:20:00.000000Z'
+                                notes: 'Customer changed mind within return period - full refund approved'
+                                status:
+                                  id: 3
+                                  name: Refunded
+                                order_return:
+                                  id: 12
+                                  reason: 'Changed mind about purchase - no longer needed'
+                                  status:
+                                    id: 7
+                                    name: Completed
+                                  order_item:
+                                    id: 18
+                                    quantity: 1
+                                    price: 7999
+                                    price_formatted: £79.99
+                                    product:
+                                      id: 23
+                                      name: 'Premium Bluetooth Speaker'
+                                    order:
+                                      id: 6
+                                      total_amount: 7999
+                                      total_amount_formatted: £79.99
+                                      user: { id: 7, name: 'Michael Chen', email: michael@example.com }
+                                created_at: '2025-01-14T11:20:00.000000Z'
+                                updated_at: '2025-01-14T11:20:00.000000Z'
+                              -
+                                id: 3
+                                amount: 1500
+                                amount_formatted: £15.00
+                                processed_at: null
+                                notes: 'Partial refund for shipping delay compensation'
+                                status:
+                                  id: 1
+                                  name: Processing
+                                order_return:
+                                  id: 18
+                                  reason: 'Shipping delay compensation request'
+                                  status:
+                                    id: 3
+                                    name: Approved
+                                  order_item:
+                                    id: 32
+                                    product:
+                                      id: 45
+                                      name: 'Wireless Charging Pad'
+                                    order:
+                                      id: 12
+                                      user: { id: 15, name: 'Emma Wilson', email: emma@example.com }
+                                created_at: '2025-01-16T09:15:00.000000Z'
+                                updated_at: '2025-01-16T09:15:00.000000Z'
+                            items:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 1
+                                amount:
+                                  type: integer
+                                  example: 2999
+                                amount_formatted:
+                                  type: string
+                                  example: £29.99
+                                processed_at:
+                                  type: string
+                                  example: '2025-01-15T14:45:00.000000Z'
+                                notes:
+                                  type: string
+                                  example: 'Refund processed for damaged product - customer reported speaker crackling at high volume'
+                                status:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                      example: 3
+                                    name:
+                                      type: string
+                                      example: Refunded
+                                order_return:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                      example: 15
+                                    reason:
+                                      type: string
+                                      example: 'Product damaged on arrival - speaker has crackling sound at any volume level'
+                                    status:
+                                      type: object
+                                      properties: { id: { type: integer, example: 7 }, name: { type: string, example: Completed } }
+                                    created_at:
+                                      type: string
+                                      example: '2025-01-14T09:30:00.000000Z'
+                                    updated_at:
+                                      type: string
+                                      example: '2025-01-15T14:45:00.000000Z'
+                                    order_item:
+                                      type: object
+                                      properties: { id: { type: integer, example: 25 }, quantity: { type: integer, example: 1 }, price: { type: integer, example: 2999 }, price_formatted: { type: string, example: £29.99 }, product: { type: object, properties: { id: { type: integer, example: 12 }, name: { type: string, example: 'Wireless Headphones' }, description: { type: string, example: 'Premium quality wireless headphones with active noise cancellation' } } }, order: { type: object, properties: { id: { type: integer, example: 8 }, total_amount: { type: integer, example: 5998 }, total_amount_formatted: { type: string, example: £59.98 }, created_at: { type: string, example: '2025-01-10T16:30:00.000000Z' }, user: { type: object, properties: { id: { type: integer, example: 3 }, name: { type: string, example: 'Sarah Johnson' }, email: { type: string, example: sarah@example.com }, email_verified_at: { type: string, example: '2025-01-05T12:00:00.000000Z' } } } } } }
+                                created_at:
+                                  type: string
+                                  example: '2025-01-15T14:45:00.000000Z'
+                                updated_at:
+                                  type: string
+                                  example: '2025-01-15T14:45:00.000000Z'
+                          current_page:
+                            type: integer
+                            example: 1
+                          per_page:
+                            type: integer
+                            example: 20
+                          total:
+                            type: integer
+                            example: 127
+                          last_page:
+                            type: integer
+                            example: 7
+                          from:
+                            type: integer
+                            example: 1
+                          to:
+                            type: integer
+                            example: 20
+                          path:
+                            type: string
+                            example: 'https://yourapi.com/api/v1/admin/refunds'
+                          first_page_url:
+                            type: string
+                            example: 'https://yourapi.com/api/v1/admin/refunds?page=1'
+                          last_page_url:
+                            type: string
+                            example: 'https://yourapi.com/api/v1/admin/refunds?page=7'
+                          next_page_url:
+                            type: string
+                            example: 'https://yourapi.com/api/v1/admin/refunds?page=2'
+                          prev_page_url:
+                            type: string
+                            example: null
+                  -
+                    description: 'No refunds found'
+                    type: object
+                    example:
+                      message: 'Refunds retrieved successfully.'
+                      data:
+                        data: []
+                        current_page: 1
+                        per_page: 20
+                        total: 0
+                        last_page: 1
+                        from: null
+                        to: null
+                    properties:
+                      message:
+                        type: string
+                        example: 'Refunds retrieved successfully.'
+                      data:
+                        type: object
+                        properties:
+                          data:
+                            type: array
+                            example: []
+                          current_page:
+                            type: integer
+                            example: 1
+                          per_page:
+                            type: integer
+                            example: 20
+                          total:
+                            type: integer
+                            example: 0
+                          last_page:
+                            type: integer
+                            example: 1
+                          from:
+                            type: string
+                            example: null
+                          to:
+                            type: string
+                            example: null
+        403:
+          description: 'Insufficient permissions'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You do not have the required permissions.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have the required permissions.'
+        422:
+          description: 'Invalid filter parameters'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    - 'The status field must be one of: Pending, Processing, Refunded, Partially Refunded, Failed, Cancelled, Declined.'
+                    - 'The date from field must be a valid date in YYYY-MM-DD format.'
+                    - 'The amount min field must be a number greater than 0.'
+                    - 'The order id field must be an integer.'
+                properties:
+                  errors:
+                    type: array
+                    example:
+                      - 'The status field must be one of: Pending, Processing, Refunded, Partially Refunded, Failed, Cancelled, Declined.'
+                      - 'The date from field must be a valid date in YYYY-MM-DD format.'
+                      - 'The amount min field must be a number greater than 0.'
+                      - 'The order id field must be an integer.'
+                    items:
+                      type: string
+      tags:
+        - 'Refund Management'
   /api/returns:
     post:
       summary: 'Create a return request for an order item'
@@ -10122,11 +10354,11 @@ paths:
         required: true
         schema:
           type: integer
-  /api/admin/refunds:
+  /api/admin/product-tags:
     get:
-      summary: 'Retrieve a paginated list of all refund records.'
-      operationId: retrieveAPaginatedListOfAllRefundRecords
-      description: ''
+      summary: 'Retrieve all product tags'
+      operationId: retrieveAllProductTags
+      description: "Get a complete list of all product tags in the system. Product tags are used to label\nand categorize products for better searchability and organization. Tags help customers\nfind products through filtering and search functionality. This endpoint provides\nadministrators with an overview of all available tags and their usage statistics."
       parameters: []
       responses:
         200:
@@ -10134,134 +10366,130 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                example:
-                  message: 'Refunds retrieved successfully.'
-                  data:
-                    data:
-                      -
-                        id: 1
-                        amount: 2999
-                        processed_at: '2025-01-15T14:45:00.000000Z'
-                        notes: 'Refund processed for damaged product'
-                        created_at: '2025-01-15T14:45:00.000000Z'
-                        updated_at: '2025-01-15T14:45:00.000000Z'
-                        status:
-                          id: 1
-                          name: Refunded
-                        order_return:
-                          id: 15
-                          reason: 'Product damaged on arrival'
-                          order_item:
-                            id: 25
-                            product:
-                              id: 12
-                              name: 'Wireless Headphones'
-                            order:
-                              id: 8
-                              total_amount: 5998
-                              user:
-                                id: 3
-                                email: customer@example.com
-                    current_page: 1
-                    per_page: 20
-                    total: 32
-                properties:
-                  message:
-                    type: string
-                    example: 'Refunds retrieved successfully.'
-                  data:
+                oneOf:
+                  -
+                    description: 'Product tags retrieved successfully'
                     type: object
+                    example:
+                      message: 'Tags retrieved successfully.'
+                      data:
+                        -
+                          id: 1
+                          name: electronics
+                          created_at: '2024-12-01T09:00:00.000000Z'
+                          updated_at: '2024-12-01T09:00:00.000000Z'
+                        -
+                          id: 2
+                          name: wireless
+                          created_at: '2024-12-01T09:05:00.000000Z'
+                          updated_at: '2024-12-01T09:05:00.000000Z'
+                        -
+                          id: 3
+                          name: bluetooth
+                          created_at: '2024-12-01T09:10:00.000000Z'
+                          updated_at: '2024-12-01T09:10:00.000000Z'
+                        -
+                          id: 4
+                          name: waterproof
+                          created_at: '2024-12-01T09:15:00.000000Z'
+                          updated_at: '2024-12-01T09:15:00.000000Z'
+                        -
+                          id: 5
+                          name: premium
+                          created_at: '2024-12-01T09:20:00.000000Z'
+                          updated_at: '2024-12-01T09:20:00.000000Z'
+                        -
+                          id: 6
+                          name: noise-cancelling
+                          created_at: '2024-12-01T09:25:00.000000Z'
+                          updated_at: '2024-12-01T09:25:00.000000Z'
+                        -
+                          id: 7
+                          name: portable
+                          created_at: '2024-12-01T09:30:00.000000Z'
+                          updated_at: '2024-12-01T09:30:00.000000Z'
+                        -
+                          id: 8
+                          name: gaming
+                          created_at: '2024-12-01T09:35:00.000000Z'
+                          updated_at: '2024-12-01T09:35:00.000000Z'
                     properties:
+                      message:
+                        type: string
+                        example: 'Tags retrieved successfully.'
                       data:
                         type: array
                         example:
                           -
                             id: 1
-                            amount: 2999
-                            processed_at: '2025-01-15T14:45:00.000000Z'
-                            notes: 'Refund processed for damaged product'
-                            created_at: '2025-01-15T14:45:00.000000Z'
-                            updated_at: '2025-01-15T14:45:00.000000Z'
-                            status:
-                              id: 1
-                              name: Refunded
-                            order_return:
-                              id: 15
-                              reason: 'Product damaged on arrival'
-                              order_item:
-                                id: 25
-                                product:
-                                  id: 12
-                                  name: 'Wireless Headphones'
-                                order:
-                                  id: 8
-                                  total_amount: 5998
-                                  user:
-                                    id: 3
-                                    email: customer@example.com
+                            name: electronics
+                            created_at: '2024-12-01T09:00:00.000000Z'
+                            updated_at: '2024-12-01T09:00:00.000000Z'
+                          -
+                            id: 2
+                            name: wireless
+                            created_at: '2024-12-01T09:05:00.000000Z'
+                            updated_at: '2024-12-01T09:05:00.000000Z'
+                          -
+                            id: 3
+                            name: bluetooth
+                            created_at: '2024-12-01T09:10:00.000000Z'
+                            updated_at: '2024-12-01T09:10:00.000000Z'
+                          -
+                            id: 4
+                            name: waterproof
+                            created_at: '2024-12-01T09:15:00.000000Z'
+                            updated_at: '2024-12-01T09:15:00.000000Z'
+                          -
+                            id: 5
+                            name: premium
+                            created_at: '2024-12-01T09:20:00.000000Z'
+                            updated_at: '2024-12-01T09:20:00.000000Z'
+                          -
+                            id: 6
+                            name: noise-cancelling
+                            created_at: '2024-12-01T09:25:00.000000Z'
+                            updated_at: '2024-12-01T09:25:00.000000Z'
+                          -
+                            id: 7
+                            name: portable
+                            created_at: '2024-12-01T09:30:00.000000Z'
+                            updated_at: '2024-12-01T09:30:00.000000Z'
+                          -
+                            id: 8
+                            name: gaming
+                            created_at: '2024-12-01T09:35:00.000000Z'
+                            updated_at: '2024-12-01T09:35:00.000000Z'
                         items:
                           type: object
                           properties:
                             id:
                               type: integer
                               example: 1
-                            amount:
-                              type: integer
-                              example: 2999
-                            processed_at:
+                            name:
                               type: string
-                              example: '2025-01-15T14:45:00.000000Z'
-                            notes:
-                              type: string
-                              example: 'Refund processed for damaged product'
+                              example: electronics
                             created_at:
                               type: string
-                              example: '2025-01-15T14:45:00.000000Z'
+                              example: '2024-12-01T09:00:00.000000Z'
                             updated_at:
                               type: string
-                              example: '2025-01-15T14:45:00.000000Z'
-                            status:
-                              type: object
-                              properties:
-                                id:
-                                  type: integer
-                                  example: 1
-                                name:
-                                  type: string
-                                  example: Refunded
-                            order_return:
-                              type: object
-                              properties:
-                                id:
-                                  type: integer
-                                  example: 15
-                                reason:
-                                  type: string
-                                  example: 'Product damaged on arrival'
-                                order_item:
-                                  type: object
-                                  properties:
-                                    id:
-                                      type: integer
-                                      example: 25
-                                    product:
-                                      type: object
-                                      properties: { id: { type: integer, example: 12 }, name: { type: string, example: 'Wireless Headphones' } }
-                                    order:
-                                      type: object
-                                      properties: { id: { type: integer, example: 8 }, total_amount: { type: integer, example: 5998 }, user: { type: object, properties: { id: { type: integer, example: 3 }, email: { type: string, example: customer@example.com } } } }
-                      current_page:
-                        type: integer
-                        example: 1
-                      per_page:
-                        type: integer
-                        example: 20
-                      total:
-                        type: integer
-                        example: 32
+                              example: '2024-12-01T09:00:00.000000Z'
+                  -
+                    description: 'No tags found'
+                    type: object
+                    example:
+                      message: 'Tags retrieved successfully.'
+                      data: []
+                    properties:
+                      message:
+                        type: string
+                        example: 'Tags retrieved successfully.'
+                      data:
+                        type: array
+                        example: []
         403:
-          description: ''
+          description: 'Insufficient permissions'
           content:
             application/json:
               schema:
@@ -10273,16 +10501,484 @@ paths:
                     type: string
                     example: 'You do not have the required permissions.'
       tags:
-        - Refunds
-  '/api/admin/refunds/{gateway}/{id}':
+        - 'Product Tag Management'
     post:
-      summary: 'Process a refund for an approved return through the specified payment gateway.'
-      operationId: processARefundForAnApprovedReturnThroughTheSpecifiedPaymentGateway
-      description: ''
+      summary: 'Create a new product tag'
+      operationId: createANewProductTag
+      description: "Add a new product tag to the system. Tags should be descriptive, concise, and follow\nconsistent naming conventions (typically lowercase, hyphen-separated for multi-word tags).\nOnce created, tags can be assigned to products to improve searchability and organization.\nTag names must be unique across the system."
+      parameters: []
+      responses:
+        200:
+          description: 'Product tag created successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Tag created successfully.'
+                  data:
+                    id: 9
+                    name: wireless-charging
+                    created_at: '2025-01-16T14:30:00.000000Z'
+                    updated_at: '2025-01-16T14:30:00.000000Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Tag created successfully.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 9
+                      name:
+                        type: string
+                        example: wireless-charging
+                      created_at:
+                        type: string
+                        example: '2025-01-16T14:30:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2025-01-16T14:30:00.000000Z'
+        403:
+          description: 'Insufficient permissions'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You do not have the required permissions.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have the required permissions.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Validation errors'
+                    type: object
+                    example:
+                      errors:
+                        - 'The name field is required.'
+                        - 'The name has already been taken.'
+                        - 'The name may not be greater than 255 characters.'
+                    properties:
+                      errors:
+                        type: array
+                        example:
+                          - 'The name field is required.'
+                          - 'The name has already been taken.'
+                          - 'The name may not be greater than 255 characters.'
+                        items:
+                          type: string
+                  -
+                    description: 'Duplicate tag name'
+                    type: object
+                    example:
+                      errors:
+                        - 'The name has already been taken.'
+                    properties:
+                      errors:
+                        type: array
+                        example:
+                          - 'The name has already been taken.'
+                        items:
+                          type: string
+      tags:
+        - 'Product Tag Management'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'The name of the product tag. Should be descriptive and follow naming conventions (lowercase, hyphen-separated).'
+                  example: '"wireless-charging"'
+                  nullable: false
+              required:
+                - name
+  '/api/admin/product-tags/{productTag_id}':
+    get:
+      summary: 'Retrieve a specific product tag'
+      operationId: retrieveASpecificProductTag
+      description: "Get detailed information about a specific product tag including its associated products.\nThis endpoint is useful for examining tag usage and understanding which products are\ncurrently tagged with specific labels. Helpful for tag management and optimization."
       parameters: []
       responses:
         200:
           description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Product tag found with associated products'
+                    type: object
+                    example:
+                      message: 'Tag retrieved successfully.'
+                      data:
+                        id: 9
+                        name: wireless-charging
+                        products:
+                          -
+                            id: 15
+                            name: 'Wireless Bluetooth Headphones'
+                            price: 7999
+                            price_formatted: £79.99
+                            created_at: '2025-01-10T14:30:00.000000Z'
+                          -
+                            id: 23
+                            name: 'Smartphone Wireless Charger'
+                            price: 2999
+                            price_formatted: £29.99
+                            created_at: '2025-01-12T16:20:00.000000Z'
+                        products_count: 2
+                        created_at: '2025-01-16T14:30:00.000000Z'
+                        updated_at: '2025-01-16T14:30:00.000000Z'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Tag retrieved successfully.'
+                      data:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 9
+                          name:
+                            type: string
+                            example: wireless-charging
+                          products:
+                            type: array
+                            example:
+                              -
+                                id: 15
+                                name: 'Wireless Bluetooth Headphones'
+                                price: 7999
+                                price_formatted: £79.99
+                                created_at: '2025-01-10T14:30:00.000000Z'
+                              -
+                                id: 23
+                                name: 'Smartphone Wireless Charger'
+                                price: 2999
+                                price_formatted: £29.99
+                                created_at: '2025-01-12T16:20:00.000000Z'
+                            items:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 15
+                                name:
+                                  type: string
+                                  example: 'Wireless Bluetooth Headphones'
+                                price:
+                                  type: integer
+                                  example: 7999
+                                price_formatted:
+                                  type: string
+                                  example: £79.99
+                                created_at:
+                                  type: string
+                                  example: '2025-01-10T14:30:00.000000Z'
+                          products_count:
+                            type: integer
+                            example: 2
+                          created_at:
+                            type: string
+                            example: '2025-01-16T14:30:00.000000Z'
+                          updated_at:
+                            type: string
+                            example: '2025-01-16T14:30:00.000000Z'
+                  -
+                    description: 'Product tag with no associated products'
+                    type: object
+                    example:
+                      message: 'Tag retrieved successfully.'
+                      data:
+                        id: 9
+                        name: wireless-charging
+                        products: []
+                        products_count: 0
+                        created_at: '2025-01-16T14:30:00.000000Z'
+                        updated_at: '2025-01-16T14:30:00.000000Z'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Tag retrieved successfully.'
+                      data:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 9
+                          name:
+                            type: string
+                            example: wireless-charging
+                          products:
+                            type: array
+                            example: []
+                          products_count:
+                            type: integer
+                            example: 0
+                          created_at:
+                            type: string
+                            example: '2025-01-16T14:30:00.000000Z'
+                          updated_at:
+                            type: string
+                            example: '2025-01-16T14:30:00.000000Z'
+        403:
+          description: 'Insufficient permissions'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You do not have the required permissions.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have the required permissions.'
+        404:
+          description: 'Product tag not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No query results for model [App\Models\ProductTag] 999'
+                properties:
+                  message:
+                    type: string
+                    example: 'No query results for model [App\Models\ProductTag] 999'
+      tags:
+        - 'Product Tag Management'
+    post:
+      summary: 'Update an existing product tag'
+      operationId: updateAnExistingProductTag
+      description: "Modify an existing product tag name. Exercise caution when updating tags as they may\nbe referenced by multiple products and affect search functionality. Ensure that any\nname changes maintain consistency with existing tagging conventions and don't create\nconfusion for customers or administrators."
+      parameters: []
+      responses:
+        200:
+          description: 'Product tag updated successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Tag updated successfully.'
+                  data:
+                    id: 9
+                    name: fast-wireless-charging
+                    created_at: '2025-01-16T14:30:00.000000Z'
+                    updated_at: '2025-01-16T15:45:00.000000Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Tag updated successfully.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 9
+                      name:
+                        type: string
+                        example: fast-wireless-charging
+                      created_at:
+                        type: string
+                        example: '2025-01-16T14:30:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2025-01-16T15:45:00.000000Z'
+        403:
+          description: 'Insufficient permissions'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You do not have the required permissions.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have the required permissions.'
+        404:
+          description: 'Product tag not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No query results for model [App\Models\ProductTag] 999'
+                properties:
+                  message:
+                    type: string
+                    example: 'No query results for model [App\Models\ProductTag] 999'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Validation errors'
+                    type: object
+                    example:
+                      errors:
+                        - 'The name field is required.'
+                        - 'The name has already been taken.'
+                        - 'The name may not be greater than 255 characters.'
+                    properties:
+                      errors:
+                        type: array
+                        example:
+                          - 'The name field is required.'
+                          - 'The name has already been taken.'
+                          - 'The name may not be greater than 255 characters.'
+                        items:
+                          type: string
+                  -
+                    description: 'Name already exists'
+                    type: object
+                    example:
+                      errors:
+                        - 'The name has already been taken.'
+                    properties:
+                      errors:
+                        type: array
+                        example:
+                          - 'The name has already been taken.'
+                        items:
+                          type: string
+      tags:
+        - 'Product Tag Management'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'The updated name of the product tag. Must be unique and follow naming conventions.'
+                  example: '"fast-wireless-charging"'
+                  nullable: false
+              required:
+                - name
+    delete:
+      summary: 'Delete a product tag'
+      operationId: deleteAProductTag
+      description: "Permanently remove a product tag from the system. This action is irreversible and will\nautomatically remove the tag from all products that currently have it assigned. Before\ndeletion, consider the impact on product searchability and organization. Customers may\nno longer be able to find products using this tag for filtering or search.\n\n**Warning**: Deleting a widely-used tag may significantly affect product discoverability\nand customer search experience."
+      parameters: []
+      responses:
+        200:
+          description: 'Product tag deleted successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Tag deleted successfully.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Tag deleted successfully.'
+        403:
+          description: 'Insufficient permissions'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You do not have the required permissions.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have the required permissions.'
+        404:
+          description: 'Product tag not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No query results for model [App\Models\ProductTag] 999'
+                properties:
+                  message:
+                    type: string
+                    example: 'No query results for model [App\Models\ProductTag] 999'
+        409:
+          description: 'Tag in use by products'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Cannot delete product tag that is currently assigned to products. Please remove the tag from all products first.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Cannot delete product tag that is currently assigned to products. Please remove the tag from all products first.'
+        422:
+          description: 'Tag has dependencies'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'This tag is currently being used by active products and cannot be deleted.'
+                properties:
+                  message:
+                    type: string
+                    example: 'This tag is currently being used by active products and cannot be deleted.'
+        500:
+          description: 'Deletion failed'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'An error occurred while deleting the product tag.'
+                properties:
+                  message:
+                    type: string
+                    example: 'An error occurred while deleting the product tag.'
+      tags:
+        - 'Product Tag Management'
+    parameters:
+      -
+        in: path
+        name: productTag_id
+        description: 'The ID of the productTag.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: productTag
+        description: 'The ID of the product tag to retrieve.'
+        example: 9
+        required: true
+        schema:
+          type: integer
+  '/api/admin/refunds/{gateway}/{id}':
+    post:
+      summary: 'Process a refund for an approved return through the specified payment gateway'
+      operationId: processARefundForAnApprovedReturnThroughTheSpecifiedPaymentGateway
+      description: "Execute a refund transaction for an approved return request through the specified payment\ngateway. This endpoint handles the actual refund processing, updates order statuses, and\nmaintains audit trails. Only approved returns can be processed for refunds. The system\nautomatically calculates refund amounts and updates payment statuses accordingly."
+      parameters: []
+      responses:
+        200:
+          description: 'Refund processed successfully'
           content:
             application/json:
               schema:
@@ -10300,7 +10996,7 @@ paths:
               schema:
                 oneOf:
                   -
-                    description: ''
+                    description: 'Unsupported payment gateway'
                     type: object
                     example:
                       message: 'Unsupported payment gateway'
@@ -10309,7 +11005,7 @@ paths:
                         type: string
                         example: 'Unsupported payment gateway'
                   -
-                    description: ''
+                    description: 'Return not approved for refund'
                     type: object
                     example:
                       message: 'This return has not been approved for refund.'
@@ -10317,8 +11013,17 @@ paths:
                       message:
                         type: string
                         example: 'This return has not been approved for refund.'
+                  -
+                    description: 'Insufficient refundable amount'
+                    type: object
+                    example:
+                      message: 'Refund amount exceeds the remaining refundable balance for this order.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Refund amount exceeds the remaining refundable balance for this order.'
         403:
-          description: ''
+          description: 'Insufficient permissions'
           content:
             application/json:
               schema:
@@ -10334,39 +11039,96 @@ paths:
           content:
             application/json:
               schema:
+                oneOf:
+                  -
+                    description: 'Return request not found'
+                    type: object
+                    example:
+                      message: 'Return request not found.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Return request not found.'
+                  -
+                    description: 'No payment found for order'
+                    type: object
+                    example:
+                      message: 'No valid payment found for this order. Cannot process refund.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'No valid payment found for this order. Cannot process refund.'
+        409:
+          description: 'Refund already processed'
+          content:
+            application/json:
+              schema:
                 type: object
                 example:
-                  message: 'Return request not found.'
+                  message: 'A refund has already been processed for this return request.'
                 properties:
                   message:
                     type: string
-                    example: 'Return request not found.'
+                    example: 'A refund has already been processed for this return request.'
         422:
           description: ''
           content:
             application/json:
               schema:
-                type: object
-                example:
-                  message: 'Refund failed. Please try again later.'
-                properties:
-                  message:
-                    type: string
-                    example: 'Refund failed. Please try again later.'
+                oneOf:
+                  -
+                    description: 'Refund failed at gateway'
+                    type: object
+                    example:
+                      message: 'Refund failed. Please try again later.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Refund failed. Please try again later.'
+                  -
+                    description: 'Payment intent not found'
+                    type: object
+                    example:
+                      message: 'Payment intent not found in payment gateway. Cannot process refund.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Payment intent not found in payment gateway. Cannot process refund.'
+                  -
+                    description: 'Order not in refundable state'
+                    type: object
+                    example:
+                      message: 'Order is not in a state that allows refunds (must be paid or partially refunded).'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Order is not in a state that allows refunds (must be paid or partially refunded).'
         500:
           description: ''
           content:
             application/json:
               schema:
-                type: object
-                example:
-                  message: 'An error occurred while processing the refund.'
-                properties:
-                  message:
-                    type: string
-                    example: 'An error occurred while processing the refund.'
+                oneOf:
+                  -
+                    description: 'Gateway communication error'
+                    type: object
+                    example:
+                      message: 'Unable to communicate with payment gateway. Please try again later.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Unable to communicate with payment gateway. Please try again later.'
+                  -
+                    description: 'Refund processing error'
+                    type: object
+                    example:
+                      message: 'An error occurred while processing the refund.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'An error occurred while processing the refund.'
       tags:
-        - Refunds
+        - 'Refund Processing'
     parameters:
       -
         in: path
@@ -10379,7 +11141,7 @@ paths:
       -
         in: path
         name: id
-        description: 'The ID of the return request to refund.'
+        description: 'The ID of the return request to refund. Must be an approved return.'
         example: 15
         required: true
         schema:
@@ -14184,13 +14946,13 @@ tags:
     name: 'Product Management'
     description: ''
   -
-    name: 'Product Tags'
-    description: ''
-  -
     name: 'Order Management'
     description: ''
   -
     name: 'Payment Processing'
+    description: ''
+  -
+    name: 'Refund Management'
     description: ''
   -
     name: 'Order Returns'
@@ -14217,7 +14979,10 @@ tags:
     name: 'Product Category Management'
     description: ''
   -
-    name: Refunds
+    name: 'Product Tag Management'
+    description: ''
+  -
+    name: 'Refund Processing'
     description: ''
   -
     name: Returns

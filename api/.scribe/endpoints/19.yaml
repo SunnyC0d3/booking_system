@@ -1,21 +1,21 @@
-name: 'Vendor Profile'
+name: 'User Profile'
 description: ''
 endpoints:
   -
     httpMethods:
       - GET
-    uri: 'api/vendors/{id}'
+    uri: 'api/users/{id}'
     metadata:
-      groupName: 'Vendor Profile'
+      groupName: 'User Profile'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Retrieve a specific vendor profile'
+      title: 'Retrieve user profile information'
       description: |-
-        Get detailed information about a specific vendor including their profile details, logo, and media.
-        This endpoint is typically used for vendor profile pages and allows authenticated users to view
-        vendor information. Vendors can view their own complete profile, while other users may see
-        limited public information depending on privacy settings.
+        Get detailed profile information for a specific user. Users can view their own complete profile
+        including personal details, address information, security settings, and account status.
+        Other authenticated users can only view basic public profile information for privacy protection.
+        This endpoint is commonly used for profile pages and account management interfaces.
       authenticated: true
       custom: []
     headers:
@@ -25,7 +25,7 @@ endpoints:
     urlParameters:
       id:
         name: id
-        description: 'The ID of the vendor.'
+        description: 'The ID of the user.'
         required: true
         example: 1
         type: integer
@@ -33,11 +33,11 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         custom: []
-      vendor:
-        name: vendor
-        description: 'The ID of the vendor to retrieve.'
+      user:
+        name: user
+        description: 'The ID of the user whose profile to retrieve.'
         required: true
-        example: 12
+        example: 123
         type: integer
         enumValues: []
         exampleWasSpecified: true
@@ -45,7 +45,7 @@ endpoints:
         custom: []
     cleanUrlParameters:
       id: 1
-      vendor: 12
+      user: 123
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -56,64 +56,79 @@ endpoints:
         status: 200
         content: |-
           {
-            "message": "Vendor details retrieved.",
+            "message": "User details retrieved.",
             "data": {
-              "id": 12,
-              "name": "TechCraft Solutions",
-              "description": "Innovative technology solutions for modern businesses. We specialize in custom software development, cloud services, and digital transformation consulting.",
-              "user": {
+              "id": 123,
+              "name": "Sarah Johnson",
+              "email": "sarah.johnson@example.com",
+              "email_verified_at": "2025-01-10T08:00:00.000000Z",
+              "stripe_customer_id": "cus_1234567890abcdef",
+              "password_changed_at": "2025-01-01T12:00:00.000000Z",
+              "last_login_at": "2025-01-16T09:15:00.000000Z",
+              "last_login_ip": "192.168.1.100",
+              "created_at": "2024-12-15T10:30:00.000000Z",
+              "updated_at": "2025-01-16T09:15:00.000000Z",
+              "deleted_at": null,
+              "user_address": {
                 "id": 45,
-                "name": "Sarah Mitchell",
-                "email": "sarah@techcraft.com",
-                "email_verified_at": "2025-01-10T08:00:00.000000Z",
-                "created_at": "2024-12-15T10:30:00.000000Z",
-                "updated_at": "2025-01-16T09:15:00.000000Z"
+                "address_line1": "123 Oak Street",
+                "address_line2": "Apartment 4B",
+                "city": "London",
+                "state": "England",
+                "country": "United Kingdom",
+                "postal_code": "SW1A 1AA"
               },
-              "logo": "https://yourapi.com/storage/vendor-logos/techcraft-logo.jpg",
-              "media": [
+              "role": {
+                "id": 7,
+                "name": "User"
+              },
+              "vendors": [
                 {
-                  "id": 78,
-                  "url": "https://yourapi.com/storage/vendor-logos/techcraft-logo.jpg",
-                  "name": "TechCraft Logo",
-                  "file_name": "techcraft-logo.jpg",
-                  "mime_type": "image/jpeg",
-                  "size": 156789
+                  "id": 12,
+                  "name": "Sarah's Boutique",
+                  "description": "Handcrafted jewelry and accessories",
+                  "logo": "https://yourapi.com/storage/vendor-logos/sarahs-boutique.jpg",
+                  "created_at": "2025-01-05T14:20:00.000000Z"
                 }
               ],
-              "products_count": 23,
-              "created_at": "2025-01-05T14:20:00.000000Z",
-              "updated_at": "2025-01-15T16:45:00.000000Z",
-              "deleted_at": null
+              "security_info": {
+                "requires_password_change": false,
+                "days_until_password_expiry": 45,
+                "security_score": {
+                  "score": 85,
+                  "level": "good",
+                  "issues": [
+                    "Consider enabling two-factor authentication"
+                  ]
+                },
+                "is_account_locked": false
+              }
             }
           }
         headers: []
-        description: 'Vendor profile retrieved successfully'
+        description: 'Own profile retrieved successfully'
         custom: []
       -
         status: 200
         content: |-
           {
-            "message": "Vendor details retrieved.",
+            "message": "User details retrieved.",
             "data": {
-              "id": 8,
-              "name": "Startup Innovations",
-              "description": "New vendor focused on innovative product development",
-              "user": {
-                "id": 23,
-                "name": "Alex Johnson",
-                "email": "alex@startup-innovations.com",
-                "email_verified_at": "2025-01-14T10:00:00.000000Z"
+              "id": 456,
+              "name": "John Smith",
+              "email": "j***@example.com",
+              "email_verified_at": "2025-01-08T12:00:00.000000Z",
+              "created_at": "2024-11-20T16:45:00.000000Z",
+              "updated_at": "2025-01-15T11:30:00.000000Z",
+              "role": {
+                "id": 7,
+                "name": "User"
               },
-              "logo": "",
-              "media": [],
-              "products_count": 0,
-              "created_at": "2025-01-14T09:30:00.000000Z",
-              "updated_at": "2025-01-14T09:30:00.000000Z",
-              "deleted_at": null
+              "vendors": []
             }
           }
         headers: []
-        description: 'Vendor with no products'
+        description: "Other user's public profile"
         custom: []
       -
         status: 401
@@ -137,10 +152,10 @@ endpoints:
         status: 404
         content: |-
           {
-            "message": "No query results for model [App\\Models\\Vendor] 999"
+            "message": "No query results for model [App\\Models\\User] 999"
           }
         headers: []
-        description: 'Vendor not found'
+        description: 'User not found'
         custom: []
     responseFields: []
     auth:
@@ -154,27 +169,28 @@ endpoints:
   -
     httpMethods:
       - POST
-    uri: 'api/vendors/{id}'
+    uri: 'api/users/{id}'
     metadata:
-      groupName: 'Vendor Profile'
+      groupName: 'User Profile'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Update vendor profile information'
+      title: 'Update user profile information'
       description: |-
-        Update the authenticated vendor's profile information including business details, description, and logo.
-        Vendors can only update their own profiles. This endpoint supports partial updates - only provided
-        fields will be updated, others remain unchanged. Logo uploads are processed securely with validation.
+        Update the authenticated user's profile information including personal details and address.
+        Users can only update their own profiles for security reasons. This endpoint supports
+        partial updates - only provided fields will be updated, others remain unchanged.
+        Password updates require the current password for security verification.
       authenticated: true
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: multipart/form-data
+      Content-Type: application/json
       Accept: application/json
     urlParameters:
       id:
         name: id
-        description: 'The ID of the vendor.'
+        description: 'The ID of the user.'
         required: true
         example: 1
         type: integer
@@ -182,11 +198,11 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         custom: []
-      vendor:
-        name: vendor
-        description: 'The ID of the vendor to update. Must belong to the authenticated user.'
+      user:
+        name: user
+        description: "The ID of the user to update. Must match the authenticated user's ID."
         required: true
-        example: 12
+        example: 123
         type: integer
         enumValues: []
         exampleWasSpecified: true
@@ -194,125 +210,220 @@ endpoints:
         custom: []
     cleanUrlParameters:
       id: 1
-      vendor: 12
+      user: 123
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
-      user_id:
-        name: user_id
-        description: 'optional The user ID associated with this vendor. Only admins can change this.'
+      name:
+        name: name
+        description: "optional The user's full name. Will be automatically formatted with proper capitalization."
         required: false
-        example: 45
+        example: 'Sarah Jane Johnson'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      email:
+        name: email
+        description: "optional The user's email address. Must be unique across all users."
+        required: false
+        example: sarah.johnson.new@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      password:
+        name: password
+        description: 'optional New password. Must be at least 8 characters. Requires current password verification via separate endpoint.'
+        required: false
+        example: MyNewSecurePassword123!
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      role_id:
+        name: role_id
+        description: "optional The user's role ID. Only admins can change user roles."
+        required: false
+        example: 7
         type: integer
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-      name:
-        name: name
-        description: "optional The vendor's business name. Will be used for public display."
+      address:
+        name: address
+        description: 'optional Complete address information for shipping and billing.'
         required: false
-        example: 'TechCraft Solutions Ltd'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      description:
-        name: description
-        description: "optional Detailed description of the vendor's business, services, or products. Maximum 1000 characters."
-        required: false
-        example: 'Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud migration services, and digital transformation consulting with over 10 years of industry experience.'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      logo:
-        name: logo
-        description: 'optional New logo file for the vendor. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will replace existing logo if provided.'
-        required: false
-        example: null
-        type: file
+        example: []
+        type: object
         enumValues: []
         exampleWasSpecified: false
+        nullable: false
+        custom: []
+      address.address_line1:
+        name: address.address_line1
+        description: 'Primary address line.'
+        required: true
+        example: '456 Maple Avenue'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      address.city:
+        name: address.city
+        description: 'City name.'
+        required: true
+        example: Manchester
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      address.country:
+        name: address.country
+        description: 'Country name.'
+        required: true
+        example: 'United Kingdom'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      address.postal_code:
+        name: address.postal_code
+        description: 'Postal or ZIP code.'
+        required: true
+        example: 'M1 1AA'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      address.address_line2:
+        name: address.address_line2
+        description: 'optional Secondary address line (apartment, suite, etc.).'
+        required: false
+        example: 'Suite 201'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      address.state:
+        name: address.state
+        description: 'optional State or region.'
+        required: false
+        example: 'Greater Manchester'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
         nullable: true
         custom: []
     cleanBodyParameters:
-      user_id: 45
-      name: 'TechCraft Solutions Ltd'
-      description: 'Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud migration services, and digital transformation consulting with over 10 years of industry experience.'
-    fileParameters:
-      logo: null
+      name: 'Sarah Jane Johnson'
+      email: sarah.johnson.new@example.com
+      password: MyNewSecurePassword123!
+      role_id: 7
+      address:
+        address_line1: '456 Maple Avenue'
+        city: Manchester
+        country: 'United Kingdom'
+        postal_code: 'M1 1AA'
+        address_line2: 'Suite 201'
+        state: 'Greater Manchester'
+    fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
-            "message": "Vendor updated successfully.",
+            "message": "User updated successfully.",
             "data": {
-              "id": 12,
-              "name": "TechCraft Solutions Ltd",
-              "description": "Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud migration services, and digital transformation consulting with over 10 years of industry experience.",
-              "user": {
+              "id": 123,
+              "name": "Sarah Jane Johnson",
+              "email": "sarah.johnson.new@example.com",
+              "email_verified_at": "2025-01-10T08:00:00.000000Z",
+              "stripe_customer_id": "cus_1234567890abcdef",
+              "password_changed_at": "2025-01-01T12:00:00.000000Z",
+              "last_login_at": "2025-01-16T09:15:00.000000Z",
+              "last_login_ip": "192.168.1.100",
+              "created_at": "2024-12-15T10:30:00.000000Z",
+              "updated_at": "2025-01-16T15:22:00.000000Z",
+              "deleted_at": null,
+              "user_address": {
                 "id": 45,
-                "name": "Sarah Mitchell",
-                "email": "sarah@techcraft.com",
-                "email_verified_at": "2025-01-10T08:00:00.000000Z"
+                "address_line1": "456 Maple Avenue",
+                "address_line2": "Suite 201",
+                "city": "Manchester",
+                "state": "Greater Manchester",
+                "country": "United Kingdom",
+                "postal_code": "M1 1AA"
               },
-              "logo": "https://yourapi.com/storage/vendor-logos/new-techcraft-logo.jpg",
-              "media": [
+              "role": {
+                "id": 7,
+                "name": "User"
+              },
+              "vendors": [
                 {
-                  "id": 82,
-                  "url": "https://yourapi.com/storage/vendor-logos/new-techcraft-logo.jpg",
-                  "name": "Updated TechCraft Logo",
-                  "file_name": "new-techcraft-logo.jpg",
-                  "mime_type": "image/jpeg",
-                  "size": 189456
+                  "id": 12,
+                  "name": "Sarah's Boutique",
+                  "description": "Handcrafted jewelry and accessories",
+                  "logo": "https://yourapi.com/storage/vendor-logos/sarahs-boutique.jpg"
                 }
               ],
-              "products_count": 23,
-              "created_at": "2025-01-05T14:20:00.000000Z",
-              "updated_at": "2025-01-16T11:30:00.000000Z",
-              "deleted_at": null
+              "security_info": {
+                "requires_password_change": false,
+                "days_until_password_expiry": 45,
+                "security_score": {
+                  "score": 85,
+                  "level": "good",
+                  "issues": [
+                    "Consider enabling two-factor authentication"
+                  ]
+                },
+                "is_account_locked": false
+              }
             }
           }
         headers: []
-        description: 'Vendor profile updated successfully'
+        description: 'Profile updated successfully'
         custom: []
       -
         status: 200
         content: |-
           {
-            "message": "Vendor updated successfully.",
+            "message": "User updated successfully.",
             "data": {
-              "id": 12,
-              "name": "TechCraft Solutions Ltd",
-              "description": "Updated business description with new focus areas and expanded service offerings.",
-              "user": {
-                "id": 45,
-                "name": "Sarah Mitchell",
-                "email": "sarah@techcraft.com"
-              },
-              "logo": "https://yourapi.com/storage/vendor-logos/techcraft-logo.jpg",
-              "media": [
-                {
-                  "id": 78,
-                  "url": "https://yourapi.com/storage/vendor-logos/techcraft-logo.jpg",
-                  "name": "TechCraft Logo",
-                  "file_name": "techcraft-logo.jpg",
-                  "mime_type": "image/jpeg",
-                  "size": 156789
-                }
-              ],
-              "products_count": 23,
-              "created_at": "2025-01-05T14:20:00.000000Z",
-              "updated_at": "2025-01-16T11:45:00.000000Z",
-              "deleted_at": null
+              "id": 123,
+              "name": "Sarah Johnson",
+              "email": "sarah.johnson@example.com",
+              "user_address": {
+                "id": 67,
+                "address_line1": "789 Pine Street",
+                "address_line2": null,
+                "city": "Edinburgh",
+                "state": "Scotland",
+                "country": "United Kingdom",
+                "postal_code": "EH1 1YZ"
+              }
             }
           }
         headers: []
-        description: 'Partial update without logo'
+        description: 'Address created for first time'
+        custom: []
+      -
+        status: 400
+        content: |-
+          {
+            "message": "Email verification required after email change. Please check your new email for verification link."
+          }
+        headers: []
+        description: 'Email verification required'
         custom: []
       -
         status: 401
@@ -327,10 +438,10 @@ endpoints:
         status: 403
         content: |-
           {
-            "message": "You do not have the required permissions."
+            "message": "You can only update your own profile."
           }
         headers: []
-        description: "Cannot update other vendor's profile"
+        description: "Cannot update other user's profile"
         custom: []
       -
         status: 403
@@ -339,58 +450,32 @@ endpoints:
             "message": "You do not have the required permissions."
           }
         headers: []
-        description: 'Insufficient permissions for user_id change'
+        description: 'Insufficient permissions for role change'
         custom: []
       -
         status: 404
         content: |-
           {
-            "message": "No query results for model [App\\Models\\Vendor] 999"
+            "message": "No query results for model [App\\Models\\User] 999"
           }
         headers: []
-        description: 'Vendor not found'
-        custom: []
-      -
-        status: 413
-        content: |-
-          {
-            "message": "File too large. Maximum size is 2.0 MB."
-          }
-        headers: []
-        description: 'Logo file too large'
+        description: 'User not found'
         custom: []
       -
         status: 422
         content: |-
           {
             "errors": [
-              "The name field is required.",
-              "The description may not be greater than 1000 characters.",
-              "The logo must be an image.",
-              "The logo may not be greater than 2048 kilobytes.",
-              "The logo must be a file of type: jpg, jpeg, png."
+              "The email has already been taken.",
+              "The password must be at least 8 characters.",
+              "The address.address_line1 field is required when address is present.",
+              "The address.city field is required when address is present.",
+              "The address.country field is required when address is present.",
+              "The address.postal_code field is required when address is present."
             ]
           }
         headers: []
         description: 'Validation errors'
-        custom: []
-      -
-        status: 422
-        content: |-
-          {
-            "message": "File type .gif not allowed. Allowed types: jpg, jpeg, png"
-          }
-        headers: []
-        description: 'Invalid file type'
-        custom: []
-      -
-        status: 500
-        content: |-
-          {
-            "message": "Failed to process logo file: Unable to write file to disk."
-          }
-        headers: []
-        description: 'Logo upload failed'
         custom: []
     responseFields: []
     auth:
