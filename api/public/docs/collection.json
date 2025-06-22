@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "E-Commerce API Documentation",
-        "_postman_id": "c97d5533-64ea-4e27-81f8-3b5aee6acbd4",
+        "_postman_id": "c7edf76f-06b6-432b-85dd-deac66fdb4de",
         "description": "Comprehensive API for managing products, orders, payments, users, vendors, and more in an e-commerce platform.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json",
         "version": "1.0.0"
@@ -527,6 +527,931 @@
                             "code": 500,
                             "body": "{\n  \"message\": \"Failed to send verification email. Please try again later.\",\n  \"status\": 500\n}",
                             "name": "Email sending failed"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "User Management",
+            "description": "",
+            "item": [
+                {
+                    "name": "Retrieve a paginated list of users with advanced filtering",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/users",
+                            "query": [
+                                {
+                                    "key": "filter[0]",
+                                    "value": "architecto",
+                                    "description": "optional Array of filter parameters to narrow down results.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter%5Bname%5D",
+                                    "value": "john",
+                                    "description": "optional Filter users by name (partial match supported).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter%5Bemail%5D",
+                                    "value": "%40gmail.com",
+                                    "description": "optional Filter users by email address (partial match supported).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter%5Bsearch%5D",
+                                    "value": "sarah+johnson",
+                                    "description": "optional Search across user names and email addresses.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter%5Brole%5D",
+                                    "value": "3%2C5%2C7",
+                                    "description": "optional Filter by role ID(s). Single ID or comma-separated multiple IDs.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter%5Bcreated_at%5D",
+                                    "value": "2025-01-01%2C2025-01-31",
+                                    "description": "optional Filter by registration date. Single date or comma-separated date range (YYYY-MM-DD).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter%5Bupdated_at%5D",
+                                    "value": "2024-12-01%2C2025-01-31",
+                                    "description": "optional Filter by last update date. Single date or comma-separated date range (YYYY-MM-DD).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter%5Binclude%5D",
+                                    "value": "role%2Cvendors%2CuserAddress",
+                                    "description": "optional Include related data. Options: role,vendors,userAddress.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "2",
+                                    "description": "optional Page number for pagination. Default: 1.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "25",
+                                    "description": "optional Number of users per page (max 100). Default: 15.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort",
+                                    "value": "-created_at%2Cname",
+                                    "description": "optional Sort users. Prefix with '-' for descending. Available: name, email, created_at, updated_at.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/admin\/users?filter[0]=architecto&filter%5Bname%5D=john&filter%5Bemail%5D=%40gmail.com&filter%5Bsearch%5D=sarah+johnson&filter%5Brole%5D=3%2C5%2C7&filter%5Bcreated_at%5D=2025-01-01%2C2025-01-31&filter%5Bupdated_at%5D=2024-12-01%2C2025-01-31&filter%5Binclude%5D=role%2Cvendors%2CuserAddress&page=2&per_page=25&sort=-created_at%2Cname"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"filter\":{\"name\":\"b\",\"email\":\"zbailey@example.net\",\"role\":\"9,31\",\"created_at\":\"2559-31-42\",\"updated_at\":\"2559-31-42\",\"search\":\"h\",\"include\":\"uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv\"},\"page\":4,\"per_page\":9,\"sort\":\"y8p,Bm,-dp,-Zm,-GH\"}"
+                        },
+                        "description": "Get a comprehensive paginated list of all users in the system with advanced filtering capabilities.\nThis endpoint provides administrators with complete user information including personal details,\naddresses, role assignments, vendor associations, and account status. Essential for user management,\nadministrative oversight, customer service, and system analytics. Supports powerful filtering and\nsearch functionality to help administrators quickly find specific users or user groups."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Users retrieved successfully.\",\n    \"data\": {\n        \"data\": [\n            {\n                \"id\": 123,\n                \"name\": \"Sarah Johnson\",\n                \"email\": \"sarah.johnson@example.com\",\n                \"email_verified_at\": \"2025-01-10T08:00:00.000000Z\",\n                \"stripe_customer_id\": \"cus_1234567890abcdef\",\n                \"password_changed_at\": \"2025-01-01T12:00:00.000000Z\",\n                \"last_login_at\": \"2025-01-16T09:15:00.000000Z\",\n                \"last_login_ip\": \"192.168.1.100\",\n                \"created_at\": \"2024-12-15T10:30:00.000000Z\",\n                \"updated_at\": \"2025-01-16T09:15:00.000000Z\",\n                \"deleted_at\": null,\n                \"user_address\": {\n                    \"id\": 45,\n                    \"address_line1\": \"123 Oak Street\",\n                    \"address_line2\": \"Apartment 4B\",\n                    \"city\": \"London\",\n                    \"state\": \"England\",\n                    \"country\": \"United Kingdom\",\n                    \"postal_code\": \"SW1A 1AA\"\n                },\n                \"role\": {\n                    \"id\": 6,\n                    \"name\": \"user\"\n                },\n                \"vendors\": [\n                    {\n                        \"id\": 12,\n                        \"name\": \"Sarah's Boutique\",\n                        \"description\": \"Handcrafted jewelry and accessories\",\n                        \"logo\": \"https:\/\/yourapi.com\/storage\/vendor-logos\/sarahs-boutique.jpg\",\n                        \"created_at\": \"2025-01-05T14:20:00.000000Z\"\n                    }\n                ]\n            },\n            {\n                \"id\": 89,\n                \"name\": \"Michael Chen\",\n                \"email\": \"michael.chen@example.com\",\n                \"email_verified_at\": \"2025-01-08T12:00:00.000000Z\",\n                \"stripe_customer_id\": \"cus_9876543210fedcba\",\n                \"password_changed_at\": \"2024-12-20T15:30:00.000000Z\",\n                \"last_login_at\": \"2025-01-15T14:45:00.000000Z\",\n                \"last_login_ip\": \"203.0.113.42\",\n                \"created_at\": \"2024-11-20T16:45:00.000000Z\",\n                \"updated_at\": \"2025-01-15T14:45:00.000000Z\",\n                \"deleted_at\": null,\n                \"user_address\": {\n                    \"id\": 67,\n                    \"address_line1\": \"456 Pine Avenue\",\n                    \"address_line2\": null,\n                    \"city\": \"Manchester\",\n                    \"state\": \"Greater Manchester\",\n                    \"country\": \"United Kingdom\",\n                    \"postal_code\": \"M1 1AA\"\n                },\n                \"role\": {\n                    \"id\": 3,\n                    \"name\": \"manager\"\n                },\n                \"vendors\": []\n            },\n            {\n                \"id\": 45,\n                \"name\": \"Emma Wilson\",\n                \"email\": \"emma.wilson@example.com\",\n                \"email_verified_at\": \"2025-01-05T14:00:00.000000Z\",\n                \"stripe_customer_id\": null,\n                \"password_changed_at\": \"2025-01-05T14:15:00.000000Z\",\n                \"last_login_at\": \"2025-01-14T11:20:00.000000Z\",\n                \"last_login_ip\": \"198.51.100.23\",\n                \"created_at\": \"2025-01-05T14:00:00.000000Z\",\n                \"updated_at\": \"2025-01-14T11:20:00.000000Z\",\n                \"deleted_at\": null,\n                \"user_address\": null,\n                \"role\": {\n                    \"id\": 4,\n                    \"name\": \"customer_service\"\n                },\n                \"vendors\": []\n            }\n        ],\n        \"current_page\": 1,\n        \"per_page\": 15,\n        \"total\": 1247,\n        \"last_page\": 84,\n        \"from\": 1,\n        \"to\": 15,\n        \"path\": \"https:\/\/yourapi.com\/api\/v1\/admin\/users\",\n        \"first_page_url\": \"https:\/\/yourapi.com\/api\/v1\/admin\/users?page=1\",\n        \"last_page_url\": \"https:\/\/yourapi.com\/api\/v1\/admin\/users?page=84\",\n        \"next_page_url\": \"https:\/\/yourapi.com\/api\/v1\/admin\/users?page=2\",\n        \"prev_page_url\": null\n    }\n}",
+                            "name": "Users retrieved successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Users retrieved successfully.\",\n    \"data\": {\n        \"data\": [\n            {\n                \"id\": 67,\n                \"name\": \"David Rodriguez\",\n                \"email\": \"david@techcorp.com\",\n                \"role\": {\n                    \"id\": 2,\n                    \"name\": \"admin\"\n                },\n                \"vendors\": [],\n                \"last_login_at\": \"2025-01-16T08:30:00.000000Z\"\n            }\n        ],\n        \"current_page\": 1,\n        \"per_page\": 15,\n        \"total\": 8,\n        \"last_page\": 1\n    }\n}",
+                            "name": "Filtered users by role"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Users retrieved successfully.\",\n    \"data\": {\n        \"data\": [],\n        \"current_page\": 1,\n        \"per_page\": 15,\n        \"total\": 0,\n        \"last_page\": 1,\n        \"from\": null,\n        \"to\": null\n    }\n}",
+                            "name": "No users found"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"errors\": [\n        \"The filter.email must be a valid email format.\",\n        \"The filter.role field must contain only comma-separated numbers.\",\n        \"The filter.created_at field must be a valid date or date range in YYYY-MM-DD format.\"\n    ]\n}",
+                            "name": "Invalid filter parameters"
+                        }
+                    ]
+                },
+                {
+                    "name": "Retrieve a specific user's detailed information",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/users\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/users\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the user."
+                                },
+                                {
+                                    "id": "user",
+                                    "key": "user",
+                                    "value": "123",
+                                    "description": "The ID of the user to retrieve."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Get comprehensive information about a specific user including personal details, address,\nrole assignments, vendor associations, and account status. This endpoint provides administrators\nwith complete visibility into user accounts for customer service, account management, and\nadministrative oversight purposes."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"User details retrieved.\",\n    \"data\": {\n        \"id\": 123,\n        \"name\": \"Sarah Johnson\",\n        \"email\": \"sarah.johnson@example.com\",\n        \"email_verified_at\": \"2025-01-10T08:00:00.000000Z\",\n        \"stripe_customer_id\": \"cus_1234567890abcdef\",\n        \"password_changed_at\": \"2025-01-01T12:00:00.000000Z\",\n        \"last_login_at\": \"2025-01-16T09:15:00.000000Z\",\n        \"last_login_ip\": \"192.168.1.100\",\n        \"created_at\": \"2024-12-15T10:30:00.000000Z\",\n        \"updated_at\": \"2025-01-16T09:15:00.000000Z\",\n        \"deleted_at\": null,\n        \"user_address\": {\n            \"id\": 45,\n            \"address_line1\": \"123 Oak Street\",\n            \"address_line2\": \"Apartment 4B\",\n            \"city\": \"London\",\n            \"state\": \"England\",\n            \"country\": \"United Kingdom\",\n            \"postal_code\": \"SW1A 1AA\"\n        },\n        \"role\": {\n            \"id\": 6,\n            \"name\": \"user\"\n        },\n        \"vendors\": [\n            {\n                \"id\": 12,\n                \"name\": \"Sarah's Boutique\",\n                \"description\": \"Handcrafted jewelry and accessories\",\n                \"logo\": \"https:\/\/yourapi.com\/storage\/vendor-logos\/sarahs-boutique.jpg\",\n                \"products_count\": 23,\n                \"created_at\": \"2025-01-05T14:20:00.000000Z\",\n                \"updated_at\": \"2025-01-15T16:45:00.000000Z\"\n            }\n        ]\n    }\n}",
+                            "name": "User details retrieved successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"User details retrieved.\",\n    \"data\": {\n        \"id\": 89,\n        \"name\": \"John Doe\",\n        \"email\": \"john.doe@example.com\",\n        \"email_verified_at\": \"2025-01-12T10:00:00.000000Z\",\n        \"stripe_customer_id\": null,\n        \"last_login_at\": \"2025-01-15T16:30:00.000000Z\",\n        \"user_address\": null,\n        \"role\": {\n            \"id\": 6,\n            \"name\": \"user\"\n        },\n        \"vendors\": []\n    }\n}",
+                            "name": "User without address or vendors"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"message\": \"No query results for model [App\\\\Models\\\\User] 999\"\n}",
+                            "name": "User not found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a new user account",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/users",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/users"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"Sarah Jane Johnson\",\"email\":\"sarah.johnson@example.com\",\"password\":\"SecurePassword123!\",\"role_id\":6,\"address\":{\"address_line1\":\"123 Oak Street\",\"city\":\"London\",\"country\":\"United Kingdom\",\"postal_code\":\"SW1A 1AA\",\"address_line2\":\"Apartment 4B\",\"state\":\"England\"}}"
+                        },
+                        "description": "Create a new user account with complete profile information including personal details, address,\nand role assignment. This endpoint allows administrators to onboard new users directly into the\nsystem with predefined access levels. The created user will receive appropriate notifications\nand can immediately begin using the system with their assigned role permissions."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"User created successfully!\",\n    \"data\": {\n        \"id\": 156,\n        \"name\": \"Sarah Jane Johnson\",\n        \"email\": \"sarah.johnson@example.com\",\n        \"email_verified_at\": null,\n        \"stripe_customer_id\": null,\n        \"password_changed_at\": null,\n        \"last_login_at\": null,\n        \"last_login_ip\": null,\n        \"created_at\": \"2025-01-16T14:30:00.000000Z\",\n        \"updated_at\": \"2025-01-16T14:30:00.000000Z\",\n        \"deleted_at\": null,\n        \"user_address\": {\n            \"id\": 89,\n            \"address_line1\": \"123 Oak Street\",\n            \"address_line2\": \"Apartment 4B\",\n            \"city\": \"London\",\n            \"state\": \"England\",\n            \"country\": \"United Kingdom\",\n            \"postal_code\": \"SW1A 1AA\"\n        },\n        \"role\": {\n            \"id\": 6,\n            \"name\": \"user\"\n        },\n        \"vendors\": []\n    }\n}",
+                            "name": "User created successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"errors\": [\n        \"The name field is required.\",\n        \"The email has already been taken.\",\n        \"The password must be at least 8 characters.\",\n        \"The role id must exist in roles table.\",\n        \"The address.address_line1 field is required.\",\n        \"The address.city field is required.\",\n        \"The address.country field is required.\",\n        \"The address.postal_code field is required.\"\n    ]\n}",
+                            "name": "Validation errors"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"errors\": [\n        \"The email has already been taken.\"\n    ]\n}",
+                            "name": "Duplicate email address"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"errors\": [\n        \"The selected role id is invalid.\"\n    ]\n}",
+                            "name": "Invalid role assignment"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update an existing user's information",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/users\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/users\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the user."
+                                },
+                                {
+                                    "id": "user",
+                                    "key": "user",
+                                    "value": "123",
+                                    "description": "The ID of the user to update."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"Sarah Jane Johnson-Smith\",\"email\":\"sarah.johnson.new@example.com\",\"password\":\"NewSecurePassword456!\",\"role_id\":3,\"address\":{\"address_line1\":\"456 Maple Avenue\",\"city\":\"Manchester\",\"country\":\"United Kingdom\",\"postal_code\":\"M1 1AA\",\"address_line2\":\"Suite 201\",\"state\":\"Greater Manchester\"}}"
+                        },
+                        "description": "Modify an existing user's profile information including personal details, address, role assignment,\nand password. This endpoint supports partial updates - only provided fields will be updated, others\nremain unchanged. Administrators can update any user's information including role changes and\npassword resets for customer service and account management purposes."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"User updated successfully.\",\n    \"data\": {\n        \"id\": 123,\n        \"name\": \"Sarah Jane Johnson-Smith\",\n        \"email\": \"sarah.johnson.new@example.com\",\n        \"email_verified_at\": \"2025-01-10T08:00:00.000000Z\",\n        \"stripe_customer_id\": \"cus_1234567890abcdef\",\n        \"password_changed_at\": \"2025-01-16T15:30:00.000000Z\",\n        \"last_login_at\": \"2025-01-16T09:15:00.000000Z\",\n        \"last_login_ip\": \"192.168.1.100\",\n        \"created_at\": \"2024-12-15T10:30:00.000000Z\",\n        \"updated_at\": \"2025-01-16T15:30:00.000000Z\",\n        \"deleted_at\": null,\n        \"user_address\": {\n            \"id\": 45,\n            \"address_line1\": \"456 Maple Avenue\",\n            \"address_line2\": \"Suite 201\",\n            \"city\": \"Manchester\",\n            \"state\": \"Greater Manchester\",\n            \"country\": \"United Kingdom\",\n            \"postal_code\": \"M1 1AA\"\n        },\n        \"role\": {\n            \"id\": 3,\n            \"name\": \"manager\"\n        },\n        \"vendors\": [\n            {\n                \"id\": 12,\n                \"name\": \"Sarah's Boutique\",\n                \"description\": \"Handcrafted jewelry and accessories\"\n            }\n        ]\n    }\n}",
+                            "name": "User updated successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"User updated successfully.\",\n    \"data\": {\n        \"id\": 123,\n        \"name\": \"Sarah Johnson\",\n        \"email\": \"sarah.johnson@example.com\",\n        \"role\": {\n            \"id\": 4,\n            \"name\": \"customer_service\"\n        },\n        \"updated_at\": \"2025-01-16T15:45:00.000000Z\"\n    }\n}",
+                            "name": "Partial update (role change only)"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"message\": \"No query results for model [App\\\\Models\\\\User] 999\"\n}",
+                            "name": "User not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"errors\": [\n        \"The email has already been taken.\",\n        \"The password must be at least 8 characters.\",\n        \"The role id must exist in roles table.\",\n        \"The address.address_line1 field is required when address is present.\",\n        \"The address.city field is required when address is present.\",\n        \"The address.country field is required when address is present.\",\n        \"The address.postal_code field is required when address is present.\"\n    ]\n}",
+                            "name": "Validation errors"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"errors\": [\n        \"The email has already been taken.\"\n    ]\n}",
+                            "name": "Duplicate email address"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"errors\": [\n        \"The selected role id is invalid.\"\n    ]\n}",
+                            "name": "Invalid role assignment"
+                        }
+                    ]
+                },
+                {
+                    "name": "Permanently delete a user account",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/users\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/users\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the user."
+                                },
+                                {
+                                    "id": "user",
+                                    "key": "user",
+                                    "value": "123",
+                                    "description": "The ID of the user to permanently delete."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Permanently remove a user account from the system along with their associated address information.\nThis action is irreversible and will completely remove the user's data from the database.\nExercise extreme caution when deleting users as this may affect order history, vendor relationships,\nand system audit trails. Consider deactivating accounts instead of deletion for data integrity.\n\n**Warning**: This permanently deletes all user data including address information. Order history\nand other related records may be affected. Ensure this action is intentional and authorized."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"User deleted successfully.\"\n}",
+                            "name": "User deleted successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"message\": \"No query results for model [App\\\\Models\\\\User] 999\"\n}",
+                            "name": "User not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n    \"message\": \"Cannot delete user with active orders or vendor associations. Please transfer or resolve dependencies first.\"\n}",
+                            "name": "User has dependencies"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"message\": \"Cannot delete system administrator accounts or users with special privileges.\"\n}",
+                            "name": "Protected user account"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"message\": \"User has active sessions. Please revoke all tokens and sessions before deletion.\"\n}",
+                            "name": "User has active sessions"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n    \"message\": \"An error occurred while deleting the user account.\"\n}",
+                            "name": "Deletion failed"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Vendor Management",
+            "description": "",
+            "item": [
+                {
+                    "name": "Retrieve a paginated list of vendors with advanced filtering",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/vendors",
+                            "query": [
+                                {
+                                    "key": "filter[0]",
+                                    "value": "architecto",
+                                    "description": "optional Array of filter parameters to narrow down results.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter%5Bname%5D",
+                                    "value": "tech",
+                                    "description": "optional Filter vendors by business name (partial match supported).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter%5Bsearch%5D",
+                                    "value": "electronics+hardware",
+                                    "description": "optional Search across vendor names and descriptions.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter%5Buser%5D",
+                                    "value": "45%2C67%2C89",
+                                    "description": "optional Filter by user ID(s) who own vendors. Single ID or comma-separated multiple IDs.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter%5Bcreated_at%5D",
+                                    "value": "2025-01-01%2C2025-01-31",
+                                    "description": "optional Filter by vendor registration date. Single date or comma-separated date range (YYYY-MM-DD).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter%5Bupdated_at%5D",
+                                    "value": "2024-12-01%2C2025-01-31",
+                                    "description": "optional Filter by last update date. Single date or comma-separated date range (YYYY-MM-DD).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter%5Binclude%5D",
+                                    "value": "user%2Cproducts",
+                                    "description": "optional Include related data. Options: user,products,media.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "2",
+                                    "description": "optional Page number for pagination. Default: 1.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "25",
+                                    "description": "optional Number of vendors per page (max 100). Default: 15.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort",
+                                    "value": "-created_at%2Cname",
+                                    "description": "optional Sort vendors. Prefix with '-' for descending. Available: name, created_at, updated_at.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/admin\/vendors?filter[0]=architecto&filter%5Bname%5D=tech&filter%5Bsearch%5D=electronics+hardware&filter%5Buser%5D=45%2C67%2C89&filter%5Bcreated_at%5D=2025-01-01%2C2025-01-31&filter%5Bupdated_at%5D=2024-12-01%2C2025-01-31&filter%5Binclude%5D=user%2Cproducts&page=2&per_page=25&sort=-created_at%2Cname"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Get a comprehensive paginated list of all vendors in the system with advanced filtering capabilities.\nThis endpoint provides administrators with complete vendor information including business details,\nassociated user accounts, product counts, media assets, and vendor status. Essential for vendor\nmanagement, marketplace oversight, business analytics, and partner relationship management.\nSupports powerful filtering and search functionality to help administrators efficiently manage\nvendor partnerships and monitor marketplace activity."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Vendors retrieved successfully.\",\n    \"data\": {\n        \"data\": [\n            {\n                \"id\": 12,\n                \"name\": \"TechCraft Solutions\",\n                \"description\": \"Innovative technology solutions for modern businesses. We specialize in custom software development, cloud services, and digital transformation consulting with over 10 years of industry experience.\",\n                \"user\": {\n                    \"id\": 45,\n                    \"name\": \"Sarah Mitchell\",\n                    \"email\": \"sarah@techcraft.com\",\n                    \"email_verified_at\": \"2025-01-10T08:00:00.000000Z\",\n                    \"created_at\": \"2024-12-15T10:30:00.000000Z\",\n                    \"updated_at\": \"2025-01-16T09:15:00.000000Z\"\n                },\n                \"logo\": \"https:\/\/yourapi.com\/storage\/vendor-logos\/techcraft-logo.jpg\",\n                \"media\": [\n                    {\n                        \"id\": 78,\n                        \"url\": \"https:\/\/yourapi.com\/storage\/vendor-logos\/techcraft-logo.jpg\",\n                        \"name\": \"TechCraft Logo\",\n                        \"file_name\": \"techcraft-logo.jpg\",\n                        \"mime_type\": \"image\/jpeg\",\n                        \"size\": 156789\n                    }\n                ],\n                \"products_count\": 23,\n                \"created_at\": \"2025-01-05T14:20:00.000000Z\",\n                \"updated_at\": \"2025-01-15T16:45:00.000000Z\",\n                \"deleted_at\": null\n            },\n            {\n                \"id\": 8,\n                \"name\": \"AudioTech Solutions\",\n                \"description\": \"Premium audio equipment manufacturer specializing in wireless technology and high-fidelity sound systems for both consumer and professional markets.\",\n                \"user\": {\n                    \"id\": 23,\n                    \"name\": \"James Thompson\",\n                    \"email\": \"james@audiotech.com\",\n                    \"email_verified_at\": \"2025-01-08T12:00:00.000000Z\",\n                    \"created_at\": \"2024-11-20T16:45:00.000000Z\",\n                    \"updated_at\": \"2025-01-14T11:30:00.000000Z\"\n                },\n                \"logo\": \"https:\/\/yourapi.com\/storage\/vendor-logos\/audiotech-logo.jpg\",\n                \"media\": [\n                    {\n                        \"id\": 56,\n                        \"url\": \"https:\/\/yourapi.com\/storage\/vendor-logos\/audiotech-logo.jpg\",\n                        \"name\": \"AudioTech Logo\",\n                        \"file_name\": \"audiotech-logo.jpg\",\n                        \"mime_type\": \"image\/jpeg\",\n                        \"size\": 198432\n                    }\n                ],\n                \"products_count\": 47,\n                \"created_at\": \"2024-12-10T11:15:00.000000Z\",\n                \"updated_at\": \"2025-01-14T16:20:00.000000Z\",\n                \"deleted_at\": null\n            },\n            {\n                \"id\": 15,\n                \"name\": \"Green Earth Organics\",\n                \"description\": \"Sustainable organic products for health-conscious consumers. We source directly from certified organic farms and focus on environmentally responsible packaging.\",\n                \"user\": {\n                    \"id\": 67,\n                    \"name\": \"Maria Rodriguez\",\n                    \"email\": \"maria@greenearth.com\",\n                    \"email_verified_at\": \"2025-01-12T09:30:00.000000Z\",\n                    \"created_at\": \"2025-01-12T09:00:00.000000Z\",\n                    \"updated_at\": \"2025-01-15T14:45:00.000000Z\"\n                },\n                \"logo\": \"\",\n                \"media\": [],\n                \"products_count\": 12,\n                \"created_at\": \"2025-01-12T10:30:00.000000Z\",\n                \"updated_at\": \"2025-01-15T14:45:00.000000Z\",\n                \"deleted_at\": null\n            }\n        ],\n        \"current_page\": 1,\n        \"per_page\": 15,\n        \"total\": 156,\n        \"last_page\": 11,\n        \"from\": 1,\n        \"to\": 15,\n        \"path\": \"https:\/\/yourapi.com\/api\/v1\/admin\/vendors\",\n        \"first_page_url\": \"https:\/\/yourapi.com\/api\/v1\/admin\/vendors?page=1\",\n        \"last_page_url\": \"https:\/\/yourapi.com\/api\/v1\/admin\/vendors?page=11\",\n        \"next_page_url\": \"https:\/\/yourapi.com\/api\/v1\/admin\/vendors?page=2\",\n        \"prev_page_url\": null\n    }\n}",
+                            "name": "Vendors retrieved successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Vendors retrieved successfully.\",\n    \"data\": {\n        \"data\": [\n            {\n                \"id\": 12,\n                \"name\": \"TechCraft Solutions\",\n                \"description\": \"Innovative technology solutions for modern businesses.\",\n                \"user\": {\n                    \"id\": 45,\n                    \"name\": \"Sarah Mitchell\",\n                    \"email\": \"sarah@techcraft.com\"\n                },\n                \"products_count\": 23,\n                \"created_at\": \"2025-01-05T14:20:00.000000Z\"\n            }\n        ],\n        \"current_page\": 1,\n        \"per_page\": 15,\n        \"total\": 1,\n        \"last_page\": 1\n    }\n}",
+                            "name": "Filtered vendors by user"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Vendors retrieved successfully.\",\n    \"data\": {\n        \"data\": [],\n        \"current_page\": 1,\n        \"per_page\": 15,\n        \"total\": 0,\n        \"last_page\": 1,\n        \"from\": null,\n        \"to\": null\n    }\n}",
+                            "name": "No vendors found"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"errors\": [\n        \"The filter.user field must contain only comma-separated numbers.\",\n        \"The filter.created_at field must be a valid date or date range in YYYY-MM-DD format.\",\n        \"The filter.include field contains invalid relationships. Available: user,products,media\"\n    ]\n}",
+                            "name": "Invalid filter parameters"
+                        }
+                    ]
+                },
+                {
+                    "name": "Retrieve a specific vendor's detailed information",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/vendors\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/vendors\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the vendor."
+                                },
+                                {
+                                    "id": "vendor",
+                                    "key": "vendor",
+                                    "value": "12",
+                                    "description": "The ID of the vendor to retrieve."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Get comprehensive information about a specific vendor including business details, associated user\naccount, branding assets, product statistics, and marketplace performance data. This endpoint\nprovides administrators with complete visibility into vendor profiles for partnership management,\nperformance monitoring, and customer service purposes."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Vendor details retrieved.\",\n    \"data\": {\n        \"id\": 12,\n        \"name\": \"TechCraft Solutions\",\n        \"description\": \"Innovative technology solutions for modern businesses. We specialize in custom software development, cloud services, and digital transformation consulting with over 10 years of industry experience. Our team of certified professionals delivers cutting-edge solutions that drive business growth and operational efficiency.\",\n        \"user\": {\n            \"id\": 45,\n            \"name\": \"Sarah Mitchell\",\n            \"email\": \"sarah@techcraft.com\",\n            \"email_verified_at\": \"2025-01-10T08:00:00.000000Z\",\n            \"stripe_customer_id\": \"cus_techcraft123456\",\n            \"last_login_at\": \"2025-01-16T09:15:00.000000Z\",\n            \"created_at\": \"2024-12-15T10:30:00.000000Z\",\n            \"updated_at\": \"2025-01-16T09:15:00.000000Z\",\n            \"user_address\": {\n                \"id\": 67,\n                \"address_line1\": \"123 Innovation Drive\",\n                \"address_line2\": \"Tech Hub Building, Floor 5\",\n                \"city\": \"London\",\n                \"state\": \"England\",\n                \"country\": \"United Kingdom\",\n                \"postal_code\": \"EC2A 4DP\"\n            }\n        },\n        \"logo\": \"https:\/\/yourapi.com\/storage\/vendor-logos\/techcraft-logo-secure.jpg\",\n        \"media\": [\n            {\n                \"id\": 78,\n                \"url\": \"https:\/\/yourapi.com\/storage\/vendor-logos\/techcraft-logo-secure.jpg\",\n                \"name\": \"TechCraft Solutions Logo\",\n                \"file_name\": \"techcraft-logo-secure.jpg\",\n                \"mime_type\": \"image\/jpeg\",\n                \"size\": 156789\n            }\n        ],\n        \"products_count\": 23,\n        \"created_at\": \"2025-01-05T14:20:00.000000Z\",\n        \"updated_at\": \"2025-01-15T16:45:00.000000Z\",\n        \"deleted_at\": null\n    }\n}",
+                            "name": "Vendor details retrieved successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Vendor details retrieved.\",\n    \"data\": {\n        \"id\": 15,\n        \"name\": \"Startup Innovations\",\n        \"description\": \"New vendor focused on innovative product development and emerging technologies.\",\n        \"user\": {\n            \"id\": 89,\n            \"name\": \"Alex Johnson\",\n            \"email\": \"alex@startup-innovations.com\",\n            \"email_verified_at\": \"2025-01-14T10:00:00.000000Z\",\n            \"created_at\": \"2025-01-14T09:30:00.000000Z\"\n        },\n        \"logo\": \"\",\n        \"media\": [],\n        \"products_count\": 0,\n        \"created_at\": \"2025-01-14T09:30:00.000000Z\",\n        \"updated_at\": \"2025-01-14T09:30:00.000000Z\",\n        \"deleted_at\": null\n    }\n}",
+                            "name": "New vendor without logo or products"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"message\": \"No query results for model [App\\\\Models\\\\Vendor] 999\"\n}",
+                            "name": "Vendor not found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a new vendor profile",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/vendors",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/vendors"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "user_id",
+                                    "value": "45",
+                                    "type": "text",
+                                    "description": "The ID of the user account that will own this vendor profile. Must be a valid, existing user."
+                                },
+                                {
+                                    "key": "name",
+                                    "value": "TechCraft Solutions Ltd",
+                                    "type": "text",
+                                    "description": "The vendor's business name. Will be used for public display and branding."
+                                },
+                                {
+                                    "key": "description",
+                                    "value": "Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud services, and digital transformation consulting.",
+                                    "type": "text",
+                                    "description": "Detailed description of the vendor's business, products, or services. Maximum 1000 characters."
+                                },
+                                {
+                                    "key": "logo",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": "Register a new vendor in the marketplace with complete business profile information. This endpoint\nallows administrators to onboard new business partners with detailed company information, branding\nassets, and user account associations. The created vendor can immediately begin listing products\nand managing their marketplace presence. Supports secure logo upload with comprehensive validation."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Vendor created successfully!\",\n    \"data\": {\n        \"id\": 25,\n        \"name\": \"TechCraft Solutions Ltd\",\n        \"description\": \"Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud services, and digital transformation consulting.\",\n        \"user\": {\n            \"id\": 45,\n            \"name\": \"Sarah Mitchell\",\n            \"email\": \"sarah@techcraft.com\",\n            \"email_verified_at\": \"2025-01-10T08:00:00.000000Z\",\n            \"created_at\": \"2024-12-15T10:30:00.000000Z\",\n            \"updated_at\": \"2025-01-16T09:15:00.000000Z\"\n        },\n        \"logo\": \"https:\/\/yourapi.com\/storage\/vendor-logos\/secure-logo-hash123.jpg\",\n        \"media\": [\n            {\n                \"id\": 89,\n                \"url\": \"https:\/\/yourapi.com\/storage\/vendor-logos\/secure-logo-hash123.jpg\",\n                \"name\": \"TechCraft Solutions Logo\",\n                \"file_name\": \"secure-logo-hash123.jpg\",\n                \"mime_type\": \"image\/jpeg\",\n                \"size\": 187456\n            }\n        ],\n        \"products_count\": 0,\n        \"created_at\": \"2025-01-16T14:30:00.000000Z\",\n        \"updated_at\": \"2025-01-16T14:30:00.000000Z\",\n        \"deleted_at\": null\n    }\n}",
+                            "name": "Vendor created successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Vendor created successfully!\",\n    \"data\": {\n        \"id\": 26,\n        \"name\": \"Green Earth Organics\",\n        \"description\": \"Sustainable organic products for health-conscious consumers.\",\n        \"user\": {\n            \"id\": 67,\n            \"name\": \"Maria Rodriguez\",\n            \"email\": \"maria@greenearth.com\"\n        },\n        \"logo\": \"\",\n        \"media\": [],\n        \"products_count\": 0,\n        \"created_at\": \"2025-01-16T14:35:00.000000Z\",\n        \"updated_at\": \"2025-01-16T14:35:00.000000Z\"\n    }\n}",
+                            "name": "Vendor created without logo"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 413,
+                            "body": "{\n    \"message\": \"File too large. Maximum size is 2.0 MB.\"\n}",
+                            "name": "Logo file too large"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"errors\": [\n        \"The user id field is required.\",\n        \"The name field is required.\",\n        \"The description field is required.\",\n        \"The user id must exist in users table.\",\n        \"The description may not be greater than 1000 characters.\",\n        \"The logo must be an image.\",\n        \"The logo may not be greater than 2048 kilobytes.\"\n    ]\n}",
+                            "name": "Validation errors"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"errors\": [\n        \"The selected user already has a vendor profile associated with their account.\"\n    ]\n}",
+                            "name": "User already has vendor"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"errors\": [\n        \"The selected user id is invalid.\"\n    ]\n}",
+                            "name": "Invalid user assignment"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"message\": \"File type .gif not allowed. Allowed types: jpg, jpeg, png\"\n}",
+                            "name": "Invalid file type"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update an existing vendor's information",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/vendors\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/vendors\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the vendor."
+                                },
+                                {
+                                    "id": "vendor",
+                                    "key": "vendor",
+                                    "value": "12",
+                                    "description": "The ID of the vendor to update."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "user_id",
+                                    "value": "67",
+                                    "type": "text",
+                                    "description": "optional Updated user ID for vendor ownership. Only admins can change this. Must be a valid, existing user."
+                                },
+                                {
+                                    "key": "name",
+                                    "value": "TechCraft Solutions International Ltd",
+                                    "type": "text",
+                                    "description": "optional Updated vendor business name. Will be used for public display and branding."
+                                },
+                                {
+                                    "key": "description",
+                                    "value": "Global leader in innovative technology solutions. We specialize in enterprise software development, cloud migration services, AI integration, and digital transformation consulting with over 15 years of proven industry experience.",
+                                    "type": "text",
+                                    "description": "optional Updated business description. Maximum 1000 characters."
+                                },
+                                {
+                                    "key": "logo",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": "Modify an existing vendor's profile information including business details, user associations,\ndescriptions, and branding assets. This endpoint supports partial updates - only provided fields\nwill be updated, others remain unchanged. Administrators can update vendor information for\npartnership management, profile corrections, and branding updates. Includes secure logo\nreplacement with comprehensive validation."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Vendor updated successfully.\",\n    \"data\": {\n        \"id\": 12,\n        \"name\": \"TechCraft Solutions International Ltd\",\n        \"description\": \"Global leader in innovative technology solutions. We specialize in enterprise software development, cloud migration services, AI integration, and digital transformation consulting with over 15 years of proven industry experience.\",\n        \"user\": {\n            \"id\": 45,\n            \"name\": \"Sarah Mitchell\",\n            \"email\": \"sarah@techcraft.com\",\n            \"email_verified_at\": \"2025-01-10T08:00:00.000000Z\"\n        },\n        \"logo\": \"https:\/\/yourapi.com\/storage\/vendor-logos\/new-techcraft-logo-hash456.jpg\",\n        \"media\": [\n            {\n                \"id\": 95,\n                \"url\": \"https:\/\/yourapi.com\/storage\/vendor-logos\/new-techcraft-logo-hash456.jpg\",\n                \"name\": \"Updated TechCraft Logo\",\n                \"file_name\": \"new-techcraft-logo-hash456.jpg\",\n                \"mime_type\": \"image\/jpeg\",\n                \"size\": 203567\n            }\n        ],\n        \"products_count\": 23,\n        \"created_at\": \"2025-01-05T14:20:00.000000Z\",\n        \"updated_at\": \"2025-01-16T11:30:00.000000Z\",\n        \"deleted_at\": null\n    }\n}",
+                            "name": "Vendor updated successfully with new logo"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Vendor updated successfully.\",\n    \"data\": {\n        \"id\": 12,\n        \"name\": \"TechCraft Solutions\",\n        \"description\": \"Updated business description with new focus areas and expanded service offerings for international markets.\",\n        \"user\": {\n            \"id\": 45,\n            \"name\": \"Sarah Mitchell\",\n            \"email\": \"sarah@techcraft.com\"\n        },\n        \"logo\": \"https:\/\/yourapi.com\/storage\/vendor-logos\/techcraft-logo-secure.jpg\",\n        \"products_count\": 23,\n        \"updated_at\": \"2025-01-16T11:45:00.000000Z\"\n    }\n}",
+                            "name": "Partial update (description only)"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Vendor updated successfully.\",\n    \"data\": {\n        \"id\": 12,\n        \"name\": \"TechCraft Solutions\",\n        \"description\": \"Innovative technology solutions for modern businesses.\",\n        \"user\": {\n            \"id\": 67,\n            \"name\": \"Maria Rodriguez\",\n            \"email\": \"maria@techcraft.com\",\n            \"email_verified_at\": \"2025-01-12T09:30:00.000000Z\"\n        },\n        \"logo\": \"https:\/\/yourapi.com\/storage\/vendor-logos\/techcraft-logo-secure.jpg\",\n        \"products_count\": 23,\n        \"updated_at\": \"2025-01-16T12:00:00.000000Z\"\n    }\n}",
+                            "name": "User ownership transfer"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"message\": \"No query results for model [App\\\\Models\\\\Vendor] 999\"\n}",
+                            "name": "Vendor not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 413,
+                            "body": "{\n    \"message\": \"File too large. Maximum size is 2.0 MB.\"\n}",
+                            "name": "Logo file too large"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"errors\": [\n        \"The user id must exist in users table.\",\n        \"The description may not be greater than 1000 characters.\",\n        \"The logo must be an image.\",\n        \"The logo may not be greater than 2048 kilobytes.\",\n        \"The logo must be a file of type: jpg, jpeg, png.\"\n    ]\n}",
+                            "name": "Validation errors"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"errors\": [\n        \"The selected user already has a vendor profile associated with their account.\"\n    ]\n}",
+                            "name": "User already has vendor"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"message\": \"File type .gif not allowed. Allowed types: jpg, jpeg, png\"\n}",
+                            "name": "Invalid file type"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n    \"message\": \"Failed to process logo file: Unable to write file to disk.\"\n}",
+                            "name": "Logo upload failed"
+                        }
+                    ]
+                },
+                {
+                    "name": "Permanently delete a vendor profile",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/vendors\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/vendors\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the vendor."
+                                },
+                                {
+                                    "id": "vendor",
+                                    "key": "vendor",
+                                    "value": "12",
+                                    "description": "The ID of the vendor to permanently delete."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Permanently remove a vendor profile from the marketplace along with their associated media assets.\nThis action is irreversible and will completely remove the vendor's business profile from the\nsystem. Exercise extreme caution when deleting vendors as this may affect product listings,\norder history, customer relationships, and marketplace analytics. Consider deactivating vendor\naccounts instead of deletion for business continuity and data integrity.\n\n**Warning**: This permanently deletes the vendor profile and all associated media files.\nProduct listings, order history, and customer relationships may be affected. Ensure this\naction is intentional and properly authorized by business stakeholders."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Vendor deleted successfully.\"\n}",
+                            "name": "Vendor deleted successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"message\": \"No query results for model [App\\\\Models\\\\Vendor] 999\"\n}",
+                            "name": "Vendor not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n    \"message\": \"Cannot delete vendor with active product listings. Please remove or transfer all products first.\"\n}",
+                            "name": "Vendor has active products"
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n    \"message\": \"Cannot delete vendor with pending or recent orders. Please resolve all order-related activities first.\"\n}",
+                            "name": "Vendor has pending orders"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"message\": \"This vendor has active marketplace dependencies and cannot be deleted. Please contact system administrator.\"\n}",
+                            "name": "Vendor has dependencies"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"message\": \"Cannot delete featured or premium vendor accounts without special authorization.\"\n}",
+                            "name": "Protected vendor account"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n    \"message\": \"An error occurred while deleting the vendor profile and associated media files.\"\n}",
+                            "name": "Deletion failed"
                         }
                     ]
                 }
@@ -3966,17 +4891,72 @@
             ]
         },
         {
-            "name": "Returns",
+            "name": "Return Management",
             "description": "",
             "item": [
                 {
-                    "name": "Retrieve a paginated list of all return requests.",
+                    "name": "Retrieve a paginated list of all return requests",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
                             "path": "api\/admin\/returns",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/returns"
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "2",
+                                    "description": "optional Page number for pagination. Default: 1.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "25",
+                                    "description": "optional Number of returns per page (max 100). Default: 20.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "Requested",
+                                    "description": "optional Filter by return status. Available: Requested, Under Review, Approved, Rejected, Return Shipped, Return Received, Completed, Cancelled, Pending.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "date_from",
+                                    "value": "2025-01-01",
+                                    "description": "optional Filter returns from this date (YYYY-MM-DD format).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "date_to",
+                                    "value": "2025-01-31",
+                                    "description": "optional Filter returns to this date (YYYY-MM-DD format).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "order_id",
+                                    "value": "8",
+                                    "description": "optional Filter returns by specific order ID.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "user_id",
+                                    "value": "3",
+                                    "description": "optional Filter returns by specific customer ID.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "product_id",
+                                    "value": "12",
+                                    "description": "optional Filter returns by specific product ID.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "reason",
+                                    "value": "damaged",
+                                    "description": "optional Filter by return reason (partial text search).",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/admin\/returns?page=2&per_page=25&status=Requested&date_from=2025-01-01&date_to=2025-01-31&order_id=8&user_id=3&product_id=12&reason=damaged"
                         },
                         "method": "GET",
                         "header": [
@@ -3990,25 +4970,37 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Get a comprehensive list of all return requests in the system with detailed information\nabout customer reasons, order details, product information, and current status. This endpoint\nis essential for customer service management, return processing workflows, and administrative\noversight of the returns process. Includes complete audit trail and customer communication history."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n    \"message\": \"Order returns retrieved.\",\n    \"data\": {\n        \"data\": [\n            {\n                \"id\": 1,\n                \"reason\": \"Product damaged on arrival\",\n                \"status\": \"Requested\",\n                \"created_at\": \"2025-01-15T10:30:00.000000Z\",\n                \"updated_at\": \"2025-01-15T10:30:00.000000Z\",\n                \"order_item\": {\n                    \"id\": 25,\n                    \"quantity\": 2,\n                    \"price\": 2999,\n                    \"product\": {\n                        \"id\": 12,\n                        \"name\": \"Wireless Headphones\",\n                        \"price\": 2999\n                    },\n                    \"order\": {\n                        \"id\": 8,\n                        \"total_amount\": 5998,\n                        \"user\": {\n                            \"id\": 3,\n                            \"email\": \"customer@example.com\"\n                        }\n                    }\n                }\n            }\n        ],\n        \"current_page\": 1,\n        \"per_page\": 20,\n        \"total\": 45\n    }\n}",
-                            "name": ""
+                            "body": "{\n    \"message\": \"Order returns retrieved.\",\n    \"data\": {\n        \"data\": [\n            {\n                \"id\": 1,\n                \"reason\": \"Product damaged on arrival - speaker has crackling sound at any volume level. Packaging appeared intact but internal components seem faulty.\",\n                \"status\": \"Requested\",\n                \"created_at\": \"2025-01-15T10:30:00.000000Z\",\n                \"updated_at\": \"2025-01-15T10:30:00.000000Z\",\n                \"order_item\": {\n                    \"id\": 25,\n                    \"quantity\": 2,\n                    \"price\": 2999,\n                    \"price_formatted\": \"\u00a329.99\",\n                    \"line_total\": 5998,\n                    \"line_total_formatted\": \"\u00a359.98\",\n                    \"created_at\": \"2025-01-10T16:30:00.000000Z\",\n                    \"product\": {\n                        \"id\": 12,\n                        \"name\": \"Wireless Headphones\",\n                        \"description\": \"Premium quality wireless headphones with active noise cancellation\",\n                        \"price\": 2999,\n                        \"price_formatted\": \"\u00a329.99\",\n                        \"featured_image\": \"https:\/\/yourapi.com\/storage\/products\/headphones-featured.jpg\"\n                    },\n                    \"order\": {\n                        \"id\": 8,\n                        \"total_amount\": 5998,\n                        \"total_amount_formatted\": \"\u00a359.98\",\n                        \"created_at\": \"2025-01-10T16:30:00.000000Z\",\n                        \"updated_at\": \"2025-01-12T11:15:00.000000Z\",\n                        \"user\": {\n                            \"id\": 3,\n                            \"name\": \"Sarah Johnson\",\n                            \"email\": \"sarah@example.com\",\n                            \"email_verified_at\": \"2025-01-05T12:00:00.000000Z\"\n                        }\n                    }\n                }\n            },\n            {\n                \"id\": 2,\n                \"reason\": \"Product does not match description - advertised as waterproof but water damage occurred during first use\",\n                \"status\": \"Under Review\",\n                \"created_at\": \"2025-01-14T14:20:00.000000Z\",\n                \"updated_at\": \"2025-01-15T09:45:00.000000Z\",\n                \"order_item\": {\n                    \"id\": 31,\n                    \"quantity\": 1,\n                    \"price\": 4999,\n                    \"price_formatted\": \"\u00a349.99\",\n                    \"line_total\": 4999,\n                    \"line_total_formatted\": \"\u00a349.99\",\n                    \"product\": {\n                        \"id\": 18,\n                        \"name\": \"Bluetooth Portable Speaker\",\n                        \"description\": \"Compact waterproof speaker with 12-hour battery\",\n                        \"price\": 4999,\n                        \"price_formatted\": \"\u00a349.99\"\n                    },\n                    \"order\": {\n                        \"id\": 11,\n                        \"total_amount\": 4999,\n                        \"total_amount_formatted\": \"\u00a349.99\",\n                        \"user\": {\n                            \"id\": 7,\n                            \"name\": \"Michael Chen\",\n                            \"email\": \"michael@example.com\",\n                            \"email_verified_at\": \"2025-01-08T14:30:00.000000Z\"\n                        }\n                    }\n                }\n            },\n            {\n                \"id\": 3,\n                \"reason\": \"Changed mind about purchase - no longer needed due to receiving similar item as gift\",\n                \"status\": \"Approved\",\n                \"created_at\": \"2025-01-13T16:15:00.000000Z\",\n                \"updated_at\": \"2025-01-14T11:20:00.000000Z\",\n                \"order_item\": {\n                    \"id\": 28,\n                    \"quantity\": 1,\n                    \"price\": 7999,\n                    \"price_formatted\": \"\u00a379.99\",\n                    \"product\": {\n                        \"id\": 23,\n                        \"name\": \"Premium Bluetooth Speaker\",\n                        \"price\": 7999,\n                        \"price_formatted\": \"\u00a379.99\"\n                    },\n                    \"order\": {\n                        \"id\": 9,\n                        \"total_amount\": 7999,\n                        \"total_amount_formatted\": \"\u00a379.99\",\n                        \"user\": {\n                            \"id\": 15,\n                            \"name\": \"Emma Wilson\",\n                            \"email\": \"emma@example.com\"\n                        }\n                    }\n                }\n            },\n            {\n                \"id\": 4,\n                \"reason\": \"Wrong size ordered by mistake - need larger size but currently out of stock\",\n                \"status\": \"Rejected\",\n                \"created_at\": \"2025-01-12T11:30:00.000000Z\",\n                \"updated_at\": \"2025-01-13T14:45:00.000000Z\",\n                \"order_item\": {\n                    \"id\": 22,\n                    \"quantity\": 1,\n                    \"price\": 3999,\n                    \"price_formatted\": \"\u00a339.99\",\n                    \"product\": {\n                        \"id\": 34,\n                        \"name\": \"Wireless Mouse\",\n                        \"price\": 3999,\n                        \"price_formatted\": \"\u00a339.99\"\n                    },\n                    \"order\": {\n                        \"id\": 7,\n                        \"total_amount\": 3999,\n                        \"total_amount_formatted\": \"\u00a339.99\",\n                        \"user\": {\n                            \"id\": 12,\n                            \"name\": \"David Rodriguez\",\n                            \"email\": \"david@example.com\"\n                        }\n                    }\n                }\n            }\n        ],\n        \"current_page\": 1,\n        \"per_page\": 20,\n        \"total\": 89,\n        \"last_page\": 5,\n        \"from\": 1,\n        \"to\": 20,\n        \"path\": \"https:\/\/yourapi.com\/api\/v1\/admin\/returns\",\n        \"first_page_url\": \"https:\/\/yourapi.com\/api\/v1\/admin\/returns?page=1\",\n        \"last_page_url\": \"https:\/\/yourapi.com\/api\/v1\/admin\/returns?page=5\",\n        \"next_page_url\": \"https:\/\/yourapi.com\/api\/v1\/admin\/returns?page=2\",\n        \"prev_page_url\": null\n    }\n}",
+                            "name": "Return requests retrieved successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Order returns retrieved.\",\n    \"data\": {\n        \"data\": [],\n        \"current_page\": 1,\n        \"per_page\": 20,\n        \"total\": 0,\n        \"last_page\": 1,\n        \"from\": null,\n        \"to\": null\n    }\n}",
+                            "name": "No return requests found"
                         },
                         {
                             "header": [],
                             "code": 403,
                             "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"errors\": [\n        \"The status field must be one of: Requested, Under Review, Approved, Rejected, Return Shipped, Return Received, Completed, Cancelled, Pending.\",\n        \"The date from field must be a valid date in YYYY-MM-DD format.\",\n        \"The order id field must be an integer.\",\n        \"The user id field must be an integer.\"\n    ]\n}",
+                            "name": "Invalid filter parameters"
                         }
                     ]
                 },
                 {
-                    "name": "Review and update the status of a return request.",
+                    "name": "Review and update the status of a return request",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -4020,7 +5012,7 @@
                                     "id": "returnId",
                                     "key": "returnId",
                                     "value": "15",
-                                    "description": "The ID of the return request."
+                                    "description": "The ID of the return request to review."
                                 },
                                 {
                                     "id": "action",
@@ -4042,69 +5034,97 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Process a return request by changing its status through the review workflow. This endpoint\nallows administrators to move returns through different stages: review, approve, or reject.\nStatus changes trigger appropriate notifications to customers and update the order processing\nworkflow. Only returns in appropriate states can be transitioned to prevent invalid workflows."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n    \"message\": \"Return status updated to Approved.\",\n    \"data\": {\n        \"id\": 15,\n        \"order_item_id\": 25,\n        \"reason\": \"Product damaged on arrival\",\n        \"order_return_status_id\": 3,\n        \"created_at\": \"2025-01-15T10:30:00.000000Z\",\n        \"updated_at\": \"2025-01-15T14:45:00.000000Z\"\n    }\n}",
-                            "name": ""
+                            "body": "{\n    \"message\": \"Return status updated to Approved.\",\n    \"data\": {\n        \"id\": 15,\n        \"order_item_id\": 25,\n        \"reason\": \"Product damaged on arrival - speaker has crackling sound at any volume level\",\n        \"order_return_status_id\": 3,\n        \"created_at\": \"2025-01-15T10:30:00.000000Z\",\n        \"updated_at\": \"2025-01-15T14:45:00.000000Z\"\n    }\n}",
+                            "name": "Return approved successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Return status updated to Under Review.\",\n    \"data\": {\n        \"id\": 12,\n        \"order_item_id\": 18,\n        \"reason\": \"Product does not match description - advertised as waterproof but failed during first use\",\n        \"order_return_status_id\": 2,\n        \"created_at\": \"2025-01-14T14:20:00.000000Z\",\n        \"updated_at\": \"2025-01-15T09:30:00.000000Z\"\n    }\n}",
+                            "name": "Return moved to review"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Return status updated to Rejected.\",\n    \"data\": {\n        \"id\": 8,\n        \"order_item_id\": 22,\n        \"reason\": \"Wrong size ordered by mistake\",\n        \"order_return_status_id\": 4,\n        \"created_at\": \"2025-01-12T11:30:00.000000Z\",\n        \"updated_at\": \"2025-01-15T16:15:00.000000Z\"\n    }\n}",
+                            "name": "Return rejected"
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n    \"message\": \"Return request cannot be approved as the return window has expired.\"\n}",
+                            "name": "Return window expired"
                         },
                         {
                             "header": [],
                             "code": 403,
                             "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
+                            "name": "Insufficient permissions"
                         },
                         {
                             "header": [],
                             "code": 404,
                             "body": "{\n    \"message\": \"Return request not found.\"\n}",
-                            "name": ""
+                            "name": "Return request not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n    \"message\": \"Cannot modify return status as a refund has already been processed for this item.\"\n}",
+                            "name": "Return already has refund"
                         },
                         {
                             "header": [],
                             "code": 422,
                             "body": "{\n    \"message\": \"Return is already processed.\"\n}",
-                            "name": ""
+                            "name": "Return already processed"
                         },
                         {
                             "header": [],
                             "code": 422,
                             "body": "{\n    \"message\": \"Invalid action provided.\"\n}",
-                            "name": ""
+                            "name": "Invalid action provided"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"message\": \"Cannot change return status from Completed to Under Review. Invalid status transition.\"\n}",
+                            "name": "Invalid status transition"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"message\": \"Order is not in a state that allows returns (must be delivered or completed).\"\n}",
+                            "name": "Order not eligible for returns"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n    \"message\": \"An error occurred while updating the return status.\"\n}",
+                            "name": "Status update failed"
                         }
                     ]
                 }
             ]
         },
         {
-            "name": "Role Permissions",
+            "name": "Role Management",
             "description": "",
             "item": [
                 {
-                    "name": "Retrieve all permissions for a role.",
+                    "name": "Retrieve all user roles",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
-                            "path": "api\/admin\/roles\/:role_id\/permissions",
+                            "path": "api\/admin\/roles",
                             "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/roles\/:role_id\/permissions",
-                            "variable": [
-                                {
-                                    "id": "role_id",
-                                    "key": "role_id",
-                                    "value": "1",
-                                    "description": "The ID of the role."
-                                },
-                                {
-                                    "id": "role",
-                                    "key": "role",
-                                    "value": "1",
-                                    "description": "The ID of the role."
-                                }
-                            ]
+                            "raw": "{{baseUrl}}\/api\/admin\/roles"
                         },
                         "method": "GET",
                         "header": [
@@ -4118,43 +5138,102 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Get a complete list of all user roles in the system. Roles define user access levels and permissions\nwithin the application. This endpoint is essential for user management, access control configuration,\nand understanding the system's permission structure. Only administrators with proper permissions\ncan view roles to maintain system security."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"message\": \"Permissions retrieved successfully.\",\n  \"data\": []\n}",
-                            "name": ""
+                            "body": "{\n  \"message\": \"Roles retrieved successfully.\",\n  \"data\": [\n    {\n      \"id\": 1,\n      \"name\": \"super_admin\",\n      \"created_at\": \"2024-12-01T08:00:00.000000Z\",\n      \"updated_at\": \"2024-12-01T08:00:00.000000Z\"\n    },\n    {\n      \"id\": 2,\n      \"name\": \"admin\",\n      \"created_at\": \"2024-12-01T08:05:00.000000Z\",\n      \"updated_at\": \"2024-12-01T08:05:00.000000Z\"\n    },\n    {\n      \"id\": 3,\n      \"name\": \"manager\",\n      \"created_at\": \"2024-12-01T08:10:00.000000Z\",\n      \"updated_at\": \"2024-12-01T08:10:00.000000Z\"\n    },\n    {\n      \"id\": 4,\n      \"name\": \"customer_service\",\n      \"created_at\": \"2024-12-01T08:15:00.000000Z\",\n      \"updated_at\": \"2024-12-01T08:15:00.000000Z\"\n    },\n    {\n      \"id\": 5,\n      \"name\": \"vendor\",\n      \"created_at\": \"2024-12-01T08:20:00.000000Z\",\n      \"updated_at\": \"2024-12-01T08:20:00.000000Z\"\n    },\n    {\n      \"id\": 6,\n      \"name\": \"user\",\n      \"created_at\": \"2024-12-01T08:25:00.000000Z\",\n      \"updated_at\": \"2024-12-01T08:25:00.000000Z\"\n    }\n  ]\n}",
+                            "name": "Roles retrieved successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Roles retrieved successfully.\",\n  \"data\": []\n}",
+                            "name": "No roles configured"
                         },
                         {
                             "header": [],
                             "code": 403,
                             "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
+                            "name": "Insufficient permissions"
                         }
                     ]
                 },
                 {
-                    "name": "Assign specific permissions to a role.",
+                    "name": "Create a new user role",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
-                            "path": "api\/admin\/roles\/:role_id\/permissions",
+                            "path": "api\/admin\/roles",
                             "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/roles\/:role_id\/permissions",
+                            "raw": "{{baseUrl}}\/api\/admin\/roles"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"customer_service\"}"
+                        },
+                        "description": "Add a new role to the system for user access control. Roles define what permissions users have\nand what actions they can perform within the application. Role names should follow a consistent\nnaming convention (lowercase, underscore-separated) and must be unique. Once created, roles can\nbe assigned to users and configured with specific permissions."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Role created successfully.\",\n  \"data\": {\n    \"id\": 7,\n    \"name\": \"customer_service\",\n    \"created_at\": \"2025-01-16T14:30:00.000000Z\",\n    \"updated_at\": \"2025-01-16T14:30:00.000000Z\"\n  }\n}",
+                            "name": "Role created successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"errors\": [\n    \"The name field is required.\",\n    \"The name has already been taken.\",\n    \"The name may not be greater than 255 characters.\"\n  ]\n}",
+                            "name": "Validation errors"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"errors\": [\n    \"The name has already been taken.\"\n  ]\n}",
+                            "name": "Duplicate role name"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update an existing role",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/roles\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/roles\/:id",
                             "variable": [
                                 {
-                                    "id": "role_id",
-                                    "key": "role_id",
+                                    "id": "id",
+                                    "key": "id",
                                     "value": "1",
                                     "description": "The ID of the role."
                                 },
                                 {
                                     "id": "role",
                                     "key": "role",
-                                    "value": "1",
-                                    "description": "The ID of the role."
+                                    "value": "7",
+                                    "description": "The ID of the role to update."
                                 }
                             ]
                         },
@@ -4171,27 +5250,270 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"permissions\":[\"create_users\",\"edit_users\"]}"
+                            "raw": "{\"name\":\"senior_customer_service\"}"
                         },
-                        "description": ""
+                        "description": "Modify an existing role name in the system. Exercise caution when updating roles as this may\naffect user access throughout the application. Ensure that any name changes are reflected in\nuser assignments and access control logic. Role names are automatically converted to lowercase\nand must remain unique across all roles."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"message\": \"Permissions assigned successfully.\",\n  \"data\": {}\n}",
-                            "name": ""
+                            "body": "{\n  \"message\": \"Role updated successfully.\",\n  \"data\": {\n    \"id\": 7,\n    \"name\": \"senior_customer_service\",\n    \"created_at\": \"2025-01-16T14:30:00.000000Z\",\n    \"updated_at\": \"2025-01-16T15:15:00.000000Z\"\n  }\n}",
+                            "name": "Role updated successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\Role] 999\"\n}",
+                            "name": "Role not found"
                         },
                         {
                             "header": [],
                             "code": 422,
-                            "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"permissions\": [\"The permissions field is required.\"]\n  }\n}",
-                            "name": ""
+                            "body": "{\n  \"errors\": [\n    \"The name field is required.\",\n    \"The name has already been taken.\",\n    \"The name may not be greater than 255 characters.\"\n  ]\n}",
+                            "name": "Validation errors"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"errors\": [\n    \"The name has already been taken.\"\n  ]\n}",
+                            "name": "Name already exists"
                         }
                     ]
                 },
                 {
-                    "name": "Assign all available permissions to a role.",
+                    "name": "Delete a role",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/roles\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/roles\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "The ID of the role."
+                                },
+                                {
+                                    "id": "role",
+                                    "key": "role",
+                                    "value": "7",
+                                    "description": "The ID of the role to delete."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Permanently remove a role from the system. This action is irreversible and will affect all users\ncurrently assigned to this role. Before deletion, ensure that users with this role are reassigned\nto appropriate alternative roles to maintain proper access control. Exercise extreme caution when\ndeleting roles as this may impact user access throughout the application.\n\n**Warning**: Deleting a role that is currently assigned to users may leave those users without\nproper access permissions, potentially locking them out of system features."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Role deleted successfully.\"\n}",
+                            "name": "Role deleted successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\Role] 999\"\n}",
+                            "name": "Role not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n  \"message\": \"Cannot delete role that is currently assigned to users.\"\n}",
+                            "name": "Role in use by users"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"Cannot delete core system roles required for application functionality.\"\n}",
+                            "name": "Core role protection"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"message\": \"An error occurred while deleting the role.\"\n}",
+                            "name": "Deletion failed"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Role Permission Management",
+            "description": "",
+            "item": [
+                {
+                    "name": "Retrieve all permissions for a specific role",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/roles\/:role_id\/permissions",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/roles\/:role_id\/permissions",
+                            "variable": [
+                                {
+                                    "id": "role_id",
+                                    "key": "role_id",
+                                    "value": "1",
+                                    "description": "The ID of the role."
+                                },
+                                {
+                                    "id": "role",
+                                    "key": "role",
+                                    "value": "3",
+                                    "description": "The ID of the role to retrieve permissions for."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Get a complete list of permissions assigned to a specific role. This endpoint is essential for\nunderstanding what actions users with this role can perform within the system. It provides\nadministrators with visibility into the current permission structure and helps with access\ncontrol auditing and role management decisions."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Permissions retrieved successfully.\",\n  \"data\": {\n    \"role\": \"manager\",\n    \"permissions\": [\n      \"view_users\",\n      \"create_users\",\n      \"edit_users\",\n      \"view_orders\",\n      \"create_orders\",\n      \"edit_orders\",\n      \"view_products\",\n      \"create_products\",\n      \"edit_products\",\n      \"view_vendors\",\n      \"manage_returns\",\n      \"view_payments\"\n    ]\n  }\n}",
+                            "name": "Permissions retrieved successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Permissions retrieved successfully.\",\n  \"data\": {\n    \"role\": \"new_role\",\n    \"permissions\": []\n  }\n}",
+                            "name": "Role with no permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\Role] 999\"\n}",
+                            "name": "Role not found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Assign specific permissions to a role",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/roles\/:role_id\/permissions",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/roles\/:role_id\/permissions",
+                            "variable": [
+                                {
+                                    "id": "role_id",
+                                    "key": "role_id",
+                                    "value": "1",
+                                    "description": "The ID of the role."
+                                },
+                                {
+                                    "id": "role",
+                                    "key": "role",
+                                    "value": "3",
+                                    "description": "The ID of the role to assign permissions to."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"permissions\":[\"architecto\"]}"
+                        },
+                        "description": "Grant specific permissions to a role, enabling users with that role to perform the associated\nactions. This endpoint allows fine-grained control over role capabilities by selectively\nassigning permissions. Permissions are added to existing ones (not replaced), so you can\nincrementally build up role permissions without losing previously assigned ones."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Permissions assigned successfully.\",\n  \"data\": {\n    \"role\": \"manager\",\n    \"assigned_permissions\": [\n      \"delete_users\",\n      \"manage_refunds\",\n      \"view_reports\"\n    ],\n    \"total_permissions\": 15\n  }\n}",
+                            "name": "Permissions assigned successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Permissions assigned successfully.\",\n  \"data\": {\n    \"role\": \"manager\",\n    \"assigned_permissions\": [],\n    \"note\": \"All specified permissions were already assigned to this role\",\n    \"total_permissions\": 12\n  }\n}",
+                            "name": "Permissions already assigned"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\Role] 999\"\n}",
+                            "name": "Role not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"errors\": [\n    \"The permissions field is required.\",\n    \"The permissions must be an array.\",\n    \"The permissions.0 is invalid. Permission 'invalid_permission' does not exist.\",\n    \"The permissions.1 is invalid. Permission 'another_invalid' does not exist.\"\n  ]\n}",
+                            "name": "Validation errors"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"errors\": [\n    \"The following permissions do not exist: invalid_permission, fake_permission\"\n  ]\n}",
+                            "name": "Invalid permission names"
+                        }
+                    ]
+                },
+                {
+                    "name": "Assign all available permissions to a role",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -4209,7 +5531,7 @@
                                     "id": "role",
                                     "key": "role",
                                     "value": "1",
-                                    "description": "The ID of the role."
+                                    "description": "The ID of the role to assign all permissions to."
                                 }
                             ]
                         },
@@ -4225,25 +5547,43 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Grant all permissions in the system to a specific role, effectively creating a \"super\" role with\ncomplete access to all system functionality. Use this endpoint with extreme caution as it provides\nunrestricted access to all features. This is typically used for super administrator roles or during\ninitial system setup. The operation will assign every permission that exists in the system.\n\n**Warning**: This gives complete system access to users with this role. Ensure this is intentional\nand that the role is assigned only to trusted administrators."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"message\": \"All permissions assigned successfully.\",\n  \"data\": {}\n}",
-                            "name": ""
+                            "body": "{\n  \"message\": \"All permissions assigned successfully.\",\n  \"data\": {\n    \"role\": \"super_admin\",\n    \"total_permissions_assigned\": 47,\n    \"newly_assigned\": 12,\n    \"already_assigned\": 35,\n    \"permissions\": [\n      \"view_users\",\n      \"create_users\",\n      \"edit_users\",\n      \"delete_users\",\n      \"view_orders\",\n      \"create_orders\",\n      \"edit_orders\",\n      \"delete_orders\",\n      \"view_products\",\n      \"create_products\",\n      \"edit_products\",\n      \"delete_products\",\n      \"view_vendors\",\n      \"create_vendors\",\n      \"edit_vendors\",\n      \"delete_vendors\",\n      \"view_payments\",\n      \"manage_refunds\",\n      \"manage_returns\",\n      \"view_roles\",\n      \"create_roles\",\n      \"edit_roles\",\n      \"delete_roles\",\n      \"view_permissions\",\n      \"create_permissions\",\n      \"edit_permissions\",\n      \"delete_permissions\",\n      \"view_reports\",\n      \"export_data\",\n      \"import_data\",\n      \"system_settings\",\n      \"user_management\",\n      \"security_settings\"\n    ]\n  }\n}",
+                            "name": "All permissions assigned successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"All permissions assigned successfully.\",\n  \"data\": {\n    \"role\": \"super_admin\",\n    \"total_permissions_assigned\": 47,\n    \"newly_assigned\": 0,\n    \"already_assigned\": 47,\n    \"note\": \"Role already had all available permissions\"\n  }\n}",
+                            "name": "Role already has all permissions"
                         },
                         {
                             "header": [],
                             "code": 403,
                             "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\Role] 999\"\n}",
+                            "name": "Role not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"message\": \"An error occurred while assigning all permissions to the role.\"\n}",
+                            "name": "Assignment failed"
                         }
                     ]
                 },
                 {
-                    "name": "Revoke a specific permission from a role.",
+                    "name": "Revoke a specific permission from a role",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -4266,14 +5606,14 @@
                                 {
                                     "id": "role",
                                     "key": "role",
-                                    "value": "1",
-                                    "description": "The ID of the role."
+                                    "value": "3",
+                                    "description": "The ID of the role to revoke the permission from."
                                 },
                                 {
                                     "id": "permission",
                                     "key": "permission",
-                                    "value": "5",
-                                    "description": "The ID of the permission to revoke."
+                                    "value": "12",
+                                    "description": "The ID of the permission to revoke from the role."
                                 }
                             ]
                         },
@@ -4289,200 +5629,50 @@
                             }
                         ],
                         "body": null,
-                        "description": ""
+                        "description": "Remove a specific permission from a role, preventing users with that role from performing the\nassociated action. This endpoint provides fine-grained control over role capabilities by allowing\nselective removal of permissions. Use this when you need to restrict access to specific features\nfor users with a particular role while maintaining their other permissions."
                     },
                     "response": [
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"message\": \"Permission revoked successfully.\",\n  \"data\": {}\n}",
-                            "name": ""
+                            "body": "{\n  \"message\": \"Permission revoked successfully.\",\n  \"data\": {\n    \"role\": \"manager\",\n    \"revoked_permission\": \"delete_users\",\n    \"remaining_permissions_count\": 11,\n    \"remaining_permissions\": [\n      \"view_users\",\n      \"create_users\",\n      \"edit_users\",\n      \"view_orders\",\n      \"create_orders\",\n      \"edit_orders\",\n      \"view_products\",\n      \"create_products\",\n      \"edit_products\",\n      \"view_vendors\",\n      \"manage_returns\"\n    ]\n  }\n}",
+                            "name": "Permission revoked successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Permission revoked successfully.\",\n  \"data\": {\n    \"role\": \"manager\",\n    \"permission\": \"super_admin_only\",\n    \"note\": \"Permission was not assigned to this role\",\n    \"remaining_permissions_count\": 12\n  }\n}",
+                            "name": "Permission was not assigned"
                         },
                         {
                             "header": [],
                             "code": 403,
                             "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "Roles",
-            "description": "",
-            "item": [
-                {
-                    "name": "Retrieve all roles.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/roles",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/roles"
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"message\": \"Roles retrieved successfully.\",\n  \"data\": []\n}",
-                            "name": ""
+                            "name": "Insufficient permissions"
                         },
                         {
                             "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Create a new role.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/roles",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/roles"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"name\":\"\\\"admin\\\"\"}"
-                        },
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"message\": \"Role created successfully.\",\n  \"data\": {}\n}",
-                            "name": ""
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\Role] 999\"\n}",
+                            "name": "Role not found"
                         },
                         {
                             "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Update a role.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/roles\/:id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/roles\/:id",
-                            "variable": [
-                                {
-                                    "id": "id",
-                                    "key": "id",
-                                    "value": "1",
-                                    "description": "The ID of the role."
-                                }
-                            ]
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"name\":\"\\\"admin\\\"\"}"
-                        },
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"message\": \"Role updated successfully.\",\n  \"data\": {}\n}",
-                            "name": ""
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\Permission] 999\"\n}",
+                            "name": "Permission not found"
                         },
                         {
                             "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Delete a role.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/roles\/:id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/roles\/:id",
-                            "variable": [
-                                {
-                                    "id": "id",
-                                    "key": "id",
-                                    "value": "1",
-                                    "description": "The ID of the role."
-                                }
-                            ]
-                        },
-                        "method": "DELETE",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"message\": \"Role deleted successfully.\"\n}",
-                            "name": ""
+                            "code": 422,
+                            "body": "{\n  \"message\": \"Cannot revoke core system permissions that are required for role functionality.\"\n}",
+                            "name": "Cannot revoke core permission"
                         },
                         {
                             "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
+                            "code": 500,
+                            "body": "{\n  \"message\": \"An error occurred while revoking the permission from the role.\"\n}",
+                            "name": "Revocation failed"
                         }
                     ]
                 }
@@ -4816,235 +6006,6 @@
             ]
         },
         {
-            "name": "Users",
-            "description": "",
-            "item": [
-                {
-                    "name": "Retrieve a paginated list of users.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/users",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/users"
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"b\",\"email\":\"zbailey@example.net\",\"role\":\"9,31\",\"created_at\":\"2559-31-42\",\"updated_at\":\"2559-31-42\",\"search\":\"h\",\"include\":\"uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv\"},\"page\":4,\"per_page\":9,\"sort\":\"y8p,Bm,-dp,-Zm,-GH\"}"
-                        },
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Users retrieved successfully.\",\n    \"data\": []\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Retrieve a specific user.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/users\/:id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/users\/:id",
-                            "variable": [
-                                {
-                                    "id": "id",
-                                    "key": "id",
-                                    "value": "1",
-                                    "description": "The ID of the user."
-                                }
-                            ]
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"User details retrieved.\",\n    \"data\": {}\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Create a new user.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/users",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/users"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"email\":\"zbailey@example.net\",\"password\":\"-0pBNvYgxw\",\"role_id\":\"architecto\",\"address\":{\"address_line1\":\"n\",\"city\":\"g\",\"country\":\"z\",\"postal_code\":\"miyvdljnikhwaykc\",\"address_line2\":\"m\",\"state\":\"y\"}}"
-                        },
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"User created successfully!\",\n    \"data\": {}\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Update an existing user.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/users\/:id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/users\/:id",
-                            "variable": [
-                                {
-                                    "id": "id",
-                                    "key": "id",
-                                    "value": "1",
-                                    "description": "The ID of the user."
-                                }
-                            ]
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"name\":\"b\",\"email\":\"zbailey@example.net\",\"password\":\"-0pBNvYgxw\",\"address\":{\"address_line1\":\"a\",\"city\":\"y\",\"country\":\"k\",\"postal_code\":\"cmyuwpwlvqwrsitc\",\"address_line2\":\"p\",\"state\":\"s\"}}"
-                        },
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"User updated successfully.\",\n    \"data\": {}\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Permanently delete a user.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/users\/:id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/users\/:id",
-                            "variable": [
-                                {
-                                    "id": "id",
-                                    "key": "id",
-                                    "value": "1",
-                                    "description": "The ID of the user."
-                                }
-                            ]
-                        },
-                        "method": "DELETE",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"User deleted successfully.\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                }
-            ]
-        },
-        {
             "name": "Vendor Profile",
             "description": "",
             "item": [
@@ -5242,274 +6203,6 @@
                             "code": 500,
                             "body": "{\n  \"message\": \"Failed to process logo file: Unable to write file to disk.\"\n}",
                             "name": "Logo upload failed"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "Vendors",
-            "description": "",
-            "item": [
-                {
-                    "name": "Retrieve a paginated list of vendors.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/vendors",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/vendors"
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Vendors retrieved successfully.\",\n    \"data\": []\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Retrieve a specific vendor.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/vendors\/:id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/vendors\/:id",
-                            "variable": [
-                                {
-                                    "id": "id",
-                                    "key": "id",
-                                    "value": "1",
-                                    "description": "The ID of the vendor."
-                                }
-                            ]
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Vendor details retrieved.\",\n    \"data\": {}\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Create a new vendor.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/vendors",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/vendors"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "multipart\/form-data"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "formdata",
-                            "formdata": [
-                                {
-                                    "key": "user_id",
-                                    "value": "architecto",
-                                    "type": "text",
-                                    "description": "The <code>id<\/code> of an existing record in the users table."
-                                },
-                                {
-                                    "key": "name",
-                                    "value": "n",
-                                    "type": "text",
-                                    "description": "Must not be greater than 255 characters."
-                                },
-                                {
-                                    "key": "description",
-                                    "value": "Animi quos velit et fugiat.",
-                                    "type": "text",
-                                    "description": "Must not be greater than 1000 characters."
-                                },
-                                {
-                                    "key": "logo",
-                                    "src": [],
-                                    "type": "file"
-                                }
-                            ]
-                        },
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Vendor created successfully!\",\n    \"data\": {}\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Update an existing vendor.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/vendors\/:id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/vendors\/:id",
-                            "variable": [
-                                {
-                                    "id": "id",
-                                    "key": "id",
-                                    "value": "1",
-                                    "description": "The ID of the vendor."
-                                }
-                            ]
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "multipart\/form-data"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "formdata",
-                            "formdata": [
-                                {
-                                    "key": "name",
-                                    "value": "b",
-                                    "type": "text",
-                                    "description": "Must not be greater than 255 characters."
-                                },
-                                {
-                                    "key": "description",
-                                    "value": "Et animi quos velit et fugiat.",
-                                    "type": "text",
-                                    "description": "Must not be greater than 1000 characters."
-                                },
-                                {
-                                    "key": "logo",
-                                    "src": [],
-                                    "type": "file"
-                                }
-                            ]
-                        },
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Vendor updated successfully.\",\n    \"data\": {}\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Permanently delete a vendor.",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/admin\/vendors\/:id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/admin\/vendors\/:id",
-                            "variable": [
-                                {
-                                    "id": "id",
-                                    "key": "id",
-                                    "value": "1",
-                                    "description": "The ID of the vendor."
-                                }
-                            ]
-                        },
-                        "method": "DELETE",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": ""
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Vendor deleted successfully.\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": ""
                         }
                     ]
                 }
