@@ -7,6 +7,7 @@ use App\Constants\PaymentStatuses;
 use App\Constants\ReturnStatuses;
 use App\Models\OrderStatus;
 use App\Models\OrderReturnStatus;
+use App\Services\V1\Emails\Email;
 use App\Services\V1\Orders\Refunds\RefundHandlerInterface;
 use App\Services\V1\Orders\Refunds\RefundProcessor;
 use App\Services\V1\Orders\Refunds\ManualStripeRefund;
@@ -27,17 +28,19 @@ class StripeWebhook implements WebhookHandlerInterface
     private $secret;
     private $webhook_secret;
     private RefundHandlerInterface $refundProcessor;
+    private Email $emailService;
 
-    public function __construct()
+    public function __construct(Email $emailService)
     {
         $this->secret = config('services.stripe_secret');
         $this->webhook_secret = config('services.stripe_webhook_secret');
         Stripe::setApiKey($this->secret);
 
-        $this->refundProcessor = new RefundProcessor(new ManualStripeRefund());
+        $this->refundProcessor = new RefundProcessor(new ManualStripeRefund(), $emailService);
         $this->refundProcessor->enableWebhook();
         $this->refundProcessor->skipGatewayProcessing();
         $this->refundProcessor->setRefundSource('stripe_webhook');
+        $this->emailService = $emailService;
     }
 
     public function webhook(Request $request)
@@ -218,6 +221,8 @@ class StripeWebhook implements WebhookHandlerInterface
                     'refund_id' => $refund->id,
                     'source' => 'external_stripe_refund'
                 ]);
+
+                $this->sendRefundProcessedEmailForExternalRefund($order, $refund->amount, $notes);
             } else {
                 Log::error('Failed to process external Stripe refund', [
                     'order_id' => $order->id,
@@ -416,6 +421,9 @@ class StripeWebhook implements WebhookHandlerInterface
                 'payment_id' => $payment->id,
                 'order_id' => $order->id
             ]);
+
+            $this->sendOrderConfirmationEmail($order);
+            $this->sendPaymentStatusEmail($payment, 'succeeded');
         }
 
         return $this->ok('Payment success webhook processed.');
@@ -448,6 +456,8 @@ class StripeWebhook implements WebhookHandlerInterface
                 'payment_id' => $payment->id,
                 'order_id' => $order->id
             ]);
+
+            $this->sendPaymentStatusEmail($payment, 'failed');
         }
 
         return $this->ok('Payment failure webhook processed.');
@@ -462,5 +472,65 @@ class StripeWebhook implements WebhookHandlerInterface
         ]);
 
         return $this->ok('Invoice payment webhook processed.');
+    }
+
+    private function sendOrderConfirmationEmail($order): void
+    {
+        try {
+            $orderData = $this->emailService->formatOrderData($order);
+            $this->emailService->sendOrderConfirmation($orderData, $order->user->email);
+        } catch (\Exception $e) {
+            Log::error('Failed to send order confirmation email', [
+                'order_id' => $order->id,
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    private function sendPaymentStatusEmail($payment, string $status): void
+    {
+        try {
+            $payment->load(['order.user', 'paymentMethod']);
+            $paymentData = $this->emailService->formatPaymentData($payment);
+            $this->emailService->sendPaymentStatus($paymentData, $payment->order->user->email);
+        } catch (\Exception $e) {
+            Log::error('Failed to send payment status email', [
+                'payment_id' => $payment->id,
+                'status' => $status,
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    private function sendRefundProcessedEmailForExternalRefund($order, int $amountInPennies, string $notes): void
+    {
+        try {
+            $recentReturn = $order->orderItems()
+                ->whereHas('orderReturn', function ($q) {
+                    $approvedStatusId = OrderReturnStatus::where('name', ReturnStatuses::APPROVED)->value('id');
+                    $q->where('order_return_status_id', $approvedStatusId);
+                })
+                ->with('orderReturn')
+                ->first();
+
+            if ($recentReturn && $recentReturn->orderReturn) {
+                $mockRefund = (object) [
+                    'id' => 'external_' . time(),
+                    'amount' => $amountInPennies,
+                    'processed_at' => now(),
+                    'notes' => $notes,
+                    'orderReturn' => $recentReturn->orderReturn
+                ];
+
+                $refundData = $this->emailService->formatRefundData($mockRefund);
+                $this->emailService->sendRefundProcessed($refundData, $order->user->email);
+            }
+        } catch (\Exception $e) {
+            Log::error('Failed to send external refund email', [
+                'order_id' => $order->id,
+                'amount_pennies' => $amountInPennies,
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 }

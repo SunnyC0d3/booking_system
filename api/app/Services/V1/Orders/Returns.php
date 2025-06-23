@@ -7,17 +7,21 @@ use App\Constants\ReturnStatuses;
 use App\Models\OrderItem;
 use App\Models\OrderReturn;
 use App\Models\OrderReturnStatus;
-use App\Models\OrderStatus;
 use App\Resources\V1\OrderReturnResource;
 use Illuminate\Http\Request;
 use App\Traits\V1\ApiResponses;
+use App\Services\V1\Emails\Email;
+use Illuminate\Support\Facades\Log;
 
 class Returns
 {
     use ApiResponses;
 
-    public function __construct()
+    private Email $emailService;
+
+    public function __construct(Email $emailService)
     {
+        $this->emailService = $emailService;
     }
 
     public function all(Request $request)
@@ -109,9 +113,30 @@ class Returns
                 'order_return_status_id' => $statusId,
             ]);
 
+            if (in_array($nextStatus, [ReturnStatuses::APPROVED, ReturnStatuses::REJECTED])) {
+                $this->sendReturnStatusEmail($return, $nextStatus);
+            }
+
             return $this->ok("Return status updated to {$nextStatus}.", $return);
         }
 
         return $this->error('You do not have the required permissions.', 403);
+    }
+
+    private function sendReturnStatusEmail(OrderReturn $orderReturn, string $status): void
+    {
+        try {
+            $returnData = $this->emailService->formatReturnData($orderReturn);
+            $customerEmail = $orderReturn->orderItem->order->user->email;
+
+            $this->emailService->sendReturnStatus($returnData, $customerEmail);
+        } catch (\Exception $e) {
+            Log::error('Failed to send return status email', [
+                'return_id' => $orderReturn->id,
+                'status' => $status,
+                'customer_email' => $orderReturn->orderItem->order->user->email ?? 'unknown',
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 }

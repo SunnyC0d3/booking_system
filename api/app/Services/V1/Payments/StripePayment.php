@@ -17,17 +17,20 @@ use Illuminate\Support\Facades\Log;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
 use Stripe\Customer;
+use App\Services\V1\Emails\Email;
 
 class StripePayment implements PaymentHandlerInterface
 {
     use ApiResponses;
 
     private $secret;
+    private Email $emailService;
 
-    public function __construct()
+    public function __construct(Email $emailService)
     {
         $this->secret = config('services.stripe_secret');
         Stripe::setApiKey($this->secret);
+        $this->emailService = $emailService;
     }
 
     public function createPayment(Request $request)
@@ -122,12 +125,43 @@ class StripePayment implements PaymentHandlerInterface
                 'payment_id' => $payment->id,
                 'order_id' => $order->id
             ]);
+
+            $this->sendOrderConfirmationEmail($order);
+            $this->sendPaymentStatusEmail($payment, 'succeeded');
         }
 
         return $this->ok('Payment verified', [
             'payment_status' => $payment->status,
             'order_status' => $payment->order->status->name ?? 'Unknown'
         ]);
+    }
+
+    private function sendOrderConfirmationEmail($order): void
+    {
+        try {
+            $orderData = $this->emailService->formatOrderData($order);
+            $this->emailService->sendOrderConfirmation($orderData, $order->user->email);
+        } catch (\Exception $e) {
+            Log::error('Failed to send order confirmation email via API verification', [
+                'order_id' => $order->id,
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    private function sendPaymentStatusEmail($payment, string $status): void
+    {
+        try {
+            $payment->load(['order.user', 'paymentMethod']);
+            $paymentData = $this->emailService->formatPaymentData($payment);
+            $this->emailService->sendPaymentStatus($paymentData, $payment->order->user->email);
+        } catch (\Exception $e) {
+            Log::error('Failed to send payment status email via API verification', [
+                'payment_id' => $payment->id,
+                'status' => $status,
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 
     private function getProductDetails(Collection $orderItems)

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\V1\Admin;
 
 use App\Constants\PaymentMethods;
 use App\Http\Controllers\Controller;
+use App\Services\V1\Emails\Email;
 use App\Services\V1\Orders\Refunds\RefundProcessor;
 use App\Services\V1\Orders\Refunds\Refunds;
 use App\Services\V1\Orders\Refunds\ManualStripeRefund;
@@ -295,7 +296,10 @@ class RefundController extends Controller
                 return $this->error('Unsupported payment gateway', 400);
             }
 
-            $refundProcessor = new RefundProcessor(app($handler));
+            $refundProcessor = new RefundProcessor(
+                app($handler),
+                app(Email::class)
+            );
 
             return $refundProcessor->refund($request, $id);
         } catch (Exception $e) {

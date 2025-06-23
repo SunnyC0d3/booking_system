@@ -16,6 +16,7 @@ use App\Models\OrderRefund;
 use App\Models\OrderRefundStatus;
 use App\Models\OrderReturnStatus;
 use App\Models\OrderStatus;
+use App\Services\V1\Emails\Email;
 
 class RefundProcessor implements RefundHandlerInterface
 {
@@ -31,12 +32,13 @@ class RefundProcessor implements RefundHandlerInterface
     protected int $approvedCount = 0;
     protected ?string $refundSource = null;
     protected ?string $refundNotes = null;
-
     protected PaymentGatewayRefundInterface $gateway;
+    protected Email $emailService;
 
-    public function __construct(PaymentGatewayRefundInterface $gateway)
+    public function __construct(PaymentGatewayRefundInterface $gateway, Email $emailService = null)
     {
         $this->gateway = $gateway;
+        $this->emailService = $emailService ?? app(Email::class);
     }
 
     public function enableWebhook(): void
@@ -196,6 +198,8 @@ class RefundProcessor implements RefundHandlerInterface
         $this->createRefundRecords();
         $this->updateOrderAndPaymentStatus();
         $this->markReturnAsCompleted();
+
+        $this->sendRefundProcessedEmail();
     }
 
     public function cancelRefund(int $orderId, int $refundAmountInPennies): bool
@@ -456,7 +460,7 @@ class RefundProcessor implements RefundHandlerInterface
                 ? $remainingAmount
                 : $orderItem->refundAmount();
 
-            OrderRefund::create([
+            $refund = OrderRefund::create([
                 'order_return_id' => $orderItem->orderReturn->id,
                 'amount' => $itemRefundAmount,
                 'order_refund_status_id' => $refundedStatusId,
@@ -476,6 +480,10 @@ class RefundProcessor implements RefundHandlerInterface
                 'refund_amount_pennies' => $itemRefundAmount,
                 'refund_amount_pounds' => $itemRefundAmount / 100
             ]);
+
+            if ($index === 0) {
+                $this->sendRefundProcessedEmailForRefund($refund);
+            }
         });
     }
 
@@ -586,5 +594,44 @@ class RefundProcessor implements RefundHandlerInterface
     private function hasPermission(Request $request): bool
     {
         return $request->user()?->hasPermission('manage_refunds') ?? false;
+    }
+
+    private function sendRefundProcessedEmail(): void
+    {
+        try {
+            if ($this->orderReturn && $this->orderReturn->orderRefund) {
+                $this->sendRefundProcessedEmailForRefund($this->orderReturn->orderRefund);
+            } elseif ($this->orderItems) {
+                foreach ($this->orderItems as $item) {
+                    if ($item->orderReturn && $item->orderReturn->orderRefund) {
+                        $this->sendRefundProcessedEmailForRefund($item->orderReturn->orderRefund);
+                        break;
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            Log::error('Failed to send refund processed email', [
+                'order_id' => $this->order?->id,
+                'return_id' => $this->orderReturn?->id,
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    private function sendRefundProcessedEmailForRefund(OrderRefund $refund): void
+    {
+        try {
+            $refund->load(['orderReturn.orderItem.order.user']);
+            $refundData = $this->emailService->formatRefundData($refund);
+            $customerEmail = $refund->orderReturn->orderItem->order->user->email;
+
+            $this->emailService->sendRefundProcessed($refundData, $customerEmail);
+        } catch (\Exception $e) {
+            Log::error('Failed to send individual refund processed email', [
+                'refund_id' => $refund->id,
+                'return_id' => $refund->order_return_id,
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 }
