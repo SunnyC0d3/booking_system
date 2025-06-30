@@ -76,8 +76,6 @@ const AdminDashboard = () => {
                 authType: 'auth'
             });
 
-            console.log(res.data);
-
             setRefunds(res.data);
         } catch (err) {
             setError(err.message);
@@ -134,7 +132,7 @@ const AdminDashboard = () => {
                     <div key={ret.id} className="border p-4 mb-4 rounded bg-white shadow">
                         <p><strong>Return ID:</strong> {ret.id}</p>
                         <p><strong>Reason:</strong> {ret.reason}</p>
-                        <p><strong>Status:</strong> <span className="text-indigo-600">{ret.order_return_status?.name || ret.status}</span></p>
+                        <p><strong>Status:</strong> <span className="text-indigo-600">{ret.status.name}</span></p>
                         <p><strong>Product:</strong> {ret.order_item?.product?.name || 'N/A'}</p>
                         <p><strong>Customer:</strong> {ret.order_item?.order?.user?.email || 'N/A'}</p>
                         <p><strong>Order ID:</strong> {ret.order_item?.order?.id || 'N/A'}</p>

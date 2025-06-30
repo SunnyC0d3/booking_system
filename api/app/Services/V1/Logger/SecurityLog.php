@@ -16,7 +16,6 @@ class SecurityLog
             'ip' => $request->ip(),
             'user_agent' => $request->userAgent(),
             'timestamp' => Carbon::now()->toISOString(),
-            'session_id' => $request->session()->getId(),
             'email' => $request->input('email'),
             'success' => str_contains($event, 'success'),
         ];

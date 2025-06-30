@@ -44,7 +44,7 @@ class AccountLock
         return $accountLock->getTimeUntilUnlock();
     }
 
-    public function recordFailedAttempt(User $user, array $metadata = []): AccountLock
+    public function recordFailedAttempt(User $user, array $metadata = []): DB
     {
         $accountLock = $this->getOrCreateAccountLock($user);
 
@@ -208,14 +208,14 @@ class AccountLock
         ];
     }
 
-    protected function getAccountLock(User $user): ?AccountLock
+    protected function getAccountLock(User $user): ?DB
     {
         return DB::where('user_id', $user->id)
             ->where('ip_address', $this->request->ip())
             ->first();
     }
 
-    protected function getOrCreateAccountLock(User $user): AccountLock
+    protected function getOrCreateAccountLock(User $user): DB
     {
         return DB::firstOrCreate(
             [
