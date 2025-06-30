@@ -4,6 +4,7 @@ namespace App\Services\V1\Auth;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Resources\V1\UserResource;
 use Illuminate\Http\Request;
 use App\Traits\V1\ApiResponses;
 use Illuminate\Support\Facades\Auth;
@@ -32,9 +33,14 @@ final class UserAuth
 
         $user->sendEmailVerificationNotification();
 
+        // Load the role relationship for the UserResource
+        $user->load('role');
+
         return $this->ok(
             'User registered successfully.',
-            []
+            [
+                'user' => new UserResource($user)
+            ]
         );
     }
 
@@ -53,17 +59,15 @@ final class UserAuth
         $tokenResult->token->expires_at = $expiresAt;
         $tokenResult->token->save();
 
+        $user->load(['role', 'userAddress']);
+
         return $this->ok(
             'User logged in successfully.',
             [
                 'token_type' => 'Bearer',
                 'access_token' => $accessToken,
                 'expires_at' => $expiresAt->timestamp,
-                'user' => [
-                    'id' => $user->id,
-                    'email' => $user->email,
-                    'role' => $user->role->name
-                ]
+                'user' => new UserResource($user)
             ]
         );
     }
@@ -125,6 +129,43 @@ final class UserAuth
         return $this->ok(
             __($status),
             []
+        );
+    }
+
+    public function getAuthenticatedUser(Request $request)
+    {
+        $user = $request->user();
+
+        if (!$user) {
+            throw new Exception('User not authenticated.', 401);
+        }
+
+        $user->load(['role', 'userAddress', 'vendors']);
+
+        return $this->ok(
+            'User data retrieved successfully.',
+            [
+                'user' => new UserResource($user)
+            ]
+        );
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
+
+        if (!$user) {
+            throw new Exception('User not authenticated.', 401);
+        }
+
+        $user->update($request->only(['name', 'email']));
+        $user->load(['role', 'userAddress', 'vendors']);
+
+        return $this->ok(
+            'Profile updated successfully.',
+            [
+                'user' => new UserResource($user)
+            ]
         );
     }
 }

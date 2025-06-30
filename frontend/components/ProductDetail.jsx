@@ -14,13 +14,15 @@ const ProductDetail = () => {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const response = await callApi({
+                const res = await callApi({
                     method: 'GET',
                     path: `/api/products/${productId}`,
                     authType: 'client'
                 });
 
-                setProduct(response.data);
+                console.log(res.data);
+
+                setProduct(res.data);
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -51,7 +53,7 @@ const ProductDetail = () => {
 
                         <div className="md:w-1/2">
                             <img
-                                src={product.image || product.thumbnail || 'https://via.placeholder.com/600x400?text=Template'}
+                                src={product.featured_image || 'https://via.placeholder.com/600x400?text=Template'}
                                 alt={product.name}
                                 className="w-full h-auto rounded"
                             />
@@ -59,7 +61,7 @@ const ProductDetail = () => {
 
                         <div className="md:w-1/2 mt-6 md:mt-0">
                             <h1 className="text-3xl font-bold text-gray-800 mb-2">{product.name}</h1>
-                            <p className="text-sm text-gray-500 mb-4">{product.category || 'Template'}</p>
+                            <p className="text-sm text-gray-500 mb-4">{product.category.name || 'Template'}</p>
                             <p className="text-2xl text-indigo-600 font-semibold mb-4">£{(product.price / 100).toFixed(2)}</p>
 
                             <div className="text-gray-700 mb-6 whitespace-pre-line">

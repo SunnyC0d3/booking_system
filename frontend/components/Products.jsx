@@ -13,13 +13,13 @@ const Products = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await callApi({
+                const res = await callApi({
                     method: 'GET',
                     path: '/api/products',
                     authType: 'client'
                 });
 
-                setProducts(response.data);
+                setProducts(res.data);
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -53,7 +53,7 @@ const Products = () => {
                                     className="w-full h-40 object-cover rounded mb-4"
                                 />
                                 <h2 className="text-lg font-semibold text-gray-800">{product.name}</h2>
-                                <p className="text-sm text-gray-500 mb-2">{product.category || 'Template'}</p>
+                                <p className="text-sm text-gray-500 mb-2">{product.category.name || 'Template'}</p>
                                 <p className="text-indigo-600 font-bold">£{(product.price / 100).toFixed(2)}</p>
                             </div>
                         ))}
