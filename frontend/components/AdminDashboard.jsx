@@ -233,7 +233,7 @@ const AdminDashboard = () => {
                 payments.map(pay => (
                     <div key={pay.id} className="border p-4 mb-3 rounded bg-white shadow">
                         <p><strong>Payment ID:</strong> {pay.id}</p>
-                        <p><strong>Order ID:</strong> {pay.order_id}</p>
+                        <p><strong>Order ID:</strong> {pay.order.id}</p>
                         <p><strong>Customer:</strong> {pay.user?.email || pay.order?.user?.email || 'N/A'}</p>
                         <p><strong>Amount:</strong> £{(pay.amount / 100).toFixed(2)}</p>
                         <p><strong>Status:</strong> <span className="text-indigo-600">{pay.status}</span></p>

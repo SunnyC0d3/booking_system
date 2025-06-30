@@ -230,7 +230,7 @@ class AccountLock
         );
     }
 
-    protected function lockAccount(AccountLock $accountLock): void
+    protected function lockAccount(DB $accountLock): void
     {
         $accountLock->lockout_count++;
         $lockoutDuration = $accountLock->getNextLockoutDuration();
@@ -252,7 +252,7 @@ class AccountLock
         ]);
     }
 
-    protected function resetFailedAttempts(AccountLock $accountLock): void
+    protected function resetFailedAttempts(DB $accountLock): void
     {
         $oldAttempts = $accountLock->failed_attempts;
 
