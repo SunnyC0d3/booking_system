@@ -71,7 +71,8 @@ return [
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => 90,
             'replace_placeholders' => true,
-            'permission' => 0600,
+            'permission' => 0664,
+            'formatter' => \Monolog\Formatter\JsonFormatter::class,
         ],
 
         'audit' => [
@@ -80,7 +81,8 @@ return [
             'level' => env('LOG_LEVEL', 'info'),
             'days' => 365,
             'replace_placeholders' => true,
-            'permission' => 0600,
+            'permission' => 0664,
+            'formatter' => \Monolog\Formatter\JsonFormatter::class,
         ],
 
         'suspicious' => [
@@ -89,7 +91,8 @@ return [
             'level' => env('LOG_LEVEL', 'warning'),
             'days' => 180,
             'replace_placeholders' => true,
-            'permission' => 0600,
+            'permission' => 0664,
+            'formatter' => \Monolog\Formatter\JsonFormatter::class,
         ],
 
         'daily' => [

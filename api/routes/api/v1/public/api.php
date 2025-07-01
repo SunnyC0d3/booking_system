@@ -15,8 +15,8 @@ use App\Http\Controllers\V1\Public\ReturnsController;
 
 // Auth
 
-Route::middleware(['throttle:3,1', 'client'])
-    ->controller(AuthController::class)
+//Route::middleware(['throttle:3,1', 'client'])
+Route::controller(AuthController::class)
     ->group(function () {
         Route::post('/register', 'register')->middleware('rate_limit:auth.register')->name('auth.register');
         Route::post('/login', 'login')->middleware('rate_limit:auth.login')->name('auth.login');
