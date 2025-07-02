@@ -5,8 +5,6 @@ namespace App\Http\Middleware\V1;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Cache\RateLimiter;
-use Illuminate\Http\Response;
-use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class DynamicRateLimit
 {
@@ -17,7 +15,7 @@ class DynamicRateLimit
         $this->limiter = $limiter;
     }
 
-    public function handle(Request $request, Closure $next, string $limitType = 'general'): SymfonyResponse
+    public function handle(Request $request, Closure $next, string $limitType = 'general')
     {
         $limits = config('rate-limiting');
         $limitConfig = $this->parseLimitConfig($limits, $limitType);
@@ -93,7 +91,7 @@ class DynamicRateLimit
         return $this->limiter->availableIn($key);
     }
 
-    protected function buildFailedResponse(string $key, int $maxAttempts, int $decayMinutes): Response
+    protected function buildFailedResponse(string $key, int $maxAttempts, int $decayMinutes)
     {
         $retryAfter = $this->calculateRetryAfter($key);
 

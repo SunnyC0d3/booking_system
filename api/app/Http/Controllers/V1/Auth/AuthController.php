@@ -234,18 +234,18 @@ class AuthController extends Controller
                 return $this->error($errorData, 401);
             }
 
-//            if ($user->requiresPasswordChange()) {
-//                $this->securityLogger->logAuthEvent('login_requires_password_change', $request, [
-//                    'user_email' => $request->email,
-//                    'password_expired' => true
-//                ]);
-//
-//                return $this->error([
-//                    'message' => 'Your password has expired and must be changed before logging in.',
-//                    'password_expired' => true,
-//                    'change_password_required' => true
-//                ], 426);
-//            }
+            if ($user->requiresPasswordChange()) {
+                $this->securityLogger->logAuthEvent('login_requires_password_change', $request, [
+                    'user_email' => $request->email,
+                    'password_expired' => true
+                ]);
+
+                return $this->error([
+                    'message' => 'Your password has expired and must be changed before logging in.',
+                    'password_expired' => true,
+                    'change_password_required' => true
+                ], 426);
+            }
 
             $result = $this->userAuth->login($request);
 

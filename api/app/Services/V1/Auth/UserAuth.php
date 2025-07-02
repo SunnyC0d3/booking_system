@@ -28,6 +28,7 @@ final class UserAuth
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'password_changed_at' => now(),
             'role_id' => Role::where('name', 'User')->first()->id
         ]);
 

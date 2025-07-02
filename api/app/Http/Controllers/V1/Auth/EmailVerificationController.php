@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\V1\Auth;
 
 use App\Traits\V1\ApiResponses;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -55,18 +56,27 @@ class EmailVerificationController
      *   "status": 401
      * }
      */
-    public function verify(int $user_id,  Request $request) {
+    public function verify(Request $request, $id, $hash)
+    {
         if (!$request->hasValidSignature()) {
             return $this->error('Invalid/Expired url provided.', 401);
         }
 
-        $user = User::findOrFail($user_id);
+        $user = User::findOrFail($id);
 
-        if (!$user->hasVerifiedEmail()) {
-            $user->markEmailAsVerified();
+        if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+            return $this->error('Invalid verification hash.', 401);
         }
 
-        return redirect(config('services.app_frontend_url') . config('services.app_frontend_email_verify'));
+        if ($user->hasVerifiedEmail()) {
+            return $this->ok('Email is already verified.');
+        }
+
+        if ($user->markEmailAsVerified()) {
+            event(new Verified($user));
+        }
+
+        return $this->ok('Email verified.');
     }
 
     /**
@@ -104,7 +114,8 @@ class EmailVerificationController
      *   "status": 500
      * }
      */
-    public function resend() {
+    public function resend()
+    {
         $user = Auth::user();
 
         if ($user->hasVerifiedEmail()) {
