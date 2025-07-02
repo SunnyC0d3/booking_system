@@ -2,19 +2,25 @@
 
 namespace App\Services\V1\Orders;
 
+use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Resources\V1\OrderResource;
 use Illuminate\Http\Request;
 use App\Models\Order as OrderDB;
 use App\Traits\V1\ApiResponses;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Services\V1\Inventory\InventoryAlertService;
 
 class Order
 {
     use ApiResponses;
 
-    public function __construct()
+    private $inventoryService;
+
+    public function __construct(InventoryAlertService $inventoryService)
     {
+        $this->inventoryService = $inventoryService;
     }
 
     public function all(Request $request)
@@ -64,6 +70,7 @@ class Order
 
                 if (!empty($data['order_items'])) {
                     $totalInPennies = 0;
+                    $orderItems = [];
 
                     foreach ($data['order_items'] as $item) {
                         $priceInPennies = isset($item['price_pennies'])
@@ -81,6 +88,8 @@ class Order
                             'price' => $priceInPennies,
                         ]);
 
+                        $orderItems[] = $item; // Store for inventory update
+
                         Log::info('Order item created', [
                             'order_item_id' => $orderItem->id,
                             'product_id' => $item['product_id'],
@@ -94,6 +103,9 @@ class Order
 
                     $order->setTotalAmountFromPennies($totalInPennies);
                     $order->save();
+
+                    // NEW: Update inventory and check for alerts
+                    $this->updateInventoryAfterOrder($orderItems);
 
                     Log::info('Order total calculated', [
                         'order_id' => $order->id,
@@ -216,5 +228,27 @@ class Order
         }
 
         return $this->error('You do not have the required permissions.', 403);
+    }
+
+    protected function updateInventoryAfterOrder($orderItems)
+    {
+        foreach ($orderItems as $item) {
+            $product = Product::find($item['product_id']);
+
+            // Update product stock
+            if ($product) {
+                $product->decrement('quantity', $item['quantity']);
+                $this->inventoryService->checkProductStock($product->fresh());
+            }
+
+            // Update variant stock if applicable
+            if (!empty($item['product_variant_id'])) {
+                $variant = ProductVariant::find($item['product_variant_id']);
+                if ($variant) {
+                    $variant->decrement('quantity', $item['quantity']);
+                    $this->inventoryService->checkVariantStock($variant->fresh());
+                }
+            }
+        }
     }
 }

@@ -51,4 +51,14 @@ class ProductVariant extends Model
     {
         return '£' . number_format($this->getTotalPrice() / 100, 2);
     }
+
+    public function isLowStock(): bool
+    {
+        return $this->quantity <= $this->low_stock_threshold && $this->quantity > 0;
+    }
+
+    public function isOutOfStock(): bool
+    {
+        return $this->quantity <= 0;
+    }
 }

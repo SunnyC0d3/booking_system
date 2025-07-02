@@ -262,6 +262,28 @@
                             </li>
                                                                         </ul>
                             </ul>
+                    <ul id="tocify-header-inventory-management" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="inventory-management">
+                    <a href="#inventory-management">Inventory Management</a>
+                </li>
+                                    <ul id="tocify-subheader-inventory-management" class="tocify-subheader">
+                                                    <li class="tocify-item level-2" data-unique="inventory-management-GETapi-admin-inventory-overview">
+                                <a href="#inventory-management-GETapi-admin-inventory-overview">Get inventory overview</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="inventory-management-POSTapi-admin-inventory-products--product_id--threshold">
+                                <a href="#inventory-management-POSTapi-admin-inventory-products--product_id--threshold">Update product stock threshold</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="inventory-management-POSTapi-admin-inventory-variants--variant_id--threshold">
+                                <a href="#inventory-management-POSTapi-admin-inventory-variants--variant_id--threshold">Update variant stock threshold</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="inventory-management-POSTapi-admin-inventory-check">
+                                <a href="#inventory-management-POSTapi-admin-inventory-check">Trigger manual inventory check</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="inventory-management-POSTapi-admin-inventory-bulk-update-thresholds">
+                                <a href="#inventory-management-POSTapi-admin-inventory-bulk-update-thresholds">Bulk update stock thresholds</a>
+                            </li>
+                                                                        </ul>
+                            </ul>
                     <ul id="tocify-header-order-returns" class="tocify-header">
                 <li class="tocify-item level-1" data-unique="order-returns">
                     <a href="#order-returns">Order Returns</a>
@@ -5976,7 +5998,7 @@ and managing their marketplace presence. Supports secure logo upload with compre
     --form "user_id=45"\
     --form "name=TechCraft Solutions Ltd"\
     --form "description=Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud services, and digital transformation consulting."\
-    --form "logo=@/tmp/php0Z6MGK" </code></pre></div>
+    --form "logo=@/tmp/phpBh9WH4" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6029,7 +6051,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'logo',
-                'contents' =&gt; fopen('/tmp/php0Z6MGK', 'r')
+                'contents' =&gt; fopen('/tmp/phpBh9WH4', 'r')
             ],
         ],
     ]
@@ -6047,7 +6069,7 @@ files = {
   'user_id': (None, '45'),
   'name': (None, 'TechCraft Solutions Ltd'),
   'description': (None, 'Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud services, and digital transformation consulting.'),
-  'logo': open('/tmp/php0Z6MGK', 'rb')}
+  'logo': open('/tmp/phpBh9WH4', 'rb')}
 payload = {
     "user_id": 45,
     "name": "TechCraft Solutions Ltd",
@@ -6316,7 +6338,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional Business logo file. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Recommended dimensions: 200x200px minimum. Example: <code>/tmp/php0Z6MGK</code></p>
+<p>optional Business logo file. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Recommended dimensions: 200x200px minimum. Example: <code>/tmp/phpBh9WH4</code></p>
         </div>
         </form>
 
@@ -6345,7 +6367,7 @@ replacement with comprehensive validation.</p>
     --form "user_id=67"\
     --form "name=TechCraft Solutions International Ltd"\
     --form "description=Global leader in innovative technology solutions. We specialize in enterprise software development, cloud migration services, AI integration, and digital transformation consulting with over 15 years of proven industry experience."\
-    --form "logo=@/tmp/php5VYRSl" </code></pre></div>
+    --form "logo=@/tmp/phpTwN9AD" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6398,7 +6420,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'logo',
-                'contents' =&gt; fopen('/tmp/php5VYRSl', 'r')
+                'contents' =&gt; fopen('/tmp/phpTwN9AD', 'r')
             ],
         ],
     ]
@@ -6416,7 +6438,7 @@ files = {
   'user_id': (None, '67'),
   'name': (None, 'TechCraft Solutions International Ltd'),
   'description': (None, 'Global leader in innovative technology solutions. We specialize in enterprise software development, cloud migration services, AI integration, and digital transformation consulting with over 15 years of proven industry experience.'),
-  'logo': open('/tmp/php5VYRSl', 'rb')}
+  'logo': open('/tmp/phpTwN9AD', 'rb')}
 payload = {
     "user_id": 67,
     "name": "TechCraft Solutions International Ltd",
@@ -6732,7 +6754,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional New logo file to replace existing one. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will completely replace the current logo. Example: <code>/tmp/php5VYRSl</code></p>
+<p>optional New logo file to replace existing one. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will completely replace the current logo. Example: <code>/tmp/phpTwN9AD</code></p>
         </div>
         </form>
 
@@ -8013,7 +8035,7 @@ Supports secure file uploads for featured images and gallery photos with compreh
     --form "quantity=50"\
     --form "product_tags[]=3"\
     --form "product_variants[]=architecto"\
-    --form "media[featured_image]=@/tmp/phpkbJi7K"     --form "media[gallery][]=@/tmp/phpIZSiSM" </code></pre></div>
+    --form "media[featured_image]=@/tmp/phpdeIUDa"     --form "media[gallery][]=@/tmp/phpZKwWx9" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -8092,11 +8114,11 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'media[featured_image]',
-                'contents' =&gt; fopen('/tmp/phpkbJi7K', 'r')
+                'contents' =&gt; fopen('/tmp/phpdeIUDa', 'r')
             ],
             [
                 'name' =&gt; 'media[gallery][]',
-                'contents' =&gt; fopen('/tmp/phpIZSiSM', 'r')
+                'contents' =&gt; fopen('/tmp/phpZKwWx9', 'r')
             ],
         ],
     ]
@@ -8119,7 +8141,7 @@ files = {
   'quantity': (None, '50'),
   'product_tags[]': (None, '3'),
   'product_variants[]': (None, 'architecto'),
-  'media[featured_image]': open('/tmp/phpkbJi7K', 'rb')  'media[gallery][]': open('/tmp/phpIZSiSM', 'rb')}
+  'media[featured_image]': open('/tmp/phpdeIUDa', 'rb')  'media[gallery][]': open('/tmp/phpZKwWx9', 'rb')}
 payload = {
     "name": "\"Premium Wireless Earbuds\"",
     "description": "\"High-quality wireless earbuds with noise cancellation and long battery life.\"",
@@ -8545,7 +8567,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional Featured product image. Max 5MB, dimensions 100x100 to 4000x4000px. Example: <code>/tmp/phpkbJi7K</code></p>
+<p>optional Featured product image. Max 5MB, dimensions 100x100 to 4000x4000px. Example: <code>/tmp/phpdeIUDa</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>gallery</code></b>&nbsp;&nbsp;
@@ -8592,7 +8614,7 @@ all existing variants are replaced with the new ones. Media files can be updated
     --form "quantity=75"\
     --form "product_tags[]=3"\
     --form "product_variants[]=architecto"\
-    --form "media[featured_image]=@/tmp/phpdo5EKT"     --form "media[gallery][]=@/tmp/phpLW862f" </code></pre></div>
+    --form "media[featured_image]=@/tmp/phpuQQO1k"     --form "media[gallery][]=@/tmp/php1l0w81" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -8671,11 +8693,11 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'media[featured_image]',
-                'contents' =&gt; fopen('/tmp/phpdo5EKT', 'r')
+                'contents' =&gt; fopen('/tmp/phpuQQO1k', 'r')
             ],
             [
                 'name' =&gt; 'media[gallery][]',
-                'contents' =&gt; fopen('/tmp/phpLW862f', 'r')
+                'contents' =&gt; fopen('/tmp/php1l0w81', 'r')
             ],
         ],
     ]
@@ -8698,7 +8720,7 @@ files = {
   'quantity': (None, '75'),
   'product_tags[]': (None, '3'),
   'product_variants[]': (None, 'architecto'),
-  'media[featured_image]': open('/tmp/phpdo5EKT', 'rb')  'media[gallery][]': open('/tmp/phpLW862f', 'rb')}
+  'media[featured_image]': open('/tmp/phpuQQO1k', 'rb')  'media[gallery][]': open('/tmp/php1l0w81', 'rb')}
 payload = {
     "name": "\"Premium Wireless Earbuds Pro\"",
     "description": "\"Enhanced wireless earbuds with improved noise cancellation.\"",
@@ -9135,7 +9157,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional New featured image (replaces existing). Example: <code>/tmp/phpdo5EKT</code></p>
+<p>optional New featured image (replaces existing). Example: <code>/tmp/phpuQQO1k</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>gallery</code></b>&nbsp;&nbsp;
@@ -12987,6 +13009,1269 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>numeric optional Filter refunds with maximum amount in pounds. Example: <code>500.00</code></p>
             </div>
                 </form>
+
+                <h1 id="inventory-management">Inventory Management</h1>
+
+    
+
+                                <h2 id="inventory-management-GETapi-admin-inventory-overview">Get inventory overview</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Returns low stock and out of stock items for admin dashboard.
+Provides a complete overview of inventory status for immediate action.</p>
+
+<span id="example-requests-GETapi-admin-inventory-overview">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://marketplace.com/api/admin/inventory/overview" \
+    --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://marketplace.com/api/admin/inventory/overview"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://marketplace.com/api/admin/inventory/overview';
+$response = $client-&gt;get(
+    $url,
+    [
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_AUTH_TOKEN}',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'http://marketplace.com/api/admin/inventory/overview'
+headers = {
+  'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('GET', url, headers=headers)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-admin-inventory-overview">
+            <blockquote>
+            <p>Example response (200, Inventory overview retrieved successfully):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Inventory overview retrieved successfully.&quot;,
+    &quot;data&quot;: {
+        &quot;low_stock_items&quot;: [
+            {
+                &quot;type&quot;: &quot;product&quot;,
+                &quot;id&quot;: 15,
+                &quot;name&quot;: &quot;Wireless Bluetooth Headphones&quot;,
+                &quot;current_stock&quot;: 8,
+                &quot;threshold&quot;: 10,
+                &quot;vendor&quot;: &quot;AudioTech Solutions&quot;
+            },
+            {
+                &quot;type&quot;: &quot;variant&quot;,
+                &quot;id&quot;: 24,
+                &quot;name&quot;: &quot;Wireless Bluetooth Headphones - Color: White&quot;,
+                &quot;current_stock&quot;: 3,
+                &quot;threshold&quot;: 5,
+                &quot;vendor&quot;: &quot;AudioTech Solutions&quot;
+            }
+        ],
+        &quot;out_of_stock_items&quot;: [
+            {
+                &quot;type&quot;: &quot;product&quot;,
+                &quot;id&quot;: 22,
+                &quot;name&quot;: &quot;USB-C Cable&quot;,
+                &quot;vendor&quot;: &quot;TechCorp&quot;
+            }
+        ],
+        &quot;summary&quot;: {
+            &quot;low_stock_count&quot;: 2,
+            &quot;out_of_stock_count&quot;: 1,
+            &quot;total_issues&quot;: 3
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (403, Insufficient permissions):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;You do not have the required permissions.&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-admin-inventory-overview" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-admin-inventory-overview"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-admin-inventory-overview"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-admin-inventory-overview" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-admin-inventory-overview">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-admin-inventory-overview" data-method="GET"
+      data-path="api/admin/inventory/overview"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-admin-inventory-overview', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-admin-inventory-overview"
+                    onclick="tryItOut('GETapi-admin-inventory-overview');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-admin-inventory-overview"
+                    onclick="cancelTryOut('GETapi-admin-inventory-overview');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-admin-inventory-overview"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/admin/inventory/overview</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-admin-inventory-overview"
+               value="Bearer {YOUR_AUTH_TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-admin-inventory-overview"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-admin-inventory-overview"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        </form>
+
+                    <h2 id="inventory-management-POSTapi-admin-inventory-products--product_id--threshold">Update product stock threshold</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Updates the low stock threshold for a specific product. When the product's
+quantity falls to or below this threshold, alerts will be triggered.</p>
+
+<span id="example-requests-POSTapi-admin-inventory-products--product_id--threshold">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://marketplace.com/api/admin/inventory/products/1/threshold" \
+    --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"low_stock_threshold\": 15
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://marketplace.com/api/admin/inventory/products/1/threshold"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "low_stock_threshold": 15
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://marketplace.com/api/admin/inventory/products/1/threshold';
+$response = $client-&gt;post(
+    $url,
+    [
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_AUTH_TOKEN}',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'low_stock_threshold' =&gt; 15,
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'http://marketplace.com/api/admin/inventory/products/1/threshold'
+payload = {
+    "low_stock_threshold": 15
+}
+headers = {
+  'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('POST', url, headers=headers, json=payload)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-admin-inventory-products--product_id--threshold">
+            <blockquote>
+            <p>Example response (200, Product threshold updated successfully):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Product stock threshold updated successfully.&quot;,
+    &quot;data&quot;: {
+        &quot;id&quot;: 15,
+        &quot;name&quot;: &quot;Wireless Bluetooth Headphones&quot;,
+        &quot;current_stock&quot;: 25,
+        &quot;old_threshold&quot;: 10,
+        &quot;new_threshold&quot;: 15
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (403, Insufficient permissions):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;You do not have the required permissions.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Product not found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;No query results for model [App\\Models\\Product] 999&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422, Validation errors):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;errors&quot;: [
+        &quot;The low stock threshold field is required.&quot;,
+        &quot;The low stock threshold must be at least 0.&quot;
+    ]
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-admin-inventory-products--product_id--threshold" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-admin-inventory-products--product_id--threshold"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-admin-inventory-products--product_id--threshold"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-admin-inventory-products--product_id--threshold" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-admin-inventory-products--product_id--threshold">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-admin-inventory-products--product_id--threshold" data-method="POST"
+      data-path="api/admin/inventory/products/{product_id}/threshold"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-admin-inventory-products--product_id--threshold', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-admin-inventory-products--product_id--threshold"
+                    onclick="tryItOut('POSTapi-admin-inventory-products--product_id--threshold');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-admin-inventory-products--product_id--threshold"
+                    onclick="cancelTryOut('POSTapi-admin-inventory-products--product_id--threshold');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-admin-inventory-products--product_id--threshold"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/admin/inventory/products/{product_id}/threshold</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-admin-inventory-products--product_id--threshold"
+               value="Bearer {YOUR_AUTH_TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-admin-inventory-products--product_id--threshold"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-admin-inventory-products--product_id--threshold"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>product_id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="product_id"                data-endpoint="POSTapi-admin-inventory-products--product_id--threshold"
+               value="1"
+               data-component="url">
+    <br>
+<p>The ID of the product. Example: <code>1</code></p>
+            </div>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>product</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="product"                data-endpoint="POSTapi-admin-inventory-products--product_id--threshold"
+               value="15"
+               data-component="url">
+    <br>
+<p>The ID of the product to update. Example: <code>15</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>low_stock_threshold</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="low_stock_threshold"                data-endpoint="POSTapi-admin-inventory-products--product_id--threshold"
+               value="15"
+               data-component="body">
+    <br>
+<p>The new threshold value (minimum 0). Example: <code>15</code></p>
+        </div>
+        </form>
+
+                    <h2 id="inventory-management-POSTapi-admin-inventory-variants--variant_id--threshold">Update variant stock threshold</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Updates the low stock threshold for a specific product variant. When the variant's
+quantity falls to or below this threshold, alerts will be triggered.</p>
+
+<span id="example-requests-POSTapi-admin-inventory-variants--variant_id--threshold">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://marketplace.com/api/admin/inventory/variants/1/threshold" \
+    --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"low_stock_threshold\": 8
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://marketplace.com/api/admin/inventory/variants/1/threshold"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "low_stock_threshold": 8
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://marketplace.com/api/admin/inventory/variants/1/threshold';
+$response = $client-&gt;post(
+    $url,
+    [
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_AUTH_TOKEN}',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'low_stock_threshold' =&gt; 8,
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'http://marketplace.com/api/admin/inventory/variants/1/threshold'
+payload = {
+    "low_stock_threshold": 8
+}
+headers = {
+  'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('POST', url, headers=headers, json=payload)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-admin-inventory-variants--variant_id--threshold">
+            <blockquote>
+            <p>Example response (200, Variant threshold updated successfully):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Variant stock threshold updated successfully.&quot;,
+    &quot;data&quot;: {
+        &quot;id&quot;: 24,
+        &quot;name&quot;: &quot;Wireless Bluetooth Headphones - Color: White&quot;,
+        &quot;current_stock&quot;: 20,
+        &quot;old_threshold&quot;: 5,
+        &quot;new_threshold&quot;: 8
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (403, Insufficient permissions):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;You do not have the required permissions.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Variant not found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;No query results for model [App\\Models\\ProductVariant] 999&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422, Validation errors):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;errors&quot;: [
+        &quot;The low stock threshold field is required.&quot;,
+        &quot;The low stock threshold must be at least 0.&quot;
+    ]
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-admin-inventory-variants--variant_id--threshold" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-admin-inventory-variants--variant_id--threshold"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-admin-inventory-variants--variant_id--threshold"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-admin-inventory-variants--variant_id--threshold" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-admin-inventory-variants--variant_id--threshold">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-admin-inventory-variants--variant_id--threshold" data-method="POST"
+      data-path="api/admin/inventory/variants/{variant_id}/threshold"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-admin-inventory-variants--variant_id--threshold', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-admin-inventory-variants--variant_id--threshold"
+                    onclick="tryItOut('POSTapi-admin-inventory-variants--variant_id--threshold');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-admin-inventory-variants--variant_id--threshold"
+                    onclick="cancelTryOut('POSTapi-admin-inventory-variants--variant_id--threshold');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-admin-inventory-variants--variant_id--threshold"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/admin/inventory/variants/{variant_id}/threshold</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-admin-inventory-variants--variant_id--threshold"
+               value="Bearer {YOUR_AUTH_TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-admin-inventory-variants--variant_id--threshold"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-admin-inventory-variants--variant_id--threshold"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>variant_id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="variant_id"                data-endpoint="POSTapi-admin-inventory-variants--variant_id--threshold"
+               value="1"
+               data-component="url">
+    <br>
+<p>The ID of the variant. Example: <code>1</code></p>
+            </div>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>variant</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="variant"                data-endpoint="POSTapi-admin-inventory-variants--variant_id--threshold"
+               value="24"
+               data-component="url">
+    <br>
+<p>The ID of the product variant to update. Example: <code>24</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>low_stock_threshold</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="low_stock_threshold"                data-endpoint="POSTapi-admin-inventory-variants--variant_id--threshold"
+               value="8"
+               data-component="body">
+    <br>
+<p>The new threshold value (minimum 0). Example: <code>8</code></p>
+        </div>
+        </form>
+
+                    <h2 id="inventory-management-POSTapi-admin-inventory-check">Trigger manual inventory check</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Manually triggers an inventory check and sends alerts if any items are
+below their thresholds. Useful for testing or immediate inventory review.</p>
+
+<span id="example-requests-POSTapi-admin-inventory-check">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://marketplace.com/api/admin/inventory/check" \
+    --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://marketplace.com/api/admin/inventory/check"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://marketplace.com/api/admin/inventory/check';
+$response = $client-&gt;post(
+    $url,
+    [
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_AUTH_TOKEN}',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'http://marketplace.com/api/admin/inventory/check'
+headers = {
+  'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('POST', url, headers=headers)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-admin-inventory-check">
+            <blockquote>
+            <p>Example response (200, Manual check completed with alerts):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Inventory check completed. Alerts sent for 3 items.&quot;,
+    &quot;data&quot;: {
+        &quot;alerts_sent&quot;: true,
+        &quot;low_stock_count&quot;: 3,
+        &quot;items_checked&quot;: 156
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (200, Manual check completed - no alerts needed):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Inventory check completed. No alerts needed.&quot;,
+    &quot;data&quot;: {
+        &quot;alerts_sent&quot;: false,
+        &quot;low_stock_count&quot;: 0,
+        &quot;items_checked&quot;: 156
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (403, Insufficient permissions):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;You do not have the required permissions.&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-admin-inventory-check" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-admin-inventory-check"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-admin-inventory-check"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-admin-inventory-check" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-admin-inventory-check">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-admin-inventory-check" data-method="POST"
+      data-path="api/admin/inventory/check"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-admin-inventory-check', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-admin-inventory-check"
+                    onclick="tryItOut('POSTapi-admin-inventory-check');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-admin-inventory-check"
+                    onclick="cancelTryOut('POSTapi-admin-inventory-check');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-admin-inventory-check"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/admin/inventory/check</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-admin-inventory-check"
+               value="Bearer {YOUR_AUTH_TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-admin-inventory-check"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-admin-inventory-check"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        </form>
+
+                    <h2 id="inventory-management-POSTapi-admin-inventory-bulk-update-thresholds">Bulk update stock thresholds</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Updates stock thresholds for multiple products and variants in a single request.
+Useful for bulk inventory management operations.</p>
+
+<span id="example-requests-POSTapi-admin-inventory-bulk-update-thresholds">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://marketplace.com/api/admin/inventory/bulk-update-thresholds" \
+    --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"products\": [
+        \"architecto\"
+    ],
+    \"variants\": [
+        \"architecto\"
+    ]
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://marketplace.com/api/admin/inventory/bulk-update-thresholds"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "products": [
+        "architecto"
+    ],
+    "variants": [
+        "architecto"
+    ]
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://marketplace.com/api/admin/inventory/bulk-update-thresholds';
+$response = $client-&gt;post(
+    $url,
+    [
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_AUTH_TOKEN}',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'products' =&gt; [
+                'architecto',
+            ],
+            'variants' =&gt; [
+                'architecto',
+            ],
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'http://marketplace.com/api/admin/inventory/bulk-update-thresholds'
+payload = {
+    "products": [
+        "architecto"
+    ],
+    "variants": [
+        "architecto"
+    ]
+}
+headers = {
+  'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('POST', url, headers=headers, json=payload)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-admin-inventory-bulk-update-thresholds">
+            <blockquote>
+            <p>Example response (200, Bulk update completed successfully):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Bulk threshold update completed successfully.&quot;,
+    &quot;data&quot;: {
+        &quot;updated_products&quot;: 3,
+        &quot;updated_variants&quot;: 5,
+        &quot;total_updated&quot;: 8,
+        &quot;new_alerts_triggered&quot;: 2
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (403, Insufficient permissions):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;You do not have the required permissions.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422, Validation errors):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;errors&quot;: [
+        &quot;The products.0.id field is required.&quot;,
+        &quot;The variants.1.low_stock_threshold must be at least 0.&quot;
+    ]
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-admin-inventory-bulk-update-thresholds" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-admin-inventory-bulk-update-thresholds"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-admin-inventory-bulk-update-thresholds"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-admin-inventory-bulk-update-thresholds" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-admin-inventory-bulk-update-thresholds">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-admin-inventory-bulk-update-thresholds" data-method="POST"
+      data-path="api/admin/inventory/bulk-update-thresholds"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-admin-inventory-bulk-update-thresholds', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-admin-inventory-bulk-update-thresholds"
+                    onclick="tryItOut('POSTapi-admin-inventory-bulk-update-thresholds');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-admin-inventory-bulk-update-thresholds"
+                    onclick="cancelTryOut('POSTapi-admin-inventory-bulk-update-thresholds');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-admin-inventory-bulk-update-thresholds"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/admin/inventory/bulk-update-thresholds</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-admin-inventory-bulk-update-thresholds"
+               value="Bearer {YOUR_AUTH_TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-admin-inventory-bulk-update-thresholds"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-admin-inventory-bulk-update-thresholds"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b style="line-height: 2;"><code>products</code></b>&nbsp;&nbsp;
+<small>string[]</small>&nbsp;
+<i>optional</i> &nbsp;
+<br>
+<p>optional Array of product threshold updates.</p>
+            </summary>
+                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="products.0.id"                data-endpoint="POSTapi-admin-inventory-bulk-update-thresholds"
+               value="architecto"
+               data-component="body">
+    <br>
+<p>The <code>id</code> of an existing record in the products table. Example: <code>architecto</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>low_stock_threshold</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="products.0.low_stock_threshold"                data-endpoint="POSTapi-admin-inventory-bulk-update-thresholds"
+               value="39"
+               data-component="body">
+    <br>
+<p>Must be at least 0. Example: <code>39</code></p>
+                    </div>
+                                                                <div style=" margin-left: 14px; clear: unset;">
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b style="line-height: 2;"><code>*</code></b>&nbsp;&nbsp;
+<small>object</small>&nbsp;
+<i>optional</i> &nbsp;
+<br>
+
+            </summary>
+                                                <div style="margin-left: 28px; clear: unset;">
+                        <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="products.*.id"                data-endpoint="POSTapi-admin-inventory-bulk-update-thresholds"
+               value="15"
+               data-component="body">
+    <br>
+<p>Product ID. Example: <code>15</code></p>
+                    </div>
+                                                                <div style="margin-left: 28px; clear: unset;">
+                        <b style="line-height: 2;"><code>low_stock_threshold</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="products.*.low_stock_threshold"                data-endpoint="POSTapi-admin-inventory-bulk-update-thresholds"
+               value="20"
+               data-component="body">
+    <br>
+<p>New threshold value. Example: <code>20</code></p>
+                    </div>
+                                    </details>
+        </div>
+                                        </details>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b style="line-height: 2;"><code>variants</code></b>&nbsp;&nbsp;
+<small>string[]</small>&nbsp;
+<i>optional</i> &nbsp;
+<br>
+<p>optional Array of variant threshold updates.</p>
+            </summary>
+                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="variants.0.id"                data-endpoint="POSTapi-admin-inventory-bulk-update-thresholds"
+               value="architecto"
+               data-component="body">
+    <br>
+<p>The <code>id</code> of an existing record in the product_variants table. Example: <code>architecto</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>low_stock_threshold</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="variants.0.low_stock_threshold"                data-endpoint="POSTapi-admin-inventory-bulk-update-thresholds"
+               value="39"
+               data-component="body">
+    <br>
+<p>Must be at least 0. Example: <code>39</code></p>
+                    </div>
+                                                                <div style=" margin-left: 14px; clear: unset;">
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b style="line-height: 2;"><code>*</code></b>&nbsp;&nbsp;
+<small>object</small>&nbsp;
+<i>optional</i> &nbsp;
+<br>
+
+            </summary>
+                                                <div style="margin-left: 28px; clear: unset;">
+                        <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="variants.*.id"                data-endpoint="POSTapi-admin-inventory-bulk-update-thresholds"
+               value="24"
+               data-component="body">
+    <br>
+<p>Variant ID. Example: <code>24</code></p>
+                    </div>
+                                                                <div style="margin-left: 28px; clear: unset;">
+                        <b style="line-height: 2;"><code>low_stock_threshold</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="variants.*.low_stock_threshold"                data-endpoint="POSTapi-admin-inventory-bulk-update-thresholds"
+               value="10"
+               data-component="body">
+    <br>
+<p>New threshold value. Example: <code>10</code></p>
+                    </div>
+                                    </details>
+        </div>
+                                        </details>
+        </div>
+        </form>
 
                 <h1 id="order-returns">Order Returns</h1>
 
@@ -27245,7 +28530,7 @@ fields will be updated, others remain unchanged. Logo uploads are processed secu
     --form "user_id=45"\
     --form "name=TechCraft Solutions Ltd"\
     --form "description=Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud migration services, and digital transformation consulting with over 10 years of industry experience."\
-    --form "logo=@/tmp/phpXFydE9" </code></pre></div>
+    --form "logo=@/tmp/phpb2OM94" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -27298,7 +28583,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'logo',
-                'contents' =&gt; fopen('/tmp/phpXFydE9', 'r')
+                'contents' =&gt; fopen('/tmp/phpb2OM94', 'r')
             ],
         ],
     ]
@@ -27316,7 +28601,7 @@ files = {
   'user_id': (None, '45'),
   'name': (None, 'TechCraft Solutions Ltd'),
   'description': (None, 'Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud migration services, and digital transformation consulting with over 10 years of industry experience.'),
-  'logo': open('/tmp/phpXFydE9', 'rb')}
+  'logo': open('/tmp/phpb2OM94', 'rb')}
 payload = {
     "user_id": 45,
     "name": "TechCraft Solutions Ltd",
@@ -27628,7 +28913,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional New logo file for the vendor. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will replace existing logo if provided. Example: <code>/tmp/phpXFydE9</code></p>
+<p>optional New logo file for the vendor. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will replace existing logo if provided. Example: <code>/tmp/phpb2OM94</code></p>
         </div>
         </form>
 

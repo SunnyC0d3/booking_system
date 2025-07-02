@@ -9073,6 +9073,546 @@ paths:
                       type: string
       tags:
         - 'Refund Management'
+  /api/admin/inventory/overview:
+    get:
+      summary: 'Get inventory overview'
+      operationId: getInventoryOverview
+      description: "Returns low stock and out of stock items for admin dashboard.\nProvides a complete overview of inventory status for immediate action."
+      parameters: []
+      responses:
+        200:
+          description: 'Inventory overview retrieved successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Inventory overview retrieved successfully.'
+                  data:
+                    low_stock_items:
+                      -
+                        type: product
+                        id: 15
+                        name: 'Wireless Bluetooth Headphones'
+                        current_stock: 8
+                        threshold: 10
+                        vendor: 'AudioTech Solutions'
+                      -
+                        type: variant
+                        id: 24
+                        name: 'Wireless Bluetooth Headphones - Color: White'
+                        current_stock: 3
+                        threshold: 5
+                        vendor: 'AudioTech Solutions'
+                    out_of_stock_items:
+                      -
+                        type: product
+                        id: 22
+                        name: 'USB-C Cable'
+                        vendor: TechCorp
+                    summary:
+                      low_stock_count: 2
+                      out_of_stock_count: 1
+                      total_issues: 3
+                properties:
+                  message:
+                    type: string
+                    example: 'Inventory overview retrieved successfully.'
+                  data:
+                    type: object
+                    properties:
+                      low_stock_items:
+                        type: array
+                        example:
+                          -
+                            type: product
+                            id: 15
+                            name: 'Wireless Bluetooth Headphones'
+                            current_stock: 8
+                            threshold: 10
+                            vendor: 'AudioTech Solutions'
+                          -
+                            type: variant
+                            id: 24
+                            name: 'Wireless Bluetooth Headphones - Color: White'
+                            current_stock: 3
+                            threshold: 5
+                            vendor: 'AudioTech Solutions'
+                        items:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                              example: product
+                            id:
+                              type: integer
+                              example: 15
+                            name:
+                              type: string
+                              example: 'Wireless Bluetooth Headphones'
+                            current_stock:
+                              type: integer
+                              example: 8
+                            threshold:
+                              type: integer
+                              example: 10
+                            vendor:
+                              type: string
+                              example: 'AudioTech Solutions'
+                      out_of_stock_items:
+                        type: array
+                        example:
+                          -
+                            type: product
+                            id: 22
+                            name: 'USB-C Cable'
+                            vendor: TechCorp
+                        items:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                              example: product
+                            id:
+                              type: integer
+                              example: 22
+                            name:
+                              type: string
+                              example: 'USB-C Cable'
+                            vendor:
+                              type: string
+                              example: TechCorp
+                      summary:
+                        type: object
+                        properties:
+                          low_stock_count:
+                            type: integer
+                            example: 2
+                          out_of_stock_count:
+                            type: integer
+                            example: 1
+                          total_issues:
+                            type: integer
+                            example: 3
+        403:
+          description: 'Insufficient permissions'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You do not have the required permissions.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have the required permissions.'
+      tags:
+        - 'Inventory Management'
+  '/api/admin/inventory/products/{product_id}/threshold':
+    post:
+      summary: 'Update product stock threshold'
+      operationId: updateProductStockThreshold
+      description: "Updates the low stock threshold for a specific product. When the product's\nquantity falls to or below this threshold, alerts will be triggered."
+      parameters: []
+      responses:
+        200:
+          description: 'Product threshold updated successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Product stock threshold updated successfully.'
+                  data:
+                    id: 15
+                    name: 'Wireless Bluetooth Headphones'
+                    current_stock: 25
+                    old_threshold: 10
+                    new_threshold: 15
+                properties:
+                  message:
+                    type: string
+                    example: 'Product stock threshold updated successfully.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 15
+                      name:
+                        type: string
+                        example: 'Wireless Bluetooth Headphones'
+                      current_stock:
+                        type: integer
+                        example: 25
+                      old_threshold:
+                        type: integer
+                        example: 10
+                      new_threshold:
+                        type: integer
+                        example: 15
+        403:
+          description: 'Insufficient permissions'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You do not have the required permissions.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have the required permissions.'
+        404:
+          description: 'Product not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No query results for model [App\Models\Product] 999'
+                properties:
+                  message:
+                    type: string
+                    example: 'No query results for model [App\Models\Product] 999'
+        422:
+          description: 'Validation errors'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    - 'The low stock threshold field is required.'
+                    - 'The low stock threshold must be at least 0.'
+                properties:
+                  errors:
+                    type: array
+                    example:
+                      - 'The low stock threshold field is required.'
+                      - 'The low stock threshold must be at least 0.'
+                    items:
+                      type: string
+      tags:
+        - 'Inventory Management'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                low_stock_threshold:
+                  type: integer
+                  description: 'The new threshold value (minimum 0).'
+                  example: 15
+                  nullable: false
+              required:
+                - low_stock_threshold
+    parameters:
+      -
+        in: path
+        name: product_id
+        description: 'The ID of the product.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: product
+        description: 'The ID of the product to update.'
+        example: 15
+        required: true
+        schema:
+          type: integer
+  '/api/admin/inventory/variants/{variant_id}/threshold':
+    post:
+      summary: 'Update variant stock threshold'
+      operationId: updateVariantStockThreshold
+      description: "Updates the low stock threshold for a specific product variant. When the variant's\nquantity falls to or below this threshold, alerts will be triggered."
+      parameters: []
+      responses:
+        200:
+          description: 'Variant threshold updated successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Variant stock threshold updated successfully.'
+                  data:
+                    id: 24
+                    name: 'Wireless Bluetooth Headphones - Color: White'
+                    current_stock: 20
+                    old_threshold: 5
+                    new_threshold: 8
+                properties:
+                  message:
+                    type: string
+                    example: 'Variant stock threshold updated successfully.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 24
+                      name:
+                        type: string
+                        example: 'Wireless Bluetooth Headphones - Color: White'
+                      current_stock:
+                        type: integer
+                        example: 20
+                      old_threshold:
+                        type: integer
+                        example: 5
+                      new_threshold:
+                        type: integer
+                        example: 8
+        403:
+          description: 'Insufficient permissions'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You do not have the required permissions.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have the required permissions.'
+        404:
+          description: 'Variant not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No query results for model [App\Models\ProductVariant] 999'
+                properties:
+                  message:
+                    type: string
+                    example: 'No query results for model [App\Models\ProductVariant] 999'
+        422:
+          description: 'Validation errors'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    - 'The low stock threshold field is required.'
+                    - 'The low stock threshold must be at least 0.'
+                properties:
+                  errors:
+                    type: array
+                    example:
+                      - 'The low stock threshold field is required.'
+                      - 'The low stock threshold must be at least 0.'
+                    items:
+                      type: string
+      tags:
+        - 'Inventory Management'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                low_stock_threshold:
+                  type: integer
+                  description: 'The new threshold value (minimum 0).'
+                  example: 8
+                  nullable: false
+              required:
+                - low_stock_threshold
+    parameters:
+      -
+        in: path
+        name: variant_id
+        description: 'The ID of the variant.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: variant
+        description: 'The ID of the product variant to update.'
+        example: 24
+        required: true
+        schema:
+          type: integer
+  /api/admin/inventory/check:
+    post:
+      summary: 'Trigger manual inventory check'
+      operationId: triggerManualInventoryCheck
+      description: "Manually triggers an inventory check and sends alerts if any items are\nbelow their thresholds. Useful for testing or immediate inventory review."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Manual check completed with alerts'
+                    type: object
+                    example:
+                      message: 'Inventory check completed. Alerts sent for 3 items.'
+                      data:
+                        alerts_sent: true
+                        low_stock_count: 3
+                        items_checked: 156
+                    properties:
+                      message:
+                        type: string
+                        example: 'Inventory check completed. Alerts sent for 3 items.'
+                      data:
+                        type: object
+                        properties:
+                          alerts_sent:
+                            type: boolean
+                            example: true
+                          low_stock_count:
+                            type: integer
+                            example: 3
+                          items_checked:
+                            type: integer
+                            example: 156
+                  -
+                    description: 'Manual check completed - no alerts needed'
+                    type: object
+                    example:
+                      message: 'Inventory check completed. No alerts needed.'
+                      data:
+                        alerts_sent: false
+                        low_stock_count: 0
+                        items_checked: 156
+                    properties:
+                      message:
+                        type: string
+                        example: 'Inventory check completed. No alerts needed.'
+                      data:
+                        type: object
+                        properties:
+                          alerts_sent:
+                            type: boolean
+                            example: false
+                          low_stock_count:
+                            type: integer
+                            example: 0
+                          items_checked:
+                            type: integer
+                            example: 156
+        403:
+          description: 'Insufficient permissions'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You do not have the required permissions.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have the required permissions.'
+      tags:
+        - 'Inventory Management'
+  /api/admin/inventory/bulk-update-thresholds:
+    post:
+      summary: 'Bulk update stock thresholds'
+      operationId: bulkUpdateStockThresholds
+      description: "Updates stock thresholds for multiple products and variants in a single request.\nUseful for bulk inventory management operations."
+      parameters: []
+      responses:
+        200:
+          description: 'Bulk update completed successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Bulk threshold update completed successfully.'
+                  data:
+                    updated_products: 3
+                    updated_variants: 5
+                    total_updated: 8
+                    new_alerts_triggered: 2
+                properties:
+                  message:
+                    type: string
+                    example: 'Bulk threshold update completed successfully.'
+                  data:
+                    type: object
+                    properties:
+                      updated_products:
+                        type: integer
+                        example: 3
+                      updated_variants:
+                        type: integer
+                        example: 5
+                      total_updated:
+                        type: integer
+                        example: 8
+                      new_alerts_triggered:
+                        type: integer
+                        example: 2
+        403:
+          description: 'Insufficient permissions'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'You do not have the required permissions.'
+                properties:
+                  message:
+                    type: string
+                    example: 'You do not have the required permissions.'
+        422:
+          description: 'Validation errors'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    - 'The products.0.id field is required.'
+                    - 'The variants.1.low_stock_threshold must be at least 0.'
+                properties:
+                  errors:
+                    type: array
+                    example:
+                      - 'The products.0.id field is required.'
+                      - 'The variants.1.low_stock_threshold must be at least 0.'
+                    items:
+                      type: string
+      tags:
+        - 'Inventory Management'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                products:
+                  type: array
+                  description: 'optional Array of product threshold updates.'
+                  example:
+                    - architecto
+                  items:
+                    type: string
+                variants:
+                  type: array
+                  description: 'optional Array of variant threshold updates.'
+                  example:
+                    - architecto
+                  items:
+                    type: string
   /api/returns:
     post:
       summary: 'Create a return request for an order item'
@@ -19759,6 +20299,9 @@ tags:
     description: ''
   -
     name: 'Refund Management'
+    description: ''
+  -
+    name: 'Inventory Management'
     description: ''
   -
     name: 'Order Returns'

@@ -1,408 +1,19 @@
-name: Authentication
+name: 'Inventory Management'
 description: ''
 endpoints:
   -
     httpMethods:
-      - POST
-    uri: api/register
-    metadata:
-      groupName: Authentication
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Register a new user'
-      description: |-
-        Creates a new user account with email verification. The user will receive an email to verify their account.
-        Passwords must meet security requirements including minimum length, character diversity, and cannot be common passwords.
-      authenticated: false
-      custom: []
-    headers:
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      name:
-        name: name
-        description: "The user's full name."
-        required: true
-        example: 'John Doe'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      email:
-        name: email
-        description: "The user's email address. Must be unique."
-        required: true
-        example: john@example.com
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      password:
-        name: password
-        description: "The user's password. Must be at least 12 characters with uppercase, lowercase, numbers, and symbols."
-        required: true
-        example: MySecurePass123!
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      password_confirmation:
-        name: password_confirmation
-        description: 'Password confirmation. Must match the password field.'
-        required: true
-        example: MySecurePass123!
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      name: 'John Doe'
-      email: john@example.com
-      password: MySecurePass123!
-      password_confirmation: MySecurePass123!
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "data": [],
-            "message": "User registered successfully.",
-            "status": 200
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 422
-        content: |-
-          {
-            "message": "Password does not meet security requirements.",
-            "errors": [
-              "Password must contain at least 1 uppercase letter(s).",
-              "Password cannot contain common words or patterns that are not secure."
-            ],
-            "strength": {
-              "score": 45,
-              "strength": "medium",
-              "feedback": ["Add special characters", "Use more unique characters"]
-            }
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 423
-        content: |-
-          {
-            "message": "Registration temporarily blocked. Please try again later.",
-            "time_remaining_minutes": 15
-          }
-        headers: []
-        description: ''
-        custom: []
-    responseFields: []
-    auth: []
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/login
-    metadata:
-      groupName: Authentication
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'User login'
-      description: 'Authenticates a user and returns an access token. Implements account lockout protection and tracks failed attempts.'
-      authenticated: false
-      custom: []
-    headers:
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      email:
-        name: email
-        description: "The user's email address."
-        required: true
-        example: john@example.com
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      password:
-        name: password
-        description: "The user's password."
-        required: true
-        example: MySecurePass123!
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      remember:
-        name: remember
-        description: 'optional Whether to remember the user for extended period.'
-        required: false
-        example: true
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        custom: []
-    cleanBodyParameters:
-      email: john@example.com
-      password: MySecurePass123!
-      remember: true
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "data": {
-              "token_type": "Bearer",
-              "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...",
-              "expires_at": 1640995200,
-              "user": {
-                "id": 1,
-                "email": "john@example.com",
-                "role": "user"
-              }
-            },
-            "message": "User logged in successfully.",
-            "status": 200
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 401
-        content: |-
-          {
-            "message": "Invalid credentials"
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 423
-        content: |-
-          {
-            "message": "Account is temporarily locked due to multiple failed login attempts.",
-            "locked_until": "2024-01-15T15:30:00.000000Z",
-            "time_remaining_seconds": 1800,
-            "time_remaining_minutes": 30,
-            "lockout_count": 2
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 426
-        content: |-
-          {
-            "message": "Your password has expired and must be changed before logging in.",
-            "password_expired": true,
-            "change_password_required": true
-          }
-        headers: []
-        description: ''
-        custom: []
-    responseFields: []
-    auth: []
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/logout
-    metadata:
-      groupName: Authentication
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'User logout'
-      description: 'Logs out the authenticated user and revokes their access token.'
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "data": [],
-            "message": "User logged out successfully",
-            "status": 200
-          }
-        headers: []
-        description: ''
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/change-password
-    metadata:
-      groupName: Authentication
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Change password'
-      description: "Changes the authenticated user's password. Requires current password verification and validates new password strength."
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      current_password:
-        name: current_password
-        description: "The user's current password."
-        required: true
-        example: MyOldPass123!
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      new_password:
-        name: new_password
-        description: 'The new password. Must meet security requirements.'
-        required: true
-        example: MyNewSecurePass456!
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      new_password_confirmation:
-        name: new_password_confirmation
-        description: 'Confirmation of the new password.'
-        required: true
-        example: MyNewSecurePass456!
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      current_password: MyOldPass123!
-      new_password: MyNewSecurePass456!
-      new_password_confirmation: MyNewSecurePass456!
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "data": {
-              "password_strength": {
-                "score": 85,
-                "strength": "very strong",
-                "feedback": []
-              },
-              "security_score": {
-                "score": 95,
-                "level": "excellent",
-                "issues": []
-              }
-            },
-            "message": "Password changed successfully",
-            "status": 200
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 401
-        content: |-
-          {
-            "message": "Current password is incorrect"
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 422
-        content: |-
-          {
-            "message": "New password does not meet security requirements.",
-            "errors": [
-              "Password cannot be the same as your last 5 passwords."
-            ],
-            "strength": {
-              "score": 45,
-              "strength": "medium",
-              "feedback": ["Add special characters"]
-            }
-          }
-        headers: []
-        description: ''
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
       - GET
-    uri: api/security-info
+    uri: api/admin/inventory/overview
     metadata:
-      groupName: Authentication
+      groupName: 'Inventory Management'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Get security information'
-      description: 'Retrieves comprehensive security information for the authenticated user including account lock status, security score, and password expiry details.'
+      title: 'Get inventory overview'
+      description: |-
+        Returns low stock and out of stock items for admin dashboard.
+        Provides a complete overview of inventory status for immediate action.
       authenticated: true
       custom: []
     headers:
@@ -421,38 +32,52 @@ endpoints:
         status: 200
         content: |-
           {
+            "message": "Inventory overview retrieved successfully.",
             "data": {
-              "account_lock": {
-                "is_locked": false,
-                "failed_attempts": 0,
-                "max_attempts": 5,
-                "lockout_count": 0,
-                "locked_until": null,
-                "time_until_unlock": null,
-                "last_attempt_at": null,
-                "last_successful_login": "2024-01-15T10:30:00.000000Z",
-                "should_reset": false
-              },
-              "security_score": {
-                "score": 85,
-                "level": "good",
-                "issues": ["Medium strength password"]
-              },
-              "password_expiry": {
-                "requires_change": false,
-                "days_until_expiry": 45,
-                "last_changed": "2024-01-01T12:00:00.000000Z"
-              },
-              "login_history": {
-                "last_login": "2024-01-15T10:30:00.000000Z",
-                "last_login_ip": "192.168.1.100"
+              "low_stock_items": [
+                {
+                  "type": "product",
+                  "id": 15,
+                  "name": "Wireless Bluetooth Headphones",
+                  "current_stock": 8,
+                  "threshold": 10,
+                  "vendor": "AudioTech Solutions"
+                },
+                {
+                  "type": "variant",
+                  "id": 24,
+                  "name": "Wireless Bluetooth Headphones - Color: White",
+                  "current_stock": 3,
+                  "threshold": 5,
+                  "vendor": "AudioTech Solutions"
+                }
+              ],
+              "out_of_stock_items": [
+                {
+                  "type": "product",
+                  "id": 22,
+                  "name": "USB-C Cable",
+                  "vendor": "TechCorp"
+                }
+              ],
+              "summary": {
+                "low_stock_count": 2,
+                "out_of_stock_count": 1,
+                "total_issues": 3
               }
-            },
-            "message": "Security information retrieved",
-            "status": 200
+            }
           }
         headers: []
-        description: ''
+        description: 'Inventory overview retrieved successfully'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
         custom: []
     responseFields: []
     auth:
@@ -466,60 +91,114 @@ endpoints:
   -
     httpMethods:
       - POST
-    uri: api/forgot-password
+    uri: 'api/admin/inventory/products/{product_id}/threshold'
     metadata:
-      groupName: Authentication
+      groupName: 'Inventory Management'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Forgot password'
-      description: "Sends a password reset link to the user's email address."
-      authenticated: false
+      title: 'Update product stock threshold'
+      description: |-
+        Updates the low stock threshold for a specific product. When the product's
+        quantity falls to or below this threshold, alerts will be triggered.
+      authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
+    urlParameters:
+      product_id:
+        name: product_id
+        description: 'The ID of the product.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      product:
+        name: product
+        description: 'The ID of the product to update.'
+        required: true
+        example: 15
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      product_id: 1
+      product: 15
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
-      email:
-        name: email
-        description: "The user's email address."
+      low_stock_threshold:
+        name: low_stock_threshold
+        description: 'The new threshold value (minimum 0).'
         required: true
-        example: john@example.com
-        type: string
+        example: 15
+        type: integer
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
     cleanBodyParameters:
-      email: john@example.com
+      low_stock_threshold: 15
     fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
-            "data": [],
-            "message": "We have emailed your password reset link!",
-            "status": 200
+            "message": "Product stock threshold updated successfully.",
+            "data": {
+              "id": 15,
+              "name": "Wireless Bluetooth Headphones",
+              "current_stock": 25,
+              "old_threshold": 10,
+              "new_threshold": 15
+            }
           }
         headers: []
-        description: ''
+        description: 'Product threshold updated successfully'
         custom: []
       -
-        status: 423
+        status: 403
         content: |-
           {
-            "message": "Password reset temporarily blocked. Please try again later."
+            "message": "You do not have the required permissions."
           }
         headers: []
-        description: ''
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\Product] 999"
+          }
+        headers: []
+        description: 'Product not found'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "errors": [
+              "The low stock threshold field is required.",
+              "The low stock threshold must be at least 0."
+            ]
+          }
+        headers: []
+        description: 'Validation errors'
         custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
     controller: null
     method: null
     route: null
@@ -527,17 +206,208 @@ endpoints:
   -
     httpMethods:
       - POST
-    uri: api/reset-password
+    uri: 'api/admin/inventory/variants/{variant_id}/threshold'
     metadata:
-      groupName: Authentication
+      groupName: 'Inventory Management'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Reset password'
-      description: "Resets the user's password using a valid reset token from the forgot password email."
-      authenticated: false
+      title: 'Update variant stock threshold'
+      description: |-
+        Updates the low stock threshold for a specific product variant. When the variant's
+        quantity falls to or below this threshold, alerts will be triggered.
+      authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      variant_id:
+        name: variant_id
+        description: 'The ID of the variant.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      variant:
+        name: variant
+        description: 'The ID of the product variant to update.'
+        required: true
+        example: 24
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      variant_id: 1
+      variant: 24
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      low_stock_threshold:
+        name: low_stock_threshold
+        description: 'The new threshold value (minimum 0).'
+        required: true
+        example: 8
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      low_stock_threshold: 8
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Variant stock threshold updated successfully.",
+            "data": {
+              "id": 24,
+              "name": "Wireless Bluetooth Headphones - Color: White",
+              "current_stock": 20,
+              "old_threshold": 5,
+              "new_threshold": 8
+            }
+          }
+        headers: []
+        description: 'Variant threshold updated successfully'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\ProductVariant] 999"
+          }
+        headers: []
+        description: 'Variant not found'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "errors": [
+              "The low stock threshold field is required.",
+              "The low stock threshold must be at least 0."
+            ]
+          }
+        headers: []
+        description: 'Validation errors'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/admin/inventory/check
+    metadata:
+      groupName: 'Inventory Management'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Trigger manual inventory check'
+      description: |-
+        Manually triggers an inventory check and sends alerts if any items are
+        below their thresholds. Useful for testing or immediate inventory review.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Inventory check completed. Alerts sent for 3 items.",
+            "data": {
+              "alerts_sent": true,
+              "low_stock_count": 3,
+              "items_checked": 156
+            }
+          }
+        headers: []
+        description: 'Manual check completed with alerts'
+        custom: []
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Inventory check completed. No alerts needed.",
+            "data": {
+              "alerts_sent": false,
+              "low_stock_count": 0,
+              "items_checked": 156
+            }
+          }
+        headers: []
+        description: 'Manual check completed - no alerts needed'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/admin/inventory/bulk-update-thresholds
+    metadata:
+      groupName: 'Inventory Management'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Bulk update stock thresholds'
+      description: |-
+        Updates stock thresholds for multiple products and variants in a single request.
+        Useful for bulk inventory management operations.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -545,83 +415,156 @@ endpoints:
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
-      token:
-        name: token
-        description: 'The password reset token from the email.'
+      products:
+        name: products
+        description: 'optional Array of product threshold updates.'
+        required: false
+        example:
+          - architecto
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      variants:
+        name: variants
+        description: 'optional Array of variant threshold updates.'
+        required: false
+        example:
+          - architecto
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      'products[].id':
+        name: 'products[].id'
+        description: 'The <code>id</code> of an existing record in the products table.'
         required: true
-        example: abc123def456
+        example: architecto
         type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      'products[].low_stock_threshold':
+        name: 'products[].low_stock_threshold'
+        description: 'Must be at least 0.'
+        required: true
+        example: 39
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      'variants[].id':
+        name: 'variants[].id'
+        description: 'The <code>id</code> of an existing record in the product_variants table.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      'variants[].low_stock_threshold':
+        name: 'variants[].low_stock_threshold'
+        description: 'Must be at least 0.'
+        required: true
+        example: 39
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      'products.*.id':
+        name: 'products.*.id'
+        description: 'Product ID.'
+        required: true
+        example: 15
+        type: integer
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-      email:
-        name: email
-        description: "The user's email address."
+      'products.*.low_stock_threshold':
+        name: 'products.*.low_stock_threshold'
+        description: 'New threshold value.'
         required: true
-        example: john@example.com
-        type: string
+        example: 20
+        type: integer
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-      password:
-        name: password
-        description: 'The new password. Must meet security requirements.'
+      'variants.*.id':
+        name: 'variants.*.id'
+        description: 'Variant ID.'
         required: true
-        example: MyNewSecurePass456!
-        type: string
+        example: 24
+        type: integer
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-      password_confirmation:
-        name: password_confirmation
-        description: 'Confirmation of the new password.'
+      'variants.*.low_stock_threshold':
+        name: 'variants.*.low_stock_threshold'
+        description: 'New threshold value.'
         required: true
-        example: MyNewSecurePass456!
-        type: string
+        example: 10
+        type: integer
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
     cleanBodyParameters:
-      token: abc123def456
-      email: john@example.com
-      password: MyNewSecurePass456!
-      password_confirmation: MyNewSecurePass456!
+      products:
+        - architecto
+      variants:
+        - architecto
     fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
-            "data": [],
-            "message": "Your password has been reset!",
-            "status": 200
+            "message": "Bulk threshold update completed successfully.",
+            "data": {
+              "updated_products": 3,
+              "updated_variants": 5,
+              "total_updated": 8,
+              "new_alerts_triggered": 2
+            }
           }
         headers: []
-        description: ''
+        description: 'Bulk update completed successfully'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
         custom: []
       -
         status: 422
         content: |-
           {
-            "message": "New password does not meet security requirements.",
             "errors": [
-              "Password must contain at least 1 special character(s)."
-            ],
-            "strength": {
-              "score": 60,
-              "strength": "strong",
-              "feedback": ["Add special characters"]
-            }
+              "The products.0.id field is required.",
+              "The variants.1.low_stock_threshold must be at least 0."
+            ]
           }
         headers: []
-        description: ''
+        description: 'Validation errors'
         custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
     controller: null
     method: null
     route: null

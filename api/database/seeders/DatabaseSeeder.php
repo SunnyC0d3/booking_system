@@ -30,6 +30,8 @@ class DatabaseSeeder extends Seeder
             OrderSeeder::class,
 
             PaymentSeeder::class,
+
+            InventoryPermissionsSeeder::class,
         ]);
     }
 }

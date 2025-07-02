@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\V1\Admin\InventoryController;
 use Illuminate\Support\Facades\Route;
 
 // Admin Controllers
@@ -189,4 +190,17 @@ Route::prefix('admin/payments')
     ->controller(PaymentController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.payments.index');
+    });
+
+// Admin/Inventory
+
+Route::prefix('admin/inventory')
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'rate_limit:admin'])
+    ->controller(InventoryController::class)
+    ->group(function () {
+        Route::get('/overview', 'overview')->name('admin.inventory.overview');
+        Route::post('/products/{product}/threshold', 'updateProductThreshold')->name('admin.inventory.product.threshold');
+        Route::post('/variants/{variant}/threshold', 'updateVariantThreshold')->name('admin.inventory.variant.threshold');
+        Route::post('/check', 'manualCheck')->name('admin.inventory.check');
+        Route::post('/bulk-update-thresholds', 'bulkUpdateThresholds')->name('admin.inventory.bulk.update');
     });

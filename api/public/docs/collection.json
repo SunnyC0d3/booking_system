@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "E-Commerce API Documentation",
-        "_postman_id": "d7748034-ab06-4bef-b975-b398bf3d0296",
+        "_postman_id": "ecfec9d0-784f-4290-8b5e-220fe7fdd06e",
         "description": "Comprehensive API for managing products, orders, payments, users, vendors, and more in an e-commerce platform.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json",
         "version": "1.0.0"
@@ -2821,6 +2821,275 @@
                             "code": 422,
                             "body": "{\n    \"errors\": [\n        \"The status field must be one of: Pending, Processing, Refunded, Partially Refunded, Failed, Cancelled, Declined.\",\n        \"The date from field must be a valid date in YYYY-MM-DD format.\",\n        \"The amount min field must be a number greater than 0.\",\n        \"The order id field must be an integer.\"\n    ]\n}",
                             "name": "Invalid filter parameters"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Inventory Management",
+            "description": "",
+            "item": [
+                {
+                    "name": "Get inventory overview",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/inventory\/overview",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/inventory\/overview"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Returns low stock and out of stock items for admin dashboard.\nProvides a complete overview of inventory status for immediate action."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Inventory overview retrieved successfully.\",\n  \"data\": {\n    \"low_stock_items\": [\n      {\n        \"type\": \"product\",\n        \"id\": 15,\n        \"name\": \"Wireless Bluetooth Headphones\",\n        \"current_stock\": 8,\n        \"threshold\": 10,\n        \"vendor\": \"AudioTech Solutions\"\n      },\n      {\n        \"type\": \"variant\",\n        \"id\": 24,\n        \"name\": \"Wireless Bluetooth Headphones - Color: White\",\n        \"current_stock\": 3,\n        \"threshold\": 5,\n        \"vendor\": \"AudioTech Solutions\"\n      }\n    ],\n    \"out_of_stock_items\": [\n      {\n        \"type\": \"product\",\n        \"id\": 22,\n        \"name\": \"USB-C Cable\",\n        \"vendor\": \"TechCorp\"\n      }\n    ],\n    \"summary\": {\n      \"low_stock_count\": 2,\n      \"out_of_stock_count\": 1,\n      \"total_issues\": 3\n    }\n  }\n}",
+                            "name": "Inventory overview retrieved successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update product stock threshold",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/inventory\/products\/:product_id\/threshold",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/inventory\/products\/:product_id\/threshold",
+                            "variable": [
+                                {
+                                    "id": "product_id",
+                                    "key": "product_id",
+                                    "value": "1",
+                                    "description": "The ID of the product."
+                                },
+                                {
+                                    "id": "product",
+                                    "key": "product",
+                                    "value": "15",
+                                    "description": "The ID of the product to update."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"low_stock_threshold\":15}"
+                        },
+                        "description": "Updates the low stock threshold for a specific product. When the product's\nquantity falls to or below this threshold, alerts will be triggered."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Product stock threshold updated successfully.\",\n  \"data\": {\n    \"id\": 15,\n    \"name\": \"Wireless Bluetooth Headphones\",\n    \"current_stock\": 25,\n    \"old_threshold\": 10,\n    \"new_threshold\": 15\n  }\n}",
+                            "name": "Product threshold updated successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\Product] 999\"\n}",
+                            "name": "Product not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"errors\": [\n    \"The low stock threshold field is required.\",\n    \"The low stock threshold must be at least 0.\"\n  ]\n}",
+                            "name": "Validation errors"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update variant stock threshold",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/inventory\/variants\/:variant_id\/threshold",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/inventory\/variants\/:variant_id\/threshold",
+                            "variable": [
+                                {
+                                    "id": "variant_id",
+                                    "key": "variant_id",
+                                    "value": "1",
+                                    "description": "The ID of the variant."
+                                },
+                                {
+                                    "id": "variant",
+                                    "key": "variant",
+                                    "value": "24",
+                                    "description": "The ID of the product variant to update."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"low_stock_threshold\":8}"
+                        },
+                        "description": "Updates the low stock threshold for a specific product variant. When the variant's\nquantity falls to or below this threshold, alerts will be triggered."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Variant stock threshold updated successfully.\",\n  \"data\": {\n    \"id\": 24,\n    \"name\": \"Wireless Bluetooth Headphones - Color: White\",\n    \"current_stock\": 20,\n    \"old_threshold\": 5,\n    \"new_threshold\": 8\n  }\n}",
+                            "name": "Variant threshold updated successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\ProductVariant] 999\"\n}",
+                            "name": "Variant not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"errors\": [\n    \"The low stock threshold field is required.\",\n    \"The low stock threshold must be at least 0.\"\n  ]\n}",
+                            "name": "Validation errors"
+                        }
+                    ]
+                },
+                {
+                    "name": "Trigger manual inventory check",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/inventory\/check",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/inventory\/check"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Manually triggers an inventory check and sends alerts if any items are\nbelow their thresholds. Useful for testing or immediate inventory review."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Inventory check completed. Alerts sent for 3 items.\",\n  \"data\": {\n    \"alerts_sent\": true,\n    \"low_stock_count\": 3,\n    \"items_checked\": 156\n  }\n}",
+                            "name": "Manual check completed with alerts"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Inventory check completed. No alerts needed.\",\n  \"data\": {\n    \"alerts_sent\": false,\n    \"low_stock_count\": 0,\n    \"items_checked\": 156\n  }\n}",
+                            "name": "Manual check completed - no alerts needed"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        }
+                    ]
+                },
+                {
+                    "name": "Bulk update stock thresholds",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/inventory\/bulk-update-thresholds",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/inventory\/bulk-update-thresholds"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"products\":[\"architecto\"],\"variants\":[\"architecto\"]}"
+                        },
+                        "description": "Updates stock thresholds for multiple products and variants in a single request.\nUseful for bulk inventory management operations."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Bulk threshold update completed successfully.\",\n  \"data\": {\n    \"updated_products\": 3,\n    \"updated_variants\": 5,\n    \"total_updated\": 8,\n    \"new_alerts_triggered\": 2\n  }\n}",
+                            "name": "Bulk update completed successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"errors\": [\n    \"The products.0.id field is required.\",\n    \"The variants.1.low_stock_threshold must be at least 0.\"\n  ]\n}",
+                            "name": "Validation errors"
                         }
                     ]
                 }

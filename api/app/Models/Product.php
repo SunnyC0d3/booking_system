@@ -97,4 +97,14 @@ class Product extends Model implements HasMedia
 
         return $price;
     }
+
+    public function isLowStock(): bool
+    {
+        return $this->quantity <= $this->low_stock_threshold && $this->quantity > 0;
+    }
+
+    public function isOutOfStock(): bool
+    {
+        return $this->quantity <= 0;
+    }
 }
