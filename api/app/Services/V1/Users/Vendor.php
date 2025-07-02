@@ -31,7 +31,10 @@ class Vendor
             $perPage = $request->input('per_page', 15);
             $vendors = $query->paginate($perPage);
 
-            return $this->ok('Vendors fetched successfully', VendorResource::collection($vendors));
+            return VendorResource::collection($vendors)->additional([
+                'message' => 'Vendors fetched successfully.',
+                'status' => 200
+            ]);
         }
 
         return $this->error('You do not have the required permissions.', 403);

@@ -28,7 +28,10 @@ class User
             $perPage = $request->input('per_page', 15);
             $users = $query->paginate($perPage);
 
-            return $this->ok('Users retrieved successfully.', UserResource::collection($users));
+            return UserResource::collection($users)->additional([
+                'message' => 'Users retrieved successfully.',
+                'status' => 200
+            ]);
         }
 
         return $this->error('You do not have the required permissions.', 403);

@@ -36,7 +36,10 @@ class Returns
                 'status'
             ])->latest()->paginate(20);
 
-            return $this->ok('Order returns retrieved.', OrderReturnResource::collection($returns));
+            return OrderReturnResource::collection($returns)->additional([
+                'message' => 'Order returns retrieved.',
+                'status' => 200
+            ]);
         }
 
         return $this->error('You do not have the required permissions.', 403);

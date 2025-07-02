@@ -28,7 +28,10 @@ class Refunds
                 'status'
             ])->latest()->paginate(20);
 
-            return $this->ok('Order refunds retrieved.', OrderRefundResource::collection($returns));
+            return OrderRefundResource::collection($returns)->additional([
+                'message' => 'Order refunds retrieved.',
+                'status' => 200
+            ]);
         }
 
         return $this->error('You do not have the required permissions.', 403);

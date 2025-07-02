@@ -32,7 +32,10 @@ class Product
         $perPage = $request->input('per_page', 15);
         $products = $query->paginate($perPage);
 
-        return $this->ok('Products retrieved successfully.', ProductResource::collection($products));
+        return ProductResource::collection($products)->additional([
+            'message' => 'Products retrieved successfully.',
+            'status' => 200
+        ]);
     }
 
     public function find(Request $request, ProdDB $product)

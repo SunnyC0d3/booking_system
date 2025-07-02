@@ -28,7 +28,10 @@ class Payment
                 ->latest()
                 ->paginate(15);
 
-            return $this->ok('Payments retrieved.', PaymentResource::collection($payments));
+            return PaymentResource::collection($payments)->additional([
+                'message' => 'Payments retrieved successfully.',
+                'status' => 200
+            ]);
         }
 
         return $this->error('You do not have the required permissions.', 403);

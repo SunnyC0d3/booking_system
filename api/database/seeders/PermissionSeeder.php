@@ -23,7 +23,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'delete_roles'],
 
             // Permission Management
-            ['name' => 'view_roles'],
+            ['name' => 'view_permissions'],
             ['name' => 'create_permissions'],
             ['name' => 'edit_permissions'],
             ['name' => 'delete_permissions'],
@@ -72,13 +72,19 @@ class PermissionSeeder extends Seeder
             ['name' => 'edit_categories'],
             ['name' => 'delete_categories'],
 
-            // Order Management
-            ['name' => 'view_orders'],
-            ['name' => 'create_orders'],
-            ['name' => 'edit_orders'],
-            ['name' => 'delete_orders'],
+            // Order Management - Admin/Staff Level
+            ['name' => 'view_all_orders'],
+            ['name' => 'create_orders_for_users'],
+            ['name' => 'edit_all_orders'],
+            ['name' => 'delete_all_orders'],
             ['name' => 'restore_orders'],
             ['name' => 'force_delete_orders'],
+
+            // Order Management - User Level
+            ['name' => 'view_own_orders'],
+            ['name' => 'create_own_orders'],
+            ['name' => 'edit_own_orders'],
+            ['name' => 'delete_own_orders'],
 
             // Payment Methods
             ['name' => 'view_payment_methods'],
