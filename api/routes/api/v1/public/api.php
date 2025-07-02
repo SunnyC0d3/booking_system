@@ -6,12 +6,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\Auth\AuthController;
 use App\Http\Controllers\V1\Auth\EmailVerificationController;
 
+// Other Controllers
 use App\Http\Controllers\V1\Public\UserController;
 use App\Http\Controllers\V1\Public\VendorController;
 use App\Http\Controllers\V1\Public\ProductController;
 use App\Http\Controllers\V1\Public\OrderController;
 use App\Http\Controllers\V1\Public\PaymentController;
 use App\Http\Controllers\V1\Public\ReturnsController;
+use App\Http\Controllers\V1\Public\CartController;
 
 // Auth
 
@@ -113,4 +115,18 @@ Route::prefix('returns')
     ->controller(ReturnsController::class)
     ->group(function () {
         Route::post('/', 'return')->name('returns');
+    });
+
+// Cart
+
+Route::prefix('cart')
+    ->middleware(['client', 'rate_limit:cart'])
+    ->controller(CartController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('cart.index');
+        Route::post('/items', 'store')->name('cart.add');
+        Route::put('/items/{cartItem}', 'update')->name('cart.update');
+        Route::delete('/items/{cartItem}', 'destroy')->name('cart.remove');
+        Route::delete('/clear', 'clear')->name('cart.clear');
+        Route::post('/sync-prices', 'syncPrices')->name('cart.sync-prices');
     });

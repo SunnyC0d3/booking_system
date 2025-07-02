@@ -80,6 +80,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(UserAddress::class);
     }
 
+    public function cart(): HasOne
+    {
+        return $this->hasOne(Cart::class)->active();
+    }
+
     public function accountLocks(): HasMany
     {
         return $this->hasMany(AccountLock::class);
@@ -330,5 +335,18 @@ class User extends Authenticatable implements MustVerifyEmail
     public function scopeRecentlyActive(Builder $query, int $days = 30): Builder
     {
         return $query->where('last_login_at', '>', now()->subDays($days));
+    }
+
+    public function getOrCreateCart(): Cart
+    {
+        $cart = $this->cart;
+
+        if (!$cart) {
+            $cart = $this->cart()->create([
+                'expires_at' => now()->addDays(30),
+            ]);
+        }
+
+        return $cart;
     }
 }

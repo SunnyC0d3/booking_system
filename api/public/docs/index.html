@@ -470,6 +470,31 @@
                             </li>
                                                                         </ul>
                             </ul>
+                    <ul id="tocify-header-shopping-cart" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="shopping-cart">
+                    <a href="#shopping-cart">Shopping Cart</a>
+                </li>
+                                    <ul id="tocify-subheader-shopping-cart" class="tocify-subheader">
+                                                    <li class="tocify-item level-2" data-unique="shopping-cart-GETapi-cart">
+                                <a href="#shopping-cart-GETapi-cart">Retrieve user's shopping cart</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="shopping-cart-POSTapi-cart-items">
+                                <a href="#shopping-cart-POSTapi-cart-items">Add item to shopping cart</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="shopping-cart-PUTapi-cart-items--cartItem-">
+                                <a href="#shopping-cart-PUTapi-cart-items--cartItem-">Update cart item quantity</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="shopping-cart-DELETEapi-cart-items--cartItem-">
+                                <a href="#shopping-cart-DELETEapi-cart-items--cartItem-">Remove item from cart</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="shopping-cart-DELETEapi-cart-clear">
+                                <a href="#shopping-cart-DELETEapi-cart-clear">Clear entire cart</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="shopping-cart-POSTapi-cart-sync-prices">
+                                <a href="#shopping-cart-POSTapi-cart-sync-prices">Synchronize cart prices</a>
+                            </li>
+                                                                        </ul>
+                            </ul>
                     <ul id="tocify-header-user-orders" class="tocify-header">
                 <li class="tocify-item level-1" data-unique="user-orders">
                     <a href="#user-orders">User Orders</a>
@@ -518,7 +543,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: June 22, 2025</li>
+        <li>Last updated: July 2, 2025</li>
     </ul>
 </div>
 
@@ -5951,7 +5976,7 @@ and managing their marketplace presence. Supports secure logo upload with compre
     --form "user_id=45"\
     --form "name=TechCraft Solutions Ltd"\
     --form "description=Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud services, and digital transformation consulting."\
-    --form "logo=@/tmp/phpHMSdJP" </code></pre></div>
+    --form "logo=@/tmp/php0Z6MGK" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6004,7 +6029,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'logo',
-                'contents' =&gt; fopen('/tmp/phpHMSdJP', 'r')
+                'contents' =&gt; fopen('/tmp/php0Z6MGK', 'r')
             ],
         ],
     ]
@@ -6022,7 +6047,7 @@ files = {
   'user_id': (None, '45'),
   'name': (None, 'TechCraft Solutions Ltd'),
   'description': (None, 'Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud services, and digital transformation consulting.'),
-  'logo': open('/tmp/phpHMSdJP', 'rb')}
+  'logo': open('/tmp/php0Z6MGK', 'rb')}
 payload = {
     "user_id": 45,
     "name": "TechCraft Solutions Ltd",
@@ -6291,7 +6316,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional Business logo file. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Recommended dimensions: 200x200px minimum. Example: <code>/tmp/phpHMSdJP</code></p>
+<p>optional Business logo file. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Recommended dimensions: 200x200px minimum. Example: <code>/tmp/php0Z6MGK</code></p>
         </div>
         </form>
 
@@ -6320,7 +6345,7 @@ replacement with comprehensive validation.</p>
     --form "user_id=67"\
     --form "name=TechCraft Solutions International Ltd"\
     --form "description=Global leader in innovative technology solutions. We specialize in enterprise software development, cloud migration services, AI integration, and digital transformation consulting with over 15 years of proven industry experience."\
-    --form "logo=@/tmp/phpImIUMP" </code></pre></div>
+    --form "logo=@/tmp/php5VYRSl" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6373,7 +6398,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'logo',
-                'contents' =&gt; fopen('/tmp/phpImIUMP', 'r')
+                'contents' =&gt; fopen('/tmp/php5VYRSl', 'r')
             ],
         ],
     ]
@@ -6391,7 +6416,7 @@ files = {
   'user_id': (None, '67'),
   'name': (None, 'TechCraft Solutions International Ltd'),
   'description': (None, 'Global leader in innovative technology solutions. We specialize in enterprise software development, cloud migration services, AI integration, and digital transformation consulting with over 15 years of proven industry experience.'),
-  'logo': open('/tmp/phpImIUMP', 'rb')}
+  'logo': open('/tmp/php5VYRSl', 'rb')}
 payload = {
     "user_id": 67,
     "name": "TechCraft Solutions International Ltd",
@@ -6707,7 +6732,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional New logo file to replace existing one. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will completely replace the current logo. Example: <code>/tmp/phpImIUMP</code></p>
+<p>optional New logo file to replace existing one. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will completely replace the current logo. Example: <code>/tmp/php5VYRSl</code></p>
         </div>
         </form>
 
@@ -7988,7 +8013,7 @@ Supports secure file uploads for featured images and gallery photos with compreh
     --form "quantity=50"\
     --form "product_tags[]=3"\
     --form "product_variants[]=architecto"\
-    --form "media[featured_image]=@/tmp/php91RtBO"     --form "media[gallery][]=@/tmp/phpvbAfvL" </code></pre></div>
+    --form "media[featured_image]=@/tmp/phpkbJi7K"     --form "media[gallery][]=@/tmp/phpIZSiSM" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -8067,11 +8092,11 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'media[featured_image]',
-                'contents' =&gt; fopen('/tmp/php91RtBO', 'r')
+                'contents' =&gt; fopen('/tmp/phpkbJi7K', 'r')
             ],
             [
                 'name' =&gt; 'media[gallery][]',
-                'contents' =&gt; fopen('/tmp/phpvbAfvL', 'r')
+                'contents' =&gt; fopen('/tmp/phpIZSiSM', 'r')
             ],
         ],
     ]
@@ -8094,7 +8119,7 @@ files = {
   'quantity': (None, '50'),
   'product_tags[]': (None, '3'),
   'product_variants[]': (None, 'architecto'),
-  'media[featured_image]': open('/tmp/php91RtBO', 'rb')  'media[gallery][]': open('/tmp/phpvbAfvL', 'rb')}
+  'media[featured_image]': open('/tmp/phpkbJi7K', 'rb')  'media[gallery][]': open('/tmp/phpIZSiSM', 'rb')}
 payload = {
     "name": "\"Premium Wireless Earbuds\"",
     "description": "\"High-quality wireless earbuds with noise cancellation and long battery life.\"",
@@ -8520,7 +8545,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional Featured product image. Max 5MB, dimensions 100x100 to 4000x4000px. Example: <code>/tmp/php91RtBO</code></p>
+<p>optional Featured product image. Max 5MB, dimensions 100x100 to 4000x4000px. Example: <code>/tmp/phpkbJi7K</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>gallery</code></b>&nbsp;&nbsp;
@@ -8567,7 +8592,7 @@ all existing variants are replaced with the new ones. Media files can be updated
     --form "quantity=75"\
     --form "product_tags[]=3"\
     --form "product_variants[]=architecto"\
-    --form "media[featured_image]=@/tmp/php2pJqJw"     --form "media[gallery][]=@/tmp/phpArhGWi" </code></pre></div>
+    --form "media[featured_image]=@/tmp/phpdo5EKT"     --form "media[gallery][]=@/tmp/phpLW862f" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -8646,11 +8671,11 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'media[featured_image]',
-                'contents' =&gt; fopen('/tmp/php2pJqJw', 'r')
+                'contents' =&gt; fopen('/tmp/phpdo5EKT', 'r')
             ],
             [
                 'name' =&gt; 'media[gallery][]',
-                'contents' =&gt; fopen('/tmp/phpArhGWi', 'r')
+                'contents' =&gt; fopen('/tmp/phpLW862f', 'r')
             ],
         ],
     ]
@@ -8673,7 +8698,7 @@ files = {
   'quantity': (None, '75'),
   'product_tags[]': (None, '3'),
   'product_variants[]': (None, 'architecto'),
-  'media[featured_image]': open('/tmp/php2pJqJw', 'rb')  'media[gallery][]': open('/tmp/phpArhGWi', 'rb')}
+  'media[featured_image]': open('/tmp/phpdo5EKT', 'rb')  'media[gallery][]': open('/tmp/phpLW862f', 'rb')}
 payload = {
     "name": "\"Premium Wireless Earbuds Pro\"",
     "description": "\"Enhanced wireless earbuds with improved noise cancellation.\"",
@@ -9110,7 +9135,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional New featured image (replaces existing). Example: <code>/tmp/php2pJqJw</code></p>
+<p>optional New featured image (replaces existing). Example: <code>/tmp/phpdo5EKT</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>gallery</code></b>&nbsp;&nbsp;
@@ -23979,6 +24004,1309 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                     </form>
 
+                <h1 id="shopping-cart">Shopping Cart</h1>
+
+    
+
+                                <h2 id="shopping-cart-GETapi-cart">Retrieve user&#039;s shopping cart</h2>
+
+<p>
+</p>
+
+<p>Get the current cart contents for the authenticated user or guest session.
+Returns cart items with product details, pricing information, availability status,
+and total calculations. Supports both authenticated users and guest sessions.</p>
+
+<span id="example-requests-GETapi-cart">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://marketplace.com/api/cart" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://marketplace.com/api/cart"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://marketplace.com/api/cart';
+$response = $client-&gt;get(
+    $url,
+    [
+        'headers' =&gt; [
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'http://marketplace.com/api/cart'
+headers = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('GET', url, headers=headers)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-cart">
+            <blockquote>
+            <p>Example response (200, Cart retrieved successfully):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Cart retrieved successfully.&quot;,
+    &quot;data&quot;: {
+        &quot;id&quot;: 12,
+        &quot;user_id&quot;: 123,
+        &quot;total_amount&quot;: 15998,
+        &quot;total_amount_formatted&quot;: &quot;&pound;159.98&quot;,
+        &quot;total_items_count&quot;: 3,
+        &quot;expires_at&quot;: &quot;2025-02-15T10:30:00.000000Z&quot;,
+        &quot;is_expired&quot;: false,
+        &quot;is_empty&quot;: false,
+        &quot;items&quot;: [
+            {
+                &quot;id&quot;: 45,
+                &quot;product_id&quot;: 15,
+                &quot;product_variant_id&quot;: 24,
+                &quot;quantity&quot;: 2,
+                &quot;price_snapshot&quot;: 7999,
+                &quot;price_formatted&quot;: &quot;&pound;79.99&quot;,
+                &quot;line_total&quot;: 15998,
+                &quot;line_total_formatted&quot;: &quot;&pound;159.98&quot;,
+                &quot;current_price&quot;: 7999,
+                &quot;has_price_changed&quot;: false,
+                &quot;is_available&quot;: true,
+                &quot;available_stock&quot;: 20,
+                &quot;product&quot;: {
+                    &quot;id&quot;: 15,
+                    &quot;name&quot;: &quot;Wireless Bluetooth Headphones&quot;,
+                    &quot;description&quot;: &quot;Premium quality wireless headphones&quot;,
+                    &quot;price&quot;: 7499,
+                    &quot;price_formatted&quot;: &quot;&pound;74.99&quot;,
+                    &quot;featured_image&quot;: &quot;https://yourapi.com/storage/products/headphones.jpg&quot;,
+                    &quot;status&quot;: &quot;Active&quot;
+                },
+                &quot;product_variant&quot;: {
+                    &quot;id&quot;: 24,
+                    &quot;value&quot;: &quot;White&quot;,
+                    &quot;additional_price&quot;: 500,
+                    &quot;additional_price_formatted&quot;: &quot;&pound;5.00&quot;,
+                    &quot;quantity&quot;: 20,
+                    &quot;product_attribute&quot;: {
+                        &quot;id&quot;: 1,
+                        &quot;name&quot;: &quot;Color&quot;
+                    }
+                },
+                &quot;created_at&quot;: &quot;2025-01-16T14:30:00.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2025-01-16T14:30:00.000000Z&quot;
+            }
+        ],
+        &quot;created_at&quot;: &quot;2025-01-16T14:30:00.000000Z&quot;,
+        &quot;updated_at&quot;: &quot;2025-01-16T14:35:00.000000Z&quot;
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (200, Empty cart):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Cart retrieved successfully.&quot;,
+    &quot;data&quot;: {
+        &quot;id&quot;: 13,
+        &quot;user_id&quot;: 123,
+        &quot;total_amount&quot;: 0,
+        &quot;total_amount_formatted&quot;: &quot;&pound;0.00&quot;,
+        &quot;total_items_count&quot;: 0,
+        &quot;expires_at&quot;: &quot;2025-02-15T10:30:00.000000Z&quot;,
+        &quot;is_expired&quot;: false,
+        &quot;is_empty&quot;: true,
+        &quot;items&quot;: [],
+        &quot;created_at&quot;: &quot;2025-01-16T14:30:00.000000Z&quot;,
+        &quot;updated_at&quot;: &quot;2025-01-16T14:30:00.000000Z&quot;
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-cart" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-cart"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-cart"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-cart" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-cart">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-cart" data-method="GET"
+      data-path="api/cart"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-cart', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-cart"
+                    onclick="tryItOut('GETapi-cart');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-cart"
+                    onclick="cancelTryOut('GETapi-cart');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-cart"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/cart</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-cart"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-cart"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        </form>
+
+                    <h2 id="shopping-cart-POSTapi-cart-items">Add item to shopping cart</h2>
+
+<p>
+</p>
+
+<p>Add a product (with optional variant) to the user's shopping cart. If the item already exists,
+the quantities will be combined. Validates product availability, stock levels, and pricing.
+Supports both authenticated users and guest sessions.</p>
+
+<span id="example-requests-POSTapi-cart-items">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://marketplace.com/api/cart/items" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"product_id\": 15,
+    \"product_variant_id\": 24,
+    \"quantity\": 2
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://marketplace.com/api/cart/items"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "product_id": 15,
+    "product_variant_id": 24,
+    "quantity": 2
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://marketplace.com/api/cart/items';
+$response = $client-&gt;post(
+    $url,
+    [
+        'headers' =&gt; [
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'product_id' =&gt; 15,
+            'product_variant_id' =&gt; 24,
+            'quantity' =&gt; 2,
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'http://marketplace.com/api/cart/items'
+payload = {
+    "product_id": 15,
+    "product_variant_id": 24,
+    "quantity": 2
+}
+headers = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('POST', url, headers=headers, json=payload)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-cart-items">
+            <blockquote>
+            <p>Example response (200, Item added successfully):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Item added to cart successfully.&quot;,
+    &quot;data&quot;: {
+        &quot;id&quot;: 12,
+        &quot;user_id&quot;: 123,
+        &quot;total_amount&quot;: 15998,
+        &quot;total_amount_formatted&quot;: &quot;&pound;159.98&quot;,
+        &quot;total_items_count&quot;: 2,
+        &quot;expires_at&quot;: &quot;2025-02-15T10:30:00.000000Z&quot;,
+        &quot;is_expired&quot;: false,
+        &quot;is_empty&quot;: false,
+        &quot;items&quot;: [
+            {
+                &quot;id&quot;: 45,
+                &quot;product_id&quot;: 15,
+                &quot;product_variant_id&quot;: 24,
+                &quot;quantity&quot;: 2,
+                &quot;price_snapshot&quot;: 7999,
+                &quot;price_formatted&quot;: &quot;&pound;79.99&quot;,
+                &quot;line_total&quot;: 15998,
+                &quot;line_total_formatted&quot;: &quot;&pound;159.98&quot;,
+                &quot;current_price&quot;: 7999,
+                &quot;has_price_changed&quot;: false,
+                &quot;is_available&quot;: true,
+                &quot;available_stock&quot;: 18,
+                &quot;product&quot;: {
+                    &quot;id&quot;: 15,
+                    &quot;name&quot;: &quot;Wireless Bluetooth Headphones&quot;,
+                    &quot;status&quot;: &quot;Active&quot;
+                },
+                &quot;product_variant&quot;: {
+                    &quot;id&quot;: 24,
+                    &quot;value&quot;: &quot;White&quot;,
+                    &quot;additional_price&quot;: 500,
+                    &quot;quantity&quot;: 18
+                }
+            }
+        ]
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (400, Product not available):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Product is not available for purchase.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (400, Insufficient stock):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Insufficient stock. Only 5 items available.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Product not found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;The selected product is not available.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422, Validation errors):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;errors&quot;: [
+        &quot;Please select a product to add to cart.&quot;,
+        &quot;Quantity must be at least 1.&quot;,
+        &quot;The selected product variant does not belong to the specified product.&quot;
+    ]
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-cart-items" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-cart-items"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-cart-items"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-cart-items" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-cart-items">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-cart-items" data-method="POST"
+      data-path="api/cart/items"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-cart-items', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-cart-items"
+                    onclick="tryItOut('POSTapi-cart-items');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-cart-items"
+                    onclick="cancelTryOut('POSTapi-cart-items');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-cart-items"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/cart/items</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-cart-items"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-cart-items"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>product_id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="product_id"                data-endpoint="POSTapi-cart-items"
+               value="15"
+               data-component="body">
+    <br>
+<p>The ID of the product to add to cart. Example: <code>15</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>product_variant_id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="product_variant_id"                data-endpoint="POSTapi-cart-items"
+               value="24"
+               data-component="body">
+    <br>
+<p>optional The ID of the product variant (for products with variants like color, size). Example: <code>24</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>quantity</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="quantity"                data-endpoint="POSTapi-cart-items"
+               value="2"
+               data-component="body">
+    <br>
+<p>The quantity to add to cart (1-999). Example: <code>2</code></p>
+        </div>
+        </form>
+
+                    <h2 id="shopping-cart-PUTapi-cart-items--cartItem-">Update cart item quantity</h2>
+
+<p>
+</p>
+
+<p>Update the quantity of a specific item in the cart. Setting quantity to 0 will remove
+the item from the cart. Validates stock availability and updates pricing to current
+product price if it has changed since adding to cart.</p>
+
+<span id="example-requests-PUTapi-cart-items--cartItem-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request PUT \
+    "http://marketplace.com/api/cart/items/45" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"quantity\": 3
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://marketplace.com/api/cart/items/45"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "quantity": 3
+};
+
+fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://marketplace.com/api/cart/items/45';
+$response = $client-&gt;put(
+    $url,
+    [
+        'headers' =&gt; [
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'quantity' =&gt; 3,
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'http://marketplace.com/api/cart/items/45'
+payload = {
+    "quantity": 3
+}
+headers = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('PUT', url, headers=headers, json=payload)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-PUTapi-cart-items--cartItem-">
+            <blockquote>
+            <p>Example response (200, Cart item updated successfully):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Cart updated successfully.&quot;,
+    &quot;data&quot;: {
+        &quot;id&quot;: 12,
+        &quot;user_id&quot;: 123,
+        &quot;total_amount&quot;: 23997,
+        &quot;total_amount_formatted&quot;: &quot;&pound;239.97&quot;,
+        &quot;total_items_count&quot;: 3,
+        &quot;expires_at&quot;: &quot;2025-02-15T10:30:00.000000Z&quot;,
+        &quot;is_expired&quot;: false,
+        &quot;is_empty&quot;: false,
+        &quot;items&quot;: [
+            {
+                &quot;id&quot;: 45,
+                &quot;product_id&quot;: 15,
+                &quot;product_variant_id&quot;: 24,
+                &quot;quantity&quot;: 3,
+                &quot;price_snapshot&quot;: 7999,
+                &quot;price_formatted&quot;: &quot;&pound;79.99&quot;,
+                &quot;line_total&quot;: 23997,
+                &quot;line_total_formatted&quot;: &quot;&pound;239.97&quot;,
+                &quot;current_price&quot;: 7999,
+                &quot;has_price_changed&quot;: false,
+                &quot;is_available&quot;: true,
+                &quot;available_stock&quot;: 17
+            }
+        ]
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (200, Item removed (quantity set to 0)):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Cart updated successfully.&quot;,
+    &quot;data&quot;: {
+        &quot;id&quot;: 12,
+        &quot;total_amount&quot;: 0,
+        &quot;total_amount_formatted&quot;: &quot;&pound;0.00&quot;,
+        &quot;total_items_count&quot;: 0,
+        &quot;is_empty&quot;: true,
+        &quot;items&quot;: []
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (400, Insufficient stock):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Insufficient stock. Only 2 items available.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Cart item not found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;No query results for model [App\\Models\\CartItem] 999&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422, Validation errors):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;errors&quot;: [
+        &quot;Please specify the quantity.&quot;,
+        &quot;Cannot have more than 999 items of the same product.&quot;
+    ]
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-PUTapi-cart-items--cartItem-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-PUTapi-cart-items--cartItem-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-PUTapi-cart-items--cartItem-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-PUTapi-cart-items--cartItem-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PUTapi-cart-items--cartItem-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-PUTapi-cart-items--cartItem-" data-method="PUT"
+      data-path="api/cart/items/{cartItem}"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('PUTapi-cart-items--cartItem-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-PUTapi-cart-items--cartItem-"
+                    onclick="tryItOut('PUTapi-cart-items--cartItem-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-PUTapi-cart-items--cartItem-"
+                    onclick="cancelTryOut('PUTapi-cart-items--cartItem-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-PUTapi-cart-items--cartItem-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-darkblue">PUT</small>
+            <b><code>api/cart/items/{cartItem}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PUTapi-cart-items--cartItem-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="PUTapi-cart-items--cartItem-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>cartItem</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="cartItem"                data-endpoint="PUTapi-cart-items--cartItem-"
+               value="45"
+               data-component="url">
+    <br>
+<p>The ID of the cart item to update. Example: <code>45</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>quantity</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="quantity"                data-endpoint="PUTapi-cart-items--cartItem-"
+               value="3"
+               data-component="body">
+    <br>
+<p>The new quantity for the cart item (0 to remove). Example: <code>3</code></p>
+        </div>
+        </form>
+
+                    <h2 id="shopping-cart-DELETEapi-cart-items--cartItem-">Remove item from cart</h2>
+
+<p>
+</p>
+
+<p>Remove a specific item completely from the shopping cart. This action cannot be undone.
+The cart totals and item count will be automatically recalculated.</p>
+
+<span id="example-requests-DELETEapi-cart-items--cartItem-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request DELETE \
+    "http://marketplace.com/api/cart/items/45" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://marketplace.com/api/cart/items/45"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "DELETE",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://marketplace.com/api/cart/items/45';
+$response = $client-&gt;delete(
+    $url,
+    [
+        'headers' =&gt; [
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'http://marketplace.com/api/cart/items/45'
+headers = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('DELETE', url, headers=headers)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-DELETEapi-cart-items--cartItem-">
+            <blockquote>
+            <p>Example response (200, Item removed successfully):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Item removed from cart successfully.&quot;,
+    &quot;data&quot;: {
+        &quot;id&quot;: 12,
+        &quot;user_id&quot;: 123,
+        &quot;total_amount&quot;: 7999,
+        &quot;total_amount_formatted&quot;: &quot;&pound;79.99&quot;,
+        &quot;total_items_count&quot;: 1,
+        &quot;expires_at&quot;: &quot;2025-02-15T10:30:00.000000Z&quot;,
+        &quot;is_expired&quot;: false,
+        &quot;is_empty&quot;: false,
+        &quot;items&quot;: [
+            {
+                &quot;id&quot;: 46,
+                &quot;product_id&quot;: 22,
+                &quot;quantity&quot;: 1,
+                &quot;line_total&quot;: 7999,
+                &quot;line_total_formatted&quot;: &quot;&pound;79.99&quot;
+            }
+        ]
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Cart item not found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;No query results for model [App\\Models\\CartItem] 999&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-DELETEapi-cart-items--cartItem-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-DELETEapi-cart-items--cartItem-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-DELETEapi-cart-items--cartItem-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-DELETEapi-cart-items--cartItem-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-DELETEapi-cart-items--cartItem-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-DELETEapi-cart-items--cartItem-" data-method="DELETE"
+      data-path="api/cart/items/{cartItem}"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('DELETEapi-cart-items--cartItem-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-DELETEapi-cart-items--cartItem-"
+                    onclick="tryItOut('DELETEapi-cart-items--cartItem-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-DELETEapi-cart-items--cartItem-"
+                    onclick="cancelTryOut('DELETEapi-cart-items--cartItem-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-DELETEapi-cart-items--cartItem-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-red">DELETE</small>
+            <b><code>api/cart/items/{cartItem}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="DELETEapi-cart-items--cartItem-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="DELETEapi-cart-items--cartItem-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>cartItem</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="cartItem"                data-endpoint="DELETEapi-cart-items--cartItem-"
+               value="45"
+               data-component="url">
+    <br>
+<p>The ID of the cart item to remove. Example: <code>45</code></p>
+            </div>
+                    </form>
+
+                    <h2 id="shopping-cart-DELETEapi-cart-clear">Clear entire cart</h2>
+
+<p>
+</p>
+
+<p>Remove all items from the shopping cart. This action cannot be undone and will result
+in an empty cart. Useful for starting over or clearing expired/unavailable items.</p>
+
+<span id="example-requests-DELETEapi-cart-clear">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request DELETE \
+    "http://marketplace.com/api/cart/clear" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://marketplace.com/api/cart/clear"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "DELETE",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://marketplace.com/api/cart/clear';
+$response = $client-&gt;delete(
+    $url,
+    [
+        'headers' =&gt; [
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'http://marketplace.com/api/cart/clear'
+headers = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('DELETE', url, headers=headers)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-DELETEapi-cart-clear">
+            <blockquote>
+            <p>Example response (200, Cart cleared successfully):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Cart cleared successfully.&quot;,
+    &quot;data&quot;: {
+        &quot;id&quot;: 12,
+        &quot;user_id&quot;: 123,
+        &quot;total_amount&quot;: 0,
+        &quot;total_amount_formatted&quot;: &quot;&pound;0.00&quot;,
+        &quot;total_items_count&quot;: 0,
+        &quot;expires_at&quot;: &quot;2025-02-15T10:30:00.000000Z&quot;,
+        &quot;is_expired&quot;: false,
+        &quot;is_empty&quot;: true,
+        &quot;items&quot;: [],
+        &quot;created_at&quot;: &quot;2025-01-16T14:30:00.000000Z&quot;,
+        &quot;updated_at&quot;: &quot;2025-01-16T14:45:00.000000Z&quot;
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-DELETEapi-cart-clear" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-DELETEapi-cart-clear"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-DELETEapi-cart-clear"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-DELETEapi-cart-clear" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-DELETEapi-cart-clear">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-DELETEapi-cart-clear" data-method="DELETE"
+      data-path="api/cart/clear"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('DELETEapi-cart-clear', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-DELETEapi-cart-clear"
+                    onclick="tryItOut('DELETEapi-cart-clear');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-DELETEapi-cart-clear"
+                    onclick="cancelTryOut('DELETEapi-cart-clear');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-DELETEapi-cart-clear"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-red">DELETE</small>
+            <b><code>api/cart/clear</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="DELETEapi-cart-clear"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="DELETEapi-cart-clear"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        </form>
+
+                    <h2 id="shopping-cart-POSTapi-cart-sync-prices">Synchronize cart prices</h2>
+
+<p>
+</p>
+
+<p>Update all cart item prices to match current product prices. This is useful when
+product prices have changed since items were added to the cart. Returns information
+about which items had price changes.</p>
+
+<span id="example-requests-POSTapi-cart-sync-prices">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://marketplace.com/api/cart/sync-prices" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://marketplace.com/api/cart/sync-prices"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://marketplace.com/api/cart/sync-prices';
+$response = $client-&gt;post(
+    $url,
+    [
+        'headers' =&gt; [
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'http://marketplace.com/api/cart/sync-prices'
+headers = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('POST', url, headers=headers)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-cart-sync-prices">
+            <blockquote>
+            <p>Example response (200, Prices synchronized successfully):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Cart prices synchronized. 2 items updated.&quot;,
+    &quot;data&quot;: {
+        &quot;id&quot;: 12,
+        &quot;user_id&quot;: 123,
+        &quot;total_amount&quot;: 17998,
+        &quot;total_amount_formatted&quot;: &quot;&pound;179.98&quot;,
+        &quot;total_items_count&quot;: 2,
+        &quot;items&quot;: [
+            {
+                &quot;id&quot;: 45,
+                &quot;product_id&quot;: 15,
+                &quot;quantity&quot;: 2,
+                &quot;price_snapshot&quot;: 8999,
+                &quot;price_formatted&quot;: &quot;&pound;89.99&quot;,
+                &quot;line_total&quot;: 17998,
+                &quot;line_total_formatted&quot;: &quot;&pound;179.98&quot;,
+                &quot;current_price&quot;: 8999,
+                &quot;has_price_changed&quot;: false,
+                &quot;price_change&quot;: 1000
+            }
+        ]
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (200, No price changes):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Cart prices synchronized. 0 items updated.&quot;,
+    &quot;data&quot;: {
+        &quot;id&quot;: 12,
+        &quot;total_amount&quot;: 15998,
+        &quot;total_amount_formatted&quot;: &quot;&pound;159.98&quot;,
+        &quot;items&quot;: []
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-cart-sync-prices" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-cart-sync-prices"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-cart-sync-prices"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-cart-sync-prices" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-cart-sync-prices">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-cart-sync-prices" data-method="POST"
+      data-path="api/cart/sync-prices"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-cart-sync-prices', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-cart-sync-prices"
+                    onclick="tryItOut('POSTapi-cart-sync-prices');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-cart-sync-prices"
+                    onclick="cancelTryOut('POSTapi-cart-sync-prices');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-cart-sync-prices"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/cart/sync-prices</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-cart-sync-prices"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-cart-sync-prices"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        </form>
+
                 <h1 id="user-orders">User Orders</h1>
 
     
@@ -25917,7 +27245,7 @@ fields will be updated, others remain unchanged. Logo uploads are processed secu
     --form "user_id=45"\
     --form "name=TechCraft Solutions Ltd"\
     --form "description=Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud migration services, and digital transformation consulting with over 10 years of industry experience."\
-    --form "logo=@/tmp/phpdJjKaF" </code></pre></div>
+    --form "logo=@/tmp/phpXFydE9" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -25970,7 +27298,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'logo',
-                'contents' =&gt; fopen('/tmp/phpdJjKaF', 'r')
+                'contents' =&gt; fopen('/tmp/phpXFydE9', 'r')
             ],
         ],
     ]
@@ -25988,7 +27316,7 @@ files = {
   'user_id': (None, '45'),
   'name': (None, 'TechCraft Solutions Ltd'),
   'description': (None, 'Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud migration services, and digital transformation consulting with over 10 years of industry experience.'),
-  'logo': open('/tmp/phpdJjKaF', 'rb')}
+  'logo': open('/tmp/phpXFydE9', 'rb')}
 payload = {
     "user_id": 45,
     "name": "TechCraft Solutions Ltd",
@@ -26300,7 +27628,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional New logo file for the vendor. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will replace existing logo if provided. Example: <code>/tmp/phpdJjKaF</code></p>
+<p>optional New logo file for the vendor. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will replace existing logo if provided. Example: <code>/tmp/phpXFydE9</code></p>
         </div>
         </form>
 

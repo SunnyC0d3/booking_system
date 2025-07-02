@@ -27,4 +27,28 @@ class ProductVariant extends Model
     {
         return $this->belongsTo(ProductAttribute::class);
     }
+
+    public function getAdditionalPriceFormattedAttribute(): ?string
+    {
+        if (!$this->additional_price || $this->additional_price <= 0) {
+            return null;
+        }
+
+        return '£' . number_format($this->additional_price / 100, 2);
+    }
+
+    public function isInStock(int $quantity = 1): bool
+    {
+        return $this->quantity >= $quantity;
+    }
+
+    public function getTotalPrice(): int
+    {
+        return $this->product->price + ($this->additional_price ?? 0);
+    }
+
+    public function getTotalPriceFormattedAttribute(): string
+    {
+        return '£' . number_format($this->getTotalPrice() / 100, 2);
+    }
 }

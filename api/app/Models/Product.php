@@ -62,4 +62,39 @@ class Product extends Model implements HasMedia
         $mediaService = app(SecureMedia::class);
         return $mediaService->addSecureMedia($this, $file, $collection);
     }
+
+    public function getPriceFormattedAttribute(): string
+    {
+        return '£' . number_format($this->price / 100, 2);
+    }
+
+    public function isAvailable(): bool
+    {
+        return $this->productStatus && $this->productStatus->name === 'Active' && $this->quantity > 0;
+    }
+
+    public function getFeaturedImageAttribute(): ?string
+    {
+        $media = $this->getFirstMedia('featured_image');
+        return $media ? $media->getUrl() : null;
+    }
+
+    public function isInStock(int $quantity = 1): bool
+    {
+        return $this->quantity >= $quantity;
+    }
+
+    public function getEffectivePrice(?int $variantId = null): int
+    {
+        $price = $this->price;
+
+        if ($variantId) {
+            $variant = $this->variants()->find($variantId);
+            if ($variant && $variant->additional_price) {
+                $price += $variant->additional_price;
+            }
+        }
+
+        return $price;
+    }
 }

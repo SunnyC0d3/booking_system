@@ -29,4 +29,22 @@ return [
         'products' => '30,1',       // 30 product views per minute
         'public' => '20,1',         // 20 public requests per minute
     ],
+
+    'cart' => [
+        'attempts' => 120, // 120 requests per minute for cart operations
+        'decay_minutes' => 1,
+        'message' => 'Too many cart requests. Please slow down.',
+    ],
+
+    'cart.add' => [
+        'attempts' => 30, // 30 add-to-cart requests per minute
+        'decay_minutes' => 1,
+        'message' => 'Too many items added to cart. Please wait a moment.',
+    ],
+
+    'cart.update' => [
+        'attempts' => 60, // 60 update requests per minute
+        'decay_minutes' => 1,
+        'message' => 'Too many cart updates. Please wait a moment.',
+    ],
 ];
