@@ -15,17 +15,18 @@ class RolePermissionSeeder extends Seeder
             'Super Admin' => '*',
 
             'Admin' => [
-                // User Management
-                'view_users', 'create_users', 'edit_users',
+                // User Management - Full Access
+                'view_all_users', 'create_all_users', 'edit_all_users', 'delete_all_users', 'restore_users', 'force_delete_users',
 
                 // Role & Permission Management
-                'view_roles', 'view_permissions',
+                'view_roles', 'create_roles', 'edit_roles', 'delete_roles',
+                'view_permissions', 'create_permissions', 'edit_permissions', 'delete_permissions',
 
-                // Vendor Management
-                'view_vendors', 'create_vendors', 'edit_vendors',
+                // Vendor Management - Full Access
+                'view_all_vendors', 'create_vendors_for_users', 'edit_all_vendors', 'delete_all_vendors', 'restore_vendors', 'force_delete_vendors',
 
                 // Product Management
-                'view_products', 'create_products', 'edit_products', 'delete_products',
+                'view_products', 'create_products', 'edit_products', 'delete_products', 'restore_products', 'force_delete_products',
                 'view_product_attributes', 'create_product_attributes', 'edit_product_attributes', 'delete_product_attributes',
                 'view_product_categories', 'create_product_categories', 'edit_product_categories', 'delete_product_categories',
                 'view_product_tags', 'create_product_tags', 'edit_product_tags', 'delete_product_tags',
@@ -46,8 +47,11 @@ class RolePermissionSeeder extends Seeder
             ],
 
             'Vendor Manager' => [
-                // Vendor Management
-                'view_vendors', 'create_vendors', 'edit_vendors',
+                // User Management - Limited
+                'view_all_users',
+
+                // Vendor Management - Full Access
+                'view_all_vendors', 'create_vendors_for_users', 'edit_all_vendors', 'delete_all_vendors',
 
                 // Product Management
                 'view_products', 'edit_products',
@@ -60,6 +64,13 @@ class RolePermissionSeeder extends Seeder
             ],
 
             'Vendor' => [
+                // User Management - Own Profile Only
+                'view_own_profile', 'edit_own_profile',
+
+                // Vendor Management - Own Vendor Only
+                'view_own_vendor', 'create_own_vendor', 'edit_own_vendor', 'delete_own_vendor',
+                'view_vendors_public', // Can view other vendors publicly
+
                 // Product Management (Own Products)
                 'view_products', 'create_products', 'edit_products', 'delete_products',
 
@@ -71,6 +82,12 @@ class RolePermissionSeeder extends Seeder
             ],
 
             'Customer Service' => [
+                // User Management - View Only
+                'view_all_users',
+
+                // Vendor Management - View Only
+                'view_all_vendors',
+
                 // Customer Support
                 'view_customer_data',
                 'manage_refunds',
@@ -84,6 +101,12 @@ class RolePermissionSeeder extends Seeder
             ],
 
             'Content Manager' => [
+                // User Management - View Only
+                'view_all_users',
+
+                // Vendor Management - View Only
+                'view_all_vendors',
+
                 // Product Content Management
                 'view_products', 'create_products', 'edit_products',
                 'view_product_attributes', 'create_product_attributes', 'edit_product_attributes',
@@ -96,6 +119,13 @@ class RolePermissionSeeder extends Seeder
             ],
 
             'User' => [
+                // User Management - Own Profile Only
+                'view_own_profile', 'edit_own_profile', 'delete_own_account',
+                'create_user_account', // For self-registration
+
+                // Vendor Management - Public View and Own Vendor
+                'view_vendors_public', 'view_own_vendor', 'create_own_vendor', 'edit_own_vendor', 'delete_own_vendor',
+
                 // Basic Customer Permissions
                 'view_products',
                 'view_product_categories',
@@ -105,9 +135,13 @@ class RolePermissionSeeder extends Seeder
             ],
 
             'Guest' => [
+                // User Registration
+                'create_user_account',
+
                 // Browse Only
                 'view_products',
                 'view_product_categories',
+                'view_vendors_public',
             ],
         ];
 
@@ -118,7 +152,6 @@ class RolePermissionSeeder extends Seeder
         foreach ($rolePermissions as $roleName => $rolePerms) {
             $roleId = $roles[$roleName]->id;
 
-            // If role should have all permissions
             if ($rolePerms === '*') {
                 foreach ($permissions as $permission) {
                     $rolePermissionsToInsert[] = [
@@ -130,7 +163,6 @@ class RolePermissionSeeder extends Seeder
                 continue;
             }
 
-            // Specific permissions for role
             foreach ($rolePerms as $permName) {
                 $permission = $permissions->firstWhere('name', $permName);
                 if ($permission) {

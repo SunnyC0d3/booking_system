@@ -10,11 +10,19 @@ class PermissionSeeder extends Seeder
     public function run(): void
     {
         $permissions = [
-            // User Management
-            ['name' => 'view_users'],
-            ['name' => 'create_users'],
-            ['name' => 'edit_users'],
-            ['name' => 'delete_users'],
+            // User Management - Admin Level
+            ['name' => 'view_all_users'],
+            ['name' => 'create_all_users'],
+            ['name' => 'edit_all_users'],
+            ['name' => 'delete_all_users'],
+            ['name' => 'restore_users'],
+            ['name' => 'force_delete_users'],
+
+            // User Management - User Level
+            ['name' => 'view_own_profile'],
+            ['name' => 'edit_own_profile'],
+            ['name' => 'delete_own_account'],
+            ['name' => 'create_user_account'], // For user registration
 
             // Role Management
             ['name' => 'view_roles'],
@@ -28,11 +36,22 @@ class PermissionSeeder extends Seeder
             ['name' => 'edit_permissions'],
             ['name' => 'delete_permissions'],
 
-            // Vendor Management
-            ['name' => 'view_vendors'],
-            ['name' => 'create_vendors'],
-            ['name' => 'edit_vendors'],
-            ['name' => 'delete_vendors'],
+            // Vendor Management - Admin Level
+            ['name' => 'view_all_vendors'],
+            ['name' => 'create_vendors_for_users'],
+            ['name' => 'edit_all_vendors'],
+            ['name' => 'delete_all_vendors'],
+            ['name' => 'restore_vendors'],
+            ['name' => 'force_delete_vendors'],
+
+            // Vendor Management - Vendor Level
+            ['name' => 'view_own_vendor'],
+            ['name' => 'create_own_vendor'],
+            ['name' => 'edit_own_vendor'],
+            ['name' => 'delete_own_vendor'],
+
+            // Vendor Management - Public Level
+            ['name' => 'view_vendors_public'],
 
             // Product Management
             ['name' => 'view_products'],
