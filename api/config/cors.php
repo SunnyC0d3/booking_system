@@ -1,19 +1,22 @@
 <?php
 
 return [
-    'paths' => ['web/*', 'api/*', 'oauth/*'],
+    'paths' => ['api/v1/*', 'oauth/token', 'oauth/authorize'],
 
-    'allowed_methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    'allowed_methods' => ['GET', 'POST', 'OPTIONS'],
 
-    'allowed_origins' => [env('APP_URL')],
+    'allowed_origins' => [
+        env('APP_URL'),
+        env('FRONTEND_URL'),
+    ],
 
     'allowed_origins_patterns' => [],
 
     'allowed_headers' => ['Content-Type', 'Authorization', 'X-Requested-With'],
 
-    'exposed_headers' => ['Authorization', 'X-Custom-Header', 'Content-Type'],
+    'exposed_headers' => [],
 
     'max_age' => 86400,
 
-    'supports_credentials' => true,
+    'supports_credentials' => false,
 ];
