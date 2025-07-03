@@ -38,7 +38,7 @@ final class UserAuth
 
     public function register(Request $request)
     {
-        $data = $this->validateRequest($request, ['name', 'email', 'password', 'password_confirmation']);
+        $data = $request->validated();
 
         $user = $this->findUserByEmailIfExists($data['email']);
         $this->checkAccountLockForAction($user, $request, 'registration');
@@ -57,7 +57,7 @@ final class UserAuth
 
     public function login(Request $request)
     {
-        $data = $this->validateRequest($request, ['email', 'password', 'remember']);
+        $data = $request->validated();
 
         $user = $this->findUserByEmailOrFail($data['email'], $request);
         $this->checkAccountLockForAction($user, $request, 'login');
@@ -90,7 +90,8 @@ final class UserAuth
 
     public function changePassword(Request $request)
     {
-        $user = $this->getAuthenticatedUser();
+        $user = auth()->user();
+
         $this->validateCurrentPassword($user, $request->current_password, $request);
         $this->validatePasswordStrength($request->new_password, $request, 'password_change', $user);
 
@@ -105,7 +106,7 @@ final class UserAuth
 
     public function forgotPassword(Request $request)
     {
-        $data = $this->validateRequest($request, ['email']);
+        $data = $request->validated();
 
         $user = $this->findUserByEmailIfExists($data['email']);
         $this->checkAccountLockForAction($user, $request, 'password_reset');
@@ -118,7 +119,7 @@ final class UserAuth
 
     public function passwordReset(Request $request)
     {
-        $data = $this->validateRequest($request, ['token', 'email', 'password', 'password_confirmation']);
+        $data = $request->validated();
 
         $user = $this->findUserByEmailIfExists($data['email']);
         if ($user) {
@@ -154,7 +155,7 @@ final class UserAuth
 
     public function getSecurityInfo(Request $request)
     {
-        $user = $this->getAuthenticatedUser();
+        $user = auth()->user();
 
         return $this->buildSuccessResponse('Security information retrieved', [
             'account_lock' => $this->accountLock->getAccountLockInfo($user),
@@ -162,11 +163,6 @@ final class UserAuth
             'password_expiry' => $this->getPasswordExpiryInfo($user),
             'login_history' => $this->getLoginHistoryInfo($user),
         ]);
-    }
-
-    private function validateRequest(Request $request, array $fields): array
-    {
-        return $request->validated($request->only($fields));
     }
 
     private function findUserByEmailIfExists(string $email): ?User
@@ -344,11 +340,6 @@ final class UserAuth
         $tokenRepository = app(TokenRepository::class);
         $tokenRepository->revokeAccessToken($tokenId);
         Token::where('id', $tokenId)->delete();
-    }
-
-    private function getAuthenticatedUser(): User
-    {
-        return auth()->user();
     }
 
     private function getAuthenticatedUserOrFail(Request $request): User
