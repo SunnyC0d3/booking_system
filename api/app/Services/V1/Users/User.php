@@ -2,6 +2,7 @@
 
 namespace App\Services\V1\Users;
 
+use App\Models\Role;
 use App\Models\User as DB;
 use App\Resources\V1\UserResource;
 use Illuminate\Http\Request;
@@ -93,7 +94,7 @@ class User
         if ($user->hasPermission('create_user_account')) {
             $data = $request->validated();
 
-            $defaultUserRoleId = 7;
+            $defaultUserRoleId = Role::where('name', 'User')->first()->id;
 
             if (isset($data['role_id']) && $data['role_id'] != $defaultUserRoleId) {
                 return $this->error('You cannot assign roles during registration.', 403);
