@@ -565,7 +565,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: July 2, 2025</li>
+        <li>Last updated: July 7, 2025</li>
     </ul>
 </div>
 
@@ -2323,7 +2323,16 @@ response.json()</code></pre></div>
 }</code>
  </pre>
             <blockquote>
-            <p>Example response (403):</p>
+            <p>Example response (404, User not found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;No query results for model [App\\Models\\User] 123&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (500):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -2337,43 +2346,75 @@ x-xss-protection: 1; mode=block
 content-security-policy: default-src &#039;none&#039;; frame-ancestors &#039;none&#039;;
 referrer-policy: strict-origin-when-cross-origin
 permissions-policy: camera=(), microphone=(), geolocation=(), payment=()
-access-control-allow-origin: http://marketplace.com
-access-control-allow-credentials: true
-access-control-expose-headers: Authorization, X-Custom-Header, Content-Type
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Invalid signature.&quot;,
-    &quot;exception&quot;: &quot;Illuminate\\Routing\\Exceptions\\InvalidSignatureException&quot;,
-    &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ValidateSignature.php&quot;,
-    &quot;line&quot;: 73,
+    &quot;message&quot;: &quot;The stream or file \&quot;/var/www/ecommerce_api/api/storage/logs/security/suspicious-2025-07-07.log\&quot; could not be opened in append mode: chmod(): No such file or directory\nThe exception occurred while attempting to log: Permission Denied\nContext: {\&quot;method\&quot;:\&quot;GET\&quot;,\&quot;endpoint\&quot;:\&quot;api\\/email\\/verify\\/architecto\\/abc123def456ghi789\&quot;,\&quot;status_code\&quot;:403,\&quot;ip\&quot;:\&quot;127.0.0.1\&quot;,\&quot;user_agent\&quot;:\&quot;Symfony\&quot;,\&quot;user_id\&quot;:null,\&quot;user_email\&quot;:null,\&quot;user_role\&quot;:null,\&quot;response_time_ms\&quot;:9.65,\&quot;timestamp\&quot;:\&quot;2025-07-07T18:07:24.292141Z\&quot;}&quot;,
+    &quot;exception&quot;: &quot;UnexpectedValueException&quot;,
+    &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php&quot;,
+    &quot;line&quot;: 156,
     &quot;trace&quot;: [
         {
-            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php&quot;,
-            &quot;line&quot;: 209,
-            &quot;function&quot;: &quot;handle&quot;,
-            &quot;class&quot;: &quot;Illuminate\\Routing\\Middleware\\ValidateSignature&quot;,
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Handler/RotatingFileHandler.php&quot;,
+            &quot;line&quot;: 110,
+            &quot;function&quot;: &quot;write&quot;,
+            &quot;class&quot;: &quot;Monolog\\Handler\\StreamHandler&quot;,
             &quot;type&quot;: &quot;-&gt;&quot;
         },
         {
-            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityMonitoring.php&quot;,
-            &quot;line&quot;: 27,
-            &quot;function&quot;: &quot;Illuminate\\Pipeline\\{closure}&quot;,
-            &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Handler/AbstractProcessingHandler.php&quot;,
+            &quot;line&quot;: 44,
+            &quot;function&quot;: &quot;write&quot;,
+            &quot;class&quot;: &quot;Monolog\\Handler\\RotatingFileHandler&quot;,
             &quot;type&quot;: &quot;-&gt;&quot;
         },
         {
-            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php&quot;,
-            &quot;line&quot;: 209,
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Logger.php&quot;,
+            &quot;line&quot;: 391,
             &quot;function&quot;: &quot;handle&quot;,
-            &quot;class&quot;: &quot;App\\Http\\Middleware\\V1\\SecurityMonitoring&quot;,
+            &quot;class&quot;: &quot;Monolog\\Handler\\AbstractProcessingHandler&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Logger.php&quot;,
+            &quot;line&quot;: 607,
+            &quot;function&quot;: &quot;addRecord&quot;,
+            &quot;class&quot;: &quot;Monolog\\Logger&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Log/Logger.php&quot;,
+            &quot;line&quot;: 184,
+            &quot;function&quot;: &quot;info&quot;,
+            &quot;class&quot;: &quot;Monolog\\Logger&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Log/Logger.php&quot;,
+            &quot;line&quot;: 133,
+            &quot;function&quot;: &quot;writeLog&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Log\\Logger&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/app/Services/V1/Logger/SecurityLog.php&quot;,
+            &quot;line&quot;: 137,
+            &quot;function&quot;: &quot;info&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Log\\Logger&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/app/Services/V1/Logger/SecurityLog.php&quot;,
+            &quot;line&quot;: 55,
+            &quot;function&quot;: &quot;detectSuspiciousApiPatterns&quot;,
+            &quot;class&quot;: &quot;App\\Services\\V1\\Logger\\SecurityLog&quot;,
             &quot;type&quot;: &quot;-&gt;&quot;
         },
         {
             &quot;file&quot;: &quot;/var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityLogger.php&quot;,
-            &quot;line&quot;: 23,
-            &quot;function&quot;: &quot;Illuminate\\Pipeline\\{closure}&quot;,
-            &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
+            &quot;line&quot;: 27,
+            &quot;function&quot;: &quot;logApiAccess&quot;,
+            &quot;class&quot;: &quot;App\\Services\\V1\\Logger\\SecurityLog&quot;,
             &quot;type&quot;: &quot;-&gt;&quot;
         },
         {
@@ -2532,7 +2573,7 @@ access-control-expose-headers: Authorization, X-Custom-Header, Content-Type
         },
         {
             &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php&quot;,
-            &quot;line&quot;: 62,
+            &quot;line&quot;: 49,
             &quot;function&quot;: &quot;Illuminate\\Pipeline\\{closure}&quot;,
             &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
             &quot;type&quot;: &quot;-&gt;&quot;
@@ -2776,15 +2817,6 @@ access-control-expose-headers: Authorization, X-Custom-Header, Content-Type
             &quot;type&quot;: &quot;-&gt;&quot;
         }
     ]
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (404, User not found):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;No query results for model [App\\Models\\User] 123&quot;
 }</code>
  </pre>
     </span>
@@ -3821,7 +3853,7 @@ administrative oversight purposes.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://marketplace.com/api/admin/users/1" \
+    --get "http://marketplace.com/api/admin/users/76" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -3829,7 +3861,7 @@ administrative oversight purposes.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/users/1"
+    "http://marketplace.com/api/admin/users/76"
 );
 
 const headers = {
@@ -3846,7 +3878,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/users/1';
+$url = 'http://marketplace.com/api/admin/users/76';
 $response = $client-&gt;get(
     $url,
     [
@@ -3865,7 +3897,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/users/1'
+url = 'http://marketplace.com/api/admin/users/76'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -4053,10 +4085,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="GETapi-admin-users--id-"
-               value="1"
+               value="76"
                data-component="url">
     <br>
-<p>The ID of the user. Example: <code>1</code></p>
+<p>The ID of the user. Example: <code>76</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>user</code></b>&nbsp;&nbsp;
@@ -4511,7 +4543,7 @@ password resets for customer service and account management purposes.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://marketplace.com/api/admin/users/1" \
+    "http://marketplace.com/api/admin/users/76" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -4534,7 +4566,7 @@ password resets for customer service and account management purposes.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/users/1"
+    "http://marketplace.com/api/admin/users/76"
 );
 
 const headers = {
@@ -4567,7 +4599,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/users/1';
+$url = 'http://marketplace.com/api/admin/users/76';
 $response = $client-&gt;post(
     $url,
     [
@@ -4600,7 +4632,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/users/1'
+url = 'http://marketplace.com/api/admin/users/76'
 payload = {
     "name": "Sarah Jane Johnson-Smith",
     "email": "sarah.johnson.new@example.com",
@@ -4833,10 +4865,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="POSTapi-admin-users--id-"
-               value="1"
+               value="76"
                data-component="url">
     <br>
-<p>The ID of the user. Example: <code>1</code></p>
+<p>The ID of the user. Example: <code>76</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>user</code></b>&nbsp;&nbsp;
@@ -4992,7 +5024,7 @@ and other related records may be affected. Ensure this action is intentional and
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://marketplace.com/api/admin/users/1" \
+    "http://marketplace.com/api/admin/users/76" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -5000,7 +5032,7 @@ and other related records may be affected. Ensure this action is intentional and
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/users/1"
+    "http://marketplace.com/api/admin/users/76"
 );
 
 const headers = {
@@ -5017,7 +5049,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/users/1';
+$url = 'http://marketplace.com/api/admin/users/76';
 $response = $client-&gt;delete(
     $url,
     [
@@ -5036,7 +5068,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/users/1'
+url = 'http://marketplace.com/api/admin/users/76'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -5200,10 +5232,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="DELETEapi-admin-users--id-"
-               value="1"
+               value="76"
                data-component="url">
     <br>
-<p>The ID of the user. Example: <code>1</code></p>
+<p>The ID of the user. Example: <code>76</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>user</code></b>&nbsp;&nbsp;
@@ -5998,7 +6030,7 @@ and managing their marketplace presence. Supports secure logo upload with compre
     --form "user_id=45"\
     --form "name=TechCraft Solutions Ltd"\
     --form "description=Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud services, and digital transformation consulting."\
-    --form "logo=@/tmp/phpBh9WH4" </code></pre></div>
+    --form "logo=@/tmp/phpqibmMt" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6051,7 +6083,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'logo',
-                'contents' =&gt; fopen('/tmp/phpBh9WH4', 'r')
+                'contents' =&gt; fopen('/tmp/phpqibmMt', 'r')
             ],
         ],
     ]
@@ -6069,7 +6101,7 @@ files = {
   'user_id': (None, '45'),
   'name': (None, 'TechCraft Solutions Ltd'),
   'description': (None, 'Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud services, and digital transformation consulting.'),
-  'logo': open('/tmp/phpBh9WH4', 'rb')}
+  'logo': open('/tmp/phpqibmMt', 'rb')}
 payload = {
     "user_id": 45,
     "name": "TechCraft Solutions Ltd",
@@ -6338,7 +6370,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional Business logo file. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Recommended dimensions: 200x200px minimum. Example: <code>/tmp/phpBh9WH4</code></p>
+<p>optional Business logo file. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Recommended dimensions: 200x200px minimum. Example: <code>/tmp/phpqibmMt</code></p>
         </div>
         </form>
 
@@ -6367,7 +6399,7 @@ replacement with comprehensive validation.</p>
     --form "user_id=67"\
     --form "name=TechCraft Solutions International Ltd"\
     --form "description=Global leader in innovative technology solutions. We specialize in enterprise software development, cloud migration services, AI integration, and digital transformation consulting with over 15 years of proven industry experience."\
-    --form "logo=@/tmp/phpTwN9AD" </code></pre></div>
+    --form "logo=@/tmp/phplPQkW2" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6420,7 +6452,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'logo',
-                'contents' =&gt; fopen('/tmp/phpTwN9AD', 'r')
+                'contents' =&gt; fopen('/tmp/phplPQkW2', 'r')
             ],
         ],
     ]
@@ -6438,7 +6470,7 @@ files = {
   'user_id': (None, '67'),
   'name': (None, 'TechCraft Solutions International Ltd'),
   'description': (None, 'Global leader in innovative technology solutions. We specialize in enterprise software development, cloud migration services, AI integration, and digital transformation consulting with over 15 years of proven industry experience.'),
-  'logo': open('/tmp/phpTwN9AD', 'rb')}
+  'logo': open('/tmp/phplPQkW2', 'rb')}
 payload = {
     "user_id": 67,
     "name": "TechCraft Solutions International Ltd",
@@ -6754,7 +6786,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional New logo file to replace existing one. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will completely replace the current logo. Example: <code>/tmp/phpTwN9AD</code></p>
+<p>optional New logo file to replace existing one. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will completely replace the current logo. Example: <code>/tmp/phplPQkW2</code></p>
         </div>
         </form>
 
@@ -8035,7 +8067,7 @@ Supports secure file uploads for featured images and gallery photos with compreh
     --form "quantity=50"\
     --form "product_tags[]=3"\
     --form "product_variants[]=architecto"\
-    --form "media[featured_image]=@/tmp/phpdeIUDa"     --form "media[gallery][]=@/tmp/phpZKwWx9" </code></pre></div>
+    --form "media[featured_image]=@/tmp/phpBnXEeH"     --form "media[gallery][]=@/tmp/phpp2lItV" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -8114,11 +8146,11 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'media[featured_image]',
-                'contents' =&gt; fopen('/tmp/phpdeIUDa', 'r')
+                'contents' =&gt; fopen('/tmp/phpBnXEeH', 'r')
             ],
             [
                 'name' =&gt; 'media[gallery][]',
-                'contents' =&gt; fopen('/tmp/phpZKwWx9', 'r')
+                'contents' =&gt; fopen('/tmp/phpp2lItV', 'r')
             ],
         ],
     ]
@@ -8141,7 +8173,7 @@ files = {
   'quantity': (None, '50'),
   'product_tags[]': (None, '3'),
   'product_variants[]': (None, 'architecto'),
-  'media[featured_image]': open('/tmp/phpdeIUDa', 'rb')  'media[gallery][]': open('/tmp/phpZKwWx9', 'rb')}
+  'media[featured_image]': open('/tmp/phpBnXEeH', 'rb')  'media[gallery][]': open('/tmp/phpp2lItV', 'rb')}
 payload = {
     "name": "\"Premium Wireless Earbuds\"",
     "description": "\"High-quality wireless earbuds with noise cancellation and long battery life.\"",
@@ -8567,7 +8599,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional Featured product image. Max 5MB, dimensions 100x100 to 4000x4000px. Example: <code>/tmp/phpdeIUDa</code></p>
+<p>optional Featured product image. Max 5MB, dimensions 100x100 to 4000x4000px. Example: <code>/tmp/phpBnXEeH</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>gallery</code></b>&nbsp;&nbsp;
@@ -8614,7 +8646,7 @@ all existing variants are replaced with the new ones. Media files can be updated
     --form "quantity=75"\
     --form "product_tags[]=3"\
     --form "product_variants[]=architecto"\
-    --form "media[featured_image]=@/tmp/phpuQQO1k"     --form "media[gallery][]=@/tmp/php1l0w81" </code></pre></div>
+    --form "media[featured_image]=@/tmp/phpWW9DId"     --form "media[gallery][]=@/tmp/phpVS5wVk" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -8693,11 +8725,11 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'media[featured_image]',
-                'contents' =&gt; fopen('/tmp/phpuQQO1k', 'r')
+                'contents' =&gt; fopen('/tmp/phpWW9DId', 'r')
             ],
             [
                 'name' =&gt; 'media[gallery][]',
-                'contents' =&gt; fopen('/tmp/php1l0w81', 'r')
+                'contents' =&gt; fopen('/tmp/phpVS5wVk', 'r')
             ],
         ],
     ]
@@ -8720,7 +8752,7 @@ files = {
   'quantity': (None, '75'),
   'product_tags[]': (None, '3'),
   'product_variants[]': (None, 'architecto'),
-  'media[featured_image]': open('/tmp/phpuQQO1k', 'rb')  'media[gallery][]': open('/tmp/php1l0w81', 'rb')}
+  'media[featured_image]': open('/tmp/phpWW9DId', 'rb')  'media[gallery][]': open('/tmp/phpVS5wVk', 'rb')}
 payload = {
     "name": "\"Premium Wireless Earbuds Pro\"",
     "description": "\"Enhanced wireless earbuds with improved noise cancellation.\"",
@@ -9157,7 +9189,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional New featured image (replaces existing). Example: <code>/tmp/phpuQQO1k</code></p>
+<p>optional New featured image (replaces existing). Example: <code>/tmp/phpWW9DId</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>gallery</code></b>&nbsp;&nbsp;
@@ -16896,7 +16928,7 @@ converted to lowercase and must remain unique.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://marketplace.com/api/admin/permissions/1" \
+    "http://marketplace.com/api/admin/permissions/61" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -16908,7 +16940,7 @@ converted to lowercase and must remain unique.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/permissions/1"
+    "http://marketplace.com/api/admin/permissions/61"
 );
 
 const headers = {
@@ -16930,7 +16962,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/permissions/1';
+$url = 'http://marketplace.com/api/admin/permissions/61';
 $response = $client-&gt;post(
     $url,
     [
@@ -16952,7 +16984,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/permissions/1'
+url = 'http://marketplace.com/api/admin/permissions/61'
 payload = {
     "name": "\"create-vendor\""
 }
@@ -17113,10 +17145,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="POSTapi-admin-permissions--id-"
-               value="1"
+               value="61"
                data-component="url">
     <br>
-<p>The ID of the permission. Example: <code>1</code></p>
+<p>The ID of the permission. Example: <code>61</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>permission</code></b>&nbsp;&nbsp;
@@ -17162,7 +17194,7 @@ become inaccessible to all users, including administrators.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://marketplace.com/api/admin/permissions/1" \
+    "http://marketplace.com/api/admin/permissions/61" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -17170,7 +17202,7 @@ become inaccessible to all users, including administrators.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/permissions/1"
+    "http://marketplace.com/api/admin/permissions/61"
 );
 
 const headers = {
@@ -17187,7 +17219,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/permissions/1';
+$url = 'http://marketplace.com/api/admin/permissions/61';
 $response = $client-&gt;delete(
     $url,
     [
@@ -17206,7 +17238,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/permissions/1'
+url = 'http://marketplace.com/api/admin/permissions/61'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -17361,10 +17393,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="DELETEapi-admin-permissions--id-"
-               value="1"
+               value="61"
                data-component="url">
     <br>
-<p>The ID of the permission. Example: <code>1</code></p>
+<p>The ID of the permission. Example: <code>61</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>permission</code></b>&nbsp;&nbsp;
@@ -23699,7 +23731,7 @@ and must remain unique across all roles.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://marketplace.com/api/admin/roles/1" \
+    "http://marketplace.com/api/admin/roles/9" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -23711,7 +23743,7 @@ and must remain unique across all roles.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/roles/1"
+    "http://marketplace.com/api/admin/roles/9"
 );
 
 const headers = {
@@ -23733,7 +23765,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/roles/1';
+$url = 'http://marketplace.com/api/admin/roles/9';
 $response = $client-&gt;post(
     $url,
     [
@@ -23755,7 +23787,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/roles/1'
+url = 'http://marketplace.com/api/admin/roles/9'
 payload = {
     "name": "senior_customer_service"
 }
@@ -23916,10 +23948,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="POSTapi-admin-roles--id-"
-               value="1"
+               value="9"
                data-component="url">
     <br>
-<p>The ID of the role. Example: <code>1</code></p>
+<p>The ID of the role. Example: <code>9</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>role</code></b>&nbsp;&nbsp;
@@ -23965,7 +23997,7 @@ proper access permissions, potentially locking them out of system features.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://marketplace.com/api/admin/roles/1" \
+    "http://marketplace.com/api/admin/roles/9" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -23973,7 +24005,7 @@ proper access permissions, potentially locking them out of system features.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/roles/1"
+    "http://marketplace.com/api/admin/roles/9"
 );
 
 const headers = {
@@ -23990,7 +24022,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/roles/1';
+$url = 'http://marketplace.com/api/admin/roles/9';
 $response = $client-&gt;delete(
     $url,
     [
@@ -24009,7 +24041,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/roles/1'
+url = 'http://marketplace.com/api/admin/roles/9'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -24164,10 +24196,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="DELETEapi-admin-roles--id-"
-               value="1"
+               value="9"
                data-component="url">
     <br>
-<p>The ID of the role. Example: <code>1</code></p>
+<p>The ID of the role. Example: <code>9</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>role</code></b>&nbsp;&nbsp;
@@ -24203,7 +24235,7 @@ control auditing and role management decisions.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://marketplace.com/api/admin/roles/1/permissions" \
+    --get "http://marketplace.com/api/admin/roles/9/permissions" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -24211,7 +24243,7 @@ control auditing and role management decisions.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/roles/1/permissions"
+    "http://marketplace.com/api/admin/roles/9/permissions"
 );
 
 const headers = {
@@ -24228,7 +24260,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/roles/1/permissions';
+$url = 'http://marketplace.com/api/admin/roles/9/permissions';
 $response = $client-&gt;get(
     $url,
     [
@@ -24247,7 +24279,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/roles/1/permissions'
+url = 'http://marketplace.com/api/admin/roles/9/permissions'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -24405,10 +24437,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="role_id"                data-endpoint="GETapi-admin-roles--role_id--permissions"
-               value="1"
+               value="9"
                data-component="url">
     <br>
-<p>The ID of the role. Example: <code>1</code></p>
+<p>The ID of the role. Example: <code>9</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>role</code></b>&nbsp;&nbsp;
@@ -24440,7 +24472,7 @@ incrementally build up role permissions without losing previously assigned ones.
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://marketplace.com/api/admin/roles/1/permissions" \
+    "http://marketplace.com/api/admin/roles/9/permissions" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -24454,7 +24486,7 @@ incrementally build up role permissions without losing previously assigned ones.
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/roles/1/permissions"
+    "http://marketplace.com/api/admin/roles/9/permissions"
 );
 
 const headers = {
@@ -24478,7 +24510,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/roles/1/permissions';
+$url = 'http://marketplace.com/api/admin/roles/9/permissions';
 $response = $client-&gt;post(
     $url,
     [
@@ -24502,7 +24534,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/roles/1/permissions'
+url = 'http://marketplace.com/api/admin/roles/9/permissions'
 payload = {
     "permissions": [
         "architecto"
@@ -24684,10 +24716,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="role_id"                data-endpoint="POSTapi-admin-roles--role_id--permissions"
-               value="1"
+               value="9"
                data-component="url">
     <br>
-<p>The ID of the role. Example: <code>1</code></p>
+<p>The ID of the role. Example: <code>9</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>role</code></b>&nbsp;&nbsp;
@@ -24744,7 +24776,7 @@ and that the role is assigned only to trusted administrators.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://marketplace.com/api/admin/roles/1/permissions/assign-all" \
+    "http://marketplace.com/api/admin/roles/9/permissions/assign-all" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -24752,7 +24784,7 @@ and that the role is assigned only to trusted administrators.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/roles/1/permissions/assign-all"
+    "http://marketplace.com/api/admin/roles/9/permissions/assign-all"
 );
 
 const headers = {
@@ -24769,7 +24801,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/roles/1/permissions/assign-all';
+$url = 'http://marketplace.com/api/admin/roles/9/permissions/assign-all';
 $response = $client-&gt;post(
     $url,
     [
@@ -24788,7 +24820,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/roles/1/permissions/assign-all'
+url = 'http://marketplace.com/api/admin/roles/9/permissions/assign-all'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -24982,10 +25014,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="role_id"                data-endpoint="POSTapi-admin-roles--role_id--permissions-assign-all"
-               value="1"
+               value="9"
                data-component="url">
     <br>
-<p>The ID of the role. Example: <code>1</code></p>
+<p>The ID of the role. Example: <code>9</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>role</code></b>&nbsp;&nbsp;
@@ -25017,7 +25049,7 @@ for users with a particular role while maintaining their other permissions.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://marketplace.com/api/admin/roles/1/permissions/1" \
+    "http://marketplace.com/api/admin/roles/9/permissions/61" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -25025,7 +25057,7 @@ for users with a particular role while maintaining their other permissions.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/roles/1/permissions/1"
+    "http://marketplace.com/api/admin/roles/9/permissions/61"
 );
 
 const headers = {
@@ -25042,7 +25074,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/roles/1/permissions/1';
+$url = 'http://marketplace.com/api/admin/roles/9/permissions/61';
 $response = $client-&gt;delete(
     $url,
     [
@@ -25061,7 +25093,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/roles/1/permissions/1'
+url = 'http://marketplace.com/api/admin/roles/9/permissions/61'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -25249,10 +25281,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="role_id"                data-endpoint="DELETEapi-admin-roles--role_id--permissions--permission_id-"
-               value="1"
+               value="9"
                data-component="url">
     <br>
-<p>The ID of the role. Example: <code>1</code></p>
+<p>The ID of the role. Example: <code>9</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>permission_id</code></b>&nbsp;&nbsp;
@@ -25260,10 +25292,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="permission_id"                data-endpoint="DELETEapi-admin-roles--role_id--permissions--permission_id-"
-               value="1"
+               value="61"
                data-component="url">
     <br>
-<p>The ID of the permission. Example: <code>1</code></p>
+<p>The ID of the permission. Example: <code>61</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>role</code></b>&nbsp;&nbsp;
@@ -25296,11 +25328,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
                                 <h2 id="shopping-cart-GETapi-cart">Retrieve user&#039;s shopping cart</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Get the current cart contents for the authenticated user or guest session.
-Returns cart items with product details, pricing information, availability status,
-and total calculations. Supports both authenticated users and guest sessions.</p>
+<p>Get the current cart contents for the authenticated user. Returns cart items with
+product details, pricing information, availability status, and total calculations.
+Requires a valid authentication token (Laravel Passport).</p>
 
 <span id="example-requests-GETapi-cart">
 <blockquote>Example request:</blockquote>
@@ -25309,6 +25342,7 @@ and total calculations. Supports both authenticated users and guest sessions.</p
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
     --get "http://marketplace.com/api/cart" \
+    --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
@@ -25319,6 +25353,7 @@ and total calculations. Supports both authenticated users and guest sessions.</p
 );
 
 const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_TOKEN}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
@@ -25336,6 +25371,7 @@ $response = $client-&gt;get(
     $url,
     [
         'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_AUTH_TOKEN}',
             'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
         ],
@@ -25351,6 +25387,7 @@ import json
 
 url = 'http://marketplace.com/api/cart'
 headers = {
+  'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
   'Accept': 'application/json'
 }
@@ -25374,7 +25411,7 @@ response.json()</code></pre></div>
         &quot;total_amount&quot;: 15998,
         &quot;total_amount_formatted&quot;: &quot;&pound;159.98&quot;,
         &quot;total_items_count&quot;: 3,
-        &quot;expires_at&quot;: &quot;2025-02-15T10:30:00.000000Z&quot;,
+        &quot;expires_at&quot;: null,
         &quot;is_expired&quot;: false,
         &quot;is_empty&quot;: false,
         &quot;items&quot;: [
@@ -25433,13 +25470,22 @@ response.json()</code></pre></div>
         &quot;total_amount&quot;: 0,
         &quot;total_amount_formatted&quot;: &quot;&pound;0.00&quot;,
         &quot;total_items_count&quot;: 0,
-        &quot;expires_at&quot;: &quot;2025-02-15T10:30:00.000000Z&quot;,
+        &quot;expires_at&quot;: null,
         &quot;is_expired&quot;: false,
         &quot;is_empty&quot;: true,
         &quot;items&quot;: [],
         &quot;created_at&quot;: &quot;2025-01-16T14:30:00.000000Z&quot;,
         &quot;updated_at&quot;: &quot;2025-01-16T14:30:00.000000Z&quot;
     }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401, Authentication required):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Authentication required for cart operations.&quot;
 }</code>
  </pre>
     </span>
@@ -25460,7 +25506,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-GETapi-cart" data-method="GET"
       data-path="api/cart"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -25491,6 +25537,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
                                 <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-cart"
+               value="Bearer {YOUR_AUTH_TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -25517,11 +25574,13 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     <h2 id="shopping-cart-POSTapi-cart-items">Add item to shopping cart</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Add a product (with optional variant) to the user's shopping cart. If the item already exists,
-the quantities will be combined. Validates product availability, stock levels, and pricing.
-Supports both authenticated users and guest sessions.</p>
+<p>Add a product (with optional variant) to the authenticated user's shopping cart.
+If the item already exists, the quantities will be combined. Validates product
+availability, stock levels, and pricing. Requires a valid authentication token
+(Laravel Passport).</p>
 
 <span id="example-requests-POSTapi-cart-items">
 <blockquote>Example request:</blockquote>
@@ -25530,6 +25589,7 @@ Supports both authenticated users and guest sessions.</p>
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
     "http://marketplace.com/api/cart/items" \
+    --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
@@ -25546,6 +25606,7 @@ Supports both authenticated users and guest sessions.</p>
 );
 
 const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_TOKEN}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
@@ -25570,6 +25631,7 @@ $response = $client-&gt;post(
     $url,
     [
         'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_AUTH_TOKEN}',
             'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
         ],
@@ -25595,6 +25657,7 @@ payload = {
     "quantity": 2
 }
 headers = {
+  'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
   'Accept': 'application/json'
 }
@@ -25618,7 +25681,7 @@ response.json()</code></pre></div>
         &quot;total_amount&quot;: 15998,
         &quot;total_amount_formatted&quot;: &quot;&pound;159.98&quot;,
         &quot;total_items_count&quot;: 2,
-        &quot;expires_at&quot;: &quot;2025-02-15T10:30:00.000000Z&quot;,
+        &quot;expires_at&quot;: null,
         &quot;is_expired&quot;: false,
         &quot;is_empty&quot;: false,
         &quot;items&quot;: [
@@ -25670,6 +25733,15 @@ response.json()</code></pre></div>
 }</code>
  </pre>
             <blockquote>
+            <p>Example response (401, Authentication required):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Authentication required for cart operations.&quot;
+}</code>
+ </pre>
+            <blockquote>
             <p>Example response (404, Product not found):</p>
         </blockquote>
                 <pre>
@@ -25709,7 +25781,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-POSTapi-cart-items" data-method="POST"
       data-path="api/cart/items"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -25739,6 +25811,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <b><code>api/cart/items</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-cart-items"
+               value="Bearer {YOUR_AUTH_TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_TOKEN}</code></p>
+            </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
@@ -25800,11 +25883,13 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     <h2 id="shopping-cart-PUTapi-cart-items--cartItem-">Update cart item quantity</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Update the quantity of a specific item in the cart. Setting quantity to 0 will remove
-the item from the cart. Validates stock availability and updates pricing to current
-product price if it has changed since adding to cart.</p>
+<p>Update the quantity of a specific item in the authenticated user's cart. Setting
+quantity to 0 will remove the item from the cart. Validates stock availability
+and updates pricing to current product price if it has changed since adding to cart.
+Requires a valid authentication token (Laravel Passport).</p>
 
 <span id="example-requests-PUTapi-cart-items--cartItem-">
 <blockquote>Example request:</blockquote>
@@ -25813,6 +25898,7 @@ product price if it has changed since adding to cart.</p>
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
     "http://marketplace.com/api/cart/items/45" \
+    --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
@@ -25827,6 +25913,7 @@ product price if it has changed since adding to cart.</p>
 );
 
 const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_TOKEN}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
@@ -25849,6 +25936,7 @@ $response = $client-&gt;put(
     $url,
     [
         'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_AUTH_TOKEN}',
             'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
         ],
@@ -25870,6 +25958,7 @@ payload = {
     "quantity": 3
 }
 headers = {
+  'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
   'Accept': 'application/json'
 }
@@ -25893,7 +25982,7 @@ response.json()</code></pre></div>
         &quot;total_amount&quot;: 23997,
         &quot;total_amount_formatted&quot;: &quot;&pound;239.97&quot;,
         &quot;total_items_count&quot;: 3,
-        &quot;expires_at&quot;: &quot;2025-02-15T10:30:00.000000Z&quot;,
+        &quot;expires_at&quot;: null,
         &quot;is_expired&quot;: false,
         &quot;is_empty&quot;: false,
         &quot;items&quot;: [
@@ -25924,9 +26013,11 @@ response.json()</code></pre></div>
     &quot;message&quot;: &quot;Cart updated successfully.&quot;,
     &quot;data&quot;: {
         &quot;id&quot;: 12,
+        &quot;user_id&quot;: 123,
         &quot;total_amount&quot;: 0,
         &quot;total_amount_formatted&quot;: &quot;&pound;0.00&quot;,
         &quot;total_items_count&quot;: 0,
+        &quot;expires_at&quot;: null,
         &quot;is_empty&quot;: true,
         &quot;items&quot;: []
     }
@@ -25939,6 +26030,15 @@ response.json()</code></pre></div>
 
 <code class="language-json" style="max-height: 300px;">{
     &quot;message&quot;: &quot;Insufficient stock. Only 2 items available.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401, Authentication required):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Authentication required for cart operations.&quot;
 }</code>
  </pre>
             <blockquote>
@@ -25980,7 +26080,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-PUTapi-cart-items--cartItem-" data-method="PUT"
       data-path="api/cart/items/{cartItem}"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -26010,6 +26110,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <b><code>api/cart/items/{cartItem}</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="PUTapi-cart-items--cartItem-"
+               value="Bearer {YOUR_AUTH_TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_TOKEN}</code></p>
+            </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
@@ -26061,10 +26172,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     <h2 id="shopping-cart-DELETEapi-cart-items--cartItem-">Remove item from cart</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Remove a specific item completely from the shopping cart. This action cannot be undone.
-The cart totals and item count will be automatically recalculated.</p>
+<p>Remove a specific item completely from the authenticated user's shopping cart.
+This action cannot be undone. The cart totals and item count will be automatically
+recalculated. Requires a valid authentication token (Laravel Passport).</p>
 
 <span id="example-requests-DELETEapi-cart-items--cartItem-">
 <blockquote>Example request:</blockquote>
@@ -26073,6 +26186,7 @@ The cart totals and item count will be automatically recalculated.</p>
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
     "http://marketplace.com/api/cart/items/45" \
+    --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
@@ -26083,6 +26197,7 @@ The cart totals and item count will be automatically recalculated.</p>
 );
 
 const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_TOKEN}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
@@ -26100,6 +26215,7 @@ $response = $client-&gt;delete(
     $url,
     [
         'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_AUTH_TOKEN}',
             'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
         ],
@@ -26115,6 +26231,7 @@ import json
 
 url = 'http://marketplace.com/api/cart/items/45'
 headers = {
+  'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
   'Accept': 'application/json'
 }
@@ -26138,7 +26255,7 @@ response.json()</code></pre></div>
         &quot;total_amount&quot;: 7999,
         &quot;total_amount_formatted&quot;: &quot;&pound;79.99&quot;,
         &quot;total_items_count&quot;: 1,
-        &quot;expires_at&quot;: &quot;2025-02-15T10:30:00.000000Z&quot;,
+        &quot;expires_at&quot;: null,
         &quot;is_expired&quot;: false,
         &quot;is_empty&quot;: false,
         &quot;items&quot;: [
@@ -26151,6 +26268,15 @@ response.json()</code></pre></div>
             }
         ]
     }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401, Authentication required):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Authentication required for cart operations.&quot;
 }</code>
  </pre>
             <blockquote>
@@ -26180,7 +26306,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-DELETEapi-cart-items--cartItem-" data-method="DELETE"
       data-path="api/cart/items/{cartItem}"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -26210,6 +26336,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <b><code>api/cart/items/{cartItem}</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="DELETEapi-cart-items--cartItem-"
+               value="Bearer {YOUR_AUTH_TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_TOKEN}</code></p>
+            </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
@@ -26249,10 +26386,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     <h2 id="shopping-cart-DELETEapi-cart-clear">Clear entire cart</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Remove all items from the shopping cart. This action cannot be undone and will result
-in an empty cart. Useful for starting over or clearing expired/unavailable items.</p>
+<p>Remove all items from the authenticated user's shopping cart. This action cannot
+be undone and will result in an empty cart. Useful for starting over or clearing
+expired/unavailable items. Requires a valid authentication token (Laravel Passport).</p>
 
 <span id="example-requests-DELETEapi-cart-clear">
 <blockquote>Example request:</blockquote>
@@ -26261,6 +26400,7 @@ in an empty cart. Useful for starting over or clearing expired/unavailable items
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
     "http://marketplace.com/api/cart/clear" \
+    --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
@@ -26271,6 +26411,7 @@ in an empty cart. Useful for starting over or clearing expired/unavailable items
 );
 
 const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_TOKEN}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
@@ -26288,6 +26429,7 @@ $response = $client-&gt;delete(
     $url,
     [
         'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_AUTH_TOKEN}',
             'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
         ],
@@ -26303,6 +26445,7 @@ import json
 
 url = 'http://marketplace.com/api/cart/clear'
 headers = {
+  'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
   'Accept': 'application/json'
 }
@@ -26326,13 +26469,22 @@ response.json()</code></pre></div>
         &quot;total_amount&quot;: 0,
         &quot;total_amount_formatted&quot;: &quot;&pound;0.00&quot;,
         &quot;total_items_count&quot;: 0,
-        &quot;expires_at&quot;: &quot;2025-02-15T10:30:00.000000Z&quot;,
+        &quot;expires_at&quot;: null,
         &quot;is_expired&quot;: false,
         &quot;is_empty&quot;: true,
         &quot;items&quot;: [],
         &quot;created_at&quot;: &quot;2025-01-16T14:30:00.000000Z&quot;,
         &quot;updated_at&quot;: &quot;2025-01-16T14:45:00.000000Z&quot;
     }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401, Authentication required):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Authentication required for cart operations.&quot;
 }</code>
  </pre>
     </span>
@@ -26353,7 +26505,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-DELETEapi-cart-clear" data-method="DELETE"
       data-path="api/cart/clear"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -26384,6 +26536,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
                                 <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="DELETEapi-cart-clear"
+               value="Bearer {YOUR_AUTH_TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -26410,11 +26573,13 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     <h2 id="shopping-cart-POSTapi-cart-sync-prices">Synchronize cart prices</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Update all cart item prices to match current product prices. This is useful when
-product prices have changed since items were added to the cart. Returns information
-about which items had price changes.</p>
+<p>Update all cart item prices for the authenticated user to match current product prices.
+This is useful when product prices have changed since items were added to the cart.
+Returns information about which items had price changes. Requires a valid authentication
+token (Laravel Passport).</p>
 
 <span id="example-requests-POSTapi-cart-sync-prices">
 <blockquote>Example request:</blockquote>
@@ -26423,6 +26588,7 @@ about which items had price changes.</p>
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
     "http://marketplace.com/api/cart/sync-prices" \
+    --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
@@ -26433,6 +26599,7 @@ about which items had price changes.</p>
 );
 
 const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_TOKEN}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
@@ -26450,6 +26617,7 @@ $response = $client-&gt;post(
     $url,
     [
         'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_AUTH_TOKEN}',
             'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
         ],
@@ -26465,6 +26633,7 @@ import json
 
 url = 'http://marketplace.com/api/cart/sync-prices'
 headers = {
+  'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
   'Accept': 'application/json'
 }
@@ -26488,6 +26657,7 @@ response.json()</code></pre></div>
         &quot;total_amount&quot;: 17998,
         &quot;total_amount_formatted&quot;: &quot;&pound;179.98&quot;,
         &quot;total_items_count&quot;: 2,
+        &quot;expires_at&quot;: null,
         &quot;items&quot;: [
             {
                 &quot;id&quot;: 45,
@@ -26514,10 +26684,21 @@ response.json()</code></pre></div>
     &quot;message&quot;: &quot;Cart prices synchronized. 0 items updated.&quot;,
     &quot;data&quot;: {
         &quot;id&quot;: 12,
+        &quot;user_id&quot;: 123,
         &quot;total_amount&quot;: 15998,
         &quot;total_amount_formatted&quot;: &quot;&pound;159.98&quot;,
+        &quot;expires_at&quot;: null,
         &quot;items&quot;: []
     }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401, Authentication required):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Authentication required for cart operations.&quot;
 }</code>
  </pre>
     </span>
@@ -26538,7 +26719,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-POSTapi-cart-sync-prices" data-method="POST"
       data-path="api/cart/sync-prices"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -26568,6 +26749,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <b><code>api/cart/sync-prices</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-cart-sync-prices"
+               value="Bearer {YOUR_AUTH_TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_TOKEN}</code></p>
+            </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
@@ -27465,7 +27657,7 @@ This endpoint is commonly used for profile pages and account management interfac
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://marketplace.com/api/users/1" \
+    --get "http://marketplace.com/api/users/76" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -27473,7 +27665,7 @@ This endpoint is commonly used for profile pages and account management interfac
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/users/1"
+    "http://marketplace.com/api/users/76"
 );
 
 const headers = {
@@ -27490,7 +27682,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/users/1';
+$url = 'http://marketplace.com/api/users/76';
 $response = $client-&gt;get(
     $url,
     [
@@ -27509,7 +27701,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/users/1'
+url = 'http://marketplace.com/api/users/76'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -27715,10 +27907,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="GETapi-users--id-"
-               value="1"
+               value="76"
                data-component="url">
     <br>
-<p>The ID of the user. Example: <code>1</code></p>
+<p>The ID of the user. Example: <code>76</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>user</code></b>&nbsp;&nbsp;
@@ -27750,7 +27942,7 @@ Password updates require the current password for security verification.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://marketplace.com/api/users/1" \
+    "http://marketplace.com/api/users/76" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -27773,7 +27965,7 @@ Password updates require the current password for security verification.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/users/1"
+    "http://marketplace.com/api/users/76"
 );
 
 const headers = {
@@ -27806,7 +27998,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/users/1';
+$url = 'http://marketplace.com/api/users/76';
 $response = $client-&gt;post(
     $url,
     [
@@ -27839,7 +28031,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/users/1'
+url = 'http://marketplace.com/api/users/76'
 payload = {
     "name": "Sarah Jane Johnson",
     "email": "sarah.johnson.new@example.com",
@@ -28093,10 +28285,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="POSTapi-users--id-"
-               value="1"
+               value="76"
                data-component="url">
     <br>
-<p>The ID of the user. Example: <code>1</code></p>
+<p>The ID of the user. Example: <code>76</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>user</code></b>&nbsp;&nbsp;
@@ -28530,7 +28722,7 @@ fields will be updated, others remain unchanged. Logo uploads are processed secu
     --form "user_id=45"\
     --form "name=TechCraft Solutions Ltd"\
     --form "description=Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud migration services, and digital transformation consulting with over 10 years of industry experience."\
-    --form "logo=@/tmp/phpb2OM94" </code></pre></div>
+    --form "logo=@/tmp/phprnHupE" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -28583,7 +28775,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'logo',
-                'contents' =&gt; fopen('/tmp/phpb2OM94', 'r')
+                'contents' =&gt; fopen('/tmp/phprnHupE', 'r')
             ],
         ],
     ]
@@ -28601,7 +28793,7 @@ files = {
   'user_id': (None, '45'),
   'name': (None, 'TechCraft Solutions Ltd'),
   'description': (None, 'Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud migration services, and digital transformation consulting with over 10 years of industry experience.'),
-  'logo': open('/tmp/phpb2OM94', 'rb')}
+  'logo': open('/tmp/phprnHupE', 'rb')}
 payload = {
     "user_id": 45,
     "name": "TechCraft Solutions Ltd",
@@ -28913,7 +29105,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional New logo file for the vendor. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will replace existing logo if provided. Example: <code>/tmp/phpb2OM94</code></p>
+<p>optional New logo file for the vendor. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will replace existing logo if provided. Example: <code>/tmp/phprnHupE</code></p>
         </div>
         </form>
 

@@ -804,799 +804,21 @@ paths:
                     type: integer
                     example: 401
         403:
-          description: ''
+          description: 'Signature verification failed'
           content:
             application/json:
               schema:
-                oneOf:
-                  -
-                    description: 'Signature verification failed'
-                    type: object
-                    example:
-                      message: 'Invalid/Expired url provided.'
-                      status: 401
-                    properties:
-                      message:
-                        type: string
-                        example: 'Invalid/Expired url provided.'
-                      status:
-                        type: integer
-                        example: 401
-                  -
-                    description: ''
-                    type: object
-                    example:
-                      message: 'Invalid signature.'
-                      exception: Illuminate\Routing\Exceptions\InvalidSignatureException
-                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ValidateSignature.php
-                      line: 73
-                      trace:
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                          line: 209
-                          function: handle
-                          class: Illuminate\Routing\Middleware\ValidateSignature
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityMonitoring.php
-                          line: 27
-                          function: 'Illuminate\Pipeline\{closure}'
-                          class: Illuminate\Pipeline\Pipeline
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                          line: 209
-                          function: handle
-                          class: App\Http\Middleware\V1\SecurityMonitoring
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityLogger.php
-                          line: 23
-                          function: 'Illuminate\Pipeline\{closure}'
-                          class: Illuminate\Pipeline\Pipeline
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                          line: 209
-                          function: handle
-                          class: App\Http\Middleware\V1\SecurityLogger
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityHeaders.php
-                          line: 12
-                          function: 'Illuminate\Pipeline\{closure}'
-                          class: Illuminate\Pipeline\Pipeline
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                          line: 209
-                          function: handle
-                          class: App\Http\Middleware\V1\SecurityHeaders
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php
-                          line: 51
-                          function: 'Illuminate\Pipeline\{closure}'
-                          class: Illuminate\Pipeline\Pipeline
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                          line: 209
-                          function: handle
-                          class: Illuminate\Routing\Middleware\SubstituteBindings
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                          line: 127
-                          function: 'Illuminate\Pipeline\{closure}'
-                          class: Illuminate\Pipeline\Pipeline
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php
-                          line: 807
-                          function: then
-                          class: Illuminate\Pipeline\Pipeline
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php
-                          line: 786
-                          function: runRouteWithinStack
-                          class: Illuminate\Routing\Router
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php
-                          line: 750
-                          function: runRoute
-                          class: Illuminate\Routing\Router
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php
-                          line: 739
-                          function: dispatchToRoute
-                          class: Illuminate\Routing\Router
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
-                          line: 201
-                          function: dispatch
-                          class: Illuminate\Routing\Router
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                          line: 170
-                          function: 'Illuminate\Foundation\Http\{closure}'
-                          class: Illuminate\Foundation\Http\Kernel
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php
-                          line: 21
-                          function: 'Illuminate\Pipeline\{closure}'
-                          class: Illuminate\Pipeline\Pipeline
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php
-                          line: 31
-                          function: handle
-                          class: Illuminate\Foundation\Http\Middleware\TransformsRequest
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                          line: 209
-                          function: handle
-                          class: Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php
-                          line: 21
-                          function: 'Illuminate\Pipeline\{closure}'
-                          class: Illuminate\Pipeline\Pipeline
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php
-                          line: 51
-                          function: handle
-                          class: Illuminate\Foundation\Http\Middleware\TransformsRequest
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                          line: 209
-                          function: handle
-                          class: Illuminate\Foundation\Http\Middleware\TrimStrings
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php
-                          line: 27
-                          function: 'Illuminate\Pipeline\{closure}'
-                          class: Illuminate\Pipeline\Pipeline
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                          line: 209
-                          function: handle
-                          class: Illuminate\Http\Middleware\ValidatePostSize
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php
-                          line: 110
-                          function: 'Illuminate\Pipeline\{closure}'
-                          class: Illuminate\Pipeline\Pipeline
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                          line: 209
-                          function: handle
-                          class: Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php
-                          line: 62
-                          function: 'Illuminate\Pipeline\{closure}'
-                          class: Illuminate\Pipeline\Pipeline
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                          line: 209
-                          function: handle
-                          class: Illuminate\Http\Middleware\HandleCors
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php
-                          line: 58
-                          function: 'Illuminate\Pipeline\{closure}'
-                          class: Illuminate\Pipeline\Pipeline
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                          line: 209
-                          function: handle
-                          class: Illuminate\Http\Middleware\TrustProxies
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php
-                          line: 22
-                          function: 'Illuminate\Pipeline\{closure}'
-                          class: Illuminate\Pipeline\Pipeline
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                          line: 209
-                          function: handle
-                          class: Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                          line: 127
-                          function: 'Illuminate\Pipeline\{closure}'
-                          class: Illuminate\Pipeline\Pipeline
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
-                          line: 176
-                          function: then
-                          class: Illuminate\Pipeline\Pipeline
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
-                          line: 145
-                          function: sendRequestThroughRouter
-                          class: Illuminate\Foundation\Http\Kernel
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
-                          line: 310
-                          function: handle
-                          class: Illuminate\Foundation\Http\Kernel
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
-                          line: 298
-                          function: callLaravelOrLumenRoute
-                          class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
-                          line: 91
-                          function: makeApiCall
-                          class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
-                          line: 44
-                          function: makeResponseCall
-                          class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
-                          line: 35
-                          function: makeResponseCallIfConditionsPass
-                          class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
-                          line: 237
-                          function: __invoke
-                          class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
-                          line: 163
-                          function: iterateThroughStrategies
-                          class: Knuckles\Scribe\Extracting\Extractor
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
-                          line: 95
-                          function: fetchResponses
-                          class: Knuckles\Scribe\Extracting\Extractor
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
-                          line: 125
-                          function: processRoute
-                          class: Knuckles\Scribe\Extracting\Extractor
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
-                          line: 72
-                          function: extractEndpointsInfoFromLaravelApp
-                          class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
-                          line: 50
-                          function: extractEndpointsInfoAndWriteToDisk
-                          class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Commands/GenerateDocumentation.php
-                          line: 53
-                          function: get
-                          class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
-                          line: 36
-                          function: handle
-                          class: Knuckles\Scribe\Commands\GenerateDocumentation
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Util.php
-                          line: 43
-                          function: 'Illuminate\Container\{closure}'
-                          class: Illuminate\Container\BoundMethod
-                          type: '::'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
-                          line: 95
-                          function: unwrapIfClosure
-                          class: Illuminate\Container\Util
-                          type: '::'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
-                          line: 35
-                          function: callBoundMethod
-                          class: Illuminate\Container\BoundMethod
-                          type: '::'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Container.php
-                          line: 694
-                          function: call
-                          class: Illuminate\Container\BoundMethod
-                          type: '::'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php
-                          line: 213
-                          function: call
-                          class: Illuminate\Container\Container
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/symfony/console/Command/Command.php
-                          line: 279
-                          function: execute
-                          class: Illuminate\Console\Command
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php
-                          line: 182
-                          function: run
-                          class: Symfony\Component\Console\Command\Command
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/symfony/console/Application.php
-                          line: 1094
-                          function: run
-                          class: Illuminate\Console\Command
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/symfony/console/Application.php
-                          line: 342
-                          function: doRunCommand
-                          class: Symfony\Component\Console\Application
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/symfony/console/Application.php
-                          line: 193
-                          function: doRun
-                          class: Symfony\Component\Console\Application
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php
-                          line: 198
-                          function: run
-                          class: Symfony\Component\Console\Application
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Application.php
-                          line: 1208
-                          function: handle
-                          class: Illuminate\Foundation\Console\Kernel
-                          type: '->'
-                        -
-                          file: /var/www/ecommerce_api/api/artisan
-                          line: 13
-                          function: handleCommand
-                          class: Illuminate\Foundation\Application
-                          type: '->'
-                    properties:
-                      message:
-                        type: string
-                        example: 'Invalid signature.'
-                      exception:
-                        type: string
-                        example: Illuminate\Routing\Exceptions\InvalidSignatureException
-                      file:
-                        type: string
-                        example: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ValidateSignature.php
-                      line:
-                        type: integer
-                        example: 73
-                      trace:
-                        type: array
-                        example:
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                            line: 209
-                            function: handle
-                            class: Illuminate\Routing\Middleware\ValidateSignature
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityMonitoring.php
-                            line: 27
-                            function: 'Illuminate\Pipeline\{closure}'
-                            class: Illuminate\Pipeline\Pipeline
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                            line: 209
-                            function: handle
-                            class: App\Http\Middleware\V1\SecurityMonitoring
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityLogger.php
-                            line: 23
-                            function: 'Illuminate\Pipeline\{closure}'
-                            class: Illuminate\Pipeline\Pipeline
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                            line: 209
-                            function: handle
-                            class: App\Http\Middleware\V1\SecurityLogger
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityHeaders.php
-                            line: 12
-                            function: 'Illuminate\Pipeline\{closure}'
-                            class: Illuminate\Pipeline\Pipeline
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                            line: 209
-                            function: handle
-                            class: App\Http\Middleware\V1\SecurityHeaders
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php
-                            line: 51
-                            function: 'Illuminate\Pipeline\{closure}'
-                            class: Illuminate\Pipeline\Pipeline
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                            line: 209
-                            function: handle
-                            class: Illuminate\Routing\Middleware\SubstituteBindings
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                            line: 127
-                            function: 'Illuminate\Pipeline\{closure}'
-                            class: Illuminate\Pipeline\Pipeline
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php
-                            line: 807
-                            function: then
-                            class: Illuminate\Pipeline\Pipeline
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php
-                            line: 786
-                            function: runRouteWithinStack
-                            class: Illuminate\Routing\Router
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php
-                            line: 750
-                            function: runRoute
-                            class: Illuminate\Routing\Router
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php
-                            line: 739
-                            function: dispatchToRoute
-                            class: Illuminate\Routing\Router
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
-                            line: 201
-                            function: dispatch
-                            class: Illuminate\Routing\Router
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                            line: 170
-                            function: 'Illuminate\Foundation\Http\{closure}'
-                            class: Illuminate\Foundation\Http\Kernel
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php
-                            line: 21
-                            function: 'Illuminate\Pipeline\{closure}'
-                            class: Illuminate\Pipeline\Pipeline
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php
-                            line: 31
-                            function: handle
-                            class: Illuminate\Foundation\Http\Middleware\TransformsRequest
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                            line: 209
-                            function: handle
-                            class: Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php
-                            line: 21
-                            function: 'Illuminate\Pipeline\{closure}'
-                            class: Illuminate\Pipeline\Pipeline
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php
-                            line: 51
-                            function: handle
-                            class: Illuminate\Foundation\Http\Middleware\TransformsRequest
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                            line: 209
-                            function: handle
-                            class: Illuminate\Foundation\Http\Middleware\TrimStrings
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php
-                            line: 27
-                            function: 'Illuminate\Pipeline\{closure}'
-                            class: Illuminate\Pipeline\Pipeline
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                            line: 209
-                            function: handle
-                            class: Illuminate\Http\Middleware\ValidatePostSize
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php
-                            line: 110
-                            function: 'Illuminate\Pipeline\{closure}'
-                            class: Illuminate\Pipeline\Pipeline
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                            line: 209
-                            function: handle
-                            class: Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php
-                            line: 62
-                            function: 'Illuminate\Pipeline\{closure}'
-                            class: Illuminate\Pipeline\Pipeline
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                            line: 209
-                            function: handle
-                            class: Illuminate\Http\Middleware\HandleCors
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php
-                            line: 58
-                            function: 'Illuminate\Pipeline\{closure}'
-                            class: Illuminate\Pipeline\Pipeline
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                            line: 209
-                            function: handle
-                            class: Illuminate\Http\Middleware\TrustProxies
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php
-                            line: 22
-                            function: 'Illuminate\Pipeline\{closure}'
-                            class: Illuminate\Pipeline\Pipeline
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                            line: 209
-                            function: handle
-                            class: Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                            line: 127
-                            function: 'Illuminate\Pipeline\{closure}'
-                            class: Illuminate\Pipeline\Pipeline
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
-                            line: 176
-                            function: then
-                            class: Illuminate\Pipeline\Pipeline
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
-                            line: 145
-                            function: sendRequestThroughRouter
-                            class: Illuminate\Foundation\Http\Kernel
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
-                            line: 310
-                            function: handle
-                            class: Illuminate\Foundation\Http\Kernel
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
-                            line: 298
-                            function: callLaravelOrLumenRoute
-                            class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
-                            line: 91
-                            function: makeApiCall
-                            class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
-                            line: 44
-                            function: makeResponseCall
-                            class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
-                            line: 35
-                            function: makeResponseCallIfConditionsPass
-                            class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
-                            line: 237
-                            function: __invoke
-                            class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
-                            line: 163
-                            function: iterateThroughStrategies
-                            class: Knuckles\Scribe\Extracting\Extractor
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
-                            line: 95
-                            function: fetchResponses
-                            class: Knuckles\Scribe\Extracting\Extractor
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
-                            line: 125
-                            function: processRoute
-                            class: Knuckles\Scribe\Extracting\Extractor
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
-                            line: 72
-                            function: extractEndpointsInfoFromLaravelApp
-                            class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
-                            line: 50
-                            function: extractEndpointsInfoAndWriteToDisk
-                            class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Commands/GenerateDocumentation.php
-                            line: 53
-                            function: get
-                            class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
-                            line: 36
-                            function: handle
-                            class: Knuckles\Scribe\Commands\GenerateDocumentation
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Util.php
-                            line: 43
-                            function: 'Illuminate\Container\{closure}'
-                            class: Illuminate\Container\BoundMethod
-                            type: '::'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
-                            line: 95
-                            function: unwrapIfClosure
-                            class: Illuminate\Container\Util
-                            type: '::'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
-                            line: 35
-                            function: callBoundMethod
-                            class: Illuminate\Container\BoundMethod
-                            type: '::'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Container.php
-                            line: 694
-                            function: call
-                            class: Illuminate\Container\BoundMethod
-                            type: '::'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php
-                            line: 213
-                            function: call
-                            class: Illuminate\Container\Container
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/symfony/console/Command/Command.php
-                            line: 279
-                            function: execute
-                            class: Illuminate\Console\Command
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php
-                            line: 182
-                            function: run
-                            class: Symfony\Component\Console\Command\Command
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/symfony/console/Application.php
-                            line: 1094
-                            function: run
-                            class: Illuminate\Console\Command
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/symfony/console/Application.php
-                            line: 342
-                            function: doRunCommand
-                            class: Symfony\Component\Console\Application
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/symfony/console/Application.php
-                            line: 193
-                            function: doRun
-                            class: Symfony\Component\Console\Application
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php
-                            line: 198
-                            function: run
-                            class: Symfony\Component\Console\Application
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Application.php
-                            line: 1208
-                            function: handle
-                            class: Illuminate\Foundation\Console\Kernel
-                            type: '->'
-                          -
-                            file: /var/www/ecommerce_api/api/artisan
-                            line: 13
-                            function: handleCommand
-                            class: Illuminate\Foundation\Application
-                            type: '->'
-                        items:
-                          type: object
-                          properties:
-                            file:
-                              type: string
-                              example: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
-                            line:
-                              type: integer
-                              example: 209
-                            function:
-                              type: string
-                              example: handle
-                            class:
-                              type: string
-                              example: Illuminate\Routing\Middleware\ValidateSignature
-                            type:
-                              type: string
-                              example: '->'
+                type: object
+                example:
+                  message: 'Invalid/Expired url provided.'
+                  status: 401
+                properties:
+                  message:
+                    type: string
+                    example: 'Invalid/Expired url provided.'
+                  status:
+                    type: integer
+                    example: 401
         404:
           description: 'User not found'
           content:
@@ -1609,6 +831,844 @@ paths:
                   message:
                     type: string
                     example: 'No query results for model [App\Models\User] 123'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: "The stream or file \"/var/www/ecommerce_api/api/storage/logs/security/suspicious-2025-07-07.log\" could not be opened in append mode: chmod(): No such file or directory\nThe exception occurred while attempting to log: Permission Denied\nContext: {\"method\":\"GET\",\"endpoint\":\"api\\/email\\/verify\\/architecto\\/abc123def456ghi789\",\"status_code\":403,\"ip\":\"127.0.0.1\",\"user_agent\":\"Symfony\",\"user_id\":null,\"user_email\":null,\"user_role\":null,\"response_time_ms\":9.65,\"timestamp\":\"2025-07-07T18:07:24.292141Z\"}"
+                  exception: UnexpectedValueException
+                  file: /var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php
+                  line: 156
+                  trace:
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Handler/RotatingFileHandler.php
+                      line: 110
+                      function: write
+                      class: Monolog\Handler\StreamHandler
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Handler/AbstractProcessingHandler.php
+                      line: 44
+                      function: write
+                      class: Monolog\Handler\RotatingFileHandler
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Logger.php
+                      line: 391
+                      function: handle
+                      class: Monolog\Handler\AbstractProcessingHandler
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Logger.php
+                      line: 607
+                      function: addRecord
+                      class: Monolog\Logger
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Log/Logger.php
+                      line: 184
+                      function: info
+                      class: Monolog\Logger
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Log/Logger.php
+                      line: 133
+                      function: writeLog
+                      class: Illuminate\Log\Logger
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/app/Services/V1/Logger/SecurityLog.php
+                      line: 137
+                      function: info
+                      class: Illuminate\Log\Logger
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/app/Services/V1/Logger/SecurityLog.php
+                      line: 55
+                      function: detectSuspiciousApiPatterns
+                      class: App\Services\V1\Logger\SecurityLog
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityLogger.php
+                      line: 27
+                      function: logApiAccess
+                      class: App\Services\V1\Logger\SecurityLog
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                      line: 209
+                      function: handle
+                      class: App\Http\Middleware\V1\SecurityLogger
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityHeaders.php
+                      line: 12
+                      function: 'Illuminate\Pipeline\{closure}'
+                      class: Illuminate\Pipeline\Pipeline
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                      line: 209
+                      function: handle
+                      class: App\Http\Middleware\V1\SecurityHeaders
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php
+                      line: 51
+                      function: 'Illuminate\Pipeline\{closure}'
+                      class: Illuminate\Pipeline\Pipeline
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                      line: 209
+                      function: handle
+                      class: Illuminate\Routing\Middleware\SubstituteBindings
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                      line: 127
+                      function: 'Illuminate\Pipeline\{closure}'
+                      class: Illuminate\Pipeline\Pipeline
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php
+                      line: 807
+                      function: then
+                      class: Illuminate\Pipeline\Pipeline
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php
+                      line: 786
+                      function: runRouteWithinStack
+                      class: Illuminate\Routing\Router
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php
+                      line: 750
+                      function: runRoute
+                      class: Illuminate\Routing\Router
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php
+                      line: 739
+                      function: dispatchToRoute
+                      class: Illuminate\Routing\Router
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
+                      line: 201
+                      function: dispatch
+                      class: Illuminate\Routing\Router
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                      line: 170
+                      function: 'Illuminate\Foundation\Http\{closure}'
+                      class: Illuminate\Foundation\Http\Kernel
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php
+                      line: 21
+                      function: 'Illuminate\Pipeline\{closure}'
+                      class: Illuminate\Pipeline\Pipeline
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php
+                      line: 31
+                      function: handle
+                      class: Illuminate\Foundation\Http\Middleware\TransformsRequest
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                      line: 209
+                      function: handle
+                      class: Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php
+                      line: 21
+                      function: 'Illuminate\Pipeline\{closure}'
+                      class: Illuminate\Pipeline\Pipeline
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php
+                      line: 51
+                      function: handle
+                      class: Illuminate\Foundation\Http\Middleware\TransformsRequest
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                      line: 209
+                      function: handle
+                      class: Illuminate\Foundation\Http\Middleware\TrimStrings
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php
+                      line: 27
+                      function: 'Illuminate\Pipeline\{closure}'
+                      class: Illuminate\Pipeline\Pipeline
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                      line: 209
+                      function: handle
+                      class: Illuminate\Http\Middleware\ValidatePostSize
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php
+                      line: 110
+                      function: 'Illuminate\Pipeline\{closure}'
+                      class: Illuminate\Pipeline\Pipeline
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                      line: 209
+                      function: handle
+                      class: Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php
+                      line: 49
+                      function: 'Illuminate\Pipeline\{closure}'
+                      class: Illuminate\Pipeline\Pipeline
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                      line: 209
+                      function: handle
+                      class: Illuminate\Http\Middleware\HandleCors
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php
+                      line: 58
+                      function: 'Illuminate\Pipeline\{closure}'
+                      class: Illuminate\Pipeline\Pipeline
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                      line: 209
+                      function: handle
+                      class: Illuminate\Http\Middleware\TrustProxies
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php
+                      line: 22
+                      function: 'Illuminate\Pipeline\{closure}'
+                      class: Illuminate\Pipeline\Pipeline
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                      line: 209
+                      function: handle
+                      class: Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                      line: 127
+                      function: 'Illuminate\Pipeline\{closure}'
+                      class: Illuminate\Pipeline\Pipeline
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
+                      line: 176
+                      function: then
+                      class: Illuminate\Pipeline\Pipeline
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
+                      line: 145
+                      function: sendRequestThroughRouter
+                      class: Illuminate\Foundation\Http\Kernel
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                      line: 310
+                      function: handle
+                      class: Illuminate\Foundation\Http\Kernel
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                      line: 298
+                      function: callLaravelOrLumenRoute
+                      class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                      line: 91
+                      function: makeApiCall
+                      class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                      line: 44
+                      function: makeResponseCall
+                      class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                      line: 35
+                      function: makeResponseCallIfConditionsPass
+                      class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
+                      line: 237
+                      function: __invoke
+                      class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
+                      line: 163
+                      function: iterateThroughStrategies
+                      class: Knuckles\Scribe\Extracting\Extractor
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
+                      line: 95
+                      function: fetchResponses
+                      class: Knuckles\Scribe\Extracting\Extractor
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
+                      line: 125
+                      function: processRoute
+                      class: Knuckles\Scribe\Extracting\Extractor
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
+                      line: 72
+                      function: extractEndpointsInfoFromLaravelApp
+                      class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
+                      line: 50
+                      function: extractEndpointsInfoAndWriteToDisk
+                      class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Commands/GenerateDocumentation.php
+                      line: 53
+                      function: get
+                      class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
+                      line: 36
+                      function: handle
+                      class: Knuckles\Scribe\Commands\GenerateDocumentation
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Util.php
+                      line: 43
+                      function: 'Illuminate\Container\{closure}'
+                      class: Illuminate\Container\BoundMethod
+                      type: '::'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
+                      line: 95
+                      function: unwrapIfClosure
+                      class: Illuminate\Container\Util
+                      type: '::'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
+                      line: 35
+                      function: callBoundMethod
+                      class: Illuminate\Container\BoundMethod
+                      type: '::'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Container.php
+                      line: 694
+                      function: call
+                      class: Illuminate\Container\BoundMethod
+                      type: '::'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php
+                      line: 213
+                      function: call
+                      class: Illuminate\Container\Container
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/symfony/console/Command/Command.php
+                      line: 279
+                      function: execute
+                      class: Illuminate\Console\Command
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php
+                      line: 182
+                      function: run
+                      class: Symfony\Component\Console\Command\Command
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/symfony/console/Application.php
+                      line: 1094
+                      function: run
+                      class: Illuminate\Console\Command
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/symfony/console/Application.php
+                      line: 342
+                      function: doRunCommand
+                      class: Symfony\Component\Console\Application
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/symfony/console/Application.php
+                      line: 193
+                      function: doRun
+                      class: Symfony\Component\Console\Application
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php
+                      line: 198
+                      function: run
+                      class: Symfony\Component\Console\Application
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Application.php
+                      line: 1208
+                      function: handle
+                      class: Illuminate\Foundation\Console\Kernel
+                      type: '->'
+                    -
+                      file: /var/www/ecommerce_api/api/artisan
+                      line: 13
+                      function: handleCommand
+                      class: Illuminate\Foundation\Application
+                      type: '->'
+                properties:
+                  message:
+                    type: string
+                    example: "The stream or file \"/var/www/ecommerce_api/api/storage/logs/security/suspicious-2025-07-07.log\" could not be opened in append mode: chmod(): No such file or directory\nThe exception occurred while attempting to log: Permission Denied\nContext: {\"method\":\"GET\",\"endpoint\":\"api\\/email\\/verify\\/architecto\\/abc123def456ghi789\",\"status_code\":403,\"ip\":\"127.0.0.1\",\"user_agent\":\"Symfony\",\"user_id\":null,\"user_email\":null,\"user_role\":null,\"response_time_ms\":9.65,\"timestamp\":\"2025-07-07T18:07:24.292141Z\"}"
+                  exception:
+                    type: string
+                    example: UnexpectedValueException
+                  file:
+                    type: string
+                    example: /var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php
+                  line:
+                    type: integer
+                    example: 156
+                  trace:
+                    type: array
+                    example:
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Handler/RotatingFileHandler.php
+                        line: 110
+                        function: write
+                        class: Monolog\Handler\StreamHandler
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Handler/AbstractProcessingHandler.php
+                        line: 44
+                        function: write
+                        class: Monolog\Handler\RotatingFileHandler
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Logger.php
+                        line: 391
+                        function: handle
+                        class: Monolog\Handler\AbstractProcessingHandler
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Logger.php
+                        line: 607
+                        function: addRecord
+                        class: Monolog\Logger
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Log/Logger.php
+                        line: 184
+                        function: info
+                        class: Monolog\Logger
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Log/Logger.php
+                        line: 133
+                        function: writeLog
+                        class: Illuminate\Log\Logger
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/app/Services/V1/Logger/SecurityLog.php
+                        line: 137
+                        function: info
+                        class: Illuminate\Log\Logger
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/app/Services/V1/Logger/SecurityLog.php
+                        line: 55
+                        function: detectSuspiciousApiPatterns
+                        class: App\Services\V1\Logger\SecurityLog
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityLogger.php
+                        line: 27
+                        function: logApiAccess
+                        class: App\Services\V1\Logger\SecurityLog
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line: 209
+                        function: handle
+                        class: App\Http\Middleware\V1\SecurityLogger
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityHeaders.php
+                        line: 12
+                        function: 'Illuminate\Pipeline\{closure}'
+                        class: Illuminate\Pipeline\Pipeline
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line: 209
+                        function: handle
+                        class: App\Http\Middleware\V1\SecurityHeaders
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php
+                        line: 51
+                        function: 'Illuminate\Pipeline\{closure}'
+                        class: Illuminate\Pipeline\Pipeline
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line: 209
+                        function: handle
+                        class: Illuminate\Routing\Middleware\SubstituteBindings
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line: 127
+                        function: 'Illuminate\Pipeline\{closure}'
+                        class: Illuminate\Pipeline\Pipeline
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php
+                        line: 807
+                        function: then
+                        class: Illuminate\Pipeline\Pipeline
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php
+                        line: 786
+                        function: runRouteWithinStack
+                        class: Illuminate\Routing\Router
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php
+                        line: 750
+                        function: runRoute
+                        class: Illuminate\Routing\Router
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php
+                        line: 739
+                        function: dispatchToRoute
+                        class: Illuminate\Routing\Router
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
+                        line: 201
+                        function: dispatch
+                        class: Illuminate\Routing\Router
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line: 170
+                        function: 'Illuminate\Foundation\Http\{closure}'
+                        class: Illuminate\Foundation\Http\Kernel
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php
+                        line: 21
+                        function: 'Illuminate\Pipeline\{closure}'
+                        class: Illuminate\Pipeline\Pipeline
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php
+                        line: 31
+                        function: handle
+                        class: Illuminate\Foundation\Http\Middleware\TransformsRequest
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line: 209
+                        function: handle
+                        class: Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php
+                        line: 21
+                        function: 'Illuminate\Pipeline\{closure}'
+                        class: Illuminate\Pipeline\Pipeline
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php
+                        line: 51
+                        function: handle
+                        class: Illuminate\Foundation\Http\Middleware\TransformsRequest
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line: 209
+                        function: handle
+                        class: Illuminate\Foundation\Http\Middleware\TrimStrings
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php
+                        line: 27
+                        function: 'Illuminate\Pipeline\{closure}'
+                        class: Illuminate\Pipeline\Pipeline
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line: 209
+                        function: handle
+                        class: Illuminate\Http\Middleware\ValidatePostSize
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php
+                        line: 110
+                        function: 'Illuminate\Pipeline\{closure}'
+                        class: Illuminate\Pipeline\Pipeline
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line: 209
+                        function: handle
+                        class: Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php
+                        line: 49
+                        function: 'Illuminate\Pipeline\{closure}'
+                        class: Illuminate\Pipeline\Pipeline
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line: 209
+                        function: handle
+                        class: Illuminate\Http\Middleware\HandleCors
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php
+                        line: 58
+                        function: 'Illuminate\Pipeline\{closure}'
+                        class: Illuminate\Pipeline\Pipeline
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line: 209
+                        function: handle
+                        class: Illuminate\Http\Middleware\TrustProxies
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php
+                        line: 22
+                        function: 'Illuminate\Pipeline\{closure}'
+                        class: Illuminate\Pipeline\Pipeline
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line: 209
+                        function: handle
+                        class: Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php
+                        line: 127
+                        function: 'Illuminate\Pipeline\{closure}'
+                        class: Illuminate\Pipeline\Pipeline
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
+                        line: 176
+                        function: then
+                        class: Illuminate\Pipeline\Pipeline
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php
+                        line: 145
+                        function: sendRequestThroughRouter
+                        class: Illuminate\Foundation\Http\Kernel
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                        line: 310
+                        function: handle
+                        class: Illuminate\Foundation\Http\Kernel
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                        line: 298
+                        function: callLaravelOrLumenRoute
+                        class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                        line: 91
+                        function: makeApiCall
+                        class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                        line: 44
+                        function: makeResponseCall
+                        class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php
+                        line: 35
+                        function: makeResponseCallIfConditionsPass
+                        class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
+                        line: 237
+                        function: __invoke
+                        class: Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
+                        line: 163
+                        function: iterateThroughStrategies
+                        class: Knuckles\Scribe\Extracting\Extractor
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php
+                        line: 95
+                        function: fetchResponses
+                        class: Knuckles\Scribe\Extracting\Extractor
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
+                        line: 125
+                        function: processRoute
+                        class: Knuckles\Scribe\Extracting\Extractor
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
+                        line: 72
+                        function: extractEndpointsInfoFromLaravelApp
+                        class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php
+                        line: 50
+                        function: extractEndpointsInfoAndWriteToDisk
+                        class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Commands/GenerateDocumentation.php
+                        line: 53
+                        function: get
+                        class: Knuckles\Scribe\GroupedEndpoints\GroupedEndpointsFromApp
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
+                        line: 36
+                        function: handle
+                        class: Knuckles\Scribe\Commands\GenerateDocumentation
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Util.php
+                        line: 43
+                        function: 'Illuminate\Container\{closure}'
+                        class: Illuminate\Container\BoundMethod
+                        type: '::'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
+                        line: 95
+                        function: unwrapIfClosure
+                        class: Illuminate\Container\Util
+                        type: '::'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php
+                        line: 35
+                        function: callBoundMethod
+                        class: Illuminate\Container\BoundMethod
+                        type: '::'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Container.php
+                        line: 694
+                        function: call
+                        class: Illuminate\Container\BoundMethod
+                        type: '::'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php
+                        line: 213
+                        function: call
+                        class: Illuminate\Container\Container
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/symfony/console/Command/Command.php
+                        line: 279
+                        function: execute
+                        class: Illuminate\Console\Command
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php
+                        line: 182
+                        function: run
+                        class: Symfony\Component\Console\Command\Command
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/symfony/console/Application.php
+                        line: 1094
+                        function: run
+                        class: Illuminate\Console\Command
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/symfony/console/Application.php
+                        line: 342
+                        function: doRunCommand
+                        class: Symfony\Component\Console\Application
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/symfony/console/Application.php
+                        line: 193
+                        function: doRun
+                        class: Symfony\Component\Console\Application
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php
+                        line: 198
+                        function: run
+                        class: Symfony\Component\Console\Application
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Application.php
+                        line: 1208
+                        function: handle
+                        class: Illuminate\Foundation\Console\Kernel
+                        type: '->'
+                      -
+                        file: /var/www/ecommerce_api/api/artisan
+                        line: 13
+                        function: handleCommand
+                        class: Illuminate\Foundation\Application
+                        type: '->'
+                    items:
+                      type: object
+                      properties:
+                        file:
+                          type: string
+                          example: /var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Handler/RotatingFileHandler.php
+                        line:
+                          type: integer
+                          example: 110
+                        function:
+                          type: string
+                          example: write
+                        class:
+                          type: string
+                          example: Monolog\Handler\StreamHandler
+                        type:
+                          type: string
+                          example: '->'
       tags:
         - 'Email Verification'
       security: []
@@ -3286,7 +3346,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the user.'
-        example: 1
+        example: 76
         required: true
         schema:
           type: integer
@@ -11552,7 +11612,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the permission.'
-        example: 1
+        example: 61
         required: true
         schema:
           type: integer
@@ -16034,7 +16094,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the role.'
-        example: 1
+        example: 9
         required: true
         schema:
           type: integer
@@ -16312,7 +16372,7 @@ paths:
         in: path
         name: role_id
         description: 'The ID of the role.'
-        example: 1
+        example: 9
         required: true
         schema:
           type: integer
@@ -16514,7 +16574,7 @@ paths:
         in: path
         name: role_id
         description: 'The ID of the role.'
-        example: 1
+        example: 9
         required: true
         schema:
           type: integer
@@ -16688,7 +16748,7 @@ paths:
         in: path
         name: role_id
         description: 'The ID of the role.'
-        example: 1
+        example: 9
         required: true
         schema:
           type: integer
@@ -16696,7 +16756,7 @@ paths:
         in: path
         name: permission_id
         description: 'The ID of the permission.'
-        example: 1
+        example: 61
         required: true
         schema:
           type: integer
@@ -16720,7 +16780,7 @@ paths:
     get:
       summary: "Retrieve user's shopping cart"
       operationId: retrieveUsersShoppingCart
-      description: "Get the current cart contents for the authenticated user or guest session.\nReturns cart items with product details, pricing information, availability status,\nand total calculations. Supports both authenticated users and guest sessions."
+      description: "Get the current cart contents for the authenticated user. Returns cart items with\nproduct details, pricing information, availability status, and total calculations.\nRequires a valid authentication token (Laravel Passport)."
       parameters: []
       responses:
         200:
@@ -16740,7 +16800,7 @@ paths:
                         total_amount: 15998
                         total_amount_formatted: £159.98
                         total_items_count: 3
-                        expires_at: '2025-02-15T10:30:00.000000Z'
+                        expires_at: null
                         is_expired: false
                         is_empty: false
                         items:
@@ -16802,7 +16862,7 @@ paths:
                             example: 3
                           expires_at:
                             type: string
-                            example: '2025-02-15T10:30:00.000000Z'
+                            example: null
                           is_expired:
                             type: boolean
                             example: false
@@ -16951,7 +17011,7 @@ paths:
                         total_amount: 0
                         total_amount_formatted: £0.00
                         total_items_count: 0
-                        expires_at: '2025-02-15T10:30:00.000000Z'
+                        expires_at: null
                         is_expired: false
                         is_empty: true
                         items: []
@@ -16981,7 +17041,7 @@ paths:
                             example: 0
                           expires_at:
                             type: string
-                            example: '2025-02-15T10:30:00.000000Z'
+                            example: null
                           is_expired:
                             type: boolean
                             example: false
@@ -16997,14 +17057,25 @@ paths:
                           updated_at:
                             type: string
                             example: '2025-01-16T14:30:00.000000Z'
+        401:
+          description: 'Authentication required'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Authentication required for cart operations.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Authentication required for cart operations.'
       tags:
         - 'Shopping Cart'
-      security: []
   /api/cart/items:
     post:
       summary: 'Add item to shopping cart'
       operationId: addItemToShoppingCart
-      description: "Add a product (with optional variant) to the user's shopping cart. If the item already exists,\nthe quantities will be combined. Validates product availability, stock levels, and pricing.\nSupports both authenticated users and guest sessions."
+      description: "Add a product (with optional variant) to the authenticated user's shopping cart.\nIf the item already exists, the quantities will be combined. Validates product\navailability, stock levels, and pricing. Requires a valid authentication token\n(Laravel Passport)."
       parameters: []
       responses:
         200:
@@ -17021,7 +17092,7 @@ paths:
                     total_amount: 15998
                     total_amount_formatted: £159.98
                     total_items_count: 2
-                    expires_at: '2025-02-15T10:30:00.000000Z'
+                    expires_at: null
                     is_expired: false
                     is_empty: false
                     items:
@@ -17071,7 +17142,7 @@ paths:
                         example: 2
                       expires_at:
                         type: string
-                        example: '2025-02-15T10:30:00.000000Z'
+                        example: null
                       is_expired:
                         type: boolean
                         example: false
@@ -17193,6 +17264,18 @@ paths:
                       message:
                         type: string
                         example: 'Insufficient stock. Only 5 items available.'
+        401:
+          description: 'Authentication required'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Authentication required for cart operations.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Authentication required for cart operations.'
         404:
           description: 'Product not found'
           content:
@@ -17252,12 +17335,11 @@ paths:
               required:
                 - product_id
                 - quantity
-      security: []
   '/api/cart/items/{cartItem}':
     put:
       summary: 'Update cart item quantity'
       operationId: updateCartItemQuantity
-      description: "Update the quantity of a specific item in the cart. Setting quantity to 0 will remove\nthe item from the cart. Validates stock availability and updates pricing to current\nproduct price if it has changed since adding to cart."
+      description: "Update the quantity of a specific item in the authenticated user's cart. Setting\nquantity to 0 will remove the item from the cart. Validates stock availability\nand updates pricing to current product price if it has changed since adding to cart.\nRequires a valid authentication token (Laravel Passport)."
       parameters: []
       responses:
         200:
@@ -17277,7 +17359,7 @@ paths:
                         total_amount: 23997
                         total_amount_formatted: £239.97
                         total_items_count: 3
-                        expires_at: '2025-02-15T10:30:00.000000Z'
+                        expires_at: null
                         is_expired: false
                         is_empty: false
                         items:
@@ -17318,7 +17400,7 @@ paths:
                             example: 3
                           expires_at:
                             type: string
-                            example: '2025-02-15T10:30:00.000000Z'
+                            example: null
                           is_expired:
                             type: boolean
                             example: false
@@ -17387,9 +17469,11 @@ paths:
                       message: 'Cart updated successfully.'
                       data:
                         id: 12
+                        user_id: 123
                         total_amount: 0
                         total_amount_formatted: £0.00
                         total_items_count: 0
+                        expires_at: null
                         is_empty: true
                         items: []
                     properties:
@@ -17402,6 +17486,9 @@ paths:
                           id:
                             type: integer
                             example: 12
+                          user_id:
+                            type: integer
+                            example: 123
                           total_amount:
                             type: integer
                             example: 0
@@ -17411,6 +17498,9 @@ paths:
                           total_items_count:
                             type: integer
                             example: 0
+                          expires_at:
+                            type: string
+                            example: null
                           is_empty:
                             type: boolean
                             example: true
@@ -17429,6 +17519,18 @@ paths:
                   message:
                     type: string
                     example: 'Insufficient stock. Only 2 items available.'
+        401:
+          description: 'Authentication required'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Authentication required for cart operations.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Authentication required for cart operations.'
         404:
           description: 'Cart item not found'
           content:
@@ -17475,11 +17577,10 @@ paths:
                   nullable: false
               required:
                 - quantity
-      security: []
     delete:
       summary: 'Remove item from cart'
       operationId: removeItemFromCart
-      description: "Remove a specific item completely from the shopping cart. This action cannot be undone.\nThe cart totals and item count will be automatically recalculated."
+      description: "Remove a specific item completely from the authenticated user's shopping cart.\nThis action cannot be undone. The cart totals and item count will be automatically\nrecalculated. Requires a valid authentication token (Laravel Passport)."
       parameters: []
       responses:
         200:
@@ -17496,7 +17597,7 @@ paths:
                     total_amount: 7999
                     total_amount_formatted: £79.99
                     total_items_count: 1
-                    expires_at: '2025-02-15T10:30:00.000000Z'
+                    expires_at: null
                     is_expired: false
                     is_empty: false
                     items:
@@ -17530,7 +17631,7 @@ paths:
                         example: 1
                       expires_at:
                         type: string
-                        example: '2025-02-15T10:30:00.000000Z'
+                        example: null
                       is_expired:
                         type: boolean
                         example: false
@@ -17564,6 +17665,18 @@ paths:
                             line_total_formatted:
                               type: string
                               example: £79.99
+        401:
+          description: 'Authentication required'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Authentication required for cart operations.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Authentication required for cart operations.'
         404:
           description: 'Cart item not found'
           content:
@@ -17578,7 +17691,6 @@ paths:
                     example: 'No query results for model [App\Models\CartItem] 999'
       tags:
         - 'Shopping Cart'
-      security: []
     parameters:
       -
         in: path
@@ -17592,7 +17704,7 @@ paths:
     delete:
       summary: 'Clear entire cart'
       operationId: clearEntireCart
-      description: "Remove all items from the shopping cart. This action cannot be undone and will result\nin an empty cart. Useful for starting over or clearing expired/unavailable items."
+      description: "Remove all items from the authenticated user's shopping cart. This action cannot\nbe undone and will result in an empty cart. Useful for starting over or clearing\nexpired/unavailable items. Requires a valid authentication token (Laravel Passport)."
       parameters: []
       responses:
         200:
@@ -17609,7 +17721,7 @@ paths:
                     total_amount: 0
                     total_amount_formatted: £0.00
                     total_items_count: 0
-                    expires_at: '2025-02-15T10:30:00.000000Z'
+                    expires_at: null
                     is_expired: false
                     is_empty: true
                     items: []
@@ -17639,7 +17751,7 @@ paths:
                         example: 0
                       expires_at:
                         type: string
-                        example: '2025-02-15T10:30:00.000000Z'
+                        example: null
                       is_expired:
                         type: boolean
                         example: false
@@ -17655,14 +17767,25 @@ paths:
                       updated_at:
                         type: string
                         example: '2025-01-16T14:45:00.000000Z'
+        401:
+          description: 'Authentication required'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Authentication required for cart operations.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Authentication required for cart operations.'
       tags:
         - 'Shopping Cart'
-      security: []
   /api/cart/sync-prices:
     post:
       summary: 'Synchronize cart prices'
       operationId: synchronizeCartPrices
-      description: "Update all cart item prices to match current product prices. This is useful when\nproduct prices have changed since items were added to the cart. Returns information\nabout which items had price changes."
+      description: "Update all cart item prices for the authenticated user to match current product prices.\nThis is useful when product prices have changed since items were added to the cart.\nReturns information about which items had price changes. Requires a valid authentication\ntoken (Laravel Passport)."
       parameters: []
       responses:
         200:
@@ -17682,6 +17805,7 @@ paths:
                         total_amount: 17998
                         total_amount_formatted: £179.98
                         total_items_count: 2
+                        expires_at: null
                         items:
                           -
                             id: 45
@@ -17716,6 +17840,9 @@ paths:
                           total_items_count:
                             type: integer
                             example: 2
+                          expires_at:
+                            type: string
+                            example: null
                           items:
                             type: array
                             example:
@@ -17770,8 +17897,10 @@ paths:
                       message: 'Cart prices synchronized. 0 items updated.'
                       data:
                         id: 12
+                        user_id: 123
                         total_amount: 15998
                         total_amount_formatted: £159.98
+                        expires_at: null
                         items: []
                     properties:
                       message:
@@ -17783,18 +17912,35 @@ paths:
                           id:
                             type: integer
                             example: 12
+                          user_id:
+                            type: integer
+                            example: 123
                           total_amount:
                             type: integer
                             example: 15998
                           total_amount_formatted:
                             type: string
                             example: £159.98
+                          expires_at:
+                            type: string
+                            example: null
                           items:
                             type: array
                             example: []
+        401:
+          description: 'Authentication required'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Authentication required for cart operations.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Authentication required for cart operations.'
       tags:
         - 'Shopping Cart'
-      security: []
   /api/orders:
     get:
       summary: "Retrieve user's orders"
@@ -19661,7 +19807,7 @@ paths:
         in: path
         name: id
         description: 'The ID of the user.'
-        example: 1
+        example: 76
         required: true
         schema:
           type: integer

@@ -29,7 +29,7 @@ endpoints:
         name: role_id
         description: 'The ID of the role.'
         required: true
-        example: 1
+        example: 9
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -46,7 +46,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      role_id: 1
+      role_id: 9
       role: 3
     queryParameters: []
     cleanQueryParameters: []
@@ -146,7 +146,7 @@ endpoints:
         name: role_id
         description: 'The ID of the role.'
         required: true
-        example: 1
+        example: 9
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -163,7 +163,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      role_id: 1
+      role_id: 9
       role: 3
     queryParameters: []
     cleanQueryParameters: []
@@ -308,7 +308,7 @@ endpoints:
         name: role_id
         description: 'The ID of the role.'
         required: true
-        example: 1
+        example: 9
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -325,7 +325,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      role_id: 1
+      role_id: 9
       role: 1
     queryParameters: []
     cleanQueryParameters: []
@@ -461,7 +461,7 @@ endpoints:
         name: role_id
         description: 'The ID of the role.'
         required: true
-        example: 1
+        example: 9
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -471,7 +471,7 @@ endpoints:
         name: permission_id
         description: 'The ID of the permission.'
         required: true
-        example: 1
+        example: 61
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -498,8 +498,8 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      role_id: 1
-      permission_id: 1
+      role_id: 9
+      permission_id: 61
       role: 3
       permission: 12
     queryParameters: []

@@ -80,7 +80,7 @@ class CartItem extends Model
             return false;
         }
 
-        if ($this->product->status->name !== 'Active') {
+        if ($this->product->productStatus->name !== 'Active') {
             return false;
         }
 

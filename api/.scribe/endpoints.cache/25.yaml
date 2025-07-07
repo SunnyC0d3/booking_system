@@ -14,12 +14,13 @@ endpoints:
       subgroupDescription: ''
       title: "Retrieve user's shopping cart"
       description: |-
-        Get the current cart contents for the authenticated user or guest session.
-        Returns cart items with product details, pricing information, availability status,
-        and total calculations. Supports both authenticated users and guest sessions.
-      authenticated: false
+        Get the current cart contents for the authenticated user. Returns cart items with
+        product details, pricing information, availability status, and total calculations.
+        Requires a valid authentication token (Laravel Passport).
+      authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -41,7 +42,7 @@ endpoints:
               "total_amount": 15998,
               "total_amount_formatted": "£159.98",
               "total_items_count": 3,
-              "expires_at": "2025-02-15T10:30:00.000000Z",
+              "expires_at": null,
               "is_expired": false,
               "is_empty": false,
               "items": [
@@ -100,7 +101,7 @@ endpoints:
               "total_amount": 0,
               "total_amount_formatted": "£0.00",
               "total_items_count": 0,
-              "expires_at": "2025-02-15T10:30:00.000000Z",
+              "expires_at": null,
               "is_expired": false,
               "is_empty": true,
               "items": [],
@@ -111,8 +112,20 @@ endpoints:
         headers: []
         description: 'Empty cart'
         custom: []
+      -
+        status: 401
+        content: |-
+          {
+            "message": "Authentication required for cart operations."
+          }
+        headers: []
+        description: 'Authentication required'
+        custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
     controller: null
     method: null
     route: null
@@ -128,12 +141,14 @@ endpoints:
       subgroupDescription: ''
       title: 'Add item to shopping cart'
       description: |-
-        Add a product (with optional variant) to the user's shopping cart. If the item already exists,
-        the quantities will be combined. Validates product availability, stock levels, and pricing.
-        Supports both authenticated users and guest sessions.
-      authenticated: false
+        Add a product (with optional variant) to the authenticated user's shopping cart.
+        If the item already exists, the quantities will be combined. Validates product
+        availability, stock levels, and pricing. Requires a valid authentication token
+        (Laravel Passport).
+      authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -188,7 +203,7 @@ endpoints:
               "total_amount": 15998,
               "total_amount_formatted": "£159.98",
               "total_items_count": 2,
-              "expires_at": "2025-02-15T10:30:00.000000Z",
+              "expires_at": null,
               "is_expired": false,
               "is_empty": false,
               "items": [
@@ -242,6 +257,15 @@ endpoints:
         description: 'Insufficient stock'
         custom: []
       -
+        status: 401
+        content: |-
+          {
+            "message": "Authentication required for cart operations."
+          }
+        headers: []
+        description: 'Authentication required'
+        custom: []
+      -
         status: 404
         content: |-
           {
@@ -264,7 +288,10 @@ endpoints:
         description: 'Validation errors'
         custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
     controller: null
     method: null
     route: null
@@ -280,12 +307,14 @@ endpoints:
       subgroupDescription: ''
       title: 'Update cart item quantity'
       description: |-
-        Update the quantity of a specific item in the cart. Setting quantity to 0 will remove
-        the item from the cart. Validates stock availability and updates pricing to current
-        product price if it has changed since adding to cart.
-      authenticated: false
+        Update the quantity of a specific item in the authenticated user's cart. Setting
+        quantity to 0 will remove the item from the cart. Validates stock availability
+        and updates pricing to current product price if it has changed since adding to cart.
+        Requires a valid authentication token (Laravel Passport).
+      authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -329,7 +358,7 @@ endpoints:
               "total_amount": 23997,
               "total_amount_formatted": "£239.97",
               "total_items_count": 3,
-              "expires_at": "2025-02-15T10:30:00.000000Z",
+              "expires_at": null,
               "is_expired": false,
               "is_empty": false,
               "items": [
@@ -360,9 +389,11 @@ endpoints:
             "message": "Cart updated successfully.",
             "data": {
               "id": 12,
+              "user_id": 123,
               "total_amount": 0,
               "total_amount_formatted": "£0.00",
               "total_items_count": 0,
+              "expires_at": null,
               "is_empty": true,
               "items": []
             }
@@ -378,6 +409,15 @@ endpoints:
           }
         headers: []
         description: 'Insufficient stock'
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+            "message": "Authentication required for cart operations."
+          }
+        headers: []
+        description: 'Authentication required'
         custom: []
       -
         status: 404
@@ -401,7 +441,10 @@ endpoints:
         description: 'Validation errors'
         custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
     controller: null
     method: null
     route: null
@@ -417,11 +460,13 @@ endpoints:
       subgroupDescription: ''
       title: 'Remove item from cart'
       description: |-
-        Remove a specific item completely from the shopping cart. This action cannot be undone.
-        The cart totals and item count will be automatically recalculated.
-      authenticated: false
+        Remove a specific item completely from the authenticated user's shopping cart.
+        This action cannot be undone. The cart totals and item count will be automatically
+        recalculated. Requires a valid authentication token (Laravel Passport).
+      authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -454,7 +499,7 @@ endpoints:
               "total_amount": 7999,
               "total_amount_formatted": "£79.99",
               "total_items_count": 1,
-              "expires_at": "2025-02-15T10:30:00.000000Z",
+              "expires_at": null,
               "is_expired": false,
               "is_empty": false,
               "items": [
@@ -472,6 +517,15 @@ endpoints:
         description: 'Item removed successfully'
         custom: []
       -
+        status: 401
+        content: |-
+          {
+            "message": "Authentication required for cart operations."
+          }
+        headers: []
+        description: 'Authentication required'
+        custom: []
+      -
         status: 404
         content: |-
           {
@@ -481,7 +535,10 @@ endpoints:
         description: 'Cart item not found'
         custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
     controller: null
     method: null
     route: null
@@ -497,11 +554,13 @@ endpoints:
       subgroupDescription: ''
       title: 'Clear entire cart'
       description: |-
-        Remove all items from the shopping cart. This action cannot be undone and will result
-        in an empty cart. Useful for starting over or clearing expired/unavailable items.
-      authenticated: false
+        Remove all items from the authenticated user's shopping cart. This action cannot
+        be undone and will result in an empty cart. Useful for starting over or clearing
+        expired/unavailable items. Requires a valid authentication token (Laravel Passport).
+      authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -523,7 +582,7 @@ endpoints:
               "total_amount": 0,
               "total_amount_formatted": "£0.00",
               "total_items_count": 0,
-              "expires_at": "2025-02-15T10:30:00.000000Z",
+              "expires_at": null,
               "is_expired": false,
               "is_empty": true,
               "items": [],
@@ -534,8 +593,20 @@ endpoints:
         headers: []
         description: 'Cart cleared successfully'
         custom: []
+      -
+        status: 401
+        content: |-
+          {
+            "message": "Authentication required for cart operations."
+          }
+        headers: []
+        description: 'Authentication required'
+        custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
     controller: null
     method: null
     route: null
@@ -551,12 +622,14 @@ endpoints:
       subgroupDescription: ''
       title: 'Synchronize cart prices'
       description: |-
-        Update all cart item prices to match current product prices. This is useful when
-        product prices have changed since items were added to the cart. Returns information
-        about which items had price changes.
-      authenticated: false
+        Update all cart item prices for the authenticated user to match current product prices.
+        This is useful when product prices have changed since items were added to the cart.
+        Returns information about which items had price changes. Requires a valid authentication
+        token (Laravel Passport).
+      authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -578,6 +651,7 @@ endpoints:
               "total_amount": 17998,
               "total_amount_formatted": "£179.98",
               "total_items_count": 2,
+              "expires_at": null,
               "items": [
                 {
                   "id": 45,
@@ -604,16 +678,30 @@ endpoints:
             "message": "Cart prices synchronized. 0 items updated.",
             "data": {
               "id": 12,
+              "user_id": 123,
               "total_amount": 15998,
               "total_amount_formatted": "£159.98",
+              "expires_at": null,
               "items": []
             }
           }
         headers: []
         description: 'No price changes'
         custom: []
+      -
+        status: 401
+        content: |-
+          {
+            "message": "Authentication required for cart operations."
+          }
+        headers: []
+        description: 'Authentication required'
+        custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
     controller: null
     method: null
     route: null

@@ -24,12 +24,12 @@ class CartController extends Controller
     /**
      * Retrieve user's shopping cart
      *
-     * Get the current cart contents for the authenticated user or guest session.
-     * Returns cart items with product details, pricing information, availability status,
-     * and total calculations. Supports both authenticated users and guest sessions.
+     * Get the current cart contents for the authenticated user. Returns cart items with
+     * product details, pricing information, availability status, and total calculations.
+     * Requires a valid authentication token (Laravel Passport).
      *
      * @group Shopping Cart
-     * @unauthenticated
+     * @authenticated
      *
      * @response 200 scenario="Cart retrieved successfully" {
      *   "message": "Cart retrieved successfully.",
@@ -39,7 +39,7 @@ class CartController extends Controller
      *     "total_amount": 15998,
      *     "total_amount_formatted": "£159.98",
      *     "total_items_count": 3,
-     *     "expires_at": "2025-02-15T10:30:00.000000Z",
+     *     "expires_at": null,
      *     "is_expired": false,
      *     "is_empty": false,
      *     "items": [
@@ -93,13 +93,17 @@ class CartController extends Controller
      *     "total_amount": 0,
      *     "total_amount_formatted": "£0.00",
      *     "total_items_count": 0,
-     *     "expires_at": "2025-02-15T10:30:00.000000Z",
+     *     "expires_at": null,
      *     "is_expired": false,
      *     "is_empty": true,
      *     "items": [],
      *     "created_at": "2025-01-16T14:30:00.000000Z",
      *     "updated_at": "2025-01-16T14:30:00.000000Z"
      *   }
+     * }
+     *
+     * @response 401 scenario="Authentication required" {
+     *   "message": "Authentication required for cart operations."
      * }
      */
     public function index(Request $request)
@@ -114,12 +118,13 @@ class CartController extends Controller
     /**
      * Add item to shopping cart
      *
-     * Add a product (with optional variant) to the user's shopping cart. If the item already exists,
-     * the quantities will be combined. Validates product availability, stock levels, and pricing.
-     * Supports both authenticated users and guest sessions.
+     * Add a product (with optional variant) to the authenticated user's shopping cart.
+     * If the item already exists, the quantities will be combined. Validates product
+     * availability, stock levels, and pricing. Requires a valid authentication token
+     * (Laravel Passport).
      *
      * @group Shopping Cart
-     * @unauthenticated
+     * @authenticated
      *
      * @bodyParam product_id integer required The ID of the product to add to cart. Example: 15
      * @bodyParam product_variant_id integer optional The ID of the product variant (for products with variants like color, size). Example: 24
@@ -133,7 +138,7 @@ class CartController extends Controller
      *     "total_amount": 15998,
      *     "total_amount_formatted": "£159.98",
      *     "total_items_count": 2,
-     *     "expires_at": "2025-02-15T10:30:00.000000Z",
+     *     "expires_at": null,
      *     "is_expired": false,
      *     "is_empty": false,
      *     "items": [
@@ -174,6 +179,10 @@ class CartController extends Controller
      *   "message": "Insufficient stock. Only 5 items available."
      * }
      *
+     * @response 401 scenario="Authentication required" {
+     *   "message": "Authentication required for cart operations."
+     * }
+     *
      * @response 422 scenario="Validation errors" {
      *   "errors": [
      *     "Please select a product to add to cart.",
@@ -198,12 +207,13 @@ class CartController extends Controller
     /**
      * Update cart item quantity
      *
-     * Update the quantity of a specific item in the cart. Setting quantity to 0 will remove
-     * the item from the cart. Validates stock availability and updates pricing to current
-     * product price if it has changed since adding to cart.
+     * Update the quantity of a specific item in the authenticated user's cart. Setting
+     * quantity to 0 will remove the item from the cart. Validates stock availability
+     * and updates pricing to current product price if it has changed since adding to cart.
+     * Requires a valid authentication token (Laravel Passport).
      *
      * @group Shopping Cart
-     * @unauthenticated
+     * @authenticated
      *
      * @urlParam cartItem integer required The ID of the cart item to update. Example: 45
      *
@@ -217,7 +227,7 @@ class CartController extends Controller
      *     "total_amount": 23997,
      *     "total_amount_formatted": "£239.97",
      *     "total_items_count": 3,
-     *     "expires_at": "2025-02-15T10:30:00.000000Z",
+     *     "expires_at": null,
      *     "is_expired": false,
      *     "is_empty": false,
      *     "items": [
@@ -243,9 +253,11 @@ class CartController extends Controller
      *   "message": "Cart updated successfully.",
      *   "data": {
      *     "id": 12,
+     *     "user_id": 123,
      *     "total_amount": 0,
      *     "total_amount_formatted": "£0.00",
      *     "total_items_count": 0,
+     *     "expires_at": null,
      *     "is_empty": true,
      *     "items": []
      *   }
@@ -253,6 +265,10 @@ class CartController extends Controller
      *
      * @response 400 scenario="Insufficient stock" {
      *   "message": "Insufficient stock. Only 2 items available."
+     * }
+     *
+     * @response 401 scenario="Authentication required" {
+     *   "message": "Authentication required for cart operations."
      * }
      *
      * @response 404 scenario="Cart item not found" {
@@ -278,11 +294,12 @@ class CartController extends Controller
     /**
      * Remove item from cart
      *
-     * Remove a specific item completely from the shopping cart. This action cannot be undone.
-     * The cart totals and item count will be automatically recalculated.
+     * Remove a specific item completely from the authenticated user's shopping cart.
+     * This action cannot be undone. The cart totals and item count will be automatically
+     * recalculated. Requires a valid authentication token (Laravel Passport).
      *
      * @group Shopping Cart
-     * @unauthenticated
+     * @authenticated
      *
      * @urlParam cartItem integer required The ID of the cart item to remove. Example: 45
      *
@@ -294,7 +311,7 @@ class CartController extends Controller
      *     "total_amount": 7999,
      *     "total_amount_formatted": "£79.99",
      *     "total_items_count": 1,
-     *     "expires_at": "2025-02-15T10:30:00.000000Z",
+     *     "expires_at": null,
      *     "is_expired": false,
      *     "is_empty": false,
      *     "items": [
@@ -307,6 +324,10 @@ class CartController extends Controller
      *       }
      *     ]
      *   }
+     * }
+     *
+     * @response 401 scenario="Authentication required" {
+     *   "message": "Authentication required for cart operations."
      * }
      *
      * @response 404 scenario="Cart item not found" {
@@ -325,11 +346,12 @@ class CartController extends Controller
     /**
      * Clear entire cart
      *
-     * Remove all items from the shopping cart. This action cannot be undone and will result
-     * in an empty cart. Useful for starting over or clearing expired/unavailable items.
+     * Remove all items from the authenticated user's shopping cart. This action cannot
+     * be undone and will result in an empty cart. Useful for starting over or clearing
+     * expired/unavailable items. Requires a valid authentication token (Laravel Passport).
      *
      * @group Shopping Cart
-     * @unauthenticated
+     * @authenticated
      *
      * @response 200 scenario="Cart cleared successfully" {
      *   "message": "Cart cleared successfully.",
@@ -339,13 +361,17 @@ class CartController extends Controller
      *     "total_amount": 0,
      *     "total_amount_formatted": "£0.00",
      *     "total_items_count": 0,
-     *     "expires_at": "2025-02-15T10:30:00.000000Z",
+     *     "expires_at": null,
      *     "is_expired": false,
      *     "is_empty": true,
      *     "items": [],
      *     "created_at": "2025-01-16T14:30:00.000000Z",
      *     "updated_at": "2025-01-16T14:45:00.000000Z"
      *   }
+     * }
+     *
+     * @response 401 scenario="Authentication required" {
+     *   "message": "Authentication required for cart operations."
      * }
      */
     public function clear(Request $request)
@@ -360,12 +386,13 @@ class CartController extends Controller
     /**
      * Synchronize cart prices
      *
-     * Update all cart item prices to match current product prices. This is useful when
-     * product prices have changed since items were added to the cart. Returns information
-     * about which items had price changes.
+     * Update all cart item prices for the authenticated user to match current product prices.
+     * This is useful when product prices have changed since items were added to the cart.
+     * Returns information about which items had price changes. Requires a valid authentication
+     * token (Laravel Passport).
      *
      * @group Shopping Cart
-     * @unauthenticated
+     * @authenticated
      *
      * @response 200 scenario="Prices synchronized successfully" {
      *   "message": "Cart prices synchronized. 2 items updated.",
@@ -375,6 +402,7 @@ class CartController extends Controller
      *     "total_amount": 17998,
      *     "total_amount_formatted": "£179.98",
      *     "total_items_count": 2,
+     *     "expires_at": null,
      *     "items": [
      *       {
      *         "id": 45,
@@ -396,10 +424,16 @@ class CartController extends Controller
      *   "message": "Cart prices synchronized. 0 items updated.",
      *   "data": {
      *     "id": 12,
+     *     "user_id": 123,
      *     "total_amount": 15998,
      *     "total_amount_formatted": "£159.98",
+     *     "expires_at": null,
      *     "items": []
      *   }
+     * }
+     *
+     * @response 401 scenario="Authentication required" {
+     *   "message": "Authentication required for cart operations."
      * }
      */
     public function syncPrices(Request $request)

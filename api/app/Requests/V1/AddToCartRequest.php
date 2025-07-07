@@ -15,15 +15,8 @@ class AddToCartRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'product_id' => [
-                'required',
-                'integer',
-                'exists:products,id',
-            ],
-            'product_variant_id' => [
-                'nullable',
-                'integer',
-                'exists:product_variants,id',
+            'product_id' => ['required', 'integer', 'exists:products,id'],
+            'product_variant_id' => ['nullable', 'integer', 'exists:product_variants,id',
                 function ($attribute, $value, $fail) {
                     if ($value && $this->product_id) {
                         $variant = ProductVariant::find($value);
@@ -31,14 +24,9 @@ class AddToCartRequest extends FormRequest
                             $fail('The selected product variant does not belong to the specified product.');
                         }
                     }
-                },
+                }
             ],
-            'quantity' => [
-                'required',
-                'integer',
-                'min:1',
-                'max:999',
-            ],
+            'quantity' => ['required', 'integer', 'min:1', 'max:999'],
         ];
     }
 

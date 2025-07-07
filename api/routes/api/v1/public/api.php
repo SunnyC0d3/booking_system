@@ -120,7 +120,7 @@ Route::prefix('returns')
 // Cart
 
 Route::prefix('cart')
-    ->middleware(['client', 'rate_limit:cart'])
+    ->middleware(['auth:api', 'rate_limit:cart'])
     ->controller(CartController::class)
     ->group(function () {
         Route::get('/', 'index')->name('cart.index');

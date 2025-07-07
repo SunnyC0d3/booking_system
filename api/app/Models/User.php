@@ -85,6 +85,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(Cart::class)->active();
     }
 
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
+
     public function accountLocks(): HasMany
     {
         return $this->hasMany(AccountLock::class);
@@ -339,14 +344,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getOrCreateCart(): Cart
     {
-        $cart = $this->cart;
-
-        if (!$cart) {
-            $cart = $this->cart()->create([
-                'expires_at' => now()->addDays(30),
-            ]);
-        }
-
-        return $cart;
+        return $this->carts()->firstOrCreate([
+            'user_id' => $this->id,
+            'session_id' => null,
+        ], [
+            'expires_at' => null,
+        ]);
     }
 }

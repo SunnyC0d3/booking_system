@@ -20,24 +20,11 @@ class CartService
     {
         $user = $request->user();
 
-        if ($user) {
-            return $user->getOrCreateCart();
+        if (!$user) {
+            throw new \Exception('Authentication required for cart operations', 401);
         }
 
-        $sessionId = $request->session()->getId();
-
-        $cart = Cart::where('session_id', $sessionId)
-            ->active()
-            ->first();
-
-        if (!$cart) {
-            $cart = Cart::create([
-                'session_id' => $sessionId,
-                'expires_at' => now()->addDays(7),
-            ]);
-        }
-
-        return $cart;
+        return $user->getOrCreateCart();
     }
 
     public function getCart(Request $request)
@@ -53,40 +40,48 @@ class CartService
         $data = $request->validated();
 
         try {
-            return DB::transaction(function () use ($request, $data) {
-                $cart = $this->getOrCreateCart($request);
+            $cart = $this->getOrCreateCart($request);
 
-                $product = Product::with(['productStatus', 'variants'])->findOrFail($data['product_id']);
+            $product = Product::with(['productStatus', 'variants'])->findOrFail($data['product_id']);
 
-                if ($product->productStatus->name !== 'Active') {
-                    return $this->error('Product is not available for purchase.', 400);
-                }
+            if (!$product->productStatus) {
+                return $this->error('Product status not found.', 400);
+            }
 
-                $productVariant = null;
-                if (isset($data['product_variant_id'])) {
-                    $productVariant = ProductVariant::where('product_id', $product->id)
-                        ->findOrFail($data['product_variant_id']);
-                }
+            if ($product->productStatus->name !== 'Active') {
+                return $this->error('Product is not available for purchase.', 400);
+            }
 
-                $currentPrice = $product->price;
-                if ($productVariant && $productVariant->additional_price) {
-                    $currentPrice += $productVariant->additional_price;
-                }
+            $productVariant = null;
+            if (isset($data['product_variant_id'])) {
+                $productVariant = ProductVariant::where('product_id', $product->id)
+                    ->findOrFail($data['product_variant_id']);
+            }
 
-                $availableStock = $productVariant ? $productVariant->quantity : $product->quantity;
+            $currentPrice = $product->price;
+            if ($productVariant && $productVariant->additional_price) {
+                $currentPrice += $productVariant->additional_price;
+            }
 
-                $existingItem = CartItem::where('cart_id', $cart->id)
-                    ->where('product_id', $product->id)
-                    ->where('product_variant_id', $data['product_variant_id'] ?? null)
-                    ->first();
+            $availableStock = $productVariant ? $productVariant->quantity : $product->quantity;
 
-                $requestedQuantity = $data['quantity'];
-                $totalQuantity = $existingItem ? $existingItem->quantity + $requestedQuantity : $requestedQuantity;
+            if ($availableStock <= 0) {
+                return $this->error('Product is out of stock.', 400);
+            }
 
-                if ($totalQuantity > $availableStock) {
-                    return $this->error("Insufficient stock. Only {$availableStock} items available.", 400);
-                }
+            $existingItem = CartItem::where('cart_id', $cart->id)
+                ->where('product_id', $product->id)
+                ->where('product_variant_id', $data['product_variant_id'] ?? null)
+                ->first();
 
+            $requestedQuantity = $data['quantity'];
+            $totalQuantity = $existingItem ? $existingItem->quantity + $requestedQuantity : $requestedQuantity;
+
+            if ($totalQuantity > $availableStock) {
+                return $this->error("Insufficient stock. Only {$availableStock} items available.", 400);
+            }
+
+            $result = DB::transaction(function () use ($cart, $product, $data, $currentPrice, $existingItem, $totalQuantity, $requestedQuantity, $request) {
                 if ($existingItem) {
                     $existingItem->update([
                         'quantity' => $totalQuantity,
@@ -97,10 +92,13 @@ class CartService
                         'cart_id' => $cart->id,
                         'cart_item_id' => $existingItem->id,
                         'product_id' => $product->id,
+                        'user_id' => $request->user()->id,
                         'new_quantity' => $totalQuantity,
                     ]);
+
+                    return $existingItem;
                 } else {
-                    $existingItem = CartItem::create([
+                    $newItem = CartItem::create([
                         'cart_id' => $cart->id,
                         'product_id' => $product->id,
                         'product_variant_id' => $data['product_variant_id'] ?? null,
@@ -110,23 +108,31 @@ class CartService
 
                     Log::info('New cart item added', [
                         'cart_id' => $cart->id,
-                        'cart_item_id' => $existingItem->id,
+                        'cart_item_id' => $newItem->id,
                         'product_id' => $product->id,
+                        'user_id' => $request->user()->id,
                         'quantity' => $requestedQuantity,
                     ]);
+
+                    return $newItem;
                 }
-
-                $cart->extendExpiry();
-
-                $cart->load(['cartItems.product.productStatus', 'cartItems.productVariant.productAttribute']);
-
-                return $this->ok('Item added to cart successfully.', new CartResource($cart));
             });
+
+            if (method_exists($cart, 'extendExpiry')) {
+                $cart->extendExpiry();
+            }
+
+            $cart->load(['cartItems.product.productStatus', 'cartItems.productVariant.productAttribute']);
+
+            return $this->ok('Item added to cart successfully.', new CartResource($cart));
+
         } catch (\Exception $e) {
             Log::error('Failed to add item to cart', [
                 'error' => $e->getMessage(),
                 'product_id' => $data['product_id'] ?? null,
                 'variant_id' => $data['product_variant_id'] ?? null,
+                'user_id' => $request->user()?->id,
+                'trace' => $e->getTraceAsString(),
             ]);
 
             return $this->error('Failed to add item to cart.', 500);
@@ -157,6 +163,7 @@ class CartService
                     Log::info('Cart item removed due to zero quantity', [
                         'cart_id' => $cart->id,
                         'cart_item_id' => $cartItemId,
+                        'user_id' => $request->user()->id,
                     ]);
                 } else {
                     $cartItem->update([
@@ -167,6 +174,7 @@ class CartService
                     Log::info('Cart item quantity updated', [
                         'cart_id' => $cart->id,
                         'cart_item_id' => $cartItemId,
+                        'user_id' => $request->user()->id,
                         'new_quantity' => $data['quantity'],
                     ]);
                 }
@@ -181,6 +189,7 @@ class CartService
             Log::error('Failed to update cart item', [
                 'error' => $e->getMessage(),
                 'cart_item_id' => $cartItemId,
+                'user_id' => $request->user()?->id,
             ]);
 
             return $this->error('Failed to update cart item.', 500);
@@ -198,6 +207,7 @@ class CartService
             Log::info('Cart item removed', [
                 'cart_id' => $cart->id,
                 'cart_item_id' => $cartItemId,
+                'user_id' => $request->user()->id,
             ]);
 
             $cart->load(['cartItems.product.productStatus', 'cartItems.productVariant.productAttribute']);
@@ -207,6 +217,7 @@ class CartService
             Log::error('Failed to remove cart item', [
                 'error' => $e->getMessage(),
                 'cart_item_id' => $cartItemId,
+                'user_id' => $request->user()?->id,
             ]);
 
             return $this->error('Failed to remove item from cart.', 500);
@@ -219,12 +230,16 @@ class CartService
             $cart = $this->getOrCreateCart($request);
             $cart->clear();
 
-            Log::info('Cart cleared', ['cart_id' => $cart->id]);
+            Log::info('Cart cleared', [
+                'cart_id' => $cart->id,
+                'user_id' => $request->user()->id,
+            ]);
 
             return $this->ok('Cart cleared successfully.', new CartResource($cart));
         } catch (\Exception $e) {
             Log::error('Failed to clear cart', [
                 'error' => $e->getMessage(),
+                'user_id' => $request->user()?->id,
             ]);
 
             return $this->error('Failed to clear cart.', 500);
@@ -246,6 +261,7 @@ class CartService
 
             Log::info('Cart prices synchronized', [
                 'cart_id' => $cart->id,
+                'user_id' => $request->user()->id,
                 'updated_items' => $updatedItems,
             ]);
 
@@ -255,29 +271,34 @@ class CartService
         } catch (\Exception $e) {
             Log::error('Failed to sync cart prices', [
                 'error' => $e->getMessage(),
+                'user_id' => $request->user()?->id,
             ]);
 
             return $this->error('Failed to synchronize cart prices.', 500);
         }
     }
 
+    /**
+     * This method is now optional since we're not using sessions
+     * Keep it if you might need to migrate old session-based carts
+     */
     public function mergeGuestCart(string $sessionId, int $userId): void
     {
         try {
             DB::transaction(function () use ($sessionId, $userId) {
-                $guestCart = Cart::where('session_id', $sessionId)->active()->first();
+                $guestCart = Cart::where('session_id', $sessionId)->first();
 
                 if (!$guestCart || $guestCart->isEmpty()) {
                     return;
                 }
 
-                $userCart = Cart::where('user_id', $userId)->active()->first();
+                $userCart = Cart::where('user_id', $userId)->first();
 
                 if (!$userCart) {
                     $guestCart->update([
                         'user_id' => $userId,
                         'session_id' => null,
-                        'expires_at' => now()->addDays(30),
+                        'expires_at' => null, // Remove expiry for authenticated users
                     ]);
 
                     Log::info('Guest cart assigned to user', [
