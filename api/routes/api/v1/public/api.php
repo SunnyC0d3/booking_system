@@ -125,7 +125,7 @@ Route::prefix('cart')
     ->group(function () {
         Route::get('/', 'index')->name('cart.index');
         Route::post('/items', 'store')->name('cart.add');
-        Route::put('/items/{cartItem}', 'update')->name('cart.update');
+        Route::post('/items/{cartItem}', 'update')->name('cart.update');
         Route::delete('/items/{cartItem}', 'destroy')->name('cart.remove');
         Route::delete('/clear', 'clear')->name('cart.clear');
         Route::post('/sync-prices', 'syncPrices')->name('cart.sync-prices');
