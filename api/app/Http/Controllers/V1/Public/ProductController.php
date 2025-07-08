@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1\Public;
 
+use App\Constants\ProductStatuses;
 use App\Models\Product as ProdDB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -77,7 +78,7 @@ class ProductController extends Controller
     public function show(Request $request, ProdDB $product)
     {
         try {
-            if (!$product->productStatus || $product->productStatus->name !== 'Active') {
+            if (!$product->productStatus || $product->productStatus->name !== ProductStatuses::ACTIVE) {
                 return $this->error('Product is not available for viewing', 404);
             }
 

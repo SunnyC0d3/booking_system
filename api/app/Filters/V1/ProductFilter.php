@@ -2,6 +2,7 @@
 
 namespace App\Filters\V1;
 
+use App\Constants\ProductStatuses;
 use App\Services\V1\Search\QueryProcessor;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
@@ -142,7 +143,7 @@ class ProductFilter extends QueryFilter
             case 'in_stock':
                 return $this->builder->where('products.quantity', '>', 0)
                     ->whereHas('productStatus', function($query) {
-                        $query->where('name', 'Active');
+                        $query->where('name', ProductStatuses::ACTIVE);
                     });
 
             case 'out_of_stock':
@@ -154,7 +155,7 @@ class ProductFilter extends QueryFilter
             case 'available':
                 return $this->builder->where('products.quantity', '>', 0)
                     ->whereHas('productStatus', function($query) {
-                        $query->whereIn('name', ['Active']);
+                        $query->whereIn('name', [ProductStatuses::ACTIVE]);
                     });
 
             default:

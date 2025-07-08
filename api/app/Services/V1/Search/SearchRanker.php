@@ -2,6 +2,7 @@
 
 namespace App\Services\V1\Search;
 
+use App\Constants\ProductStatuses;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -84,7 +85,7 @@ class SearchRanker
                 $boostScore += $this->penaltyFactors['out_of_stock'];
             }
 
-            if ($product->productStatus && $product->productStatus->name !== 'Active') {
+            if ($product->productStatus && $product->productStatus->name !== ProductStatuses::ACTIVE) {
                 $boostScore += $this->penaltyFactors['inactive_status'];
             }
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Constants\ProductStatuses;
 use App\Services\V1\Media\SecureMedia;
 use Illuminate\Http\UploadedFile;
 use Spatie\MediaLibrary\HasMedia;
@@ -76,7 +77,7 @@ class Product extends Model implements HasMedia
 
     public function isAvailable(): bool
     {
-        return $this->productStatus && $this->productStatus->name === 'Active' && $this->quantity > 0;
+        return $this->productStatus && $this->productStatus->name === ProductStatuses::ACTIVE && $this->quantity > 0;
     }
 
     public function getFeaturedImageAttribute(): ?string

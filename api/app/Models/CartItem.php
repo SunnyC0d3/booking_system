@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Constants\ProductStatuses;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -80,7 +81,7 @@ class CartItem extends Model
             return false;
         }
 
-        if ($this->product->productStatus->name !== 'Active') {
+        if ($this->product->productStatus->name !== ProductStatuses::ACTIVE) {
             return false;
         }
 

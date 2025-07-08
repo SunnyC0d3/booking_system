@@ -2,6 +2,7 @@
 
 namespace App\Services\V1\Cart;
 
+use App\Constants\ProductStatuses;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
@@ -48,7 +49,7 @@ class CartService
                 return $this->error('Product status not found.', 400);
             }
 
-            if ($product->productStatus->name !== 'Active') {
+            if ($product->productStatus->name !== ProductStatuses::ACTIVE) {
                 return $this->error('Product is not available for purchase.', 400);
             }
 

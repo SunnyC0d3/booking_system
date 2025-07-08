@@ -2,6 +2,7 @@
 
 namespace App\Services\V1\Products;
 
+use App\Constants\ProductStatuses;
 use App\Models\Product as ProdDB;
 use App\Services\V1\Media\SecureMedia;
 use App\Services\V1\Search\QueryProcessor;
@@ -61,7 +62,7 @@ class Product
 
         if (!$this->isAdminRequest($request)) {
             $query = $query->whereHas('productStatus', function($q) {
-                $q->where('name', 'Active');
+                $q->where('name', ProductStatuses::ACTIVE);
             });
         }
 
