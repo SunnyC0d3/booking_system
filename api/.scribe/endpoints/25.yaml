@@ -296,7 +296,7 @@ endpoints:
     custom: []
   -
     httpMethods:
-      - PUT
+      - POST
     uri: 'api/cart/items/{cartItem}'
     metadata:
       groupName: 'Shopping Cart'

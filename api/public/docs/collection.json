@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "E-Commerce API Documentation",
-        "_postman_id": "ef0a87d4-51fd-42b4-910b-302f7b5f6abe",
+        "_postman_id": "49b2f2df-7e04-473c-90b1-ea2edb4d31e3",
         "description": "Comprehensive API for managing products, orders, payments, users, vendors, and more in an e-commerce platform.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json",
         "version": "1.0.0"
@@ -416,12 +416,6 @@
                             "name": "Signature verification failed"
                         },
                         {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\User] 123\"\n}",
-                            "name": "User not found"
-                        },
-                        {
                             "header": [
                                 {
                                     "key": "cache-control",
@@ -456,9 +450,15 @@
                                     "value": "camera=(), microphone=(), geolocation=(), payment=()"
                                 }
                             ],
-                            "code": 500,
-                            "body": "{\n    \"message\": \"The stream or file \\\"\/var\/www\/ecommerce_api\/api\/storage\/logs\/security\/suspicious-2025-07-07.log\\\" could not be opened in append mode: chmod(): No such file or directory\\nThe exception occurred while attempting to log: Permission Denied\\nContext: {\\\"method\\\":\\\"GET\\\",\\\"endpoint\\\":\\\"api\\\\\/email\\\\\/verify\\\\\/architecto\\\\\/abc123def456ghi789\\\",\\\"status_code\\\":403,\\\"ip\\\":\\\"127.0.0.1\\\",\\\"user_agent\\\":\\\"Symfony\\\",\\\"user_id\\\":null,\\\"user_email\\\":null,\\\"user_role\\\":null,\\\"response_time_ms\\\":9.65,\\\"timestamp\\\":\\\"2025-07-07T18:07:24.292141Z\\\"}\",\n    \"exception\": \"UnexpectedValueException\",\n    \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/monolog\/monolog\/src\/Monolog\/Handler\/StreamHandler.php\",\n    \"line\": 156,\n    \"trace\": [\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/monolog\/monolog\/src\/Monolog\/Handler\/RotatingFileHandler.php\",\n            \"line\": 110,\n            \"function\": \"write\",\n            \"class\": \"Monolog\\\\Handler\\\\StreamHandler\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/monolog\/monolog\/src\/Monolog\/Handler\/AbstractProcessingHandler.php\",\n            \"line\": 44,\n            \"function\": \"write\",\n            \"class\": \"Monolog\\\\Handler\\\\RotatingFileHandler\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/monolog\/monolog\/src\/Monolog\/Logger.php\",\n            \"line\": 391,\n            \"function\": \"handle\",\n            \"class\": \"Monolog\\\\Handler\\\\AbstractProcessingHandler\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/monolog\/monolog\/src\/Monolog\/Logger.php\",\n            \"line\": 607,\n            \"function\": \"addRecord\",\n            \"class\": \"Monolog\\\\Logger\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Log\/Logger.php\",\n            \"line\": 184,\n            \"function\": \"info\",\n            \"class\": \"Monolog\\\\Logger\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Log\/Logger.php\",\n            \"line\": 133,\n            \"function\": \"writeLog\",\n            \"class\": \"Illuminate\\\\Log\\\\Logger\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/app\/Services\/V1\/Logger\/SecurityLog.php\",\n            \"line\": 137,\n            \"function\": \"info\",\n            \"class\": \"Illuminate\\\\Log\\\\Logger\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/app\/Services\/V1\/Logger\/SecurityLog.php\",\n            \"line\": 55,\n            \"function\": \"detectSuspiciousApiPatterns\",\n            \"class\": \"App\\\\Services\\\\V1\\\\Logger\\\\SecurityLog\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/app\/Http\/Middleware\/V1\/SecurityLogger.php\",\n            \"line\": 27,\n            \"function\": \"logApiAccess\",\n            \"class\": \"App\\\\Services\\\\V1\\\\Logger\\\\SecurityLog\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"App\\\\Http\\\\Middleware\\\\V1\\\\SecurityLogger\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/app\/Http\/Middleware\/V1\/SecurityHeaders.php\",\n            \"line\": 12,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"App\\\\Http\\\\Middleware\\\\V1\\\\SecurityHeaders\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Middleware\/SubstituteBindings.php\",\n            \"line\": 51,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Routing\\\\Middleware\\\\SubstituteBindings\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 127,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 807,\n            \"function\": \"then\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 786,\n            \"function\": \"runRouteWithinStack\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 750,\n            \"function\": \"runRoute\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 739,\n            \"function\": \"dispatchToRoute\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 201,\n            \"function\": \"dispatch\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 170,\n            \"function\": \"Illuminate\\\\Foundation\\\\Http\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TransformsRequest.php\",\n            \"line\": 21,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/ConvertEmptyStringsToNull.php\",\n            \"line\": 31,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TransformsRequest\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\ConvertEmptyStringsToNull\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TransformsRequest.php\",\n            \"line\": 21,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TrimStrings.php\",\n            \"line\": 51,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TransformsRequest\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TrimStrings\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/ValidatePostSize.php\",\n            \"line\": 27,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\ValidatePostSize\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/PreventRequestsDuringMaintenance.php\",\n            \"line\": 110,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\PreventRequestsDuringMaintenance\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/HandleCors.php\",\n            \"line\": 49,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\HandleCors\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/TrustProxies.php\",\n            \"line\": 58,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\TrustProxies\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/InvokeDeferredCallbacks.php\",\n            \"line\": 22,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\InvokeDeferredCallbacks\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 127,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 176,\n            \"function\": \"then\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 145,\n            \"function\": \"sendRequestThroughRouter\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 310,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 298,\n            \"function\": \"callLaravelOrLumenRoute\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 91,\n            \"function\": \"makeApiCall\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 44,\n            \"function\": \"makeResponseCall\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 35,\n            \"function\": \"makeResponseCallIfConditionsPass\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 237,\n            \"function\": \"__invoke\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 163,\n            \"function\": \"iterateThroughStrategies\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 95,\n            \"function\": \"fetchResponses\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 125,\n            \"function\": \"processRoute\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 72,\n            \"function\": \"extractEndpointsInfoFromLaravelApp\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 50,\n            \"function\": \"extractEndpointsInfoAndWriteToDisk\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Commands\/GenerateDocumentation.php\",\n            \"line\": 53,\n            \"function\": \"get\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 36,\n            \"function\": \"handle\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Commands\\\\GenerateDocumentation\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/Util.php\",\n            \"line\": 43,\n            \"function\": \"Illuminate\\\\Container\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 95,\n            \"function\": \"unwrapIfClosure\",\n            \"class\": \"Illuminate\\\\Container\\\\Util\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 35,\n            \"function\": \"callBoundMethod\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/Container.php\",\n            \"line\": 694,\n            \"function\": \"call\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Console\/Command.php\",\n            \"line\": 213,\n            \"function\": \"call\",\n            \"class\": \"Illuminate\\\\Container\\\\Container\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Command\/Command.php\",\n            \"line\": 279,\n            \"function\": \"execute\",\n            \"class\": \"Illuminate\\\\Console\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Console\/Command.php\",\n            \"line\": 182,\n            \"function\": \"run\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Command\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 1094,\n            \"function\": \"run\",\n            \"class\": \"Illuminate\\\\Console\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 342,\n            \"function\": \"doRunCommand\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 193,\n            \"function\": \"doRun\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Console\/Kernel.php\",\n            \"line\": 198,\n            \"function\": \"run\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Application.php\",\n            \"line\": 1208,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Console\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/artisan\",\n            \"line\": 13,\n            \"function\": \"handleCommand\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Application\",\n            \"type\": \"->\"\n        }\n    ]\n}",
+                            "code": 403,
+                            "body": "{\n    \"message\": \"Invalid signature.\",\n    \"exception\": \"Illuminate\\\\Routing\\\\Exceptions\\\\InvalidSignatureException\",\n    \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Middleware\/ValidateSignature.php\",\n    \"line\": 73,\n    \"trace\": [\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Routing\\\\Middleware\\\\ValidateSignature\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/app\/Http\/Middleware\/V1\/SecurityMonitoring.php\",\n            \"line\": 27,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"App\\\\Http\\\\Middleware\\\\V1\\\\SecurityMonitoring\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/app\/Http\/Middleware\/V1\/SecurityLogger.php\",\n            \"line\": 23,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"App\\\\Http\\\\Middleware\\\\V1\\\\SecurityLogger\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/app\/Http\/Middleware\/V1\/SecurityHeaders.php\",\n            \"line\": 12,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"App\\\\Http\\\\Middleware\\\\V1\\\\SecurityHeaders\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Middleware\/SubstituteBindings.php\",\n            \"line\": 51,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Routing\\\\Middleware\\\\SubstituteBindings\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 127,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 807,\n            \"function\": \"then\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 786,\n            \"function\": \"runRouteWithinStack\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 750,\n            \"function\": \"runRoute\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 739,\n            \"function\": \"dispatchToRoute\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 201,\n            \"function\": \"dispatch\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 170,\n            \"function\": \"Illuminate\\\\Foundation\\\\Http\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TransformsRequest.php\",\n            \"line\": 21,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/ConvertEmptyStringsToNull.php\",\n            \"line\": 31,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TransformsRequest\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\ConvertEmptyStringsToNull\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TransformsRequest.php\",\n            \"line\": 21,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TrimStrings.php\",\n            \"line\": 51,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TransformsRequest\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TrimStrings\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/ValidatePostSize.php\",\n            \"line\": 27,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\ValidatePostSize\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/PreventRequestsDuringMaintenance.php\",\n            \"line\": 110,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\PreventRequestsDuringMaintenance\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/HandleCors.php\",\n            \"line\": 49,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\HandleCors\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/TrustProxies.php\",\n            \"line\": 58,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\TrustProxies\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/InvokeDeferredCallbacks.php\",\n            \"line\": 22,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\InvokeDeferredCallbacks\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 127,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 176,\n            \"function\": \"then\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 145,\n            \"function\": \"sendRequestThroughRouter\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 310,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 298,\n            \"function\": \"callLaravelOrLumenRoute\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 91,\n            \"function\": \"makeApiCall\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 44,\n            \"function\": \"makeResponseCall\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 35,\n            \"function\": \"makeResponseCallIfConditionsPass\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 237,\n            \"function\": \"__invoke\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 163,\n            \"function\": \"iterateThroughStrategies\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 95,\n            \"function\": \"fetchResponses\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 125,\n            \"function\": \"processRoute\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 72,\n            \"function\": \"extractEndpointsInfoFromLaravelApp\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 50,\n            \"function\": \"extractEndpointsInfoAndWriteToDisk\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Commands\/GenerateDocumentation.php\",\n            \"line\": 53,\n            \"function\": \"get\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 36,\n            \"function\": \"handle\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Commands\\\\GenerateDocumentation\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/Util.php\",\n            \"line\": 43,\n            \"function\": \"Illuminate\\\\Container\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 95,\n            \"function\": \"unwrapIfClosure\",\n            \"class\": \"Illuminate\\\\Container\\\\Util\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 35,\n            \"function\": \"callBoundMethod\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/Container.php\",\n            \"line\": 694,\n            \"function\": \"call\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Console\/Command.php\",\n            \"line\": 213,\n            \"function\": \"call\",\n            \"class\": \"Illuminate\\\\Container\\\\Container\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Command\/Command.php\",\n            \"line\": 279,\n            \"function\": \"execute\",\n            \"class\": \"Illuminate\\\\Console\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Console\/Command.php\",\n            \"line\": 182,\n            \"function\": \"run\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Command\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 1094,\n            \"function\": \"run\",\n            \"class\": \"Illuminate\\\\Console\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 342,\n            \"function\": \"doRunCommand\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 193,\n            \"function\": \"doRun\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Console\/Kernel.php\",\n            \"line\": 198,\n            \"function\": \"run\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Application.php\",\n            \"line\": 1208,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Console\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/artisan\",\n            \"line\": 13,\n            \"function\": \"handleCommand\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Application\",\n            \"type\": \"->\"\n        }\n    ]\n}",
                             "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\User] 123\"\n}",
+                            "name": "User not found"
                         }
                     ]
                 },
@@ -1450,7 +1450,7 @@
             "description": "",
             "item": [
                 {
-                    "name": "Retrieve a paginated list of products",
+                    "name": "Retrieve a paginated list of products with enhanced search",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1463,15 +1463,15 @@
                                     "disabled": false
                                 },
                                 {
-                                    "key": "filter%5Bname%5D",
-                                    "value": "wireless",
-                                    "description": "optional Filter products by name (partial match supported).",
+                                    "key": "filter%5Bsearch%5D",
+                                    "value": "wireless+bluetooth+headphones",
+                                    "description": "optional Advanced search across product names and descriptions with relevance scoring.",
                                     "disabled": false
                                 },
                                 {
-                                    "key": "filter%5Bsearch%5D",
-                                    "value": "bluetooth+headphones",
-                                    "description": "optional Search across product names and descriptions.",
+                                    "key": "filter%5Bname%5D",
+                                    "value": "wireless",
+                                    "description": "optional Filter products by name (partial match supported).",
                                     "disabled": false
                                 },
                                 {
@@ -1481,15 +1481,69 @@
                                     "disabled": false
                                 },
                                 {
+                                    "key": "filter%5BpriceRanges%5D",
+                                    "value": "0-25%2C50-100%2C200-500",
+                                    "description": "optional Multiple price ranges separated by commas.",
+                                    "disabled": false
+                                },
+                                {
                                     "key": "filter%5Bcategory%5D",
                                     "value": "5%2C12%2C18",
-                                    "description": "optional Filter by category ID(s). Single ID or comma-separated multiple IDs.",
+                                    "description": "optional Filter by category ID(s) including child categories.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter%5Bavailability%5D",
+                                    "value": "in_stock",
+                                    "description": "optional Filter by stock status. Options: in_stock, out_of_stock, low_stock, available.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter%5Bvendors%5D",
+                                    "value": "2%2C5%2C8",
+                                    "description": "optional Filter by vendor ID(s).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter%5Bvendor%5D",
+                                    "value": "apple",
+                                    "description": "optional Filter by vendor name (partial match).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter%5Btags%5D",
+                                    "value": "3%2C7%2C12",
+                                    "description": "optional Filter by tag ID(s) with logic support.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter%5Battributes%5D",
+                                    "value": "color%3Ared%2Csize%3Alarge",
+                                    "description": "optional Filter by product attributes. Format: attribute:value,attribute:value.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter%5Bstatus%5D",
+                                    "value": "Active",
+                                    "description": "optional Filter by product status.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter%5Bquantity%5D",
+                                    "value": "10%2C100",
+                                    "description": "optional Filter by quantity range. Single value or min,max.",
                                     "disabled": false
                                 },
                                 {
                                     "key": "filter%5Bcreated_at%5D",
                                     "value": "2025-01-01%2C2025-01-31",
-                                    "description": "optional Filter by creation date. Single date or comma-separated date range (YYYY-MM-DD).",
+                                    "description": "optional Filter by creation date range (YYYY-MM-DD).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter%5Bupdated_at%5D",
+                                    "value": "2025-01-01%2C2025-01-31",
+                                    "description": "optional Filter by update date range (YYYY-MM-DD).",
                                     "disabled": false
                                 },
                                 {
@@ -1512,12 +1566,24 @@
                                 },
                                 {
                                     "key": "sort",
-                                    "value": "-price%2Cname",
-                                    "description": "optional Sort products. Prefix with '-' for descending. Available: name, price, created_at, updated_at.",
+                                    "value": "-relevance%2Cprice",
+                                    "description": "optional Sort products. Prefix with '-' for descending. Available: name, price, quantity, created_at, updated_at, relevance.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "diversify",
+                                    "value": "1",
+                                    "description": "optional Apply result diversification to avoid too many similar products. Default: false.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "explain",
+                                    "value": "1",
+                                    "description": "optional Include search explanations for debugging. Default: false.",
                                     "disabled": false
                                 }
                             ],
-                            "raw": "{{baseUrl}}\/api\/admin\/products?filter[0]=architecto&filter%5Bname%5D=wireless&filter%5Bsearch%5D=bluetooth+headphones&filter%5Bprice%5D=10.00%2C50.00&filter%5Bcategory%5D=5%2C12%2C18&filter%5Bcreated_at%5D=2025-01-01%2C2025-01-31&filter%5Binclude%5D=vendor%2Cvariants%2Ccategory&page=2&per_page=24&sort=-price%2Cname"
+                            "raw": "{{baseUrl}}\/api\/admin\/products?filter[0]=architecto&filter%5Bsearch%5D=wireless+bluetooth+headphones&filter%5Bname%5D=wireless&filter%5Bprice%5D=10.00%2C50.00&filter%5BpriceRanges%5D=0-25%2C50-100%2C200-500&filter%5Bcategory%5D=5%2C12%2C18&filter%5Bavailability%5D=in_stock&filter%5Bvendors%5D=2%2C5%2C8&filter%5Bvendor%5D=apple&filter%5Btags%5D=3%2C7%2C12&filter%5Battributes%5D=color%3Ared%2Csize%3Alarge&filter%5Bstatus%5D=Active&filter%5Bquantity%5D=10%2C100&filter%5Bcreated_at%5D=2025-01-01%2C2025-01-31&filter%5Bupdated_at%5D=2025-01-01%2C2025-01-31&filter%5Binclude%5D=vendor%2Cvariants%2Ccategory&page=2&per_page=24&sort=-relevance%2Cprice&diversify=1&explain=1"
                         },
                         "method": "GET",
                         "header": [
@@ -1532,39 +1598,30 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"b\",\"price\":\"9,3.1)\",\"category\":\"9,31\",\"quantity\":8,\"created_at\":\"2559-31-42\",\"updated_at\":\"2559-31-42\",\"search\":\"h\",\"include\":\"uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv\"},\"page\":4,\"per_page\":9,\"sort\":\"y8p,Bm,-dp,-Zm,-GH\"}"
+                            "raw": "{\"filter\":{\"name\":\"b\",\"search\":\"n\",\"price\":\"9,3.1)\",\"priceRanges\":\"-1.42)-3268)\",\"category\":\"9,31\",\"categories\":\"9,31\",\"quantity\":\"64\",\"availability\":\"out_of_stock\",\"vendors\":\"9,31\",\"vendor\":\"i\",\"brand\":\"k\",\"brands\":\"9,31\",\"tags\":\"9,31\",\"tag_logic\":\"OR\",\"attributes\":\"_JK:AI\",\"color\":\"k\",\"colors\":\"dLJnIk\",\"size\":\"h\",\"sizes\":\"DDz1Ys\",\"material\":\"h\",\"status\":\"w\",\"created_at\":\"2559-31-42\",\"updated_at\":\"2559-31-42\",\"include\":\"uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv\"},\"page\":4,\"per_page\":9,\"sort\":\"y8p,Bm,-dp,-Zm,-GH\",\"diversify\":true,\"explain\":false,\"facets\":false,\"highlight\":false,\"personalize\":true,\"typo_tolerance\":false,\"exact_match\":true,\"boost_new_products\":true,\"boost_in_stock\":true}"
                         },
-                        "description": "Get a comprehensive paginated list of all products in the system with advanced filtering capabilities.\nThis endpoint provides administrators with complete product information including variants, media,\ncategories, tags, vendor details, and status information. Essential for product catalog management,\ninventory oversight, and administrative operations."
+                        "description": "Get a comprehensive paginated list of all products in the system with advanced filtering capabilities.\nThis endpoint provides administrators with complete product information including variants, media,\ncategories, tags, vendor details, relevance scoring, and faceted search results."
                     },
                     "response": [
                         {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Products retrieved successfully.\",\n    \"data\": {\n        \"data\": [\n            {\n                \"id\": 15,\n                \"name\": \"Wireless Bluetooth Headphones\",\n                \"description\": \"Premium quality wireless headphones with active noise cancellation and 30-hour battery life.\",\n                \"price\": 7999,\n                \"price_formatted\": \"\u00a379.99\",\n                \"quantity\": 45,\n                \"product_status\": {\n                    \"id\": 1,\n                    \"name\": \"Active\"\n                },\n                \"category\": {\n                    \"id\": 5,\n                    \"name\": \"Audio Devices\",\n                    \"parent_id\": 2\n                },\n                \"vendor\": {\n                    \"id\": 8,\n                    \"name\": \"AudioTech Solutions\",\n                    \"description\": \"Premium audio equipment manufacturer\",\n                    \"logo\": \"https:\/\/yourapi.com\/storage\/vendor-logos\/audiotech-logo.jpg\",\n                    \"products_count\": 23\n                },\n                \"variants\": [\n                    {\n                        \"id\": 23,\n                        \"value\": \"Black\",\n                        \"additional_price\": 0,\n                        \"additional_price_formatted\": null,\n                        \"quantity\": 25,\n                        \"product_attribute\": {\n                            \"id\": 1,\n                            \"name\": \"Color\"\n                        },\n                        \"created_at\": \"2025-01-10T14:35:00.000000Z\",\n                        \"updated_at\": \"2025-01-15T09:22:00.000000Z\"\n                    },\n                    {\n                        \"id\": 24,\n                        \"value\": \"White\",\n                        \"additional_price\": 500,\n                        \"additional_price_formatted\": \"\u00a35.00\",\n                        \"quantity\": 20,\n                        \"product_attribute\": {\n                            \"id\": 1,\n                            \"name\": \"Color\"\n                        },\n                        \"created_at\": \"2025-01-10T14:35:00.000000Z\",\n                        \"updated_at\": \"2025-01-15T09:22:00.000000Z\"\n                    }\n                ],\n                \"tags\": [\n                    {\n                        \"id\": 3,\n                        \"name\": \"wireless\",\n                        \"products_count\": 12\n                    },\n                    {\n                        \"id\": 7,\n                        \"name\": \"bluetooth\",\n                        \"products_count\": 15\n                    },\n                    {\n                        \"id\": 12,\n                        \"name\": \"noise-cancelling\",\n                        \"products_count\": 6\n                    }\n                ],\n                \"featured_image\": \"https:\/\/yourapi.com\/storage\/products\/headphones-featured.jpg\",\n                \"gallery\": [\n                    {\n                        \"id\": 45,\n                        \"url\": \"https:\/\/yourapi.com\/storage\/products\/headphones-gallery-1.jpg\",\n                        \"name\": \"Front view\",\n                        \"file_name\": \"headphones-front.jpg\",\n                        \"mime_type\": \"image\/jpeg\",\n                        \"size\": 245760\n                    },\n                    {\n                        \"id\": 46,\n                        \"url\": \"https:\/\/yourapi.com\/storage\/products\/headphones-gallery-2.jpg\",\n                        \"name\": \"Side view\",\n                        \"file_name\": \"headphones-side.jpg\",\n                        \"mime_type\": \"image\/jpeg\",\n                        \"size\": 198432\n                    }\n                ],\n                \"media_count\": {\n                    \"featured_image\": 1,\n                    \"gallery\": 2\n                },\n                \"created_at\": \"2025-01-10T14:30:00.000000Z\",\n                \"updated_at\": \"2025-01-15T09:22:00.000000Z\",\n                \"deleted_at\": null\n            },\n            {\n                \"id\": 22,\n                \"name\": \"Bluetooth Portable Speaker\",\n                \"description\": \"Compact waterproof speaker with 12-hour battery and crystal clear sound.\",\n                \"price\": 4999,\n                \"price_formatted\": \"\u00a349.99\",\n                \"quantity\": 32,\n                \"product_status\": {\n                    \"id\": 1,\n                    \"name\": \"Active\"\n                },\n                \"category\": {\n                    \"id\": 5,\n                    \"name\": \"Audio Devices\",\n                    \"parent_id\": 2\n                },\n                \"vendor\": {\n                    \"id\": 12,\n                    \"name\": \"SoundWave Electronics\",\n                    \"description\": \"Innovative portable audio solutions\"\n                },\n                \"variants\": [],\n                \"tags\": [\n                    {\n                        \"id\": 3,\n                        \"name\": \"wireless\"\n                    },\n                    {\n                        \"id\": 7,\n                        \"name\": \"bluetooth\"\n                    },\n                    {\n                        \"id\": 15,\n                        \"name\": \"waterproof\"\n                    }\n                ],\n                \"featured_image\": \"https:\/\/yourapi.com\/storage\/products\/speaker-featured.jpg\",\n                \"gallery\": [],\n                \"media_count\": {\n                    \"featured_image\": 1,\n                    \"gallery\": 0\n                },\n                \"created_at\": \"2025-01-08T11:15:00.000000Z\",\n                \"updated_at\": \"2025-01-14T16:45:00.000000Z\",\n                \"deleted_at\": null\n            }\n        ],\n        \"current_page\": 1,\n        \"per_page\": 15,\n        \"total\": 156,\n        \"last_page\": 11,\n        \"from\": 1,\n        \"to\": 15\n    }\n}",
-                            "name": "Products retrieved successfully"
-                        },
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Products retrieved successfully.\",\n    \"data\": {\n        \"data\": [],\n        \"current_page\": 1,\n        \"per_page\": 15,\n        \"total\": 0,\n        \"last_page\": 1,\n        \"from\": null,\n        \"to\": null\n    }\n}",
-                            "name": "No products found"
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": "Insufficient permissions"
-                        },
-                        {
-                            "header": [],
-                            "code": 422,
-                            "body": "{\n    \"errors\": [\n        \"The filter.price field must match the format: number or number,number.\",\n        \"The filter.category field must contain only comma-separated numbers.\",\n        \"The filter.created_at field must be a valid date or date range in YYYY-MM-DD format.\"\n    ]\n}",
-                            "name": "Invalid filter parameters"
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "Retrieve a specific product",
+                    "name": "Retrieve a specific product with enhanced data",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1598,31 +1655,28 @@
                             }
                         ],
                         "body": null,
-                        "description": "Get detailed information about a specific product including all variants, media, category details,\nvendor information, tags, and administrative metadata. This endpoint provides complete product\ndata needed for product management, editing, and detailed analysis."
+                        "description": "Get detailed information about a specific product including all variants, media, category details,\nvendor information, tags, search metadata, and administrative information. This endpoint provides\ncomplete product data needed for product management, editing, and detailed analysis."
                     },
                     "response": [
                         {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Product retrieved successfully.\",\n    \"data\": {\n        \"id\": 15,\n        \"name\": \"Wireless Bluetooth Headphones\",\n        \"description\": \"Premium quality wireless headphones with active noise cancellation, 30-hour battery life, and superior sound quality. Features include touch controls, voice assistant support, and comfortable over-ear design perfect for long listening sessions.\",\n        \"price\": 7999,\n        \"price_formatted\": \"\u00a379.99\",\n        \"quantity\": 45,\n        \"product_status\": {\n            \"id\": 1,\n            \"name\": \"Active\"\n        },\n        \"category\": {\n            \"id\": 5,\n            \"name\": \"Audio Devices\",\n            \"parent_id\": 2\n        },\n        \"vendor\": {\n            \"id\": 8,\n            \"name\": \"AudioTech Solutions\",\n            \"description\": \"Premium audio equipment manufacturer specializing in wireless technology\",\n            \"logo\": \"https:\/\/yourapi.com\/storage\/vendor-logos\/audiotech-logo.jpg\",\n            \"products_count\": 23\n        },\n        \"variants\": [\n            {\n                \"id\": 23,\n                \"value\": \"Black\",\n                \"additional_price\": 0,\n                \"additional_price_formatted\": null,\n                \"quantity\": 25,\n                \"product_attribute\": {\n                    \"id\": 1,\n                    \"name\": \"Color\"\n                }\n            },\n            {\n                \"id\": 24,\n                \"value\": \"White\",\n                \"additional_price\": 500,\n                \"additional_price_formatted\": \"\u00a35.00\",\n                \"quantity\": 20,\n                \"product_attribute\": {\n                    \"id\": 1,\n                    \"name\": \"Color\"\n                }\n            }\n        ],\n        \"tags\": [\n            {\n                \"id\": 3,\n                \"name\": \"wireless\",\n                \"products_count\": 12\n            },\n            {\n                \"id\": 7,\n                \"name\": \"bluetooth\",\n                \"products_count\": 15\n            }\n        ],\n        \"featured_image\": \"https:\/\/yourapi.com\/storage\/products\/headphones-featured.jpg\",\n        \"gallery\": [\n            {\n                \"id\": 45,\n                \"url\": \"https:\/\/yourapi.com\/storage\/products\/headphones-gallery-1.jpg\",\n                \"name\": \"Front view\",\n                \"file_name\": \"headphones-front.jpg\",\n                \"mime_type\": \"image\/jpeg\",\n                \"size\": 245760\n            }\n        ],\n        \"media_count\": {\n            \"featured_image\": 1,\n            \"gallery\": 1\n        },\n        \"created_at\": \"2025-01-10T14:30:00.000000Z\",\n        \"updated_at\": \"2025-01-15T09:22:00.000000Z\",\n        \"deleted_at\": null\n    }\n}",
-                            "name": "Product retrieved successfully"
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": "Insufficient permissions"
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\n    \"message\": \"No query results for model [App\\\\Models\\\\Product] 999\"\n}",
-                            "name": "Product not found"
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "Create a new product",
+                    "name": "Create a new product with enhanced features",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1646,19 +1700,19 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "\"Premium Wireless Earbuds\"",
+                                    "value": "\"Premium Wireless Earbuds Pro\"",
                                     "type": "text",
-                                    "description": "The product name. Will be used for display and search."
+                                    "description": "The product name. Will be used for display and search optimization."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "\"High-quality wireless earbuds with noise cancellation and long battery life.\"",
+                                    "value": "\"High-quality wireless earbuds with advanced noise cancellation and 30-hour battery life.\"",
                                     "type": "text",
-                                    "description": "optional Detailed product description. Supports basic HTML tags."
+                                    "description": "optional Detailed product description. Supports basic HTML tags and is used for search indexing."
                                 },
                                 {
                                     "key": "price",
-                                    "value": "79.99",
+                                    "value": "89.99",
                                     "type": "text",
                                     "description": "Product price in pounds. Will be converted to pennies for storage."
                                 },
@@ -1699,10 +1753,22 @@
                                     "description": ""
                                 },
                                 {
+                                    "key": "product_tags[3]",
+                                    "value": "18",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
                                     "key": "product_variants[0]",
                                     "value": "architecto",
                                     "type": "text",
                                     "description": ""
+                                },
+                                {
+                                    "key": "low_stock_threshold",
+                                    "value": "5",
+                                    "type": "text",
+                                    "description": "optional Low stock alert threshold. Default: 10."
                                 },
                                 {
                                     "key": "media[featured_image]",
@@ -1711,49 +1777,12 @@
                                 }
                             ]
                         },
-                        "description": "Add a new product to the system with complete details including variants, tags, and media.\nProducts are automatically assigned to the vendor associated with the authenticated admin user.\nSupports secure file uploads for featured images and gallery photos with comprehensive validation."
+                        "description": "Add a new product to the system with complete details including variants, tags, media, and search optimization.\nProducts are automatically assigned to the vendor associated with the authenticated admin user.\nSupports secure file uploads and automatic search keyword generation for optimal findability."
                     },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Product created successfully.\",\n    \"data\": {\n        \"id\": 47,\n        \"name\": \"Premium Wireless Earbuds\",\n        \"description\": \"High-quality wireless earbuds with noise cancellation and long battery life.\",\n        \"price\": 7999,\n        \"price_formatted\": \"\u00a379.99\",\n        \"quantity\": 50,\n        \"product_status\": {\n            \"id\": 1,\n            \"name\": \"Active\"\n        },\n        \"category\": {\n            \"id\": 5,\n            \"name\": \"Audio Devices\"\n        },\n        \"vendor\": {\n            \"id\": 8,\n            \"name\": \"AudioTech Solutions\"\n        },\n        \"variants\": [\n            {\n                \"id\": 156,\n                \"value\": \"Red\",\n                \"additional_price\": 500,\n                \"additional_price_formatted\": \"\u00a35.00\",\n                \"quantity\": 20,\n                \"product_attribute\": {\n                    \"id\": 1,\n                    \"name\": \"Color\"\n                }\n            }\n        ],\n        \"tags\": [\n            {\n                \"id\": 3,\n                \"name\": \"wireless\"\n            },\n            {\n                \"id\": 7,\n                \"name\": \"bluetooth\"\n            }\n        ],\n        \"featured_image\": \"https:\/\/yourapi.com\/storage\/products\/earbuds-featured.jpg\",\n        \"gallery\": [],\n        \"created_at\": \"2025-01-16T14:30:00.000000Z\",\n        \"updated_at\": \"2025-01-16T14:30:00.000000Z\"\n    }\n}",
-                            "name": "Product created successfully"
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": "Insufficient permissions"
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\n    \"message\": \"Vendor not found.\"\n}",
-                            "name": "Vendor not found"
-                        },
-                        {
-                            "header": [],
-                            "code": 413,
-                            "body": "{\n    \"message\": \"File too large. Maximum size is 5.0 MB.\"\n}",
-                            "name": "File too large"
-                        },
-                        {
-                            "header": [],
-                            "code": 422,
-                            "body": "{\n    \"errors\": [\n        \"The name field is required.\",\n        \"The price field is required.\",\n        \"The price must be greater than 0.\",\n        \"The quantity must be at least 0.\",\n        \"The product category id must exist in product_categories table.\",\n        \"The product status id must exist in product_statuses table.\"\n    ]\n}",
-                            "name": "Validation errors"
-                        },
-                        {
-                            "header": [],
-                            "code": 500,
-                            "body": "{\n    \"message\": \"Failed to process media files: Unable to write file to disk.\"\n}",
-                            "name": "Media upload failed"
-                        }
-                    ]
+                    "response": []
                 },
                 {
-                    "name": "Update an existing product",
+                    "name": "Update an existing product with enhanced features",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1791,19 +1820,19 @@
                             "formdata": [
                                 {
                                     "key": "name",
-                                    "value": "\"Premium Wireless Earbuds Pro\"",
+                                    "value": "\"Premium Wireless Earbuds Pro Max\"",
                                     "type": "text",
                                     "description": "optional The updated product name."
                                 },
                                 {
                                     "key": "description",
-                                    "value": "\"Enhanced wireless earbuds with improved noise cancellation.\"",
+                                    "value": "\"Enhanced wireless earbuds with improved noise cancellation and extended battery life.\"",
                                     "type": "text",
-                                    "description": "optional Updated product description."
+                                    "description": "optional Updated product description with search optimization."
                                 },
                                 {
                                     "key": "price",
-                                    "value": "89.99",
+                                    "value": "99.99",
                                     "type": "text",
                                     "description": "optional Updated price in pounds."
                                 },
@@ -1850,10 +1879,22 @@
                                     "description": ""
                                 },
                                 {
+                                    "key": "product_tags[4]",
+                                    "value": "22",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
                                     "key": "product_variants[0]",
                                     "value": "architecto",
                                     "type": "text",
                                     "description": ""
+                                },
+                                {
+                                    "key": "low_stock_threshold",
+                                    "value": "8",
+                                    "type": "text",
+                                    "description": "optional Updated low stock threshold."
                                 },
                                 {
                                     "key": "media[featured_image]",
@@ -1862,37 +1903,12 @@
                                 }
                             ]
                         },
-                        "description": "Modify an existing product's details including variants, tags, and media. This endpoint\nsupports partial updates - only provided fields will be updated. When updating variants,\nall existing variants are replaced with the new ones. Media files can be updated independently."
+                        "description": "Modify an existing product's details including variants, tags, media, and search optimization.\nThis endpoint supports partial updates - only provided fields will be updated. When updating variants,\nall existing variants are replaced with the new ones. Search keywords are automatically regenerated\nfor optimal findability."
                     },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Product updated successfully.\",\n    \"data\": {\n        \"id\": 47,\n        \"name\": \"Premium Wireless Earbuds Pro\",\n        \"description\": \"Enhanced wireless earbuds with improved noise cancellation.\",\n        \"price\": 8999,\n        \"price_formatted\": \"\u00a389.99\",\n        \"quantity\": 75,\n        \"product_status\": {\n            \"id\": 1,\n            \"name\": \"Active\"\n        },\n        \"category\": {\n            \"id\": 6,\n            \"name\": \"Premium Audio\"\n        },\n        \"vendor\": {\n            \"id\": 8,\n            \"name\": \"AudioTech Solutions\"\n        },\n        \"variants\": [\n            {\n                \"id\": 157,\n                \"value\": \"Blue\",\n                \"additional_price\": 1000,\n                \"additional_price_formatted\": \"\u00a310.00\",\n                \"quantity\": 15,\n                \"product_attribute\": {\n                    \"id\": 1,\n                    \"name\": \"Color\"\n                }\n            }\n        ],\n        \"tags\": [\n            {\n                \"id\": 3,\n                \"name\": \"wireless\"\n            },\n            {\n                \"id\": 7,\n                \"name\": \"bluetooth\"\n            },\n            {\n                \"id\": 18,\n                \"name\": \"premium\"\n            }\n        ],\n        \"featured_image\": \"https:\/\/yourapi.com\/storage\/products\/earbuds-pro-featured.jpg\",\n        \"gallery\": [\n            {\n                \"id\": 89,\n                \"url\": \"https:\/\/yourapi.com\/storage\/products\/earbuds-pro-gallery-1.jpg\",\n                \"name\": \"Product showcase\"\n            }\n        ],\n        \"updated_at\": \"2025-01-16T15:45:00.000000Z\"\n    }\n}",
-                            "name": "Product updated successfully"
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": "Insufficient permissions"
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\n    \"message\": \"No query results for model [App\\\\Models\\\\Product] 999\"\n}",
-                            "name": "Product not found"
-                        },
-                        {
-                            "header": [],
-                            "code": 422,
-                            "body": "{\n    \"errors\": [\n        \"The price must be greater than 0.\",\n        \"The quantity must be at least 0.\"\n    ]\n}",
-                            "name": "Validation errors"
-                        }
-                    ]
+                    "response": []
                 },
                 {
-                    "name": "Soft delete a product",
+                    "name": "Soft delete a product with search index update",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1926,31 +1942,12 @@
                             }
                         ],
                         "body": null,
-                        "description": "Soft delete a product, making it inactive but preserving the data for potential recovery.\nSoft deleted products are hidden from public listings but remain in the database for\nadministrative purposes and order history integrity."
+                        "description": "Soft delete a product, making it inactive but preserving the data for potential recovery.\nSoft deleted products are hidden from public listings but remain in the database for\nadministrative purposes and order history integrity. Search indexes are updated automatically."
                     },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Product deleted successfully.\"\n}",
-                            "name": "Product soft deleted successfully"
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": "Insufficient permissions"
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\n    \"message\": \"No query results for model [App\\\\Models\\\\Product] 999\"\n}",
-                            "name": "Product not found"
-                        }
-                    ]
+                    "response": []
                 },
                 {
-                    "name": "Permanently delete a product",
+                    "name": "Permanently delete a product with complete cleanup",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -1978,37 +1975,12 @@
                             }
                         ],
                         "body": null,
-                        "description": "Permanently remove a product from the database. This action is irreversible and will\nalso remove all associated variants and media files. The product must be soft deleted\nfirst before it can be permanently deleted."
+                        "description": "Permanently remove a product from the database. This action is irreversible and will\nalso remove all associated variants, media files, tag associations, and search indexes.\nThe product must be soft deleted first before it can be permanently deleted."
                     },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Product deleted successfully.\"\n}",
-                            "name": "Product permanently deleted"
-                        },
-                        {
-                            "header": [],
-                            "code": 400,
-                            "body": "{\n    \"message\": \"Product must be soft deleted before force deleting.\"\n}",
-                            "name": "Product must be soft deleted first"
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": "Insufficient permissions"
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\n    \"message\": \"No query results for model [App\\\\Models\\\\Product] 47\"\n}",
-                            "name": "Product not found"
-                        }
-                    ]
+                    "response": []
                 },
                 {
-                    "name": "Restore a soft deleted product",
+                    "name": "Restore a soft deleted product with search optimization",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -2036,34 +2008,9 @@
                             }
                         ],
                         "body": null,
-                        "description": "Restore a previously soft deleted product, making it active again in the system.\nOnly products that have been soft deleted can be restored."
+                        "description": "Restore a previously soft deleted product, making it active again in the system.\nOnly products that have been soft deleted can be restored. Search indexes are\nautomatically updated to include the restored product."
                     },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n    \"message\": \"Product restored successfully.\",\n    \"data\": {\n        \"id\": 47,\n        \"name\": \"Premium Wireless Earbuds Pro\",\n        \"deleted_at\": null,\n        \"updated_at\": \"2025-01-16T16:00:00.000000Z\"\n    }\n}",
-                            "name": "Product restored successfully"
-                        },
-                        {
-                            "header": [],
-                            "code": 400,
-                            "body": "{\n    \"message\": \"Product is not deleted.\"\n}",
-                            "name": "Product not deleted"
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"You do not have the required permissions.\"\n}",
-                            "name": "Insufficient permissions"
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\n    \"message\": \"No query results for model [App\\\\Models\\\\Product] 47\"\n}",
-                            "name": "Product not found"
-                        }
-                    ]
+                    "response": []
                 }
             ]
         },
@@ -4182,7 +4129,7 @@
             "description": "",
             "item": [
                 {
-                    "name": "Retrieve paginated list of products",
+                    "name": "Search and browse products with advanced features",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -4195,15 +4142,15 @@
                                     "disabled": false
                                 },
                                 {
-                                    "key": "filter%5Bname%5D",
-                                    "value": "wireless",
-                                    "description": "optional Filter products by name (partial match supported).",
+                                    "key": "filter%5Bsearch%5D",
+                                    "value": "wireless+bluetooth+headphones+under+%C2%A350",
+                                    "description": "optional Intelligent search with typo tolerance and relevance scoring.",
                                     "disabled": false
                                 },
                                 {
-                                    "key": "filter%5Bsearch%5D",
-                                    "value": "bluetooth+headphones",
-                                    "description": "optional Search across product names and descriptions.",
+                                    "key": "filter%5Bname%5D",
+                                    "value": "wireless",
+                                    "description": "optional Filter products by name (partial match supported).",
                                     "disabled": false
                                 },
                                 {
@@ -4213,21 +4160,57 @@
                                     "disabled": false
                                 },
                                 {
+                                    "key": "filter%5BpriceRanges%5D",
+                                    "value": "0-25%2C50-100",
+                                    "description": "optional Multiple price ranges.",
+                                    "disabled": false
+                                },
+                                {
                                     "key": "filter%5Bcategory%5D",
                                     "value": "5%2C12%2C18",
-                                    "description": "optional Filter by category ID(s). Single ID or comma-separated multiple IDs.",
+                                    "description": "optional Filter by category ID(s) including child categories.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter%5Bavailability%5D",
+                                    "value": "in_stock",
+                                    "description": "optional Filter by stock status. Options: in_stock, available.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter%5Bvendors%5D",
+                                    "value": "2%2C5%2C8",
+                                    "description": "optional Filter by brand\/vendor ID(s).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter%5Bvendor%5D",
+                                    "value": "apple",
+                                    "description": "optional Filter by brand name.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter%5Btags%5D",
+                                    "value": "3%2C7%2C12",
+                                    "description": "optional Filter by tag ID(s).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter%5Battributes%5D",
+                                    "value": "color%3Ared%2Csize%3Alarge",
+                                    "description": "optional Filter by product attributes. Format: attribute:value.",
                                     "disabled": false
                                 },
                                 {
                                     "key": "filter%5Bcreated_at%5D",
                                     "value": "2025-01-01%2C2025-01-31",
-                                    "description": "optional Filter by creation date. Single date or comma-separated date range (YYYY-MM-DD).",
+                                    "description": "optional Filter by creation date range.",
                                     "disabled": false
                                 },
                                 {
                                     "key": "filter%5Binclude%5D",
                                     "value": "vendor%2Cvariants%2Ccategory",
-                                    "description": "optional Include related data. Comma-separated values: vendor,variants,category,tags,media.",
+                                    "description": "optional Include related data. Options: vendor,variants,category,tags,media.",
                                     "disabled": false
                                 },
                                 {
@@ -4244,12 +4227,18 @@
                                 },
                                 {
                                     "key": "sort",
-                                    "value": "-price%2Cname",
-                                    "description": "optional Sort products. Prefix with '-' for descending. Available: name, price, created_at, updated_at.",
+                                    "value": "-relevance%2Cprice",
+                                    "description": "optional Sort products. Available: name, price, created_at, relevance.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "diversify",
+                                    "value": "1",
+                                    "description": "optional Apply result diversification for better variety. Default: false.",
                                     "disabled": false
                                 }
                             ],
-                            "raw": "{{baseUrl}}\/api\/products?filter[0]=architecto&filter%5Bname%5D=wireless&filter%5Bsearch%5D=bluetooth+headphones&filter%5Bprice%5D=10.00%2C50.00&filter%5Bcategory%5D=5%2C12%2C18&filter%5Bcreated_at%5D=2025-01-01%2C2025-01-31&filter%5Binclude%5D=vendor%2Cvariants%2Ccategory&page=2&per_page=24&sort=-price%2Cname"
+                            "raw": "{{baseUrl}}\/api\/products?filter[0]=architecto&filter%5Bsearch%5D=wireless+bluetooth+headphones+under+%C2%A350&filter%5Bname%5D=wireless&filter%5Bprice%5D=10.00%2C50.00&filter%5BpriceRanges%5D=0-25%2C50-100&filter%5Bcategory%5D=5%2C12%2C18&filter%5Bavailability%5D=in_stock&filter%5Bvendors%5D=2%2C5%2C8&filter%5Bvendor%5D=apple&filter%5Btags%5D=3%2C7%2C12&filter%5Battributes%5D=color%3Ared%2Csize%3Alarge&filter%5Bcreated_at%5D=2025-01-01%2C2025-01-31&filter%5Binclude%5D=vendor%2Cvariants%2Ccategory&page=2&per_page=24&sort=-relevance%2Cprice&diversify=1"
                         },
                         "method": "GET",
                         "header": [
@@ -4264,42 +4253,57 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"b\",\"price\":\"9,3.1)\",\"category\":\"9,31\",\"quantity\":8,\"created_at\":\"2559-31-42\",\"updated_at\":\"2559-31-42\",\"search\":\"h\",\"include\":\"uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv\"},\"page\":4,\"per_page\":9,\"sort\":\"y8p,Bm,-dp,-Zm,-GH\"}"
+                            "raw": "{\"filter\":{\"name\":\"b\",\"search\":\"n\",\"price\":\"9,3.1)\",\"priceRanges\":\"-1.42)-3268)\",\"category\":\"9,31\",\"categories\":\"9,31\",\"quantity\":\"64\",\"availability\":\"out_of_stock\",\"vendors\":\"9,31\",\"vendor\":\"i\",\"brand\":\"k\",\"brands\":\"9,31\",\"tags\":\"9,31\",\"tag_logic\":\"AND\",\"attributes\":\"_JK:AI\",\"color\":\"k\",\"colors\":\"dLJnIk\",\"size\":\"h\",\"sizes\":\"DDz1Ys\",\"material\":\"h\",\"status\":\"w\",\"created_at\":\"2559-31-42\",\"updated_at\":\"2559-31-42\",\"include\":\"uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv\"},\"page\":4,\"per_page\":9,\"sort\":\"y8p,Bm,-dp,-Zm,-GH\",\"diversify\":true,\"explain\":false,\"facets\":false,\"highlight\":true,\"personalize\":false,\"typo_tolerance\":false,\"exact_match\":true,\"boost_new_products\":false,\"boost_in_stock\":false}"
                         },
-                        "description": "Get a paginated and filtered list of active products available for purchase.\nThis endpoint supports advanced filtering by name, price range, category, search terms, and more.\nProducts include detailed information such as variants, media, categories, tags, and vendor details.\nThis is the main endpoint for product browsing and search functionality.",
+                        "description": "Get a paginated and filtered list of active products with advanced search capabilities.\nThis endpoint supports intelligent search with relevance scoring, faceted filtering,\nresult diversification, and personalized recommendations. Includes comprehensive\nproduct information optimized for customer browsing and purchasing decisions.",
                         "auth": {
                             "type": "noauth"
                         }
                     },
                     "response": [
                         {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"message\": \"Products retrieved successfully.\",\n  \"data\": {\n    \"data\": [\n      {\n        \"id\": 15,\n        \"name\": \"Wireless Bluetooth Headphones\",\n        \"description\": \"Premium quality wireless headphones with active noise cancellation and 30-hour battery life.\",\n        \"price\": 7999,\n        \"price_formatted\": \"\u00a379.99\",\n        \"quantity\": 45,\n        \"created_at\": \"2025-01-10T14:30:00.000000Z\",\n        \"updated_at\": \"2025-01-15T09:22:00.000000Z\",\n        \"deleted_at\": null,\n        \"product_status\": {\n          \"id\": 1,\n          \"name\": \"Active\"\n        },\n        \"category\": {\n          \"id\": 5,\n          \"name\": \"Audio Devices\",\n          \"parent_id\": 2\n        },\n        \"vendor\": {\n          \"id\": 8,\n          \"name\": \"AudioTech Solutions\",\n          \"description\": \"Premium audio equipment manufacturer\",\n          \"logo\": \"https:\/\/yourapi.com\/storage\/vendor-logos\/audiotech-logo.jpg\"\n        },\n        \"variants\": [\n          {\n            \"id\": 23,\n            \"value\": \"Black\",\n            \"additional_price\": 0,\n            \"additional_price_formatted\": null,\n            \"quantity\": 25,\n            \"product_attribute\": {\n              \"id\": 1,\n              \"name\": \"Color\"\n            }\n          },\n          {\n            \"id\": 24,\n            \"value\": \"White\",\n            \"additional_price\": 500,\n            \"additional_price_formatted\": \"\u00a35.00\",\n            \"quantity\": 20,\n            \"product_attribute\": {\n              \"id\": 1,\n              \"name\": \"Color\"\n            }\n          }\n        ],\n        \"tags\": [\n          {\n            \"id\": 3,\n            \"name\": \"wireless\"\n          },\n          {\n            \"id\": 7,\n            \"name\": \"bluetooth\"\n          },\n          {\n            \"id\": 12,\n            \"name\": \"noise-cancelling\"\n          }\n        ],\n        \"featured_image\": \"https:\/\/yourapi.com\/storage\/products\/headphones-featured.jpg\",\n        \"gallery\": [\n          {\n            \"id\": 45,\n            \"url\": \"https:\/\/yourapi.com\/storage\/products\/headphones-gallery-1.jpg\",\n            \"name\": \"Front view\",\n            \"file_name\": \"headphones-front.jpg\",\n            \"mime_type\": \"image\/jpeg\",\n            \"size\": 245760\n          },\n          {\n            \"id\": 46,\n            \"url\": \"https:\/\/yourapi.com\/storage\/products\/headphones-gallery-2.jpg\",\n            \"name\": \"Side view\",\n            \"file_name\": \"headphones-side.jpg\",\n            \"mime_type\": \"image\/jpeg\",\n            \"size\": 198432\n          }\n        ],\n        \"media_count\": {\n          \"featured_image\": 1,\n          \"gallery\": 2\n        }\n      },\n      {\n        \"id\": 22,\n        \"name\": \"Bluetooth Portable Speaker\",\n        \"description\": \"Compact waterproof speaker with 12-hour battery and crystal clear sound.\",\n        \"price\": 4999,\n        \"price_formatted\": \"\u00a349.99\",\n        \"quantity\": 32,\n        \"created_at\": \"2025-01-08T11:15:00.000000Z\",\n        \"updated_at\": \"2025-01-14T16:45:00.000000Z\",\n        \"deleted_at\": null,\n        \"product_status\": {\n          \"id\": 1,\n          \"name\": \"Active\"\n        },\n        \"category\": {\n          \"id\": 5,\n          \"name\": \"Audio Devices\",\n          \"parent_id\": 2\n        },\n        \"vendor\": {\n          \"id\": 12,\n          \"name\": \"SoundWave Electronics\",\n          \"description\": \"Innovative portable audio solutions\"\n        },\n        \"variants\": [],\n        \"tags\": [\n          {\n            \"id\": 3,\n            \"name\": \"wireless\"\n          },\n          {\n            \"id\": 7,\n            \"name\": \"bluetooth\"\n          },\n          {\n            \"id\": 15,\n            \"name\": \"waterproof\"\n          }\n        ],\n        \"featured_image\": \"https:\/\/yourapi.com\/storage\/products\/speaker-featured.jpg\",\n        \"gallery\": [],\n        \"media_count\": {\n          \"featured_image\": 1,\n          \"gallery\": 0\n        }\n      }\n    ],\n    \"current_page\": 1,\n    \"per_page\": 15,\n    \"total\": 28,\n    \"last_page\": 2,\n    \"from\": 1,\n    \"to\": 15,\n    \"path\": \"https:\/\/yourapi.com\/api\/v1\/products\",\n    \"first_page_url\": \"https:\/\/yourapi.com\/api\/v1\/products?page=1\",\n    \"last_page_url\": \"https:\/\/yourapi.com\/api\/v1\/products?page=2\",\n    \"next_page_url\": \"https:\/\/yourapi.com\/api\/v1\/products?page=2\",\n    \"prev_page_url\": null\n  }\n}",
-                            "name": "Products found with filters"
-                        },
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"message\": \"Products retrieved successfully.\",\n  \"data\": {\n    \"data\": [],\n    \"current_page\": 1,\n    \"per_page\": 15,\n    \"total\": 0,\n    \"last_page\": 1,\n    \"from\": null,\n    \"to\": null\n  }\n}",
-                            "name": "No products found"
-                        },
-                        {
-                            "header": [],
-                            "code": 400,
-                            "body": "{\n  \"message\": \"Invalid sort field. Available fields: name, price, created_at, updated_at\"\n}",
-                            "name": "Invalid sort parameter"
-                        },
-                        {
-                            "header": [],
-                            "code": 422,
-                            "body": "{\n  \"errors\": [\n    \"The filter.price field must match the format: number or number,number.\",\n    \"The filter.category field must contain only comma-separated numbers.\",\n    \"The filter.created_at field must be a valid date or date range in YYYY-MM-DD format.\"\n  ]\n}",
-                            "name": "Invalid filter parameters"
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-content-type-options",
+                                    "value": "nosniff"
+                                },
+                                {
+                                    "key": "x-frame-options",
+                                    "value": "DENY"
+                                },
+                                {
+                                    "key": "x-xss-protection",
+                                    "value": "1; mode=block"
+                                },
+                                {
+                                    "key": "content-security-policy",
+                                    "value": "default-src 'none'; frame-ancestors 'none';"
+                                },
+                                {
+                                    "key": "referrer-policy",
+                                    "value": "strict-origin-when-cross-origin"
+                                },
+                                {
+                                    "key": "permissions-policy",
+                                    "value": "camera=(), microphone=(), geolocation=(), payment=()"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "name": ""
                         }
                     ]
                 },
                 {
-                    "name": "Retrieve a specific product",
+                    "name": "Retrieve detailed product information",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -4333,29 +4337,50 @@
                             }
                         ],
                         "body": null,
-                        "description": "Get detailed information about a specific product including all variants, media, category details,\nvendor information, and tags. This endpoint provides complete product data needed for product detail pages,\nincluding high-resolution images, pricing for all variants, and inventory levels.",
+                        "description": "Get comprehensive information about a specific product including all variants, media,\ncategory details, vendor information, and customer-relevant data. This endpoint provides\ncomplete product data needed for product detail pages, including high-resolution images,\npricing for all variants, inventory levels, and related product suggestions.",
                         "auth": {
                             "type": "noauth"
                         }
                     },
                     "response": [
                         {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"message\": \"Product retrieved successfully.\",\n  \"data\": {\n    \"id\": 15,\n    \"name\": \"Wireless Bluetooth Headphones\",\n    \"description\": \"Premium quality wireless headphones with active noise cancellation, 30-hour battery life, and superior sound quality. Features include touch controls, voice assistant support, and comfortable over-ear design perfect for long listening sessions.\",\n    \"price\": 7999,\n    \"price_formatted\": \"\u00a379.99\",\n    \"quantity\": 45,\n    \"created_at\": \"2025-01-10T14:30:00.000000Z\",\n    \"updated_at\": \"2025-01-15T09:22:00.000000Z\",\n    \"deleted_at\": null,\n    \"product_status\": {\n      \"id\": 1,\n      \"name\": \"Active\"\n    },\n    \"category\": {\n      \"id\": 5,\n      \"name\": \"Audio Devices\",\n      \"parent_id\": 2\n    },\n    \"vendor\": {\n      \"id\": 8,\n      \"name\": \"AudioTech Solutions\",\n      \"description\": \"Premium audio equipment manufacturer specializing in wireless technology\",\n      \"logo\": \"https:\/\/yourapi.com\/storage\/vendor-logos\/audiotech-logo.jpg\",\n      \"media\": [\n        {\n          \"id\": 12,\n          \"url\": \"https:\/\/yourapi.com\/storage\/vendor-logos\/audiotech-logo.jpg\",\n          \"name\": \"AudioTech Logo\",\n          \"file_name\": \"audiotech-logo.jpg\",\n          \"mime_type\": \"image\/jpeg\",\n          \"size\": 45672\n        }\n      ],\n      \"products_count\": 23\n    },\n    \"variants\": [\n      {\n        \"id\": 23,\n        \"value\": \"Black\",\n        \"additional_price\": 0,\n        \"additional_price_formatted\": null,\n        \"quantity\": 25,\n        \"created_at\": \"2025-01-10T14:35:00.000000Z\",\n        \"updated_at\": \"2025-01-15T09:22:00.000000Z\",\n        \"product_attribute\": {\n          \"id\": 1,\n          \"name\": \"Color\"\n        }\n      },\n      {\n        \"id\": 24,\n        \"value\": \"White\",\n        \"additional_price\": 500,\n        \"additional_price_formatted\": \"\u00a35.00\",\n        \"quantity\": 20,\n        \"created_at\": \"2025-01-10T14:35:00.000000Z\",\n        \"updated_at\": \"2025-01-15T09:22:00.000000Z\",\n        \"product_attribute\": {\n          \"id\": 1,\n          \"name\": \"Color\"\n        }\n      },\n      {\n        \"id\": 25,\n        \"value\": \"32GB\",\n        \"additional_price\": 2000,\n        \"additional_price_formatted\": \"\u00a320.00\",\n        \"quantity\": 15,\n        \"created_at\": \"2025-01-10T14:35:00.000000Z\",\n        \"updated_at\": \"2025-01-15T09:22:00.000000Z\",\n        \"product_attribute\": {\n          \"id\": 4,\n          \"name\": \"Storage\"\n        }\n      }\n    ],\n    \"tags\": [\n      {\n        \"id\": 3,\n        \"name\": \"wireless\",\n        \"products_count\": 12\n      },\n      {\n        \"id\": 7,\n        \"name\": \"bluetooth\",\n        \"products_count\": 15\n      },\n      {\n        \"id\": 12,\n        \"name\": \"noise-cancelling\",\n        \"products_count\": 6\n      },\n      {\n        \"id\": 18,\n        \"name\": \"premium\",\n        \"products_count\": 8\n      }\n    ],\n    \"featured_image\": \"https:\/\/yourapi.com\/storage\/products\/headphones-featured.jpg\",\n    \"gallery\": [\n      {\n        \"id\": 45,\n        \"url\": \"https:\/\/yourapi.com\/storage\/products\/headphones-gallery-1.jpg\",\n        \"name\": \"Front view\",\n        \"file_name\": \"headphones-front.jpg\",\n        \"mime_type\": \"image\/jpeg\",\n        \"size\": 245760\n      },\n      {\n        \"id\": 46,\n        \"url\": \"https:\/\/yourapi.com\/storage\/products\/headphones-gallery-2.jpg\",\n        \"name\": \"Side view\",\n        \"file_name\": \"headphones-side.jpg\",\n        \"mime_type\": \"image\/jpeg\",\n        \"size\": 198432\n      },\n      {\n        \"id\": 47,\n        \"url\": \"https:\/\/yourapi.com\/storage\/products\/headphones-gallery-3.jpg\",\n        \"name\": \"Package contents\",\n        \"file_name\": \"headphones-package.jpg\",\n        \"mime_type\": \"image\/jpeg\",\n        \"size\": 312584\n      }\n    ],\n    \"media_count\": {\n      \"featured_image\": 1,\n      \"gallery\": 3\n    }\n  }\n}",
-                            "name": "Product found"
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\Product] 999\"\n}",
-                            "name": "Product not found"
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\n  \"message\": \"Product is not available for viewing\"\n}",
-                            "name": "Product not active"
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                },
+                                {
+                                    "key": "x-content-type-options",
+                                    "value": "nosniff"
+                                },
+                                {
+                                    "key": "x-frame-options",
+                                    "value": "DENY"
+                                },
+                                {
+                                    "key": "x-xss-protection",
+                                    "value": "1; mode=block"
+                                },
+                                {
+                                    "key": "content-security-policy",
+                                    "value": "default-src 'none'; frame-ancestors 'none';"
+                                },
+                                {
+                                    "key": "referrer-policy",
+                                    "value": "strict-origin-when-cross-origin"
+                                },
+                                {
+                                    "key": "permissions-policy",
+                                    "value": "camera=(), microphone=(), geolocation=(), payment=()"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "name": ""
                         }
                     ]
                 }
@@ -6065,7 +6090,7 @@
                                 }
                             ]
                         },
-                        "method": "PUT",
+                        "method": "POST",
                         "header": [
                             {
                                 "key": "Content-Type",

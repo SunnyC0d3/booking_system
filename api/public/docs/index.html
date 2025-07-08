@@ -189,25 +189,25 @@
                 </li>
                                     <ul id="tocify-subheader-product-management" class="tocify-subheader">
                                                     <li class="tocify-item level-2" data-unique="product-management-GETapi-admin-products">
-                                <a href="#product-management-GETapi-admin-products">Retrieve a paginated list of products</a>
+                                <a href="#product-management-GETapi-admin-products">Retrieve a paginated list of products with enhanced search</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="product-management-GETapi-admin-products--id-">
-                                <a href="#product-management-GETapi-admin-products--id-">Retrieve a specific product</a>
+                                <a href="#product-management-GETapi-admin-products--id-">Retrieve a specific product with enhanced data</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="product-management-POSTapi-admin-products">
-                                <a href="#product-management-POSTapi-admin-products">Create a new product</a>
+                                <a href="#product-management-POSTapi-admin-products">Create a new product with enhanced features</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="product-management-POSTapi-admin-products--id-">
-                                <a href="#product-management-POSTapi-admin-products--id-">Update an existing product</a>
+                                <a href="#product-management-POSTapi-admin-products--id-">Update an existing product with enhanced features</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="product-management-DELETEapi-admin-products-soft-destroy--product_id-">
-                                <a href="#product-management-DELETEapi-admin-products-soft-destroy--product_id-">Soft delete a product</a>
+                                <a href="#product-management-DELETEapi-admin-products-soft-destroy--product_id-">Soft delete a product with search index update</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="product-management-DELETEapi-admin-products--id-">
-                                <a href="#product-management-DELETEapi-admin-products--id-">Permanently delete a product</a>
+                                <a href="#product-management-DELETEapi-admin-products--id-">Permanently delete a product with complete cleanup</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="product-management-PATCHapi-admin-products--id--restore">
-                                <a href="#product-management-PATCHapi-admin-products--id--restore">Restore a soft deleted product</a>
+                                <a href="#product-management-PATCHapi-admin-products--id--restore">Restore a soft deleted product with search optimization</a>
                             </li>
                                                                         </ul>
                             </ul>
@@ -380,10 +380,10 @@
                 </li>
                                     <ul id="tocify-subheader-product-catalog" class="tocify-subheader">
                                                     <li class="tocify-item level-2" data-unique="product-catalog-GETapi-products">
-                                <a href="#product-catalog-GETapi-products">Retrieve paginated list of products</a>
+                                <a href="#product-catalog-GETapi-products">Search and browse products with advanced features</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="product-catalog-GETapi-products--id-">
-                                <a href="#product-catalog-GETapi-products--id-">Retrieve a specific product</a>
+                                <a href="#product-catalog-GETapi-products--id-">Retrieve detailed product information</a>
                             </li>
                                                                         </ul>
                             </ul>
@@ -503,8 +503,8 @@
                                                                                 <li class="tocify-item level-2" data-unique="shopping-cart-POSTapi-cart-items">
                                 <a href="#shopping-cart-POSTapi-cart-items">Add item to shopping cart</a>
                             </li>
-                                                                                <li class="tocify-item level-2" data-unique="shopping-cart-PUTapi-cart-items--cartItem-">
-                                <a href="#shopping-cart-PUTapi-cart-items--cartItem-">Update cart item quantity</a>
+                                                                                <li class="tocify-item level-2" data-unique="shopping-cart-POSTapi-cart-items--cartItem-">
+                                <a href="#shopping-cart-POSTapi-cart-items--cartItem-">Update cart item quantity</a>
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="shopping-cart-DELETEapi-cart-items--cartItem-">
                                 <a href="#shopping-cart-DELETEapi-cart-items--cartItem-">Remove item from cart</a>
@@ -565,7 +565,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: July 7, 2025</li>
+        <li>Last updated: July 8, 2025</li>
     </ul>
 </div>
 
@@ -2323,16 +2323,7 @@ response.json()</code></pre></div>
 }</code>
  </pre>
             <blockquote>
-            <p>Example response (404, User not found):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;No query results for model [App\\Models\\User] 123&quot;
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (500):</p>
+            <p>Example response (403):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -2349,72 +2340,37 @@ permissions-policy: camera=(), microphone=(), geolocation=(), payment=()
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;The stream or file \&quot;/var/www/ecommerce_api/api/storage/logs/security/suspicious-2025-07-07.log\&quot; could not be opened in append mode: chmod(): No such file or directory\nThe exception occurred while attempting to log: Permission Denied\nContext: {\&quot;method\&quot;:\&quot;GET\&quot;,\&quot;endpoint\&quot;:\&quot;api\\/email\\/verify\\/architecto\\/abc123def456ghi789\&quot;,\&quot;status_code\&quot;:403,\&quot;ip\&quot;:\&quot;127.0.0.1\&quot;,\&quot;user_agent\&quot;:\&quot;Symfony\&quot;,\&quot;user_id\&quot;:null,\&quot;user_email\&quot;:null,\&quot;user_role\&quot;:null,\&quot;response_time_ms\&quot;:9.65,\&quot;timestamp\&quot;:\&quot;2025-07-07T18:07:24.292141Z\&quot;}&quot;,
-    &quot;exception&quot;: &quot;UnexpectedValueException&quot;,
-    &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php&quot;,
-    &quot;line&quot;: 156,
+    &quot;message&quot;: &quot;Invalid signature.&quot;,
+    &quot;exception&quot;: &quot;Illuminate\\Routing\\Exceptions\\InvalidSignatureException&quot;,
+    &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ValidateSignature.php&quot;,
+    &quot;line&quot;: 73,
     &quot;trace&quot;: [
         {
-            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Handler/RotatingFileHandler.php&quot;,
-            &quot;line&quot;: 110,
-            &quot;function&quot;: &quot;write&quot;,
-            &quot;class&quot;: &quot;Monolog\\Handler\\StreamHandler&quot;,
-            &quot;type&quot;: &quot;-&gt;&quot;
-        },
-        {
-            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Handler/AbstractProcessingHandler.php&quot;,
-            &quot;line&quot;: 44,
-            &quot;function&quot;: &quot;write&quot;,
-            &quot;class&quot;: &quot;Monolog\\Handler\\RotatingFileHandler&quot;,
-            &quot;type&quot;: &quot;-&gt;&quot;
-        },
-        {
-            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Logger.php&quot;,
-            &quot;line&quot;: 391,
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php&quot;,
+            &quot;line&quot;: 209,
             &quot;function&quot;: &quot;handle&quot;,
-            &quot;class&quot;: &quot;Monolog\\Handler\\AbstractProcessingHandler&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Routing\\Middleware\\ValidateSignature&quot;,
             &quot;type&quot;: &quot;-&gt;&quot;
         },
         {
-            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Logger.php&quot;,
-            &quot;line&quot;: 607,
-            &quot;function&quot;: &quot;addRecord&quot;,
-            &quot;class&quot;: &quot;Monolog\\Logger&quot;,
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityMonitoring.php&quot;,
+            &quot;line&quot;: 27,
+            &quot;function&quot;: &quot;Illuminate\\Pipeline\\{closure}&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
             &quot;type&quot;: &quot;-&gt;&quot;
         },
         {
-            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Log/Logger.php&quot;,
-            &quot;line&quot;: 184,
-            &quot;function&quot;: &quot;info&quot;,
-            &quot;class&quot;: &quot;Monolog\\Logger&quot;,
-            &quot;type&quot;: &quot;-&gt;&quot;
-        },
-        {
-            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Log/Logger.php&quot;,
-            &quot;line&quot;: 133,
-            &quot;function&quot;: &quot;writeLog&quot;,
-            &quot;class&quot;: &quot;Illuminate\\Log\\Logger&quot;,
-            &quot;type&quot;: &quot;-&gt;&quot;
-        },
-        {
-            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/app/Services/V1/Logger/SecurityLog.php&quot;,
-            &quot;line&quot;: 137,
-            &quot;function&quot;: &quot;info&quot;,
-            &quot;class&quot;: &quot;Illuminate\\Log\\Logger&quot;,
-            &quot;type&quot;: &quot;-&gt;&quot;
-        },
-        {
-            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/app/Services/V1/Logger/SecurityLog.php&quot;,
-            &quot;line&quot;: 55,
-            &quot;function&quot;: &quot;detectSuspiciousApiPatterns&quot;,
-            &quot;class&quot;: &quot;App\\Services\\V1\\Logger\\SecurityLog&quot;,
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php&quot;,
+            &quot;line&quot;: 209,
+            &quot;function&quot;: &quot;handle&quot;,
+            &quot;class&quot;: &quot;App\\Http\\Middleware\\V1\\SecurityMonitoring&quot;,
             &quot;type&quot;: &quot;-&gt;&quot;
         },
         {
             &quot;file&quot;: &quot;/var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityLogger.php&quot;,
-            &quot;line&quot;: 27,
-            &quot;function&quot;: &quot;logApiAccess&quot;,
-            &quot;class&quot;: &quot;App\\Services\\V1\\Logger\\SecurityLog&quot;,
+            &quot;line&quot;: 23,
+            &quot;function&quot;: &quot;Illuminate\\Pipeline\\{closure}&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
             &quot;type&quot;: &quot;-&gt;&quot;
         },
         {
@@ -2817,6 +2773,15 @@ permissions-policy: camera=(), microphone=(), geolocation=(), payment=()
             &quot;type&quot;: &quot;-&gt;&quot;
         }
     ]
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, User not found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;No query results for model [App\\Models\\User] 123&quot;
 }</code>
  </pre>
     </span>
@@ -6030,7 +5995,7 @@ and managing their marketplace presence. Supports secure logo upload with compre
     --form "user_id=45"\
     --form "name=TechCraft Solutions Ltd"\
     --form "description=Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud services, and digital transformation consulting."\
-    --form "logo=@/tmp/phpqibmMt" </code></pre></div>
+    --form "logo=@/tmp/phpse5fHI" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6083,7 +6048,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'logo',
-                'contents' =&gt; fopen('/tmp/phpqibmMt', 'r')
+                'contents' =&gt; fopen('/tmp/phpse5fHI', 'r')
             ],
         ],
     ]
@@ -6101,7 +6066,7 @@ files = {
   'user_id': (None, '45'),
   'name': (None, 'TechCraft Solutions Ltd'),
   'description': (None, 'Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud services, and digital transformation consulting.'),
-  'logo': open('/tmp/phpqibmMt', 'rb')}
+  'logo': open('/tmp/phpse5fHI', 'rb')}
 payload = {
     "user_id": 45,
     "name": "TechCraft Solutions Ltd",
@@ -6370,7 +6335,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional Business logo file. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Recommended dimensions: 200x200px minimum. Example: <code>/tmp/phpqibmMt</code></p>
+<p>optional Business logo file. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Recommended dimensions: 200x200px minimum. Example: <code>/tmp/phpse5fHI</code></p>
         </div>
         </form>
 
@@ -6399,7 +6364,7 @@ replacement with comprehensive validation.</p>
     --form "user_id=67"\
     --form "name=TechCraft Solutions International Ltd"\
     --form "description=Global leader in innovative technology solutions. We specialize in enterprise software development, cloud migration services, AI integration, and digital transformation consulting with over 15 years of proven industry experience."\
-    --form "logo=@/tmp/phplPQkW2" </code></pre></div>
+    --form "logo=@/tmp/phpq5YYwb" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6452,7 +6417,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'logo',
-                'contents' =&gt; fopen('/tmp/phplPQkW2', 'r')
+                'contents' =&gt; fopen('/tmp/phpq5YYwb', 'r')
             ],
         ],
     ]
@@ -6470,7 +6435,7 @@ files = {
   'user_id': (None, '67'),
   'name': (None, 'TechCraft Solutions International Ltd'),
   'description': (None, 'Global leader in innovative technology solutions. We specialize in enterprise software development, cloud migration services, AI integration, and digital transformation consulting with over 15 years of proven industry experience.'),
-  'logo': open('/tmp/phplPQkW2', 'rb')}
+  'logo': open('/tmp/phpq5YYwb', 'rb')}
 payload = {
     "user_id": 67,
     "name": "TechCraft Solutions International Ltd",
@@ -6786,7 +6751,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional New logo file to replace existing one. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will completely replace the current logo. Example: <code>/tmp/phplPQkW2</code></p>
+<p>optional New logo file to replace existing one. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will completely replace the current logo. Example: <code>/tmp/phpq5YYwb</code></p>
         </div>
         </form>
 
@@ -7050,7 +7015,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
     
 
-                                <h2 id="product-management-GETapi-admin-products">Retrieve a paginated list of products</h2>
+                                <h2 id="product-management-GETapi-admin-products">Retrieve a paginated list of products with enhanced search</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
@@ -7058,8 +7023,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <p>Get a comprehensive paginated list of all products in the system with advanced filtering capabilities.
 This endpoint provides administrators with complete product information including variants, media,
-categories, tags, vendor details, and status information. Essential for product catalog management,
-inventory oversight, and administrative operations.</p>
+categories, tags, vendor details, relevance scoring, and faceted search results.</p>
 
 <span id="example-requests-GETapi-admin-products">
 <blockquote>Example request:</blockquote>
@@ -7067,24 +7031,49 @@ inventory oversight, and administrative operations.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://marketplace.com/api/admin/products?filter[]=architecto&amp;filter%5Bname%5D=wireless&amp;filter%5Bsearch%5D=bluetooth+headphones&amp;filter%5Bprice%5D=10.00%2C50.00&amp;filter%5Bcategory%5D=5%2C12%2C18&amp;filter%5Bcreated_at%5D=2025-01-01%2C2025-01-31&amp;filter%5Binclude%5D=vendor%2Cvariants%2Ccategory&amp;page=2&amp;per_page=24&amp;sort=-price%2Cname" \
+    --get "http://marketplace.com/api/admin/products?filter[]=architecto&amp;filter%5Bsearch%5D=wireless+bluetooth+headphones&amp;filter%5Bname%5D=wireless&amp;filter%5Bprice%5D=10.00%2C50.00&amp;filter%5BpriceRanges%5D=0-25%2C50-100%2C200-500&amp;filter%5Bcategory%5D=5%2C12%2C18&amp;filter%5Bavailability%5D=in_stock&amp;filter%5Bvendors%5D=2%2C5%2C8&amp;filter%5Bvendor%5D=apple&amp;filter%5Btags%5D=3%2C7%2C12&amp;filter%5Battributes%5D=color%3Ared%2Csize%3Alarge&amp;filter%5Bstatus%5D=Active&amp;filter%5Bquantity%5D=10%2C100&amp;filter%5Bcreated_at%5D=2025-01-01%2C2025-01-31&amp;filter%5Bupdated_at%5D=2025-01-01%2C2025-01-31&amp;filter%5Binclude%5D=vendor%2Cvariants%2Ccategory&amp;page=2&amp;per_page=24&amp;sort=-relevance%2Cprice&amp;diversify=1&amp;explain=1" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
     \"filter\": {
         \"name\": \"b\",
+        \"search\": \"n\",
         \"price\": \"9,3.1)\",
+        \"priceRanges\": \"-1.42)-3268)\",
         \"category\": \"9,31\",
-        \"quantity\": 8,
+        \"categories\": \"9,31\",
+        \"quantity\": \"64\",
+        \"availability\": \"out_of_stock\",
+        \"vendors\": \"9,31\",
+        \"vendor\": \"i\",
+        \"brand\": \"k\",
+        \"brands\": \"9,31\",
+        \"tags\": \"9,31\",
+        \"tag_logic\": \"OR\",
+        \"attributes\": \"_JK:AI\",
+        \"color\": \"k\",
+        \"colors\": \"dLJnIk\",
+        \"size\": \"h\",
+        \"sizes\": \"DDz1Ys\",
+        \"material\": \"h\",
+        \"status\": \"w\",
         \"created_at\": \"2559-31-42\",
         \"updated_at\": \"2559-31-42\",
-        \"search\": \"h\",
         \"include\": \"uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv\"
     },
     \"page\": 4,
     \"per_page\": 9,
-    \"sort\": \"y8p,Bm,-dp,-Zm,-GH\"
+    \"sort\": \"y8p,Bm,-dp,-Zm,-GH\",
+    \"diversify\": true,
+    \"explain\": false,
+    \"facets\": false,
+    \"highlight\": false,
+    \"personalize\": true,
+    \"typo_tolerance\": false,
+    \"exact_match\": true,
+    \"boost_new_products\": true,
+    \"boost_in_stock\": true
 }"
 </code></pre></div>
 
@@ -7096,15 +7085,26 @@ inventory oversight, and administrative operations.</p>
 
 const params = {
     "filter[0]": "architecto",
+    "filter[search]": "wireless bluetooth headphones",
     "filter[name]": "wireless",
-    "filter[search]": "bluetooth headphones",
     "filter[price]": "10.00,50.00",
+    "filter[priceRanges]": "0-25,50-100,200-500",
     "filter[category]": "5,12,18",
+    "filter[availability]": "in_stock",
+    "filter[vendors]": "2,5,8",
+    "filter[vendor]": "apple",
+    "filter[tags]": "3,7,12",
+    "filter[attributes]": "color:red,size:large",
+    "filter[status]": "Active",
+    "filter[quantity]": "10,100",
     "filter[created_at]": "2025-01-01,2025-01-31",
+    "filter[updated_at]": "2025-01-01,2025-01-31",
     "filter[include]": "vendor,variants,category",
     "page": "2",
     "per_page": "24",
-    "sort": "-price,name",
+    "sort": "-relevance,price",
+    "diversify": "1",
+    "explain": "1",
 };
 Object.keys(params)
     .forEach(key =&gt; url.searchParams.append(key, params[key]));
@@ -7118,17 +7118,42 @@ const headers = {
 let body = {
     "filter": {
         "name": "b",
+        "search": "n",
         "price": "9,3.1)",
+        "priceRanges": "-1.42)-3268)",
         "category": "9,31",
-        "quantity": 8,
+        "categories": "9,31",
+        "quantity": "64",
+        "availability": "out_of_stock",
+        "vendors": "9,31",
+        "vendor": "i",
+        "brand": "k",
+        "brands": "9,31",
+        "tags": "9,31",
+        "tag_logic": "OR",
+        "attributes": "_JK:AI",
+        "color": "k",
+        "colors": "dLJnIk",
+        "size": "h",
+        "sizes": "DDz1Ys",
+        "material": "h",
+        "status": "w",
         "created_at": "2559-31-42",
         "updated_at": "2559-31-42",
-        "search": "h",
         "include": "uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv"
     },
     "page": 4,
     "per_page": 9,
-    "sort": "y8p,Bm,-dp,-Zm,-GH"
+    "sort": "y8p,Bm,-dp,-Zm,-GH",
+    "diversify": true,
+    "explain": false,
+    "facets": false,
+    "highlight": false,
+    "personalize": true,
+    "typo_tolerance": false,
+    "exact_match": true,
+    "boost_new_products": true,
+    "boost_in_stock": true
 };
 
 fetch(url, {
@@ -7151,30 +7176,66 @@ $response = $client-&gt;get(
         ],
         'query' =&gt; [
             'filter[0]' =&gt; 'architecto',
+            'filter[search]' =&gt; 'wireless bluetooth headphones',
             'filter[name]' =&gt; 'wireless',
-            'filter[search]' =&gt; 'bluetooth headphones',
             'filter[price]' =&gt; '10.00,50.00',
+            'filter[priceRanges]' =&gt; '0-25,50-100,200-500',
             'filter[category]' =&gt; '5,12,18',
+            'filter[availability]' =&gt; 'in_stock',
+            'filter[vendors]' =&gt; '2,5,8',
+            'filter[vendor]' =&gt; 'apple',
+            'filter[tags]' =&gt; '3,7,12',
+            'filter[attributes]' =&gt; 'color:red,size:large',
+            'filter[status]' =&gt; 'Active',
+            'filter[quantity]' =&gt; '10,100',
             'filter[created_at]' =&gt; '2025-01-01,2025-01-31',
+            'filter[updated_at]' =&gt; '2025-01-01,2025-01-31',
             'filter[include]' =&gt; 'vendor,variants,category',
             'page' =&gt; '2',
             'per_page' =&gt; '24',
-            'sort' =&gt; '-price,name',
+            'sort' =&gt; '-relevance,price',
+            'diversify' =&gt; '1',
+            'explain' =&gt; '1',
         ],
         'json' =&gt; [
             'filter' =&gt; [
                 'name' =&gt; 'b',
+                'search' =&gt; 'n',
                 'price' =&gt; '9,3.1)',
+                'priceRanges' =&gt; '-1.42)-3268)',
                 'category' =&gt; '9,31',
-                'quantity' =&gt; 8,
+                'categories' =&gt; '9,31',
+                'quantity' =&gt; '64',
+                'availability' =&gt; 'out_of_stock',
+                'vendors' =&gt; '9,31',
+                'vendor' =&gt; 'i',
+                'brand' =&gt; 'k',
+                'brands' =&gt; '9,31',
+                'tags' =&gt; '9,31',
+                'tag_logic' =&gt; 'OR',
+                'attributes' =&gt; '_JK:AI',
+                'color' =&gt; 'k',
+                'colors' =&gt; 'dLJnIk',
+                'size' =&gt; 'h',
+                'sizes' =&gt; 'DDz1Ys',
+                'material' =&gt; 'h',
+                'status' =&gt; 'w',
                 'created_at' =&gt; '2559-31-42',
                 'updated_at' =&gt; '2559-31-42',
-                'search' =&gt; 'h',
                 'include' =&gt; 'uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv',
             ],
             'page' =&gt; 4,
             'per_page' =&gt; 9,
             'sort' =&gt; 'y8p,Bm,-dp,-Zm,-GH',
+            'diversify' =&gt; true,
+            'explain' =&gt; false,
+            'facets' =&gt; false,
+            'highlight' =&gt; false,
+            'personalize' =&gt; true,
+            'typo_tolerance' =&gt; false,
+            'exact_match' =&gt; true,
+            'boost_new_products' =&gt; true,
+            'boost_in_stock' =&gt; true,
         ],
     ]
 );
@@ -7190,29 +7251,65 @@ url = 'http://marketplace.com/api/admin/products'
 payload = {
     "filter": {
         "name": "b",
+        "search": "n",
         "price": "9,3.1)",
+        "priceRanges": "-1.42)-3268)",
         "category": "9,31",
-        "quantity": 8,
+        "categories": "9,31",
+        "quantity": "64",
+        "availability": "out_of_stock",
+        "vendors": "9,31",
+        "vendor": "i",
+        "brand": "k",
+        "brands": "9,31",
+        "tags": "9,31",
+        "tag_logic": "OR",
+        "attributes": "_JK:AI",
+        "color": "k",
+        "colors": "dLJnIk",
+        "size": "h",
+        "sizes": "DDz1Ys",
+        "material": "h",
+        "status": "w",
         "created_at": "2559-31-42",
         "updated_at": "2559-31-42",
-        "search": "h",
         "include": "uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv"
     },
     "page": 4,
     "per_page": 9,
-    "sort": "y8p,Bm,-dp,-Zm,-GH"
+    "sort": "y8p,Bm,-dp,-Zm,-GH",
+    "diversify": true,
+    "explain": false,
+    "facets": false,
+    "highlight": false,
+    "personalize": true,
+    "typo_tolerance": false,
+    "exact_match": true,
+    "boost_new_products": true,
+    "boost_in_stock": true
 }
 params = {
   'filter[0]': 'architecto',
+  'filter[search]': 'wireless bluetooth headphones',
   'filter[name]': 'wireless',
-  'filter[search]': 'bluetooth headphones',
   'filter[price]': '10.00,50.00',
+  'filter[priceRanges]': '0-25,50-100,200-500',
   'filter[category]': '5,12,18',
+  'filter[availability]': 'in_stock',
+  'filter[vendors]': '2,5,8',
+  'filter[vendor]': 'apple',
+  'filter[tags]': '3,7,12',
+  'filter[attributes]': 'color:red,size:large',
+  'filter[status]': 'Active',
+  'filter[quantity]': '10,100',
   'filter[created_at]': '2025-01-01,2025-01-31',
+  'filter[updated_at]': '2025-01-01,2025-01-31',
   'filter[include]': 'vendor,variants,category',
   'page': '2',
   'per_page': '24',
-  'sort': '-price,name',
+  'sort': '-relevance,price',
+  'diversify': '1',
+  'explain': '1',
 }
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
@@ -7227,203 +7324,18 @@ response.json()</code></pre></div>
 
 <span id="example-responses-GETapi-admin-products">
             <blockquote>
-            <p>Example response (200, Products retrieved successfully):</p>
+            <p>Example response (401):</p>
         </blockquote>
-                <pre>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+ </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Products retrieved successfully.&quot;,
-    &quot;data&quot;: {
-        &quot;data&quot;: [
-            {
-                &quot;id&quot;: 15,
-                &quot;name&quot;: &quot;Wireless Bluetooth Headphones&quot;,
-                &quot;description&quot;: &quot;Premium quality wireless headphones with active noise cancellation and 30-hour battery life.&quot;,
-                &quot;price&quot;: 7999,
-                &quot;price_formatted&quot;: &quot;&pound;79.99&quot;,
-                &quot;quantity&quot;: 45,
-                &quot;product_status&quot;: {
-                    &quot;id&quot;: 1,
-                    &quot;name&quot;: &quot;Active&quot;
-                },
-                &quot;category&quot;: {
-                    &quot;id&quot;: 5,
-                    &quot;name&quot;: &quot;Audio Devices&quot;,
-                    &quot;parent_id&quot;: 2
-                },
-                &quot;vendor&quot;: {
-                    &quot;id&quot;: 8,
-                    &quot;name&quot;: &quot;AudioTech Solutions&quot;,
-                    &quot;description&quot;: &quot;Premium audio equipment manufacturer&quot;,
-                    &quot;logo&quot;: &quot;https://yourapi.com/storage/vendor-logos/audiotech-logo.jpg&quot;,
-                    &quot;products_count&quot;: 23
-                },
-                &quot;variants&quot;: [
-                    {
-                        &quot;id&quot;: 23,
-                        &quot;value&quot;: &quot;Black&quot;,
-                        &quot;additional_price&quot;: 0,
-                        &quot;additional_price_formatted&quot;: null,
-                        &quot;quantity&quot;: 25,
-                        &quot;product_attribute&quot;: {
-                            &quot;id&quot;: 1,
-                            &quot;name&quot;: &quot;Color&quot;
-                        },
-                        &quot;created_at&quot;: &quot;2025-01-10T14:35:00.000000Z&quot;,
-                        &quot;updated_at&quot;: &quot;2025-01-15T09:22:00.000000Z&quot;
-                    },
-                    {
-                        &quot;id&quot;: 24,
-                        &quot;value&quot;: &quot;White&quot;,
-                        &quot;additional_price&quot;: 500,
-                        &quot;additional_price_formatted&quot;: &quot;&pound;5.00&quot;,
-                        &quot;quantity&quot;: 20,
-                        &quot;product_attribute&quot;: {
-                            &quot;id&quot;: 1,
-                            &quot;name&quot;: &quot;Color&quot;
-                        },
-                        &quot;created_at&quot;: &quot;2025-01-10T14:35:00.000000Z&quot;,
-                        &quot;updated_at&quot;: &quot;2025-01-15T09:22:00.000000Z&quot;
-                    }
-                ],
-                &quot;tags&quot;: [
-                    {
-                        &quot;id&quot;: 3,
-                        &quot;name&quot;: &quot;wireless&quot;,
-                        &quot;products_count&quot;: 12
-                    },
-                    {
-                        &quot;id&quot;: 7,
-                        &quot;name&quot;: &quot;bluetooth&quot;,
-                        &quot;products_count&quot;: 15
-                    },
-                    {
-                        &quot;id&quot;: 12,
-                        &quot;name&quot;: &quot;noise-cancelling&quot;,
-                        &quot;products_count&quot;: 6
-                    }
-                ],
-                &quot;featured_image&quot;: &quot;https://yourapi.com/storage/products/headphones-featured.jpg&quot;,
-                &quot;gallery&quot;: [
-                    {
-                        &quot;id&quot;: 45,
-                        &quot;url&quot;: &quot;https://yourapi.com/storage/products/headphones-gallery-1.jpg&quot;,
-                        &quot;name&quot;: &quot;Front view&quot;,
-                        &quot;file_name&quot;: &quot;headphones-front.jpg&quot;,
-                        &quot;mime_type&quot;: &quot;image/jpeg&quot;,
-                        &quot;size&quot;: 245760
-                    },
-                    {
-                        &quot;id&quot;: 46,
-                        &quot;url&quot;: &quot;https://yourapi.com/storage/products/headphones-gallery-2.jpg&quot;,
-                        &quot;name&quot;: &quot;Side view&quot;,
-                        &quot;file_name&quot;: &quot;headphones-side.jpg&quot;,
-                        &quot;mime_type&quot;: &quot;image/jpeg&quot;,
-                        &quot;size&quot;: 198432
-                    }
-                ],
-                &quot;media_count&quot;: {
-                    &quot;featured_image&quot;: 1,
-                    &quot;gallery&quot;: 2
-                },
-                &quot;created_at&quot;: &quot;2025-01-10T14:30:00.000000Z&quot;,
-                &quot;updated_at&quot;: &quot;2025-01-15T09:22:00.000000Z&quot;,
-                &quot;deleted_at&quot;: null
-            },
-            {
-                &quot;id&quot;: 22,
-                &quot;name&quot;: &quot;Bluetooth Portable Speaker&quot;,
-                &quot;description&quot;: &quot;Compact waterproof speaker with 12-hour battery and crystal clear sound.&quot;,
-                &quot;price&quot;: 4999,
-                &quot;price_formatted&quot;: &quot;&pound;49.99&quot;,
-                &quot;quantity&quot;: 32,
-                &quot;product_status&quot;: {
-                    &quot;id&quot;: 1,
-                    &quot;name&quot;: &quot;Active&quot;
-                },
-                &quot;category&quot;: {
-                    &quot;id&quot;: 5,
-                    &quot;name&quot;: &quot;Audio Devices&quot;,
-                    &quot;parent_id&quot;: 2
-                },
-                &quot;vendor&quot;: {
-                    &quot;id&quot;: 12,
-                    &quot;name&quot;: &quot;SoundWave Electronics&quot;,
-                    &quot;description&quot;: &quot;Innovative portable audio solutions&quot;
-                },
-                &quot;variants&quot;: [],
-                &quot;tags&quot;: [
-                    {
-                        &quot;id&quot;: 3,
-                        &quot;name&quot;: &quot;wireless&quot;
-                    },
-                    {
-                        &quot;id&quot;: 7,
-                        &quot;name&quot;: &quot;bluetooth&quot;
-                    },
-                    {
-                        &quot;id&quot;: 15,
-                        &quot;name&quot;: &quot;waterproof&quot;
-                    }
-                ],
-                &quot;featured_image&quot;: &quot;https://yourapi.com/storage/products/speaker-featured.jpg&quot;,
-                &quot;gallery&quot;: [],
-                &quot;media_count&quot;: {
-                    &quot;featured_image&quot;: 1,
-                    &quot;gallery&quot;: 0
-                },
-                &quot;created_at&quot;: &quot;2025-01-08T11:15:00.000000Z&quot;,
-                &quot;updated_at&quot;: &quot;2025-01-14T16:45:00.000000Z&quot;,
-                &quot;deleted_at&quot;: null
-            }
-        ],
-        &quot;current_page&quot;: 1,
-        &quot;per_page&quot;: 15,
-        &quot;total&quot;: 156,
-        &quot;last_page&quot;: 11,
-        &quot;from&quot;: 1,
-        &quot;to&quot;: 15
-    }
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (200, No products found):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Products retrieved successfully.&quot;,
-    &quot;data&quot;: {
-        &quot;data&quot;: [],
-        &quot;current_page&quot;: 1,
-        &quot;per_page&quot;: 15,
-        &quot;total&quot;: 0,
-        &quot;last_page&quot;: 1,
-        &quot;from&quot;: null,
-        &quot;to&quot;: null
-    }
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (403, Insufficient permissions):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;You do not have the required permissions.&quot;
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (422, Invalid filter parameters):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;errors&quot;: [
-        &quot;The filter.price field must match the format: number or number,number.&quot;,
-        &quot;The filter.category field must contain only comma-separated numbers.&quot;,
-        &quot;The filter.created_at field must be a valid date or date range in YYYY-MM-DD format.&quot;
-    ]
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -7522,6 +7434,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>optional Array of filter parameters to narrow down results.</p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>filter[search]</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter[search]"                data-endpoint="GETapi-admin-products"
+               value="wireless bluetooth headphones"
+               data-component="query">
+    <br>
+<p>optional Advanced search across product names and descriptions with relevance scoring. Example: <code>wireless bluetooth headphones</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>filter[name]</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
@@ -7531,17 +7454,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="query">
     <br>
 <p>optional Filter products by name (partial match supported). Example: <code>wireless</code></p>
-            </div>
-                                    <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>filter[search]</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
-                <input type="text" style="display: none"
-                              name="filter[search]"                data-endpoint="GETapi-admin-products"
-               value="bluetooth headphones"
-               data-component="query">
-    <br>
-<p>optional Search across product names and descriptions. Example: <code>bluetooth headphones</code></p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>filter[price]</code></b>&nbsp;&nbsp;
@@ -7555,6 +7467,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>optional Filter by price range in pounds. Single value or comma-separated min,max. Example: <code>10.00,50.00</code></p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>filter[priceRanges]</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter[priceRanges]"                data-endpoint="GETapi-admin-products"
+               value="0-25,50-100,200-500"
+               data-component="query">
+    <br>
+<p>optional Multiple price ranges separated by commas. Example: <code>0-25,50-100,200-500</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>filter[category]</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
@@ -7563,7 +7486,84 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="5,12,18"
                data-component="query">
     <br>
-<p>optional Filter by category ID(s). Single ID or comma-separated multiple IDs. Example: <code>5,12,18</code></p>
+<p>optional Filter by category ID(s) including child categories. Example: <code>5,12,18</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>filter[availability]</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter[availability]"                data-endpoint="GETapi-admin-products"
+               value="in_stock"
+               data-component="query">
+    <br>
+<p>optional Filter by stock status. Options: in_stock, out_of_stock, low_stock, available. Example: <code>in_stock</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>filter[vendors]</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter[vendors]"                data-endpoint="GETapi-admin-products"
+               value="2,5,8"
+               data-component="query">
+    <br>
+<p>optional Filter by vendor ID(s). Example: <code>2,5,8</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>filter[vendor]</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter[vendor]"                data-endpoint="GETapi-admin-products"
+               value="apple"
+               data-component="query">
+    <br>
+<p>optional Filter by vendor name (partial match). Example: <code>apple</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>filter[tags]</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter[tags]"                data-endpoint="GETapi-admin-products"
+               value="3,7,12"
+               data-component="query">
+    <br>
+<p>optional Filter by tag ID(s) with logic support. Example: <code>3,7,12</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>filter[attributes]</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter[attributes]"                data-endpoint="GETapi-admin-products"
+               value="color:red,size:large"
+               data-component="query">
+    <br>
+<p>optional Filter by product attributes. Format: attribute:value,attribute:value. Example: <code>color:red,size:large</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>filter[status]</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter[status]"                data-endpoint="GETapi-admin-products"
+               value="Active"
+               data-component="query">
+    <br>
+<p>optional Filter by product status. Example: <code>Active</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>filter[quantity]</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter[quantity]"                data-endpoint="GETapi-admin-products"
+               value="10,100"
+               data-component="query">
+    <br>
+<p>optional Filter by quantity range. Single value or min,max. Example: <code>10,100</code></p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>filter[created_at]</code></b>&nbsp;&nbsp;
@@ -7574,7 +7574,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="2025-01-01,2025-01-31"
                data-component="query">
     <br>
-<p>optional Filter by creation date. Single date or comma-separated date range (YYYY-MM-DD). Example: <code>2025-01-01,2025-01-31</code></p>
+<p>optional Filter by creation date range (YYYY-MM-DD). Example: <code>2025-01-01,2025-01-31</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>filter[updated_at]</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter[updated_at]"                data-endpoint="GETapi-admin-products"
+               value="2025-01-01,2025-01-31"
+               data-component="query">
+    <br>
+<p>optional Filter by update date range (YYYY-MM-DD). Example: <code>2025-01-01,2025-01-31</code></p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>filter[include]</code></b>&nbsp;&nbsp;
@@ -7615,10 +7626,52 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-admin-products"
-               value="-price,name"
+               value="-relevance,price"
                data-component="query">
     <br>
-<p>optional Sort products. Prefix with '-' for descending. Available: name, price, created_at, updated_at. Example: <code>-price,name</code></p>
+<p>optional Sort products. Prefix with '-' for descending. Available: name, price, quantity, created_at, updated_at, relevance. Example: <code>-relevance,price</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>diversify</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="GETapi-admin-products" style="display: none">
+            <input type="radio" name="diversify"
+                   value="1"
+                   data-endpoint="GETapi-admin-products"
+                   data-component="query"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-admin-products" style="display: none">
+            <input type="radio" name="diversify"
+                   value="0"
+                   data-endpoint="GETapi-admin-products"
+                   data-component="query"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>optional Apply result diversification to avoid too many similar products. Default: false. Example: <code>true</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>explain</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="GETapi-admin-products" style="display: none">
+            <input type="radio" name="explain"
+                   value="1"
+                   data-endpoint="GETapi-admin-products"
+                   data-component="query"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-admin-products" style="display: none">
+            <input type="radio" name="explain"
+                   value="0"
+                   data-endpoint="GETapi-admin-products"
+                   data-component="query"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>optional Include search explanations for debugging. Default: false. Example: <code>true</code></p>
             </div>
                         <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
@@ -7642,6 +7695,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Must not be greater than 255 characters. Example: <code>b</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>search</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.search"                data-endpoint="GETapi-admin-products"
+               value="n"
+               data-component="body">
+    <br>
+<p>Must not be greater than 500 characters. Example: <code>n</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>price</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
@@ -7651,6 +7715,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="body">
     <br>
 <p>Must match the regex /^\d+(.\d{1,2})?(,\d+(.\d{1,2})?)*$/. Example: <code>9,3.1)</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>priceRanges</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.priceRanges"                data-endpoint="GETapi-admin-products"
+               value="-1.42)-3268)"
+               data-component="body">
+    <br>
+<p>Must match the regex /^(\d+(.\d{1,2})?-\d+(.\d{1,2})?)(,\d+(.\d{1,2})?-\d+(.\d{1,2})?)*$/. Example: <code>-1.42)-3268)</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>category</code></b>&nbsp;&nbsp;
@@ -7664,15 +7739,184 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Must match the regex /^(\d,?)+$/. Example: <code>9,31</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>quantity</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
+                        <b style="line-height: 2;"><code>categories</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
 <i>optional</i> &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="filter.quantity"                data-endpoint="GETapi-admin-products"
-               value="8"
+                <input type="text" style="display: none"
+                              name="filter.categories"                data-endpoint="GETapi-admin-products"
+               value="9,31"
                data-component="body">
     <br>
-<p>Must be at least 0. Example: <code>8</code></p>
+<p>Must match the regex /^(\d,?)+$/. Example: <code>9,31</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>quantity</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.quantity"                data-endpoint="GETapi-admin-products"
+               value="64"
+               data-component="body">
+    <br>
+<p>Must match the regex /^\d+(,\d+)?$/. Example: <code>64</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>availability</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.availability"                data-endpoint="GETapi-admin-products"
+               value="out_of_stock"
+               data-component="body">
+    <br>
+<p>Example: <code>out_of_stock</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>in_stock</code></li> <li><code>out_of_stock</code></li> <li><code>low_stock</code></li> <li><code>available</code></li></ul>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>vendors</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.vendors"                data-endpoint="GETapi-admin-products"
+               value="9,31"
+               data-component="body">
+    <br>
+<p>Must match the regex /^(\d,?)+$/. Example: <code>9,31</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>vendor</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.vendor"                data-endpoint="GETapi-admin-products"
+               value="i"
+               data-component="body">
+    <br>
+<p>Must not be greater than 255 characters. Example: <code>i</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>brand</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.brand"                data-endpoint="GETapi-admin-products"
+               value="k"
+               data-component="body">
+    <br>
+<p>Must not be greater than 255 characters. Example: <code>k</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>brands</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.brands"                data-endpoint="GETapi-admin-products"
+               value="9,31"
+               data-component="body">
+    <br>
+<p>Must match the regex /^(\d,?)+$/. Example: <code>9,31</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>tags</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.tags"                data-endpoint="GETapi-admin-products"
+               value="9,31"
+               data-component="body">
+    <br>
+<p>Must match the regex /^(\d,?)+$/. Example: <code>9,31</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>tag_logic</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.tag_logic"                data-endpoint="GETapi-admin-products"
+               value="OR"
+               data-component="body">
+    <br>
+<p>Example: <code>OR</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>AND</code></li> <li><code>OR</code></li></ul>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>attributes</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.attributes"                data-endpoint="GETapi-admin-products"
+               value="_JK:AI"
+               data-component="body">
+    <br>
+<p>Must match the regex /^([a-zA-Z<em>]+:[a-zA-Z0-9</em>-\s]+)(,[a-zA-Z<em>]+:[a-zA-Z0-9</em>-\s]+)*$/. Example: <code>_JK:AI</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>color</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.color"                data-endpoint="GETapi-admin-products"
+               value="k"
+               data-component="body">
+    <br>
+<p>Must not be greater than 50 characters. Example: <code>k</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>colors</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.colors"                data-endpoint="GETapi-admin-products"
+               value="dLJnIk"
+               data-component="body">
+    <br>
+<p>Must match the regex /^([a-zA-Z]+,?)+$/. Example: <code>dLJnIk</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>size</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.size"                data-endpoint="GETapi-admin-products"
+               value="h"
+               data-component="body">
+    <br>
+<p>Must not be greater than 50 characters. Example: <code>h</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>sizes</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.sizes"                data-endpoint="GETapi-admin-products"
+               value="DDz1Ys"
+               data-component="body">
+    <br>
+<p>Must match the regex /^([a-zA-Z0-9]+,?)+$/. Example: <code>DDz1Ys</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>material</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.material"                data-endpoint="GETapi-admin-products"
+               value="h"
+               data-component="body">
+    <br>
+<p>Must not be greater than 100 characters. Example: <code>h</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>status</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.status"                data-endpoint="GETapi-admin-products"
+               value="w"
+               data-component="body">
+    <br>
+<p>Must not be greater than 50 characters. Example: <code>w</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>created_at</code></b>&nbsp;&nbsp;
@@ -7695,17 +7939,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="body">
     <br>
 <p>Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/. Example: <code>2559-31-42</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>search</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
-                <input type="text" style="display: none"
-                              name="filter.search"                data-endpoint="GETapi-admin-products"
-               value="h"
-               data-component="body">
-    <br>
-<p>Must not be greater than 255 characters. Example: <code>h</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>include</code></b>&nbsp;&nbsp;
@@ -7753,17 +7986,206 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Must match the regex /^(-?[a-zA-Z0-9<em>]+)(,-?[a-zA-Z0-9</em>]+)*$/. Example: <code>y8p,Bm,-dp,-Zm,-GH</code></p>
         </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>diversify</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="GETapi-admin-products" style="display: none">
+            <input type="radio" name="diversify"
+                   value="true"
+                   data-endpoint="GETapi-admin-products"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-admin-products" style="display: none">
+            <input type="radio" name="diversify"
+                   value="false"
+                   data-endpoint="GETapi-admin-products"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>true</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>explain</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="GETapi-admin-products" style="display: none">
+            <input type="radio" name="explain"
+                   value="true"
+                   data-endpoint="GETapi-admin-products"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-admin-products" style="display: none">
+            <input type="radio" name="explain"
+                   value="false"
+                   data-endpoint="GETapi-admin-products"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>false</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>facets</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="GETapi-admin-products" style="display: none">
+            <input type="radio" name="facets"
+                   value="true"
+                   data-endpoint="GETapi-admin-products"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-admin-products" style="display: none">
+            <input type="radio" name="facets"
+                   value="false"
+                   data-endpoint="GETapi-admin-products"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>false</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>highlight</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="GETapi-admin-products" style="display: none">
+            <input type="radio" name="highlight"
+                   value="true"
+                   data-endpoint="GETapi-admin-products"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-admin-products" style="display: none">
+            <input type="radio" name="highlight"
+                   value="false"
+                   data-endpoint="GETapi-admin-products"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>false</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>personalize</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="GETapi-admin-products" style="display: none">
+            <input type="radio" name="personalize"
+                   value="true"
+                   data-endpoint="GETapi-admin-products"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-admin-products" style="display: none">
+            <input type="radio" name="personalize"
+                   value="false"
+                   data-endpoint="GETapi-admin-products"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>true</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>typo_tolerance</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="GETapi-admin-products" style="display: none">
+            <input type="radio" name="typo_tolerance"
+                   value="true"
+                   data-endpoint="GETapi-admin-products"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-admin-products" style="display: none">
+            <input type="radio" name="typo_tolerance"
+                   value="false"
+                   data-endpoint="GETapi-admin-products"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>false</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>exact_match</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="GETapi-admin-products" style="display: none">
+            <input type="radio" name="exact_match"
+                   value="true"
+                   data-endpoint="GETapi-admin-products"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-admin-products" style="display: none">
+            <input type="radio" name="exact_match"
+                   value="false"
+                   data-endpoint="GETapi-admin-products"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>true</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>boost_new_products</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="GETapi-admin-products" style="display: none">
+            <input type="radio" name="boost_new_products"
+                   value="true"
+                   data-endpoint="GETapi-admin-products"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-admin-products" style="display: none">
+            <input type="radio" name="boost_new_products"
+                   value="false"
+                   data-endpoint="GETapi-admin-products"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>true</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>boost_in_stock</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="GETapi-admin-products" style="display: none">
+            <input type="radio" name="boost_in_stock"
+                   value="true"
+                   data-endpoint="GETapi-admin-products"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-admin-products" style="display: none">
+            <input type="radio" name="boost_in_stock"
+                   value="false"
+                   data-endpoint="GETapi-admin-products"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>true</code></p>
+        </div>
         </form>
 
-                    <h2 id="product-management-GETapi-admin-products--id-">Retrieve a specific product</h2>
+                    <h2 id="product-management-GETapi-admin-products--id-">Retrieve a specific product with enhanced data</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
 <p>Get detailed information about a specific product including all variants, media, category details,
-vendor information, tags, and administrative metadata. This endpoint provides complete product
-data needed for product management, editing, and detailed analysis.</p>
+vendor information, tags, search metadata, and administrative information. This endpoint provides
+complete product data needed for product management, editing, and detailed analysis.</p>
 
 <span id="example-requests-GETapi-admin-products--id-">
 <blockquote>Example request:</blockquote>
@@ -7829,108 +8251,18 @@ response.json()</code></pre></div>
 
 <span id="example-responses-GETapi-admin-products--id-">
             <blockquote>
-            <p>Example response (200, Product retrieved successfully):</p>
+            <p>Example response (401):</p>
         </blockquote>
-                <pre>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+ </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Product retrieved successfully.&quot;,
-    &quot;data&quot;: {
-        &quot;id&quot;: 15,
-        &quot;name&quot;: &quot;Wireless Bluetooth Headphones&quot;,
-        &quot;description&quot;: &quot;Premium quality wireless headphones with active noise cancellation, 30-hour battery life, and superior sound quality. Features include touch controls, voice assistant support, and comfortable over-ear design perfect for long listening sessions.&quot;,
-        &quot;price&quot;: 7999,
-        &quot;price_formatted&quot;: &quot;&pound;79.99&quot;,
-        &quot;quantity&quot;: 45,
-        &quot;product_status&quot;: {
-            &quot;id&quot;: 1,
-            &quot;name&quot;: &quot;Active&quot;
-        },
-        &quot;category&quot;: {
-            &quot;id&quot;: 5,
-            &quot;name&quot;: &quot;Audio Devices&quot;,
-            &quot;parent_id&quot;: 2
-        },
-        &quot;vendor&quot;: {
-            &quot;id&quot;: 8,
-            &quot;name&quot;: &quot;AudioTech Solutions&quot;,
-            &quot;description&quot;: &quot;Premium audio equipment manufacturer specializing in wireless technology&quot;,
-            &quot;logo&quot;: &quot;https://yourapi.com/storage/vendor-logos/audiotech-logo.jpg&quot;,
-            &quot;products_count&quot;: 23
-        },
-        &quot;variants&quot;: [
-            {
-                &quot;id&quot;: 23,
-                &quot;value&quot;: &quot;Black&quot;,
-                &quot;additional_price&quot;: 0,
-                &quot;additional_price_formatted&quot;: null,
-                &quot;quantity&quot;: 25,
-                &quot;product_attribute&quot;: {
-                    &quot;id&quot;: 1,
-                    &quot;name&quot;: &quot;Color&quot;
-                }
-            },
-            {
-                &quot;id&quot;: 24,
-                &quot;value&quot;: &quot;White&quot;,
-                &quot;additional_price&quot;: 500,
-                &quot;additional_price_formatted&quot;: &quot;&pound;5.00&quot;,
-                &quot;quantity&quot;: 20,
-                &quot;product_attribute&quot;: {
-                    &quot;id&quot;: 1,
-                    &quot;name&quot;: &quot;Color&quot;
-                }
-            }
-        ],
-        &quot;tags&quot;: [
-            {
-                &quot;id&quot;: 3,
-                &quot;name&quot;: &quot;wireless&quot;,
-                &quot;products_count&quot;: 12
-            },
-            {
-                &quot;id&quot;: 7,
-                &quot;name&quot;: &quot;bluetooth&quot;,
-                &quot;products_count&quot;: 15
-            }
-        ],
-        &quot;featured_image&quot;: &quot;https://yourapi.com/storage/products/headphones-featured.jpg&quot;,
-        &quot;gallery&quot;: [
-            {
-                &quot;id&quot;: 45,
-                &quot;url&quot;: &quot;https://yourapi.com/storage/products/headphones-gallery-1.jpg&quot;,
-                &quot;name&quot;: &quot;Front view&quot;,
-                &quot;file_name&quot;: &quot;headphones-front.jpg&quot;,
-                &quot;mime_type&quot;: &quot;image/jpeg&quot;,
-                &quot;size&quot;: 245760
-            }
-        ],
-        &quot;media_count&quot;: {
-            &quot;featured_image&quot;: 1,
-            &quot;gallery&quot;: 1
-        },
-        &quot;created_at&quot;: &quot;2025-01-10T14:30:00.000000Z&quot;,
-        &quot;updated_at&quot;: &quot;2025-01-15T09:22:00.000000Z&quot;,
-        &quot;deleted_at&quot;: null
-    }
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (403, Insufficient permissions):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;You do not have the required permissions.&quot;
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (404, Product not found):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;No query results for model [App\\Models\\Product] 999&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -8039,15 +8371,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                     </form>
 
-                    <h2 id="product-management-POSTapi-admin-products">Create a new product</h2>
+                    <h2 id="product-management-POSTapi-admin-products">Create a new product with enhanced features</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Add a new product to the system with complete details including variants, tags, and media.
+<p>Add a new product to the system with complete details including variants, tags, media, and search optimization.
 Products are automatically assigned to the vendor associated with the authenticated admin user.
-Supports secure file uploads for featured images and gallery photos with comprehensive validation.</p>
+Supports secure file uploads and automatic search keyword generation for optimal findability.</p>
 
 <span id="example-requests-POSTapi-admin-products">
 <blockquote>Example request:</blockquote>
@@ -8059,15 +8391,16 @@ Supports secure file uploads for featured images and gallery photos with compreh
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "name="Premium Wireless Earbuds""\
-    --form "description="High-quality wireless earbuds with noise cancellation and long battery life.""\
-    --form "price=79.99"\
+    --form "name="Premium Wireless Earbuds Pro""\
+    --form "description="High-quality wireless earbuds with advanced noise cancellation and 30-hour battery life.""\
+    --form "price=89.99"\
     --form "product_category_id=5"\
     --form "product_status_id=1"\
     --form "quantity=50"\
     --form "product_tags[]=3"\
     --form "product_variants[]=architecto"\
-    --form "media[featured_image]=@/tmp/phpBnXEeH"     --form "media[gallery][]=@/tmp/phpp2lItV" </code></pre></div>
+    --form "low_stock_threshold=5"\
+    --form "media[featured_image]=@/tmp/phpkKlZGV"     --form "media[gallery][]=@/tmp/phpSRZjRw" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -8082,14 +8415,15 @@ const headers = {
 };
 
 const body = new FormData();
-body.append('name', '"Premium Wireless Earbuds"');
-body.append('description', '"High-quality wireless earbuds with noise cancellation and long battery life."');
-body.append('price', '79.99');
+body.append('name', '"Premium Wireless Earbuds Pro"');
+body.append('description', '"High-quality wireless earbuds with advanced noise cancellation and 30-hour battery life."');
+body.append('price', '89.99');
 body.append('product_category_id', '5');
 body.append('product_status_id', '1');
 body.append('quantity', '50');
 body.append('product_tags[]', '3');
 body.append('product_variants[]', 'architecto');
+body.append('low_stock_threshold', '5');
 body.append('media[featured_image]', document.querySelector('input[name="media[featured_image]"]').files[0]);
 body.append('media[gallery][]', document.querySelector('input[name="media[gallery][]"]').files[0]);
 
@@ -8114,15 +8448,15 @@ $response = $client-&gt;post(
         'multipart' =&gt; [
             [
                 'name' =&gt; 'name',
-                'contents' =&gt; '"Premium Wireless Earbuds"'
+                'contents' =&gt; '"Premium Wireless Earbuds Pro"'
             ],
             [
                 'name' =&gt; 'description',
-                'contents' =&gt; '"High-quality wireless earbuds with noise cancellation and long battery life."'
+                'contents' =&gt; '"High-quality wireless earbuds with advanced noise cancellation and 30-hour battery life."'
             ],
             [
                 'name' =&gt; 'price',
-                'contents' =&gt; '79.99'
+                'contents' =&gt; '89.99'
             ],
             [
                 'name' =&gt; 'product_category_id',
@@ -8145,12 +8479,16 @@ $response = $client-&gt;post(
                 'contents' =&gt; 'architecto'
             ],
             [
+                'name' =&gt; 'low_stock_threshold',
+                'contents' =&gt; '5'
+            ],
+            [
                 'name' =&gt; 'media[featured_image]',
-                'contents' =&gt; fopen('/tmp/phpBnXEeH', 'r')
+                'contents' =&gt; fopen('/tmp/phpkKlZGV', 'r')
             ],
             [
                 'name' =&gt; 'media[gallery][]',
-                'contents' =&gt; fopen('/tmp/phpp2lItV', 'r')
+                'contents' =&gt; fopen('/tmp/phpSRZjRw', 'r')
             ],
         ],
     ]
@@ -8165,30 +8503,33 @@ import json
 
 url = 'http://marketplace.com/api/admin/products'
 files = {
-  'name': (None, '"Premium Wireless Earbuds"'),
-  'description': (None, '"High-quality wireless earbuds with noise cancellation and long battery life."'),
-  'price': (None, '79.99'),
+  'name': (None, '"Premium Wireless Earbuds Pro"'),
+  'description': (None, '"High-quality wireless earbuds with advanced noise cancellation and 30-hour battery life."'),
+  'price': (None, '89.99'),
   'product_category_id': (None, '5'),
   'product_status_id': (None, '1'),
   'quantity': (None, '50'),
   'product_tags[]': (None, '3'),
   'product_variants[]': (None, 'architecto'),
-  'media[featured_image]': open('/tmp/phpBnXEeH', 'rb')  'media[gallery][]': open('/tmp/phpp2lItV', 'rb')}
+  'low_stock_threshold': (None, '5'),
+  'media[featured_image]': open('/tmp/phpkKlZGV', 'rb')  'media[gallery][]': open('/tmp/phpSRZjRw', 'rb')}
 payload = {
-    "name": "\"Premium Wireless Earbuds\"",
-    "description": "\"High-quality wireless earbuds with noise cancellation and long battery life.\"",
-    "price": "79.99",
+    "name": "\"Premium Wireless Earbuds Pro\"",
+    "description": "\"High-quality wireless earbuds with advanced noise cancellation and 30-hour battery life.\"",
+    "price": "89.99",
     "product_category_id": 5,
     "product_status_id": 1,
     "quantity": 50,
     "product_tags": [
         3,
         7,
-        12
+        12,
+        18
     ],
     "product_variants": [
         "architecto"
-    ]
+    ],
+    "low_stock_threshold": 5
 }
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
@@ -8202,115 +8543,7 @@ response.json()</code></pre></div>
 </span>
 
 <span id="example-responses-POSTapi-admin-products">
-            <blockquote>
-            <p>Example response (200, Product created successfully):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Product created successfully.&quot;,
-    &quot;data&quot;: {
-        &quot;id&quot;: 47,
-        &quot;name&quot;: &quot;Premium Wireless Earbuds&quot;,
-        &quot;description&quot;: &quot;High-quality wireless earbuds with noise cancellation and long battery life.&quot;,
-        &quot;price&quot;: 7999,
-        &quot;price_formatted&quot;: &quot;&pound;79.99&quot;,
-        &quot;quantity&quot;: 50,
-        &quot;product_status&quot;: {
-            &quot;id&quot;: 1,
-            &quot;name&quot;: &quot;Active&quot;
-        },
-        &quot;category&quot;: {
-            &quot;id&quot;: 5,
-            &quot;name&quot;: &quot;Audio Devices&quot;
-        },
-        &quot;vendor&quot;: {
-            &quot;id&quot;: 8,
-            &quot;name&quot;: &quot;AudioTech Solutions&quot;
-        },
-        &quot;variants&quot;: [
-            {
-                &quot;id&quot;: 156,
-                &quot;value&quot;: &quot;Red&quot;,
-                &quot;additional_price&quot;: 500,
-                &quot;additional_price_formatted&quot;: &quot;&pound;5.00&quot;,
-                &quot;quantity&quot;: 20,
-                &quot;product_attribute&quot;: {
-                    &quot;id&quot;: 1,
-                    &quot;name&quot;: &quot;Color&quot;
-                }
-            }
-        ],
-        &quot;tags&quot;: [
-            {
-                &quot;id&quot;: 3,
-                &quot;name&quot;: &quot;wireless&quot;
-            },
-            {
-                &quot;id&quot;: 7,
-                &quot;name&quot;: &quot;bluetooth&quot;
-            }
-        ],
-        &quot;featured_image&quot;: &quot;https://yourapi.com/storage/products/earbuds-featured.jpg&quot;,
-        &quot;gallery&quot;: [],
-        &quot;created_at&quot;: &quot;2025-01-16T14:30:00.000000Z&quot;,
-        &quot;updated_at&quot;: &quot;2025-01-16T14:30:00.000000Z&quot;
-    }
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (403, Insufficient permissions):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;You do not have the required permissions.&quot;
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (404, Vendor not found):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Vendor not found.&quot;
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (413, File too large):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;File too large. Maximum size is 5.0 MB.&quot;
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (422, Validation errors):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;errors&quot;: [
-        &quot;The name field is required.&quot;,
-        &quot;The price field is required.&quot;,
-        &quot;The price must be greater than 0.&quot;,
-        &quot;The quantity must be at least 0.&quot;,
-        &quot;The product category id must exist in product_categories table.&quot;,
-        &quot;The product status id must exist in product_statuses table.&quot;
-    ]
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (500, Media upload failed):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Failed to process media files: Unable to write file to disk.&quot;
-}</code>
- </pre>
-    </span>
+</span>
 <span id="execution-results-POSTapi-admin-products" hidden>
     <blockquote>Received response<span
                 id="execution-response-status-POSTapi-admin-products"></span>:
@@ -8398,10 +8631,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="name"                data-endpoint="POSTapi-admin-products"
-               value=""Premium Wireless Earbuds""
+               value=""Premium Wireless Earbuds Pro""
                data-component="body">
     <br>
-<p>The product name. Will be used for display and search. Example: <code>"Premium Wireless Earbuds"</code></p>
+<p>The product name. Will be used for display and search optimization. Example: <code>"Premium Wireless Earbuds Pro"</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
@@ -8409,10 +8642,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="description"                data-endpoint="POSTapi-admin-products"
-               value=""High-quality wireless earbuds with noise cancellation and long battery life.""
+               value=""High-quality wireless earbuds with advanced noise cancellation and 30-hour battery life.""
                data-component="body">
     <br>
-<p>optional Detailed product description. Supports basic HTML tags. Example: <code>"High-quality wireless earbuds with noise cancellation and long battery life."</code></p>
+<p>optional Detailed product description. Supports basic HTML tags and is used for search indexing. Example: <code>"High-quality wireless earbuds with advanced noise cancellation and 30-hour battery life."</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>price</code></b>&nbsp;&nbsp;
@@ -8420,10 +8653,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="price"                data-endpoint="POSTapi-admin-products"
-               value="79.99"
+               value="89.99"
                data-component="body">
     <br>
-<p>Product price in pounds. Will be converted to pennies for storage. Example: <code>79.99</code></p>
+<p>Product price in pounds. Will be converted to pennies for storage. Example: <code>89.99</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>product_category_id</code></b>&nbsp;&nbsp;
@@ -8469,7 +8702,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                name="product_tags[1]"                data-endpoint="POSTapi-admin-products"
                data-component="body">
     <br>
-<p>optional Array of tag IDs to associate with this product.</p>
+<p>optional Array of tag IDs to associate with this product for better searchability.</p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
         <details>
@@ -8478,7 +8711,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <small>string[]</small>&nbsp;
 <i>optional</i> &nbsp;
 <br>
-<p>optional Array of product variants.</p>
+<p>optional Array of product variants with enhanced attributes.</p>
             </summary>
                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>product_attribute_id</code></b>&nbsp;&nbsp;
@@ -8550,10 +8783,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="product_variants.*.value"                data-endpoint="POSTapi-admin-products"
-               value=""Red""
+               value=""Midnight Black""
                data-component="body">
     <br>
-<p>The value for this variant. Example: <code>"Red"</code></p>
+<p>The value for this variant. Example: <code>"Midnight Black"</code></p>
                     </div>
                                                                 <div style="margin-left: 28px; clear: unset;">
                         <b style="line-height: 2;"><code>additional_price</code></b>&nbsp;&nbsp;
@@ -8561,10 +8794,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="product_variants.*.additional_price"                data-endpoint="POSTapi-admin-products"
-               value="5.00"
+               value="10.00"
                data-component="body">
     <br>
-<p>optional Additional price for this variant in pounds. Example: <code>5.00</code></p>
+<p>optional Additional price for this variant in pounds. Example: <code>10.00</code></p>
                     </div>
                                                                 <div style="margin-left: 28px; clear: unset;">
                         <b style="line-height: 2;"><code>quantity</code></b>&nbsp;&nbsp;
@@ -8572,10 +8805,21 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="product_variants.*.quantity"                data-endpoint="POSTapi-admin-products"
-               value="20"
+               value="25"
                data-component="body">
     <br>
-<p>Stock quantity for this variant. Example: <code>20</code></p>
+<p>Stock quantity for this variant. Example: <code>25</code></p>
+                    </div>
+                                                                <div style="margin-left: 28px; clear: unset;">
+                        <b style="line-height: 2;"><code>low_stock_threshold</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="product_variants.*.low_stock_threshold"                data-endpoint="POSTapi-admin-products"
+               value="3"
+               data-component="body">
+    <br>
+<p>optional Low stock threshold for this variant. Default: 5. Example: <code>3</code></p>
                     </div>
                                     </details>
         </div>
@@ -8599,7 +8843,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional Featured product image. Max 5MB, dimensions 100x100 to 4000x4000px. Example: <code>/tmp/phpBnXEeH</code></p>
+<p>optional Featured product image. Max 5MB, dimensions 100x100 to 4000x4000px. Example: <code>/tmp/phpkKlZGV</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>gallery</code></b>&nbsp;&nbsp;
@@ -8616,17 +8860,29 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     </div>
                                     </details>
         </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>low_stock_threshold</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="low_stock_threshold"                data-endpoint="POSTapi-admin-products"
+               value="5"
+               data-component="body">
+    <br>
+<p>optional Low stock alert threshold. Default: 10. Example: <code>5</code></p>
+        </div>
         </form>
 
-                    <h2 id="product-management-POSTapi-admin-products--id-">Update an existing product</h2>
+                    <h2 id="product-management-POSTapi-admin-products--id-">Update an existing product with enhanced features</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Modify an existing product's details including variants, tags, and media. This endpoint
-supports partial updates - only provided fields will be updated. When updating variants,
-all existing variants are replaced with the new ones. Media files can be updated independently.</p>
+<p>Modify an existing product's details including variants, tags, media, and search optimization.
+This endpoint supports partial updates - only provided fields will be updated. When updating variants,
+all existing variants are replaced with the new ones. Search keywords are automatically regenerated
+for optimal findability.</p>
 
 <span id="example-requests-POSTapi-admin-products--id-">
 <blockquote>Example request:</blockquote>
@@ -8638,15 +8894,16 @@ all existing variants are replaced with the new ones. Media files can be updated
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
-    --form "name="Premium Wireless Earbuds Pro""\
-    --form "description="Enhanced wireless earbuds with improved noise cancellation.""\
-    --form "price=89.99"\
+    --form "name="Premium Wireless Earbuds Pro Max""\
+    --form "description="Enhanced wireless earbuds with improved noise cancellation and extended battery life.""\
+    --form "price=99.99"\
     --form "product_category_id=6"\
     --form "product_status_id=1"\
     --form "quantity=75"\
     --form "product_tags[]=3"\
     --form "product_variants[]=architecto"\
-    --form "media[featured_image]=@/tmp/phpWW9DId"     --form "media[gallery][]=@/tmp/phpVS5wVk" </code></pre></div>
+    --form "low_stock_threshold=8"\
+    --form "media[featured_image]=@/tmp/phpUfwg0r"     --form "media[gallery][]=@/tmp/phpb0eTfO" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -8661,14 +8918,15 @@ const headers = {
 };
 
 const body = new FormData();
-body.append('name', '"Premium Wireless Earbuds Pro"');
-body.append('description', '"Enhanced wireless earbuds with improved noise cancellation."');
-body.append('price', '89.99');
+body.append('name', '"Premium Wireless Earbuds Pro Max"');
+body.append('description', '"Enhanced wireless earbuds with improved noise cancellation and extended battery life."');
+body.append('price', '99.99');
 body.append('product_category_id', '6');
 body.append('product_status_id', '1');
 body.append('quantity', '75');
 body.append('product_tags[]', '3');
 body.append('product_variants[]', 'architecto');
+body.append('low_stock_threshold', '8');
 body.append('media[featured_image]', document.querySelector('input[name="media[featured_image]"]').files[0]);
 body.append('media[gallery][]', document.querySelector('input[name="media[gallery][]"]').files[0]);
 
@@ -8693,15 +8951,15 @@ $response = $client-&gt;post(
         'multipart' =&gt; [
             [
                 'name' =&gt; 'name',
-                'contents' =&gt; '"Premium Wireless Earbuds Pro"'
+                'contents' =&gt; '"Premium Wireless Earbuds Pro Max"'
             ],
             [
                 'name' =&gt; 'description',
-                'contents' =&gt; '"Enhanced wireless earbuds with improved noise cancellation."'
+                'contents' =&gt; '"Enhanced wireless earbuds with improved noise cancellation and extended battery life."'
             ],
             [
                 'name' =&gt; 'price',
-                'contents' =&gt; '89.99'
+                'contents' =&gt; '99.99'
             ],
             [
                 'name' =&gt; 'product_category_id',
@@ -8724,12 +8982,16 @@ $response = $client-&gt;post(
                 'contents' =&gt; 'architecto'
             ],
             [
+                'name' =&gt; 'low_stock_threshold',
+                'contents' =&gt; '8'
+            ],
+            [
                 'name' =&gt; 'media[featured_image]',
-                'contents' =&gt; fopen('/tmp/phpWW9DId', 'r')
+                'contents' =&gt; fopen('/tmp/phpUfwg0r', 'r')
             ],
             [
                 'name' =&gt; 'media[gallery][]',
-                'contents' =&gt; fopen('/tmp/phpVS5wVk', 'r')
+                'contents' =&gt; fopen('/tmp/phpb0eTfO', 'r')
             ],
         ],
     ]
@@ -8744,19 +9006,20 @@ import json
 
 url = 'http://marketplace.com/api/admin/products/1'
 files = {
-  'name': (None, '"Premium Wireless Earbuds Pro"'),
-  'description': (None, '"Enhanced wireless earbuds with improved noise cancellation."'),
-  'price': (None, '89.99'),
+  'name': (None, '"Premium Wireless Earbuds Pro Max"'),
+  'description': (None, '"Enhanced wireless earbuds with improved noise cancellation and extended battery life."'),
+  'price': (None, '99.99'),
   'product_category_id': (None, '6'),
   'product_status_id': (None, '1'),
   'quantity': (None, '75'),
   'product_tags[]': (None, '3'),
   'product_variants[]': (None, 'architecto'),
-  'media[featured_image]': open('/tmp/phpWW9DId', 'rb')  'media[gallery][]': open('/tmp/phpVS5wVk', 'rb')}
+  'low_stock_threshold': (None, '8'),
+  'media[featured_image]': open('/tmp/phpUfwg0r', 'rb')  'media[gallery][]': open('/tmp/phpb0eTfO', 'rb')}
 payload = {
-    "name": "\"Premium Wireless Earbuds Pro\"",
-    "description": "\"Enhanced wireless earbuds with improved noise cancellation.\"",
-    "price": "89.99",
+    "name": "\"Premium Wireless Earbuds Pro Max\"",
+    "description": "\"Enhanced wireless earbuds with improved noise cancellation and extended battery life.\"",
+    "price": "99.99",
     "product_category_id": 6,
     "product_status_id": 1,
     "quantity": 75,
@@ -8764,11 +9027,13 @@ payload = {
         3,
         7,
         12,
-        18
+        18,
+        22
     ],
     "product_variants": [
         "architecto"
-    ]
+    ],
+    "low_stock_threshold": 8
 }
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
@@ -8782,102 +9047,7 @@ response.json()</code></pre></div>
 </span>
 
 <span id="example-responses-POSTapi-admin-products--id-">
-            <blockquote>
-            <p>Example response (200, Product updated successfully):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Product updated successfully.&quot;,
-    &quot;data&quot;: {
-        &quot;id&quot;: 47,
-        &quot;name&quot;: &quot;Premium Wireless Earbuds Pro&quot;,
-        &quot;description&quot;: &quot;Enhanced wireless earbuds with improved noise cancellation.&quot;,
-        &quot;price&quot;: 8999,
-        &quot;price_formatted&quot;: &quot;&pound;89.99&quot;,
-        &quot;quantity&quot;: 75,
-        &quot;product_status&quot;: {
-            &quot;id&quot;: 1,
-            &quot;name&quot;: &quot;Active&quot;
-        },
-        &quot;category&quot;: {
-            &quot;id&quot;: 6,
-            &quot;name&quot;: &quot;Premium Audio&quot;
-        },
-        &quot;vendor&quot;: {
-            &quot;id&quot;: 8,
-            &quot;name&quot;: &quot;AudioTech Solutions&quot;
-        },
-        &quot;variants&quot;: [
-            {
-                &quot;id&quot;: 157,
-                &quot;value&quot;: &quot;Blue&quot;,
-                &quot;additional_price&quot;: 1000,
-                &quot;additional_price_formatted&quot;: &quot;&pound;10.00&quot;,
-                &quot;quantity&quot;: 15,
-                &quot;product_attribute&quot;: {
-                    &quot;id&quot;: 1,
-                    &quot;name&quot;: &quot;Color&quot;
-                }
-            }
-        ],
-        &quot;tags&quot;: [
-            {
-                &quot;id&quot;: 3,
-                &quot;name&quot;: &quot;wireless&quot;
-            },
-            {
-                &quot;id&quot;: 7,
-                &quot;name&quot;: &quot;bluetooth&quot;
-            },
-            {
-                &quot;id&quot;: 18,
-                &quot;name&quot;: &quot;premium&quot;
-            }
-        ],
-        &quot;featured_image&quot;: &quot;https://yourapi.com/storage/products/earbuds-pro-featured.jpg&quot;,
-        &quot;gallery&quot;: [
-            {
-                &quot;id&quot;: 89,
-                &quot;url&quot;: &quot;https://yourapi.com/storage/products/earbuds-pro-gallery-1.jpg&quot;,
-                &quot;name&quot;: &quot;Product showcase&quot;
-            }
-        ],
-        &quot;updated_at&quot;: &quot;2025-01-16T15:45:00.000000Z&quot;
-    }
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (403, Insufficient permissions):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;You do not have the required permissions.&quot;
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (404, Product not found):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;No query results for model [App\\Models\\Product] 999&quot;
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (422, Validation errors):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;errors&quot;: [
-        &quot;The price must be greater than 0.&quot;,
-        &quot;The quantity must be at least 0.&quot;
-    ]
-}</code>
- </pre>
-    </span>
+</span>
 <span id="execution-results-POSTapi-admin-products--id-" hidden>
     <blockquote>Received response<span
                 id="execution-response-status-POSTapi-admin-products--id-"></span>:
@@ -8988,10 +9158,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="name"                data-endpoint="POSTapi-admin-products--id-"
-               value=""Premium Wireless Earbuds Pro""
+               value=""Premium Wireless Earbuds Pro Max""
                data-component="body">
     <br>
-<p>optional The updated product name. Example: <code>"Premium Wireless Earbuds Pro"</code></p>
+<p>optional The updated product name. Example: <code>"Premium Wireless Earbuds Pro Max"</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>description</code></b>&nbsp;&nbsp;
@@ -8999,10 +9169,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="description"                data-endpoint="POSTapi-admin-products--id-"
-               value=""Enhanced wireless earbuds with improved noise cancellation.""
+               value=""Enhanced wireless earbuds with improved noise cancellation and extended battery life.""
                data-component="body">
     <br>
-<p>optional Updated product description. Example: <code>"Enhanced wireless earbuds with improved noise cancellation."</code></p>
+<p>optional Updated product description with search optimization. Example: <code>"Enhanced wireless earbuds with improved noise cancellation and extended battery life."</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>price</code></b>&nbsp;&nbsp;
@@ -9010,10 +9180,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="price"                data-endpoint="POSTapi-admin-products--id-"
-               value="89.99"
+               value="99.99"
                data-component="body">
     <br>
-<p>optional Updated price in pounds. Example: <code>89.99</code></p>
+<p>optional Updated price in pounds. Example: <code>99.99</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>product_category_id</code></b>&nbsp;&nbsp;
@@ -9059,7 +9229,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                name="product_tags[1]"                data-endpoint="POSTapi-admin-products--id-"
                data-component="body">
     <br>
-<p>optional Updated array of tag IDs.</p>
+<p>optional Updated array of tag IDs for better search optimization.</p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
         <details>
@@ -9140,10 +9310,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="product_variants.*.value"                data-endpoint="POSTapi-admin-products--id-"
-               value=""Blue""
+               value=""Pearl White""
                data-component="body">
     <br>
-<p>Variant value. Example: <code>"Blue"</code></p>
+<p>Variant value. Example: <code>"Pearl White"</code></p>
                     </div>
                                                                 <div style="margin-left: 28px; clear: unset;">
                         <b style="line-height: 2;"><code>additional_price</code></b>&nbsp;&nbsp;
@@ -9151,10 +9321,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="product_variants.*.additional_price"                data-endpoint="POSTapi-admin-products--id-"
-               value="10.00"
+               value="15.00"
                data-component="body">
     <br>
-<p>optional Additional price in pounds. Example: <code>10.00</code></p>
+<p>optional Additional price in pounds. Example: <code>15.00</code></p>
                     </div>
                                                                 <div style="margin-left: 28px; clear: unset;">
                         <b style="line-height: 2;"><code>quantity</code></b>&nbsp;&nbsp;
@@ -9162,10 +9332,21 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="product_variants.*.quantity"                data-endpoint="POSTapi-admin-products--id-"
-               value="15"
+               value="20"
                data-component="body">
     <br>
-<p>Variant stock quantity. Example: <code>15</code></p>
+<p>Variant stock quantity. Example: <code>20</code></p>
+                    </div>
+                                                                <div style="margin-left: 28px; clear: unset;">
+                        <b style="line-height: 2;"><code>low_stock_threshold</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="product_variants.*.low_stock_threshold"                data-endpoint="POSTapi-admin-products--id-"
+               value="2"
+               data-component="body">
+    <br>
+<p>optional Variant low stock threshold. Example: <code>2</code></p>
                     </div>
                                     </details>
         </div>
@@ -9189,7 +9370,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional New featured image (replaces existing). Example: <code>/tmp/phpWW9DId</code></p>
+<p>optional New featured image (replaces existing). Example: <code>/tmp/phpUfwg0r</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>gallery</code></b>&nbsp;&nbsp;
@@ -9206,9 +9387,20 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     </div>
                                     </details>
         </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>low_stock_threshold</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="low_stock_threshold"                data-endpoint="POSTapi-admin-products--id-"
+               value="8"
+               data-component="body">
+    <br>
+<p>optional Updated low stock threshold. Example: <code>8</code></p>
+        </div>
         </form>
 
-                    <h2 id="product-management-DELETEapi-admin-products-soft-destroy--product_id-">Soft delete a product</h2>
+                    <h2 id="product-management-DELETEapi-admin-products-soft-destroy--product_id-">Soft delete a product with search index update</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
@@ -9216,7 +9408,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <p>Soft delete a product, making it inactive but preserving the data for potential recovery.
 Soft deleted products are hidden from public listings but remain in the database for
-administrative purposes and order history integrity.</p>
+administrative purposes and order history integrity. Search indexes are updated automatically.</p>
 
 <span id="example-requests-DELETEapi-admin-products-soft-destroy--product_id-">
 <blockquote>Example request:</blockquote>
@@ -9281,34 +9473,7 @@ response.json()</code></pre></div>
 </span>
 
 <span id="example-responses-DELETEapi-admin-products-soft-destroy--product_id-">
-            <blockquote>
-            <p>Example response (200, Product soft deleted successfully):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Product deleted successfully.&quot;
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (403, Insufficient permissions):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;You do not have the required permissions.&quot;
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (404, Product not found):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;No query results for model [App\\Models\\Product] 999&quot;
-}</code>
- </pre>
-    </span>
+</span>
 <span id="execution-results-DELETEapi-admin-products-soft-destroy--product_id-" hidden>
     <blockquote>Received response<span
                 id="execution-response-status-DELETEapi-admin-products-soft-destroy--product_id-"></span>:
@@ -9414,15 +9579,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                     </form>
 
-                    <h2 id="product-management-DELETEapi-admin-products--id-">Permanently delete a product</h2>
+                    <h2 id="product-management-DELETEapi-admin-products--id-">Permanently delete a product with complete cleanup</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
 <p>Permanently remove a product from the database. This action is irreversible and will
-also remove all associated variants and media files. The product must be soft deleted
-first before it can be permanently deleted.</p>
+also remove all associated variants, media files, tag associations, and search indexes.
+The product must be soft deleted first before it can be permanently deleted.</p>
 
 <span id="example-requests-DELETEapi-admin-products--id-">
 <blockquote>Example request:</blockquote>
@@ -9487,43 +9652,7 @@ response.json()</code></pre></div>
 </span>
 
 <span id="example-responses-DELETEapi-admin-products--id-">
-            <blockquote>
-            <p>Example response (200, Product permanently deleted):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Product deleted successfully.&quot;
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (400, Product must be soft deleted first):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Product must be soft deleted before force deleting.&quot;
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (403, Insufficient permissions):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;You do not have the required permissions.&quot;
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (404, Product not found):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;No query results for model [App\\Models\\Product] 47&quot;
-}</code>
- </pre>
-    </span>
+</span>
 <span id="execution-results-DELETEapi-admin-products--id-" hidden>
     <blockquote>Received response<span
                 id="execution-response-status-DELETEapi-admin-products--id-"></span>:
@@ -9618,14 +9747,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                     </form>
 
-                    <h2 id="product-management-PATCHapi-admin-products--id--restore">Restore a soft deleted product</h2>
+                    <h2 id="product-management-PATCHapi-admin-products--id--restore">Restore a soft deleted product with search optimization</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
 <p>Restore a previously soft deleted product, making it active again in the system.
-Only products that have been soft deleted can be restored.</p>
+Only products that have been soft deleted can be restored. Search indexes are
+automatically updated to include the restored product.</p>
 
 <span id="example-requests-PATCHapi-admin-products--id--restore">
 <blockquote>Example request:</blockquote>
@@ -9690,49 +9820,7 @@ response.json()</code></pre></div>
 </span>
 
 <span id="example-responses-PATCHapi-admin-products--id--restore">
-            <blockquote>
-            <p>Example response (200, Product restored successfully):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Product restored successfully.&quot;,
-    &quot;data&quot;: {
-        &quot;id&quot;: 47,
-        &quot;name&quot;: &quot;Premium Wireless Earbuds Pro&quot;,
-        &quot;deleted_at&quot;: null,
-        &quot;updated_at&quot;: &quot;2025-01-16T16:00:00.000000Z&quot;
-    }
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (400, Product not deleted):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Product is not deleted.&quot;
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (403, Insufficient permissions):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;You do not have the required permissions.&quot;
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (404, Product not found):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;No query results for model [App\\Models\\Product] 47&quot;
-}</code>
- </pre>
-    </span>
+</span>
 <span id="execution-results-PATCHapi-admin-products--id--restore" hidden>
     <blockquote>Received response<span
                 id="execution-response-status-PATCHapi-admin-products--id--restore"></span>:
@@ -18586,15 +18674,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
     
 
-                                <h2 id="product-catalog-GETapi-products">Retrieve paginated list of products</h2>
+                                <h2 id="product-catalog-GETapi-products">Search and browse products with advanced features</h2>
 
 <p>
 </p>
 
-<p>Get a paginated and filtered list of active products available for purchase.
-This endpoint supports advanced filtering by name, price range, category, search terms, and more.
-Products include detailed information such as variants, media, categories, tags, and vendor details.
-This is the main endpoint for product browsing and search functionality.</p>
+<p>Get a paginated and filtered list of active products with advanced search capabilities.
+This endpoint supports intelligent search with relevance scoring, faceted filtering,
+result diversification, and personalized recommendations. Includes comprehensive
+product information optimized for customer browsing and purchasing decisions.</p>
 
 <span id="example-requests-GETapi-products">
 <blockquote>Example request:</blockquote>
@@ -18602,23 +18690,48 @@ This is the main endpoint for product browsing and search functionality.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://marketplace.com/api/products?filter[]=architecto&amp;filter%5Bname%5D=wireless&amp;filter%5Bsearch%5D=bluetooth+headphones&amp;filter%5Bprice%5D=10.00%2C50.00&amp;filter%5Bcategory%5D=5%2C12%2C18&amp;filter%5Bcreated_at%5D=2025-01-01%2C2025-01-31&amp;filter%5Binclude%5D=vendor%2Cvariants%2Ccategory&amp;page=2&amp;per_page=24&amp;sort=-price%2Cname" \
+    --get "http://marketplace.com/api/products?filter[]=architecto&amp;filter%5Bsearch%5D=wireless+bluetooth+headphones+under+%C2%A350&amp;filter%5Bname%5D=wireless&amp;filter%5Bprice%5D=10.00%2C50.00&amp;filter%5BpriceRanges%5D=0-25%2C50-100&amp;filter%5Bcategory%5D=5%2C12%2C18&amp;filter%5Bavailability%5D=in_stock&amp;filter%5Bvendors%5D=2%2C5%2C8&amp;filter%5Bvendor%5D=apple&amp;filter%5Btags%5D=3%2C7%2C12&amp;filter%5Battributes%5D=color%3Ared%2Csize%3Alarge&amp;filter%5Bcreated_at%5D=2025-01-01%2C2025-01-31&amp;filter%5Binclude%5D=vendor%2Cvariants%2Ccategory&amp;page=2&amp;per_page=24&amp;sort=-relevance%2Cprice&amp;diversify=1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
     \"filter\": {
         \"name\": \"b\",
+        \"search\": \"n\",
         \"price\": \"9,3.1)\",
+        \"priceRanges\": \"-1.42)-3268)\",
         \"category\": \"9,31\",
-        \"quantity\": 8,
+        \"categories\": \"9,31\",
+        \"quantity\": \"64\",
+        \"availability\": \"out_of_stock\",
+        \"vendors\": \"9,31\",
+        \"vendor\": \"i\",
+        \"brand\": \"k\",
+        \"brands\": \"9,31\",
+        \"tags\": \"9,31\",
+        \"tag_logic\": \"AND\",
+        \"attributes\": \"_JK:AI\",
+        \"color\": \"k\",
+        \"colors\": \"dLJnIk\",
+        \"size\": \"h\",
+        \"sizes\": \"DDz1Ys\",
+        \"material\": \"h\",
+        \"status\": \"w\",
         \"created_at\": \"2559-31-42\",
         \"updated_at\": \"2559-31-42\",
-        \"search\": \"h\",
         \"include\": \"uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv\"
     },
     \"page\": 4,
     \"per_page\": 9,
-    \"sort\": \"y8p,Bm,-dp,-Zm,-GH\"
+    \"sort\": \"y8p,Bm,-dp,-Zm,-GH\",
+    \"diversify\": true,
+    \"explain\": false,
+    \"facets\": false,
+    \"highlight\": true,
+    \"personalize\": false,
+    \"typo_tolerance\": false,
+    \"exact_match\": true,
+    \"boost_new_products\": false,
+    \"boost_in_stock\": false
 }"
 </code></pre></div>
 
@@ -18630,15 +18743,22 @@ This is the main endpoint for product browsing and search functionality.</p>
 
 const params = {
     "filter[0]": "architecto",
+    "filter[search]": "wireless bluetooth headphones under £50",
     "filter[name]": "wireless",
-    "filter[search]": "bluetooth headphones",
     "filter[price]": "10.00,50.00",
+    "filter[priceRanges]": "0-25,50-100",
     "filter[category]": "5,12,18",
+    "filter[availability]": "in_stock",
+    "filter[vendors]": "2,5,8",
+    "filter[vendor]": "apple",
+    "filter[tags]": "3,7,12",
+    "filter[attributes]": "color:red,size:large",
     "filter[created_at]": "2025-01-01,2025-01-31",
     "filter[include]": "vendor,variants,category",
     "page": "2",
     "per_page": "24",
-    "sort": "-price,name",
+    "sort": "-relevance,price",
+    "diversify": "1",
 };
 Object.keys(params)
     .forEach(key =&gt; url.searchParams.append(key, params[key]));
@@ -18651,17 +18771,42 @@ const headers = {
 let body = {
     "filter": {
         "name": "b",
+        "search": "n",
         "price": "9,3.1)",
+        "priceRanges": "-1.42)-3268)",
         "category": "9,31",
-        "quantity": 8,
+        "categories": "9,31",
+        "quantity": "64",
+        "availability": "out_of_stock",
+        "vendors": "9,31",
+        "vendor": "i",
+        "brand": "k",
+        "brands": "9,31",
+        "tags": "9,31",
+        "tag_logic": "AND",
+        "attributes": "_JK:AI",
+        "color": "k",
+        "colors": "dLJnIk",
+        "size": "h",
+        "sizes": "DDz1Ys",
+        "material": "h",
+        "status": "w",
         "created_at": "2559-31-42",
         "updated_at": "2559-31-42",
-        "search": "h",
         "include": "uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv"
     },
     "page": 4,
     "per_page": 9,
-    "sort": "y8p,Bm,-dp,-Zm,-GH"
+    "sort": "y8p,Bm,-dp,-Zm,-GH",
+    "diversify": true,
+    "explain": false,
+    "facets": false,
+    "highlight": true,
+    "personalize": false,
+    "typo_tolerance": false,
+    "exact_match": true,
+    "boost_new_products": false,
+    "boost_in_stock": false
 };
 
 fetch(url, {
@@ -18683,30 +18828,62 @@ $response = $client-&gt;get(
         ],
         'query' =&gt; [
             'filter[0]' =&gt; 'architecto',
+            'filter[search]' =&gt; 'wireless bluetooth headphones under £50',
             'filter[name]' =&gt; 'wireless',
-            'filter[search]' =&gt; 'bluetooth headphones',
             'filter[price]' =&gt; '10.00,50.00',
+            'filter[priceRanges]' =&gt; '0-25,50-100',
             'filter[category]' =&gt; '5,12,18',
+            'filter[availability]' =&gt; 'in_stock',
+            'filter[vendors]' =&gt; '2,5,8',
+            'filter[vendor]' =&gt; 'apple',
+            'filter[tags]' =&gt; '3,7,12',
+            'filter[attributes]' =&gt; 'color:red,size:large',
             'filter[created_at]' =&gt; '2025-01-01,2025-01-31',
             'filter[include]' =&gt; 'vendor,variants,category',
             'page' =&gt; '2',
             'per_page' =&gt; '24',
-            'sort' =&gt; '-price,name',
+            'sort' =&gt; '-relevance,price',
+            'diversify' =&gt; '1',
         ],
         'json' =&gt; [
             'filter' =&gt; [
                 'name' =&gt; 'b',
+                'search' =&gt; 'n',
                 'price' =&gt; '9,3.1)',
+                'priceRanges' =&gt; '-1.42)-3268)',
                 'category' =&gt; '9,31',
-                'quantity' =&gt; 8,
+                'categories' =&gt; '9,31',
+                'quantity' =&gt; '64',
+                'availability' =&gt; 'out_of_stock',
+                'vendors' =&gt; '9,31',
+                'vendor' =&gt; 'i',
+                'brand' =&gt; 'k',
+                'brands' =&gt; '9,31',
+                'tags' =&gt; '9,31',
+                'tag_logic' =&gt; 'AND',
+                'attributes' =&gt; '_JK:AI',
+                'color' =&gt; 'k',
+                'colors' =&gt; 'dLJnIk',
+                'size' =&gt; 'h',
+                'sizes' =&gt; 'DDz1Ys',
+                'material' =&gt; 'h',
+                'status' =&gt; 'w',
                 'created_at' =&gt; '2559-31-42',
                 'updated_at' =&gt; '2559-31-42',
-                'search' =&gt; 'h',
                 'include' =&gt; 'uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv',
             ],
             'page' =&gt; 4,
             'per_page' =&gt; 9,
             'sort' =&gt; 'y8p,Bm,-dp,-Zm,-GH',
+            'diversify' =&gt; true,
+            'explain' =&gt; false,
+            'facets' =&gt; false,
+            'highlight' =&gt; true,
+            'personalize' =&gt; false,
+            'typo_tolerance' =&gt; false,
+            'exact_match' =&gt; true,
+            'boost_new_products' =&gt; false,
+            'boost_in_stock' =&gt; false,
         ],
     ]
 );
@@ -18722,29 +18899,61 @@ url = 'http://marketplace.com/api/products'
 payload = {
     "filter": {
         "name": "b",
+        "search": "n",
         "price": "9,3.1)",
+        "priceRanges": "-1.42)-3268)",
         "category": "9,31",
-        "quantity": 8,
+        "categories": "9,31",
+        "quantity": "64",
+        "availability": "out_of_stock",
+        "vendors": "9,31",
+        "vendor": "i",
+        "brand": "k",
+        "brands": "9,31",
+        "tags": "9,31",
+        "tag_logic": "AND",
+        "attributes": "_JK:AI",
+        "color": "k",
+        "colors": "dLJnIk",
+        "size": "h",
+        "sizes": "DDz1Ys",
+        "material": "h",
+        "status": "w",
         "created_at": "2559-31-42",
         "updated_at": "2559-31-42",
-        "search": "h",
         "include": "uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv"
     },
     "page": 4,
     "per_page": 9,
-    "sort": "y8p,Bm,-dp,-Zm,-GH"
+    "sort": "y8p,Bm,-dp,-Zm,-GH",
+    "diversify": true,
+    "explain": false,
+    "facets": false,
+    "highlight": true,
+    "personalize": false,
+    "typo_tolerance": false,
+    "exact_match": true,
+    "boost_new_products": false,
+    "boost_in_stock": false
 }
 params = {
   'filter[0]': 'architecto',
+  'filter[search]': 'wireless bluetooth headphones under £50',
   'filter[name]': 'wireless',
-  'filter[search]': 'bluetooth headphones',
   'filter[price]': '10.00,50.00',
+  'filter[priceRanges]': '0-25,50-100',
   'filter[category]': '5,12,18',
+  'filter[availability]': 'in_stock',
+  'filter[vendors]': '2,5,8',
+  'filter[vendor]': 'apple',
+  'filter[tags]': '3,7,12',
+  'filter[attributes]': 'color:red,size:large',
   'filter[created_at]': '2025-01-01,2025-01-31',
   'filter[include]': 'vendor,variants,category',
   'page': '2',
   'per_page': '24',
-  'sort': '-price,name',
+  'sort': '-relevance,price',
+  'diversify': '1',
 }
 headers = {
   'Content-Type': 'application/json',
@@ -18758,200 +18967,24 @@ response.json()</code></pre></div>
 
 <span id="example-responses-GETapi-products">
             <blockquote>
-            <p>Example response (200, Products found with filters):</p>
+            <p>Example response (401):</p>
         </blockquote>
-                <pre>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+x-content-type-options: nosniff
+x-frame-options: DENY
+x-xss-protection: 1; mode=block
+content-security-policy: default-src &#039;none&#039;; frame-ancestors &#039;none&#039;;
+referrer-policy: strict-origin-when-cross-origin
+permissions-policy: camera=(), microphone=(), geolocation=(), payment=()
+ </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Products retrieved successfully.&quot;,
-    &quot;data&quot;: {
-        &quot;data&quot;: [
-            {
-                &quot;id&quot;: 15,
-                &quot;name&quot;: &quot;Wireless Bluetooth Headphones&quot;,
-                &quot;description&quot;: &quot;Premium quality wireless headphones with active noise cancellation and 30-hour battery life.&quot;,
-                &quot;price&quot;: 7999,
-                &quot;price_formatted&quot;: &quot;&pound;79.99&quot;,
-                &quot;quantity&quot;: 45,
-                &quot;created_at&quot;: &quot;2025-01-10T14:30:00.000000Z&quot;,
-                &quot;updated_at&quot;: &quot;2025-01-15T09:22:00.000000Z&quot;,
-                &quot;deleted_at&quot;: null,
-                &quot;product_status&quot;: {
-                    &quot;id&quot;: 1,
-                    &quot;name&quot;: &quot;Active&quot;
-                },
-                &quot;category&quot;: {
-                    &quot;id&quot;: 5,
-                    &quot;name&quot;: &quot;Audio Devices&quot;,
-                    &quot;parent_id&quot;: 2
-                },
-                &quot;vendor&quot;: {
-                    &quot;id&quot;: 8,
-                    &quot;name&quot;: &quot;AudioTech Solutions&quot;,
-                    &quot;description&quot;: &quot;Premium audio equipment manufacturer&quot;,
-                    &quot;logo&quot;: &quot;https://yourapi.com/storage/vendor-logos/audiotech-logo.jpg&quot;
-                },
-                &quot;variants&quot;: [
-                    {
-                        &quot;id&quot;: 23,
-                        &quot;value&quot;: &quot;Black&quot;,
-                        &quot;additional_price&quot;: 0,
-                        &quot;additional_price_formatted&quot;: null,
-                        &quot;quantity&quot;: 25,
-                        &quot;product_attribute&quot;: {
-                            &quot;id&quot;: 1,
-                            &quot;name&quot;: &quot;Color&quot;
-                        }
-                    },
-                    {
-                        &quot;id&quot;: 24,
-                        &quot;value&quot;: &quot;White&quot;,
-                        &quot;additional_price&quot;: 500,
-                        &quot;additional_price_formatted&quot;: &quot;&pound;5.00&quot;,
-                        &quot;quantity&quot;: 20,
-                        &quot;product_attribute&quot;: {
-                            &quot;id&quot;: 1,
-                            &quot;name&quot;: &quot;Color&quot;
-                        }
-                    }
-                ],
-                &quot;tags&quot;: [
-                    {
-                        &quot;id&quot;: 3,
-                        &quot;name&quot;: &quot;wireless&quot;
-                    },
-                    {
-                        &quot;id&quot;: 7,
-                        &quot;name&quot;: &quot;bluetooth&quot;
-                    },
-                    {
-                        &quot;id&quot;: 12,
-                        &quot;name&quot;: &quot;noise-cancelling&quot;
-                    }
-                ],
-                &quot;featured_image&quot;: &quot;https://yourapi.com/storage/products/headphones-featured.jpg&quot;,
-                &quot;gallery&quot;: [
-                    {
-                        &quot;id&quot;: 45,
-                        &quot;url&quot;: &quot;https://yourapi.com/storage/products/headphones-gallery-1.jpg&quot;,
-                        &quot;name&quot;: &quot;Front view&quot;,
-                        &quot;file_name&quot;: &quot;headphones-front.jpg&quot;,
-                        &quot;mime_type&quot;: &quot;image/jpeg&quot;,
-                        &quot;size&quot;: 245760
-                    },
-                    {
-                        &quot;id&quot;: 46,
-                        &quot;url&quot;: &quot;https://yourapi.com/storage/products/headphones-gallery-2.jpg&quot;,
-                        &quot;name&quot;: &quot;Side view&quot;,
-                        &quot;file_name&quot;: &quot;headphones-side.jpg&quot;,
-                        &quot;mime_type&quot;: &quot;image/jpeg&quot;,
-                        &quot;size&quot;: 198432
-                    }
-                ],
-                &quot;media_count&quot;: {
-                    &quot;featured_image&quot;: 1,
-                    &quot;gallery&quot;: 2
-                }
-            },
-            {
-                &quot;id&quot;: 22,
-                &quot;name&quot;: &quot;Bluetooth Portable Speaker&quot;,
-                &quot;description&quot;: &quot;Compact waterproof speaker with 12-hour battery and crystal clear sound.&quot;,
-                &quot;price&quot;: 4999,
-                &quot;price_formatted&quot;: &quot;&pound;49.99&quot;,
-                &quot;quantity&quot;: 32,
-                &quot;created_at&quot;: &quot;2025-01-08T11:15:00.000000Z&quot;,
-                &quot;updated_at&quot;: &quot;2025-01-14T16:45:00.000000Z&quot;,
-                &quot;deleted_at&quot;: null,
-                &quot;product_status&quot;: {
-                    &quot;id&quot;: 1,
-                    &quot;name&quot;: &quot;Active&quot;
-                },
-                &quot;category&quot;: {
-                    &quot;id&quot;: 5,
-                    &quot;name&quot;: &quot;Audio Devices&quot;,
-                    &quot;parent_id&quot;: 2
-                },
-                &quot;vendor&quot;: {
-                    &quot;id&quot;: 12,
-                    &quot;name&quot;: &quot;SoundWave Electronics&quot;,
-                    &quot;description&quot;: &quot;Innovative portable audio solutions&quot;
-                },
-                &quot;variants&quot;: [],
-                &quot;tags&quot;: [
-                    {
-                        &quot;id&quot;: 3,
-                        &quot;name&quot;: &quot;wireless&quot;
-                    },
-                    {
-                        &quot;id&quot;: 7,
-                        &quot;name&quot;: &quot;bluetooth&quot;
-                    },
-                    {
-                        &quot;id&quot;: 15,
-                        &quot;name&quot;: &quot;waterproof&quot;
-                    }
-                ],
-                &quot;featured_image&quot;: &quot;https://yourapi.com/storage/products/speaker-featured.jpg&quot;,
-                &quot;gallery&quot;: [],
-                &quot;media_count&quot;: {
-                    &quot;featured_image&quot;: 1,
-                    &quot;gallery&quot;: 0
-                }
-            }
-        ],
-        &quot;current_page&quot;: 1,
-        &quot;per_page&quot;: 15,
-        &quot;total&quot;: 28,
-        &quot;last_page&quot;: 2,
-        &quot;from&quot;: 1,
-        &quot;to&quot;: 15,
-        &quot;path&quot;: &quot;https://yourapi.com/api/v1/products&quot;,
-        &quot;first_page_url&quot;: &quot;https://yourapi.com/api/v1/products?page=1&quot;,
-        &quot;last_page_url&quot;: &quot;https://yourapi.com/api/v1/products?page=2&quot;,
-        &quot;next_page_url&quot;: &quot;https://yourapi.com/api/v1/products?page=2&quot;,
-        &quot;prev_page_url&quot;: null
-    }
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (200, No products found):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Products retrieved successfully.&quot;,
-    &quot;data&quot;: {
-        &quot;data&quot;: [],
-        &quot;current_page&quot;: 1,
-        &quot;per_page&quot;: 15,
-        &quot;total&quot;: 0,
-        &quot;last_page&quot;: 1,
-        &quot;from&quot;: null,
-        &quot;to&quot;: null
-    }
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (400, Invalid sort parameter):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Invalid sort field. Available fields: name, price, created_at, updated_at&quot;
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (422, Invalid filter parameters):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;errors&quot;: [
-        &quot;The filter.price field must match the format: number or number,number.&quot;,
-        &quot;The filter.category field must contain only comma-separated numbers.&quot;,
-        &quot;The filter.created_at field must be a valid date or date range in YYYY-MM-DD format.&quot;
-    ]
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -19039,6 +19072,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>optional Array of filter parameters to narrow down results.</p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>filter[search]</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter[search]"                data-endpoint="GETapi-products"
+               value="wireless bluetooth headphones under £50"
+               data-component="query">
+    <br>
+<p>optional Intelligent search with typo tolerance and relevance scoring. Example: <code>wireless bluetooth headphones under £50</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>filter[name]</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
@@ -19048,17 +19092,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="query">
     <br>
 <p>optional Filter products by name (partial match supported). Example: <code>wireless</code></p>
-            </div>
-                                    <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>filter[search]</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
-                <input type="text" style="display: none"
-                              name="filter[search]"                data-endpoint="GETapi-products"
-               value="bluetooth headphones"
-               data-component="query">
-    <br>
-<p>optional Search across product names and descriptions. Example: <code>bluetooth headphones</code></p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>filter[price]</code></b>&nbsp;&nbsp;
@@ -19072,6 +19105,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>optional Filter by price range in pounds. Single value or comma-separated min,max. Example: <code>10.00,50.00</code></p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>filter[priceRanges]</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter[priceRanges]"                data-endpoint="GETapi-products"
+               value="0-25,50-100"
+               data-component="query">
+    <br>
+<p>optional Multiple price ranges. Example: <code>0-25,50-100</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>filter[category]</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
@@ -19080,7 +19124,62 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="5,12,18"
                data-component="query">
     <br>
-<p>optional Filter by category ID(s). Single ID or comma-separated multiple IDs. Example: <code>5,12,18</code></p>
+<p>optional Filter by category ID(s) including child categories. Example: <code>5,12,18</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>filter[availability]</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter[availability]"                data-endpoint="GETapi-products"
+               value="in_stock"
+               data-component="query">
+    <br>
+<p>optional Filter by stock status. Options: in_stock, available. Example: <code>in_stock</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>filter[vendors]</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter[vendors]"                data-endpoint="GETapi-products"
+               value="2,5,8"
+               data-component="query">
+    <br>
+<p>optional Filter by brand/vendor ID(s). Example: <code>2,5,8</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>filter[vendor]</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter[vendor]"                data-endpoint="GETapi-products"
+               value="apple"
+               data-component="query">
+    <br>
+<p>optional Filter by brand name. Example: <code>apple</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>filter[tags]</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter[tags]"                data-endpoint="GETapi-products"
+               value="3,7,12"
+               data-component="query">
+    <br>
+<p>optional Filter by tag ID(s). Example: <code>3,7,12</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>filter[attributes]</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter[attributes]"                data-endpoint="GETapi-products"
+               value="color:red,size:large"
+               data-component="query">
+    <br>
+<p>optional Filter by product attributes. Format: attribute:value. Example: <code>color:red,size:large</code></p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>filter[created_at]</code></b>&nbsp;&nbsp;
@@ -19091,7 +19190,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="2025-01-01,2025-01-31"
                data-component="query">
     <br>
-<p>optional Filter by creation date. Single date or comma-separated date range (YYYY-MM-DD). Example: <code>2025-01-01,2025-01-31</code></p>
+<p>optional Filter by creation date range. Example: <code>2025-01-01,2025-01-31</code></p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>filter[include]</code></b>&nbsp;&nbsp;
@@ -19102,7 +19201,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="vendor,variants,category"
                data-component="query">
     <br>
-<p>optional Include related data. Comma-separated values: vendor,variants,category,tags,media. Example: <code>vendor,variants,category</code></p>
+<p>optional Include related data. Options: vendor,variants,category,tags,media. Example: <code>vendor,variants,category</code></p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>page</code></b>&nbsp;&nbsp;
@@ -19132,10 +19231,31 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-products"
-               value="-price,name"
+               value="-relevance,price"
                data-component="query">
     <br>
-<p>optional Sort products. Prefix with '-' for descending. Available: name, price, created_at, updated_at. Example: <code>-price,name</code></p>
+<p>optional Sort products. Available: name, price, created_at, relevance. Example: <code>-relevance,price</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>diversify</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="GETapi-products" style="display: none">
+            <input type="radio" name="diversify"
+                   value="1"
+                   data-endpoint="GETapi-products"
+                   data-component="query"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-products" style="display: none">
+            <input type="radio" name="diversify"
+                   value="0"
+                   data-endpoint="GETapi-products"
+                   data-component="query"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>optional Apply result diversification for better variety. Default: false. Example: <code>true</code></p>
             </div>
                         <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
         <div style=" padding-left: 28px;  clear: unset;">
@@ -19159,6 +19279,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Must not be greater than 255 characters. Example: <code>b</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>search</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.search"                data-endpoint="GETapi-products"
+               value="n"
+               data-component="body">
+    <br>
+<p>Must not be greater than 500 characters. Example: <code>n</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>price</code></b>&nbsp;&nbsp;
 <small>string</small>&nbsp;
 <i>optional</i> &nbsp;
@@ -19168,6 +19299,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="body">
     <br>
 <p>Must match the regex /^\d+(.\d{1,2})?(,\d+(.\d{1,2})?)*$/. Example: <code>9,3.1)</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>priceRanges</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.priceRanges"                data-endpoint="GETapi-products"
+               value="-1.42)-3268)"
+               data-component="body">
+    <br>
+<p>Must match the regex /^(\d+(.\d{1,2})?-\d+(.\d{1,2})?)(,\d+(.\d{1,2})?-\d+(.\d{1,2})?)*$/. Example: <code>-1.42)-3268)</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>category</code></b>&nbsp;&nbsp;
@@ -19181,15 +19323,184 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Must match the regex /^(\d,?)+$/. Example: <code>9,31</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>quantity</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
+                        <b style="line-height: 2;"><code>categories</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
 <i>optional</i> &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="filter.quantity"                data-endpoint="GETapi-products"
-               value="8"
+                <input type="text" style="display: none"
+                              name="filter.categories"                data-endpoint="GETapi-products"
+               value="9,31"
                data-component="body">
     <br>
-<p>Must be at least 0. Example: <code>8</code></p>
+<p>Must match the regex /^(\d,?)+$/. Example: <code>9,31</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>quantity</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.quantity"                data-endpoint="GETapi-products"
+               value="64"
+               data-component="body">
+    <br>
+<p>Must match the regex /^\d+(,\d+)?$/. Example: <code>64</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>availability</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.availability"                data-endpoint="GETapi-products"
+               value="out_of_stock"
+               data-component="body">
+    <br>
+<p>Example: <code>out_of_stock</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>in_stock</code></li> <li><code>out_of_stock</code></li> <li><code>low_stock</code></li> <li><code>available</code></li></ul>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>vendors</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.vendors"                data-endpoint="GETapi-products"
+               value="9,31"
+               data-component="body">
+    <br>
+<p>Must match the regex /^(\d,?)+$/. Example: <code>9,31</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>vendor</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.vendor"                data-endpoint="GETapi-products"
+               value="i"
+               data-component="body">
+    <br>
+<p>Must not be greater than 255 characters. Example: <code>i</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>brand</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.brand"                data-endpoint="GETapi-products"
+               value="k"
+               data-component="body">
+    <br>
+<p>Must not be greater than 255 characters. Example: <code>k</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>brands</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.brands"                data-endpoint="GETapi-products"
+               value="9,31"
+               data-component="body">
+    <br>
+<p>Must match the regex /^(\d,?)+$/. Example: <code>9,31</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>tags</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.tags"                data-endpoint="GETapi-products"
+               value="9,31"
+               data-component="body">
+    <br>
+<p>Must match the regex /^(\d,?)+$/. Example: <code>9,31</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>tag_logic</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.tag_logic"                data-endpoint="GETapi-products"
+               value="AND"
+               data-component="body">
+    <br>
+<p>Example: <code>AND</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>AND</code></li> <li><code>OR</code></li></ul>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>attributes</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.attributes"                data-endpoint="GETapi-products"
+               value="_JK:AI"
+               data-component="body">
+    <br>
+<p>Must match the regex /^([a-zA-Z<em>]+:[a-zA-Z0-9</em>-\s]+)(,[a-zA-Z<em>]+:[a-zA-Z0-9</em>-\s]+)*$/. Example: <code>_JK:AI</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>color</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.color"                data-endpoint="GETapi-products"
+               value="k"
+               data-component="body">
+    <br>
+<p>Must not be greater than 50 characters. Example: <code>k</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>colors</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.colors"                data-endpoint="GETapi-products"
+               value="dLJnIk"
+               data-component="body">
+    <br>
+<p>Must match the regex /^([a-zA-Z]+,?)+$/. Example: <code>dLJnIk</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>size</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.size"                data-endpoint="GETapi-products"
+               value="h"
+               data-component="body">
+    <br>
+<p>Must not be greater than 50 characters. Example: <code>h</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>sizes</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.sizes"                data-endpoint="GETapi-products"
+               value="DDz1Ys"
+               data-component="body">
+    <br>
+<p>Must match the regex /^([a-zA-Z0-9]+,?)+$/. Example: <code>DDz1Ys</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>material</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.material"                data-endpoint="GETapi-products"
+               value="h"
+               data-component="body">
+    <br>
+<p>Must not be greater than 100 characters. Example: <code>h</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>status</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.status"                data-endpoint="GETapi-products"
+               value="w"
+               data-component="body">
+    <br>
+<p>Must not be greater than 50 characters. Example: <code>w</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>created_at</code></b>&nbsp;&nbsp;
@@ -19212,17 +19523,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="body">
     <br>
 <p>Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/. Example: <code>2559-31-42</code></p>
-                    </div>
-                                                                <div style="margin-left: 14px; clear: unset;">
-                        <b style="line-height: 2;"><code>search</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
-                <input type="text" style="display: none"
-                              name="filter.search"                data-endpoint="GETapi-products"
-               value="h"
-               data-component="body">
-    <br>
-<p>Must not be greater than 255 characters. Example: <code>h</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>include</code></b>&nbsp;&nbsp;
@@ -19270,16 +19570,206 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Must match the regex /^(-?[a-zA-Z0-9<em>]+)(,-?[a-zA-Z0-9</em>]+)*$/. Example: <code>y8p,Bm,-dp,-Zm,-GH</code></p>
         </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>diversify</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="GETapi-products" style="display: none">
+            <input type="radio" name="diversify"
+                   value="true"
+                   data-endpoint="GETapi-products"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-products" style="display: none">
+            <input type="radio" name="diversify"
+                   value="false"
+                   data-endpoint="GETapi-products"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>true</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>explain</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="GETapi-products" style="display: none">
+            <input type="radio" name="explain"
+                   value="true"
+                   data-endpoint="GETapi-products"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-products" style="display: none">
+            <input type="radio" name="explain"
+                   value="false"
+                   data-endpoint="GETapi-products"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>false</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>facets</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="GETapi-products" style="display: none">
+            <input type="radio" name="facets"
+                   value="true"
+                   data-endpoint="GETapi-products"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-products" style="display: none">
+            <input type="radio" name="facets"
+                   value="false"
+                   data-endpoint="GETapi-products"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>false</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>highlight</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="GETapi-products" style="display: none">
+            <input type="radio" name="highlight"
+                   value="true"
+                   data-endpoint="GETapi-products"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-products" style="display: none">
+            <input type="radio" name="highlight"
+                   value="false"
+                   data-endpoint="GETapi-products"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>true</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>personalize</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="GETapi-products" style="display: none">
+            <input type="radio" name="personalize"
+                   value="true"
+                   data-endpoint="GETapi-products"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-products" style="display: none">
+            <input type="radio" name="personalize"
+                   value="false"
+                   data-endpoint="GETapi-products"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>false</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>typo_tolerance</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="GETapi-products" style="display: none">
+            <input type="radio" name="typo_tolerance"
+                   value="true"
+                   data-endpoint="GETapi-products"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-products" style="display: none">
+            <input type="radio" name="typo_tolerance"
+                   value="false"
+                   data-endpoint="GETapi-products"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>false</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>exact_match</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="GETapi-products" style="display: none">
+            <input type="radio" name="exact_match"
+                   value="true"
+                   data-endpoint="GETapi-products"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-products" style="display: none">
+            <input type="radio" name="exact_match"
+                   value="false"
+                   data-endpoint="GETapi-products"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>true</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>boost_new_products</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="GETapi-products" style="display: none">
+            <input type="radio" name="boost_new_products"
+                   value="true"
+                   data-endpoint="GETapi-products"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-products" style="display: none">
+            <input type="radio" name="boost_new_products"
+                   value="false"
+                   data-endpoint="GETapi-products"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>false</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>boost_in_stock</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="GETapi-products" style="display: none">
+            <input type="radio" name="boost_in_stock"
+                   value="true"
+                   data-endpoint="GETapi-products"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-products" style="display: none">
+            <input type="radio" name="boost_in_stock"
+                   value="false"
+                   data-endpoint="GETapi-products"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>false</code></p>
+        </div>
         </form>
 
-                    <h2 id="product-catalog-GETapi-products--id-">Retrieve a specific product</h2>
+                    <h2 id="product-catalog-GETapi-products--id-">Retrieve detailed product information</h2>
 
 <p>
 </p>
 
-<p>Get detailed information about a specific product including all variants, media, category details,
-vendor information, and tags. This endpoint provides complete product data needed for product detail pages,
-including high-resolution images, pricing for all variants, and inventory levels.</p>
+<p>Get comprehensive information about a specific product including all variants, media,
+category details, vendor information, and customer-relevant data. This endpoint provides
+complete product data needed for product detail pages, including high-resolution images,
+pricing for all variants, inventory levels, and related product suggestions.</p>
 
 <span id="example-requests-GETapi-products--id-">
 <blockquote>Example request:</blockquote>
@@ -19341,161 +19831,24 @@ response.json()</code></pre></div>
 
 <span id="example-responses-GETapi-products--id-">
             <blockquote>
-            <p>Example response (200, Product found):</p>
+            <p>Example response (401):</p>
         </blockquote>
-                <pre>
+                <details class="annotation">
+            <summary style="cursor: pointer;">
+                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
+            </summary>
+            <pre><code class="language-http">cache-control: no-cache, private
+content-type: application/json
+x-content-type-options: nosniff
+x-frame-options: DENY
+x-xss-protection: 1; mode=block
+content-security-policy: default-src &#039;none&#039;; frame-ancestors &#039;none&#039;;
+referrer-policy: strict-origin-when-cross-origin
+permissions-policy: camera=(), microphone=(), geolocation=(), payment=()
+ </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Product retrieved successfully.&quot;,
-    &quot;data&quot;: {
-        &quot;id&quot;: 15,
-        &quot;name&quot;: &quot;Wireless Bluetooth Headphones&quot;,
-        &quot;description&quot;: &quot;Premium quality wireless headphones with active noise cancellation, 30-hour battery life, and superior sound quality. Features include touch controls, voice assistant support, and comfortable over-ear design perfect for long listening sessions.&quot;,
-        &quot;price&quot;: 7999,
-        &quot;price_formatted&quot;: &quot;&pound;79.99&quot;,
-        &quot;quantity&quot;: 45,
-        &quot;created_at&quot;: &quot;2025-01-10T14:30:00.000000Z&quot;,
-        &quot;updated_at&quot;: &quot;2025-01-15T09:22:00.000000Z&quot;,
-        &quot;deleted_at&quot;: null,
-        &quot;product_status&quot;: {
-            &quot;id&quot;: 1,
-            &quot;name&quot;: &quot;Active&quot;
-        },
-        &quot;category&quot;: {
-            &quot;id&quot;: 5,
-            &quot;name&quot;: &quot;Audio Devices&quot;,
-            &quot;parent_id&quot;: 2
-        },
-        &quot;vendor&quot;: {
-            &quot;id&quot;: 8,
-            &quot;name&quot;: &quot;AudioTech Solutions&quot;,
-            &quot;description&quot;: &quot;Premium audio equipment manufacturer specializing in wireless technology&quot;,
-            &quot;logo&quot;: &quot;https://yourapi.com/storage/vendor-logos/audiotech-logo.jpg&quot;,
-            &quot;media&quot;: [
-                {
-                    &quot;id&quot;: 12,
-                    &quot;url&quot;: &quot;https://yourapi.com/storage/vendor-logos/audiotech-logo.jpg&quot;,
-                    &quot;name&quot;: &quot;AudioTech Logo&quot;,
-                    &quot;file_name&quot;: &quot;audiotech-logo.jpg&quot;,
-                    &quot;mime_type&quot;: &quot;image/jpeg&quot;,
-                    &quot;size&quot;: 45672
-                }
-            ],
-            &quot;products_count&quot;: 23
-        },
-        &quot;variants&quot;: [
-            {
-                &quot;id&quot;: 23,
-                &quot;value&quot;: &quot;Black&quot;,
-                &quot;additional_price&quot;: 0,
-                &quot;additional_price_formatted&quot;: null,
-                &quot;quantity&quot;: 25,
-                &quot;created_at&quot;: &quot;2025-01-10T14:35:00.000000Z&quot;,
-                &quot;updated_at&quot;: &quot;2025-01-15T09:22:00.000000Z&quot;,
-                &quot;product_attribute&quot;: {
-                    &quot;id&quot;: 1,
-                    &quot;name&quot;: &quot;Color&quot;
-                }
-            },
-            {
-                &quot;id&quot;: 24,
-                &quot;value&quot;: &quot;White&quot;,
-                &quot;additional_price&quot;: 500,
-                &quot;additional_price_formatted&quot;: &quot;&pound;5.00&quot;,
-                &quot;quantity&quot;: 20,
-                &quot;created_at&quot;: &quot;2025-01-10T14:35:00.000000Z&quot;,
-                &quot;updated_at&quot;: &quot;2025-01-15T09:22:00.000000Z&quot;,
-                &quot;product_attribute&quot;: {
-                    &quot;id&quot;: 1,
-                    &quot;name&quot;: &quot;Color&quot;
-                }
-            },
-            {
-                &quot;id&quot;: 25,
-                &quot;value&quot;: &quot;32GB&quot;,
-                &quot;additional_price&quot;: 2000,
-                &quot;additional_price_formatted&quot;: &quot;&pound;20.00&quot;,
-                &quot;quantity&quot;: 15,
-                &quot;created_at&quot;: &quot;2025-01-10T14:35:00.000000Z&quot;,
-                &quot;updated_at&quot;: &quot;2025-01-15T09:22:00.000000Z&quot;,
-                &quot;product_attribute&quot;: {
-                    &quot;id&quot;: 4,
-                    &quot;name&quot;: &quot;Storage&quot;
-                }
-            }
-        ],
-        &quot;tags&quot;: [
-            {
-                &quot;id&quot;: 3,
-                &quot;name&quot;: &quot;wireless&quot;,
-                &quot;products_count&quot;: 12
-            },
-            {
-                &quot;id&quot;: 7,
-                &quot;name&quot;: &quot;bluetooth&quot;,
-                &quot;products_count&quot;: 15
-            },
-            {
-                &quot;id&quot;: 12,
-                &quot;name&quot;: &quot;noise-cancelling&quot;,
-                &quot;products_count&quot;: 6
-            },
-            {
-                &quot;id&quot;: 18,
-                &quot;name&quot;: &quot;premium&quot;,
-                &quot;products_count&quot;: 8
-            }
-        ],
-        &quot;featured_image&quot;: &quot;https://yourapi.com/storage/products/headphones-featured.jpg&quot;,
-        &quot;gallery&quot;: [
-            {
-                &quot;id&quot;: 45,
-                &quot;url&quot;: &quot;https://yourapi.com/storage/products/headphones-gallery-1.jpg&quot;,
-                &quot;name&quot;: &quot;Front view&quot;,
-                &quot;file_name&quot;: &quot;headphones-front.jpg&quot;,
-                &quot;mime_type&quot;: &quot;image/jpeg&quot;,
-                &quot;size&quot;: 245760
-            },
-            {
-                &quot;id&quot;: 46,
-                &quot;url&quot;: &quot;https://yourapi.com/storage/products/headphones-gallery-2.jpg&quot;,
-                &quot;name&quot;: &quot;Side view&quot;,
-                &quot;file_name&quot;: &quot;headphones-side.jpg&quot;,
-                &quot;mime_type&quot;: &quot;image/jpeg&quot;,
-                &quot;size&quot;: 198432
-            },
-            {
-                &quot;id&quot;: 47,
-                &quot;url&quot;: &quot;https://yourapi.com/storage/products/headphones-gallery-3.jpg&quot;,
-                &quot;name&quot;: &quot;Package contents&quot;,
-                &quot;file_name&quot;: &quot;headphones-package.jpg&quot;,
-                &quot;mime_type&quot;: &quot;image/jpeg&quot;,
-                &quot;size&quot;: 312584
-            }
-        ],
-        &quot;media_count&quot;: {
-            &quot;featured_image&quot;: 1,
-            &quot;gallery&quot;: 3
-        }
-    }
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (404, Product not found):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;No query results for model [App\\Models\\Product] 999&quot;
-}</code>
- </pre>
-            <blockquote>
-            <p>Example response (404, Product not active):</p>
-        </blockquote>
-                <pre>
-
-<code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Product is not available for viewing&quot;
+    &quot;message&quot;: &quot;Unauthenticated.&quot;
 }</code>
  </pre>
     </span>
@@ -25880,7 +26233,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </div>
         </form>
 
-                    <h2 id="shopping-cart-PUTapi-cart-items--cartItem-">Update cart item quantity</h2>
+                    <h2 id="shopping-cart-POSTapi-cart-items--cartItem-">Update cart item quantity</h2>
 
 <p>
 <small class="badge badge-darkred">requires authentication</small>
@@ -25891,12 +26244,12 @@ quantity to 0 will remove the item from the cart. Validates stock availability
 and updates pricing to current product price if it has changed since adding to cart.
 Requires a valid authentication token (Laravel Passport).</p>
 
-<span id="example-requests-PUTapi-cart-items--cartItem-">
+<span id="example-requests-POSTapi-cart-items--cartItem-">
 <blockquote>Example request:</blockquote>
 
 
 <div class="bash-example">
-    <pre><code class="language-bash">curl --request PUT \
+    <pre><code class="language-bash">curl --request POST \
     "http://marketplace.com/api/cart/items/45" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
@@ -25923,7 +26276,7 @@ let body = {
 };
 
 fetch(url, {
-    method: "PUT",
+    method: "POST",
     headers,
     body: JSON.stringify(body),
 }).then(response =&gt; response.json());</code></pre></div>
@@ -25932,7 +26285,7 @@ fetch(url, {
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
 $url = 'http://marketplace.com/api/cart/items/45';
-$response = $client-&gt;put(
+$response = $client-&gt;post(
     $url,
     [
         'headers' =&gt; [
@@ -25963,12 +26316,12 @@ headers = {
   'Accept': 'application/json'
 }
 
-response = requests.request('PUT', url, headers=headers, json=payload)
+response = requests.request('POST', url, headers=headers, json=payload)
 response.json()</code></pre></div>
 
 </span>
 
-<span id="example-responses-PUTapi-cart-items--cartItem-">
+<span id="example-responses-POSTapi-cart-items--cartItem-">
             <blockquote>
             <p>Example response (200, Cart item updated successfully):</p>
         </blockquote>
@@ -26063,50 +26416,50 @@ response.json()</code></pre></div>
 }</code>
  </pre>
     </span>
-<span id="execution-results-PUTapi-cart-items--cartItem-" hidden>
+<span id="execution-results-POSTapi-cart-items--cartItem-" hidden>
     <blockquote>Received response<span
-                id="execution-response-status-PUTapi-cart-items--cartItem-"></span>:
+                id="execution-response-status-POSTapi-cart-items--cartItem-"></span>:
     </blockquote>
-    <pre class="json"><code id="execution-response-content-PUTapi-cart-items--cartItem-"
+    <pre class="json"><code id="execution-response-content-POSTapi-cart-items--cartItem-"
       data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
 </span>
-<span id="execution-error-PUTapi-cart-items--cartItem-" hidden>
+<span id="execution-error-POSTapi-cart-items--cartItem-" hidden>
     <blockquote>Request failed with error:</blockquote>
-    <pre><code id="execution-error-message-PUTapi-cart-items--cartItem-">
+    <pre><code id="execution-error-message-POSTapi-cart-items--cartItem-">
 
 Tip: Check that you&#039;re properly connected to the network.
 If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
 You can check the Dev Tools console for debugging information.</code></pre>
 </span>
-<form id="form-PUTapi-cart-items--cartItem-" data-method="PUT"
+<form id="form-POSTapi-cart-items--cartItem-" data-method="POST"
       data-path="api/cart/items/{cartItem}"
       data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
-      onsubmit="event.preventDefault(); executeTryOut('PUTapi-cart-items--cartItem-', this);">
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-cart-items--cartItem-', this);">
     <h3>
         Request&nbsp;&nbsp;&nbsp;
                     <button type="button"
                     style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-tryout-PUTapi-cart-items--cartItem-"
-                    onclick="tryItOut('PUTapi-cart-items--cartItem-');">Try it out ⚡
+                    id="btn-tryout-POSTapi-cart-items--cartItem-"
+                    onclick="tryItOut('POSTapi-cart-items--cartItem-');">Try it out ⚡
             </button>
             <button type="button"
                     style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-canceltryout-PUTapi-cart-items--cartItem-"
-                    onclick="cancelTryOut('PUTapi-cart-items--cartItem-');" hidden>Cancel 🛑
+                    id="btn-canceltryout-POSTapi-cart-items--cartItem-"
+                    onclick="cancelTryOut('POSTapi-cart-items--cartItem-');" hidden>Cancel 🛑
             </button>&nbsp;&nbsp;
             <button type="submit"
                     style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
-                    id="btn-executetryout-PUTapi-cart-items--cartItem-"
+                    id="btn-executetryout-POSTapi-cart-items--cartItem-"
                     data-initial-text="Send Request 💥"
                     data-loading-text="⏱ Sending..."
                     hidden>Send Request 💥
             </button>
             </h3>
             <p>
-            <small class="badge badge-darkblue">PUT</small>
+            <small class="badge badge-black">POST</small>
             <b><code>api/cart/items/{cartItem}</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
@@ -26115,7 +26468,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Authorization" class="auth-value"               data-endpoint="PUTapi-cart-items--cartItem-"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-cart-items--cartItem-"
                value="Bearer {YOUR_AUTH_TOKEN}"
                data-component="header">
     <br>
@@ -26126,7 +26479,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="PUTapi-cart-items--cartItem-"
+                              name="Content-Type"                data-endpoint="POSTapi-cart-items--cartItem-"
                value="application/json"
                data-component="header">
     <br>
@@ -26137,7 +26490,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 &nbsp;
  &nbsp;
                 <input type="text" style="display: none"
-                              name="Accept"                data-endpoint="PUTapi-cart-items--cartItem-"
+                              name="Accept"                data-endpoint="POSTapi-cart-items--cartItem-"
                value="application/json"
                data-component="header">
     <br>
@@ -26149,7 +26502,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <small>integer</small>&nbsp;
  &nbsp;
                 <input type="number" style="display: none"
-               step="any"               name="cartItem"                data-endpoint="PUTapi-cart-items--cartItem-"
+               step="any"               name="cartItem"                data-endpoint="POSTapi-cart-items--cartItem-"
                value="45"
                data-component="url">
     <br>
@@ -26161,7 +26514,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <small>integer</small>&nbsp;
  &nbsp;
                 <input type="number" style="display: none"
-               step="any"               name="quantity"                data-endpoint="PUTapi-cart-items--cartItem-"
+               step="any"               name="quantity"                data-endpoint="POSTapi-cart-items--cartItem-"
                value="3"
                data-component="body">
     <br>
@@ -28722,7 +29075,7 @@ fields will be updated, others remain unchanged. Logo uploads are processed secu
     --form "user_id=45"\
     --form "name=TechCraft Solutions Ltd"\
     --form "description=Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud migration services, and digital transformation consulting with over 10 years of industry experience."\
-    --form "logo=@/tmp/phprnHupE" </code></pre></div>
+    --form "logo=@/tmp/phpxnugsE" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -28775,7 +29128,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'logo',
-                'contents' =&gt; fopen('/tmp/phprnHupE', 'r')
+                'contents' =&gt; fopen('/tmp/phpxnugsE', 'r')
             ],
         ],
     ]
@@ -28793,7 +29146,7 @@ files = {
   'user_id': (None, '45'),
   'name': (None, 'TechCraft Solutions Ltd'),
   'description': (None, 'Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud migration services, and digital transformation consulting with over 10 years of industry experience.'),
-  'logo': open('/tmp/phprnHupE', 'rb')}
+  'logo': open('/tmp/phpxnugsE', 'rb')}
 payload = {
     "user_id": 45,
     "name": "TechCraft Solutions Ltd",
@@ -29105,7 +29458,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional New logo file for the vendor. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will replace existing logo if provided. Example: <code>/tmp/phprnHupE</code></p>
+<p>optional New logo file for the vendor. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will replace existing logo if provided. Example: <code>/tmp/phpxnugsE</code></p>
         </div>
         </form>
 

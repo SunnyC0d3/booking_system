@@ -130,84 +130,40 @@ endpoints:
         description: 'Signature verification failed'
         custom: []
       -
-        status: 404
+        status: 403
         content: |-
           {
-            "message": "No query results for model [App\\Models\\User] 123"
-          }
-        headers: []
-        description: 'User not found'
-        custom: []
-      -
-        status: 500
-        content: |-
-          {
-              "message": "The stream or file \"/var/www/ecommerce_api/api/storage/logs/security/suspicious-2025-07-07.log\" could not be opened in append mode: chmod(): No such file or directory\nThe exception occurred while attempting to log: Permission Denied\nContext: {\"method\":\"GET\",\"endpoint\":\"api\\/email\\/verify\\/architecto\\/abc123def456ghi789\",\"status_code\":403,\"ip\":\"127.0.0.1\",\"user_agent\":\"Symfony\",\"user_id\":null,\"user_email\":null,\"user_role\":null,\"response_time_ms\":9.65,\"timestamp\":\"2025-07-07T18:07:24.292141Z\"}",
-              "exception": "UnexpectedValueException",
-              "file": "/var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php",
-              "line": 156,
+              "message": "Invalid signature.",
+              "exception": "Illuminate\\Routing\\Exceptions\\InvalidSignatureException",
+              "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ValidateSignature.php",
+              "line": 73,
               "trace": [
                   {
-                      "file": "/var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Handler/RotatingFileHandler.php",
-                      "line": 110,
-                      "function": "write",
-                      "class": "Monolog\\Handler\\StreamHandler",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Handler/AbstractProcessingHandler.php",
-                      "line": 44,
-                      "function": "write",
-                      "class": "Monolog\\Handler\\RotatingFileHandler",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Logger.php",
-                      "line": 391,
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
                       "function": "handle",
-                      "class": "Monolog\\Handler\\AbstractProcessingHandler",
+                      "class": "Illuminate\\Routing\\Middleware\\ValidateSignature",
                       "type": "->"
                   },
                   {
-                      "file": "/var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Logger.php",
-                      "line": 607,
-                      "function": "addRecord",
-                      "class": "Monolog\\Logger",
+                      "file": "/var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityMonitoring.php",
+                      "line": 27,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
                       "type": "->"
                   },
                   {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Log/Logger.php",
-                      "line": 184,
-                      "function": "info",
-                      "class": "Monolog\\Logger",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Log/Logger.php",
-                      "line": 133,
-                      "function": "writeLog",
-                      "class": "Illuminate\\Log\\Logger",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/app/Services/V1/Logger/SecurityLog.php",
-                      "line": 137,
-                      "function": "info",
-                      "class": "Illuminate\\Log\\Logger",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/app/Services/V1/Logger/SecurityLog.php",
-                      "line": 55,
-                      "function": "detectSuspiciousApiPatterns",
-                      "class": "App\\Services\\V1\\Logger\\SecurityLog",
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "App\\Http\\Middleware\\V1\\SecurityMonitoring",
                       "type": "->"
                   },
                   {
                       "file": "/var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityLogger.php",
-                      "line": 27,
-                      "function": "logApiAccess",
-                      "class": "App\\Services\\V1\\Logger\\SecurityLog",
+                      "line": 23,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
                       "type": "->"
                   },
                   {
@@ -621,6 +577,15 @@ endpoints:
           referrer-policy: strict-origin-when-cross-origin
           permissions-policy: 'camera=(), microphone=(), geolocation=(), payment=()'
         description: null
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\User] 123"
+          }
+        headers: []
+        description: 'User not found'
         custom: []
     responseFields: []
     auth: []
