@@ -120,7 +120,17 @@ class PermissionSeeder extends Seeder
             // Customer Service
             ['name' => 'view_customer_data'],
             ['name' => 'manage_refunds'],
-            ['name' => 'manage_returns']
+            ['name' => 'manage_returns'],
+
+            // Inventory Management
+            ['name' => 'view_inventory'],
+            ['name' => 'edit_inventory'],
+            ['name' => 'manage_inventory'],
+            ['name' => 'update_stock_thresholds'],
+            ['name' => 'bulk_update_inventory'],
+            ['name' => 'trigger_inventory_alerts'],
+            ['name' => 'view_inventory_reports'],
+            ['name' => 'manage_stock_alerts'],
         ];
 
         $permissionsToInsert = array_map(function ($permission) {

@@ -44,6 +44,9 @@ class RolePermissionSeeder extends Seeder
                 // Payment Management
                 'view_payments', 'create_payments', 'edit_payments', 'delete_payments',
                 'view_payment_methods', 'create_payment_methods', 'edit_payment_methods', 'delete_payment_methods',
+
+                // Inventory Management - Full Access
+                'view_inventory', 'edit_inventory', 'manage_inventory', 'update_stock_thresholds', 'bulk_update_inventory', 'trigger_inventory_alerts', 'view_inventory_reports', 'manage_stock_alerts',
             ],
 
             'Vendor Manager' => [
@@ -61,6 +64,9 @@ class RolePermissionSeeder extends Seeder
 
                 // Customer Service
                 'view_customer_data',
+
+                // Inventory Management - Limited
+                'view_inventory', 'edit_inventory', 'update_stock_thresholds', 'view_inventory_reports',
             ],
 
             'Vendor' => [
@@ -79,6 +85,9 @@ class RolePermissionSeeder extends Seeder
 
                 // Product Attributes/Categories (if they can manage these)
                 'view_product_attributes', 'view_product_categories', 'view_product_tags', 'view_product_statuses',
+
+                // Inventory Management - Own Products Only
+                'view_inventory', 'edit_inventory', 'update_stock_thresholds',
             ],
 
             'Customer Service' => [
@@ -98,6 +107,9 @@ class RolePermissionSeeder extends Seeder
 
                 // Product Viewing (for support purposes)
                 'view_products', 'view_product_categories',
+
+                // Inventory Management - View Only
+                'view_inventory', 'view_inventory_reports',
             ],
 
             'Content Manager' => [
@@ -116,6 +128,9 @@ class RolePermissionSeeder extends Seeder
 
                 // Category Management
                 'view_categories', 'create_categories', 'edit_categories',
+
+                // Inventory Management - View Only
+                'view_inventory', 'view_inventory_reports',
             ],
 
             'User' => [
