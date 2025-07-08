@@ -30,6 +30,7 @@ class Product extends Model implements HasMedia
         'price',
         'quantity',
         'product_status_id',
+        'low_stock_threshold',
     ];
 
     public function category(): BelongsTo

@@ -16,6 +16,7 @@ class ProductVariant extends Model
         'value',
         'additional_price',
         'quantity',
+        'low_stock_threshold',
     ];
 
     public function product(): BelongsTo

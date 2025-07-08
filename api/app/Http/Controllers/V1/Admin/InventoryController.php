@@ -145,6 +145,7 @@ class InventoryController extends Controller
         ]);
 
         $oldThreshold = $product->low_stock_threshold;
+
         $product->update([
             'low_stock_threshold' => $request->low_stock_threshold
         ]);
@@ -212,6 +213,7 @@ class InventoryController extends Controller
         ]);
 
         $oldThreshold = $variant->low_stock_threshold;
+
         $variant->update([
             'low_stock_threshold' => $request->low_stock_threshold
         ]);
