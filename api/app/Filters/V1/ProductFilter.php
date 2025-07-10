@@ -498,7 +498,6 @@ class ProductFilter extends QueryFilter
             'attributes',
             'status',
             'include',
-            'role',
             'user',
             'sort',
             'filter'

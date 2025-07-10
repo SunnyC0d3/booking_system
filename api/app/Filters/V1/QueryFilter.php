@@ -52,7 +52,6 @@ abstract class QueryFilter
             'category',
             'include',
             'search',
-            'role',
             'user',
             'sort',
             'filter'
