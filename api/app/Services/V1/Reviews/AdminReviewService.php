@@ -11,14 +11,15 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use App\Services\V1\Reviews\ReviewNotificationService;
 
 class AdminReviewService
 {
     use ApiResponses;
 
-    public function __construct()
+    public function __construct(ReviewNotificationService $notificationService)
     {
-
+        $this->notificationService = $notificationService;
     }
 
     public function getAllReviews($request)
@@ -155,6 +156,9 @@ class AdminReviewService
                     'is_featured' => $review->is_featured,
                 ];
 
+                $wasApproved = $review->is_approved;
+                $wasFeatured = $review->is_featured;
+
                 switch ($action) {
                     case 'approve':
                         $review->update([
@@ -162,6 +166,11 @@ class AdminReviewService
                             'approved_at' => now(),
                         ]);
                         $message = 'Review approved successfully.';
+
+                        // Send approval notification if previously not approved
+                        if (!$wasApproved) {
+                            $this->notificationService->sendReviewApproved($review);
+                        }
                         break;
 
                     case 'reject':
@@ -170,6 +179,9 @@ class AdminReviewService
                             'approved_at' => null,
                         ]);
                         $message = 'Review rejected successfully.';
+
+                        // Send rejection notification
+                        $this->notificationService->sendReviewRejected($review, $reason);
                         break;
 
                     case 'feature':
@@ -179,6 +191,16 @@ class AdminReviewService
                             'approved_at' => $review->approved_at ?? now(),
                         ]);
                         $message = 'Review featured successfully.';
+
+                        // Send featured notification if newly featured
+                        if (!$wasFeatured) {
+                            $this->notificationService->sendReviewFeatured($review);
+                        }
+
+                        // Send approval notification if previously not approved
+                        if (!$wasApproved) {
+                            $this->notificationService->sendReviewApproved($review);
+                        }
                         break;
 
                     case 'unfeature':
@@ -422,8 +444,9 @@ class AdminReviewService
             $results = [];
             $successful = 0;
             $failed = 0;
+            $notificationQueue = [];
 
-            return DB::transaction(function () use ($reviewIds, $action, $reason, $user, &$results, &$successful, &$failed) {
+            return DB::transaction(function () use ($reviewIds, $action, $reason, $user, &$results, &$successful, &$failed, &$notificationQueue) {
                 $reviews = Review::whereIn('id', $reviewIds)->get();
 
                 foreach ($reviews as $review) {
@@ -433,12 +456,19 @@ class AdminReviewService
                             'is_featured' => $review->is_featured,
                         ];
 
+                        $wasApproved = $review->is_approved;
+                        $wasFeatured = $review->is_featured;
+
                         switch ($action) {
                             case 'approve':
                                 $review->update([
                                     'is_approved' => true,
                                     'approved_at' => now(),
                                 ]);
+
+                                if (!$wasApproved) {
+                                    $notificationQueue[] = ['type' => 'approved', 'review' => $review];
+                                }
                                 break;
 
                             case 'reject':
@@ -446,6 +476,8 @@ class AdminReviewService
                                     'is_approved' => false,
                                     'approved_at' => null,
                                 ]);
+
+                                $notificationQueue[] = ['type' => 'rejected', 'review' => $review, 'reason' => $reason];
                                 break;
 
                             case 'feature':
@@ -454,6 +486,13 @@ class AdminReviewService
                                     'is_approved' => true,
                                     'approved_at' => $review->approved_at ?? now(),
                                 ]);
+
+                                if (!$wasFeatured) {
+                                    $notificationQueue[] = ['type' => 'featured', 'review' => $review];
+                                }
+                                if (!$wasApproved) {
+                                    $notificationQueue[] = ['type' => 'approved', 'review' => $review];
+                                }
                                 break;
 
                             case 'unfeature':
@@ -483,6 +522,9 @@ class AdminReviewService
                         $failed++;
                     }
                 }
+
+                // Send notifications after transaction completes
+                $this->processBulkNotifications($notificationQueue);
 
                 Log::info('Bulk review moderation completed', [
                     'action' => $action,
@@ -823,5 +865,30 @@ class AdminReviewService
     protected function getReviewTrends(string $period, $productId = null): array
     {
         return []; // Mock empty array for now
+    }
+
+    private function processBulkNotifications(array $notificationQueue): void
+    {
+        foreach ($notificationQueue as $notification) {
+            try {
+                switch ($notification['type']) {
+                    case 'approved':
+                        $this->notificationService->sendReviewApproved($notification['review']);
+                        break;
+                    case 'rejected':
+                        $this->notificationService->sendReviewRejected($notification['review'], $notification['reason'] ?? null);
+                        break;
+                    case 'featured':
+                        $this->notificationService->sendReviewFeatured($notification['review']);
+                        break;
+                }
+            } catch (\Exception $e) {
+                Log::error('Failed to send bulk notification', [
+                    'type' => $notification['type'],
+                    'review_id' => $notification['review']->id,
+                    'error' => $e->getMessage()
+                ]);
+            }
+        }
     }
 }

@@ -47,4 +47,19 @@ return [
         'decay_minutes' => 1,
         'message' => 'Too many cart updates. Please wait a moment.',
     ],
+
+    'reviews' => [
+        'create' => '5,5',          // 5 review creations per 5 minutes
+        'update' => '10,1',         // 10 review updates per minute
+        'vote' => '20,1',           // 20 helpfulness votes per minute
+        'report' => '3,5',          // 3 reports per 5 minutes
+        'respond' => '10,5',        // 10 vendor responses per 5 minutes
+        'moderate' => '50,1',       // 50 moderation actions per minute (admin)
+        'bulk' => '5,5',            // 5 bulk operations per 5 minutes (admin)
+    ],
+
+    'vendor' => [
+        'responses' => '10,5',      // 10 vendor responses per 5 minutes
+        'dashboard' => '30,1',      // 30 vendor dashboard requests per minute
+    ],
 ];

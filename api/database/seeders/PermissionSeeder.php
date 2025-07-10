@@ -131,6 +131,42 @@ class PermissionSeeder extends Seeder
             ['name' => 'trigger_inventory_alerts'],
             ['name' => 'view_inventory_reports'],
             ['name' => 'manage_stock_alerts'],
+
+            // Public Review Permissions
+            ['name' => 'view_reviews', 'description' => 'View reviews and ratings'],
+            ['name' => 'create_reviews', 'description' => 'Create new reviews'],
+            ['name' => 'edit_own_reviews', 'description' => 'Edit own reviews within time limit'],
+            ['name' => 'delete_own_reviews', 'description' => 'Delete own reviews'],
+            ['name' => 'vote_review_helpfulness', 'description' => 'Vote on review helpfulness'],
+            ['name' => 'report_reviews', 'description' => 'Report inappropriate reviews'],
+
+            // Vendor Review Permissions
+            ['name' => 'respond_to_reviews', 'description' => 'Respond to reviews on vendor products'],
+            ['name' => 'edit_own_responses', 'description' => 'Edit own review responses within time limit'],
+            ['name' => 'delete_own_responses', 'description' => 'Delete own review responses'],
+            ['name' => 'view_product_reviews', 'description' => 'View reviews for vendor products'],
+
+            // Admin Review Management
+            ['name' => 'manage_reviews', 'description' => 'Full review management access'],
+            ['name' => 'moderate_reviews', 'description' => 'Moderate and approve/reject reviews'],
+            ['name' => 'delete_reviews', 'description' => 'Delete any review permanently'],
+            ['name' => 'bulk_moderate_reviews', 'description' => 'Perform bulk moderation actions'],
+            ['name' => 'feature_reviews', 'description' => 'Feature/unfeature reviews'],
+
+            // Review Reports Management
+            ['name' => 'view_review_reports', 'description' => 'View reported reviews'],
+            ['name' => 'handle_review_reports', 'description' => 'Resolve or dismiss review reports'],
+            ['name' => 'manage_review_reports', 'description' => 'Full review reports management'],
+
+            // Review Analytics
+            ['name' => 'view_analytics', 'description' => 'View review analytics and statistics'],
+            ['name' => 'view_review_trends', 'description' => 'View review trends and insights'],
+            ['name' => 'export_review_data', 'description' => 'Export review data and reports'],
+
+            // Review Response Management (Admin)
+            ['name' => 'manage_review_responses', 'description' => 'Manage all vendor responses'],
+            ['name' => 'approve_review_responses', 'description' => 'Approve/reject vendor responses'],
+            ['name' => 'delete_review_responses', 'description' => 'Delete any review response'],
         ];
 
         $permissionsToInsert = array_map(function ($permission) {

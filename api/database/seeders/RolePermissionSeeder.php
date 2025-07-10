@@ -47,6 +47,15 @@ class RolePermissionSeeder extends Seeder
 
                 // Inventory Management - Full Access
                 'view_inventory', 'edit_inventory', 'manage_inventory', 'update_stock_thresholds', 'bulk_update_inventory', 'trigger_inventory_alerts', 'view_inventory_reports', 'manage_stock_alerts',
+
+                // Review Management - Full Access
+                'view_reviews', 'create_reviews', 'edit_own_reviews', 'delete_own_reviews',
+                'vote_review_helpfulness', 'report_reviews', 'manage_reviews',
+                'moderate_reviews', 'delete_reviews', 'bulk_moderate_reviews',
+                'feature_reviews', 'view_review_reports', 'handle_review_reports',
+                'manage_review_reports', 'view_analytics', 'view_review_trends',
+                'export_review_data', 'manage_review_responses', 'approve_review_responses',
+                'delete_review_responses',
             ],
 
             'Vendor Manager' => [
@@ -67,6 +76,11 @@ class RolePermissionSeeder extends Seeder
 
                 // Inventory Management - Limited
                 'view_inventory', 'edit_inventory', 'update_stock_thresholds', 'view_inventory_reports',
+
+                // Review Management - Management Level
+                'view_reviews', 'manage_reviews', 'moderate_reviews', 'view_review_reports',
+                'handle_review_reports', 'view_analytics', 'view_review_trends',
+                'manage_review_responses', 'approve_review_responses',
             ],
 
             'Vendor' => [
@@ -88,6 +102,11 @@ class RolePermissionSeeder extends Seeder
 
                 // Inventory Management - Own Products Only
                 'view_inventory', 'edit_inventory', 'update_stock_thresholds',
+
+                // Review Management - Vendor Level
+                'view_reviews', 'create_reviews', 'edit_own_reviews', 'delete_own_reviews',
+                'vote_review_helpfulness', 'report_reviews', 'respond_to_reviews',
+                'edit_own_responses', 'delete_own_responses', 'view_product_reviews',
             ],
 
             'Customer Service' => [
@@ -110,6 +129,10 @@ class RolePermissionSeeder extends Seeder
 
                 // Inventory Management - View Only
                 'view_inventory', 'view_inventory_reports',
+
+                // Review Management - Customer Service Level
+                'view_reviews', 'moderate_reviews', 'view_review_reports',
+                'handle_review_reports', 'manage_review_reports', 'view_analytics',
             ],
 
             'Content Manager' => [
@@ -131,6 +154,10 @@ class RolePermissionSeeder extends Seeder
 
                 // Inventory Management - View Only
                 'view_inventory', 'view_inventory_reports',
+
+                // Review Management - Content Management Level
+                'view_reviews', 'moderate_reviews', 'feature_reviews',
+                'view_review_reports', 'handle_review_reports', 'view_analytics',
             ],
 
             'User' => [
@@ -147,6 +174,10 @@ class RolePermissionSeeder extends Seeder
 
                 // Order Management - Own Orders Only
                 'view_own_orders', 'create_own_orders', 'edit_own_orders', 'delete_own_orders',
+
+                // Review Management - Standard User Level
+                'view_reviews', 'create_reviews', 'edit_own_reviews', 'delete_own_reviews',
+                'vote_review_helpfulness', 'report_reviews',
             ],
 
             'Guest' => [
@@ -157,6 +188,9 @@ class RolePermissionSeeder extends Seeder
                 'view_products',
                 'view_product_categories',
                 'view_vendors_public',
+
+                // Review Management - Guest Level
+                'view_reviews',
             ],
         ];
 

@@ -14,6 +14,8 @@ use App\Http\Controllers\V1\Public\OrderController;
 use App\Http\Controllers\V1\Public\PaymentController;
 use App\Http\Controllers\V1\Public\ReturnsController;
 use App\Http\Controllers\V1\Public\CartController;
+use App\Http\Controllers\V1\Public\ReviewController;
+use App\Http\Controllers\V1\Public\ReviewResponseController;
 
 // Auth
 
@@ -129,4 +131,73 @@ Route::prefix('cart')
         Route::delete('/items/{cartItem}', 'destroy')->name('cart.remove');
         Route::delete('/clear', 'clear')->name('cart.clear');
         Route::post('/sync-prices', 'syncPrices')->name('cart.sync-prices');
+    });
+
+// Reviews
+Route::prefix('products/{product}/reviews')
+    ->middleware(['client', 'throttle:dynamic_rate_limit:guest.reviews'])
+    ->controller(ReviewController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('products.reviews.index');
+    });
+
+Route::prefix('reviews')
+    ->middleware(['client', 'throttle:dynamic_rate_limit:guest.reviews'])
+    ->controller(ReviewController::class)
+    ->group(function () {
+        Route::get('/{review}', 'show')->name('reviews.show');
+    });
+
+// Reviews - Authenticated User Routes
+Route::prefix('reviews')
+    ->middleware(['auth:api', 'emailVerified'])
+    ->controller(ReviewController::class)
+    ->group(function () {
+        Route::post('/', 'store')
+            ->middleware('throttle:dynamic_rate_limit:reviews.create')
+            ->name('reviews.store');
+
+        Route::post('/{review}', 'update')
+            ->middleware('throttle:dynamic_rate_limit:reviews.update')
+            ->name('reviews.update');
+
+        Route::delete('/{review}', 'destroy')
+            ->middleware('throttle:dynamic_rate_limit:api.reviews')
+            ->name('reviews.destroy');
+
+        Route::post('/{review}/helpfulness', 'voteHelpfulness')
+            ->middleware('throttle:dynamic_rate_limit:reviews.vote')
+            ->name('reviews.helpfulness');
+
+        Route::post('/{review}/report', 'report')
+            ->middleware('throttle:dynamic_rate_limit:reviews.report')
+            ->name('reviews.report');
+    });
+
+// Review Responses - Vendor Routes
+Route::prefix('reviews/{review}/responses')
+    ->middleware(['auth:api', 'roles:vendor', 'emailVerified'])
+    ->controller(ReviewResponseController::class)
+    ->group(function () {
+        Route::post('/', 'store')
+            ->middleware('throttle:dynamic_rate_limit:reviews.respond')
+            ->name('review.responses.store');
+
+        Route::post('/{response}', 'update')
+            ->middleware('throttle:dynamic_rate_limit:vendor.responses')
+            ->name('review.responses.update');
+
+        Route::delete('/{response}', 'destroy')
+            ->middleware('throttle:dynamic_rate_limit:vendor.responses')
+            ->name('review.responses.destroy');
+    });
+
+// Vendor Response Management
+Route::prefix('vendor/responses')
+    ->middleware(['auth:api', 'roles:vendor', 'emailVerified', 'throttle:dynamic_rate_limit:vendor.dashboard'])
+    ->controller(ReviewResponseController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('vendor.responses.index');
+        Route::get('/{response}', 'show')->name('vendor.responses.show');
+        Route::get('/unanswered/reviews', 'getUnansweredReviews')->name('vendor.responses.unanswered');
     });

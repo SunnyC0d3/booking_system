@@ -14,16 +14,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use App\Services\V1\Reviews\ReviewNotificationService;
 
 class ReviewService
 {
     use ApiResponses;
 
     protected SecureMedia $mediaService;
+    protected ReviewNotificationService $notificationService;
 
-    public function __construct(SecureMedia $mediaService)
+    public function __construct(SecureMedia $mediaService, ReviewNotificationService $notificationService)
     {
         $this->mediaService = $mediaService;
+        $this->notificationService = $notificationService;
     }
 
     public function getProductReviews($request, Product $product)
@@ -158,9 +161,18 @@ class ReviewService
                 // Load relationships for response
                 $review->load([
                     'user:id,name',
-                    'product:id,name,price',
+                    'product:id,name,price,vendor_id',
+                    'product.vendor.user',
                     'media'
                 ]);
+
+                // Send notifications
+                $this->notificationService->sendNewReviewToVendor($review);
+
+                // If auto-approved, send approval notification
+                if ($review->is_approved) {
+                    $this->notificationService->sendReviewApproved($review);
+                }
 
                 Log::info('Review created successfully', [
                     'review_id' => $review->id,
@@ -316,6 +328,8 @@ class ReviewService
                 throw new \Exception('You cannot vote on your own review.', 403);
             }
 
+            $previousHelpfulVotes = $review->helpful_votes;
+
             $voteResult = $isHelpful
                 ? $review->markAsHelpful($user)
                 : $review->markAsNotHelpful($user);
@@ -326,6 +340,11 @@ class ReviewService
 
             // Refresh review to get updated vote counts
             $review->refresh();
+
+            // Check for helpful milestone notifications
+            if ($review->helpful_votes > $previousHelpfulVotes) {
+                $this->notificationService->sendReviewHelpfulMilestone($review);
+            }
 
             Log::info('Review helpfulness vote recorded', [
                 'review_id' => $review->id,
@@ -376,6 +395,10 @@ class ReviewService
                 'details' => $data['details'] ?? null,
                 'status' => 'pending'
             ]);
+
+            $report->load(['review.product', 'review.user', 'reporter']);
+
+            $this->notificationService->sendReviewReported($report);
 
             Log::info('Review reported', [
                 'report_id' => $report->id,

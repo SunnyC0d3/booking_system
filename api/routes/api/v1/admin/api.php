@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\V1\Admin\InventoryController;
 use Illuminate\Support\Facades\Route;
 
 // Admin Controllers
@@ -19,6 +18,9 @@ use App\Http\Controllers\V1\Admin\OrderController;
 use App\Http\Controllers\V1\Admin\ReturnsController;
 use App\Http\Controllers\V1\Admin\RefundController;
 use App\Http\Controllers\V1\Admin\PaymentController;
+use App\Http\Controllers\V1\Admin\InventoryController;
+use App\Http\Controllers\V1\Admin\ReviewController;
+use App\Http\Controllers\V1\Admin\ReviewResponseController;
 
 // Admin/Users
 
@@ -203,4 +205,37 @@ Route::prefix('admin/inventory')
         Route::post('/variants/{variant}/threshold', 'updateVariantThreshold')->name('admin.inventory.variant.threshold');
         Route::post('/check', 'manualCheck')->name('admin.inventory.check');
         Route::post('/bulk-update-thresholds', 'bulkUpdateThresholds')->name('admin.inventory.bulk.update');
+    });
+
+// Admin/Reviews - Complete Review Management System
+
+Route::prefix('admin/reviews')
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'rate_limit:admin'])
+    ->controller(ReviewController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('admin.reviews.index');
+        Route::get('/{review}', 'show')->name('admin.reviews.show');
+        Route::delete('/{review}', 'destroy')->name('admin.reviews.destroy');
+
+        Route::post('/{review}/moderate', 'moderate')->name('admin.reviews.moderate');
+        Route::post('/bulk-moderate', 'bulkModerate')->name('admin.reviews.bulk-moderate');
+
+        Route::get('/reports', 'getReportedReviews')->name('admin.reviews.reports');
+        Route::post('/reports/{report}/handle', 'handleReport')->name('admin.reviews.reports.handle');
+
+        Route::get('/analytics', 'getAnalytics')->name('admin.reviews.analytics');
+    });
+
+// Admin/Review Responses - Manage vendor responses
+
+Route::prefix('admin/review-responses')
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'rate_limit:admin'])
+    ->controller(ReviewResponseController::class)
+    ->group(function () {
+        Route::get('/', 'adminIndex')->name('admin.review-responses.index');
+        Route::get('/{response}', 'adminShow')->name('admin.review-responses.show');
+        Route::post('/{response}/approve', 'approve')->name('admin.review-responses.approve');
+        Route::delete('/{response}', 'adminDestroy')->name('admin.review-responses.destroy');
+        Route::post('/bulk-moderate', 'bulkModerate')->name('admin.review-responses.bulk-moderate');
+        Route::get('/analytics', 'getAnalytics')->name('admin.review-responses.analytics');
     });
