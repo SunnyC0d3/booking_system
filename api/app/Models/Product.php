@@ -59,6 +59,21 @@ class Product extends Model implements HasMedia
         return $this->belongsToMany(ProductTag::class, 'product_tag', 'product_id', 'product_tag_id');
     }
 
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function approvedReviews(): HasMany
+    {
+        return $this->hasMany(Review::class)->approved();
+    }
+
+    public function featuredReviews(): HasMany
+    {
+        return $this->hasMany(Review::class)->featured();
+    }
+
     public function scopeFilter(Builder $builder, QueryFilter $filters)
     {
         return $filters->apply($builder);
@@ -113,5 +128,86 @@ class Product extends Model implements HasMedia
     public function isOutOfStock(): bool
     {
         return $this->quantity <= 0;
+    }
+
+    public function getAverageRatingAttribute(): float
+    {
+        return (float) $this->average_rating;
+    }
+
+    public function getTotalReviewsAttribute(): int
+    {
+        return (int) $this->total_reviews;
+    }
+
+    public function getRatingBreakdownAttribute(): array
+    {
+        $breakdown = $this->attributes['rating_breakdown'] ?? '{}';
+        $decoded = json_decode($breakdown, true) ?? [];
+
+        return array_merge([1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0], $decoded);
+    }
+
+    public function hasReviews(): bool
+    {
+        return $this->total_reviews > 0;
+    }
+
+    public function getReviewsSummary(): array
+    {
+        return [
+            'average_rating' => $this->average_rating,
+            'total_reviews' => $this->total_reviews,
+            'rating_breakdown' => $this->rating_breakdown,
+            'verified_purchase_count' => $this->reviews()->verifiedPurchase()->count(),
+            'featured_reviews_count' => $this->reviews()->featured()->count(),
+        ];
+    }
+
+    public function canUserReview(User $user): bool
+    {
+        $hasPurchased = OrderItem::whereHas('order', function($query) use ($user) {
+            $query->where('user_id', $user->id)
+                ->whereIn('status_id', [3, 6]);
+        })->where('product_id', $this->id)->exists();
+
+        if (!$hasPurchased) {
+            return false;
+        }
+
+        return !$this->reviews()->where('user_id', $user->id)->exists();
+    }
+
+    public function getUserReview(User $user): ?Review
+    {
+        return $this->reviews()->where('user_id', $user->id)->first();
+    }
+
+    public function recalculateReviewStats(): void
+    {
+        $reviews = $this->reviews()->approved();
+
+        $stats = $reviews->selectRaw('
+        COUNT(*) as total,
+        AVG(rating) as average,
+        COUNT(CASE WHEN rating = 1 THEN 1 END) as rating_1,
+        COUNT(CASE WHEN rating = 2 THEN 1 END) as rating_2,
+        COUNT(CASE WHEN rating = 3 THEN 1 END) as rating_3,
+        COUNT(CASE WHEN rating = 4 THEN 1 END) as rating_4,
+        COUNT(CASE WHEN rating = 5 THEN 1 END) as rating_5
+    ')->first();
+
+        $this->update([
+            'total_reviews' => $stats->total ?? 0,
+            'average_rating' => $stats->average ? round($stats->average, 2) : 0,
+            'rating_breakdown' => json_encode([
+                1 => $stats->rating_1 ?? 0,
+                2 => $stats->rating_2 ?? 0,
+                3 => $stats->rating_3 ?? 0,
+                4 => $stats->rating_4 ?? 0,
+                5 => $stats->rating_5 ?? 0,
+            ]),
+            'last_reviewed_at' => $this->reviews()->approved()->latest()->value('created_at'),
+        ]);
     }
 }
