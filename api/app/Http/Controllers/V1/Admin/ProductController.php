@@ -56,9 +56,10 @@ class ProductController extends Controller
      * @queryParam diversify boolean optional Apply result diversification to avoid too many similar products. Default: false. Example: true
      * @queryParam explain boolean optional Include search explanations for debugging. Default: false. Example: true
      */
-    public function index(FilterProductRequest $request, ProductFilter $filter)
+    public function index(FilterProductRequest $request)
     {
         try {
+            $filter = new ProductFilter($request);
             return $this->product->search($request, $filter);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);

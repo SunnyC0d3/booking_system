@@ -93,7 +93,7 @@ class ProductResource extends JsonResource
         });
 
         // Variants with enhanced data
-        $data['variants'] = $this->whenLoaded('variants', function() {
+        $data['variants'] = $this->relationLoaded('variants', function() {
             return $this->variants->map(function($variant) {
                 return [
                     'id' => $variant->id,
@@ -234,7 +234,7 @@ class ProductResource extends JsonResource
 
     public static function collectionWithSearchData($resource, array $searchMetadata = [])
     {
-        return $resource->map(function ($item, $index) use ($searchMetadata) {
+        return collect($resource)->map(function ($item, $index) use ($searchMetadata) {
             $itemMetadata = $searchMetadata;
             $itemMetadata['position'] = $index + 1;
 

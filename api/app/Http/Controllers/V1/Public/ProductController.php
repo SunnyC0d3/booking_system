@@ -53,9 +53,10 @@ class ProductController extends Controller
      * @queryParam sort string optional Sort products. Available: name, price, created_at, relevance. Example: -relevance,price
      * @queryParam diversify boolean optional Apply result diversification for better variety. Default: false. Example: true
      */
-    public function index(FilterProductRequest $request, ProductFilter $filter)
+    public function index(FilterProductRequest $request)
     {
         try {
+            $filter = new ProductFilter($request);
             return $this->product->search($request, $filter);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
