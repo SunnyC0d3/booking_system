@@ -93,9 +93,13 @@ class ProductResource extends JsonResource
         });
 
         // Variants with enhanced data
-        $data['variants'] = $this->relationLoaded('variants', function() {
+        $data['variants'] = $this->whenLoaded('variants', function() {
+            if (!$this->variants || $this->variants->isEmpty()) {
+                return [];
+            }
+
             return $this->variants->map(function($variant) {
-                return [
+                $variantData = [
                     'id' => $variant->id,
                     'value' => $variant->value,
                     'additional_price' => $variant->additional_price,
@@ -106,28 +110,37 @@ class ProductResource extends JsonResource
                     'quantity' => $variant->quantity,
                     'is_available' => $variant->quantity > 0,
                     'is_low_stock' => $variant->isLowStock(),
-                    'product_attribute' => $variant->whenLoaded('productAttribute', function() use ($variant) {
-                        return [
-                            'id' => $variant->productAttribute->id,
-                            'name' => $variant->productAttribute->name
-                        ];
-                    }),
                     'created_at' => $variant->created_at,
                     'updated_at' => $variant->updated_at,
                 ];
+
+                if ($variant->relationLoaded('productAttribute') && $variant->productAttribute) {
+                    $variantData['product_attribute'] = [
+                        'id' => $variant->productAttribute->id,
+                        'name' => $variant->productAttribute->name
+                    ];
+                } else {
+                    $variantData['product_attribute'] = null;
+                }
+
+                return $variantData;
             });
-        });
+        }, []);
 
         // Tags
         $data['tags'] = $this->whenLoaded('tags', function() {
+            if (!$this->tags || $this->tags->isEmpty()) {
+                return [];
+            }
+
             return $this->tags->map(function($tag) {
                 return [
                     'id' => $tag->id,
                     'name' => $tag->name,
-                    'products_count' => $this->whenCounted('tags.products')
+                    'products_count' => $tag->products_count ?? 0
                 ];
             });
-        });
+        }, []);
 
         return $data;
     }

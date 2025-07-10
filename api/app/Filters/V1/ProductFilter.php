@@ -32,53 +32,97 @@ class ProductFilter extends QueryFilter
             return $this->builder;
         }
 
-        $parsedQuery = $this->queryProcessor->parseQuery($value);
+        try {
+            $parsedQuery = $this->queryProcessor->parseQuery($value);
 
-        if ($parsedQuery->hasTerms()) {
-            $this->builder = $this->applyFullTextSearch($parsedQuery);
+            if ($parsedQuery->hasTerms()) {
+                $this->builder = $this->applyFullTextSearch($parsedQuery);
+            }
+
+            if ($parsedQuery->hasFilters()) {
+                $this->builder = $this->applyQueryFilters($parsedQuery->filters);
+            }
+
+            return $this->builder;
+        } catch (\Exception $e) {
+            return $this->fallbackToSimpleSearch($value);
         }
-
-        if ($parsedQuery->hasFilters()) {
-            $this->builder = $this->applyQueryFilters($parsedQuery->filters);
-        }
-
-        return $this->builder;
     }
 
     protected function applyFullTextSearch($parsedQuery): Builder
     {
-        $fulltextQuery = $parsedQuery->fulltext_query;
+        $fulltextQuery = $this->buildSafeFulltextQuery($parsedQuery);
 
         if (empty($fulltextQuery)) {
             return $this->fallbackToLikeSearch($parsedQuery);
         }
 
-        return $this->builder
-            ->selectRaw('
-                products.*,
-                MATCH(products.name, products.description) AGAINST(? IN BOOLEAN MODE) as relevance_score,
-                CASE
-                    WHEN products.name LIKE ? THEN 100
-                    WHEN products.name LIKE ? THEN 75
-                    WHEN products.description LIKE ? THEN 50
-                    ELSE MATCH(products.name, products.description) AGAINST(? IN BOOLEAN MODE) * 10
-                END as search_score
-            ', [
-                $fulltextQuery,
-                '%' . $parsedQuery->cleaned . '%',
-                '%' . implode('%', $parsedQuery->terms) . '%',
-                '%' . $parsedQuery->cleaned . '%',
-                $fulltextQuery
-            ])
-            ->whereRaw('MATCH(products.name, products.description) AGAINST(? IN BOOLEAN MODE)', [$fulltextQuery])
-            ->orWhere(function($query) use ($parsedQuery) {
-                foreach ($parsedQuery->terms as $term) {
-                    if (strlen($term) >= 2) {
-                        $query->orWhere('products.name', 'LIKE', '%' . $term . '%')
-                            ->orWhere('products.description', 'LIKE', '%' . $term . '%');
+        try {
+            return $this->builder
+                ->selectRaw('
+                    products.*,
+                    MATCH(products.name, products.description) AGAINST(? IN BOOLEAN MODE) as relevance_score,
+                    CASE
+                        WHEN products.name LIKE ? THEN 100
+                        WHEN products.name LIKE ? THEN 75
+                        WHEN products.description LIKE ? THEN 50
+                        ELSE MATCH(products.name, products.description) AGAINST(? IN BOOLEAN MODE) * 10
+                    END as search_score
+                ', [
+                    $fulltextQuery,
+                    '%' . $parsedQuery->cleaned . '%',
+                    '%' . implode('%', $parsedQuery->terms) . '%',
+                    '%' . $parsedQuery->cleaned . '%',
+                    $fulltextQuery
+                ])
+                ->whereRaw('MATCH(products.name, products.description) AGAINST(? IN BOOLEAN MODE)', [$fulltextQuery])
+                ->orWhere(function($query) use ($parsedQuery) {
+                    foreach ($parsedQuery->terms as $term) {
+                        if (strlen($term) >= 2) {
+                            $query->orWhere('products.name', 'LIKE', '%' . $term . '%')
+                                ->orWhere('products.description', 'LIKE', '%' . $term . '%');
+                        }
                     }
-                }
-            });
+                });
+        } catch (\Exception $e) {
+            return $this->fallbackToLikeSearch($parsedQuery);
+        }
+    }
+
+    protected function buildSafeFulltextQuery($parsedQuery): string
+    {
+        $fulltextParts = [];
+
+        // Add phrases first
+        foreach ($parsedQuery->phrases as $phrase) {
+            if (!empty(trim($phrase))) {
+                $fulltextParts[] = '"' . addslashes(trim($phrase)) . '"';
+            }
+        }
+
+        // Add individual terms, removing duplicates and cleaning
+        $processedTerms = [];
+        foreach ($parsedQuery->terms as $term) {
+            $cleanTerm = $this->cleanTermForFulltext($term);
+            if ($cleanTerm && !in_array($cleanTerm, $processedTerms) && strlen($cleanTerm) >= 2) {
+                $processedTerms[] = $cleanTerm;
+                $fulltextParts[] = '+' . $cleanTerm . '*';
+            }
+        }
+
+        return implode(' ', $fulltextParts);
+    }
+
+    protected function cleanTermForFulltext(string $term): string
+    {
+        // Remove invalid fulltext characters and operators
+        $term = preg_replace('/[^\w\s]/', '', $term);
+        $term = trim($term);
+
+        // Remove MySQL fulltext operators that could cause issues
+        $term = str_replace(['+', '-', '~', '<', '>', '(', ')', '"', '*'], '', $term);
+
+        return $term;
     }
 
     protected function fallbackToLikeSearch($parsedQuery): Builder
@@ -86,15 +130,29 @@ class ProductFilter extends QueryFilter
         return $this->builder->where(function (Builder $query) use ($parsedQuery) {
             foreach ($parsedQuery->terms as $term) {
                 if (strlen($term) >= 2) {
-                    $query->orWhere('products.name', 'LIKE', '%' . $term . '%')
-                        ->orWhere('products.description', 'LIKE', '%' . $term . '%');
+                    $cleanTerm = trim($term);
+                    $query->orWhere('products.name', 'LIKE', '%' . $cleanTerm . '%')
+                        ->orWhere('products.description', 'LIKE', '%' . $cleanTerm . '%');
                 }
             }
 
             foreach ($parsedQuery->phrases as $phrase) {
-                $query->orWhere('products.name', 'LIKE', '%' . $phrase . '%')
-                    ->orWhere('products.description', 'LIKE', '%' . $phrase . '%');
+                if (!empty(trim($phrase))) {
+                    $cleanPhrase = trim($phrase);
+                    $query->orWhere('products.name', 'LIKE', '%' . $cleanPhrase . '%')
+                        ->orWhere('products.description', 'LIKE', '%' . $cleanPhrase . '%');
+                }
             }
+        });
+    }
+
+    protected function fallbackToSimpleSearch(string $value): Builder
+    {
+        $cleanValue = trim($value);
+
+        return $this->builder->where(function($query) use ($cleanValue) {
+            $query->where('products.name', 'LIKE', '%' . $cleanValue . '%')
+                ->orWhere('products.description', 'LIKE', '%' . $cleanValue . '%');
         });
     }
 
@@ -232,10 +290,14 @@ class ProductFilter extends QueryFilter
         }
 
         if (count($range) === 2) {
-            return $this->builder->whereBetween('products.price', [
-                floatval($range[0]) * 100,
-                floatval($range[1]) * 100
-            ]);
+            $minPrice = floatval($range[0]) * 100;
+            $maxPrice = floatval($range[1]) * 100;
+
+            if ($minPrice === $maxPrice) {
+                return $this->builder->where('products.price', '=', $minPrice);
+            }
+
+            return $this->builder->whereBetween('products.price', [$minPrice, $maxPrice]);
         }
 
         return $this->builder->where('products.price', '<=', floatval($value) * 100);
@@ -321,6 +383,7 @@ class ProductFilter extends QueryFilter
         return $this->builder->whereHas('vendor', function($query) use ($value) {
             $this->builder = $query;
             $this->safeLikeQuery('name', $value);
+
         });
     }
 
@@ -437,7 +500,8 @@ class ProductFilter extends QueryFilter
             'include',
             'role',
             'user',
-            'sort'
+            'sort',
+            'filter'
         ];
 
         return in_array($method, $allowedMethods);

@@ -29,6 +29,17 @@ abstract class QueryFilter
         return $builder;
     }
 
+    public function filter(array $filters): Builder
+    {
+        foreach ($filters as $key => $value) {
+            if (method_exists($this, $key) && $this->isAllowedFilter($key)) {
+                $this->$key($value);
+            }
+        }
+
+        return $this->builder;
+    }
+
     protected function isAllowedFilter(string $method): bool
     {
         $allowedMethods = [
@@ -43,7 +54,8 @@ abstract class QueryFilter
             'search',
             'role',
             'user',
-            'sort'
+            'sort',
+            'filter'
         ];
 
         return in_array($method, $allowedMethods);

@@ -68,7 +68,7 @@ class Product
 
         $results = $query->paginate($perPage, ['*'], 'page', $page);
 
-        $rankedProducts = collect($results->items());
+        $rankedProducts = $results->getCollection();
         $searchStats = [];
 
         if (!empty($searchQuery) && $rankedProducts->isNotEmpty()) {
