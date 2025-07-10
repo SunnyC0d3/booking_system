@@ -26,9 +26,7 @@ class QueryProcessor
     {
         $query = strip_tags($query);
         $query = htmlspecialchars($query, ENT_QUOTES, 'UTF-8');
-
         $query = preg_replace('/\s+/', ' ', $query);
-
         $query = trim($query);
         $query = Str::limit($query, 500, '');
 
@@ -41,9 +39,11 @@ class QueryProcessor
 
         $cleaned = preg_replace('/[^\w\s\-\+\*\(\)\"\'&|!]/', ' ', $cleaned);
 
-        $cleaned = str_replace([' and ', ' AND '], ' +', $cleaned);
+        $cleaned = str_replace([' and ', ' AND '], ' ', $cleaned);
         $cleaned = str_replace([' or ', ' OR '], ' |', $cleaned);
         $cleaned = str_replace([' not ', ' NOT ', ' -'], ' -', $cleaned);
+
+        $cleaned = preg_replace('/\s+/', ' ', $cleaned);
 
         return trim($cleaned);
     }
@@ -57,10 +57,22 @@ class QueryProcessor
         $terms = preg_split('/\s+/', $withoutPhrases);
 
         $terms = array_filter($terms, function($term) {
-            return !empty($term) && !in_array($term, ['+', '-', '|', '&', '(', ')']);
+            $term = trim($term);
+            if (empty($term) || in_array($term, ['+', '-', '|', '&', '(', ')'])) {
+                return false;
+            }
+            return true;
         });
 
-        return array_values($terms);
+        $cleanedTerms = [];
+        foreach ($terms as $term) {
+            $cleanTerm = ltrim($term, '+-|&');
+            if (!empty($cleanTerm) && strlen($cleanTerm) >= 2) {
+                $cleanedTerms[] = $cleanTerm;
+            }
+        }
+
+        return array_values(array_unique($cleanedTerms));
     }
 
     protected function extractPhrases(string $query): array
@@ -77,11 +89,12 @@ class QueryProcessor
             'not' => [],
         ];
 
-        if (preg_match_all('/(\w+)\s+(?:and|AND|\+)\s+(\w+)/', $query, $matches)) {
-            for ($i = 0; $i < count($matches[0]); $i++) {
+        $terms = $this->extractTerms($query);
+        if (count($terms) > 1) {
+            for ($i = 0; $i < count($terms) - 1; $i++) {
                 $operators['and'][] = [
-                    'left' => $matches[1][$i],
-                    'right' => $matches[2][$i]
+                    'left' => $terms[$i],
+                    'right' => $terms[$i + 1]
                 ];
             }
         }
@@ -89,14 +102,14 @@ class QueryProcessor
         if (preg_match_all('/(\w+)\s+(?:or|OR|\|)\s+(\w+)/', $query, $matches)) {
             for ($i = 0; $i < count($matches[0]); $i++) {
                 $operators['or'][] = [
-                    'left' => $matches[1][$i],
-                    'right' => $matches[2][$i]
+                    'left' => strtolower($matches[1][$i]),
+                    'right' => strtolower($matches[2][$i])
                 ];
             }
         }
 
         if (preg_match_all('/(?:not|NOT|\-)\s+(\w+)/', $query, $matches)) {
-            $operators['not'] = $matches[1];
+            $operators['not'] = array_map('strtolower', $matches[1]);
         }
 
         return $operators;
@@ -106,6 +119,7 @@ class QueryProcessor
     {
         $filters = [];
 
+        // Price filters
         if (preg_match('/(?:under|below|less than|<)\s*\$?(\d+(?:\.\d{2})?)/', $query, $matches)) {
             $filters['price_max'] = floatval($matches[1]) * 100;
         }
@@ -119,6 +133,7 @@ class QueryProcessor
             $filters['price_max'] = floatval($matches[2]) * 100;
         }
 
+        // Color filters
         $colors = ['red', 'blue', 'green', 'black', 'white', 'yellow', 'orange', 'purple', 'pink', 'brown', 'gray', 'grey'];
         foreach ($colors as $color) {
             if (stripos($query, $color) !== false) {
@@ -126,6 +141,7 @@ class QueryProcessor
             }
         }
 
+        // Size filters
         $sizes = ['xs', 'small', 'medium', 'large', 'xl', 'xxl', 's', 'm', 'l'];
         foreach ($sizes as $size) {
             if (preg_match('/\b' . preg_quote($size, '/') . '\b/i', $query)) {
@@ -133,6 +149,7 @@ class QueryProcessor
             }
         }
 
+        // Brand filters
         $brands = ['apple', 'samsung', 'nike', 'adidas', 'sony', 'lg', 'hp', 'dell', 'microsoft'];
         foreach ($brands as $brand) {
             if (stripos($query, $brand) !== false) {
@@ -147,34 +164,57 @@ class QueryProcessor
     {
         $cleaned = $this->cleanQuery($query);
 
-        $booleanQuery = str_replace([' +', ' |', ' -'], [' +', ' ', ' -'], $cleaned);
+        $terms = $this->extractTerms($query);
+        $phrases = $this->extractPhrases($query);
 
-        $booleanQuery = preg_replace('/"([^"]+)"/', '"$1"', $booleanQuery);
+        $booleanParts = [];
 
-        $booleanQuery = str_replace('*', '*', $booleanQuery);
+        foreach ($phrases as $phrase) {
+            $booleanParts[] = '"' . $phrase . '"';
+        }
 
-        return $booleanQuery;
+        foreach ($terms as $term) {
+            if (strlen($term) >= 2) {
+                $booleanParts[] = '+' . $term;
+            }
+        }
+
+        return implode(' ', $booleanParts);
     }
 
     protected function buildFulltextQuery(string $query): string
     {
-        // Extract terms and phrases directly without calling parseQuery again
         $phrases = $this->extractPhrases($query);
         $terms = $this->extractTerms($query);
 
         $fulltextParts = [];
 
         foreach ($phrases as $phrase) {
-            $fulltextParts[] = '"' . $phrase . '"';
+            if (!empty(trim($phrase))) {
+                $fulltextParts[] = '"' . addslashes(trim($phrase)) . '"';
+            }
         }
 
         foreach ($terms as $term) {
-            if (strlen($term) >= 3) {
-                $fulltextParts[] = '+' . $term . '*';
+            $cleanTerm = $this->cleanTermForFulltext($term);
+            if ($cleanTerm && strlen($cleanTerm) >= 2) {
+                $fulltextParts[] = '+' . $cleanTerm . '*';
             }
         }
 
         return implode(' ', $fulltextParts);
+    }
+
+    protected function cleanTermForFulltext(string $term): string
+    {
+        $term = ltrim($term, '+-|&');
+
+        $term = preg_replace('/[^\w\s]/', '', $term);
+        $term = trim($term);
+
+        $term = str_replace(['+', '-', '~', '<', '>', '(', ')', '"', '*'], '', $term);
+
+        return $term;
     }
 
     public function calculateComplexity(string $query): array

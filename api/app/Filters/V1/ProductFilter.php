@@ -6,6 +6,7 @@ use App\Constants\ProductStatuses;
 use App\Services\V1\Search\QueryProcessor;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ProductFilter extends QueryFilter
 {
@@ -52,55 +53,335 @@ class ProductFilter extends QueryFilter
     protected function applyFullTextSearch($parsedQuery): Builder
     {
         $fulltextQuery = $this->buildSafeFulltextQuery($parsedQuery);
+        $searchTerms = $parsedQuery->terms;
+        $cleanedQuery = $parsedQuery->cleaned;
 
-        if (empty($fulltextQuery)) {
-            return $this->fallbackToLikeSearch($parsedQuery);
+        if (empty($fulltextQuery) || strlen($cleanedQuery) < 2) {
+            return $this->applyComprehensiveSearch($searchTerms, $cleanedQuery);
         }
 
         try {
             return $this->builder
                 ->selectRaw('
-                    products.*,
-                    MATCH(products.name, products.description) AGAINST(? IN BOOLEAN MODE) as relevance_score,
-                    CASE
-                        WHEN products.name LIKE ? THEN 100
-                        WHEN products.name LIKE ? THEN 75
-                        WHEN products.description LIKE ? THEN 50
-                        ELSE MATCH(products.name, products.description) AGAINST(? IN BOOLEAN MODE) * 10
-                    END as search_score
-                ', [
-                    $fulltextQuery,
-                    '%' . $parsedQuery->cleaned . '%',
-                    '%' . implode('%', $parsedQuery->terms) . '%',
-                    '%' . $parsedQuery->cleaned . '%',
-                    $fulltextQuery
+                products.*,
+                MATCH(products.name, products.description) AGAINST(? IN BOOLEAN MODE) as relevance_score,
+                CASE
+                    -- Exact product name match (highest priority)
+                    WHEN LOWER(products.name) = LOWER(?) THEN 1000
+
+                    -- Product name starts with search
+                    WHEN LOWER(products.name) LIKE LOWER(?) THEN 800
+
+                    -- Product name contains search
+                    WHEN LOWER(products.name) LIKE LOWER(?) THEN 600
+
+                    -- Category exact match
+                    WHEN EXISTS (
+                        SELECT 1 FROM product_categories pc
+                        WHERE pc.id = products.product_category_id
+                        AND LOWER(pc.name) = LOWER(?)
+                    ) THEN 500
+
+                    -- Parent category exact match
+                    WHEN EXISTS (
+                        SELECT 1 FROM product_categories pc
+                        JOIN product_categories parent ON pc.parent_id = parent.id
+                        WHERE pc.id = products.product_category_id
+                        AND LOWER(parent.name) = LOWER(?)
+                    ) THEN 450
+
+                    -- Vendor exact match
+                    WHEN EXISTS (
+                        SELECT 1 FROM vendors v
+                        WHERE v.id = products.vendor_id
+                        AND LOWER(v.name) = LOWER(?)
+                    ) THEN 400
+
+                    -- Tag exact match
+                    WHEN EXISTS (
+                        SELECT 1 FROM product_tag pt
+                        JOIN product_tags ptags ON pt.product_tag_id = ptags.id
+                        WHERE pt.product_id = products.id
+                        AND LOWER(ptags.name) = LOWER(?)
+                    ) THEN 350
+
+                    -- Category partial match
+                    WHEN EXISTS (
+                        SELECT 1 FROM product_categories pc
+                        WHERE pc.id = products.product_category_id
+                        AND LOWER(pc.name) LIKE LOWER(?)
+                    ) THEN 300
+
+                    -- Parent category partial match
+                    WHEN EXISTS (
+                        SELECT 1 FROM product_categories pc
+                        JOIN product_categories parent ON pc.parent_id = parent.id
+                        WHERE pc.id = products.product_category_id
+                        AND LOWER(parent.name) LIKE LOWER(?)
+                    ) THEN 280
+
+                    -- Vendor partial match
+                    WHEN EXISTS (
+                        SELECT 1 FROM vendors v
+                        WHERE v.id = products.vendor_id
+                        AND LOWER(v.name) LIKE LOWER(?)
+                    ) THEN 250
+
+                    -- Variant value match
+                    WHEN EXISTS (
+                        SELECT 1 FROM product_variants pv
+                        WHERE pv.product_id = products.id
+                        AND LOWER(pv.value) LIKE LOWER(?)
+                    ) THEN 200
+
+                    -- Variant attribute name match
+                    WHEN EXISTS (
+                        SELECT 1 FROM product_variants pv
+                        JOIN product_attributes pa ON pv.product_attribute_id = pa.id
+                        WHERE pv.product_id = products.id
+                        AND LOWER(pa.name) LIKE LOWER(?)
+                    ) THEN 180
+
+                    -- Tag partial match
+                    WHEN EXISTS (
+                        SELECT 1 FROM product_tag pt
+                        JOIN product_tags ptags ON pt.product_tag_id = ptags.id
+                        WHERE pt.product_id = products.id
+                        AND LOWER(ptags.name) LIKE LOWER(?)
+                    ) THEN 150
+
+                    -- Product description contains search
+                    WHEN LOWER(products.description) LIKE LOWER(?) THEN 100
+
+                    -- Vendor description contains search
+                    WHEN EXISTS (
+                        SELECT 1 FROM vendors v
+                        WHERE v.id = products.vendor_id
+                        AND LOWER(v.description) LIKE LOWER(?)
+                    ) THEN 50
+
+                    -- Fulltext relevance as fallback
+                    ELSE MATCH(products.name, products.description) AGAINST(? IN BOOLEAN MODE) * 10
+                END as search_score
+            ', [
+                    $fulltextQuery,                     // MATCH AGAINST
+                    $cleanedQuery,                      // Exact product name
+                    $cleanedQuery . '%',               // Product name starts with
+                    '%' . $cleanedQuery . '%',         // Product name contains
+                    $cleanedQuery,                      // Category exact
+                    $cleanedQuery,                      // Parent category exact
+                    $cleanedQuery,                      // Vendor exact
+                    $cleanedQuery,                      // Tag exact
+                    '%' . $cleanedQuery . '%',         // Category partial
+                    '%' . $cleanedQuery . '%',         // Parent category partial
+                    '%' . $cleanedQuery . '%',         // Vendor partial
+                    '%' . $cleanedQuery . '%',         // Variant value
+                    '%' . $cleanedQuery . '%',         // Variant attribute
+                    '%' . $cleanedQuery . '%',         // Tag partial
+                    '%' . $cleanedQuery . '%',         // Product description
+                    '%' . $cleanedQuery . '%',         // Vendor description
+                    $fulltextQuery                      // MATCH AGAINST for scoring
                 ])
-                ->whereRaw('MATCH(products.name, products.description) AGAINST(? IN BOOLEAN MODE)', [$fulltextQuery])
-                ->orWhere(function($query) use ($parsedQuery) {
-                    foreach ($parsedQuery->terms as $term) {
-                        if (strlen($term) >= 2) {
-                            $query->orWhere('products.name', 'LIKE', '%' . $term . '%')
+                ->where(function($query) use ($fulltextQuery, $searchTerms, $cleanedQuery) {
+                    // Main fulltext search
+                    $query->whereRaw('MATCH(products.name, products.description) AGAINST(? IN BOOLEAN MODE)', [$fulltextQuery])
+
+                        // OR search in product name/description with individual terms
+                        ->orWhere(function($q) use ($searchTerms) {
+                            foreach ($searchTerms as $term) {
+                                if (strlen($term) >= 1) {
+                                    $q->where('products.name', 'LIKE', '%' . $term . '%')
+                                        ->orWhere('products.description', 'LIKE', '%' . $term . '%');
+                                }
+                            }
+                        })
+
+                        // OR search in categories
+                        ->orWhereHas('category', function($q) use ($cleanedQuery, $searchTerms) {
+                            $q->where('name', 'LIKE', '%' . $cleanedQuery . '%');
+                            foreach ($searchTerms as $term) {
+                                if (strlen($term) >= 2) {
+                                    $q->orWhere('name', 'LIKE', '%' . $term . '%');
+                                }
+                            }
+                        })
+
+                        // OR search in parent categories
+                        ->orWhereHas('category.parent', function($q) use ($cleanedQuery, $searchTerms) {
+                            $q->where('name', 'LIKE', '%' . $cleanedQuery . '%');
+                            foreach ($searchTerms as $term) {
+                                if (strlen($term) >= 2) {
+                                    $q->orWhere('name', 'LIKE', '%' . $term . '%');
+                                }
+                            }
+                        })
+
+                        // OR search in vendors
+                        ->orWhereHas('vendor', function($q) use ($cleanedQuery, $searchTerms) {
+                            $q->where('name', 'LIKE', '%' . $cleanedQuery . '%')
+                                ->orWhere('description', 'LIKE', '%' . $cleanedQuery . '%');
+                            foreach ($searchTerms as $term) {
+                                if (strlen($term) >= 2) {
+                                    $q->orWhere('name', 'LIKE', '%' . $term . '%')
+                                        ->orWhere('description', 'LIKE', '%' . $term . '%');
+                                }
+                            }
+                        })
+
+                        // OR search in tags
+                        ->orWhereHas('tags', function($q) use ($cleanedQuery, $searchTerms) {
+                            $q->where('name', 'LIKE', '%' . $cleanedQuery . '%');
+                            foreach ($searchTerms as $term) {
+                                if (strlen($term) >= 2) {
+                                    $q->orWhere('name', 'LIKE', '%' . $term . '%');
+                                }
+                            }
+                        })
+
+                        // OR search in product variants
+                        ->orWhereHas('variants', function($q) use ($cleanedQuery, $searchTerms) {
+                            $q->where('value', 'LIKE', '%' . $cleanedQuery . '%');
+                            foreach ($searchTerms as $term) {
+                                if (strlen($term) >= 1) {
+                                    $q->orWhere('value', 'LIKE', '%' . $term . '%');
+                                }
+                            }
+                        })
+
+                        ->orWhereHas('variants.productAttribute', function($q) use ($cleanedQuery, $searchTerms) {
+                            $q->where('name', 'LIKE', '%' . $cleanedQuery . '%');
+                            foreach ($searchTerms as $term) {
+                                if (strlen($term) >= 2) {
+                                    $q->orWhere('name', 'LIKE', '%' . $term . '%');
+                                }
+                            }
+                        });
+                });
+
+        } catch (\Exception $e) {
+            Log::error('Enhanced fulltext search failed', [
+                'error' => $e->getMessage(),
+                'query' => $cleanedQuery
+            ]);
+            return $this->applyComprehensiveSearch($searchTerms, $cleanedQuery);
+        }
+    }
+
+    protected function applyComprehensiveSearch(array $searchTerms, string $cleanedQuery): Builder
+    {
+        return $this->builder
+            ->selectRaw('
+            products.*,
+            0 as relevance_score,
+            CASE
+                WHEN LOWER(products.name) = LOWER(?) THEN 1000
+                WHEN LOWER(products.name) LIKE LOWER(?) THEN 800
+                WHEN LOWER(products.name) LIKE LOWER(?) THEN 600
+                WHEN EXISTS (
+                    SELECT 1 FROM product_categories pc
+                    WHERE pc.id = products.product_category_id
+                    AND LOWER(pc.name) = LOWER(?)
+                ) THEN 500
+                WHEN EXISTS (
+                    SELECT 1 FROM vendors v
+                    WHERE v.id = products.vendor_id
+                    AND LOWER(v.name) = LOWER(?)
+                ) THEN 400
+                WHEN EXISTS (
+                    SELECT 1 FROM product_categories pc
+                    WHERE pc.id = products.product_category_id
+                    AND LOWER(pc.name) LIKE LOWER(?)
+                ) THEN 300
+                WHEN EXISTS (
+                    SELECT 1 FROM vendors v
+                    WHERE v.id = products.vendor_id
+                    AND LOWER(v.name) LIKE LOWER(?)
+                ) THEN 250
+                WHEN LOWER(products.description) LIKE LOWER(?) THEN 100
+                ELSE 10
+            END as search_score
+        ', [
+                $cleanedQuery,                      // Exact product name
+                $cleanedQuery . '%',               // Product name starts with
+                '%' . $cleanedQuery . '%',         // Product name contains
+                $cleanedQuery,                      // Category exact
+                $cleanedQuery,                      // Vendor exact
+                '%' . $cleanedQuery . '%',         // Category partial
+                '%' . $cleanedQuery . '%',         // Vendor partial
+                '%' . $cleanedQuery . '%',         // Product description
+            ])
+            ->where(function($query) use ($searchTerms, $cleanedQuery) {
+                $query->where(function($q) use ($searchTerms) {
+                    foreach ($searchTerms as $term) {
+                        if (strlen($term) >= 1) {
+                            $q->where('products.name', 'LIKE', '%' . $term . '%')
                                 ->orWhere('products.description', 'LIKE', '%' . $term . '%');
                         }
                     }
-                });
-        } catch (\Exception $e) {
-            return $this->fallbackToLikeSearch($parsedQuery);
-        }
+                })
+                    ->orWhereHas('category', function($q) use ($cleanedQuery, $searchTerms) {
+                        $q->where('name', 'LIKE', '%' . $cleanedQuery . '%');
+                        foreach ($searchTerms as $term) {
+                            if (strlen($term) >= 2) {
+                                $q->orWhere('name', 'LIKE', '%' . $term . '%');
+                            }
+                        }
+                    })
+                    ->orWhereHas('category.parent', function($q) use ($cleanedQuery, $searchTerms) {
+                        $q->where('name', 'LIKE', '%' . $cleanedQuery . '%');
+                        foreach ($searchTerms as $term) {
+                            if (strlen($term) >= 2) {
+                                $q->orWhere('name', 'LIKE', '%' . $term . '%');
+                            }
+                        }
+                    })
+                    ->orWhereHas('vendor', function($q) use ($cleanedQuery, $searchTerms) {
+                        $q->where('name', 'LIKE', '%' . $cleanedQuery . '%')
+                            ->orWhere('description', 'LIKE', '%' . $cleanedQuery . '%');
+                        foreach ($searchTerms as $term) {
+                            if (strlen($term) >= 2) {
+                                $q->orWhere('name', 'LIKE', '%' . $term . '%')
+                                    ->orWhere('description', 'LIKE', '%' . $term . '%');
+                            }
+                        }
+                    })
+                    ->orWhereHas('tags', function($q) use ($cleanedQuery, $searchTerms) {
+                        $q->where('name', 'LIKE', '%' . $cleanedQuery . '%');
+                        foreach ($searchTerms as $term) {
+                            if (strlen($term) >= 2) {
+                                $q->orWhere('name', 'LIKE', '%' . $term . '%');
+                            }
+                        }
+                    })
+                    ->orWhereHas('variants', function($q) use ($cleanedQuery, $searchTerms) {
+                        $q->where('value', 'LIKE', '%' . $cleanedQuery . '%');
+                        foreach ($searchTerms as $term) {
+                            if (strlen($term) >= 1) {
+                                $q->orWhere('value', 'LIKE', '%' . $term . '%');
+                            }
+                        }
+                    })
+                    ->orWhereHas('variants.productAttribute', function($q) use ($cleanedQuery, $searchTerms) {
+                        $q->where('name', 'LIKE', '%' . $cleanedQuery . '%');
+                        foreach ($searchTerms as $term) {
+                            if (strlen($term) >= 2) {
+                                $q->orWhere('name', 'LIKE', '%' . $term . '%');
+                            }
+                        }
+                    });
+            });
     }
 
     protected function buildSafeFulltextQuery($parsedQuery): string
     {
         $fulltextParts = [];
 
-        // Add phrases first
         foreach ($parsedQuery->phrases as $phrase) {
             if (!empty(trim($phrase))) {
                 $fulltextParts[] = '"' . addslashes(trim($phrase)) . '"';
             }
         }
 
-        // Add individual terms, removing duplicates and cleaning
         $processedTerms = [];
         foreach ($parsedQuery->terms as $term) {
             $cleanTerm = $this->cleanTermForFulltext($term);
@@ -115,11 +396,9 @@ class ProductFilter extends QueryFilter
 
     protected function cleanTermForFulltext(string $term): string
     {
-        // Remove invalid fulltext characters and operators
         $term = preg_replace('/[^\w\s]/', '', $term);
         $term = trim($term);
 
-        // Remove MySQL fulltext operators that could cause issues
         $term = str_replace(['+', '-', '~', '<', '>', '(', ')', '"', '*'], '', $term);
 
         return $term;
