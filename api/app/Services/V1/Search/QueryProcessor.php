@@ -158,15 +158,17 @@ class QueryProcessor
 
     protected function buildFulltextQuery(string $query): string
     {
-        $parsed = $this->parseQuery($query);
+        // Extract terms and phrases directly without calling parseQuery again
+        $phrases = $this->extractPhrases($query);
+        $terms = $this->extractTerms($query);
 
         $fulltextParts = [];
 
-        foreach ($parsed->phrases as $phrase) {
+        foreach ($phrases as $phrase) {
             $fulltextParts[] = '"' . $phrase . '"';
         }
 
-        foreach ($parsed->terms as $term) {
+        foreach ($terms as $term) {
             if (strlen($term) >= 3) {
                 $fulltextParts[] = '+' . $term . '*';
             }
