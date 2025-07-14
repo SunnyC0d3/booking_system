@@ -1,156 +1,1648 @@
-name: 'Order Returns'
+name: 'Product Catalog'
 description: ''
 endpoints:
   -
     httpMethods:
-      - POST
-    uri: api/returns
+      - GET
+    uri: api/products
     metadata:
-      groupName: 'Order Returns'
+      groupName: 'Product Catalog'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Create a return request for an order item'
+      title: 'Search and browse products with advanced features'
       description: |-
-        Allows authenticated users to request a return for items from their paid orders.
-        Users can only return items from orders they own and that have been successfully paid.
-        Each order item can only have one return request to prevent duplicate submissions.
-        This is the first step in the return process - the request will need admin approval before processing.
-      authenticated: true
+        Get a paginated and filtered list of active products with advanced search capabilities.
+        This endpoint supports intelligent search with relevance scoring, faceted filtering,
+        result diversification, and personalized recommendations. Includes comprehensive
+        product information optimized for customer browsing and purchasing decisions.
+      authenticated: false
       custom: []
     headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
     cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      order_item_id:
-        name: order_item_id
-        description: 'The ID of the specific order item to return. Must belong to a paid order owned by the authenticated user.'
-        required: true
-        example: 89
-        type: integer
+    queryParameters:
+      filter:
+        name: filter
+        description: 'optional Array of filter parameters to narrow down results.'
+        required: false
+        example:
+          - architecto
+        type: 'string[]'
         enumValues: []
-        exampleWasSpecified: true
+        exampleWasSpecified: false
         nullable: false
         custom: []
-      reason:
-        name: reason
-        description: 'Detailed reason for the return request. Must be between 10 and 1000 characters to provide sufficient context for review.'
-        required: true
-        example: 'The wireless headphones arrived with a defective left speaker that produces crackling sounds at any volume level. The product does not match the quality described.'
+      'filter[search]':
+        name: 'filter[search]'
+        description: 'optional Intelligent search with typo tolerance and relevance scoring.'
+        required: false
+        example: 'wireless bluetooth headphones under £50'
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
+      'filter[name]':
+        name: 'filter[name]'
+        description: 'optional Filter products by name (partial match supported).'
+        required: false
+        example: wireless
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      'filter[price]':
+        name: 'filter[price]'
+        description: 'optional Filter by price range in pounds. Single value or comma-separated min,max.'
+        required: false
+        example: '10.00,50.00'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      'filter[priceRanges]':
+        name: 'filter[priceRanges]'
+        description: 'optional Multiple price ranges.'
+        required: false
+        example: '0-25,50-100'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      'filter[category]':
+        name: 'filter[category]'
+        description: 'optional Filter by category ID(s) including child categories.'
+        required: false
+        example: '5,12,18'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      'filter[availability]':
+        name: 'filter[availability]'
+        description: 'optional Filter by stock status. Options: in_stock, available.'
+        required: false
+        example: in_stock
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      'filter[vendors]':
+        name: 'filter[vendors]'
+        description: 'optional Filter by brand/vendor ID(s).'
+        required: false
+        example: '2,5,8'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      'filter[vendor]':
+        name: 'filter[vendor]'
+        description: 'optional Filter by brand name.'
+        required: false
+        example: apple
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      'filter[tags]':
+        name: 'filter[tags]'
+        description: 'optional Filter by tag ID(s).'
+        required: false
+        example: '3,7,12'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      'filter[attributes]':
+        name: 'filter[attributes]'
+        description: 'optional Filter by product attributes. Format: attribute:value.'
+        required: false
+        example: 'color:red,size:large'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      'filter[created_at]':
+        name: 'filter[created_at]'
+        description: 'optional Filter by creation date range.'
+        required: false
+        example: '2025-01-01,2025-01-31'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      'filter[include]':
+        name: 'filter[include]'
+        description: 'optional Include related data. Options: vendor,variants,category,tags,media.'
+        required: false
+        example: 'vendor,variants,category'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      page:
+        name: page
+        description: 'optional Page number for pagination. Default: 1.'
+        required: false
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      per_page:
+        name: per_page
+        description: 'optional Number of products per page (max 100). Default: 15.'
+        required: false
+        example: 24
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      sort:
+        name: sort
+        description: 'optional Sort products. Available: name, price, created_at, relevance.'
+        required: false
+        example: '-relevance,price'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      diversify:
+        name: diversify
+        description: 'optional Apply result diversification for better variety. Default: false.'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanQueryParameters:
+      filter:
+        - architecto
+      'filter[search]': 'wireless bluetooth headphones under £50'
+      'filter[name]': wireless
+      'filter[price]': '10.00,50.00'
+      'filter[priceRanges]': '0-25,50-100'
+      'filter[category]': '5,12,18'
+      'filter[availability]': in_stock
+      'filter[vendors]': '2,5,8'
+      'filter[vendor]': apple
+      'filter[tags]': '3,7,12'
+      'filter[attributes]': 'color:red,size:large'
+      'filter[created_at]': '2025-01-01,2025-01-31'
+      'filter[include]': 'vendor,variants,category'
+      page: 2
+      per_page: 24
+      sort: '-relevance,price'
+      diversify: true
+    bodyParameters:
+      filter:
+        name: filter
+        description: ''
+        required: false
+        example: null
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.name:
+        name: filter.name
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: b
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.search:
+        name: filter.search
+        description: 'Must not be greater than 500 characters.'
+        required: false
+        example: 'n'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.price:
+        name: filter.price
+        description: 'Must match the regex /^\d+(\.\d{1,2})?(,\d+(\.\d{1,2})?)*$/.'
+        required: false
+        example: '9,3.1)'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.priceRanges:
+        name: filter.priceRanges
+        description: 'Must match the regex /^(\d+(\.\d{1,2})?-\d+(\.\d{1,2})?)(,\d+(\.\d{1,2})?-\d+(\.\d{1,2})?)*$/.'
+        required: false
+        example: '-1.42)-3268)'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.category:
+        name: filter.category
+        description: 'Must match the regex /^(\d,?)+$/.'
+        required: false
+        example: '9,31'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.categories:
+        name: filter.categories
+        description: 'Must match the regex /^(\d,?)+$/.'
+        required: false
+        example: '9,31'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.quantity:
+        name: filter.quantity
+        description: 'Must match the regex /^\d+(,\d+)?$/.'
+        required: false
+        example: '64'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.availability:
+        name: filter.availability
+        description: ''
+        required: false
+        example: available
+        type: string
+        enumValues:
+          - in_stock
+          - out_of_stock
+          - low_stock
+          - available
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.vendors:
+        name: filter.vendors
+        description: 'Must match the regex /^(\d,?)+$/.'
+        required: false
+        example: '9,31'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.vendor:
+        name: filter.vendor
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: i
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.brand:
+        name: filter.brand
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: k
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.brands:
+        name: filter.brands
+        description: 'Must match the regex /^(\d,?)+$/.'
+        required: false
+        example: '9,31'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.tags:
+        name: filter.tags
+        description: 'Must match the regex /^(\d,?)+$/.'
+        required: false
+        example: '9,31'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.tag_logic:
+        name: filter.tag_logic
+        description: ''
+        required: false
+        example: AND
+        type: string
+        enumValues:
+          - AND
+          - OR
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.attributes:
+        name: filter.attributes
+        description: 'Must match the regex /^([a-zA-Z_]+:[a-zA-Z0-9_\-\s]+)(,[a-zA-Z_]+:[a-zA-Z0-9_\-\s]+)*$/.'
+        required: false
+        example: '_JK:AI'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.color:
+        name: filter.color
+        description: 'Must not be greater than 50 characters.'
+        required: false
+        example: k
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.colors:
+        name: filter.colors
+        description: 'Must match the regex /^([a-zA-Z]+,?)+$/.'
+        required: false
+        example: dLJnIk
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.size:
+        name: filter.size
+        description: 'Must not be greater than 50 characters.'
+        required: false
+        example: h
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.sizes:
+        name: filter.sizes
+        description: 'Must match the regex /^([a-zA-Z0-9]+,?)+$/.'
+        required: false
+        example: DDz1Ys
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.material:
+        name: filter.material
+        description: 'Must not be greater than 100 characters.'
+        required: false
+        example: h
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.status:
+        name: filter.status
+        description: 'Must not be greater than 50 characters.'
+        required: false
+        example: w
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.created_at:
+        name: filter.created_at
+        description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
+        required: false
+        example: '2559-31-42'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.updated_at:
+        name: filter.updated_at
+        description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
+        required: false
+        example: '2559-31-42'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      filter.include:
+        name: filter.include
+        description: 'Must match the regex /^(\w+(,\w+)*)?$/.'
+        required: false
+        example: 'uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      page:
+        name: page
+        description: 'Must be at least 1.'
+        required: false
+        example: 4
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      per_page:
+        name: per_page
+        description: 'Must be at least 1. Must not be greater than 100.'
+        required: false
+        example: 9
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      sort:
+        name: sort
+        description: 'Must match the regex /^(-?[a-zA-Z0-9_]+)(,-?[a-zA-Z0-9_]+)*$/.'
+        required: false
+        example: 'y8p,Bm,-dp,-Zm,-GH'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      diversify:
+        name: diversify
+        description: ''
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      explain:
+        name: explain
+        description: ''
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      facets:
+        name: facets
+        description: ''
+        required: false
+        example: false
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      highlight:
+        name: highlight
+        description: ''
+        required: false
+        example: false
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      personalize:
+        name: personalize
+        description: ''
+        required: false
+        example: false
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      typo_tolerance:
+        name: typo_tolerance
+        description: ''
+        required: false
+        example: false
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      exact_match:
+        name: exact_match
+        description: ''
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      boost_new_products:
+        name: boost_new_products
+        description: ''
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      boost_in_stock:
+        name: boost_in_stock
+        description: ''
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
     cleanBodyParameters:
-      order_item_id: 89
-      reason: 'The wireless headphones arrived with a defective left speaker that produces crackling sounds at any volume level. The product does not match the quality described.'
+      filter:
+        name: b
+        search: 'n'
+        price: '9,3.1)'
+        priceRanges: '-1.42)-3268)'
+        category: '9,31'
+        categories: '9,31'
+        quantity: '64'
+        availability: available
+        vendors: '9,31'
+        vendor: i
+        brand: k
+        brands: '9,31'
+        tags: '9,31'
+        tag_logic: AND
+        attributes: '_JK:AI'
+        color: k
+        colors: dLJnIk
+        size: h
+        sizes: DDz1Ys
+        material: h
+        status: w
+        created_at: '2559-31-42'
+        updated_at: '2559-31-42'
+        include: 'uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv'
+      page: 4
+      per_page: 9
+      sort: 'y8p,Bm,-dp,-Zm,-GH'
+      diversify: true
+      explain: true
+      facets: false
+      highlight: false
+      personalize: false
+      typo_tolerance: false
+      exact_match: true
+      boost_new_products: true
+      boost_in_stock: true
     fileParameters: []
     responses:
       -
-        status: 200
+        status: 500
         content: |-
           {
-            "message": "Orders return created.",
-            "data": {
-              "id": 15,
-              "reason": "The wireless headphones arrived with a defective left speaker that produces crackling sounds at any volume level. The product does not match the quality described.",
-              "status": "Requested",
-              "created_at": "2025-01-16T14:30:00.000000Z",
-              "updated_at": "2025-01-16T14:30:00.000000Z"
-            }
+              "message": "The stream or file \"/var/www/ecommerce_api/api/storage/logs/audit/audit-2025-07-14.log\" could not be opened in append mode: chmod(): No such file or directory\nThe exception occurred while attempting to log: API Access\nContext: {\"method\":\"GET\",\"endpoint\":\"api\\/products\",\"status_code\":401,\"ip\":\"127.0.0.1\",\"user_agent\":\"Symfony\",\"user_id\":null,\"user_email\":null,\"user_role\":null,\"response_time_ms\":0.85,\"timestamp\":\"2025-07-14T15:57:29.798562Z\"}",
+              "exception": "UnexpectedValueException",
+              "file": "/var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php",
+              "line": 156,
+              "trace": [
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Handler/RotatingFileHandler.php",
+                      "line": 110,
+                      "function": "write",
+                      "class": "Monolog\\Handler\\StreamHandler",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Handler/AbstractProcessingHandler.php",
+                      "line": 44,
+                      "function": "write",
+                      "class": "Monolog\\Handler\\RotatingFileHandler",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Logger.php",
+                      "line": 391,
+                      "function": "handle",
+                      "class": "Monolog\\Handler\\AbstractProcessingHandler",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Logger.php",
+                      "line": 607,
+                      "function": "addRecord",
+                      "class": "Monolog\\Logger",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Log/Logger.php",
+                      "line": 184,
+                      "function": "info",
+                      "class": "Monolog\\Logger",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Log/Logger.php",
+                      "line": 133,
+                      "function": "writeLog",
+                      "class": "Illuminate\\Log\\Logger",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/app/Services/V1/Logger/SecurityLog.php",
+                      "line": 53,
+                      "function": "info",
+                      "class": "Illuminate\\Log\\Logger",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityLogger.php",
+                      "line": 27,
+                      "function": "logApiAccess",
+                      "class": "App\\Services\\V1\\Logger\\SecurityLog",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "App\\Http\\Middleware\\V1\\SecurityLogger",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityHeaders.php",
+                      "line": 12,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "App\\Http\\Middleware\\V1\\SecurityHeaders",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php",
+                      "line": 51,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Routing\\Middleware\\SubstituteBindings",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 127,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+                      "line": 807,
+                      "function": "then",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+                      "line": 786,
+                      "function": "runRouteWithinStack",
+                      "class": "Illuminate\\Routing\\Router",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+                      "line": 750,
+                      "function": "runRoute",
+                      "class": "Illuminate\\Routing\\Router",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+                      "line": 739,
+                      "function": "dispatchToRoute",
+                      "class": "Illuminate\\Routing\\Router",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php",
+                      "line": 201,
+                      "function": "dispatch",
+                      "class": "Illuminate\\Routing\\Router",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 170,
+                      "function": "Illuminate\\Foundation\\Http\\{closure}",
+                      "class": "Illuminate\\Foundation\\Http\\Kernel",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php",
+                      "line": 21,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php",
+                      "line": 31,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php",
+                      "line": 21,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php",
+                      "line": 51,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Middleware\\TrimStrings",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php",
+                      "line": 27,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Http\\Middleware\\ValidatePostSize",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php",
+                      "line": 110,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php",
+                      "line": 49,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Http\\Middleware\\HandleCors",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php",
+                      "line": 58,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Http\\Middleware\\TrustProxies",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php",
+                      "line": 22,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Middleware\\InvokeDeferredCallbacks",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 127,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php",
+                      "line": 176,
+                      "function": "then",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php",
+                      "line": 145,
+                      "function": "sendRequestThroughRouter",
+                      "class": "Illuminate\\Foundation\\Http\\Kernel",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
+                      "line": 310,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Kernel",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
+                      "line": 298,
+                      "function": "callLaravelOrLumenRoute",
+                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
+                      "line": 91,
+                      "function": "makeApiCall",
+                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
+                      "line": 44,
+                      "function": "makeResponseCall",
+                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
+                      "line": 35,
+                      "function": "makeResponseCallIfConditionsPass",
+                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php",
+                      "line": 237,
+                      "function": "__invoke",
+                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php",
+                      "line": 163,
+                      "function": "iterateThroughStrategies",
+                      "class": "Knuckles\\Scribe\\Extracting\\Extractor",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php",
+                      "line": 95,
+                      "function": "fetchResponses",
+                      "class": "Knuckles\\Scribe\\Extracting\\Extractor",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php",
+                      "line": 125,
+                      "function": "processRoute",
+                      "class": "Knuckles\\Scribe\\Extracting\\Extractor",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php",
+                      "line": 72,
+                      "function": "extractEndpointsInfoFromLaravelApp",
+                      "class": "Knuckles\\Scribe\\GroupedEndpoints\\GroupedEndpointsFromApp",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php",
+                      "line": 50,
+                      "function": "extractEndpointsInfoAndWriteToDisk",
+                      "class": "Knuckles\\Scribe\\GroupedEndpoints\\GroupedEndpointsFromApp",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Commands/GenerateDocumentation.php",
+                      "line": 53,
+                      "function": "get",
+                      "class": "Knuckles\\Scribe\\GroupedEndpoints\\GroupedEndpointsFromApp",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php",
+                      "line": 36,
+                      "function": "handle",
+                      "class": "Knuckles\\Scribe\\Commands\\GenerateDocumentation",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Util.php",
+                      "line": 43,
+                      "function": "Illuminate\\Container\\{closure}",
+                      "class": "Illuminate\\Container\\BoundMethod",
+                      "type": "::"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php",
+                      "line": 95,
+                      "function": "unwrapIfClosure",
+                      "class": "Illuminate\\Container\\Util",
+                      "type": "::"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php",
+                      "line": 35,
+                      "function": "callBoundMethod",
+                      "class": "Illuminate\\Container\\BoundMethod",
+                      "type": "::"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Container.php",
+                      "line": 694,
+                      "function": "call",
+                      "class": "Illuminate\\Container\\BoundMethod",
+                      "type": "::"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php",
+                      "line": 213,
+                      "function": "call",
+                      "class": "Illuminate\\Container\\Container",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/symfony/console/Command/Command.php",
+                      "line": 279,
+                      "function": "execute",
+                      "class": "Illuminate\\Console\\Command",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php",
+                      "line": 182,
+                      "function": "run",
+                      "class": "Symfony\\Component\\Console\\Command\\Command",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/symfony/console/Application.php",
+                      "line": 1094,
+                      "function": "run",
+                      "class": "Illuminate\\Console\\Command",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/symfony/console/Application.php",
+                      "line": 342,
+                      "function": "doRunCommand",
+                      "class": "Symfony\\Component\\Console\\Application",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/symfony/console/Application.php",
+                      "line": 193,
+                      "function": "doRun",
+                      "class": "Symfony\\Component\\Console\\Application",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php",
+                      "line": 198,
+                      "function": "run",
+                      "class": "Symfony\\Component\\Console\\Application",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Application.php",
+                      "line": 1208,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Console\\Kernel",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/artisan",
+                      "line": 13,
+                      "function": "handleCommand",
+                      "class": "Illuminate\\Foundation\\Application",
+                      "type": "->"
+                  }
+              ]
           }
-        headers: []
-        description: 'Return request created successfully'
-        custom: []
-      -
-        status: 400
-        content: |-
-          {
-            "message": "This item is not eligible for return due to its category or condition."
-          }
-        headers: []
-        description: 'Item not eligible for return'
-        custom: []
-      -
-        status: 401
-        content: |-
-          {
-            "message": "Unauthenticated."
-          }
-        headers: []
-        description: 'User not authenticated'
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-            "message": "You are not authorized to return this item."
-          }
-        headers: []
-        description: "Unauthorized - not user's order item"
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "Order item not found."
-          }
-        headers: []
-        description: 'Order item not found'
-        custom: []
-      -
-        status: 409
-        content: |-
-          {
-            "message": "A return request has already been created for this item."
-          }
-        headers: []
-        description: 'Return already exists for this item'
-        custom: []
-      -
-        status: 422
-        content: |-
-          {
-            "message": "Order has not been paid for."
-          }
-        headers: []
-        description: 'Order not paid'
-        custom: []
-      -
-        status: 422
-        content: |-
-          {
-            "message": "Return window has expired for this order."
-          }
-        headers: []
-        description: 'Order too old for returns'
-        custom: []
-      -
-        status: 422
-        content: |-
-          {
-            "errors": [
-              "The order item id field is required.",
-              "The reason field is required.",
-              "The reason must be at least 10 characters.",
-              "The reason may not be greater than 1000 characters.",
-              "The selected order item id is invalid."
-            ]
-          }
-        headers: []
-        description: 'Validation errors'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-content-type-options: nosniff
+          x-frame-options: DENY
+          x-xss-protection: '1; mode=block'
+          content-security-policy: "default-src 'none'; frame-ancestors 'none';"
+          referrer-policy: strict-origin-when-cross-origin
+          permissions-policy: 'camera=(), microphone=(), geolocation=(), payment=()'
+        description: null
         custom: []
     responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/products/{id}'
+    metadata:
+      groupName: 'Product Catalog'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Retrieve detailed product information'
+      description: |-
+        Get comprehensive information about a specific product including all variants, media,
+        category details, vendor information, and customer-relevant data. This endpoint provides
+        complete product data needed for product detail pages, including high-resolution images,
+        pricing for all variants, inventory levels, and related product suggestions.
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the product.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      product:
+        name: product
+        description: 'The ID of the product to retrieve.'
+        required: true
+        example: 15
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+      product: 15
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 500
+        content: |-
+          {
+              "message": "The stream or file \"/var/www/ecommerce_api/api/storage/logs/audit/audit-2025-07-14.log\" could not be opened in append mode: chmod(): No such file or directory\nThe exception occurred while attempting to log: API Access\nContext: {\"method\":\"GET\",\"endpoint\":\"api\\/products\\/1\",\"status_code\":401,\"ip\":\"127.0.0.1\",\"user_agent\":\"Symfony\",\"user_id\":null,\"user_email\":null,\"user_role\":null,\"response_time_ms\":0.38,\"timestamp\":\"2025-07-14T15:57:29.814543Z\"}",
+              "exception": "UnexpectedValueException",
+              "file": "/var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php",
+              "line": 156,
+              "trace": [
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Handler/RotatingFileHandler.php",
+                      "line": 110,
+                      "function": "write",
+                      "class": "Monolog\\Handler\\StreamHandler",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Handler/AbstractProcessingHandler.php",
+                      "line": 44,
+                      "function": "write",
+                      "class": "Monolog\\Handler\\RotatingFileHandler",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Logger.php",
+                      "line": 391,
+                      "function": "handle",
+                      "class": "Monolog\\Handler\\AbstractProcessingHandler",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/monolog/monolog/src/Monolog/Logger.php",
+                      "line": 607,
+                      "function": "addRecord",
+                      "class": "Monolog\\Logger",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Log/Logger.php",
+                      "line": 184,
+                      "function": "info",
+                      "class": "Monolog\\Logger",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Log/Logger.php",
+                      "line": 133,
+                      "function": "writeLog",
+                      "class": "Illuminate\\Log\\Logger",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/app/Services/V1/Logger/SecurityLog.php",
+                      "line": 53,
+                      "function": "info",
+                      "class": "Illuminate\\Log\\Logger",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityLogger.php",
+                      "line": 27,
+                      "function": "logApiAccess",
+                      "class": "App\\Services\\V1\\Logger\\SecurityLog",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "App\\Http\\Middleware\\V1\\SecurityLogger",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityHeaders.php",
+                      "line": 12,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "App\\Http\\Middleware\\V1\\SecurityHeaders",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php",
+                      "line": 51,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Routing\\Middleware\\SubstituteBindings",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 127,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+                      "line": 807,
+                      "function": "then",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+                      "line": 786,
+                      "function": "runRouteWithinStack",
+                      "class": "Illuminate\\Routing\\Router",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+                      "line": 750,
+                      "function": "runRoute",
+                      "class": "Illuminate\\Routing\\Router",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+                      "line": 739,
+                      "function": "dispatchToRoute",
+                      "class": "Illuminate\\Routing\\Router",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php",
+                      "line": 201,
+                      "function": "dispatch",
+                      "class": "Illuminate\\Routing\\Router",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 170,
+                      "function": "Illuminate\\Foundation\\Http\\{closure}",
+                      "class": "Illuminate\\Foundation\\Http\\Kernel",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php",
+                      "line": 21,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php",
+                      "line": 31,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php",
+                      "line": 21,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php",
+                      "line": 51,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Middleware\\TrimStrings",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php",
+                      "line": 27,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Http\\Middleware\\ValidatePostSize",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php",
+                      "line": 110,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php",
+                      "line": 49,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Http\\Middleware\\HandleCors",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php",
+                      "line": 58,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Http\\Middleware\\TrustProxies",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php",
+                      "line": 22,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Middleware\\InvokeDeferredCallbacks",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 127,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php",
+                      "line": 176,
+                      "function": "then",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php",
+                      "line": 145,
+                      "function": "sendRequestThroughRouter",
+                      "class": "Illuminate\\Foundation\\Http\\Kernel",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
+                      "line": 310,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Kernel",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
+                      "line": 298,
+                      "function": "callLaravelOrLumenRoute",
+                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
+                      "line": 91,
+                      "function": "makeApiCall",
+                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
+                      "line": 44,
+                      "function": "makeResponseCall",
+                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
+                      "line": 35,
+                      "function": "makeResponseCallIfConditionsPass",
+                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php",
+                      "line": 237,
+                      "function": "__invoke",
+                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php",
+                      "line": 163,
+                      "function": "iterateThroughStrategies",
+                      "class": "Knuckles\\Scribe\\Extracting\\Extractor",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php",
+                      "line": 95,
+                      "function": "fetchResponses",
+                      "class": "Knuckles\\Scribe\\Extracting\\Extractor",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php",
+                      "line": 125,
+                      "function": "processRoute",
+                      "class": "Knuckles\\Scribe\\Extracting\\Extractor",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php",
+                      "line": 72,
+                      "function": "extractEndpointsInfoFromLaravelApp",
+                      "class": "Knuckles\\Scribe\\GroupedEndpoints\\GroupedEndpointsFromApp",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php",
+                      "line": 50,
+                      "function": "extractEndpointsInfoAndWriteToDisk",
+                      "class": "Knuckles\\Scribe\\GroupedEndpoints\\GroupedEndpointsFromApp",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Commands/GenerateDocumentation.php",
+                      "line": 53,
+                      "function": "get",
+                      "class": "Knuckles\\Scribe\\GroupedEndpoints\\GroupedEndpointsFromApp",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php",
+                      "line": 36,
+                      "function": "handle",
+                      "class": "Knuckles\\Scribe\\Commands\\GenerateDocumentation",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Util.php",
+                      "line": 43,
+                      "function": "Illuminate\\Container\\{closure}",
+                      "class": "Illuminate\\Container\\BoundMethod",
+                      "type": "::"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php",
+                      "line": 95,
+                      "function": "unwrapIfClosure",
+                      "class": "Illuminate\\Container\\Util",
+                      "type": "::"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php",
+                      "line": 35,
+                      "function": "callBoundMethod",
+                      "class": "Illuminate\\Container\\BoundMethod",
+                      "type": "::"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Container.php",
+                      "line": 694,
+                      "function": "call",
+                      "class": "Illuminate\\Container\\BoundMethod",
+                      "type": "::"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php",
+                      "line": 213,
+                      "function": "call",
+                      "class": "Illuminate\\Container\\Container",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/symfony/console/Command/Command.php",
+                      "line": 279,
+                      "function": "execute",
+                      "class": "Illuminate\\Console\\Command",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php",
+                      "line": 182,
+                      "function": "run",
+                      "class": "Symfony\\Component\\Console\\Command\\Command",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/symfony/console/Application.php",
+                      "line": 1094,
+                      "function": "run",
+                      "class": "Illuminate\\Console\\Command",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/symfony/console/Application.php",
+                      "line": 342,
+                      "function": "doRunCommand",
+                      "class": "Symfony\\Component\\Console\\Application",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/symfony/console/Application.php",
+                      "line": 193,
+                      "function": "doRun",
+                      "class": "Symfony\\Component\\Console\\Application",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php",
+                      "line": 198,
+                      "function": "run",
+                      "class": "Symfony\\Component\\Console\\Application",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Application.php",
+                      "line": 1208,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Console\\Kernel",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/artisan",
+                      "line": 13,
+                      "function": "handleCommand",
+                      "class": "Illuminate\\Foundation\\Application",
+                      "type": "->"
+                  }
+              ]
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-content-type-options: nosniff
+          x-frame-options: DENY
+          x-xss-protection: '1; mode=block'
+          content-security-policy: "default-src 'none'; frame-ancestors 'none';"
+          referrer-policy: strict-origin-when-cross-origin
+          permissions-policy: 'camera=(), microphone=(), geolocation=(), payment=()'
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
     controller: null
     method: null
     route: null

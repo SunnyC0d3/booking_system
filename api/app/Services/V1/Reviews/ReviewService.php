@@ -46,7 +46,6 @@ class ReviewService
                 ->where('product_id', $product->id)
                 ->where('is_approved', true);
 
-            // Apply filters
             if (!empty($rating)) {
                 $query->whereIn('rating', $rating);
             }
@@ -59,18 +58,15 @@ class ReviewService
                 $query->whereHas('media');
             }
 
-            // Apply sorting
             $query = $this->applySorting($query, $sortBy);
 
             $reviews = $query->paginate($perPage);
 
-            // Load user vote status if authenticated
             $user = $request->user();
             if ($user) {
                 $this->loadUserVoteStatus($reviews->getCollection(), $user->id);
             }
 
-            // Get product review statistics
             $reviewStats = $this->getProductReviewStats($product);
 
             $responseData = $reviews->toArray();
@@ -99,7 +95,6 @@ class ReviewService
     public function getReview(Request $request, Review $review)
     {
         try {
-            // Only show approved reviews to public
             if (!$review->is_approved) {
                 throw new \Exception('Review not found.', 404);
             }
@@ -111,7 +106,6 @@ class ReviewService
                 'response.vendor:id,name'
             ]);
 
-            // Load user vote status if authenticated
             $user = $request->user();
             if ($user) {
                 $this->loadUserVoteStatus(collect([$review]), $user->id);
@@ -136,7 +130,6 @@ class ReviewService
             $data = $request->validated();
 
             return DB::transaction(function () use ($data, $user, $request) {
-                // Create the review
                 $review = Review::create([
                     'user_id' => $user->id,
                     'product_id' => $data['product_id'],
@@ -145,20 +138,17 @@ class ReviewService
                     'title' => $data['title'] ?? null,
                     'content' => $data['content'],
                     'is_verified_purchase' => !empty($data['order_item_id']),
-                    'is_approved' => true, // Auto-approve for now
+                    'is_approved' => true,
                     'approved_at' => now(),
                 ]);
 
-                // Handle media uploads
                 if ($request->hasFile('media')) {
                     $this->handleReviewMediaUpload($review, $request);
                 }
 
-                // Update product review statistics
                 $product = $review->product;
                 $product->recalculateReviewStats();
 
-                // Load relationships for response
                 $review->load([
                     'user:id,name',
                     'product:id,name,price,vendor_id',
@@ -166,10 +156,8 @@ class ReviewService
                     'media'
                 ]);
 
-                // Send notifications
                 $this->notificationService->sendNewReviewToVendor($review);
 
-                // If auto-approved, send approval notification
                 if ($review->is_approved) {
                     $this->notificationService->sendReviewApproved($review);
                 }
@@ -203,7 +191,6 @@ class ReviewService
             $data = $request->validated();
 
             return DB::transaction(function () use ($data, $review, $request) {
-                // Update review fields
                 $updateData = array_intersect_key($data, array_flip([
                     'rating', 'title', 'content'
                 ]));
@@ -212,7 +199,6 @@ class ReviewService
                     $review->update($updateData);
                 }
 
-                // Handle media removal
                 if (!empty($data['remove_media'])) {
                     $mediaToRemove = ReviewMedia::where('review_id', $review->id)
                         ->whereIn('id', $data['remove_media'])
@@ -228,7 +214,6 @@ class ReviewService
                     }
                 }
 
-                // Handle new media uploads
                 if ($request->hasFile('media')) {
                     $currentMediaCount = $review->media()->count();
                     $newMediaCount = count($request->file('media'));
@@ -240,7 +225,6 @@ class ReviewService
                     $this->handleReviewMediaUpload($review, $request);
                 }
 
-                // Update product review statistics if rating changed
                 if (isset($updateData['rating'])) {
                     $review->product->recalculateReviewStats();
                 }
@@ -279,7 +263,6 @@ class ReviewService
             return DB::transaction(function () use ($review, $user) {
                 $productId = $review->product_id;
 
-                // Delete associated media files
                 foreach ($review->media as $media) {
                     Storage::delete($media->media_path);
                     if ($media->thumbnail_url) {
@@ -288,10 +271,8 @@ class ReviewService
                     }
                 }
 
-                // Delete the review (cascade will handle related records)
                 $review->delete();
 
-                // Update product review statistics
                 $product = Product::find($productId);
                 if ($product) {
                     $product->recalculateReviewStats();
@@ -338,10 +319,8 @@ class ReviewService
                 throw new \Exception('You have already voted on this review with the same rating.', 409);
             }
 
-            // Refresh review to get updated vote counts
             $review->refresh();
 
-            // Check for helpful milestone notifications
             if ($review->helpful_votes > $previousHelpfulVotes) {
                 $this->notificationService->sendReviewHelpfulMilestone($review);
             }
@@ -550,7 +529,6 @@ class ReviewService
                 }
             }
         } catch (\Exception $e) {
-            // Silently fail - dimensions are optional
         }
 
         return null;

@@ -32,18 +32,15 @@ class ReviewResponseService
             $user = $request->user();
             $data = $request->validated();
 
-            // Get vendor for the authenticated user
             $vendor = Vendor::where('user_id', $user->id)->first();
             if (!$vendor) {
                 throw new \Exception('Vendor account not found.', 404);
             }
 
-            // Check if review is for vendor's product
             if ($review->product->vendor_id !== $vendor->id) {
                 throw new \Exception('You can only respond to reviews on your products.', 403);
             }
 
-            // Check if vendor has already responded
             $existingResponse = ReviewResponse::where('review_id', $review->id)
                 ->where('vendor_id', $vendor->id)
                 ->first();
@@ -58,11 +55,10 @@ class ReviewResponseService
                     'vendor_id' => $vendor->id,
                     'user_id' => $user->id,
                     'content' => $data['content'],
-                    'is_approved' => true, // Auto-approve vendor responses for now
+                    'is_approved' => true,
                     'approved_at' => now(),
                 ]);
 
-                // Load relationships for response
                 $response->load([
                     'review.user',
                     'review.product',
@@ -70,7 +66,6 @@ class ReviewResponseService
                     'user'
                 ]);
 
-                // Send notification to review author
                 $this->notificationService->sendReviewResponse($response);
 
                 Log::info('Review response created', [
@@ -94,16 +89,12 @@ class ReviewResponseService
         }
     }
 
-    /**
-     * Update an existing vendor response
-     */
     public function updateResponse($request, ReviewResponse $response)
     {
         try {
             $user = $request->user();
             $data = $request->validated();
 
-            // Check if user can edit this response
             if (!$response->canBeEditedBy($user)) {
                 throw new \Exception('You can only edit your responses within 24 hours of creation.', 403);
             }
@@ -134,15 +125,11 @@ class ReviewResponseService
         }
     }
 
-    /**
-     * Delete a vendor response
-     */
     public function deleteResponse(Request $request, ReviewResponse $response)
     {
         try {
             $user = $request->user();
 
-            // Check if user can delete this response
             if (!$response->canBeEditedBy($user)) {
                 throw new \Exception('You can only delete your responses within 24 hours of creation.', 403);
             }
@@ -168,15 +155,11 @@ class ReviewResponseService
         }
     }
 
-    /**
-     * Get vendor's responses for dashboard
-     */
     public function getVendorResponses(Request $request)
     {
         try {
             $user = $request->user();
 
-            // Get vendor for the authenticated user
             $vendor = Vendor::where('user_id', $user->id)->first();
             if (!$vendor) {
                 throw new \Exception('Vendor account not found.', 404);
@@ -195,7 +178,6 @@ class ReviewResponseService
             ])
                 ->where('vendor_id', $vendor->id);
 
-            // Apply filters
             if ($productId) {
                 $query->whereHas('review.product', function($q) use ($productId) {
                     $q->where('id', $productId);
@@ -208,15 +190,13 @@ class ReviewResponseService
                 });
             }
 
-            // Apply sorting
             $query = $this->applySorting($query, $sortBy);
 
             $responses = $query->paginate($perPage);
 
-            // Add edit/delete permissions
             $responses->getCollection()->each(function ($response) use ($user) {
                 $response->can_edit = $response->canBeEditedBy($user);
-                $response->can_delete = $response->canBeEditedBy($user); // Same logic for now
+                $response->can_delete = $response->canBeEditedBy($user);
             });
 
             return $this->ok('Your responses retrieved successfully.', $responses->toArray());
@@ -231,15 +211,11 @@ class ReviewResponseService
         }
     }
 
-    /**
-     * Get individual response details
-     */
     public function getResponse(Request $request, ReviewResponse $response)
     {
         try {
             $user = $request->user();
 
-            // Check if user has permission to view this response
             if ($response->user_id !== $user->id && !$user->hasRole(['super admin', 'admin'])) {
                 throw new \Exception('You can only view your own responses.', 403);
             }
@@ -267,9 +243,6 @@ class ReviewResponseService
         }
     }
 
-    /**
-     * Apply sorting to the query
-     */
     protected function applySorting($query, string $sortBy)
     {
         switch ($sortBy) {
@@ -294,9 +267,6 @@ class ReviewResponseService
         }
     }
 
-    /**
-     * Get unanswered reviews for a vendor
-     */
     public function getUnansweredReviews(Request $request)
     {
         try {

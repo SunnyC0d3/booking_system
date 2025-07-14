@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "E-Commerce API Documentation",
-        "_postman_id": "49b2f2df-7e04-473c-90b1-ea2edb4d31e3",
+        "_postman_id": "f21836a6-8935-49ef-ad82-5ea676de8882",
         "description": "Comprehensive API for managing products, orders, payments, users, vendors, and more in an e-commerce platform.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json",
         "version": "1.0.0"
@@ -416,6 +416,12 @@
                             "name": "Signature verification failed"
                         },
                         {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\User] 123\"\n}",
+                            "name": "User not found"
+                        },
+                        {
                             "header": [
                                 {
                                     "key": "cache-control",
@@ -450,15 +456,9 @@
                                     "value": "camera=(), microphone=(), geolocation=(), payment=()"
                                 }
                             ],
-                            "code": 403,
-                            "body": "{\n    \"message\": \"Invalid signature.\",\n    \"exception\": \"Illuminate\\\\Routing\\\\Exceptions\\\\InvalidSignatureException\",\n    \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Middleware\/ValidateSignature.php\",\n    \"line\": 73,\n    \"trace\": [\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Routing\\\\Middleware\\\\ValidateSignature\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/app\/Http\/Middleware\/V1\/SecurityMonitoring.php\",\n            \"line\": 27,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"App\\\\Http\\\\Middleware\\\\V1\\\\SecurityMonitoring\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/app\/Http\/Middleware\/V1\/SecurityLogger.php\",\n            \"line\": 23,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"App\\\\Http\\\\Middleware\\\\V1\\\\SecurityLogger\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/app\/Http\/Middleware\/V1\/SecurityHeaders.php\",\n            \"line\": 12,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"App\\\\Http\\\\Middleware\\\\V1\\\\SecurityHeaders\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Middleware\/SubstituteBindings.php\",\n            \"line\": 51,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Routing\\\\Middleware\\\\SubstituteBindings\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 127,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 807,\n            \"function\": \"then\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 786,\n            \"function\": \"runRouteWithinStack\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 750,\n            \"function\": \"runRoute\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 739,\n            \"function\": \"dispatchToRoute\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 201,\n            \"function\": \"dispatch\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 170,\n            \"function\": \"Illuminate\\\\Foundation\\\\Http\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TransformsRequest.php\",\n            \"line\": 21,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/ConvertEmptyStringsToNull.php\",\n            \"line\": 31,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TransformsRequest\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\ConvertEmptyStringsToNull\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TransformsRequest.php\",\n            \"line\": 21,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TrimStrings.php\",\n            \"line\": 51,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TransformsRequest\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TrimStrings\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/ValidatePostSize.php\",\n            \"line\": 27,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\ValidatePostSize\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/PreventRequestsDuringMaintenance.php\",\n            \"line\": 110,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\PreventRequestsDuringMaintenance\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/HandleCors.php\",\n            \"line\": 49,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\HandleCors\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/TrustProxies.php\",\n            \"line\": 58,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\TrustProxies\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/InvokeDeferredCallbacks.php\",\n            \"line\": 22,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\InvokeDeferredCallbacks\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 127,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 176,\n            \"function\": \"then\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 145,\n            \"function\": \"sendRequestThroughRouter\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 310,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 298,\n            \"function\": \"callLaravelOrLumenRoute\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 91,\n            \"function\": \"makeApiCall\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 44,\n            \"function\": \"makeResponseCall\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 35,\n            \"function\": \"makeResponseCallIfConditionsPass\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 237,\n            \"function\": \"__invoke\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 163,\n            \"function\": \"iterateThroughStrategies\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 95,\n            \"function\": \"fetchResponses\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 125,\n            \"function\": \"processRoute\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 72,\n            \"function\": \"extractEndpointsInfoFromLaravelApp\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 50,\n            \"function\": \"extractEndpointsInfoAndWriteToDisk\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Commands\/GenerateDocumentation.php\",\n            \"line\": 53,\n            \"function\": \"get\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 36,\n            \"function\": \"handle\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Commands\\\\GenerateDocumentation\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/Util.php\",\n            \"line\": 43,\n            \"function\": \"Illuminate\\\\Container\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 95,\n            \"function\": \"unwrapIfClosure\",\n            \"class\": \"Illuminate\\\\Container\\\\Util\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 35,\n            \"function\": \"callBoundMethod\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/Container.php\",\n            \"line\": 694,\n            \"function\": \"call\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Console\/Command.php\",\n            \"line\": 213,\n            \"function\": \"call\",\n            \"class\": \"Illuminate\\\\Container\\\\Container\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Command\/Command.php\",\n            \"line\": 279,\n            \"function\": \"execute\",\n            \"class\": \"Illuminate\\\\Console\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Console\/Command.php\",\n            \"line\": 182,\n            \"function\": \"run\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Command\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 1094,\n            \"function\": \"run\",\n            \"class\": \"Illuminate\\\\Console\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 342,\n            \"function\": \"doRunCommand\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 193,\n            \"function\": \"doRun\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Console\/Kernel.php\",\n            \"line\": 198,\n            \"function\": \"run\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Application.php\",\n            \"line\": 1208,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Console\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/artisan\",\n            \"line\": 13,\n            \"function\": \"handleCommand\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Application\",\n            \"type\": \"->\"\n        }\n    ]\n}",
+                            "code": 500,
+                            "body": "{\n    \"message\": \"The stream or file \\\"\/var\/www\/ecommerce_api\/api\/storage\/logs\/audit\/audit-2025-07-14.log\\\" could not be opened in append mode: chmod(): No such file or directory\\nThe exception occurred while attempting to log: API Access\\nContext: {\\\"method\\\":\\\"GET\\\",\\\"endpoint\\\":\\\"api\\\\\/email\\\\\/verify\\\\\/architecto\\\\\/abc123def456ghi789\\\",\\\"status_code\\\":403,\\\"ip\\\":\\\"127.0.0.1\\\",\\\"user_agent\\\":\\\"Symfony\\\",\\\"user_id\\\":null,\\\"user_email\\\":null,\\\"user_role\\\":null,\\\"response_time_ms\\\":2.29,\\\"timestamp\\\":\\\"2025-07-14T15:57:29.712465Z\\\"}\",\n    \"exception\": \"UnexpectedValueException\",\n    \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/monolog\/monolog\/src\/Monolog\/Handler\/StreamHandler.php\",\n    \"line\": 156,\n    \"trace\": [\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/monolog\/monolog\/src\/Monolog\/Handler\/RotatingFileHandler.php\",\n            \"line\": 110,\n            \"function\": \"write\",\n            \"class\": \"Monolog\\\\Handler\\\\StreamHandler\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/monolog\/monolog\/src\/Monolog\/Handler\/AbstractProcessingHandler.php\",\n            \"line\": 44,\n            \"function\": \"write\",\n            \"class\": \"Monolog\\\\Handler\\\\RotatingFileHandler\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/monolog\/monolog\/src\/Monolog\/Logger.php\",\n            \"line\": 391,\n            \"function\": \"handle\",\n            \"class\": \"Monolog\\\\Handler\\\\AbstractProcessingHandler\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/monolog\/monolog\/src\/Monolog\/Logger.php\",\n            \"line\": 607,\n            \"function\": \"addRecord\",\n            \"class\": \"Monolog\\\\Logger\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Log\/Logger.php\",\n            \"line\": 184,\n            \"function\": \"info\",\n            \"class\": \"Monolog\\\\Logger\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Log\/Logger.php\",\n            \"line\": 133,\n            \"function\": \"writeLog\",\n            \"class\": \"Illuminate\\\\Log\\\\Logger\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/app\/Services\/V1\/Logger\/SecurityLog.php\",\n            \"line\": 53,\n            \"function\": \"info\",\n            \"class\": \"Illuminate\\\\Log\\\\Logger\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/app\/Http\/Middleware\/V1\/SecurityLogger.php\",\n            \"line\": 27,\n            \"function\": \"logApiAccess\",\n            \"class\": \"App\\\\Services\\\\V1\\\\Logger\\\\SecurityLog\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"App\\\\Http\\\\Middleware\\\\V1\\\\SecurityLogger\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/app\/Http\/Middleware\/V1\/SecurityHeaders.php\",\n            \"line\": 12,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"App\\\\Http\\\\Middleware\\\\V1\\\\SecurityHeaders\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Middleware\/SubstituteBindings.php\",\n            \"line\": 51,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Routing\\\\Middleware\\\\SubstituteBindings\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 127,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 807,\n            \"function\": \"then\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 786,\n            \"function\": \"runRouteWithinStack\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 750,\n            \"function\": \"runRoute\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 739,\n            \"function\": \"dispatchToRoute\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 201,\n            \"function\": \"dispatch\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 170,\n            \"function\": \"Illuminate\\\\Foundation\\\\Http\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TransformsRequest.php\",\n            \"line\": 21,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/ConvertEmptyStringsToNull.php\",\n            \"line\": 31,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TransformsRequest\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\ConvertEmptyStringsToNull\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TransformsRequest.php\",\n            \"line\": 21,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TrimStrings.php\",\n            \"line\": 51,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TransformsRequest\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TrimStrings\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/ValidatePostSize.php\",\n            \"line\": 27,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\ValidatePostSize\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/PreventRequestsDuringMaintenance.php\",\n            \"line\": 110,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\PreventRequestsDuringMaintenance\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/HandleCors.php\",\n            \"line\": 49,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\HandleCors\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/TrustProxies.php\",\n            \"line\": 58,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\TrustProxies\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/InvokeDeferredCallbacks.php\",\n            \"line\": 22,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\InvokeDeferredCallbacks\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 127,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 176,\n            \"function\": \"then\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 145,\n            \"function\": \"sendRequestThroughRouter\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 310,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 298,\n            \"function\": \"callLaravelOrLumenRoute\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 91,\n            \"function\": \"makeApiCall\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 44,\n            \"function\": \"makeResponseCall\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 35,\n            \"function\": \"makeResponseCallIfConditionsPass\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 237,\n            \"function\": \"__invoke\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 163,\n            \"function\": \"iterateThroughStrategies\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 95,\n            \"function\": \"fetchResponses\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 125,\n            \"function\": \"processRoute\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 72,\n            \"function\": \"extractEndpointsInfoFromLaravelApp\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 50,\n            \"function\": \"extractEndpointsInfoAndWriteToDisk\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Commands\/GenerateDocumentation.php\",\n            \"line\": 53,\n            \"function\": \"get\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 36,\n            \"function\": \"handle\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Commands\\\\GenerateDocumentation\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/Util.php\",\n            \"line\": 43,\n            \"function\": \"Illuminate\\\\Container\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 95,\n            \"function\": \"unwrapIfClosure\",\n            \"class\": \"Illuminate\\\\Container\\\\Util\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 35,\n            \"function\": \"callBoundMethod\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/Container.php\",\n            \"line\": 694,\n            \"function\": \"call\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Console\/Command.php\",\n            \"line\": 213,\n            \"function\": \"call\",\n            \"class\": \"Illuminate\\\\Container\\\\Container\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Command\/Command.php\",\n            \"line\": 279,\n            \"function\": \"execute\",\n            \"class\": \"Illuminate\\\\Console\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Console\/Command.php\",\n            \"line\": 182,\n            \"function\": \"run\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Command\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 1094,\n            \"function\": \"run\",\n            \"class\": \"Illuminate\\\\Console\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 342,\n            \"function\": \"doRunCommand\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 193,\n            \"function\": \"doRun\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Console\/Kernel.php\",\n            \"line\": 198,\n            \"function\": \"run\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Application.php\",\n            \"line\": 1208,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Console\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/artisan\",\n            \"line\": 13,\n            \"function\": \"handleCommand\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Application\",\n            \"type\": \"->\"\n        }\n    ]\n}",
                             "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\User] 123\"\n}",
-                            "name": "User not found"
                         }
                     ]
                 },
@@ -1598,7 +1598,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"b\",\"search\":\"n\",\"price\":\"9,3.1)\",\"priceRanges\":\"-1.42)-3268)\",\"category\":\"9,31\",\"categories\":\"9,31\",\"quantity\":\"64\",\"availability\":\"out_of_stock\",\"vendors\":\"9,31\",\"vendor\":\"i\",\"brand\":\"k\",\"brands\":\"9,31\",\"tags\":\"9,31\",\"tag_logic\":\"OR\",\"attributes\":\"_JK:AI\",\"color\":\"k\",\"colors\":\"dLJnIk\",\"size\":\"h\",\"sizes\":\"DDz1Ys\",\"material\":\"h\",\"status\":\"w\",\"created_at\":\"2559-31-42\",\"updated_at\":\"2559-31-42\",\"include\":\"uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv\"},\"page\":4,\"per_page\":9,\"sort\":\"y8p,Bm,-dp,-Zm,-GH\",\"diversify\":true,\"explain\":false,\"facets\":false,\"highlight\":false,\"personalize\":true,\"typo_tolerance\":false,\"exact_match\":true,\"boost_new_products\":true,\"boost_in_stock\":true}"
+                            "raw": "{\"filter\":{\"name\":\"b\",\"search\":\"n\",\"price\":\"9,3.1)\",\"priceRanges\":\"-1.42)-3268)\",\"category\":\"9,31\",\"categories\":\"9,31\",\"quantity\":\"64\",\"availability\":\"low_stock\",\"vendors\":\"9,31\",\"vendor\":\"i\",\"brand\":\"k\",\"brands\":\"9,31\",\"tags\":\"9,31\",\"tag_logic\":\"AND\",\"attributes\":\"_JK:AI\",\"color\":\"k\",\"colors\":\"dLJnIk\",\"size\":\"h\",\"sizes\":\"DDz1Ys\",\"material\":\"h\",\"status\":\"w\",\"created_at\":\"2559-31-42\",\"updated_at\":\"2559-31-42\",\"include\":\"uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv\"},\"page\":4,\"per_page\":9,\"sort\":\"y8p,Bm,-dp,-Zm,-GH\",\"diversify\":true,\"explain\":true,\"facets\":false,\"highlight\":true,\"personalize\":true,\"typo_tolerance\":false,\"exact_match\":false,\"boost_new_products\":true,\"boost_in_stock\":true}"
                         },
                         "description": "Get a comprehensive paginated list of all products in the system with advanced filtering capabilities.\nThis endpoint provides administrators with complete product information including variants, media,\ncategories, tags, vendor details, relevance scoring, and faceted search results."
                     },
@@ -2756,6 +2756,878 @@
                             "code": 422,
                             "body": "{\n    \"errors\": [\n        \"The status field must be one of: Pending, Processing, Refunded, Partially Refunded, Failed, Cancelled, Declined.\",\n        \"The date from field must be a valid date in YYYY-MM-DD format.\",\n        \"The amount min field must be a number greater than 0.\",\n        \"The order id field must be an integer.\"\n    ]\n}",
                             "name": "Invalid filter parameters"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Admin Review Management",
+            "description": "",
+            "item": [
+                {
+                    "name": "Get all reviews with admin filtering capabilities",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/reviews",
+                            "query": [
+                                {
+                                    "key": "product_id",
+                                    "value": "15",
+                                    "description": "optional Filter by specific product ID.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "user_id",
+                                    "value": "45",
+                                    "description": "optional Filter by specific user ID.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "rating[0]",
+                                    "value": "1",
+                                    "description": "optional Filter by specific ratings (1-5).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "rating[1]",
+                                    "value": "2",
+                                    "description": "optional Filter by specific ratings (1-5).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "pending",
+                                    "description": "optional Filter by approval status. Options: approved, pending, rejected.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "is_featured",
+                                    "value": "1",
+                                    "description": "optional Filter by featured status.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "is_verified",
+                                    "value": "1",
+                                    "description": "optional Filter by verified purchase status.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "has_reports",
+                                    "value": "1",
+                                    "description": "optional Filter reviews that have been reported.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort_by",
+                                    "value": "reports_count",
+                                    "description": "optional Sort reviews. Options: newest, oldest, rating_high, rating_low, reports_count.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "50",
+                                    "description": "optional Number of reviews per page (1-100). Default: 20.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "2",
+                                    "description": "optional Page number for pagination. Default: 1.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/admin\/reviews?product_id=15&user_id=45&rating[0]=1&rating[1]=2&status=pending&is_featured=1&is_verified=1&has_reports=1&sort_by=reports_count&per_page=50&page=2"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"product_id\":16,\"rating\":[2],\"verified_only\":false,\"with_media\":true,\"sort_by\":\"helpful\",\"per_page\":1,\"page\":66}"
+                        },
+                        "description": "Retrieve all reviews in the system with advanced admin filtering and sorting.\nProvides comprehensive review management including pending approvals, reported reviews,\nand detailed analytics for administrative oversight."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Reviews retrieved successfully.\",\n  \"data\": {\n    \"data\": [\n      {\n        \"id\": 123,\n        \"user\": {\n          \"id\": 45,\n          \"name\": \"Sarah Johnson\",\n          \"email\": \"sarah.johnson@example.com\"\n        },\n        \"product\": {\n          \"id\": 15,\n          \"name\": \"Premium Wireless Earbuds\"\n        },\n        \"rating\": 5,\n        \"title\": \"Excellent sound quality!\",\n        \"content\": \"These earbuds exceeded my expectations...\",\n        \"is_verified_purchase\": true,\n        \"is_featured\": false,\n        \"is_approved\": true,\n        \"helpful_votes\": 12,\n        \"total_votes\": 15,\n        \"reports_count\": 0,\n        \"created_at\": \"2025-01-10T14:30:00.000000Z\"\n      }\n    ],\n    \"current_page\": 1,\n    \"per_page\": 20,\n    \"total\": 1543,\n    \"last_page\": 78\n  },\n  \"meta\": {\n    \"stats\": {\n      \"total_reviews\": 1543,\n      \"pending_approval\": 23,\n      \"reported_reviews\": 8,\n      \"featured_reviews\": 45,\n      \"average_rating\": 4.2\n    }\n  }\n}",
+                            "name": "Reviews retrieved successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get detailed review information for admin",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/reviews\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/reviews\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "16",
+                                    "description": "The ID of the review."
+                                },
+                                {
+                                    "id": "review",
+                                    "key": "review",
+                                    "value": "123",
+                                    "description": "The ID of the review to retrieve."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieve comprehensive admin view of a specific review including all reports,\nmoderation history, user details, and administrative actions available."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Review details retrieved successfully.\",\n  \"data\": {\n    \"id\": 123,\n    \"user\": {\n      \"id\": 45,\n      \"name\": \"Sarah Johnson\",\n      \"email\": \"sarah.johnson@example.com\",\n      \"total_reviews\": 8,\n      \"average_rating\": 4.3\n    },\n    \"product\": {\n      \"id\": 15,\n      \"name\": \"Premium Wireless Earbuds\",\n      \"average_rating\": 4.5,\n      \"total_reviews\": 127\n    },\n    \"rating\": 5,\n    \"title\": \"Excellent sound quality!\",\n    \"content\": \"These earbuds exceeded my expectations...\",\n    \"is_verified_purchase\": true,\n    \"is_featured\": false,\n    \"is_approved\": true,\n    \"helpful_votes\": 12,\n    \"total_votes\": 15,\n    \"reports\": [\n      {\n        \"id\": 67,\n        \"reason\": \"spam\",\n        \"details\": \"Contains promotional links\",\n        \"status\": \"pending\",\n        \"reported_by\": {\n          \"id\": 89,\n          \"name\": \"John Doe\"\n        },\n        \"created_at\": \"2025-01-12T10:30:00.000000Z\"\n      }\n    ],\n    \"moderation_history\": [\n      {\n        \"action\": \"featured\",\n        \"moderator\": \"Admin User\",\n        \"timestamp\": \"2025-01-11T15:45:00.000000Z\",\n        \"reason\": \"High quality review with helpful details\"\n      }\n    ],\n    \"created_at\": \"2025-01-10T14:30:00.000000Z\"\n  }\n}",
+                            "name": "Review retrieved successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\Review] 999\"\n}",
+                            "name": "Review not found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete a review permanently",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/reviews\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/reviews\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "16",
+                                    "description": "The ID of the review."
+                                },
+                                {
+                                    "id": "review",
+                                    "key": "review",
+                                    "value": "123",
+                                    "description": "The ID of the review to delete permanently."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Permanently delete a review and all associated data including media files,\nhelpfulness votes, and reports. This action is irreversible."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Review deleted permanently.\"\n}",
+                            "name": "Review deleted successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\Review] 999\"\n}",
+                            "name": "Review not found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Moderate a review (approve, reject, feature, unfeature)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/reviews\/:review_id\/moderate",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/reviews\/:review_id\/moderate",
+                            "variable": [
+                                {
+                                    "id": "review_id",
+                                    "key": "review_id",
+                                    "value": "16",
+                                    "description": "The ID of the review."
+                                },
+                                {
+                                    "id": "review",
+                                    "key": "review",
+                                    "value": "123",
+                                    "description": "The ID of the review to moderate."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"action\":\"approve\",\"reason\":\"\\\"Contains inappropriate language\\\"\"}"
+                        },
+                        "description": "Perform moderation actions on reviews including approval, rejection, featuring,\nand unfeaturing. All actions are logged for audit trail and accountability."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Review approved successfully.\",\n  \"data\": {\n    \"id\": 123,\n    \"action\": \"approve\",\n    \"is_approved\": true,\n    \"is_featured\": false,\n    \"moderated_by\": {\n      \"id\": 1,\n      \"name\": \"Admin User\"\n    },\n    \"moderated_at\": \"2025-01-16T14:30:00.000000Z\",\n    \"reason\": null\n  }\n}",
+                            "name": "Review moderated successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"errors\": [\n    \"Reason is required when rejecting a review.\",\n    \"Invalid moderation action.\"\n  ]\n}",
+                            "name": "Validation errors"
+                        }
+                    ]
+                },
+                {
+                    "name": "Bulk moderate multiple reviews",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/reviews\/bulk-moderate",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/reviews\/bulk-moderate"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"review_ids\":[123,124,125],\"action\":\"approve\",\"reason\":\"\\\"Quality assurance batch approval\\\"\"}"
+                        },
+                        "description": "Perform the same moderation action on multiple reviews simultaneously.\nUseful for bulk approval, rejection, or featuring of reviews."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Bulk moderation completed successfully.\",\n  \"data\": {\n    \"action\": \"approve\",\n    \"total_reviews\": 3,\n    \"successful\": 3,\n    \"failed\": 0,\n    \"results\": [\n      {\n        \"review_id\": 123,\n        \"status\": \"success\",\n        \"message\": \"Review approved\"\n      },\n      {\n        \"review_id\": 124,\n        \"status\": \"success\",\n        \"message\": \"Review approved\"\n      },\n      {\n        \"review_id\": 125,\n        \"status\": \"success\",\n        \"message\": \"Review approved\"\n      }\n    ],\n    \"moderated_by\": {\n      \"id\": 1,\n      \"name\": \"Admin User\"\n    },\n    \"moderated_at\": \"2025-01-16T14:30:00.000000Z\"\n  }\n}",
+                            "name": "Bulk moderation completed"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"errors\": [\n    \"The review_ids field is required.\",\n    \"The action field is required.\"\n  ]\n}",
+                            "name": "Validation errors"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get all reported reviews for moderation",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/reviews\/reports",
+                            "query": [
+                                {
+                                    "key": "status",
+                                    "value": "pending",
+                                    "description": "optional Filter by report status. Options: pending, reviewed, resolved, dismissed. Default: pending.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "reason",
+                                    "value": "spam",
+                                    "description": "optional Filter by report reason. Options: spam, inappropriate_language, fake_review, off_topic, personal_information, other.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "priority",
+                                    "value": "high",
+                                    "description": "optional Filter by priority level. Options: high, medium, low.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort_by",
+                                    "value": "reports_count",
+                                    "description": "optional Sort reports. Options: newest, oldest, priority, reports_count. Default: priority.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "50",
+                                    "description": "optional Number of reports per page (1-100). Default: 20.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/admin\/reviews\/reports?status=pending&reason=spam&priority=high&sort_by=reports_count&per_page=50"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieve all reviews that have been reported by users, sorted by priority\nand report severity. Essential for content moderation workflow."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Reported reviews retrieved successfully.\",\n  \"data\": {\n    \"data\": [\n      {\n        \"review\": {\n          \"id\": 123,\n          \"rating\": 1,\n          \"title\": \"Terrible product\",\n          \"content\": \"This is spam content with promotional links...\",\n          \"user\": {\n            \"id\": 45,\n            \"name\": \"Suspicious User\"\n          },\n          \"product\": {\n            \"id\": 15,\n            \"name\": \"Premium Wireless Earbuds\"\n          }\n        },\n        \"reports\": [\n          {\n            \"id\": 67,\n            \"reason\": \"spam\",\n            \"details\": \"Contains promotional links and fake claims\",\n            \"status\": \"pending\",\n            \"priority\": \"high\",\n            \"reported_by\": {\n              \"id\": 89,\n              \"name\": \"John Doe\"\n            },\n            \"created_at\": \"2025-01-12T10:30:00.000000Z\"\n          }\n        ],\n        \"reports_count\": 3,\n        \"last_reported_at\": \"2025-01-13T08:15:00.000000Z\"\n      }\n    ],\n    \"current_page\": 1,\n    \"per_page\": 20,\n    \"total\": 47\n  }\n}",
+                            "name": "Reported reviews retrieved successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        }
+                    ]
+                },
+                {
+                    "name": "Handle a review report (resolve, dismiss)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/reviews\/reports\/:report_id\/handle",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/reviews\/reports\/:report_id\/handle",
+                            "variable": [
+                                {
+                                    "id": "report_id",
+                                    "key": "report_id",
+                                    "value": "16",
+                                    "description": "The ID of the report."
+                                },
+                                {
+                                    "id": "report",
+                                    "key": "report",
+                                    "value": "67",
+                                    "description": "The ID of the review report to handle."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"action\":\"resolve\",\"notes\":\"\\\"Review content violates community guidelines\\\"\"}"
+                        },
+                        "description": "Take action on review reports by resolving or dismissing them.\nResolved reports indicate action was taken, dismissed reports indicate\nthe report was invalid or not actionable."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Review report resolved successfully.\",\n  \"data\": {\n    \"report_id\": 67,\n    \"review_id\": 123,\n    \"action\": \"resolve\",\n    \"status\": \"resolved\",\n    \"admin_notes\": \"Review content violates community guidelines\",\n    \"reviewed_by\": {\n      \"id\": 1,\n      \"name\": \"Admin User\"\n    },\n    \"reviewed_at\": \"2025-01-16T14:30:00.000000Z\"\n  }\n}",
+                            "name": "Report handled successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\ReviewReport] 999\"\n}",
+                            "name": "Report not found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get review analytics and statistics",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/reviews\/analytics",
+                            "query": [
+                                {
+                                    "key": "period",
+                                    "value": "week",
+                                    "description": "optional Time period for analytics. Options: today, week, month, quarter, year. Default: month.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "product_id",
+                                    "value": "15",
+                                    "description": "optional Get analytics for specific product.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "include_trends",
+                                    "value": "1",
+                                    "description": "optional Include trend data and charts. Default: false.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/admin\/reviews\/analytics?period=week&product_id=15&include_trends=1"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieve comprehensive analytics about reviews including trends,\nmoderation statistics, and quality metrics for administrative insights."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Review analytics retrieved successfully.\",\n  \"data\": {\n    \"summary\": {\n      \"total_reviews\": 1543,\n      \"pending_approval\": 23,\n      \"reported_reviews\": 8,\n      \"featured_reviews\": 45,\n      \"average_rating\": 4.2,\n      \"verification_rate\": 67.3\n    },\n    \"period_stats\": {\n      \"new_reviews\": 89,\n      \"approved_reviews\": 76,\n      \"rejected_reviews\": 4,\n      \"reports_received\": 12,\n      \"reports_resolved\": 8\n    },\n    \"rating_distribution\": {\n      \"1\": 45,\n      \"2\": 78,\n      \"3\": 234,\n      \"4\": 567,\n      \"5\": 619\n    },\n    \"top_products\": [\n      {\n        \"product_id\": 15,\n        \"product_name\": \"Premium Wireless Earbuds\",\n        \"review_count\": 127,\n        \"average_rating\": 4.5\n      }\n    ],\n    \"moderation_stats\": {\n      \"approval_rate\": 94.2,\n      \"average_response_time_hours\": 4.7,\n      \"moderator_activity\": [\n        {\n          \"moderator\": \"Admin User\",\n          \"actions\": 45,\n          \"approvals\": 42,\n          \"rejections\": 3\n        }\n      ]\n    }\n  }\n}",
+                            "name": "Analytics retrieved successfully"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Admin Review Response Management",
+            "description": "",
+            "item": [
+                {
+                    "name": "Get all review responses with admin filtering capabilities",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/review-responses",
+                            "query": [
+                                {
+                                    "key": "vendor_id",
+                                    "value": "5",
+                                    "description": "optional Filter by specific vendor ID.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "product_id",
+                                    "value": "15",
+                                    "description": "optional Filter by specific product ID.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "review_rating[0]",
+                                    "value": "4",
+                                    "description": "optional Filter by review ratings (1-5).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "review_rating[1]",
+                                    "value": "5",
+                                    "description": "optional Filter by review ratings (1-5).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "pending",
+                                    "description": "optional Filter by approval status. Options: approved, pending, rejected.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort_by",
+                                    "value": "newest",
+                                    "description": "optional Sort responses. Options: newest, oldest, rating_high, rating_low.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "50",
+                                    "description": "optional Number of responses per page (1-100). Default: 20.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "2",
+                                    "description": "optional Page number for pagination. Default: 1.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/admin\/review-responses?vendor_id=5&product_id=15&review_rating[0]=4&review_rating[1]=5&status=pending&sort_by=newest&per_page=50&page=2"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieve all vendor responses in the system with advanced admin filtering and sorting.\nProvides comprehensive response management including pending approvals, response analytics,\nand detailed oversight for administrative purposes."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Review responses retrieved successfully.\",\n  \"data\": {\n    \"data\": [\n      {\n        \"id\": 45,\n        \"review\": {\n          \"id\": 123,\n          \"rating\": 4,\n          \"title\": \"Good product\",\n          \"user\": {\n            \"id\": 67,\n            \"name\": \"John Doe\",\n            \"email\": \"john@example.com\"\n          },\n          \"product\": {\n            \"id\": 15,\n            \"name\": \"Premium Wireless Earbuds\"\n          }\n        },\n        \"vendor\": {\n          \"id\": 8,\n          \"name\": \"Tech Solutions Inc\",\n          \"description\": \"Leading electronics vendor\"\n        },\n        \"user\": {\n          \"id\": 89,\n          \"name\": \"Vendor Manager\",\n          \"email\": \"manager@techsolutions.com\"\n        },\n        \"content\": \"Thank you for your feedback! We're glad you're satisfied with the product.\",\n        \"is_approved\": true,\n        \"approved_at\": \"2025-01-15T10:30:00.000000Z\",\n        \"created_at\": \"2025-01-14T16:45:00.000000Z\"\n      }\n    ],\n    \"current_page\": 1,\n    \"per_page\": 20,\n    \"total\": 156,\n    \"last_page\": 8\n  }\n}",
+                            "name": "Responses retrieved successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get detailed review response information for admin",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/review-responses\/:response_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/review-responses\/:response_id",
+                            "variable": [
+                                {
+                                    "id": "response_id",
+                                    "key": "response_id",
+                                    "value": "16",
+                                    "description": "The ID of the response."
+                                },
+                                {
+                                    "id": "response",
+                                    "key": "response",
+                                    "value": "45",
+                                    "description": "The ID of the response to retrieve."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieve comprehensive admin view of a specific vendor response including\nreview context, vendor details, approval status, and administrative actions available."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Response details retrieved successfully.\",\n  \"data\": {\n    \"id\": 45,\n    \"review\": {\n      \"id\": 123,\n      \"rating\": 4,\n      \"title\": \"Good product\",\n      \"content\": \"The product works well but could use some improvements in design.\",\n      \"is_verified_purchase\": true,\n      \"user\": {\n        \"id\": 67,\n        \"name\": \"John Doe\",\n        \"email\": \"john@example.com\"\n      },\n      \"product\": {\n        \"id\": 15,\n        \"name\": \"Premium Wireless Earbuds\",\n        \"vendor_id\": 8\n      }\n    },\n    \"vendor\": {\n      \"id\": 8,\n      \"name\": \"Tech Solutions Inc\",\n      \"description\": \"Leading electronics vendor\"\n    },\n    \"user\": {\n      \"id\": 89,\n      \"name\": \"Vendor Manager\",\n      \"email\": \"manager@techsolutions.com\"\n    },\n    \"content\": \"Thank you for your detailed feedback! We appreciate your honest review and will take your design suggestions into consideration for future product iterations. If you have any specific concerns, please don't hesitate to contact our support team.\",\n    \"is_approved\": true,\n    \"approved_at\": \"2025-01-15T10:30:00.000000Z\",\n    \"created_at\": \"2025-01-14T16:45:00.000000Z\",\n    \"updated_at\": \"2025-01-14T17:20:00.000000Z\"\n  }\n}",
+                            "name": "Response retrieved successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\ReviewResponse] 999\"\n}",
+                            "name": "Response not found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Approve a vendor response",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/review-responses\/:response_id\/approve",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/review-responses\/:response_id\/approve",
+                            "variable": [
+                                {
+                                    "id": "response_id",
+                                    "key": "response_id",
+                                    "value": "16",
+                                    "description": "The ID of the response."
+                                },
+                                {
+                                    "id": "response",
+                                    "key": "response",
+                                    "value": "45",
+                                    "description": "The ID of the response to approve."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Approve a pending vendor response, making it visible to customers.\nOnly responses that are currently unapproved can be approved through this endpoint."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Response approved successfully.\",\n  \"data\": {\n    \"id\": 45,\n    \"is_approved\": true,\n    \"approved_at\": \"2025-01-16T14:30:00.000000Z\",\n    \"approved_by\": {\n      \"id\": 1,\n      \"name\": \"Admin User\"\n    }\n  }\n}",
+                            "name": "Response approved successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n  \"message\": \"Response is already approved.\"\n}",
+                            "name": "Already approved"
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete a vendor response permanently",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/review-responses\/:response_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/review-responses\/:response_id",
+                            "variable": [
+                                {
+                                    "id": "response_id",
+                                    "key": "response_id",
+                                    "value": "16",
+                                    "description": "The ID of the response."
+                                },
+                                {
+                                    "id": "response",
+                                    "key": "response",
+                                    "value": "45",
+                                    "description": "The ID of the response to delete permanently."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Permanently delete a vendor response. This action is irreversible and will\nremove the response from the review thread completely."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Response deleted permanently.\"\n}",
+                            "name": "Response deleted successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You do not have the required permissions.\"\n}",
+                            "name": "Insufficient permissions"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\ReviewResponse] 999\"\n}",
+                            "name": "Response not found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Bulk moderate multiple vendor responses",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/review-responses\/bulk-moderate",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/admin\/review-responses\/bulk-moderate"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"response_ids\":[45,46,47],\"action\":\"approve\",\"reason\":\"\\\"Quality assurance batch approval\\\"\"}"
+                        },
+                        "description": "Perform the same moderation action on multiple vendor responses simultaneously.\nUseful for bulk approval, rejection, or deletion of responses."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Bulk moderation completed successfully.\",\n  \"data\": {\n    \"action\": \"approve\",\n    \"total_responses\": 3,\n    \"successful\": 3,\n    \"failed\": 0,\n    \"results\": [\n      {\n        \"response_id\": 45,\n        \"status\": \"success\",\n        \"message\": \"Approved successfully\"\n      },\n      {\n        \"response_id\": 46,\n        \"status\": \"success\",\n        \"message\": \"Approved successfully\"\n      },\n      {\n        \"response_id\": 47,\n        \"status\": \"success\",\n        \"message\": \"Approved successfully\"\n      }\n    ],\n    \"moderated_by\": {\n      \"id\": 1,\n      \"name\": \"Admin User\"\n    },\n    \"moderated_at\": \"2025-01-16T14:30:00.000000Z\"\n  }\n}",
+                            "name": "Bulk moderation completed"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"errors\": [\n    \"The response_ids field is required.\",\n    \"The action field is required.\"\n  ]\n}",
+                            "name": "Validation errors"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get review response analytics and statistics",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/admin\/review-responses\/analytics",
+                            "query": [
+                                {
+                                    "key": "period",
+                                    "value": "week",
+                                    "description": "optional Time period for analytics. Options: today, week, month, quarter, year. Default: month.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "vendor_id",
+                                    "value": "8",
+                                    "description": "optional Get analytics for specific vendor.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "include_trends",
+                                    "value": "1",
+                                    "description": "optional Include trend data and charts. Default: false.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/admin\/review-responses\/analytics?period=week&vendor_id=8&include_trends=1"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieve comprehensive analytics about vendor responses including response rates,\napproval statistics, vendor performance metrics, and trends for administrative insights."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Response analytics retrieved successfully.\",\n  \"data\": {\n    \"summary\": {\n      \"total_responses\": 156,\n      \"pending_approval\": 12,\n      \"approved_responses\": 144,\n      \"response_rate\": 73.2,\n      \"average_response_time_hours\": 6.4\n    },\n    \"period_stats\": {\n      \"new_responses\": 23,\n      \"approved_responses\": 21,\n      \"rejected_responses\": 1\n    },\n    \"top_vendors\": [\n      {\n        \"vendor_id\": 8,\n        \"vendor_name\": \"Tech Solutions Inc\",\n        \"response_count\": 45,\n        \"response_rate\": 89.5,\n        \"average_response_time\": 4.2\n      },\n      {\n        \"vendor_id\": 12,\n        \"vendor_name\": \"Premium Electronics\",\n        \"response_count\": 32,\n        \"response_rate\": 78.3,\n        \"average_response_time\": 8.1\n      }\n    ],\n    \"response_trends\": {\n      \"daily_responses\": [\n        {\"date\": \"2025-01-10\", \"responses\": 8},\n        {\"date\": \"2025-01-11\", \"responses\": 12},\n        {\"date\": \"2025-01-12\", \"responses\": 6}\n      ]\n    }\n  }\n}",
+                            "name": "Analytics retrieved successfully"
                         }
                     ]
                 }
@@ -4253,7 +5125,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"b\",\"search\":\"n\",\"price\":\"9,3.1)\",\"priceRanges\":\"-1.42)-3268)\",\"category\":\"9,31\",\"categories\":\"9,31\",\"quantity\":\"64\",\"availability\":\"out_of_stock\",\"vendors\":\"9,31\",\"vendor\":\"i\",\"brand\":\"k\",\"brands\":\"9,31\",\"tags\":\"9,31\",\"tag_logic\":\"AND\",\"attributes\":\"_JK:AI\",\"color\":\"k\",\"colors\":\"dLJnIk\",\"size\":\"h\",\"sizes\":\"DDz1Ys\",\"material\":\"h\",\"status\":\"w\",\"created_at\":\"2559-31-42\",\"updated_at\":\"2559-31-42\",\"include\":\"uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv\"},\"page\":4,\"per_page\":9,\"sort\":\"y8p,Bm,-dp,-Zm,-GH\",\"diversify\":true,\"explain\":false,\"facets\":false,\"highlight\":true,\"personalize\":false,\"typo_tolerance\":false,\"exact_match\":true,\"boost_new_products\":false,\"boost_in_stock\":false}"
+                            "raw": "{\"filter\":{\"name\":\"b\",\"search\":\"n\",\"price\":\"9,3.1)\",\"priceRanges\":\"-1.42)-3268)\",\"category\":\"9,31\",\"categories\":\"9,31\",\"quantity\":\"64\",\"availability\":\"available\",\"vendors\":\"9,31\",\"vendor\":\"i\",\"brand\":\"k\",\"brands\":\"9,31\",\"tags\":\"9,31\",\"tag_logic\":\"AND\",\"attributes\":\"_JK:AI\",\"color\":\"k\",\"colors\":\"dLJnIk\",\"size\":\"h\",\"sizes\":\"DDz1Ys\",\"material\":\"h\",\"status\":\"w\",\"created_at\":\"2559-31-42\",\"updated_at\":\"2559-31-42\",\"include\":\"uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv\"},\"page\":4,\"per_page\":9,\"sort\":\"y8p,Bm,-dp,-Zm,-GH\",\"diversify\":true,\"explain\":true,\"facets\":false,\"highlight\":false,\"personalize\":false,\"typo_tolerance\":false,\"exact_match\":true,\"boost_new_products\":true,\"boost_in_stock\":true}"
                         },
                         "description": "Get a paginated and filtered list of active products with advanced search capabilities.\nThis endpoint supports intelligent search with relevance scoring, faceted filtering,\nresult diversification, and personalized recommendations. Includes comprehensive\nproduct information optimized for customer browsing and purchasing decisions.",
                         "auth": {
@@ -4296,8 +5168,8 @@
                                     "value": "camera=(), microphone=(), geolocation=(), payment=()"
                                 }
                             ],
-                            "code": 401,
-                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "code": 500,
+                            "body": "{\n    \"message\": \"The stream or file \\\"\/var\/www\/ecommerce_api\/api\/storage\/logs\/audit\/audit-2025-07-14.log\\\" could not be opened in append mode: chmod(): No such file or directory\\nThe exception occurred while attempting to log: API Access\\nContext: {\\\"method\\\":\\\"GET\\\",\\\"endpoint\\\":\\\"api\\\\\/products\\\",\\\"status_code\\\":401,\\\"ip\\\":\\\"127.0.0.1\\\",\\\"user_agent\\\":\\\"Symfony\\\",\\\"user_id\\\":null,\\\"user_email\\\":null,\\\"user_role\\\":null,\\\"response_time_ms\\\":0.85,\\\"timestamp\\\":\\\"2025-07-14T15:57:29.798562Z\\\"}\",\n    \"exception\": \"UnexpectedValueException\",\n    \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/monolog\/monolog\/src\/Monolog\/Handler\/StreamHandler.php\",\n    \"line\": 156,\n    \"trace\": [\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/monolog\/monolog\/src\/Monolog\/Handler\/RotatingFileHandler.php\",\n            \"line\": 110,\n            \"function\": \"write\",\n            \"class\": \"Monolog\\\\Handler\\\\StreamHandler\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/monolog\/monolog\/src\/Monolog\/Handler\/AbstractProcessingHandler.php\",\n            \"line\": 44,\n            \"function\": \"write\",\n            \"class\": \"Monolog\\\\Handler\\\\RotatingFileHandler\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/monolog\/monolog\/src\/Monolog\/Logger.php\",\n            \"line\": 391,\n            \"function\": \"handle\",\n            \"class\": \"Monolog\\\\Handler\\\\AbstractProcessingHandler\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/monolog\/monolog\/src\/Monolog\/Logger.php\",\n            \"line\": 607,\n            \"function\": \"addRecord\",\n            \"class\": \"Monolog\\\\Logger\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Log\/Logger.php\",\n            \"line\": 184,\n            \"function\": \"info\",\n            \"class\": \"Monolog\\\\Logger\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Log\/Logger.php\",\n            \"line\": 133,\n            \"function\": \"writeLog\",\n            \"class\": \"Illuminate\\\\Log\\\\Logger\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/app\/Services\/V1\/Logger\/SecurityLog.php\",\n            \"line\": 53,\n            \"function\": \"info\",\n            \"class\": \"Illuminate\\\\Log\\\\Logger\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/app\/Http\/Middleware\/V1\/SecurityLogger.php\",\n            \"line\": 27,\n            \"function\": \"logApiAccess\",\n            \"class\": \"App\\\\Services\\\\V1\\\\Logger\\\\SecurityLog\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"App\\\\Http\\\\Middleware\\\\V1\\\\SecurityLogger\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/app\/Http\/Middleware\/V1\/SecurityHeaders.php\",\n            \"line\": 12,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"App\\\\Http\\\\Middleware\\\\V1\\\\SecurityHeaders\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Middleware\/SubstituteBindings.php\",\n            \"line\": 51,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Routing\\\\Middleware\\\\SubstituteBindings\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 127,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 807,\n            \"function\": \"then\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 786,\n            \"function\": \"runRouteWithinStack\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 750,\n            \"function\": \"runRoute\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 739,\n            \"function\": \"dispatchToRoute\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 201,\n            \"function\": \"dispatch\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 170,\n            \"function\": \"Illuminate\\\\Foundation\\\\Http\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TransformsRequest.php\",\n            \"line\": 21,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/ConvertEmptyStringsToNull.php\",\n            \"line\": 31,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TransformsRequest\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\ConvertEmptyStringsToNull\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TransformsRequest.php\",\n            \"line\": 21,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TrimStrings.php\",\n            \"line\": 51,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TransformsRequest\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TrimStrings\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/ValidatePostSize.php\",\n            \"line\": 27,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\ValidatePostSize\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/PreventRequestsDuringMaintenance.php\",\n            \"line\": 110,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\PreventRequestsDuringMaintenance\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/HandleCors.php\",\n            \"line\": 49,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\HandleCors\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/TrustProxies.php\",\n            \"line\": 58,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\TrustProxies\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/InvokeDeferredCallbacks.php\",\n            \"line\": 22,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\InvokeDeferredCallbacks\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 127,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 176,\n            \"function\": \"then\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 145,\n            \"function\": \"sendRequestThroughRouter\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 310,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 298,\n            \"function\": \"callLaravelOrLumenRoute\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 91,\n            \"function\": \"makeApiCall\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 44,\n            \"function\": \"makeResponseCall\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 35,\n            \"function\": \"makeResponseCallIfConditionsPass\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 237,\n            \"function\": \"__invoke\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 163,\n            \"function\": \"iterateThroughStrategies\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 95,\n            \"function\": \"fetchResponses\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 125,\n            \"function\": \"processRoute\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 72,\n            \"function\": \"extractEndpointsInfoFromLaravelApp\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 50,\n            \"function\": \"extractEndpointsInfoAndWriteToDisk\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Commands\/GenerateDocumentation.php\",\n            \"line\": 53,\n            \"function\": \"get\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 36,\n            \"function\": \"handle\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Commands\\\\GenerateDocumentation\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/Util.php\",\n            \"line\": 43,\n            \"function\": \"Illuminate\\\\Container\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 95,\n            \"function\": \"unwrapIfClosure\",\n            \"class\": \"Illuminate\\\\Container\\\\Util\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 35,\n            \"function\": \"callBoundMethod\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/Container.php\",\n            \"line\": 694,\n            \"function\": \"call\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Console\/Command.php\",\n            \"line\": 213,\n            \"function\": \"call\",\n            \"class\": \"Illuminate\\\\Container\\\\Container\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Command\/Command.php\",\n            \"line\": 279,\n            \"function\": \"execute\",\n            \"class\": \"Illuminate\\\\Console\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Console\/Command.php\",\n            \"line\": 182,\n            \"function\": \"run\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Command\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 1094,\n            \"function\": \"run\",\n            \"class\": \"Illuminate\\\\Console\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 342,\n            \"function\": \"doRunCommand\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 193,\n            \"function\": \"doRun\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Console\/Kernel.php\",\n            \"line\": 198,\n            \"function\": \"run\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Application.php\",\n            \"line\": 1208,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Console\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/artisan\",\n            \"line\": 13,\n            \"function\": \"handleCommand\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Application\",\n            \"type\": \"->\"\n        }\n    ]\n}",
                             "name": ""
                         }
                     ]
@@ -4378,8 +5250,8 @@
                                     "value": "camera=(), microphone=(), geolocation=(), payment=()"
                                 }
                             ],
-                            "code": 401,
-                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "code": 500,
+                            "body": "{\n    \"message\": \"The stream or file \\\"\/var\/www\/ecommerce_api\/api\/storage\/logs\/audit\/audit-2025-07-14.log\\\" could not be opened in append mode: chmod(): No such file or directory\\nThe exception occurred while attempting to log: API Access\\nContext: {\\\"method\\\":\\\"GET\\\",\\\"endpoint\\\":\\\"api\\\\\/products\\\\\/1\\\",\\\"status_code\\\":401,\\\"ip\\\":\\\"127.0.0.1\\\",\\\"user_agent\\\":\\\"Symfony\\\",\\\"user_id\\\":null,\\\"user_email\\\":null,\\\"user_role\\\":null,\\\"response_time_ms\\\":0.38,\\\"timestamp\\\":\\\"2025-07-14T15:57:29.814543Z\\\"}\",\n    \"exception\": \"UnexpectedValueException\",\n    \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/monolog\/monolog\/src\/Monolog\/Handler\/StreamHandler.php\",\n    \"line\": 156,\n    \"trace\": [\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/monolog\/monolog\/src\/Monolog\/Handler\/RotatingFileHandler.php\",\n            \"line\": 110,\n            \"function\": \"write\",\n            \"class\": \"Monolog\\\\Handler\\\\StreamHandler\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/monolog\/monolog\/src\/Monolog\/Handler\/AbstractProcessingHandler.php\",\n            \"line\": 44,\n            \"function\": \"write\",\n            \"class\": \"Monolog\\\\Handler\\\\RotatingFileHandler\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/monolog\/monolog\/src\/Monolog\/Logger.php\",\n            \"line\": 391,\n            \"function\": \"handle\",\n            \"class\": \"Monolog\\\\Handler\\\\AbstractProcessingHandler\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/monolog\/monolog\/src\/Monolog\/Logger.php\",\n            \"line\": 607,\n            \"function\": \"addRecord\",\n            \"class\": \"Monolog\\\\Logger\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Log\/Logger.php\",\n            \"line\": 184,\n            \"function\": \"info\",\n            \"class\": \"Monolog\\\\Logger\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Log\/Logger.php\",\n            \"line\": 133,\n            \"function\": \"writeLog\",\n            \"class\": \"Illuminate\\\\Log\\\\Logger\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/app\/Services\/V1\/Logger\/SecurityLog.php\",\n            \"line\": 53,\n            \"function\": \"info\",\n            \"class\": \"Illuminate\\\\Log\\\\Logger\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/app\/Http\/Middleware\/V1\/SecurityLogger.php\",\n            \"line\": 27,\n            \"function\": \"logApiAccess\",\n            \"class\": \"App\\\\Services\\\\V1\\\\Logger\\\\SecurityLog\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"App\\\\Http\\\\Middleware\\\\V1\\\\SecurityLogger\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/app\/Http\/Middleware\/V1\/SecurityHeaders.php\",\n            \"line\": 12,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"App\\\\Http\\\\Middleware\\\\V1\\\\SecurityHeaders\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Middleware\/SubstituteBindings.php\",\n            \"line\": 51,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Routing\\\\Middleware\\\\SubstituteBindings\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 127,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 807,\n            \"function\": \"then\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 786,\n            \"function\": \"runRouteWithinStack\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 750,\n            \"function\": \"runRoute\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 739,\n            \"function\": \"dispatchToRoute\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 201,\n            \"function\": \"dispatch\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 170,\n            \"function\": \"Illuminate\\\\Foundation\\\\Http\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TransformsRequest.php\",\n            \"line\": 21,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/ConvertEmptyStringsToNull.php\",\n            \"line\": 31,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TransformsRequest\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\ConvertEmptyStringsToNull\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TransformsRequest.php\",\n            \"line\": 21,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TrimStrings.php\",\n            \"line\": 51,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TransformsRequest\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TrimStrings\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/ValidatePostSize.php\",\n            \"line\": 27,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\ValidatePostSize\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/PreventRequestsDuringMaintenance.php\",\n            \"line\": 110,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\PreventRequestsDuringMaintenance\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/HandleCors.php\",\n            \"line\": 49,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\HandleCors\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/TrustProxies.php\",\n            \"line\": 58,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\TrustProxies\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/InvokeDeferredCallbacks.php\",\n            \"line\": 22,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\InvokeDeferredCallbacks\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 127,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 176,\n            \"function\": \"then\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 145,\n            \"function\": \"sendRequestThroughRouter\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 310,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 298,\n            \"function\": \"callLaravelOrLumenRoute\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 91,\n            \"function\": \"makeApiCall\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 44,\n            \"function\": \"makeResponseCall\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 35,\n            \"function\": \"makeResponseCallIfConditionsPass\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 237,\n            \"function\": \"__invoke\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 163,\n            \"function\": \"iterateThroughStrategies\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 95,\n            \"function\": \"fetchResponses\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 125,\n            \"function\": \"processRoute\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 72,\n            \"function\": \"extractEndpointsInfoFromLaravelApp\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 50,\n            \"function\": \"extractEndpointsInfoAndWriteToDisk\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Commands\/GenerateDocumentation.php\",\n            \"line\": 53,\n            \"function\": \"get\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 36,\n            \"function\": \"handle\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Commands\\\\GenerateDocumentation\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/Util.php\",\n            \"line\": 43,\n            \"function\": \"Illuminate\\\\Container\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 95,\n            \"function\": \"unwrapIfClosure\",\n            \"class\": \"Illuminate\\\\Container\\\\Util\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 35,\n            \"function\": \"callBoundMethod\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/Container.php\",\n            \"line\": 694,\n            \"function\": \"call\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Console\/Command.php\",\n            \"line\": 213,\n            \"function\": \"call\",\n            \"class\": \"Illuminate\\\\Container\\\\Container\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Command\/Command.php\",\n            \"line\": 279,\n            \"function\": \"execute\",\n            \"class\": \"Illuminate\\\\Console\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Console\/Command.php\",\n            \"line\": 182,\n            \"function\": \"run\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Command\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 1094,\n            \"function\": \"run\",\n            \"class\": \"Illuminate\\\\Console\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 342,\n            \"function\": \"doRunCommand\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 193,\n            \"function\": \"doRun\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Console\/Kernel.php\",\n            \"line\": 198,\n            \"function\": \"run\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Application.php\",\n            \"line\": 1208,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Console\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/artisan\",\n            \"line\": 13,\n            \"function\": \"handleCommand\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Application\",\n            \"type\": \"->\"\n        }\n    ]\n}",
                             "name": ""
                         }
                     ]
@@ -4727,6 +5599,528 @@
                             "code": 500,
                             "body": "{\n    \"message\": \"An error occurred while deleting the category.\"\n}",
                             "name": "Deletion failed"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Product Reviews",
+            "description": "",
+            "item": [
+                {
+                    "name": "Get reviews for a specific product with filtering and sorting",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/products\/:product_id\/reviews",
+                            "query": [
+                                {
+                                    "key": "rating[0]",
+                                    "value": "4",
+                                    "description": "optional Filter by specific ratings (1-5). Can be multiple values.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "rating[1]",
+                                    "value": "5",
+                                    "description": "optional Filter by specific ratings (1-5). Can be multiple values.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "verified_only",
+                                    "value": "1",
+                                    "description": "optional Show only verified purchase reviews. Default: false.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "with_media",
+                                    "value": "1",
+                                    "description": "optional Show only reviews with photos\/videos. Default: false.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort_by",
+                                    "value": "helpful",
+                                    "description": "optional Sort reviews. Options: newest, oldest, rating_high, rating_low, helpful. Default: newest.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "20",
+                                    "description": "optional Number of reviews per page (1-50). Default: 15.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "2",
+                                    "description": "optional Page number for pagination. Default: 1.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/products\/:product_id\/reviews?rating[0]=4&rating[1]=5&verified_only=1&with_media=1&sort_by=helpful&per_page=20&page=2",
+                            "variable": [
+                                {
+                                    "id": "product_id",
+                                    "key": "product_id",
+                                    "value": "1",
+                                    "description": "The ID of the product."
+                                },
+                                {
+                                    "id": "product",
+                                    "key": "product",
+                                    "value": "15",
+                                    "description": "The ID of the product to get reviews for."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"product_id\":16,\"rating\":[2],\"verified_only\":true,\"with_media\":true,\"sort_by\":\"oldest\",\"per_page\":1,\"page\":66}"
+                        },
+                        "description": "Retrieve all approved reviews for a product with advanced filtering capabilities.\nSupports filtering by rating, verified purchases, media presence, and various sorting options.\nEssential for product detail pages and review browsing functionality.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Product reviews retrieved successfully.\",\n  \"data\": {\n    \"data\": [\n      {\n        \"id\": 123,\n        \"user\": {\n          \"id\": 45,\n          \"name\": \"Sarah Johnson\",\n          \"email\": \"s***@example.com\"\n        },\n        \"product\": {\n          \"id\": 15,\n          \"name\": \"Premium Wireless Earbuds\",\n          \"price_formatted\": \"\u00a389.99\"\n        },\n        \"rating\": 5,\n        \"title\": \"Excellent sound quality!\",\n        \"content\": \"These earbuds exceeded my expectations. The noise cancellation is fantastic and battery life is exactly as advertised.\",\n        \"is_verified_purchase\": true,\n        \"is_featured\": false,\n        \"helpful_votes\": 12,\n        \"total_votes\": 15,\n        \"helpfulness_ratio\": 80.0,\n        \"user_voted\": null,\n        \"media\": [\n          {\n            \"id\": 67,\n            \"media_type\": \"image\",\n            \"url\": \"https:\/\/yourapi.com\/storage\/reviews\/review-image-1.jpg\",\n            \"thumbnail_url\": \"https:\/\/yourapi.com\/storage\/reviews\/thumb_review-image-1.jpg\"\n          }\n        ],\n        \"response\": null,\n        \"created_at\": \"2025-01-10T14:30:00.000000Z\",\n        \"can_edit\": false,\n        \"can_delete\": false\n      }\n    ],\n    \"current_page\": 1,\n    \"per_page\": 15,\n    \"total\": 127,\n    \"last_page\": 9\n  },\n  \"meta\": {\n    \"product_id\": 15,\n    \"total_reviews\": 127,\n    \"average_rating\": 4.3,\n    \"rating_breakdown\": {\n      \"1\": 2,\n      \"2\": 8,\n      \"3\": 15,\n      \"4\": 45,\n      \"5\": 57\n    },\n    \"verified_purchase_count\": 89,\n    \"with_media_count\": 34\n  }\n}",
+                            "name": "Reviews retrieved successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\Product] 999\"\n}",
+                            "name": "Product not found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get detailed information about a specific review",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/reviews\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/reviews\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "16",
+                                    "description": "The ID of the review."
+                                },
+                                {
+                                    "id": "review",
+                                    "key": "review",
+                                    "value": "123",
+                                    "description": "The ID of the review to retrieve."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieve comprehensive details about a single review including user information,\nmedia attachments, helpfulness votes, and vendor responses if available.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Review retrieved successfully.\",\n  \"data\": {\n    \"id\": 123,\n    \"user\": {\n      \"id\": 45,\n      \"name\": \"Sarah Johnson\",\n      \"email\": \"s***@example.com\"\n    },\n    \"product\": {\n      \"id\": 15,\n      \"name\": \"Premium Wireless Earbuds\",\n      \"price_formatted\": \"\u00a389.99\",\n      \"featured_image\": \"https:\/\/yourapi.com\/storage\/products\/featured-image.jpg\"\n    },\n    \"rating\": 5,\n    \"title\": \"Excellent sound quality!\",\n    \"content\": \"These earbuds exceeded my expectations...\",\n    \"is_verified_purchase\": true,\n    \"is_featured\": false,\n    \"helpful_votes\": 12,\n    \"total_votes\": 15,\n    \"helpfulness_ratio\": 80.0,\n    \"user_voted\": null,\n    \"media\": [],\n    \"response\": null,\n    \"created_at\": \"2025-01-10T14:30:00.000000Z\",\n    \"can_edit\": false,\n    \"can_delete\": false\n  }\n}",
+                            "name": "Review retrieved successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\Review] 999\"\n}",
+                            "name": "Review not found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a new product review",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/reviews",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/reviews"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "product_id",
+                                    "value": "15",
+                                    "type": "text",
+                                    "description": "The ID of the product being reviewed."
+                                },
+                                {
+                                    "key": "order_item_id",
+                                    "value": "234",
+                                    "type": "text",
+                                    "description": "optional The order item ID for verified purchase reviews."
+                                },
+                                {
+                                    "key": "rating",
+                                    "value": "5",
+                                    "type": "text",
+                                    "description": "Rating from 1-5 stars."
+                                },
+                                {
+                                    "key": "title",
+                                    "value": "\"Excellent sound quality!\"",
+                                    "type": "text",
+                                    "description": "optional Short review title (3-255 characters)."
+                                },
+                                {
+                                    "key": "content",
+                                    "value": "\"These earbuds exceeded my expectations...\"",
+                                    "type": "text",
+                                    "description": "Detailed review content (10-2000 characters)."
+                                },
+                                {
+                                    "key": "media[]",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": "Submit a new review for a product. Users can only review products they have purchased\nand can only submit one review per product. Supports uploading media files (images\/videos)\nwith the review for enhanced credibility."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"message\": \"Review submitted successfully.\",\n  \"data\": {\n    \"id\": 123,\n    \"user\": {\n      \"id\": 45,\n      \"name\": \"Sarah Johnson\"\n    },\n    \"product\": {\n      \"id\": 15,\n      \"name\": \"Premium Wireless Earbuds\"\n    },\n    \"rating\": 5,\n    \"title\": \"Excellent sound quality!\",\n    \"content\": \"These earbuds exceeded my expectations...\",\n    \"is_verified_purchase\": true,\n    \"is_featured\": false,\n    \"helpful_votes\": 0,\n    \"total_votes\": 0,\n    \"media\": [],\n    \"created_at\": \"2025-01-10T14:30:00.000000Z\"\n  }\n}",
+                            "name": "Review created successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You can only review products you have purchased.\"\n}",
+                            "name": "Cannot review product"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"errors\": [\n    \"You have already reviewed this product.\",\n    \"Rating must be between 1 and 5 stars.\",\n    \"Review content must be at least 10 characters long.\"\n  ]\n}",
+                            "name": "Validation errors"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update an existing review",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/reviews\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/reviews\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "16",
+                                    "description": "The ID of the review."
+                                },
+                                {
+                                    "id": "review",
+                                    "key": "review",
+                                    "value": "123",
+                                    "description": "The ID of the review to update."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "rating",
+                                    "value": "4",
+                                    "type": "text",
+                                    "description": "optional Updated rating from 1-5 stars."
+                                },
+                                {
+                                    "key": "title",
+                                    "value": "\"Good sound quality\"",
+                                    "type": "text",
+                                    "description": "optional Updated review title (3-255 characters)."
+                                },
+                                {
+                                    "key": "content",
+                                    "value": "\"Updated thoughts on these earbuds...\"",
+                                    "type": "text",
+                                    "description": "optional Updated review content (10-2000 characters)."
+                                },
+                                {
+                                    "key": "remove_media[0]",
+                                    "value": "67",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "remove_media[1]",
+                                    "value": "68",
+                                    "type": "text",
+                                    "description": ""
+                                },
+                                {
+                                    "key": "media[]",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": "Update your own review within the allowed time window (30 days after creation).\nYou can modify the rating, title, content, and add\/remove media attachments."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Review updated successfully.\",\n  \"data\": {\n    \"id\": 123,\n    \"rating\": 4,\n    \"title\": \"Good sound quality\",\n    \"content\": \"Updated thoughts on these earbuds...\",\n    \"updated_at\": \"2025-01-15T10:20:00.000000Z\"\n  }\n}",
+                            "name": "Review updated successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You can only edit your own reviews within 30 days of creation.\"\n}",
+                            "name": "Cannot edit review"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\Review] 999\"\n}",
+                            "name": "Review not found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete a review",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/reviews\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/reviews\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "16",
+                                    "description": "The ID of the review."
+                                },
+                                {
+                                    "id": "review",
+                                    "key": "review",
+                                    "value": "123",
+                                    "description": "The ID of the review to delete."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Delete your own review. This action is irreversible and will also remove\nall associated media files and helpfulness votes."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Review deleted successfully.\"\n}",
+                            "name": "Review deleted successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You can only delete your own reviews.\"\n}",
+                            "name": "Cannot delete review"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\Review] 999\"\n}",
+                            "name": "Review not found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Vote on review helpfulness",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/reviews\/:review_id\/helpfulness",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/reviews\/:review_id\/helpfulness",
+                            "variable": [
+                                {
+                                    "id": "review_id",
+                                    "key": "review_id",
+                                    "value": "16",
+                                    "description": "The ID of the review."
+                                },
+                                {
+                                    "id": "review",
+                                    "key": "review",
+                                    "value": "123",
+                                    "description": "The ID of the review to vote on."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"is_helpful\":true}"
+                        },
+                        "description": "Mark a review as helpful or not helpful. Users cannot vote on their own reviews\nand can only vote once per review (but can change their vote)."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Thank you for your feedback!\",\n  \"data\": {\n    \"review_id\": 123,\n    \"helpful_votes\": 13,\n    \"total_votes\": 16,\n    \"helpfulness_ratio\": 81.3,\n    \"user_vote\": true\n  }\n}",
+                            "name": "Vote recorded successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You cannot vote on your own review.\"\n}",
+                            "name": "Cannot vote on own review"
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n  \"message\": \"You have already voted on this review with the same rating.\"\n}",
+                            "name": "Already voted"
+                        }
+                    ]
+                },
+                {
+                    "name": "Report an inappropriate review",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/reviews\/:review_id\/report",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/reviews\/:review_id\/report",
+                            "variable": [
+                                {
+                                    "id": "review_id",
+                                    "key": "review_id",
+                                    "value": "16",
+                                    "description": "The ID of the review."
+                                },
+                                {
+                                    "id": "review",
+                                    "key": "review",
+                                    "value": "123",
+                                    "description": "The ID of the review to report."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"reason\":\"spam\",\"details\":\"\\\"This review contains promotional links\\\"\"}"
+                        },
+                        "description": "Report a review for inappropriate content, spam, or other violations.\nReported reviews are flagged for admin moderation review."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Review reported successfully. Our moderation team will review it shortly.\",\n  \"data\": {\n    \"report_id\": 45,\n    \"review_id\": 123,\n    \"reason\": \"spam\",\n    \"status\": \"pending\"\n  }\n}",
+                            "name": "Review reported successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You cannot report your own review.\"\n}",
+                            "name": "Cannot report own review"
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n  \"message\": \"You have already reported this review.\"\n}",
+                            "name": "Already reported"
                         }
                     ]
                 }
@@ -6807,6 +8201,322 @@
                             "code": 500,
                             "body": "{\n  \"message\": \"Failed to process logo file: Unable to write file to disk.\"\n}",
                             "name": "Logo upload failed"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Vendor Review Responses",
+            "description": "",
+            "item": [
+                {
+                    "name": "Store a new vendor response to a review",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/reviews\/:review_id\/responses",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/reviews\/:review_id\/responses",
+                            "variable": [
+                                {
+                                    "id": "review_id",
+                                    "key": "review_id",
+                                    "value": "16",
+                                    "description": "The ID of the review."
+                                },
+                                {
+                                    "id": "review",
+                                    "key": "review",
+                                    "value": "123",
+                                    "description": "The ID of the review to respond to."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"content\":\"\\\"Thank you for your feedback! We're glad you enjoyed our product.\\\"\"}"
+                        },
+                        "description": "Allows vendors to respond to reviews on their products. Each vendor can only\nrespond once per review, but can edit their response within 24 hours."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"message\": \"Response submitted successfully.\",\n  \"data\": {\n    \"id\": 45,\n    \"review_id\": 123,\n    \"vendor\": {\n      \"id\": 15,\n      \"name\": \"Tech Haven\"\n    },\n    \"user\": {\n      \"id\": 12,\n      \"name\": \"John Vendor\"\n    },\n    \"content\": \"Thank you for your feedback! We're glad you enjoyed our product.\",\n    \"is_approved\": true,\n    \"created_at\": \"2025-01-16T14:30:00.000000Z\"\n  }\n}",
+                            "name": "Response created successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You can only respond to reviews on your products.\"\n}",
+                            "name": "Not authorized to respond"
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n  \"message\": \"You have already responded to this review.\"\n}",
+                            "name": "Already responded"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update an existing vendor response",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/reviews\/:review_id\/responses\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/reviews\/:review_id\/responses\/:id",
+                            "variable": [
+                                {
+                                    "id": "review_id",
+                                    "key": "review_id",
+                                    "value": "16",
+                                    "description": "The ID of the review."
+                                },
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "16",
+                                    "description": "The ID of the response."
+                                },
+                                {
+                                    "id": "review",
+                                    "key": "review",
+                                    "value": "123",
+                                    "description": "The ID of the review."
+                                },
+                                {
+                                    "id": "response",
+                                    "key": "response",
+                                    "value": "45",
+                                    "description": "The ID of the response to update."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"content\":\"\\\"Thank you for your updated feedback!\\\"\"}"
+                        },
+                        "description": "Vendors can edit their response within 24 hours of creation.\nAfter 24 hours, responses become locked to maintain transparency."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Response updated successfully.\",\n  \"data\": {\n    \"id\": 45,\n    \"content\": \"Thank you for your updated feedback!\",\n    \"updated_at\": \"2025-01-16T15:45:00.000000Z\"\n  }\n}",
+                            "name": "Response updated successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You can only edit your responses within 24 hours of creation.\"\n}",
+                            "name": "Cannot edit response"
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete a vendor response",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/reviews\/:review_id\/responses\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/reviews\/:review_id\/responses\/:id",
+                            "variable": [
+                                {
+                                    "id": "review_id",
+                                    "key": "review_id",
+                                    "value": "16",
+                                    "description": "The ID of the review."
+                                },
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "16",
+                                    "description": "The ID of the response."
+                                },
+                                {
+                                    "id": "review",
+                                    "key": "review",
+                                    "value": "123",
+                                    "description": "The ID of the review."
+                                },
+                                {
+                                    "id": "response",
+                                    "key": "response",
+                                    "value": "45",
+                                    "description": "The ID of the response to delete."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Vendors can delete their response within 24 hours of creation.\nThis action is irreversible."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Response deleted successfully.\"\n}",
+                            "name": "Response deleted successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"message\": \"You can only delete your responses within 24 hours of creation.\"\n}",
+                            "name": "Cannot delete response"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get vendor's responses (for vendor dashboard)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/vendor\/responses",
+                            "query": [
+                                {
+                                    "key": "product_id",
+                                    "value": "15",
+                                    "description": "optional Filter by specific product ID.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "rating[0]",
+                                    "value": "1",
+                                    "description": "optional Filter by review ratings.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "rating[1]",
+                                    "value": "2",
+                                    "description": "optional Filter by review ratings.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort_by",
+                                    "value": "newest",
+                                    "description": "optional Sort responses. Options: newest, oldest, rating_high, rating_low. Default: newest.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "20",
+                                    "description": "optional Number of responses per page (1-50). Default: 15.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "2",
+                                    "description": "optional Page number for pagination. Default: 1.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/vendor\/responses?product_id=15&rating[0]=1&rating[1]=2&sort_by=newest&per_page=20&page=2"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieve all responses made by the authenticated vendor with filtering\nand sorting options for vendor dashboard management."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Your responses retrieved successfully.\",\n  \"data\": {\n    \"data\": [\n      {\n        \"id\": 45,\n        \"review\": {\n          \"id\": 123,\n          \"rating\": 4,\n          \"title\": \"Good product\",\n          \"content\": \"Works well but could be better...\",\n          \"user\": {\n            \"name\": \"Customer Name\"\n          },\n          \"product\": {\n            \"id\": 15,\n            \"name\": \"Premium Wireless Earbuds\"\n          }\n        },\n        \"content\": \"Thank you for your feedback!\",\n        \"is_approved\": true,\n        \"created_at\": \"2025-01-16T14:30:00.000000Z\",\n        \"can_edit\": true,\n        \"can_delete\": true\n      }\n    ],\n    \"current_page\": 1,\n    \"per_page\": 15,\n    \"total\": 25,\n    \"last_page\": 2\n  }\n}",
+                            "name": "Responses retrieved successfully"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get individual response details",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/vendor\/responses\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/vendor\/responses\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "16",
+                                    "description": "The ID of the response."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [
+                                {
+                                    "key": "cache-control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "content-type",
+                                    "value": "application\/json"
+                                }
+                            ],
+                            "code": 401,
+                            "body": "{\"message\":\"Unauthenticated.\"}",
+                            "name": ""
                         }
                     ]
                 }

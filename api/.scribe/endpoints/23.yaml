@@ -1,96 +1,54 @@
-name: 'User Orders'
+name: 'Vendor Profile'
 description: ''
 endpoints:
   -
     httpMethods:
       - GET
-    uri: api/orders
+    uri: 'api/vendors/{id}'
     metadata:
-      groupName: 'User Orders'
+      groupName: 'Vendor Profile'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: "Retrieve user's orders"
+      title: 'Retrieve a specific vendor profile'
       description: |-
-        Get a paginated list of orders for the authenticated user. This endpoint allows users to view
-        their order history with optional filtering by status. Orders include complete information about
-        items purchased, payment status, delivery details, and current order status. Users can only
-        access their own orders for privacy and security.
+        Get detailed information about a specific vendor including their profile details, logo, and media.
+        This endpoint is typically used for vendor profile pages and allows authenticated users to view
+        vendor information. Vendors can view their own complete profile, while other users may see
+        limited public information depending on privacy settings.
       authenticated: true
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters:
-      user_id:
-        name: user_id
-        description: 'optional Filter orders by user ID (must match authenticated user).'
-        required: false
-        example: 123
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the vendor.'
+        required: true
+        example: 1
         type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      status_id:
-        name: status_id
-        description: 'optional Filter orders by specific status ID. See order statuses endpoint for available options.'
-        required: false
-        example: 2
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      page:
-        name: page
-        description: 'optional Page number for pagination. Default: 1.'
-        required: false
-        example: 2
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      per_page:
-        name: per_page
-        description: 'optional Number of orders per page (max 50). Default: 15.'
-        required: false
-        example: 10
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanQueryParameters:
-      user_id: 123
-      status_id: 2
-      page: 2
-      per_page: 10
-    bodyParameters:
-      user_id:
-        name: user_id
-        description: 'The <code>id</code> of an existing record in the users table.'
-        required: false
-        example: null
-        type: string
         enumValues: []
         exampleWasSpecified: false
-        nullable: true
+        nullable: false
         custom: []
-      status_id:
-        name: status_id
-        description: 'The <code>id</code> of an existing record in the order_statuses table.'
-        required: false
-        example: null
-        type: string
+      vendor:
+        name: vendor
+        description: 'The ID of the vendor to retrieve.'
+        required: true
+        example: 12
+        type: integer
         enumValues: []
-        exampleWasSpecified: false
-        nullable: true
+        exampleWasSpecified: true
+        nullable: false
         custom: []
+    cleanUrlParameters:
+      id: 1
+      vendor: 12
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
     responses:
@@ -98,179 +56,64 @@ endpoints:
         status: 200
         content: |-
           {
-            "message": "Orders retrieved successfully.",
+            "message": "Vendor details retrieved.",
             "data": {
-              "data": [
+              "id": 12,
+              "name": "TechCraft Solutions",
+              "description": "Innovative technology solutions for modern businesses. We specialize in custom software development, cloud services, and digital transformation consulting.",
+              "user": {
+                "id": 45,
+                "name": "Sarah Mitchell",
+                "email": "sarah@techcraft.com",
+                "email_verified_at": "2025-01-10T08:00:00.000000Z",
+                "created_at": "2024-12-15T10:30:00.000000Z",
+                "updated_at": "2025-01-16T09:15:00.000000Z"
+              },
+              "logo": "https://yourapi.com/storage/vendor-logos/techcraft-logo.jpg",
+              "media": [
                 {
-                  "id": 45,
-                  "total_amount": 8498,
-                  "total_amount_formatted": "£84.98",
-                  "created_at": "2025-01-15T14:20:00.000000Z",
-                  "updated_at": "2025-01-16T09:45:00.000000Z",
-                  "deleted_at": null,
-                  "user": {
-                    "id": 123,
-                    "name": "Sarah Johnson",
-                    "email": "sarah.johnson@example.com",
-                    "email_verified_at": "2025-01-10T08:00:00.000000Z"
-                  },
-                  "status": {
-                    "id": 4,
-                    "name": "Shipped"
-                  },
-                  "order_items": [
-                    {
-                      "id": 89,
-                      "quantity": 1,
-                      "price": 7999,
-                      "price_formatted": "£79.99",
-                      "line_total": 7999,
-                      "line_total_formatted": "£79.99",
-                      "created_at": "2025-01-15T14:20:00.000000Z",
-                      "product": {
-                        "id": 15,
-                        "name": "Wireless Bluetooth Headphones",
-                        "description": "Premium quality wireless headphones with active noise cancellation",
-                        "price": 7999,
-                        "price_formatted": "£79.99"
-                      },
-                      "product_variant": {
-                        "id": 24,
-                        "value": "White",
-                        "additional_price": 500,
-                        "additional_price_formatted": "£5.00",
-                        "product_attribute": {
-                          "id": 1,
-                          "name": "Color"
-                        }
-                      },
-                      "order_return": null
-                    },
-                    {
-                      "id": 90,
-                      "quantity": 1,
-                      "price": 499,
-                      "price_formatted": "£4.99",
-                      "line_total": 499,
-                      "line_total_formatted": "£4.99",
-                      "created_at": "2025-01-15T14:20:00.000000Z",
-                      "product": {
-                        "id": 28,
-                        "name": "USB-C Charging Cable",
-                        "description": "High-speed USB-C to USB-A charging cable",
-                        "price": 499,
-                        "price_formatted": "£4.99"
-                      },
-                      "product_variant": null,
-                      "order_return": null
-                    }
-                  ],
-                  "payments": [
-                    {
-                      "id": 67,
-                      "amount": 8498,
-                      "amount_formatted": "£84.98",
-                      "status": "Paid",
-                      "method": "stripe",
-                      "transaction_reference": "pi_1Hxxxxxxxxxxxx",
-                      "processed_at": "2025-01-15T14:22:00.000000Z",
-                      "created_at": "2025-01-15T14:21:00.000000Z"
-                    }
-                  ]
-                },
-                {
-                  "id": 38,
-                  "total_amount": 2999,
-                  "total_amount_formatted": "£29.99",
-                  "created_at": "2025-01-10T16:30:00.000000Z",
-                  "updated_at": "2025-01-12T11:15:00.000000Z",
-                  "deleted_at": null,
-                  "user": {
-                    "id": 123,
-                    "name": "Sarah Johnson",
-                    "email": "sarah.johnson@example.com",
-                    "email_verified_at": "2025-01-10T08:00:00.000000Z"
-                  },
-                  "status": {
-                    "id": 6,
-                    "name": "Delivered"
-                  },
-                  "order_items": [
-                    {
-                      "id": 75,
-                      "quantity": 1,
-                      "price": 2999,
-                      "price_formatted": "£29.99",
-                      "line_total": 2999,
-                      "line_total_formatted": "£29.99",
-                      "created_at": "2025-01-10T16:30:00.000000Z",
-                      "product": {
-                        "id": 22,
-                        "name": "Bluetooth Portable Speaker",
-                        "description": "Compact waterproof speaker with 12-hour battery",
-                        "price": 2999,
-                        "price_formatted": "£29.99"
-                      },
-                      "product_variant": null,
-                      "order_return": {
-                        "id": 12,
-                        "reason": "Product quality issue - speaker has crackling sound",
-                        "status": {
-                          "id": 3,
-                          "name": "Approved"
-                        },
-                        "created_at": "2025-01-14T09:30:00.000000Z",
-                        "updated_at": "2025-01-15T14:20:00.000000Z"
-                      }
-                    }
-                  ],
-                  "payments": [
-                    {
-                      "id": 58,
-                      "amount": 2999,
-                      "amount_formatted": "£29.99",
-                      "status": "Paid",
-                      "method": "stripe",
-                      "transaction_reference": "pi_1Gxxxxxxxxxx",
-                      "processed_at": "2025-01-10T16:32:00.000000Z",
-                      "created_at": "2025-01-10T16:31:00.000000Z"
-                    }
-                  ]
+                  "id": 78,
+                  "url": "https://yourapi.com/storage/vendor-logos/techcraft-logo.jpg",
+                  "name": "TechCraft Logo",
+                  "file_name": "techcraft-logo.jpg",
+                  "mime_type": "image/jpeg",
+                  "size": 156789
                 }
               ],
-              "current_page": 1,
-              "per_page": 15,
-              "total": 12,
-              "last_page": 1,
-              "from": 1,
-              "to": 12,
-              "path": "https://yourapi.com/api/v1/orders",
-              "first_page_url": "https://yourapi.com/api/v1/orders?page=1",
-              "last_page_url": "https://yourapi.com/api/v1/orders?page=1",
-              "next_page_url": null,
-              "prev_page_url": null
+              "products_count": 23,
+              "created_at": "2025-01-05T14:20:00.000000Z",
+              "updated_at": "2025-01-15T16:45:00.000000Z",
+              "deleted_at": null
             }
           }
         headers: []
-        description: 'User orders retrieved successfully'
+        description: 'Vendor profile retrieved successfully'
         custom: []
       -
         status: 200
         content: |-
           {
-            "message": "Orders retrieved successfully.",
+            "message": "Vendor details retrieved.",
             "data": {
-              "data": [],
-              "current_page": 1,
-              "per_page": 15,
-              "total": 0,
-              "last_page": 1,
-              "from": null,
-              "to": null
+              "id": 8,
+              "name": "Startup Innovations",
+              "description": "New vendor focused on innovative product development",
+              "user": {
+                "id": 23,
+                "name": "Alex Johnson",
+                "email": "alex@startup-innovations.com",
+                "email_verified_at": "2025-01-14T10:00:00.000000Z"
+              },
+              "logo": "",
+              "media": [],
+              "products_count": 0,
+              "created_at": "2025-01-14T09:30:00.000000Z",
+              "updated_at": "2025-01-14T09:30:00.000000Z",
+              "deleted_at": null
             }
           }
         headers: []
-        description: 'No orders found for user'
+        description: 'Vendor with no products'
         custom: []
       -
         status: 401
@@ -285,22 +128,19 @@ endpoints:
         status: 403
         content: |-
           {
-            "message": "You can only access your own orders."
+            "message": "You do not have the required permissions."
           }
         headers: []
-        description: "Access denied to other user's orders"
+        description: 'Insufficient permissions'
         custom: []
       -
-        status: 422
+        status: 404
         content: |-
           {
-            "errors": [
-              "The user id must be an integer.",
-              "The status id must exist in order_statuses table."
-            ]
+            "message": "No query results for model [App\\Models\\Vendor] 999"
           }
         headers: []
-        description: 'Invalid filter parameters'
+        description: 'Vendor not found'
         custom: []
     responseFields: []
     auth:
@@ -313,29 +153,28 @@ endpoints:
     custom: []
   -
     httpMethods:
-      - GET
-    uri: 'api/orders/{id}'
+      - POST
+    uri: 'api/vendors/{id}'
     metadata:
-      groupName: 'User Orders'
+      groupName: 'Vendor Profile'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Retrieve a specific order'
+      title: 'Update vendor profile information'
       description: |-
-        Get detailed information about a specific order belonging to the authenticated user.
-        This includes complete order details, all purchased items with product information,
-        payment records, shipping status, and any returns or refunds. Users can only access
-        their own orders. This endpoint is perfect for order confirmation pages and order tracking.
+        Update the authenticated vendor's profile information including business details, description, and logo.
+        Vendors can only update their own profiles. This endpoint supports partial updates - only provided
+        fields will be updated, others remain unchanged. Logo uploads are processed securely with validation.
       authenticated: true
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
+      Content-Type: multipart/form-data
       Accept: application/json
     urlParameters:
       id:
         name: id
-        description: 'The ID of the order.'
+        description: 'The ID of the vendor.'
         required: true
         example: 1
         type: integer
@@ -343,11 +182,11 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         custom: []
-      order:
-        name: order
-        description: 'The ID of the order to retrieve. Must belong to the authenticated user.'
+      vendor:
+        name: vendor
+        description: 'The ID of the vendor to update. Must belong to the authenticated user.'
         required: true
-        example: 45
+        example: 12
         type: integer
         enumValues: []
         exampleWasSpecified: true
@@ -355,198 +194,125 @@ endpoints:
         custom: []
     cleanUrlParameters:
       id: 1
-      order: 45
+      vendor: 12
     queryParameters: []
     cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
+    bodyParameters:
+      user_id:
+        name: user_id
+        description: 'optional The user ID associated with this vendor. Only admins can change this.'
+        required: false
+        example: 45
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      name:
+        name: name
+        description: "optional The vendor's business name. Will be used for public display."
+        required: false
+        example: 'TechCraft Solutions Ltd'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      description:
+        name: description
+        description: "optional Detailed description of the vendor's business, services, or products. Maximum 1000 characters."
+        required: false
+        example: 'Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud migration services, and digital transformation consulting with over 10 years of industry experience.'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      logo:
+        name: logo
+        description: 'optional New logo file for the vendor. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will replace existing logo if provided.'
+        required: false
+        example: null
+        type: file
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+    cleanBodyParameters:
+      user_id: 45
+      name: 'TechCraft Solutions Ltd'
+      description: 'Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud migration services, and digital transformation consulting with over 10 years of industry experience.'
+    fileParameters:
+      logo: null
     responses:
       -
         status: 200
         content: |-
           {
-            "message": "Order retrieved successfully.",
+            "message": "Vendor updated successfully.",
             "data": {
-              "id": 45,
-              "total_amount": 8498,
-              "total_amount_formatted": "£84.98",
-              "created_at": "2025-01-15T14:20:00.000000Z",
-              "updated_at": "2025-01-16T09:45:00.000000Z",
-              "deleted_at": null,
+              "id": 12,
+              "name": "TechCraft Solutions Ltd",
+              "description": "Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud migration services, and digital transformation consulting with over 10 years of industry experience.",
               "user": {
-                "id": 123,
-                "name": "Sarah Johnson",
-                "email": "sarah.johnson@example.com",
-                "email_verified_at": "2025-01-10T08:00:00.000000Z",
-                "user_address": {
-                  "id": 45,
-                  "address_line1": "123 Oak Street",
-                  "address_line2": "Apartment 4B",
-                  "city": "London",
-                  "state": "England",
-                  "country": "United Kingdom",
-                  "postal_code": "SW1A 1AA"
-                }
+                "id": 45,
+                "name": "Sarah Mitchell",
+                "email": "sarah@techcraft.com",
+                "email_verified_at": "2025-01-10T08:00:00.000000Z"
               },
-              "status": {
-                "id": 4,
-                "name": "Shipped"
-              },
-              "order_items": [
+              "logo": "https://yourapi.com/storage/vendor-logos/new-techcraft-logo.jpg",
+              "media": [
                 {
-                  "id": 89,
-                  "quantity": 1,
-                  "price": 7999,
-                  "price_formatted": "£79.99",
-                  "line_total": 7999,
-                  "line_total_formatted": "£79.99",
-                  "created_at": "2025-01-15T14:20:00.000000Z",
-                  "updated_at": "2025-01-15T14:20:00.000000Z",
-                  "product": {
-                    "id": 15,
-                    "name": "Wireless Bluetooth Headphones",
-                    "description": "Premium quality wireless headphones with active noise cancellation, 30-hour battery life, and superior sound quality.",
-                    "price": 7999,
-                    "price_formatted": "£79.99",
-                    "featured_image": "https://yourapi.com/storage/products/headphones-featured.jpg"
-                  },
-                  "product_variant": {
-                    "id": 24,
-                    "value": "White",
-                    "additional_price": 500,
-                    "additional_price_formatted": "£5.00",
-                    "quantity": 20,
-                    "product_attribute": {
-                      "id": 1,
-                      "name": "Color"
-                    }
-                  },
-                  "order_return": null
-                },
-                {
-                  "id": 90,
-                  "quantity": 1,
-                  "price": 499,
-                  "price_formatted": "£4.99",
-                  "line_total": 499,
-                  "line_total_formatted": "£4.99",
-                  "created_at": "2025-01-15T14:20:00.000000Z",
-                  "updated_at": "2025-01-15T14:20:00.000000Z",
-                  "product": {
-                    "id": 28,
-                    "name": "USB-C Charging Cable",
-                    "description": "High-speed USB-C to USB-A charging cable - 1 meter length",
-                    "price": 499,
-                    "price_formatted": "£4.99",
-                    "featured_image": "https://yourapi.com/storage/products/usb-cable-featured.jpg"
-                  },
-                  "product_variant": null,
-                  "order_return": null
+                  "id": 82,
+                  "url": "https://yourapi.com/storage/vendor-logos/new-techcraft-logo.jpg",
+                  "name": "Updated TechCraft Logo",
+                  "file_name": "new-techcraft-logo.jpg",
+                  "mime_type": "image/jpeg",
+                  "size": 189456
                 }
               ],
-              "payments": [
-                {
-                  "id": 67,
-                  "amount": 8498,
-                  "amount_formatted": "£84.98",
-                  "status": "Paid",
-                  "method": "stripe",
-                  "transaction_reference": "pi_1Hxxxxxxxxxxxx",
-                  "processed_at": "2025-01-15T14:22:00.000000Z",
-                  "created_at": "2025-01-15T14:21:00.000000Z",
-                  "updated_at": "2025-01-15T14:22:00.000000Z",
-                  "payment_method": {
-                    "id": 1,
-                    "name": "stripe"
-                  }
-                }
-              ]
+              "products_count": 23,
+              "created_at": "2025-01-05T14:20:00.000000Z",
+              "updated_at": "2025-01-16T11:30:00.000000Z",
+              "deleted_at": null
             }
           }
         headers: []
-        description: 'Order details retrieved successfully'
+        description: 'Vendor profile updated successfully'
         custom: []
       -
         status: 200
         content: |-
           {
-            "message": "Order retrieved successfully.",
+            "message": "Vendor updated successfully.",
             "data": {
-              "id": 38,
-              "total_amount": 2999,
-              "total_amount_formatted": "£29.99",
-              "created_at": "2025-01-10T16:30:00.000000Z",
-              "updated_at": "2025-01-15T11:30:00.000000Z",
-              "deleted_at": null,
+              "id": 12,
+              "name": "TechCraft Solutions Ltd",
+              "description": "Updated business description with new focus areas and expanded service offerings.",
               "user": {
-                "id": 123,
-                "name": "Sarah Johnson",
-                "email": "sarah.johnson@example.com"
+                "id": 45,
+                "name": "Sarah Mitchell",
+                "email": "sarah@techcraft.com"
               },
-              "status": {
-                "id": 8,
-                "name": "Partially Refunded"
-              },
-              "order_items": [
+              "logo": "https://yourapi.com/storage/vendor-logos/techcraft-logo.jpg",
+              "media": [
                 {
-                  "id": 75,
-                  "quantity": 1,
-                  "price": 2999,
-                  "price_formatted": "£29.99",
-                  "line_total": 2999,
-                  "line_total_formatted": "£29.99",
-                  "product": {
-                    "id": 22,
-                    "name": "Bluetooth Portable Speaker",
-                    "description": "Compact waterproof speaker with 12-hour battery"
-                  },
-                  "product_variant": null,
-                  "order_return": {
-                    "id": 12,
-                    "reason": "Product quality issue - speaker has crackling sound at high volume",
-                    "status": {
-                      "id": 7,
-                      "name": "Completed"
-                    },
-                    "created_at": "2025-01-14T09:30:00.000000Z",
-                    "updated_at": "2025-01-15T11:30:00.000000Z",
-                    "has_refunds": true,
-                    "total_refunded_amount": 2999,
-                    "total_refunded_amount_formatted": "£29.99",
-                    "order_refunds": [
-                      {
-                        "id": 8,
-                        "amount": 2999,
-                        "amount_formatted": "£29.99",
-                        "processed_at": "2025-01-15T11:25:00.000000Z",
-                        "notes": "Refund processed for defective product",
-                        "status": {
-                          "id": 3,
-                          "name": "Refunded"
-                        },
-                        "created_at": "2025-01-15T11:20:00.000000Z",
-                        "updated_at": "2025-01-15T11:25:00.000000Z"
-                      }
-                    ]
-                  }
+                  "id": 78,
+                  "url": "https://yourapi.com/storage/vendor-logos/techcraft-logo.jpg",
+                  "name": "TechCraft Logo",
+                  "file_name": "techcraft-logo.jpg",
+                  "mime_type": "image/jpeg",
+                  "size": 156789
                 }
               ],
-              "payments": [
-                {
-                  "id": 58,
-                  "amount": 2999,
-                  "amount_formatted": "£29.99",
-                  "status": "Partially Refunded",
-                  "method": "stripe",
-                  "transaction_reference": "pi_1Gxxxxxxxxxx",
-                  "processed_at": "2025-01-10T16:32:00.000000Z"
-                }
-              ]
+              "products_count": 23,
+              "created_at": "2025-01-05T14:20:00.000000Z",
+              "updated_at": "2025-01-16T11:45:00.000000Z",
+              "deleted_at": null
             }
           }
         headers: []
-        description: 'Order with returns and refunds'
+        description: 'Partial update without logo'
         custom: []
       -
         status: 401
@@ -561,19 +327,70 @@ endpoints:
         status: 403
         content: |-
           {
-            "message": "You can only access your own orders."
+            "message": "You do not have the required permissions."
           }
         headers: []
-        description: "Access denied to other user's order"
+        description: "Cannot update other vendor's profile"
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions for user_id change'
         custom: []
       -
         status: 404
         content: |-
           {
-            "message": "No query results for model [App\\Models\\Order] 999"
+            "message": "No query results for model [App\\Models\\Vendor] 999"
           }
         headers: []
-        description: 'Order not found'
+        description: 'Vendor not found'
+        custom: []
+      -
+        status: 413
+        content: |-
+          {
+            "message": "File too large. Maximum size is 2.0 MB."
+          }
+        headers: []
+        description: 'Logo file too large'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "errors": [
+              "The name field is required.",
+              "The description may not be greater than 1000 characters.",
+              "The logo must be an image.",
+              "The logo may not be greater than 2048 kilobytes.",
+              "The logo must be a file of type: jpg, jpeg, png."
+            ]
+          }
+        headers: []
+        description: 'Validation errors'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "message": "File type .gif not allowed. Allowed types: jpg, jpeg, png"
+          }
+        headers: []
+        description: 'Invalid file type'
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+            "message": "Failed to process logo file: Unable to write file to disk."
+          }
+        headers: []
+        description: 'Logo upload failed'
         custom: []
     responseFields: []
     auth:

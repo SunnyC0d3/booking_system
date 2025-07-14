@@ -1,387 +1,288 @@
-name: Authentication
+name: 'Admin Review Management'
 description: ''
 endpoints:
   -
     httpMethods:
-      - POST
-    uri: api/register
+      - GET
+    uri: api/admin/reviews
     metadata:
-      groupName: Authentication
+      groupName: 'Admin Review Management'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Register a new user'
+      title: 'Get all reviews with admin filtering capabilities'
       description: |-
-        Creates a new user account with email verification. The user will receive an email to verify their account.
-        Passwords must meet security requirements including minimum length, character diversity, and cannot be common passwords.
-      authenticated: false
+        Retrieve all reviews in the system with advanced admin filtering and sorting.
+        Provides comprehensive review management including pending approvals, reported reviews,
+        and detailed analytics for administrative oversight.
+      authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
     cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      name:
-        name: name
-        description: "The user's full name."
-        required: true
-        example: 'John Doe'
+    queryParameters:
+      product_id:
+        name: product_id
+        description: 'optional Filter by specific product ID.'
+        required: false
+        example: 15
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      user_id:
+        name: user_id
+        description: 'optional Filter by specific user ID.'
+        required: false
+        example: 45
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      rating:
+        name: rating
+        description: 'optional Filter by specific ratings (1-5).'
+        required: false
+        example:
+          - 1
+          - 2
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      status:
+        name: status
+        description: 'optional Filter by approval status. Options: approved, pending, rejected.'
+        required: false
+        example: pending
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-      email:
-        name: email
-        description: "The user's email address. Must be unique."
-        required: true
-        example: john@example.com
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      password:
-        name: password
-        description: "The user's password. Must be at least 12 characters with uppercase, lowercase, numbers, and symbols."
-        required: true
-        example: MySecurePass123!
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      password_confirmation:
-        name: password_confirmation
-        description: 'Password confirmation. Must match the password field.'
-        required: true
-        example: MySecurePass123!
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      name: 'John Doe'
-      email: john@example.com
-      password: MySecurePass123!
-      password_confirmation: MySecurePass123!
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "data": [],
-            "message": "User registered successfully.",
-            "status": 200
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 422
-        content: |-
-          {
-            "message": "Password does not meet security requirements.",
-            "errors": [
-              "Password must contain at least 1 uppercase letter(s).",
-              "Password cannot contain common words or patterns that are not secure."
-            ],
-            "strength": {
-              "score": 45,
-              "strength": "medium",
-              "feedback": ["Add special characters", "Use more unique characters"]
-            }
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 423
-        content: |-
-          {
-            "message": "Registration temporarily blocked. Please try again later.",
-            "time_remaining_minutes": 15
-          }
-        headers: []
-        description: ''
-        custom: []
-    responseFields: []
-    auth: []
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/login
-    metadata:
-      groupName: Authentication
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'User login'
-      description: 'Authenticates a user and returns an access token. Implements account lockout protection and tracks failed attempts.'
-      authenticated: false
-      custom: []
-    headers:
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      email:
-        name: email
-        description: "The user's email address."
-        required: true
-        example: john@example.com
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      password:
-        name: password
-        description: "The user's password."
-        required: true
-        example: MySecurePass123!
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      remember:
-        name: remember
-        description: 'optional Whether to remember the user for extended period.'
+      is_featured:
+        name: is_featured
+        description: 'optional Filter by featured status.'
         required: false
         example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: true
-        nullable: true
+        nullable: false
         custom: []
-    cleanBodyParameters:
-      email: john@example.com
-      password: MySecurePass123!
-      remember: true
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "data": {
-              "token_type": "Bearer",
-              "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...",
-              "expires_at": 1640995200,
-              "user": {
-                "id": 1,
-                "email": "john@example.com",
-                "role": "user"
-              }
-            },
-            "message": "User logged in successfully.",
-            "status": 200
-          }
-        headers: []
-        description: ''
+      is_verified:
+        name: is_verified
+        description: 'optional Filter by verified purchase status.'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
         custom: []
-      -
-        status: 401
-        content: |-
-          {
-            "message": "Invalid credentials"
-          }
-        headers: []
-        description: ''
+      has_reports:
+        name: has_reports
+        description: 'optional Filter reviews that have been reported.'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
         custom: []
-      -
-        status: 423
-        content: |-
-          {
-            "message": "Account is temporarily locked due to multiple failed login attempts.",
-            "locked_until": "2024-01-15T15:30:00.000000Z",
-            "time_remaining_seconds": 1800,
-            "time_remaining_minutes": 30,
-            "lockout_count": 2
-          }
-        headers: []
-        description: ''
+      sort_by:
+        name: sort_by
+        description: 'optional Sort reviews. Options: newest, oldest, rating_high, rating_low, reports_count.'
+        required: false
+        example: reports_count
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
         custom: []
-      -
-        status: 426
-        content: |-
-          {
-            "message": "Your password has expired and must be changed before logging in.",
-            "password_expired": true,
-            "change_password_required": true
-          }
-        headers: []
-        description: ''
+      per_page:
+        name: per_page
+        description: 'optional Number of reviews per page (1-100). Default: 20.'
+        required: false
+        example: 50
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
         custom: []
-    responseFields: []
-    auth: []
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/logout
-    metadata:
-      groupName: Authentication
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'User logout'
-      description: 'Logs out the authenticated user and revokes their access token.'
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "data": [],
-            "message": "User logged out successfully",
-            "status": 200
-          }
-        headers: []
-        description: ''
+      page:
+        name: page
+        description: 'optional Page number for pagination. Default: 1.'
+        required: false
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
         custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/change-password
-    metadata:
-      groupName: Authentication
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Change password'
-      description: "Changes the authenticated user's password. Requires current password verification and validates new password strength."
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
+    cleanQueryParameters:
+      product_id: 15
+      user_id: 45
+      rating:
+        - 1
+        - 2
+      status: pending
+      is_featured: true
+      is_verified: true
+      has_reports: true
+      sort_by: reports_count
+      per_page: 50
+      page: 2
     bodyParameters:
-      current_password:
-        name: current_password
-        description: "The user's current password."
-        required: true
-        example: MyOldPass123!
-        type: string
+      product_id:
+        name: product_id
+        description: 'The <code>id</code> of an existing record in the products table.'
+        required: false
+        example: 16
+        type: integer
         enumValues: []
-        exampleWasSpecified: true
+        exampleWasSpecified: false
         nullable: false
         custom: []
-      new_password:
-        name: new_password
-        description: 'The new password. Must meet security requirements.'
-        required: true
-        example: MyNewSecurePass456!
-        type: string
+      rating:
+        name: rating
+        description: 'Must be between 1 and 5.'
+        required: false
+        example:
+          - 2
+        type: 'integer[]'
         enumValues: []
-        exampleWasSpecified: true
+        exampleWasSpecified: false
         nullable: false
         custom: []
-      new_password_confirmation:
-        name: new_password_confirmation
-        description: 'Confirmation of the new password.'
-        required: true
-        example: MyNewSecurePass456!
-        type: string
+      verified_only:
+        name: verified_only
+        description: ''
+        required: false
+        example: false
+        type: boolean
         enumValues: []
-        exampleWasSpecified: true
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      with_media:
+        name: with_media
+        description: ''
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      sort_by:
+        name: sort_by
+        description: ''
+        required: false
+        example: helpful
+        type: string
+        enumValues:
+          - newest
+          - oldest
+          - rating_high
+          - rating_low
+          - helpful
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      per_page:
+        name: per_page
+        description: 'Must be between 1 and 50.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      page:
+        name: page
+        description: 'Must be at least 1.'
+        required: false
+        example: 66
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      current_password: MyOldPass123!
-      new_password: MyNewSecurePass456!
-      new_password_confirmation: MyNewSecurePass456!
+      product_id: 16
+      rating:
+        - 2
+      verified_only: false
+      with_media: true
+      sort_by: helpful
+      per_page: 1
+      page: 66
     fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
+            "message": "Reviews retrieved successfully.",
             "data": {
-              "password_strength": {
-                "score": 85,
-                "strength": "very strong",
-                "feedback": []
-              },
-              "security_score": {
-                "score": 95,
-                "level": "excellent",
-                "issues": []
-              }
+              "data": [
+                {
+                  "id": 123,
+                  "user": {
+                    "id": 45,
+                    "name": "Sarah Johnson",
+                    "email": "sarah.johnson@example.com"
+                  },
+                  "product": {
+                    "id": 15,
+                    "name": "Premium Wireless Earbuds"
+                  },
+                  "rating": 5,
+                  "title": "Excellent sound quality!",
+                  "content": "These earbuds exceeded my expectations...",
+                  "is_verified_purchase": true,
+                  "is_featured": false,
+                  "is_approved": true,
+                  "helpful_votes": 12,
+                  "total_votes": 15,
+                  "reports_count": 0,
+                  "created_at": "2025-01-10T14:30:00.000000Z"
+                }
+              ],
+              "current_page": 1,
+              "per_page": 20,
+              "total": 1543,
+              "last_page": 78
             },
-            "message": "Password changed successfully",
-            "status": 200
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 401
-        content: |-
-          {
-            "message": "Current password is incorrect"
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 422
-        content: |-
-          {
-            "message": "New password does not meet security requirements.",
-            "errors": [
-              "Password cannot be the same as your last 5 passwords."
-            ],
-            "strength": {
-              "score": 45,
-              "strength": "medium",
-              "feedback": ["Add special characters"]
+            "meta": {
+              "stats": {
+                "total_reviews": 1543,
+                "pending_approval": 23,
+                "reported_reviews": 8,
+                "featured_reviews": 45,
+                "average_rating": 4.2
+              }
             }
           }
         headers: []
-        description: ''
+        description: 'Reviews retrieved successfully'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
         custom: []
     responseFields: []
     auth:
@@ -395,22 +296,46 @@ endpoints:
   -
     httpMethods:
       - GET
-    uri: api/security-info
+    uri: 'api/admin/reviews/{id}'
     metadata:
-      groupName: Authentication
+      groupName: 'Admin Review Management'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Get security information'
-      description: 'Retrieves comprehensive security information for the authenticated user including account lock status, security score, and password expiry details.'
+      title: 'Get detailed review information for admin'
+      description: |-
+        Retrieve comprehensive admin view of a specific review including all reports,
+        moderation history, user details, and administrative actions available.
       authenticated: true
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the review.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      review:
+        name: review
+        description: 'The ID of the review to retrieve.'
+        required: true
+        example: 123
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 16
+      review: 123
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -421,38 +346,159 @@ endpoints:
         status: 200
         content: |-
           {
+            "message": "Review details retrieved successfully.",
             "data": {
-              "account_lock": {
-                "is_locked": false,
-                "failed_attempts": 0,
-                "max_attempts": 5,
-                "lockout_count": 0,
-                "locked_until": null,
-                "time_until_unlock": null,
-                "last_attempt_at": null,
-                "last_successful_login": "2024-01-15T10:30:00.000000Z",
-                "should_reset": false
+              "id": 123,
+              "user": {
+                "id": 45,
+                "name": "Sarah Johnson",
+                "email": "sarah.johnson@example.com",
+                "total_reviews": 8,
+                "average_rating": 4.3
               },
-              "security_score": {
-                "score": 85,
-                "level": "good",
-                "issues": ["Medium strength password"]
+              "product": {
+                "id": 15,
+                "name": "Premium Wireless Earbuds",
+                "average_rating": 4.5,
+                "total_reviews": 127
               },
-              "password_expiry": {
-                "requires_change": false,
-                "days_until_expiry": 45,
-                "last_changed": "2024-01-01T12:00:00.000000Z"
-              },
-              "login_history": {
-                "last_login": "2024-01-15T10:30:00.000000Z",
-                "last_login_ip": "192.168.1.100"
-              }
-            },
-            "message": "Security information retrieved",
-            "status": 200
+              "rating": 5,
+              "title": "Excellent sound quality!",
+              "content": "These earbuds exceeded my expectations...",
+              "is_verified_purchase": true,
+              "is_featured": false,
+              "is_approved": true,
+              "helpful_votes": 12,
+              "total_votes": 15,
+              "reports": [
+                {
+                  "id": 67,
+                  "reason": "spam",
+                  "details": "Contains promotional links",
+                  "status": "pending",
+                  "reported_by": {
+                    "id": 89,
+                    "name": "John Doe"
+                  },
+                  "created_at": "2025-01-12T10:30:00.000000Z"
+                }
+              ],
+              "moderation_history": [
+                {
+                  "action": "featured",
+                  "moderator": "Admin User",
+                  "timestamp": "2025-01-11T15:45:00.000000Z",
+                  "reason": "High quality review with helpful details"
+                }
+              ],
+              "created_at": "2025-01-10T14:30:00.000000Z"
+            }
           }
         headers: []
-        description: ''
+        description: 'Review retrieved successfully'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\Review] 999"
+          }
+        headers: []
+        description: 'Review not found'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/admin/reviews/{id}'
+    metadata:
+      groupName: 'Admin Review Management'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Delete a review permanently'
+      description: |-
+        Permanently delete a review and all associated data including media files,
+        helpfulness votes, and reports. This action is irreversible.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the review.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      review:
+        name: review
+        description: 'The ID of the review to delete permanently.'
+        required: true
+        example: 123
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 16
+      review: 123
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Review deleted permanently."
+          }
+        headers: []
+        description: 'Review deleted successfully'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\Review] 999"
+          }
+        headers: []
+        description: 'Review not found'
         custom: []
     responseFields: []
     auth:
@@ -466,60 +512,121 @@ endpoints:
   -
     httpMethods:
       - POST
-    uri: api/forgot-password
+    uri: 'api/admin/reviews/{review_id}/moderate'
     metadata:
-      groupName: Authentication
+      groupName: 'Admin Review Management'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Forgot password'
-      description: "Sends a password reset link to the user's email address."
-      authenticated: false
+      title: 'Moderate a review (approve, reject, feature, unfeature)'
+      description: |-
+        Perform moderation actions on reviews including approval, rejection, featuring,
+        and unfeaturing. All actions are logged for audit trail and accountability.
+      authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
+    urlParameters:
+      review_id:
+        name: review_id
+        description: 'The ID of the review.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      review:
+        name: review
+        description: 'The ID of the review to moderate.'
+        required: true
+        example: 123
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      review_id: 16
+      review: 123
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
-      email:
-        name: email
-        description: "The user's email address."
+      action:
+        name: action
+        description: 'Moderation action to perform. Options: approve, reject, feature, unfeature.'
         required: true
-        example: john@example.com
+        example: approve
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
+      reason:
+        name: reason
+        description: 'optional Reason for the action (required for reject).'
+        required: false
+        example: '"Contains inappropriate language"'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
     cleanBodyParameters:
-      email: john@example.com
+      action: approve
+      reason: '"Contains inappropriate language"'
     fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
-            "data": [],
-            "message": "We have emailed your password reset link!",
-            "status": 200
+            "message": "Review approved successfully.",
+            "data": {
+              "id": 123,
+              "action": "approve",
+              "is_approved": true,
+              "is_featured": false,
+              "moderated_by": {
+                "id": 1,
+                "name": "Admin User"
+              },
+              "moderated_at": "2025-01-16T14:30:00.000000Z",
+              "reason": null
+            }
           }
         headers: []
-        description: ''
+        description: 'Review moderated successfully'
         custom: []
       -
-        status: 423
+        status: 403
         content: |-
           {
-            "message": "Password reset temporarily blocked. Please try again later."
+            "message": "You do not have the required permissions."
           }
         headers: []
-        description: ''
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "errors": [
+              "Reason is required when rejecting a review.",
+              "Invalid moderation action."
+            ]
+          }
+        headers: []
+        description: 'Validation errors'
         custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
     controller: null
     method: null
     route: null
@@ -527,17 +634,20 @@ endpoints:
   -
     httpMethods:
       - POST
-    uri: api/reset-password
+    uri: api/admin/reviews/bulk-moderate
     metadata:
-      groupName: Authentication
+      groupName: 'Admin Review Management'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Reset password'
-      description: "Resets the user's password using a valid reset token from the forgot password email."
-      authenticated: false
+      title: 'Bulk moderate multiple reviews'
+      description: |-
+        Perform the same moderation action on multiple reviews simultaneously.
+        Useful for bulk approval, rejection, or featuring of reviews.
+      authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -545,83 +655,492 @@ endpoints:
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
-      token:
-        name: token
-        description: 'The password reset token from the email.'
+      review_ids:
+        name: review_ids
+        description: 'Array of review IDs to moderate.'
         required: true
-        example: abc123def456
+        example:
+          - 123
+          - 124
+          - 125
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      action:
+        name: action
+        description: 'Bulk action to perform. Options: approve, reject, feature, unfeature.'
+        required: true
+        example: approve
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-      email:
-        name: email
-        description: "The user's email address."
-        required: true
-        example: john@example.com
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      password:
-        name: password
-        description: 'The new password. Must meet security requirements.'
-        required: true
-        example: MyNewSecurePass456!
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      password_confirmation:
-        name: password_confirmation
-        description: 'Confirmation of the new password.'
-        required: true
-        example: MyNewSecurePass456!
+      reason:
+        name: reason
+        description: 'optional Reason for bulk action (required for reject).'
+        required: false
+        example: '"Quality assurance batch approval"'
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
     cleanBodyParameters:
-      token: abc123def456
-      email: john@example.com
-      password: MyNewSecurePass456!
-      password_confirmation: MyNewSecurePass456!
+      review_ids:
+        - 123
+        - 124
+        - 125
+      action: approve
+      reason: '"Quality assurance batch approval"'
     fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
-            "data": [],
-            "message": "Your password has been reset!",
-            "status": 200
+            "message": "Bulk moderation completed successfully.",
+            "data": {
+              "action": "approve",
+              "total_reviews": 3,
+              "successful": 3,
+              "failed": 0,
+              "results": [
+                {
+                  "review_id": 123,
+                  "status": "success",
+                  "message": "Review approved"
+                },
+                {
+                  "review_id": 124,
+                  "status": "success",
+                  "message": "Review approved"
+                },
+                {
+                  "review_id": 125,
+                  "status": "success",
+                  "message": "Review approved"
+                }
+              ],
+              "moderated_by": {
+                "id": 1,
+                "name": "Admin User"
+              },
+              "moderated_at": "2025-01-16T14:30:00.000000Z"
+            }
           }
         headers: []
-        description: ''
+        description: 'Bulk moderation completed'
         custom: []
       -
         status: 422
         content: |-
           {
-            "message": "New password does not meet security requirements.",
             "errors": [
-              "Password must contain at least 1 special character(s)."
-            ],
-            "strength": {
-              "score": 60,
-              "strength": "strong",
-              "feedback": ["Add special characters"]
+              "The review_ids field is required.",
+              "The action field is required."
+            ]
+          }
+        headers: []
+        description: 'Validation errors'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/admin/reviews/reports
+    metadata:
+      groupName: 'Admin Review Management'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get all reported reviews for moderation'
+      description: |-
+        Retrieve all reviews that have been reported by users, sorted by priority
+        and report severity. Essential for content moderation workflow.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      status:
+        name: status
+        description: 'optional Filter by report status. Options: pending, reviewed, resolved, dismissed. Default: pending.'
+        required: false
+        example: pending
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      reason:
+        name: reason
+        description: 'optional Filter by report reason. Options: spam, inappropriate_language, fake_review, off_topic, personal_information, other.'
+        required: false
+        example: spam
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      priority:
+        name: priority
+        description: 'optional Filter by priority level. Options: high, medium, low.'
+        required: false
+        example: high
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      sort_by:
+        name: sort_by
+        description: 'optional Sort reports. Options: newest, oldest, priority, reports_count. Default: priority.'
+        required: false
+        example: reports_count
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      per_page:
+        name: per_page
+        description: 'optional Number of reports per page (1-100). Default: 20.'
+        required: false
+        example: 50
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanQueryParameters:
+      status: pending
+      reason: spam
+      priority: high
+      sort_by: reports_count
+      per_page: 50
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Reported reviews retrieved successfully.",
+            "data": {
+              "data": [
+                {
+                  "review": {
+                    "id": 123,
+                    "rating": 1,
+                    "title": "Terrible product",
+                    "content": "This is spam content with promotional links...",
+                    "user": {
+                      "id": 45,
+                      "name": "Suspicious User"
+                    },
+                    "product": {
+                      "id": 15,
+                      "name": "Premium Wireless Earbuds"
+                    }
+                  },
+                  "reports": [
+                    {
+                      "id": 67,
+                      "reason": "spam",
+                      "details": "Contains promotional links and fake claims",
+                      "status": "pending",
+                      "priority": "high",
+                      "reported_by": {
+                        "id": 89,
+                        "name": "John Doe"
+                      },
+                      "created_at": "2025-01-12T10:30:00.000000Z"
+                    }
+                  ],
+                  "reports_count": 3,
+                  "last_reported_at": "2025-01-13T08:15:00.000000Z"
+                }
+              ],
+              "current_page": 1,
+              "per_page": 20,
+              "total": 47
             }
           }
         headers: []
-        description: ''
+        description: 'Reported reviews retrieved successfully'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
         custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: 'api/admin/reviews/reports/{report_id}/handle'
+    metadata:
+      groupName: 'Admin Review Management'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Handle a review report (resolve, dismiss)'
+      description: |-
+        Take action on review reports by resolving or dismissing them.
+        Resolved reports indicate action was taken, dismissed reports indicate
+        the report was invalid or not actionable.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      report_id:
+        name: report_id
+        description: 'The ID of the report.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      report:
+        name: report
+        description: 'The ID of the review report to handle.'
+        required: true
+        example: 67
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      report_id: 16
+      report: 67
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      action:
+        name: action
+        description: 'Action to take on the report. Options: resolve, dismiss.'
+        required: true
+        example: resolve
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      notes:
+        name: notes
+        description: 'optional Admin notes explaining the decision.'
+        required: false
+        example: '"Review content violates community guidelines"'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      action: resolve
+      notes: '"Review content violates community guidelines"'
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Review report resolved successfully.",
+            "data": {
+              "report_id": 67,
+              "review_id": 123,
+              "action": "resolve",
+              "status": "resolved",
+              "admin_notes": "Review content violates community guidelines",
+              "reviewed_by": {
+                "id": 1,
+                "name": "Admin User"
+              },
+              "reviewed_at": "2025-01-16T14:30:00.000000Z"
+            }
+          }
+        headers: []
+        description: 'Report handled successfully'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\ReviewReport] 999"
+          }
+        headers: []
+        description: 'Report not found'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/admin/reviews/analytics
+    metadata:
+      groupName: 'Admin Review Management'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get review analytics and statistics'
+      description: |-
+        Retrieve comprehensive analytics about reviews including trends,
+        moderation statistics, and quality metrics for administrative insights.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      period:
+        name: period
+        description: 'optional Time period for analytics. Options: today, week, month, quarter, year. Default: month.'
+        required: false
+        example: week
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      product_id:
+        name: product_id
+        description: 'optional Get analytics for specific product.'
+        required: false
+        example: 15
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      include_trends:
+        name: include_trends
+        description: 'optional Include trend data and charts. Default: false.'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanQueryParameters:
+      period: week
+      product_id: 15
+      include_trends: true
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Review analytics retrieved successfully.",
+            "data": {
+              "summary": {
+                "total_reviews": 1543,
+                "pending_approval": 23,
+                "reported_reviews": 8,
+                "featured_reviews": 45,
+                "average_rating": 4.2,
+                "verification_rate": 67.3
+              },
+              "period_stats": {
+                "new_reviews": 89,
+                "approved_reviews": 76,
+                "rejected_reviews": 4,
+                "reports_received": 12,
+                "reports_resolved": 8
+              },
+              "rating_distribution": {
+                "1": 45,
+                "2": 78,
+                "3": 234,
+                "4": 567,
+                "5": 619
+              },
+              "top_products": [
+                {
+                  "product_id": 15,
+                  "product_name": "Premium Wireless Earbuds",
+                  "review_count": 127,
+                  "average_rating": 4.5
+                }
+              ],
+              "moderation_stats": {
+                "approval_rate": 94.2,
+                "average_response_time_hours": 4.7,
+                "moderator_activity": [
+                  {
+                    "moderator": "Admin User",
+                    "actions": 45,
+                    "approvals": 42,
+                    "rejections": 3
+                  }
+                ]
+              }
+            }
+          }
+        headers: []
+        description: 'Analytics retrieved successfully'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
     controller: null
     method: null
     route: null
