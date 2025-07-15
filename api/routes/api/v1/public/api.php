@@ -133,68 +133,84 @@ Route::prefix('cart')
         Route::post('/sync-prices', 'syncPrices')->name('cart.sync-prices');
     });
 
-// Reviews
+// Public Review Viewing (Guest + Authenticated)
+
 Route::prefix('products/{product}/reviews')
-    ->middleware(['client', 'throttle:dynamic_rate_limit:guest.reviews'])
+    ->middleware(['review.smart_throttle:view,false'])
     ->controller(ReviewController::class)
     ->group(function () {
         Route::get('/', 'index')->name('products.reviews.index');
     });
 
 Route::prefix('reviews')
-    ->middleware(['client', 'throttle:dynamic_rate_limit:guest.reviews'])
+    ->middleware(['review.smart_throttle:view,false'])
     ->controller(ReviewController::class)
     ->group(function () {
         Route::get('/{review}', 'show')->name('reviews.show');
     });
 
-// Reviews - Authenticated User Routes
+// Review Actions (Require Authentication)
+
 Route::prefix('reviews')
-    ->middleware(['auth:api', 'emailVerified'])
+    ->middleware(['review.smart_throttle:create,true'])
     ->controller(ReviewController::class)
     ->group(function () {
-        Route::post('/', 'store')
-            ->middleware('throttle:dynamic_rate_limit:reviews.create')
-            ->name('reviews.store');
+        Route::post('/', 'store')->name('reviews.store');
+    });
 
-        Route::post('/{review}', 'update')
-            ->middleware('throttle:dynamic_rate_limit:reviews.update')
+Route::prefix('reviews/{review}')
+    ->controller(ReviewController::class)
+    ->group(function () {
+        Route::post('/', 'update')
+            ->middleware(['review.smart_throttle:update,true'])
             ->name('reviews.update');
 
-        Route::delete('/{review}', 'destroy')
-            ->middleware('throttle:dynamic_rate_limit:api.reviews')
+        Route::delete('/', 'destroy')
+            ->middleware(['review.smart_throttle:delete,true'])
             ->name('reviews.destroy');
 
-        Route::post('/{review}/helpfulness', 'voteHelpfulness')
-            ->middleware('throttle:dynamic_rate_limit:reviews.vote')
+        Route::post('/helpfulness', 'voteHelpfulness')
+            ->middleware(['review.smart_throttle:vote,true'])
             ->name('reviews.helpfulness');
 
-        Route::post('/{review}/report', 'report')
-            ->middleware('throttle:dynamic_rate_limit:reviews.report')
+        Route::post('/report', 'report')
+            ->middleware(['review.smart_throttle:report,true'])
             ->name('reviews.report');
     });
 
-// Review Responses - Vendor Routes
+// Review Responses - Public Viewing
+
+Route::prefix('reviews/{review}/responses')
+    ->middleware(['review.smart_throttle:responses,false'])
+    ->controller(ReviewResponseController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('review.responses.public.index');
+        Route::get('/{response}', 'show')->name('review.responses.public.show');
+    });
+
+// Review Responses - Vendor Actions
+
 Route::prefix('reviews/{review}/responses')
     ->middleware(['auth:api', 'roles:vendor', 'emailVerified'])
     ->controller(ReviewResponseController::class)
     ->group(function () {
         Route::post('/', 'store')
-            ->middleware('throttle:dynamic_rate_limit:reviews.respond')
+            ->middleware(['review.smart_throttle:respond,true'])
             ->name('review.responses.store');
 
         Route::post('/{response}', 'update')
-            ->middleware('throttle:dynamic_rate_limit:vendor.responses')
+            ->middleware(['review.smart_throttle:respond_update,true'])
             ->name('review.responses.update');
 
         Route::delete('/{response}', 'destroy')
-            ->middleware('throttle:dynamic_rate_limit:vendor.responses')
+            ->middleware(['review.smart_throttle:respond_delete,true'])
             ->name('review.responses.destroy');
     });
 
-// Vendor Response Management
+// Vendor Dashboard
+
 Route::prefix('vendor/responses')
-    ->middleware(['auth:api', 'roles:vendor', 'emailVerified', 'throttle:dynamic_rate_limit:vendor.dashboard'])
+    ->middleware(['auth:api', 'roles:vendor', 'emailVerified', 'review.smart_throttle:dashboard,true'])
     ->controller(ReviewResponseController::class)
     ->group(function () {
         Route::get('/', 'index')->name('vendor.responses.index');

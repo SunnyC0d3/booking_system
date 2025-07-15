@@ -74,10 +74,7 @@ return new class extends Migration
                 $table->dropColumn('converted_to_pennies');
             });
 
-            echo "✅ Successfully converted all monetary values to pennies\n";
-
         } catch (\Exception $e) {
-            echo "❌ Migration failed: " . $e->getMessage() . "\n";
             throw $e;
         }
     }

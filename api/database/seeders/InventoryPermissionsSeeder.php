@@ -20,14 +20,11 @@ class InventoryPermissionsSeeder extends Seeder
             Permission::firstOrCreate(['name' => $permission]);
         }
 
-        // Assign to admin roles
         $adminRoles = Role::whereIn('name', ['super_admin', 'admin'])->get();
 
         foreach ($adminRoles as $role) {
             $permissionIds = Permission::whereIn('name', $permissions)->pluck('id');
             $role->permissions()->syncWithoutDetaching($permissionIds);
         }
-
-        $this->command->info('Inventory permissions created and assigned to admin roles.');
     }
 }

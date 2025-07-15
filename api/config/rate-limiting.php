@@ -28,6 +28,11 @@ return [
     'guest' => [
         'products' => '30,1',       // 30 product views per minute
         'public' => '20,1',         // 20 public requests per minute
+        'reviews' => '15,1',        // 15 review views per minute
+        'review_votes' => '0,1',    // No voting for guests
+        'review_reports' => '0,1',  // No reporting for guests
+        'review_create' => '0,1',   // No review creation for guests
+        'review_responses' => '5,1', // 5 response views per minute
     ],
 
     'cart' => [

@@ -4,11 +4,14 @@ use App\Http\Middleware\V1\CheckAccountLock;
 use App\Http\Middleware\V1\CheckPasswordExpiry;
 use App\Http\Middleware\V1\DynamicRateLimit;
 use App\Http\Middleware\V1\EnsureEmailIsVerified;
+use App\Http\Middleware\V1\GuestReviewRestriction;
+use App\Http\Middleware\V1\ReviewRateLimit;
 use App\Http\Middleware\V1\Role;
 use App\Http\Middleware\V1\SecureFileUpload;
 use App\Http\Middleware\V1\SecurityHeaders;
 use App\Http\Middleware\V1\SecurityLogger;
 use App\Http\Middleware\V1\SecurityMonitoring;
+use App\Http\Middleware\V1\SmartReviewThrottle;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -44,6 +47,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'secure_upload' => SecureFileUpload::class,
             'account_lock' => CheckAccountLock::class,
             'password_expiry' => CheckPasswordExpiry::class,
+            'review.guest_restrict' => GuestReviewRestriction::class,
+            'review.rate_limit' => ReviewRateLimit::class,
+            'review.smart_throttle' => SmartReviewThrottle::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
