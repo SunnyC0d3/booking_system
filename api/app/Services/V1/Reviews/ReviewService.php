@@ -63,6 +63,7 @@ class ReviewService
             $reviews = $query->paginate($perPage);
 
             $user = $request->user();
+
             if ($user) {
                 $this->loadUserVoteStatus($reviews->getCollection(), $user->id);
             }
@@ -150,7 +151,7 @@ class ReviewService
                 $product->recalculateReviewStats();
 
                 $review->load([
-                    'user:id,name',
+                    'user',
                     'product:id,name,price,vendor_id',
                     'product.vendor.user',
                     'media'

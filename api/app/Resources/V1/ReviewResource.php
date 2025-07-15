@@ -64,6 +64,7 @@ class ReviewResource extends JsonResource
     protected function maskEmail(string $email): string
     {
         $parts = explode('@', $email);
+
         if (count($parts) !== 2) {
             return $email;
         }

@@ -133,7 +133,7 @@ Route::prefix('cart')
         Route::post('/sync-prices', 'syncPrices')->name('cart.sync-prices');
     });
 
-// Public Review Viewing (Guest + Authenticated)
+// Public Review Viewing (Guest + Authenticated users can view reviews)
 
 Route::prefix('products/{product}/reviews')
     ->middleware(['review.smart_throttle:view,false'])
@@ -149,13 +149,14 @@ Route::prefix('reviews')
         Route::get('/{review}', 'show')->name('reviews.show');
     });
 
-// Review Actions (Require Authentication)
+// Review Actions (Require Authentication) - SmartReviewThrottle handles auth
 
 Route::prefix('reviews')
-    ->middleware(['review.smart_throttle:create,true'])
     ->controller(ReviewController::class)
     ->group(function () {
-        Route::post('/', 'store')->name('reviews.store');
+        Route::post('/', 'store')
+            ->middleware(['review.smart_throttle:create,true'])
+            ->name('reviews.store');
     });
 
 Route::prefix('reviews/{review}')
@@ -178,7 +179,7 @@ Route::prefix('reviews/{review}')
             ->name('reviews.report');
     });
 
-// Review Responses - Public Viewing
+// Review Responses - Public Viewing (No auth required)
 
 Route::prefix('reviews/{review}/responses')
     ->middleware(['review.smart_throttle:responses,false'])
@@ -188,29 +189,21 @@ Route::prefix('reviews/{review}/responses')
         Route::get('/{response}', 'show')->name('review.responses.public.show');
     });
 
-// Review Responses - Vendor Actions
+// Review Responses - Vendor Actions (Auth required + Role check)
 
 Route::prefix('reviews/{review}/responses')
-    ->middleware(['auth:api', 'roles:vendor', 'emailVerified'])
+    ->middleware(['review.smart_throttle:respond,true', 'roles:vendor'])
     ->controller(ReviewResponseController::class)
     ->group(function () {
-        Route::post('/', 'store')
-            ->middleware(['review.smart_throttle:respond,true'])
-            ->name('review.responses.store');
-
-        Route::post('/{response}', 'update')
-            ->middleware(['review.smart_throttle:respond_update,true'])
-            ->name('review.responses.update');
-
-        Route::delete('/{response}', 'destroy')
-            ->middleware(['review.smart_throttle:respond_delete,true'])
-            ->name('review.responses.destroy');
+        Route::post('/', 'store')->name('review.responses.store');
+        Route::post('/{response}', 'update')->name('review.responses.update');
+        Route::delete('/{response}', 'destroy')->name('review.responses.destroy');
     });
 
-// Vendor Dashboard
+// Vendor Dashboard (Auth required + Role check)
 
 Route::prefix('vendor/responses')
-    ->middleware(['auth:api', 'roles:vendor', 'emailVerified', 'review.smart_throttle:dashboard,true'])
+    ->middleware(['review.smart_throttle:dashboard,true', 'roles:vendor'])
     ->controller(ReviewResponseController::class)
     ->group(function () {
         Route::get('/', 'index')->name('vendor.responses.index');

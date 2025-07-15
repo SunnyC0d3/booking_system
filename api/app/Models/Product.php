@@ -32,6 +32,9 @@ class Product extends Model implements HasMedia
         'quantity',
         'product_status_id',
         'low_stock_threshold',
+        'total_reviews',
+        'average_rating',
+        'rating_breakdown'
     ];
 
     public function category(): BelongsTo
@@ -132,12 +135,12 @@ class Product extends Model implements HasMedia
 
     public function getAverageRatingAttribute(): float
     {
-        return (float) $this->average_rating;
+        return (float) ($this->attributes['average_rating'] ?? 0);
     }
 
     public function getTotalReviewsAttribute(): int
     {
-        return (int) $this->total_reviews;
+        return (int) ($this->attributes['total_reviews'] ?? 0);
     }
 
     public function getRatingBreakdownAttribute(): array

@@ -105,10 +105,10 @@ class Review extends Model
             ->whereRaw('(helpful_votes / total_votes) >= 0.7');
     }
 
-    public function getHelpfulnessRatio(): float
+    public function getHelpfulnessRatio(): ?float
     {
-        if ($this->total_votes === 0) {
-            return 0;
+        if ($this->total_votes === 0 || $this->total_votes === null) {
+            return null;
         }
 
         return round(($this->helpful_votes / $this->total_votes) * 100, 1);
