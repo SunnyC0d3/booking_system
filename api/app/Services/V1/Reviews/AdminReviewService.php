@@ -523,7 +523,6 @@ class AdminReviewService
                     }
                 }
 
-                // Send notifications after transaction completes
                 $this->processBulkNotifications($notificationQueue);
 
                 Log::info('Bulk review moderation completed', [

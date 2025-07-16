@@ -395,7 +395,7 @@ class AdminReviewResponseService
             $query->join('reviews', 'products.id', '=', 'reviews.product_id')
                 ->where('reviews.is_approved', true);
         }])
-            ->withCount('user.vendors as responses_count')
+            ->withCount('reviewResponses as responses_count')
             ->having('total_reviews', '>', 0)
             ->orderByRaw('responses_count / total_reviews DESC')
             ->limit($limit)

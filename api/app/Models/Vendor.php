@@ -32,6 +32,11 @@ class Vendor extends Model implements HasMedia
         return $this->belongsTo(User::class);
     }
 
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class);
+    }
+
     public function scopeFilter(Builder $builder, QueryFilter $filters)
     {
         return $filters->apply($builder);
