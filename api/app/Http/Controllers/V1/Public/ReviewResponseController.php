@@ -24,6 +24,66 @@ class ReviewResponseController extends Controller
     }
 
     /**
+     * Get all responses for a specific review (Public viewing)
+     *
+     * Retrieve all approved vendor responses for a specific review.
+     * This endpoint is publicly accessible and does not require authentication.
+     *
+     * @group Public Review Responses
+     *
+     * @urlParam review integer required The ID of the review. Example: 123
+     *
+     * @queryParam per_page integer optional Number of responses per page (1-50). Default: 15. Example: 20
+     * @queryParam page integer optional Page number for pagination. Default: 1. Example: 2
+     *
+     * @response 200 scenario="Responses retrieved successfully" {
+     *   "message": "Review responses retrieved successfully.",
+     *   "data": {
+     *     "data": [
+     *       {
+     *         "id": 45,
+     *         "vendor": {
+     *           "id": 15,
+     *           "name": "Tech Haven"
+     *         },
+     *         "content": "Thank you for your feedback! We're glad you enjoyed our product.",
+     *         "created_at": "2025-01-16T14:30:00.000000Z"
+     *       }
+     *     ],
+     *     "current_page": 1,
+     *     "per_page": 15,
+     *     "total": 2,
+     *     "last_page": 1
+     *   }
+     * }
+     */
+    public function publicIndex(Request $request, Review $review)
+    {
+        try {
+            return $this->reviewResponseService->getPublicResponses($request, $review);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
+    }
+
+    /**
+     * Get individual response details (Public viewing)
+     *
+     * @group Public Review Responses
+     *
+     * @urlParam review integer required The ID of the review. Example: 123
+     * @urlParam response integer required The ID of the response. Example: 45
+     */
+    public function publicShow(Request $request, Review $review, ReviewResponse $response)
+    {
+        try {
+            return $this->reviewResponseService->getPublicResponse($request, $review, $response);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
+    }
+
+    /**
      * Store a new vendor response to a review
      *
      * Allows vendors to respond to reviews on their products. Each vendor can only
@@ -204,6 +264,21 @@ class ReviewResponseController extends Controller
     {
         try {
             return $this->reviewResponseService->getResponse($request, $response);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
+    }
+
+    /**
+     * Get unanswered reviews for vendor
+     *
+     * @group Vendor Review Responses
+     * @authenticated
+     */
+    public function getUnansweredReviews(Request $request)
+    {
+        try {
+            return $this->reviewResponseService->getUnansweredReviews($request);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }

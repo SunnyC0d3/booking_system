@@ -303,4 +303,59 @@ class ReviewResponseService
             throw new \Exception('Failed to retrieve unanswered reviews.', 500);
         }
     }
+
+    public function getPublicResponses(Request $request, Review $review)
+    {
+        try {
+            $perPage = min($request->input('per_page', 15), 50);
+
+            $responses = ReviewResponse::with([
+                'vendor:id,name',
+                'user:id,name'
+            ])
+                ->where('review_id', $review->id)
+                ->where('is_approved', true)
+                ->latest()
+                ->paginate($perPage);
+
+            return $this->ok('Review responses retrieved successfully.', $responses->toArray());
+
+        } catch (\Exception $e) {
+            Log::error('Failed to retrieve public responses', [
+                'review_id' => $review->id,
+                'error' => $e->getMessage()
+            ]);
+
+            throw new \Exception('Failed to retrieve responses.', 500);
+        }
+    }
+
+    public function getPublicResponse(Request $request, Review $review, ReviewResponse $response)
+    {
+        try {
+            if ($response->review_id !== $review->id) {
+                throw new \Exception('Response not found for this review.', 404);
+            }
+
+            if (!$response->is_approved) {
+                throw new \Exception('Response not found.', 404);
+            }
+
+            $response->load([
+                'vendor:id,name',
+                'user:id,name'
+            ]);
+
+            return $this->ok('Response retrieved successfully.', new ReviewResponseResource($response));
+
+        } catch (\Exception $e) {
+            Log::error('Failed to retrieve public response', [
+                'response_id' => $response->id,
+                'review_id' => $review->id,
+                'error' => $e->getMessage()
+            ]);
+
+            throw new \Exception($e->getMessage(), $e->getCode() ?: 500);
+        }
+    }
 }

@@ -230,7 +230,7 @@ class ReviewService
                     $review->product->recalculateReviewStats();
                 }
 
-                $review->load(['user:id,name', 'product:id,name', 'media']);
+                $review->load(['user', 'product:id,name', 'media']);
 
                 Log::info('Review updated successfully', [
                     'review_id' => $review->id,
@@ -305,7 +305,6 @@ class ReviewService
             $user = $request->user();
             $isHelpful = $request->validated()['is_helpful'];
 
-            // Check if user can vote
             if ($review->user_id === $user->id) {
                 throw new \Exception('You cannot vote on your own review.', 403);
             }
@@ -359,7 +358,6 @@ class ReviewService
             $user = $request->user();
             $data = $request->validated();
 
-            // Check if user has already reported this review
             $existingReport = ReviewReport::where('review_id', $review->id)
                 ->where('reported_by', $user->id)
                 ->first();

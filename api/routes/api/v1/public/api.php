@@ -185,8 +185,8 @@ Route::prefix('reviews/{review}/responses')
     ->middleware(['review.smart_throttle:responses,false'])
     ->controller(ReviewResponseController::class)
     ->group(function () {
-        Route::get('/', 'index')->name('review.responses.public.index');
-        Route::get('/{response}', 'show')->name('review.responses.public.show');
+        Route::get('/', 'publicIndex')->name('review.responses.public.index');
+        Route::get('/{response}', 'publicShow')->name('review.responses.public.show');
     });
 
 // Review Responses - Vendor Actions (Auth required + Role check)
@@ -208,5 +208,10 @@ Route::prefix('vendor/responses')
     ->group(function () {
         Route::get('/', 'index')->name('vendor.responses.index');
         Route::get('/{response}', 'show')->name('vendor.responses.show');
-        Route::get('/unanswered/reviews', 'getUnansweredReviews')->name('vendor.responses.unanswered');
     });
+
+// Vendor Unanswered Reviews
+
+Route::get('vendor/unanswered-reviews', [ReviewResponseController::class, 'getUnansweredReviews'])
+    ->middleware(['review.smart_throttle:dashboard,true', 'roles:vendor'])
+    ->name('vendor.responses.unanswered');

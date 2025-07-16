@@ -110,7 +110,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function hasRole(string|array $roles): bool
     {
         if (is_string($roles)) {
-            $roles = strtolower($roles);
+            $roles = [strtolower($roles)];
         } else {
             $roles = array_map('strtolower', $roles);
         }

@@ -22,6 +22,7 @@ class StoreReviewResponseRequest extends FormRequest
         }
 
         $vendor = Vendor::where('user_id', $user->id)->first();
+
         if (!$vendor) {
             return false;
         }
