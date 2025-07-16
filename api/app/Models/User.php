@@ -351,4 +351,14 @@ class User extends Authenticatable implements MustVerifyEmail
             'expires_at' => null,
         ]);
     }
+
+    public function shippingAddresses(): HasMany
+    {
+        return $this->hasMany(ShippingAddress::class);
+    }
+
+    public function defaultShippingAddress(): BelongsTo
+    {
+        return $this->belongsTo(ShippingAddress::class, 'default_shipping_address_id');
+    }
 }

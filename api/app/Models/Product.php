@@ -213,4 +213,140 @@ class Product extends Model implements HasMedia
             'last_reviewed_at' => $this->reviews()->approved()->latest()->value('created_at'),
         ]);
     }
+
+    public function getWeightInGrams(): int
+    {
+        return (int) ($this->weight * 1000);
+    }
+
+    public function getWeightInKg(): float
+    {
+        return (float) $this->weight;
+    }
+
+    public function getWeightFormatted(): string
+    {
+        if ($this->weight >= 1) {
+            return number_format($this->weight, 2) . 'kg';
+        }
+
+        return number_format($this->weight * 1000, 0) . 'g';
+    }
+
+    public function getDimensions(): array
+    {
+        return [
+            'length' => (float) $this->length,
+            'width' => (float) $this->width,
+            'height' => (float) $this->height,
+        ];
+    }
+
+    public function getDimensionsFormatted(): string
+    {
+        $dimensions = $this->getDimensions();
+        return $dimensions['length'] . ' x ' . $dimensions['width'] . ' x ' . $dimensions['height'] . ' cm';
+    }
+
+    public function getVolumeInCubicCm(): float
+    {
+        $dimensions = $this->getDimensions();
+        return $dimensions['length'] * $dimensions['width'] * $dimensions['height'];
+    }
+
+    public function requiresShipping(): bool
+    {
+        return $this->requires_shipping && !$this->is_virtual;
+    }
+
+    public function isVirtual(): bool
+    {
+        return $this->is_virtual;
+    }
+
+    public function getShippingClass(): string
+    {
+        return $this->shipping_class ?? 'standard';
+    }
+
+    public function getHandlingTimeDays(): int
+    {
+        return $this->handling_time_days ?? 1;
+    }
+
+    public function getEstimatedShippingDate(): \Carbon\Carbon
+    {
+        return now()->addDays($this->getHandlingTimeDays());
+    }
+
+    public function hasShippingRestrictions(): bool
+    {
+        return !empty($this->shipping_restrictions);
+    }
+
+    public function getShippingRestrictions(): array
+    {
+        return $this->shipping_restrictions ?? [];
+    }
+
+    public function isRestrictedToCountry(string $countryCode): bool
+    {
+        $restrictions = $this->getShippingRestrictions();
+
+        if (empty($restrictions)) {
+            return false;
+        }
+
+        if (isset($restrictions['excluded_countries'])) {
+            return in_array($countryCode, $restrictions['excluded_countries']);
+        }
+
+        if (isset($restrictions['allowed_countries'])) {
+            return !in_array($countryCode, $restrictions['allowed_countries']);
+        }
+
+        return false;
+    }
+
+    public function canShipTo(string $countryCode): bool
+    {
+        if (!$this->requiresShipping()) {
+            return true;
+        }
+
+        return !$this->isRestrictedToCountry($countryCode);
+    }
+
+    public function getShippingData(): array
+    {
+        return [
+            'weight' => $this->getWeightInKg(),
+            'weight_unit' => 'kg',
+            'dimensions' => $this->getDimensions(),
+            'dimension_unit' => 'cm',
+            'shipping_class' => $this->getShippingClass(),
+            'requires_shipping' => $this->requiresShipping(),
+            'is_virtual' => $this->isVirtual(),
+            'handling_time_days' => $this->getHandlingTimeDays(),
+            'restrictions' => $this->getShippingRestrictions(),
+        ];
+    }
+
+    public function isDangerous(): bool
+    {
+        $restrictions = $this->getShippingRestrictions();
+        return isset($restrictions['dangerous_goods']) && $restrictions['dangerous_goods'] === true;
+    }
+
+    public function requiresSignature(): bool
+    {
+        $restrictions = $this->getShippingRestrictions();
+        return isset($restrictions['signature_required']) && $restrictions['signature_required'] === true;
+    }
+
+    public function isFragile(): bool
+    {
+        $restrictions = $this->getShippingRestrictions();
+        return isset($restrictions['fragile']) && $restrictions['fragile'] === true;
+    }
 }
