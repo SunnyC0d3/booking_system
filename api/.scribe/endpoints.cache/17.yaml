@@ -6,6 +6,245 @@ endpoints:
   -
     httpMethods:
       - GET
+    uri: api/admin/review-responses/analytics
+    metadata:
+      groupName: 'Admin Review Response Management'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get review response analytics and statistics'
+      description: |-
+        Retrieve comprehensive analytics about vendor responses including response rates,
+        approval statistics, vendor performance metrics, and trends for administrative insights.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      period:
+        name: period
+        description: 'optional Time period for analytics. Options: today, week, month, quarter, year. Default: month.'
+        required: false
+        example: week
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      vendor_id:
+        name: vendor_id
+        description: 'optional Get analytics for specific vendor.'
+        required: false
+        example: 8
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      include_trends:
+        name: include_trends
+        description: 'optional Include trend data and charts. Default: false.'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanQueryParameters:
+      period: week
+      vendor_id: 8
+      include_trends: true
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Response analytics retrieved successfully.",
+            "data": {
+              "summary": {
+                "total_responses": 156,
+                "pending_approval": 12,
+                "approved_responses": 144,
+                "response_rate": 73.2,
+                "average_response_time_hours": 6.4
+              },
+              "period_stats": {
+                "new_responses": 23,
+                "approved_responses": 21,
+                "rejected_responses": 1
+              },
+              "top_vendors": [
+                {
+                  "vendor_id": 8,
+                  "vendor_name": "Tech Solutions Inc",
+                  "response_count": 45,
+                  "response_rate": 89.5,
+                  "average_response_time": 4.2
+                },
+                {
+                  "vendor_id": 12,
+                  "vendor_name": "Premium Electronics",
+                  "response_count": 32,
+                  "response_rate": 78.3,
+                  "average_response_time": 8.1
+                }
+              ],
+              "response_trends": {
+                "daily_responses": [
+                  {"date": "2025-01-10", "responses": 8},
+                  {"date": "2025-01-11", "responses": 12},
+                  {"date": "2025-01-12", "responses": 6}
+                ]
+              }
+            }
+          }
+        headers: []
+        description: 'Analytics retrieved successfully'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/admin/review-responses/bulk-moderate
+    metadata:
+      groupName: 'Admin Review Response Management'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Bulk moderate multiple vendor responses'
+      description: |-
+        Perform the same moderation action on multiple vendor responses simultaneously.
+        Useful for bulk approval, rejection, or deletion of responses.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      response_ids:
+        name: response_ids
+        description: 'Array of response IDs to moderate.'
+        required: true
+        example:
+          - 45
+          - 46
+          - 47
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      action:
+        name: action
+        description: 'Bulk action to perform. Options: approve, reject, delete.'
+        required: true
+        example: approve
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      reason:
+        name: reason
+        description: 'optional Reason for bulk action (recommended for reject/delete).'
+        required: false
+        example: '"Quality assurance batch approval"'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      response_ids:
+        - 45
+        - 46
+        - 47
+      action: approve
+      reason: '"Quality assurance batch approval"'
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Bulk moderation completed successfully.",
+            "data": {
+              "action": "approve",
+              "total_responses": 3,
+              "successful": 3,
+              "failed": 0,
+              "results": [
+                {
+                  "response_id": 45,
+                  "status": "success",
+                  "message": "Approved successfully"
+                },
+                {
+                  "response_id": 46,
+                  "status": "success",
+                  "message": "Approved successfully"
+                },
+                {
+                  "response_id": 47,
+                  "status": "success",
+                  "message": "Approved successfully"
+                }
+              ],
+              "moderated_by": {
+                "id": 1,
+                "name": "Admin User"
+              },
+              "moderated_at": "2025-01-16T14:30:00.000000Z"
+            }
+          }
+        headers: []
+        description: 'Bulk moderation completed'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "errors": [
+              "The response_ids field is required.",
+              "The action field is required."
+            ]
+          }
+        headers: []
+        description: 'Validation errors'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
     uri: api/admin/review-responses
     metadata:
       groupName: 'Admin Review Response Management'
@@ -202,7 +441,7 @@ endpoints:
         name: response_id
         description: 'The ID of the response.'
         required: true
-        example: 16
+        example: 2
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -219,7 +458,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      response_id: 16
+      response_id: 2
       response: 45
     queryParameters: []
     cleanQueryParameters: []
@@ -322,7 +561,7 @@ endpoints:
         name: response_id
         description: 'The ID of the response.'
         required: true
-        example: 16
+        example: 2
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -339,7 +578,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      response_id: 16
+      response_id: 2
       response: 45
     queryParameters: []
     cleanQueryParameters: []
@@ -416,7 +655,7 @@ endpoints:
         name: response_id
         description: 'The ID of the response.'
         required: true
-        example: 16
+        example: 2
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -433,7 +672,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      response_id: 16
+      response_id: 2
       response: 45
     queryParameters: []
     cleanQueryParameters: []
@@ -467,245 +706,6 @@ endpoints:
           }
         headers: []
         description: 'Response not found'
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/admin/review-responses/bulk-moderate
-    metadata:
-      groupName: 'Admin Review Response Management'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Bulk moderate multiple vendor responses'
-      description: |-
-        Perform the same moderation action on multiple vendor responses simultaneously.
-        Useful for bulk approval, rejection, or deletion of responses.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      response_ids:
-        name: response_ids
-        description: 'Array of response IDs to moderate.'
-        required: true
-        example:
-          - 45
-          - 46
-          - 47
-        type: 'string[]'
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      action:
-        name: action
-        description: 'Bulk action to perform. Options: approve, reject, delete.'
-        required: true
-        example: approve
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      reason:
-        name: reason
-        description: 'optional Reason for bulk action (recommended for reject/delete).'
-        required: false
-        example: '"Quality assurance batch approval"'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      response_ids:
-        - 45
-        - 46
-        - 47
-      action: approve
-      reason: '"Quality assurance batch approval"'
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Bulk moderation completed successfully.",
-            "data": {
-              "action": "approve",
-              "total_responses": 3,
-              "successful": 3,
-              "failed": 0,
-              "results": [
-                {
-                  "response_id": 45,
-                  "status": "success",
-                  "message": "Approved successfully"
-                },
-                {
-                  "response_id": 46,
-                  "status": "success",
-                  "message": "Approved successfully"
-                },
-                {
-                  "response_id": 47,
-                  "status": "success",
-                  "message": "Approved successfully"
-                }
-              ],
-              "moderated_by": {
-                "id": 1,
-                "name": "Admin User"
-              },
-              "moderated_at": "2025-01-16T14:30:00.000000Z"
-            }
-          }
-        headers: []
-        description: 'Bulk moderation completed'
-        custom: []
-      -
-        status: 422
-        content: |-
-          {
-            "errors": [
-              "The response_ids field is required.",
-              "The action field is required."
-            ]
-          }
-        headers: []
-        description: 'Validation errors'
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - GET
-    uri: api/admin/review-responses/analytics
-    metadata:
-      groupName: 'Admin Review Response Management'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Get review response analytics and statistics'
-      description: |-
-        Retrieve comprehensive analytics about vendor responses including response rates,
-        approval statistics, vendor performance metrics, and trends for administrative insights.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters:
-      period:
-        name: period
-        description: 'optional Time period for analytics. Options: today, week, month, quarter, year. Default: month.'
-        required: false
-        example: week
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      vendor_id:
-        name: vendor_id
-        description: 'optional Get analytics for specific vendor.'
-        required: false
-        example: 8
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      include_trends:
-        name: include_trends
-        description: 'optional Include trend data and charts. Default: false.'
-        required: false
-        example: true
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanQueryParameters:
-      period: week
-      vendor_id: 8
-      include_trends: true
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Response analytics retrieved successfully.",
-            "data": {
-              "summary": {
-                "total_responses": 156,
-                "pending_approval": 12,
-                "approved_responses": 144,
-                "response_rate": 73.2,
-                "average_response_time_hours": 6.4
-              },
-              "period_stats": {
-                "new_responses": 23,
-                "approved_responses": 21,
-                "rejected_responses": 1
-              },
-              "top_vendors": [
-                {
-                  "vendor_id": 8,
-                  "vendor_name": "Tech Solutions Inc",
-                  "response_count": 45,
-                  "response_rate": 89.5,
-                  "average_response_time": 4.2
-                },
-                {
-                  "vendor_id": 12,
-                  "vendor_name": "Premium Electronics",
-                  "response_count": 32,
-                  "response_rate": 78.3,
-                  "average_response_time": 8.1
-                }
-              ],
-              "response_trends": {
-                "daily_responses": [
-                  {"date": "2025-01-10", "responses": 8},
-                  {"date": "2025-01-11", "responses": 12},
-                  {"date": "2025-01-12", "responses": 6}
-                ]
-              }
-            }
-          }
-        headers: []
-        description: 'Analytics retrieved successfully'
         custom: []
     responseFields: []
     auth:

@@ -4,6 +4,400 @@ endpoints:
   -
     httpMethods:
       - GET
+    uri: api/admin/reviews/reports
+    metadata:
+      groupName: 'Admin Review Management'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get all reported reviews for moderation'
+      description: |-
+        Retrieve all reviews that have been reported by users, sorted by priority
+        and report severity. Essential for content moderation workflow.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      status:
+        name: status
+        description: 'optional Filter by report status. Options: pending, reviewed, resolved, dismissed. Default: pending.'
+        required: false
+        example: pending
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      reason:
+        name: reason
+        description: 'optional Filter by report reason. Options: spam, inappropriate_language, fake_review, off_topic, personal_information, other.'
+        required: false
+        example: spam
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      priority:
+        name: priority
+        description: 'optional Filter by priority level. Options: high, medium, low.'
+        required: false
+        example: high
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      sort_by:
+        name: sort_by
+        description: 'optional Sort reports. Options: newest, oldest, priority, reports_count. Default: priority.'
+        required: false
+        example: reports_count
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      per_page:
+        name: per_page
+        description: 'optional Number of reports per page (1-100). Default: 20.'
+        required: false
+        example: 50
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanQueryParameters:
+      status: pending
+      reason: spam
+      priority: high
+      sort_by: reports_count
+      per_page: 50
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Reported reviews retrieved successfully.",
+            "data": {
+              "data": [
+                {
+                  "review": {
+                    "id": 123,
+                    "rating": 1,
+                    "title": "Terrible product",
+                    "content": "This is spam content with promotional links...",
+                    "user": {
+                      "id": 45,
+                      "name": "Suspicious User"
+                    },
+                    "product": {
+                      "id": 15,
+                      "name": "Premium Wireless Earbuds"
+                    }
+                  },
+                  "reports": [
+                    {
+                      "id": 67,
+                      "reason": "spam",
+                      "details": "Contains promotional links and fake claims",
+                      "status": "pending",
+                      "priority": "high",
+                      "reported_by": {
+                        "id": 89,
+                        "name": "John Doe"
+                      },
+                      "created_at": "2025-01-12T10:30:00.000000Z"
+                    }
+                  ],
+                  "reports_count": 3,
+                  "last_reported_at": "2025-01-13T08:15:00.000000Z"
+                }
+              ],
+              "current_page": 1,
+              "per_page": 20,
+              "total": 47
+            }
+          }
+        headers: []
+        description: 'Reported reviews retrieved successfully'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/admin/reviews/analytics
+    metadata:
+      groupName: 'Admin Review Management'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get review analytics and statistics'
+      description: |-
+        Retrieve comprehensive analytics about reviews including trends,
+        moderation statistics, and quality metrics for administrative insights.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      period:
+        name: period
+        description: 'optional Time period for analytics. Options: today, week, month, quarter, year. Default: month.'
+        required: false
+        example: week
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      product_id:
+        name: product_id
+        description: 'optional Get analytics for specific product.'
+        required: false
+        example: 15
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      include_trends:
+        name: include_trends
+        description: 'optional Include trend data and charts. Default: false.'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanQueryParameters:
+      period: week
+      product_id: 15
+      include_trends: true
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Review analytics retrieved successfully.",
+            "data": {
+              "summary": {
+                "total_reviews": 1543,
+                "pending_approval": 23,
+                "reported_reviews": 8,
+                "featured_reviews": 45,
+                "average_rating": 4.2,
+                "verification_rate": 67.3
+              },
+              "period_stats": {
+                "new_reviews": 89,
+                "approved_reviews": 76,
+                "rejected_reviews": 4,
+                "reports_received": 12,
+                "reports_resolved": 8
+              },
+              "rating_distribution": {
+                "1": 45,
+                "2": 78,
+                "3": 234,
+                "4": 567,
+                "5": 619
+              },
+              "top_products": [
+                {
+                  "product_id": 15,
+                  "product_name": "Premium Wireless Earbuds",
+                  "review_count": 127,
+                  "average_rating": 4.5
+                }
+              ],
+              "moderation_stats": {
+                "approval_rate": 94.2,
+                "average_response_time_hours": 4.7,
+                "moderator_activity": [
+                  {
+                    "moderator": "Admin User",
+                    "actions": 45,
+                    "approvals": 42,
+                    "rejections": 3
+                  }
+                ]
+              }
+            }
+          }
+        headers: []
+        description: 'Analytics retrieved successfully'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/admin/reviews/bulk-moderate
+    metadata:
+      groupName: 'Admin Review Management'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Bulk moderate multiple reviews'
+      description: |-
+        Perform the same moderation action on multiple reviews simultaneously.
+        Useful for bulk approval, rejection, or featuring of reviews.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      review_ids:
+        name: review_ids
+        description: 'Array of review IDs to moderate.'
+        required: true
+        example:
+          - 123
+          - 124
+          - 125
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      action:
+        name: action
+        description: 'Bulk action to perform. Options: approve, reject, feature, unfeature.'
+        required: true
+        example: approve
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      reason:
+        name: reason
+        description: 'optional Reason for bulk action (required for reject).'
+        required: false
+        example: '"Quality assurance batch approval"'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      review_ids:
+        - 123
+        - 124
+        - 125
+      action: approve
+      reason: '"Quality assurance batch approval"'
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Bulk moderation completed successfully.",
+            "data": {
+              "action": "approve",
+              "total_reviews": 3,
+              "successful": 3,
+              "failed": 0,
+              "results": [
+                {
+                  "review_id": 123,
+                  "status": "success",
+                  "message": "Review approved"
+                },
+                {
+                  "review_id": 124,
+                  "status": "success",
+                  "message": "Review approved"
+                },
+                {
+                  "review_id": 125,
+                  "status": "success",
+                  "message": "Review approved"
+                }
+              ],
+              "moderated_by": {
+                "id": 1,
+                "name": "Admin User"
+              },
+              "moderated_at": "2025-01-16T14:30:00.000000Z"
+            }
+          }
+        headers: []
+        description: 'Bulk moderation completed'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "errors": [
+              "The review_ids field is required.",
+              "The action field is required."
+            ]
+          }
+        headers: []
+        description: 'Validation errors'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
     uri: api/admin/reviews
     metadata:
       groupName: 'Admin Review Management'
@@ -185,7 +579,7 @@ endpoints:
         name: sort_by
         description: ''
         required: false
-        example: helpful
+        example: oldest
         type: string
         enumValues:
           - newest
@@ -222,7 +616,7 @@ endpoints:
         - 2
       verified_only: false
       with_media: true
-      sort_by: helpful
+      sort_by: oldest
       per_page: 1
       page: 66
     fileParameters: []
@@ -317,7 +711,7 @@ endpoints:
         name: id
         description: 'The ID of the review.'
         required: true
-        example: 16
+        example: 5
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -334,7 +728,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      id: 16
+      id: 5
       review: 123
     queryParameters: []
     cleanQueryParameters: []
@@ -448,7 +842,7 @@ endpoints:
         name: id
         description: 'The ID of the review.'
         required: true
-        example: 16
+        example: 5
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -465,7 +859,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      id: 16
+      id: 5
       review: 123
     queryParameters: []
     cleanQueryParameters: []
@@ -533,7 +927,7 @@ endpoints:
         name: review_id
         description: 'The ID of the review.'
         required: true
-        example: 16
+        example: 5
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -550,7 +944,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      review_id: 16
+      review_id: 5
       review: 123
     queryParameters: []
     cleanQueryParameters: []
@@ -634,278 +1028,6 @@ endpoints:
   -
     httpMethods:
       - POST
-    uri: api/admin/reviews/bulk-moderate
-    metadata:
-      groupName: 'Admin Review Management'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Bulk moderate multiple reviews'
-      description: |-
-        Perform the same moderation action on multiple reviews simultaneously.
-        Useful for bulk approval, rejection, or featuring of reviews.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      review_ids:
-        name: review_ids
-        description: 'Array of review IDs to moderate.'
-        required: true
-        example:
-          - 123
-          - 124
-          - 125
-        type: 'string[]'
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      action:
-        name: action
-        description: 'Bulk action to perform. Options: approve, reject, feature, unfeature.'
-        required: true
-        example: approve
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      reason:
-        name: reason
-        description: 'optional Reason for bulk action (required for reject).'
-        required: false
-        example: '"Quality assurance batch approval"'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      review_ids:
-        - 123
-        - 124
-        - 125
-      action: approve
-      reason: '"Quality assurance batch approval"'
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Bulk moderation completed successfully.",
-            "data": {
-              "action": "approve",
-              "total_reviews": 3,
-              "successful": 3,
-              "failed": 0,
-              "results": [
-                {
-                  "review_id": 123,
-                  "status": "success",
-                  "message": "Review approved"
-                },
-                {
-                  "review_id": 124,
-                  "status": "success",
-                  "message": "Review approved"
-                },
-                {
-                  "review_id": 125,
-                  "status": "success",
-                  "message": "Review approved"
-                }
-              ],
-              "moderated_by": {
-                "id": 1,
-                "name": "Admin User"
-              },
-              "moderated_at": "2025-01-16T14:30:00.000000Z"
-            }
-          }
-        headers: []
-        description: 'Bulk moderation completed'
-        custom: []
-      -
-        status: 422
-        content: |-
-          {
-            "errors": [
-              "The review_ids field is required.",
-              "The action field is required."
-            ]
-          }
-        headers: []
-        description: 'Validation errors'
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - GET
-    uri: api/admin/reviews/reports
-    metadata:
-      groupName: 'Admin Review Management'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Get all reported reviews for moderation'
-      description: |-
-        Retrieve all reviews that have been reported by users, sorted by priority
-        and report severity. Essential for content moderation workflow.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters:
-      status:
-        name: status
-        description: 'optional Filter by report status. Options: pending, reviewed, resolved, dismissed. Default: pending.'
-        required: false
-        example: pending
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      reason:
-        name: reason
-        description: 'optional Filter by report reason. Options: spam, inappropriate_language, fake_review, off_topic, personal_information, other.'
-        required: false
-        example: spam
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      priority:
-        name: priority
-        description: 'optional Filter by priority level. Options: high, medium, low.'
-        required: false
-        example: high
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      sort_by:
-        name: sort_by
-        description: 'optional Sort reports. Options: newest, oldest, priority, reports_count. Default: priority.'
-        required: false
-        example: reports_count
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      per_page:
-        name: per_page
-        description: 'optional Number of reports per page (1-100). Default: 20.'
-        required: false
-        example: 50
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanQueryParameters:
-      status: pending
-      reason: spam
-      priority: high
-      sort_by: reports_count
-      per_page: 50
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Reported reviews retrieved successfully.",
-            "data": {
-              "data": [
-                {
-                  "review": {
-                    "id": 123,
-                    "rating": 1,
-                    "title": "Terrible product",
-                    "content": "This is spam content with promotional links...",
-                    "user": {
-                      "id": 45,
-                      "name": "Suspicious User"
-                    },
-                    "product": {
-                      "id": 15,
-                      "name": "Premium Wireless Earbuds"
-                    }
-                  },
-                  "reports": [
-                    {
-                      "id": 67,
-                      "reason": "spam",
-                      "details": "Contains promotional links and fake claims",
-                      "status": "pending",
-                      "priority": "high",
-                      "reported_by": {
-                        "id": 89,
-                        "name": "John Doe"
-                      },
-                      "created_at": "2025-01-12T10:30:00.000000Z"
-                    }
-                  ],
-                  "reports_count": 3,
-                  "last_reported_at": "2025-01-13T08:15:00.000000Z"
-                }
-              ],
-              "current_page": 1,
-              "per_page": 20,
-              "total": 47
-            }
-          }
-        headers: []
-        description: 'Reported reviews retrieved successfully'
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-            "message": "You do not have the required permissions."
-          }
-        headers: []
-        description: 'Insufficient permissions'
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
     uri: 'api/admin/reviews/reports/{report_id}/handle'
     metadata:
       groupName: 'Admin Review Management'
@@ -928,7 +1050,7 @@ endpoints:
         name: report_id
         description: 'The ID of the report.'
         required: true
-        example: 16
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -945,7 +1067,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      report_id: 16
+      report_id: 1
       report: 67
     queryParameters: []
     cleanQueryParameters: []
@@ -1013,128 +1135,6 @@ endpoints:
           }
         headers: []
         description: 'Report not found'
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - GET
-    uri: api/admin/reviews/analytics
-    metadata:
-      groupName: 'Admin Review Management'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Get review analytics and statistics'
-      description: |-
-        Retrieve comprehensive analytics about reviews including trends,
-        moderation statistics, and quality metrics for administrative insights.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters:
-      period:
-        name: period
-        description: 'optional Time period for analytics. Options: today, week, month, quarter, year. Default: month.'
-        required: false
-        example: week
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      product_id:
-        name: product_id
-        description: 'optional Get analytics for specific product.'
-        required: false
-        example: 15
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      include_trends:
-        name: include_trends
-        description: 'optional Include trend data and charts. Default: false.'
-        required: false
-        example: true
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanQueryParameters:
-      period: week
-      product_id: 15
-      include_trends: true
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Review analytics retrieved successfully.",
-            "data": {
-              "summary": {
-                "total_reviews": 1543,
-                "pending_approval": 23,
-                "reported_reviews": 8,
-                "featured_reviews": 45,
-                "average_rating": 4.2,
-                "verification_rate": 67.3
-              },
-              "period_stats": {
-                "new_reviews": 89,
-                "approved_reviews": 76,
-                "rejected_reviews": 4,
-                "reports_received": 12,
-                "reports_resolved": 8
-              },
-              "rating_distribution": {
-                "1": 45,
-                "2": 78,
-                "3": 234,
-                "4": 567,
-                "5": 619
-              },
-              "top_products": [
-                {
-                  "product_id": 15,
-                  "product_name": "Premium Wireless Earbuds",
-                  "review_count": 127,
-                  "average_rating": 4.5
-                }
-              ],
-              "moderation_stats": {
-                "approval_rate": 94.2,
-                "average_response_time_hours": 4.7,
-                "moderator_activity": [
-                  {
-                    "moderator": "Admin User",
-                    "actions": 45,
-                    "approvals": 42,
-                    "rejections": 3
-                  }
-                ]
-              }
-            }
-          }
-        headers: []
-        description: 'Analytics retrieved successfully'
         custom: []
     responseFields: []
     auth:

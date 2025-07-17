@@ -1,81 +1,134 @@
-name: 'Order Returns'
+name: 'User Profile'
 description: ''
 endpoints:
   -
     httpMethods:
-      - POST
-    uri: api/returns
+      - GET
+    uri: 'api/users/{id}'
     metadata:
-      groupName: 'Order Returns'
+      groupName: 'User Profile'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Create a return request for an order item'
+      title: 'Retrieve user profile information'
       description: |-
-        Allows authenticated users to request a return for items from their paid orders.
-        Users can only return items from orders they own and that have been successfully paid.
-        Each order item can only have one return request to prevent duplicate submissions.
-        This is the first step in the return process - the request will need admin approval before processing.
+        Get detailed profile information for a specific user. Users can view their own complete profile
+        including personal details, address information, security settings, and account status.
+        Other authenticated users can only view basic public profile information for privacy protection.
+        This endpoint is commonly used for profile pages and account management interfaces.
       authenticated: true
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      order_item_id:
-        name: order_item_id
-        description: 'The ID of the specific order item to return. Must belong to a paid order owned by the authenticated user.'
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the user.'
         required: true
-        example: 89
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      user:
+        name: user
+        description: 'The ID of the user whose profile to retrieve.'
+        required: true
+        example: 123
         type: integer
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-      reason:
-        name: reason
-        description: 'Detailed reason for the return request. Must be between 10 and 1000 characters to provide sufficient context for review.'
-        required: true
-        example: 'The wireless headphones arrived with a defective left speaker that produces crackling sounds at any volume level. The product does not match the quality described.'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      order_item_id: 89
-      reason: 'The wireless headphones arrived with a defective left speaker that produces crackling sounds at any volume level. The product does not match the quality described.'
+    cleanUrlParameters:
+      id: 1
+      user: 123
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
     fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
-            "message": "Orders return created.",
+            "message": "User details retrieved.",
             "data": {
-              "id": 15,
-              "reason": "The wireless headphones arrived with a defective left speaker that produces crackling sounds at any volume level. The product does not match the quality described.",
-              "status": "Requested",
-              "created_at": "2025-01-16T14:30:00.000000Z",
-              "updated_at": "2025-01-16T14:30:00.000000Z"
+              "id": 123,
+              "name": "Sarah Johnson",
+              "email": "sarah.johnson@example.com",
+              "email_verified_at": "2025-01-10T08:00:00.000000Z",
+              "stripe_customer_id": "cus_1234567890abcdef",
+              "password_changed_at": "2025-01-01T12:00:00.000000Z",
+              "last_login_at": "2025-01-16T09:15:00.000000Z",
+              "last_login_ip": "192.168.1.100",
+              "created_at": "2024-12-15T10:30:00.000000Z",
+              "updated_at": "2025-01-16T09:15:00.000000Z",
+              "deleted_at": null,
+              "user_address": {
+                "id": 45,
+                "address_line1": "123 Oak Street",
+                "address_line2": "Apartment 4B",
+                "city": "London",
+                "state": "England",
+                "country": "United Kingdom",
+                "postal_code": "SW1A 1AA"
+              },
+              "role": {
+                "id": 7,
+                "name": "User"
+              },
+              "vendors": [
+                {
+                  "id": 12,
+                  "name": "Sarah's Boutique",
+                  "description": "Handcrafted jewelry and accessories",
+                  "logo": "https://yourapi.com/storage/vendor-logos/sarahs-boutique.jpg",
+                  "created_at": "2025-01-05T14:20:00.000000Z"
+                }
+              ],
+              "security_info": {
+                "requires_password_change": false,
+                "days_until_password_expiry": 45,
+                "security_score": {
+                  "score": 85,
+                  "level": "good",
+                  "issues": [
+                    "Consider enabling two-factor authentication"
+                  ]
+                },
+                "is_account_locked": false
+              }
             }
           }
         headers: []
-        description: 'Return request created successfully'
+        description: 'Own profile retrieved successfully'
         custom: []
       -
-        status: 400
+        status: 200
         content: |-
           {
-            "message": "This item is not eligible for return due to its category or condition."
+            "message": "User details retrieved.",
+            "data": {
+              "id": 456,
+              "name": "John Smith",
+              "email": "j***@example.com",
+              "email_verified_at": "2025-01-08T12:00:00.000000Z",
+              "created_at": "2024-11-20T16:45:00.000000Z",
+              "updated_at": "2025-01-15T11:30:00.000000Z",
+              "role": {
+                "id": 7,
+                "name": "User"
+              },
+              "vendors": []
+            }
           }
         headers: []
-        description: 'Item not eligible for return'
+        description: "Other user's public profile"
         custom: []
       -
         status: 401
@@ -90,57 +143,335 @@ endpoints:
         status: 403
         content: |-
           {
-            "message": "You are not authorized to return this item."
+            "message": "You do not have the required permissions."
           }
         headers: []
-        description: "Unauthorized - not user's order item"
+        description: 'Insufficient permissions'
         custom: []
       -
         status: 404
         content: |-
           {
-            "message": "Order item not found."
+            "message": "No query results for model [App\\Models\\User] 999"
           }
         headers: []
-        description: 'Order item not found'
+        description: 'User not found'
         custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: 'api/users/{id}'
+    metadata:
+      groupName: 'User Profile'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update user profile information'
+      description: |-
+        Update the authenticated user's profile information including personal details and address.
+        Users can only update their own profiles for security reasons. This endpoint supports
+        partial updates - only provided fields will be updated, others remain unchanged.
+        Password updates require the current password for security verification.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the user.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      user:
+        name: user
+        description: "The ID of the user to update. Must match the authenticated user's ID."
+        required: true
+        example: 123
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+      user: 123
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        name: name
+        description: "optional The user's full name. Will be automatically formatted with proper capitalization."
+        required: false
+        example: 'Sarah Jane Johnson'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      email:
+        name: email
+        description: "optional The user's email address. Must be unique across all users."
+        required: false
+        example: sarah.johnson.new@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      password:
+        name: password
+        description: 'optional New password. Must be at least 8 characters. Requires current password verification via separate endpoint.'
+        required: false
+        example: MyNewSecurePassword123!
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      role_id:
+        name: role_id
+        description: "optional The user's role ID. Only admins can change user roles."
+        required: false
+        example: 7
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      address:
+        name: address
+        description: 'optional Complete address information for shipping and billing.'
+        required: false
+        example: []
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      address.address_line1:
+        name: address.address_line1
+        description: 'Primary address line.'
+        required: true
+        example: '456 Maple Avenue'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      address.city:
+        name: address.city
+        description: 'City name.'
+        required: true
+        example: Manchester
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      address.country:
+        name: address.country
+        description: 'Country name.'
+        required: true
+        example: 'United Kingdom'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      address.postal_code:
+        name: address.postal_code
+        description: 'Postal or ZIP code.'
+        required: true
+        example: 'M1 1AA'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      address.address_line2:
+        name: address.address_line2
+        description: 'optional Secondary address line (apartment, suite, etc.).'
+        required: false
+        example: 'Suite 201'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      address.state:
+        name: address.state
+        description: 'optional State or region.'
+        required: false
+        example: 'Greater Manchester'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+    cleanBodyParameters:
+      name: 'Sarah Jane Johnson'
+      email: sarah.johnson.new@example.com
+      password: MyNewSecurePassword123!
+      role_id: 7
+      address:
+        address_line1: '456 Maple Avenue'
+        city: Manchester
+        country: 'United Kingdom'
+        postal_code: 'M1 1AA'
+        address_line2: 'Suite 201'
+        state: 'Greater Manchester'
+    fileParameters: []
+    responses:
       -
-        status: 409
+        status: 200
         content: |-
           {
-            "message": "A return request has already been created for this item."
+            "message": "User updated successfully.",
+            "data": {
+              "id": 123,
+              "name": "Sarah Jane Johnson",
+              "email": "sarah.johnson.new@example.com",
+              "email_verified_at": "2025-01-10T08:00:00.000000Z",
+              "stripe_customer_id": "cus_1234567890abcdef",
+              "password_changed_at": "2025-01-01T12:00:00.000000Z",
+              "last_login_at": "2025-01-16T09:15:00.000000Z",
+              "last_login_ip": "192.168.1.100",
+              "created_at": "2024-12-15T10:30:00.000000Z",
+              "updated_at": "2025-01-16T15:22:00.000000Z",
+              "deleted_at": null,
+              "user_address": {
+                "id": 45,
+                "address_line1": "456 Maple Avenue",
+                "address_line2": "Suite 201",
+                "city": "Manchester",
+                "state": "Greater Manchester",
+                "country": "United Kingdom",
+                "postal_code": "M1 1AA"
+              },
+              "role": {
+                "id": 7,
+                "name": "User"
+              },
+              "vendors": [
+                {
+                  "id": 12,
+                  "name": "Sarah's Boutique",
+                  "description": "Handcrafted jewelry and accessories",
+                  "logo": "https://yourapi.com/storage/vendor-logos/sarahs-boutique.jpg"
+                }
+              ],
+              "security_info": {
+                "requires_password_change": false,
+                "days_until_password_expiry": 45,
+                "security_score": {
+                  "score": 85,
+                  "level": "good",
+                  "issues": [
+                    "Consider enabling two-factor authentication"
+                  ]
+                },
+                "is_account_locked": false
+              }
+            }
           }
         headers: []
-        description: 'Return already exists for this item'
+        description: 'Profile updated successfully'
         custom: []
       -
-        status: 422
+        status: 200
         content: |-
           {
-            "message": "Order has not been paid for."
+            "message": "User updated successfully.",
+            "data": {
+              "id": 123,
+              "name": "Sarah Johnson",
+              "email": "sarah.johnson@example.com",
+              "user_address": {
+                "id": 67,
+                "address_line1": "789 Pine Street",
+                "address_line2": null,
+                "city": "Edinburgh",
+                "state": "Scotland",
+                "country": "United Kingdom",
+                "postal_code": "EH1 1YZ"
+              }
+            }
           }
         headers: []
-        description: 'Order not paid'
+        description: 'Address created for first time'
         custom: []
       -
-        status: 422
+        status: 400
         content: |-
           {
-            "message": "Return window has expired for this order."
+            "message": "Email verification required after email change. Please check your new email for verification link."
           }
         headers: []
-        description: 'Order too old for returns'
+        description: 'Email verification required'
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated."
+          }
+        headers: []
+        description: 'User not authenticated'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You can only update your own profile."
+          }
+        headers: []
+        description: "Cannot update other user's profile"
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions for role change'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\User] 999"
+          }
+        headers: []
+        description: 'User not found'
         custom: []
       -
         status: 422
         content: |-
           {
             "errors": [
-              "The order item id field is required.",
-              "The reason field is required.",
-              "The reason must be at least 10 characters.",
-              "The reason may not be greater than 1000 characters.",
-              "The selected order item id is invalid."
+              "The email has already been taken.",
+              "The password must be at least 8 characters.",
+              "The address.address_line1 field is required when address is present.",
+              "The address.city field is required when address is present.",
+              "The address.country field is required when address is present.",
+              "The address.postal_code field is required when address is present."
             ]
           }
         headers: []

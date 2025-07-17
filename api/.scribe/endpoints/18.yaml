@@ -1,248 +1,20 @@
-name: Authentication
+name: 'Shipping Method Management'
 description: ''
 endpoints:
   -
     httpMethods:
-      - POST
-    uri: api/register
+      - GET
+    uri: api/admin/shipping-methods
     metadata:
-      groupName: Authentication
+      groupName: 'Shipping Method Management'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Register a new user'
+      title: 'Retrieve paginated list of shipping methods'
       description: |-
-        Creates a new user account with email verification. The user will receive an email to verify their account.
-        Passwords must meet security requirements including minimum length, character diversity, and cannot be common passwords.
-      authenticated: false
-      custom: []
-    headers:
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      name:
-        name: name
-        description: "The user's full name."
-        required: true
-        example: 'John Doe'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      email:
-        name: email
-        description: "The user's email address. Must be unique."
-        required: true
-        example: john@example.com
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      password:
-        name: password
-        description: "The user's password. Must be at least 12 characters with uppercase, lowercase, numbers, and symbols."
-        required: true
-        example: MySecurePass123!
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      password_confirmation:
-        name: password_confirmation
-        description: 'Password confirmation. Must match the password field.'
-        required: true
-        example: MySecurePass123!
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      name: 'John Doe'
-      email: john@example.com
-      password: MySecurePass123!
-      password_confirmation: MySecurePass123!
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "data": [],
-            "message": "User registered successfully.",
-            "status": 200
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 422
-        content: |-
-          {
-            "message": "Password does not meet security requirements.",
-            "errors": [
-              "Password must contain at least 1 uppercase letter(s).",
-              "Password cannot contain common words or patterns that are not secure."
-            ],
-            "strength": {
-              "score": 45,
-              "strength": "medium",
-              "feedback": ["Add special characters", "Use more unique characters"]
-            }
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 423
-        content: |-
-          {
-            "message": "Registration temporarily blocked. Please try again later.",
-            "time_remaining_minutes": 15
-          }
-        headers: []
-        description: ''
-        custom: []
-    responseFields: []
-    auth: []
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/login
-    metadata:
-      groupName: Authentication
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'User login'
-      description: 'Authenticates a user and returns an access token. Implements account lockout protection and tracks failed attempts.'
-      authenticated: false
-      custom: []
-    headers:
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      email:
-        name: email
-        description: "The user's email address."
-        required: true
-        example: john@example.com
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      password:
-        name: password
-        description: "The user's password."
-        required: true
-        example: MySecurePass123!
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      remember:
-        name: remember
-        description: 'optional Whether to remember the user for extended period.'
-        required: false
-        example: true
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        custom: []
-    cleanBodyParameters:
-      email: john@example.com
-      password: MySecurePass123!
-      remember: true
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "data": {
-              "token_type": "Bearer",
-              "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...",
-              "expires_at": 1640995200,
-              "user": {
-                "id": 1,
-                "email": "john@example.com",
-                "role": "user"
-              }
-            },
-            "message": "User logged in successfully.",
-            "status": 200
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 401
-        content: |-
-          {
-            "message": "Invalid credentials"
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 423
-        content: |-
-          {
-            "message": "Account is temporarily locked due to multiple failed login attempts.",
-            "locked_until": "2024-01-15T15:30:00.000000Z",
-            "time_remaining_seconds": 1800,
-            "time_remaining_minutes": 30,
-            "lockout_count": 2
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 426
-        content: |-
-          {
-            "message": "Your password has expired and must be changed before logging in.",
-            "password_expired": true,
-            "change_password_required": true
-          }
-        headers: []
-        description: ''
-        custom: []
-    responseFields: []
-    auth: []
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/logout
-    metadata:
-      groupName: Authentication
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'User logout'
-      description: 'Logs out the authenticated user and revokes their access token.'
+        Get a paginated list of all shipping methods in the system with optional filtering by carrier
+        and active status. Essential for managing shipping configuration and displaying available
+        shipping options to customers during checkout.
       authenticated: true
       custom: []
     headers:
@@ -251,8 +23,52 @@ endpoints:
       Accept: application/json
     urlParameters: []
     cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
+    queryParameters:
+      carrier:
+        name: carrier
+        description: 'optional Filter by carrier name (partial match supported).'
+        required: false
+        example: royal-mail
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      is_active:
+        name: is_active
+        description: 'optional Filter by active status.'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      page:
+        name: page
+        description: 'optional Page number for pagination. Default: 1.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      per_page:
+        name: per_page
+        description: 'optional Number of methods per page (max 100). Default: 15.'
+        required: false
+        example: 25
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanQueryParameters:
+      carrier: royal-mail
+      is_active: true
+      page: 1
+      per_page: 25
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
@@ -261,12 +77,76 @@ endpoints:
         status: 200
         content: |-
           {
-            "data": [],
-            "message": "User logged out successfully",
+            "data": [
+              {
+                "id": 1,
+                "name": "Standard Delivery",
+                "carrier": "Royal Mail",
+                "service_code": "tracked-48",
+                "description": "Tracked delivery within 2-3 working days",
+                "estimated_delivery": "2-3 days",
+                "min_delivery_days": 2,
+                "max_delivery_days": 3,
+                "is_active": true,
+                "is_default": false,
+                "supports_tracking": true,
+                "requires_signature": false,
+                "max_weight": 20000,
+                "max_dimensions": {
+                  "length": 60,
+                  "width": 46,
+                  "height": 46
+                },
+                "sort_order": 1,
+                "zones_count": 3,
+                "rates_count": 12,
+                "created_at": "2025-01-10T09:00:00.000000Z",
+                "updated_at": "2025-01-14T14:30:00.000000Z"
+              },
+              {
+                "id": 2,
+                "name": "Express Delivery",
+                "carrier": "DPD",
+                "service_code": "next-day",
+                "description": "Next working day delivery by 1pm",
+                "estimated_delivery": "1 day",
+                "min_delivery_days": 1,
+                "max_delivery_days": 1,
+                "is_active": true,
+                "is_default": false,
+                "supports_tracking": true,
+                "requires_signature": true,
+                "max_weight": 30000,
+                "max_dimensions": {
+                  "length": 120,
+                  "width": 80,
+                  "height": 80
+                },
+                "sort_order": 2,
+                "zones_count": 2,
+                "rates_count": 8,
+                "created_at": "2025-01-10T09:15:00.000000Z",
+                "updated_at": "2025-01-14T14:30:00.000000Z"
+              }
+            ],
+            "current_page": 1,
+            "per_page": 15,
+            "total": 5,
+            "last_page": 1,
+            "message": "Shipping methods retrieved successfully.",
             "status": 200
           }
         headers: []
-        description: ''
+        description: 'Success with shipping methods'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
         custom: []
     responseFields: []
     auth:
@@ -280,14 +160,17 @@ endpoints:
   -
     httpMethods:
       - POST
-    uri: api/change-password
+    uri: api/admin/shipping-methods
     metadata:
-      groupName: Authentication
+      groupName: 'Shipping Method Management'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Change password'
-      description: "Changes the authenticated user's password. Requires current password verification and validates new password strength."
+      title: 'Create a new shipping method'
+      description: |-
+        Create a new shipping method with carrier details, delivery estimates, and configuration options.
+        The system validates that the service code is unique and the carrier configuration is valid.
+        This method defines how products are shipped and affects checkout options.
       authenticated: true
       custom: []
     headers:
@@ -299,89 +182,269 @@ endpoints:
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
-      current_password:
-        name: current_password
-        description: "The user's current password."
+      name:
+        name: name
+        description: 'The display name for the shipping method.'
         required: true
-        example: MyOldPass123!
+        example: 'Premium Delivery'
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-      new_password:
-        name: new_password
-        description: 'The new password. Must meet security requirements.'
+      description:
+        name: description
+        description: 'optional Detailed description of the shipping method.'
+        required: false
+        example: 'Express delivery with insurance'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      carrier:
+        name: carrier
+        description: 'The carrier company name.'
         required: true
-        example: MyNewSecurePass456!
+        example: UPS
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-      new_password_confirmation:
-        name: new_password_confirmation
-        description: 'Confirmation of the new password.'
+      service_code:
+        name: service_code
+        description: 'Unique service identifier for the carrier.'
         required: true
-        example: MyNewSecurePass456!
+        example: ups-express
         type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      estimated_days_min:
+        name: estimated_days_min
+        description: 'Must be at least 0. Must not be greater than 365.'
+        required: true
+        example: 19
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      estimated_days_max:
+        name: estimated_days_max
+        description: 'Must be at least 0. Must not be greater than 365.'
+        required: true
+        example: 17
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      is_active:
+        name: is_active
+        description: 'optional Whether method is active. Default: true.'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      sort_order:
+        name: sort_order
+        description: 'optional Display order.'
+        required: false
+        example: 3
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      metadata:
+        name: metadata
+        description: ''
+        required: false
+        example: null
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      estimated_delivery:
+        name: estimated_delivery
+        description: 'Human-readable delivery estimate.'
+        required: true
+        example: '1-2 days'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      min_delivery_days:
+        name: min_delivery_days
+        description: 'Minimum delivery days.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      max_delivery_days:
+        name: max_delivery_days
+        description: 'Maximum delivery days.'
+        required: true
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      is_default:
+        name: is_default
+        description: 'optional Whether this is the default method. Default: false.'
+        required: false
+        example: false
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      supports_tracking:
+        name: supports_tracking
+        description: 'optional Whether tracking is supported. Default: true.'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      requires_signature:
+        name: requires_signature
+        description: 'optional Whether signature is required. Default: false.'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      max_weight:
+        name: max_weight
+        description: 'optional Maximum weight in grams.'
+        required: false
+        example: 25000
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      max_dimensions:
+        name: max_dimensions
+        description: 'optional Maximum dimensions in cm.'
+        required: false
+        example:
+          length: 100
+          width: 60
+          height: 60
+        type: object
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      carrier_config:
+        name: carrier_config
+        description: 'optional Carrier-specific configuration.'
+        required: false
+        example:
+          api_key: ups_api_key
+          account_number: '12345'
+        type: object
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
     cleanBodyParameters:
-      current_password: MyOldPass123!
-      new_password: MyNewSecurePass456!
-      new_password_confirmation: MyNewSecurePass456!
+      name: 'Premium Delivery'
+      description: 'Express delivery with insurance'
+      carrier: UPS
+      service_code: ups-express
+      estimated_days_min: 19
+      estimated_days_max: 17
+      is_active: true
+      sort_order: 3
+      estimated_delivery: '1-2 days'
+      min_delivery_days: 1
+      max_delivery_days: 2
+      is_default: false
+      supports_tracking: true
+      requires_signature: true
+      max_weight: 25000
+      max_dimensions:
+        length: 100
+        width: 60
+        height: 60
+      carrier_config:
+        api_key: ups_api_key
+        account_number: '12345'
     fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
+            "message": "Shipping method created successfully.",
             "data": {
-              "password_strength": {
-                "score": 85,
-                "strength": "very strong",
-                "feedback": []
+              "id": 6,
+              "name": "Premium Delivery",
+              "carrier": "UPS",
+              "service_code": "ups-express",
+              "description": "Express delivery with insurance",
+              "estimated_delivery": "1-2 days",
+              "min_delivery_days": 1,
+              "max_delivery_days": 2,
+              "is_active": true,
+              "is_default": false,
+              "supports_tracking": true,
+              "requires_signature": true,
+              "max_weight": 25000,
+              "max_dimensions": {
+                "length": 100,
+                "width": 60,
+                "height": 60
               },
-              "security_score": {
-                "score": 95,
-                "level": "excellent",
-                "issues": []
-              }
-            },
-            "message": "Password changed successfully",
-            "status": 200
+              "sort_order": 3,
+              "created_at": "2025-01-15T10:30:00.000000Z",
+              "updated_at": "2025-01-15T10:30:00.000000Z"
+            }
           }
         headers: []
-        description: ''
+        description: 'Shipping method created successfully'
         custom: []
       -
-        status: 401
+        status: 403
         content: |-
           {
-            "message": "Current password is incorrect"
+            "message": "You do not have the required permissions."
           }
         headers: []
-        description: ''
+        description: 'Insufficient permissions'
         custom: []
       -
         status: 422
         content: |-
           {
-            "message": "New password does not meet security requirements.",
             "errors": [
-              "Password cannot be the same as your last 5 passwords."
-            ],
-            "strength": {
-              "score": 45,
-              "strength": "medium",
-              "feedback": ["Add special characters"]
-            }
+              "The name field is required.",
+              "The service code must be unique.",
+              "The max delivery days must be greater than or equal to min delivery days."
+            ]
           }
         headers: []
-        description: ''
+        description: 'Validation errors'
         custom: []
     responseFields: []
     auth:
@@ -395,22 +458,47 @@ endpoints:
   -
     httpMethods:
       - GET
-    uri: api/security-info
+    uri: 'api/admin/shipping-methods/{shippingMethod_id}'
     metadata:
-      groupName: Authentication
+      groupName: 'Shipping Method Management'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Get security information'
-      description: 'Retrieves comprehensive security information for the authenticated user including account lock status, security score, and password expiry details.'
+      title: 'Retrieve a specific shipping method'
+      description: |-
+        Get detailed information about a specific shipping method including zone and rate counts,
+        carrier configuration, and all method settings. Useful for viewing complete method
+        configuration and understanding its relationship to zones and rates.
       authenticated: true
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
+    urlParameters:
+      shippingMethod_id:
+        name: shippingMethod_id
+        description: 'The ID of the shippingMethod.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      shippingMethod:
+        name: shippingMethod
+        description: 'The ID of the shipping method to retrieve.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      shippingMethod_id: 16
+      shippingMethod: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -421,38 +509,667 @@ endpoints:
         status: 200
         content: |-
           {
+            "message": "Shipping method retrieved successfully.",
             "data": {
-              "account_lock": {
-                "is_locked": false,
-                "failed_attempts": 0,
-                "max_attempts": 5,
-                "lockout_count": 0,
-                "locked_until": null,
-                "time_until_unlock": null,
-                "last_attempt_at": null,
-                "last_successful_login": "2024-01-15T10:30:00.000000Z",
-                "should_reset": false
+              "id": 1,
+              "name": "Standard Delivery",
+              "carrier": "Royal Mail",
+              "service_code": "tracked-48",
+              "description": "Tracked delivery within 2-3 working days",
+              "estimated_delivery": "2-3 days",
+              "min_delivery_days": 2,
+              "max_delivery_days": 3,
+              "is_active": true,
+              "is_default": false,
+              "supports_tracking": true,
+              "requires_signature": false,
+              "max_weight": 20000,
+              "max_dimensions": {
+                "length": 60,
+                "width": 46,
+                "height": 46
               },
-              "security_score": {
-                "score": 85,
-                "level": "good",
-                "issues": ["Medium strength password"]
+              "sort_order": 1,
+              "zones_count": 3,
+              "rates_count": 12,
+              "carrier_config": {
+                "api_endpoint": "https://api.royalmail.com",
+                "account_id": "RM123456"
               },
-              "password_expiry": {
-                "requires_change": false,
-                "days_until_expiry": 45,
-                "last_changed": "2024-01-01T12:00:00.000000Z"
-              },
-              "login_history": {
-                "last_login": "2024-01-15T10:30:00.000000Z",
-                "last_login_ip": "192.168.1.100"
-              }
-            },
-            "message": "Security information retrieved",
-            "status": 200
+              "created_at": "2025-01-10T09:00:00.000000Z",
+              "updated_at": "2025-01-14T14:30:00.000000Z"
+            }
           }
         headers: []
+        description: 'Shipping method found'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\ShippingMethod] 999"
+          }
+        headers: []
+        description: 'Shipping method not found'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PUT
+    uri: 'api/admin/shipping-methods/{shippingMethod_id}'
+    metadata:
+      groupName: 'Shipping Method Management'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update an existing shipping method'
+      description: |-
+        Update a shipping method's configuration, delivery estimates, and settings. The system
+        validates that any service code changes don't conflict with existing methods. Changes
+        to active status will immediately affect checkout options for customers.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      shippingMethod_id:
+        name: shippingMethod_id
+        description: 'The ID of the shippingMethod.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      shippingMethod:
+        name: shippingMethod
+        description: 'The ID of the shipping method to update.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      shippingMethod_id: 16
+      shippingMethod: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        name: name
+        description: 'optional The display name for the shipping method.'
+        required: false
+        example: 'Standard Delivery Updated'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      description:
+        name: description
+        description: 'optional Detailed description of the shipping method.'
+        required: false
+        example: 'Updated tracked delivery within 2-3 working days'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      carrier:
+        name: carrier
+        description: 'optional The carrier company name.'
+        required: false
+        example: 'Royal Mail'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      service_code:
+        name: service_code
+        description: 'optional Unique service identifier for the carrier.'
+        required: false
+        example: tracked-48-updated
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      estimated_days_min:
+        name: estimated_days_min
+        description: 'Must be at least 0. Must not be greater than 365.'
+        required: true
+        example: 19
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      estimated_days_max:
+        name: estimated_days_max
+        description: 'Must be at least 0. Must not be greater than 365.'
+        required: true
+        example: 17
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      is_active:
+        name: is_active
+        description: 'optional Whether method is active.'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      sort_order:
+        name: sort_order
+        description: 'optional Display order.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      metadata:
+        name: metadata
         description: ''
+        required: false
+        example: null
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      estimated_delivery:
+        name: estimated_delivery
+        description: 'optional Human-readable delivery estimate.'
+        required: false
+        example: '2-4 days'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      min_delivery_days:
+        name: min_delivery_days
+        description: 'optional Minimum delivery days.'
+        required: false
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      max_delivery_days:
+        name: max_delivery_days
+        description: 'optional Maximum delivery days.'
+        required: false
+        example: 4
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      is_default:
+        name: is_default
+        description: 'optional Whether this is the default method.'
+        required: false
+        example: false
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      supports_tracking:
+        name: supports_tracking
+        description: 'optional Whether tracking is supported.'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      requires_signature:
+        name: requires_signature
+        description: 'optional Whether signature is required.'
+        required: false
+        example: false
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      max_weight:
+        name: max_weight
+        description: 'optional Maximum weight in grams.'
+        required: false
+        example: 22000
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      max_dimensions:
+        name: max_dimensions
+        description: 'optional Maximum dimensions in cm.'
+        required: false
+        example:
+          length: 65
+          width: 50
+          height: 50
+        type: object
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      carrier_config:
+        name: carrier_config
+        description: 'optional Carrier-specific configuration.'
+        required: false
+        example:
+          api_endpoint: 'https://api.royalmail.com/v2'
+          account_id: RM123456
+        type: object
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      name: 'Standard Delivery Updated'
+      description: 'Updated tracked delivery within 2-3 working days'
+      carrier: 'Royal Mail'
+      service_code: tracked-48-updated
+      estimated_days_min: 19
+      estimated_days_max: 17
+      is_active: true
+      sort_order: 1
+      estimated_delivery: '2-4 days'
+      min_delivery_days: 2
+      max_delivery_days: 4
+      is_default: false
+      supports_tracking: true
+      requires_signature: false
+      max_weight: 22000
+      max_dimensions:
+        length: 65
+        width: 50
+        height: 50
+      carrier_config:
+        api_endpoint: 'https://api.royalmail.com/v2'
+        account_id: RM123456
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Shipping method updated successfully.",
+            "data": {
+              "id": 1,
+              "name": "Standard Delivery Updated",
+              "carrier": "Royal Mail",
+              "service_code": "tracked-48",
+              "description": "Updated tracked delivery within 2-3 working days",
+              "estimated_delivery": "2-4 days",
+              "min_delivery_days": 2,
+              "max_delivery_days": 4,
+              "is_active": true,
+              "max_weight": 22000,
+              "updated_at": "2025-01-15T11:45:00.000000Z"
+            }
+          }
+        headers: []
+        description: 'Shipping method updated successfully'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\ShippingMethod] 999"
+          }
+        headers: []
+        description: 'Shipping method not found'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "errors": [
+              "The service code must be unique.",
+              "The max delivery days must be greater than or equal to min delivery days."
+            ]
+          }
+        headers: []
+        description: 'Validation errors'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/admin/shipping-methods/{shippingMethod_id}'
+    metadata:
+      groupName: 'Shipping Method Management'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Delete a shipping method'
+      description: |-
+        Delete a shipping method from the system. This action cannot be performed if the method
+        has been used in orders or has associated shipments. The system also removes all related
+        zones and rates when the method is successfully deleted.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      shippingMethod_id:
+        name: shippingMethod_id
+        description: 'The ID of the shippingMethod.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      shippingMethod:
+        name: shippingMethod
+        description: 'The ID of the shipping method to delete.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      shippingMethod_id: 16
+      shippingMethod: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Shipping method deleted successfully."
+          }
+        headers: []
+        description: 'Shipping method deleted successfully'
+        custom: []
+      -
+        status: 400
+        content: |-
+          {
+            "message": "Cannot delete shipping method that has been used in orders."
+          }
+        headers: []
+        description: 'Cannot delete method with orders'
+        custom: []
+      -
+        status: 400
+        content: |-
+          {
+            "message": "Cannot delete shipping method that has associated shipments."
+          }
+        headers: []
+        description: 'Cannot delete method with shipments'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\ShippingMethod] 999"
+          }
+        headers: []
+        description: 'Shipping method not found'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PATCH
+    uri: 'api/admin/shipping-methods/{shippingMethod_id}/activate'
+    metadata:
+      groupName: 'Shipping Method Management'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Activate a shipping method'
+      description: |-
+        Activate a shipping method, making it available for use in orders and visible to customers
+        during checkout. This enables the method to appear in shipping options and be selected
+        for order fulfillment.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      shippingMethod_id:
+        name: shippingMethod_id
+        description: 'The ID of the shippingMethod.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      shippingMethod:
+        name: shippingMethod
+        description: 'The ID of the shipping method to activate.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      shippingMethod_id: 16
+      shippingMethod: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Shipping method activated successfully.",
+            "data": {
+              "id": 1,
+              "name": "Standard Delivery",
+              "carrier": "Royal Mail",
+              "service_code": "tracked-48",
+              "is_active": true,
+              "updated_at": "2025-01-15T12:00:00.000000Z"
+            }
+          }
+        headers: []
+        description: 'Shipping method activated successfully'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\ShippingMethod] 999"
+          }
+        headers: []
+        description: 'Shipping method not found'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PATCH
+    uri: 'api/admin/shipping-methods/{shippingMethod_id}/deactivate'
+    metadata:
+      groupName: 'Shipping Method Management'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Deactivate a shipping method'
+      description: |-
+        Deactivate a shipping method, preventing it from being used in new orders and removing
+        it from customer checkout options. Existing orders and shipments using this method
+        are not affected by this change.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      shippingMethod_id:
+        name: shippingMethod_id
+        description: 'The ID of the shippingMethod.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      shippingMethod:
+        name: shippingMethod
+        description: 'The ID of the shipping method to deactivate.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      shippingMethod_id: 16
+      shippingMethod: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Shipping method deactivated successfully.",
+            "data": {
+              "id": 1,
+              "name": "Standard Delivery",
+              "carrier": "Royal Mail",
+              "service_code": "tracked-48",
+              "is_active": false,
+              "updated_at": "2025-01-15T12:15:00.000000Z"
+            }
+          }
+        headers: []
+        description: 'Shipping method deactivated successfully'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\ShippingMethod] 999"
+          }
+        headers: []
+        description: 'Shipping method not found'
         custom: []
     responseFields: []
     auth:
@@ -466,17 +1183,21 @@ endpoints:
   -
     httpMethods:
       - POST
-    uri: api/forgot-password
+    uri: api/admin/shipping-methods/reorder
     metadata:
-      groupName: Authentication
+      groupName: 'Shipping Method Management'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Forgot password'
-      description: "Sends a password reset link to the user's email address."
-      authenticated: false
+      title: 'Reorder shipping methods'
+      description: |-
+        Update the display order of shipping methods by providing an array of method IDs in the
+        desired order. This affects how methods are presented to customers during checkout,
+        with lower sort orders appearing first in the list.
+      authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []
@@ -484,144 +1205,76 @@ endpoints:
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
-      email:
-        name: email
-        description: "The user's email address."
+      methods:
+        name: methods
+        description: 'Array of shipping method IDs in desired order.'
         required: true
-        example: john@example.com
-        type: string
+        example:
+          - 2
+          - 1
+          - 3
+          - 4
+          - 5
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      'methods.*':
+        name: 'methods.*'
+        description: 'Each method ID must be a valid shipping method ID.'
+        required: true
+        example: 1
+        type: integer
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
     cleanBodyParameters:
-      email: john@example.com
+      methods:
+        - 2
+        - 1
+        - 3
+        - 4
+        - 5
     fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
-            "data": [],
-            "message": "We have emailed your password reset link!",
-            "status": 200
+            "message": "Shipping methods reordered successfully."
           }
         headers: []
-        description: ''
+        description: 'Shipping methods reordered successfully'
         custom: []
       -
-        status: 423
+        status: 403
         content: |-
           {
-            "message": "Password reset temporarily blocked. Please try again later."
+            "message": "You do not have the required permissions."
           }
         headers: []
-        description: ''
-        custom: []
-    responseFields: []
-    auth: []
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/reset-password
-    metadata:
-      groupName: Authentication
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Reset password'
-      description: "Resets the user's password using a valid reset token from the forgot password email."
-      authenticated: false
-      custom: []
-    headers:
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      token:
-        name: token
-        description: 'The password reset token from the email.'
-        required: true
-        example: abc123def456
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      email:
-        name: email
-        description: "The user's email address."
-        required: true
-        example: john@example.com
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      password:
-        name: password
-        description: 'The new password. Must meet security requirements.'
-        required: true
-        example: MyNewSecurePass456!
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      password_confirmation:
-        name: password_confirmation
-        description: 'Confirmation of the new password.'
-        required: true
-        example: MyNewSecurePass456!
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      token: abc123def456
-      email: john@example.com
-      password: MyNewSecurePass456!
-      password_confirmation: MyNewSecurePass456!
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "data": [],
-            "message": "Your password has been reset!",
-            "status": 200
-          }
-        headers: []
-        description: ''
+        description: 'Insufficient permissions'
         custom: []
       -
         status: 422
         content: |-
           {
-            "message": "New password does not meet security requirements.",
             "errors": [
-              "Password must contain at least 1 special character(s)."
-            ],
-            "strength": {
-              "score": 60,
-              "strength": "strong",
-              "feedback": ["Add special characters"]
-            }
+              "The methods field is required.",
+              "The methods.0 field must be an integer.",
+              "The methods.1 field must exist in shipping_methods table."
+            ]
           }
         headers: []
-        description: ''
+        description: 'Validation errors'
         custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
     controller: null
     method: null
     route: null

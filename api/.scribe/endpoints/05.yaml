@@ -343,7 +343,7 @@ endpoints:
         name: filter.availability
         description: ''
         required: false
-        example: low_stock
+        example: available
         type: string
         enumValues:
           - in_stock
@@ -559,7 +559,7 @@ endpoints:
         name: explain
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -579,7 +579,7 @@ endpoints:
         name: highlight
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -589,7 +589,7 @@ endpoints:
         name: personalize
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -599,7 +599,7 @@ endpoints:
         name: typo_tolerance
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -609,7 +609,7 @@ endpoints:
         name: exact_match
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -619,7 +619,7 @@ endpoints:
         name: boost_new_products
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -629,7 +629,7 @@ endpoints:
         name: boost_in_stock
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -644,7 +644,7 @@ endpoints:
         category: '9,31'
         categories: '9,31'
         quantity: '64'
-        availability: low_stock
+        availability: available
         vendors: '9,31'
         vendor: i
         brand: k
@@ -665,14 +665,14 @@ endpoints:
       per_page: 9
       sort: 'y8p,Bm,-dp,-Zm,-GH'
       diversify: true
-      explain: true
+      explain: false
       facets: false
-      highlight: true
-      personalize: true
-      typo_tolerance: false
-      exact_match: false
-      boost_new_products: true
-      boost_in_stock: true
+      highlight: false
+      personalize: false
+      typo_tolerance: true
+      exact_match: true
+      boost_new_products: false
+      boost_in_stock: false
     fileParameters: []
     responses:
       -
