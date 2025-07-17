@@ -32,6 +32,10 @@ class DatabaseSeeder extends Seeder
             PaymentSeeder::class,
 
             InventoryPermissionsSeeder::class,
+
+            ShippingMethodSeeder::class,
+            ShippingZoneSeeder::class,
+            ShippingRateSeeder::class,
         ]);
     }
 }

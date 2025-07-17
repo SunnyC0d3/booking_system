@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\V1\Public\ShippingAddressController;
+use App\Http\Controllers\V1\Public\ShippingCalculationController;
 use Illuminate\Support\Facades\Route;
 
 // Auth Controllers
@@ -215,3 +217,71 @@ Route::prefix('vendor/responses')
 Route::get('vendor/unanswered-reviews', [ReviewResponseController::class, 'getUnansweredReviews'])
     ->middleware(['review.smart_throttle:dashboard,true', 'roles:vendor'])
     ->name('vendor.responses.unanswered');
+
+// Shipping Addresses (User-specific)
+
+Route::prefix('shipping-addresses')
+    ->middleware(['auth:api', 'emailVerified', 'rate_limit:shipping'])
+    ->controller(ShippingAddressController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('shipping-addresses.index');
+        Route::post('/', 'store')->name('shipping-addresses.store');
+        Route::get('/{shippingAddress}', 'show')->name('shipping-addresses.show');
+        Route::put('/{shippingAddress}', 'update')->name('shipping-addresses.update');
+        Route::delete('/{shippingAddress}', 'destroy')->name('shipping-addresses.destroy');
+        Route::patch('/{shippingAddress}/set-default', 'setDefault')->name('shipping-addresses.set-default');
+        Route::post('/{shippingAddress}/validate', 'validate')->name('shipping-addresses.validate');
+    });
+
+// Shipping Calculations and Quotes
+
+Route::prefix('shipping')
+    ->middleware(['rate_limit:shipping'])
+    ->controller(ShippingCalculationController::class)
+    ->group(function () {
+        // Cart shipping (requires auth)
+        Route::post('/cart/quote', 'getCartShippingQuote')
+            ->middleware(['auth:api'])
+            ->name('shipping.cart.quote');
+
+        // Product shipping (requires auth)
+        Route::post('/products/quote', 'getProductShippingQuote')
+            ->middleware(['auth:api'])
+            ->name('shipping.products.quote');
+
+        // Quick estimate (public - no auth required)
+        Route::post('/estimate', 'getQuickEstimate')->name('shipping.estimate');
+
+        // Cheapest/Fastest options (requires auth)
+        Route::post('/cheapest', 'getCheapestOption')
+            ->middleware(['auth:api'])
+            ->name('shipping.cheapest');
+        Route::post('/fastest', 'getFastestOption')
+            ->middleware(['auth:api'])
+            ->name('shipping.fastest');
+
+        // Method validation (requires auth)
+        Route::post('/validate-method', 'validateShippingMethod')
+            ->middleware(['auth:api'])
+            ->name('shipping.validate-method');
+    });
+
+// Shipment Tracking (public - no auth required for tracking)
+
+Route::prefix('tracking')
+    ->middleware(['rate_limit:tracking'])
+    ->controller(ShippingController::class)
+    ->group(function () {
+        Route::get('/{trackingNumber}', 'trackShipment')->name('tracking.shipment');
+        Route::get('/{trackingNumber}/status', 'getShipmentStatus')->name('tracking.status');
+    });
+
+// User's Shipments (requires auth)
+
+Route::prefix('my-shipments')
+    ->middleware(['auth:api', 'emailVerified', 'rate_limit:shipping'])
+    ->controller(ShippingController::class)
+    ->group(function () {
+        Route::get('/', 'getUserShipments')->name('my-shipments.index');
+        Route::get('/{shipment}', 'getUserShipment')->name('my-shipments.show');
+    });
