@@ -6,7 +6,7 @@ use App\Models\Order;
 use App\Models\Shipment;
 use App\Models\ShippingMethod;
 use App\Models\ShippingAddress;
-use App\Services\V1\Shipping\Providers\ShippoProvider;
+use App\Services\V1\Shipping\ShippoProvider;
 use Illuminate\Support\Facades\Log;
 use Exception;
 

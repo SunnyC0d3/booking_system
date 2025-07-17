@@ -44,4 +44,6 @@ return [
     'stripe_key' => env('STRIPE_PUBLIC_KEY'),
     'stripe_secret' => env('STRIPE_SECRET_KEY'),
     'stripe_webhook_secret' => env('STRIPE_WEBHOOK_SECRET_KEY'),
+    'shippo_api_key' => env('SHIPPO_API_KEY'),
+    'shippo_environment' => env('SHIPPO_ENVIRONMENT', 'test'),
 ];
