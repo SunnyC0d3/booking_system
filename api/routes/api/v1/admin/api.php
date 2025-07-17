@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\V1\Admin\ShippingMethodController;
 use Illuminate\Support\Facades\Route;
 
 // Admin Controllers
@@ -240,4 +241,20 @@ Route::prefix('admin/review-responses')
         Route::get('/{response}', 'adminShow')->name('admin.review-responses.show');
         Route::post('/{response}/approve', 'approve')->name('admin.review-responses.approve');
         Route::delete('/{response}', 'adminDestroy')->name('admin.review-responses.destroy');
+    });
+
+// Admin/Shipping Methods
+
+Route::prefix('admin/shipping-methods')
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'rate_limit:admin'])
+    ->controller(ShippingMethodController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('admin.shipping-methods.index');
+        Route::post('/', 'store')->name('admin.shipping-methods.store');
+        Route::get('/{shippingMethod}', 'show')->name('admin.shipping-methods.show');
+        Route::put('/{shippingMethod}', 'update')->name('admin.shipping-methods.update');
+        Route::delete('/{shippingMethod}', 'destroy')->name('admin.shipping-methods.destroy');
+        Route::patch('/{shippingMethod}/activate', 'activate')->name('admin.shipping-methods.activate');
+        Route::patch('/{shippingMethod}/deactivate', 'deactivate')->name('admin.shipping-methods.deactivate');
+        Route::post('/reorder', 'reorder')->name('admin.shipping-methods.reorder');
     });

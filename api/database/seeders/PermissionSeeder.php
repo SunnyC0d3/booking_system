@@ -167,6 +167,43 @@ class PermissionSeeder extends Seeder
             ['name' => 'manage_review_responses', 'description' => 'Manage all vendor responses'],
             ['name' => 'approve_review_responses', 'description' => 'Approve/reject vendor responses'],
             ['name' => 'delete_review_responses', 'description' => 'Delete any review response'],
+
+            // Shipping Method Management
+            ['name' => 'view_shipping_methods'],
+            ['name' => 'create_shipping_methods'],
+            ['name' => 'edit_shipping_methods'],
+            ['name' => 'delete_shipping_methods'],
+
+            // Shipping Zone Management
+            ['name' => 'view_shipping_zones'],
+            ['name' => 'create_shipping_zones'],
+            ['name' => 'edit_shipping_zones'],
+            ['name' => 'delete_shipping_zones'],
+
+            // Shipping Rate Management
+            ['name' => 'view_shipping_rates'],
+            ['name' => 'create_shipping_rates'],
+            ['name' => 'edit_shipping_rates'],
+            ['name' => 'delete_shipping_rates'],
+
+            // Shipment Management
+            ['name' => 'view_shipments'],
+            ['name' => 'create_shipments'],
+            ['name' => 'edit_shipments'],
+            ['name' => 'delete_shipments'],
+            ['name' => 'manage_shipments'],
+
+            // Shipping Address Management
+            ['name' => 'view_shipping_addresses'],
+            ['name' => 'create_shipping_addresses'],
+            ['name' => 'edit_shipping_addresses'],
+            ['name' => 'delete_shipping_addresses'],
+
+            // Shipping Operations
+            ['name' => 'calculate_shipping'],
+            ['name' => 'validate_addresses'],
+            ['name' => 'purchase_labels'],
+            ['name' => 'track_shipments'],
         ];
 
         $permissionsToInsert = array_map(function ($permission) {

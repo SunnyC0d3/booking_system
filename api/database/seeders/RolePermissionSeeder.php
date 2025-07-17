@@ -56,6 +56,14 @@ class RolePermissionSeeder extends Seeder
                 'manage_review_reports', 'view_analytics', 'view_review_trends',
                 'export_review_data', 'manage_review_responses', 'approve_review_responses',
                 'delete_review_responses',
+
+                // Shipping Management - Full Access
+                'view_shipping_methods', 'create_shipping_methods', 'edit_shipping_methods', 'delete_shipping_methods',
+                'view_shipping_zones', 'create_shipping_zones', 'edit_shipping_zones', 'delete_shipping_zones',
+                'view_shipping_rates', 'create_shipping_rates', 'edit_shipping_rates', 'delete_shipping_rates',
+                'view_shipments', 'create_shipments', 'edit_shipments', 'delete_shipments', 'manage_shipments',
+                'view_shipping_addresses', 'create_shipping_addresses', 'edit_shipping_addresses', 'delete_shipping_addresses',
+                'calculate_shipping', 'validate_addresses', 'purchase_labels', 'track_shipments',
             ],
 
             'Vendor Manager' => [
@@ -81,6 +89,11 @@ class RolePermissionSeeder extends Seeder
                 'view_reviews', 'manage_reviews', 'moderate_reviews', 'view_review_reports',
                 'handle_review_reports', 'view_analytics', 'view_review_trends',
                 'manage_review_responses', 'approve_review_responses',
+
+                // Shipping Management - Management Level
+                'view_shipping_methods', 'view_shipping_zones', 'view_shipping_rates',
+                'view_shipments', 'edit_shipments', 'manage_shipments',
+                'calculate_shipping', 'track_shipments',
             ],
 
             'Vendor' => [
@@ -107,6 +120,10 @@ class RolePermissionSeeder extends Seeder
                 'view_reviews', 'create_reviews', 'edit_own_reviews', 'delete_own_reviews',
                 'vote_review_helpfulness', 'report_reviews', 'respond_to_reviews',
                 'edit_own_responses', 'delete_own_responses', 'view_product_reviews',
+
+                // Shipping Management - Vendor Level
+                'view_shipping_methods', 'view_shipping_zones', 'view_shipments',
+                'calculate_shipping', 'track_shipments',
             ],
 
             'Customer Service' => [
@@ -133,6 +150,10 @@ class RolePermissionSeeder extends Seeder
                 // Review Management - Customer Service Level
                 'view_reviews', 'moderate_reviews', 'view_review_reports',
                 'handle_review_reports', 'manage_review_reports', 'view_analytics',
+
+                // Shipping Management - Customer Service Level
+                'view_shipping_methods', 'view_shipping_zones', 'view_shipments',
+                'edit_shipments', 'track_shipments', 'validate_addresses',
             ],
 
             'Content Manager' => [
@@ -158,6 +179,9 @@ class RolePermissionSeeder extends Seeder
                 // Review Management - Content Management Level
                 'view_reviews', 'moderate_reviews', 'feature_reviews',
                 'view_review_reports', 'handle_review_reports', 'view_analytics',
+
+                // Shipping Management - Content Management Level
+                'view_shipping_methods', 'view_shipping_zones', 'calculate_shipping',
             ],
 
             'User' => [
@@ -178,6 +202,10 @@ class RolePermissionSeeder extends Seeder
                 // Review Management - Standard User Level
                 'view_reviews', 'create_reviews', 'edit_own_reviews', 'delete_own_reviews',
                 'vote_review_helpfulness', 'report_reviews',
+
+                // Shipping Management - User Level
+                'view_shipping_addresses', 'create_shipping_addresses', 'edit_shipping_addresses', 'delete_shipping_addresses',
+                'calculate_shipping', 'track_shipments',
             ],
 
             'Guest' => [
