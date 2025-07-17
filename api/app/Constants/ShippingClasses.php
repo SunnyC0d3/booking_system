@@ -26,4 +26,19 @@ class ShippingClasses
             self::REFRIGERATED,
         ];
     }
+
+    public static function getClassLabel(string $class): string
+    {
+        return match($class) {
+            self::STANDARD => 'Standard',
+            self::EXPRESS => 'Express',
+            self::OVERNIGHT => 'Overnight',
+            self::FRAGILE => 'Fragile',
+            self::HEAVY => 'Heavy',
+            self::OVERSIZED => 'Oversized',
+            self::DANGEROUS => 'Dangerous Goods',
+            self::REFRIGERATED => 'Refrigerated',
+            default => ucfirst($class),
+        };
+    }
 }

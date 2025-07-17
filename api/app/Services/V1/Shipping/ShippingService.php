@@ -7,6 +7,8 @@ use App\Models\Shipment;
 use App\Models\ShippingMethod;
 use App\Models\ShippingAddress;
 use App\Services\V1\Shipping\ShippoProvider;
+use App\Constants\ShippingStatuses;
+use App\Constants\FulfillmentStatuses;
 use Illuminate\Support\Facades\Log;
 use Exception;
 
@@ -29,7 +31,7 @@ class ShippingService
 
         try {
             $shipment = $order->createShipment([
-                'status' => 'processing',
+                'status' => ShippingStatuses::PROCESSING,
                 'notes' => $options['notes'] ?? null,
             ]);
 
@@ -82,7 +84,7 @@ class ShippingService
                 'label_url' => $labelData['label_url'],
                 'tracking_url' => $labelData['tracking_url'],
                 'carrier_data' => $labelData,
-                'status' => 'ready_to_ship',
+                'status' => ShippingStatuses::READY_TO_SHIP,
             ]);
 
             Log::info('Shipping label purchased successfully', [
@@ -93,7 +95,7 @@ class ShippingService
             return $labelData;
 
         } catch (Exception $e) {
-            $shipment->update(['status' => 'failed']);
+            $shipment->update(['status' => ShippingStatuses::FAILED]);
 
             Log::error('Failed to purchase shipping label', [
                 'shipment_id' => $shipment->id,
@@ -148,12 +150,12 @@ class ShippingService
             $trackingData = $this->shippoProvider->getTrackingInfo($shipment->tracking_number);
 
             $statusMapping = [
-                'UNKNOWN' => 'pending',
-                'PRE_TRANSIT' => 'processing',
-                'TRANSIT' => 'in_transit',
-                'DELIVERED' => 'delivered',
-                'RETURNED' => 'returned',
-                'FAILURE' => 'failed',
+                'UNKNOWN' => ShippingStatuses::PENDING,
+                'PRE_TRANSIT' => ShippingStatuses::PROCESSING,
+                'TRANSIT' => ShippingStatuses::IN_TRANSIT,
+                'DELIVERED' => ShippingStatuses::DELIVERED,
+                'RETURNED' => ShippingStatuses::RETURNED,
+                'FAILURE' => ShippingStatuses::FAILED,
             ];
 
             $newStatus = $statusMapping[$trackingData['status']] ?? $shipment->status;
@@ -166,7 +168,7 @@ class ShippingService
                 ]),
             ];
 
-            if ($newStatus === 'delivered' && !$shipment->delivered_at) {
+            if ($newStatus === ShippingStatuses::DELIVERED && !$shipment->delivered_at) {
                 $updateData['delivered_at'] = $trackingData['delivered_at'] ?? now();
             }
 
@@ -202,11 +204,11 @@ class ShippingService
             }
 
             $shipment->update([
-                'status' => 'cancelled',
+                'status' => ShippingStatuses::CANCELLED,
                 'notes' => $shipment->notes . "\nCancelled: " . $reason,
             ]);
 
-            $shipment->order->update(['fulfillment_status' => 'unfulfilled']);
+            $shipment->order->update(['fulfillment_status' => FulfillmentStatuses::UNFULFILLED]);
 
             Log::info('Shipment cancelled', [
                 'shipment_id' => $shipment->id,

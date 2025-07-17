@@ -7,6 +7,7 @@ use Shippo\Address;
 use Shippo\Shipment;
 use Shippo\Transaction;
 use Shippo\Track;
+use App\Constants\ShippingStatuses;
 use Illuminate\Support\Facades\Log;
 use Exception;
 
@@ -208,16 +209,16 @@ class ShippoProvider
             ]);
 
             $statusMapping = [
-                'UNKNOWN' => 'pending',
-                'PRE_TRANSIT' => 'processing',
-                'TRANSIT' => 'in_transit',
-                'DELIVERED' => 'delivered',
-                'RETURNED' => 'returned',
-                'FAILURE' => 'failed',
-                'EXCEPTION' => 'exception',
+                'UNKNOWN' => ShippingStatuses::UNKNOWN,
+                'PRE_TRANSIT' => ShippingStatuses::PROCESSING,
+                'TRANSIT' => ShippingStatuses::IN_TRANSIT,
+                'DELIVERED' => ShippingStatuses::DELIVERED,
+                'RETURNED' => ShippingStatuses::RETURNED,
+                'FAILURE' => ShippingStatuses::FAILED,
+                'EXCEPTION' => ShippingStatuses::EXCEPTION,
             ];
 
-            $status = $statusMapping[$trackingData['tracking_status']] ?? 'unknown';
+            $status = $statusMapping[$trackingData['tracking_status']] ?? ShippingStatuses::UNKNOWN;
 
             $trackingHistory = [];
             if (isset($trackingData['tracking_history'])) {
@@ -237,7 +238,7 @@ class ShippoProvider
                 'status' => $status,
                 'tracking_status' => $trackingData['tracking_status'],
                 'eta' => $trackingData['eta'] ?? null,
-                'delivered_at' => $status === 'delivered' ? ($trackingData['status_date'] ?? null) : null,
+                'delivered_at' => $status === ShippingStatuses::DELIVERED ? ($trackingData['status_date'] ?? null) : null,
                 'tracking_history' => $trackingHistory,
                 'tracking_url' => $trackingData['public_url'] ?? null,
             ];

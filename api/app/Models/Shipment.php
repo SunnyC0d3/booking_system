@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Constants\ShippingStatuses;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -57,22 +58,26 @@ class Shipment extends Model
 
     public function scopePending($query)
     {
-        return $query->where('status', 'pending');
+        return $query->where('status', ShippingStatuses::PENDING);
     }
 
     public function scopeShipped($query)
     {
-        return $query->where('status', 'shipped');
+        return $query->where('status', ShippingStatuses::SHIPPED);
     }
 
     public function scopeDelivered($query)
     {
-        return $query->where('status', 'delivered');
+        return $query->where('status', ShippingStatuses::DELIVERED);
     }
 
     public function scopeInTransit($query)
     {
-        return $query->whereIn('status', ['shipped', 'in_transit', 'out_for_delivery']);
+        return $query->whereIn('status', [
+            ShippingStatuses::SHIPPED,
+            ShippingStatuses::IN_TRANSIT,
+            ShippingStatuses::OUT_FOR_DELIVERY
+        ]);
     }
 
     public function getShippingCostInPennies(): int
@@ -92,22 +97,27 @@ class Shipment extends Model
 
     public function isPending(): bool
     {
-        return $this->status === 'pending';
+        return $this->status === ShippingStatuses::PENDING;
     }
 
     public function isShipped(): bool
     {
-        return in_array($this->status, ['shipped', 'in_transit', 'out_for_delivery', 'delivered']);
+        return in_array($this->status, [
+            ShippingStatuses::SHIPPED,
+            ShippingStatuses::IN_TRANSIT,
+            ShippingStatuses::OUT_FOR_DELIVERY,
+            ShippingStatuses::DELIVERED
+        ]);
     }
 
     public function isDelivered(): bool
     {
-        return $this->status === 'delivered';
+        return $this->status === ShippingStatuses::DELIVERED;
     }
 
     public function isCancelled(): bool
     {
-        return $this->status === 'cancelled';
+        return $this->status === ShippingStatuses::CANCELLED;
     }
 
     public function hasTrackingNumber(): bool
@@ -135,32 +145,12 @@ class Shipment extends Model
 
     public function getStatusLabel(): string
     {
-        return match($this->status) {
-            'pending' => 'Pending',
-            'processing' => 'Processing',
-            'shipped' => 'Shipped',
-            'in_transit' => 'In Transit',
-            'out_for_delivery' => 'Out for Delivery',
-            'delivered' => 'Delivered',
-            'failed' => 'Failed',
-            'cancelled' => 'Cancelled',
-            'returned' => 'Returned',
-            default => ucfirst($this->status),
-        };
+        return ShippingStatuses::getStatusLabel($this->status);
     }
 
     public function getStatusColor(): string
     {
-        return match($this->status) {
-            'pending' => 'yellow',
-            'processing' => 'blue',
-            'shipped', 'in_transit' => 'indigo',
-            'out_for_delivery' => 'purple',
-            'delivered' => 'green',
-            'failed', 'cancelled' => 'red',
-            'returned' => 'orange',
-            default => 'gray',
-        };
+        return ShippingStatuses::getStatusColor($this->status);
     }
 
     public function getDaysInTransit(): ?int
@@ -185,14 +175,14 @@ class Shipment extends Model
     public function markAsShipped(string $trackingNumber = null, string $labelUrl = null): void
     {
         $this->update([
-            'status' => 'shipped',
+            'status' => ShippingStatuses::SHIPPED,
             'shipped_at' => now(),
             'tracking_number' => $trackingNumber ?? $this->tracking_number,
             'label_url' => $labelUrl ?? $this->label_url,
         ]);
 
         $this->order->update([
-            'fulfillment_status' => 'fulfilled',
+            'fulfillment_status' => FulfillmentStatuses::FULFILLED,
             'shipped_at' => now(),
             'tracking_number' => $trackingNumber ?? $this->tracking_number,
         ]);
@@ -201,7 +191,7 @@ class Shipment extends Model
     public function markAsDelivered(): void
     {
         $this->update([
-            'status' => 'delivered',
+            'status' => ShippingStatuses::DELIVERED,
             'delivered_at' => now(),
         ]);
     }
@@ -210,7 +200,7 @@ class Shipment extends Model
     {
         $updateData = array_merge(['status' => $status], $additionalData);
 
-        if ($status === 'delivered' && !$this->delivered_at) {
+        if ($status === ShippingStatuses::DELIVERED && !$this->delivered_at) {
             $updateData['delivered_at'] = now();
         }
 

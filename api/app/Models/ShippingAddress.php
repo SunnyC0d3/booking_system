@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Constants\AddressTypes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -62,6 +63,16 @@ class ShippingAddress extends Model
     public function scopeByType($query, string $type)
     {
         return $query->where('type', $type);
+    }
+
+    public function scopeShipping($query)
+    {
+        return $query->whereIn('type', [AddressTypes::SHIPPING, AddressTypes::BOTH]);
+    }
+
+    public function scopeBilling($query)
+    {
+        return $query->whereIn('type', [AddressTypes::BILLING, AddressTypes::BOTH]);
     }
 
     public function getFullNameAttribute(): string
@@ -198,5 +209,20 @@ class ShippingAddress extends Model
             'phone' => $this->phone ?? '',
             'email' => $this->user?->email ?? '',
         ];
+    }
+
+    public function isShippingAddress(): bool
+    {
+        return in_array($this->type, [AddressTypes::SHIPPING, AddressTypes::BOTH]);
+    }
+
+    public function isBillingAddress(): bool
+    {
+        return in_array($this->type, [AddressTypes::BILLING, AddressTypes::BOTH]);
+    }
+
+    public function getTypeLabel(): string
+    {
+        return AddressTypes::getTypeLabel($this->type);
     }
 }

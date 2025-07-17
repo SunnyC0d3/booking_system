@@ -9,6 +9,8 @@ use App\Models\ShippingAddress;
 use App\Models\ShippingZone;
 use App\Models\ShippingMethod;
 use App\Models\ShippingRate;
+use App\Constants\FulfillmentStatuses;
+use App\Constants\ShippingClasses;
 use Illuminate\Support\Collection;
 
 class ShippingCalculator
@@ -54,6 +56,8 @@ class ShippingCalculator
         $totalWeight = 0;
         $totalValue = 0;
         $requiresShipping = false;
+        $hasSpecialHandling = false;
+        $shippingClasses = [];
 
         foreach ($products as $index => $product) {
             if ($product->requiresShipping()) {
@@ -61,6 +65,20 @@ class ShippingCalculator
                 $quantity = $quantities[$index] ?? $quantities[$product->id] ?? 1;
                 $totalWeight += $product->getWeightInKg() * $quantity;
                 $totalValue += $product->price * $quantity;
+
+                $shippingClass = $product->getShippingClass();
+                $shippingClasses[] = $shippingClass;
+
+                // Check for special handling requirements
+                if (in_array($shippingClass, [
+                    ShippingClasses::FRAGILE,
+                    ShippingClasses::DANGEROUS,
+                    ShippingClasses::REFRIGERATED,
+                    ShippingClasses::OVERSIZED,
+                    ShippingClasses::HEAVY
+                ])) {
+                    $hasSpecialHandling = true;
+                }
             }
         }
 
@@ -74,7 +92,14 @@ class ShippingCalculator
             return collect();
         }
 
-        return $this->getAvailableMethodsForZone($zone, $totalWeight, $totalValue);
+        $methods = $this->getAvailableMethodsForZone($zone, $totalWeight, $totalValue);
+
+        // Filter methods based on special handling requirements
+        if ($hasSpecialHandling) {
+            $methods = $this->filterMethodsForSpecialHandling($methods, $shippingClasses);
+        }
+
+        return $methods;
     }
 
     public function getQuickEstimate(string $countryCode, string $postcode, float $weight, int $valueInPennies): Collection
@@ -143,6 +168,40 @@ class ShippingCalculator
             ->values();
     }
 
+    protected function filterMethodsForSpecialHandling(Collection $methods, array $shippingClasses): Collection
+    {
+        $specialClasses = array_intersect($shippingClasses, [
+            ShippingClasses::FRAGILE,
+            ShippingClasses::DANGEROUS,
+            ShippingClasses::REFRIGERATED,
+            ShippingClasses::OVERSIZED,
+            ShippingClasses::HEAVY
+        ]);
+
+        if (empty($specialClasses)) {
+            return $methods;
+        }
+
+        return $methods->filter(function ($method) use ($specialClasses) {
+            // Filter out overnight/express for dangerous goods
+            if (in_array(ShippingClasses::DANGEROUS, $specialClasses)) {
+                if (stripos($method['name'], 'overnight') !== false ||
+                    stripos($method['name'], 'express') !== false) {
+                    return false;
+                }
+            }
+
+            // Filter out standard shipping for refrigerated items
+            if (in_array(ShippingClasses::REFRIGERATED, $specialClasses)) {
+                if (stripos($method['name'], 'standard') !== false) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
+    }
+
     protected function cartRequiresShipping(Cart $cart): bool
     {
         return $cart->cartItems()
@@ -164,6 +223,23 @@ class ShippingCalculator
                 }
                 return $item->product->getWeightInKg() * $item->quantity;
             });
+    }
+
+    protected function calculateCartShippingClasses(Cart $cart): array
+    {
+        return $cart->cartItems()
+            ->with('product')
+            ->get()
+            ->map(function ($item) {
+                if (!$item->product->requiresShipping()) {
+                    return null;
+                }
+                return $item->product->getShippingClass();
+            })
+            ->filter()
+            ->unique()
+            ->values()
+            ->toArray();
     }
 
     public function validateShippingMethod(int $methodId, ShippingAddress $address, float $weight = 0, int $total = 0): bool
@@ -222,7 +298,44 @@ class ShippingCalculator
             'fastest_method' => $shippingMethods->sortBy('estimated_days_min')->first(),
             'requires_shipping' => $this->cartRequiresShipping($cart),
             'total_weight' => $this->calculateCartWeight($cart),
+            'shipping_classes' => $this->calculateCartShippingClasses($cart),
             'shipping_zone' => $address->getShippingZone()?->name,
         ];
+    }
+
+    public function canMethodHandleShippingClass(ShippingMethod $method, string $shippingClass): bool
+    {
+        $metadata = $method->metadata ?? [];
+        $supportedClasses = $metadata['supported_shipping_classes'] ?? ShippingClasses::all();
+
+        return in_array($shippingClass, $supportedClasses);
+    }
+
+    public function getShippingRestrictions(Cart $cart): array
+    {
+        $restrictions = [];
+        $shippingClasses = $this->calculateCartShippingClasses($cart);
+
+        foreach ($shippingClasses as $class) {
+            switch ($class) {
+                case ShippingClasses::DANGEROUS:
+                    $restrictions[] = 'Contains dangerous goods - special handling required';
+                    break;
+                case ShippingClasses::REFRIGERATED:
+                    $restrictions[] = 'Requires refrigeration during transport';
+                    break;
+                case ShippingClasses::FRAGILE:
+                    $restrictions[] = 'Fragile items - careful handling required';
+                    break;
+                case ShippingClasses::OVERSIZED:
+                    $restrictions[] = 'Oversized items - may require special delivery';
+                    break;
+                case ShippingClasses::HEAVY:
+                    $restrictions[] = 'Heavy items - may require additional handling fees';
+                    break;
+            }
+        }
+
+        return array_unique($restrictions);
     }
 }

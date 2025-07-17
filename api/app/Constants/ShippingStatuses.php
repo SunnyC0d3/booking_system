@@ -14,6 +14,8 @@ class ShippingStatuses
     public const CANCELLED = 'cancelled';
     public const RETURNED = 'returned';
     public const READY_TO_SHIP = 'ready_to_ship';
+    public const EXCEPTION = 'exception';
+    public const UNKNOWN = 'unknown';
 
     public static function all(): array
     {
@@ -28,6 +30,44 @@ class ShippingStatuses
             self::CANCELLED,
             self::RETURNED,
             self::READY_TO_SHIP,
+            self::EXCEPTION,
+            self::UNKNOWN,
         ];
+    }
+
+    public static function getStatusLabel(string $status): string
+    {
+        return match($status) {
+            self::PENDING => 'Pending',
+            self::PROCESSING => 'Processing',
+            self::SHIPPED => 'Shipped',
+            self::IN_TRANSIT => 'In Transit',
+            self::OUT_FOR_DELIVERY => 'Out for Delivery',
+            self::DELIVERED => 'Delivered',
+            self::FAILED => 'Failed',
+            self::CANCELLED => 'Cancelled',
+            self::RETURNED => 'Returned',
+            self::READY_TO_SHIP => 'Ready to Ship',
+            self::EXCEPTION => 'Exception',
+            self::UNKNOWN => 'Unknown',
+            default => ucfirst($status),
+        };
+    }
+
+    public static function getStatusColor(string $status): string
+    {
+        return match($status) {
+            self::PENDING => 'yellow',
+            self::PROCESSING => 'blue',
+            self::SHIPPED, self::IN_TRANSIT => 'indigo',
+            self::OUT_FOR_DELIVERY => 'purple',
+            self::DELIVERED => 'green',
+            self::FAILED, self::CANCELLED => 'red',
+            self::RETURNED => 'orange',
+            self::READY_TO_SHIP => 'cyan',
+            self::EXCEPTION => 'red',
+            self::UNKNOWN => 'gray',
+            default => 'gray',
+        };
     }
 }
