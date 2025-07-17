@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\V1\Admin\ShippingMethodController;
 use Illuminate\Support\Facades\Route;
 
 // Admin Controllers
@@ -22,6 +21,9 @@ use App\Http\Controllers\V1\Admin\PaymentController;
 use App\Http\Controllers\V1\Admin\InventoryController;
 use App\Http\Controllers\V1\Admin\ReviewController;
 use App\Http\Controllers\V1\Admin\ReviewResponseController;
+use App\Http\Controllers\V1\Admin\ShippingMethodController;
+use App\Http\Controllers\V1\Admin\ShippingZoneController;
+use App\Http\Controllers\V1\Admin\ShippingRateController;
 
 // Admin/Users
 
@@ -257,4 +259,42 @@ Route::prefix('admin/shipping-methods')
         Route::patch('/{shippingMethod}/activate', 'activate')->name('admin.shipping-methods.activate');
         Route::patch('/{shippingMethod}/deactivate', 'deactivate')->name('admin.shipping-methods.deactivate');
         Route::post('/reorder', 'reorder')->name('admin.shipping-methods.reorder');
+    });
+
+// Admin/Shipping Zones
+
+Route::prefix('admin/shipping-zones')
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'rate_limit:admin'])
+    ->controller(ShippingZoneController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('admin.shipping-zones.index');
+        Route::post('/', 'store')->name('admin.shipping-zones.store');
+        Route::get('/{shippingZone}', 'show')->name('admin.shipping-zones.show');
+        Route::put('/{shippingZone}', 'update')->name('admin.shipping-zones.update');
+        Route::delete('/{shippingZone}', 'destroy')->name('admin.shipping-zones.destroy');
+        Route::patch('/{shippingZone}/activate', 'activate')->name('admin.shipping-zones.activate');
+        Route::patch('/{shippingZone}/deactivate', 'deactivate')->name('admin.shipping-zones.deactivate');
+        Route::post('/reorder', 'reorder')->name('admin.shipping-zones.reorder');
+        Route::post('/{shippingZone}/methods', 'attachMethod')->name('admin.shipping-zones.attach-method');
+        Route::delete('/{shippingZone}/methods/{shippingMethod}', 'detachMethod')->name('admin.shipping-zones.detach-method');
+        Route::put('/{shippingZone}/methods/{shippingMethod}', 'updateMethodSettings')->name('admin.shipping-zones.update-method');
+    });
+
+// Admin/Shipping Rates
+
+Route::prefix('admin/shipping-rates')
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'rate_limit:admin'])
+    ->controller(ShippingRateController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('admin.shipping-rates.index');
+        Route::post('/', 'store')->name('admin.shipping-rates.store');
+        Route::get('/{shippingRate}', 'show')->name('admin.shipping-rates.show');
+        Route::put('/{shippingRate}', 'update')->name('admin.shipping-rates.update');
+        Route::delete('/{shippingRate}', 'destroy')->name('admin.shipping-rates.destroy');
+        Route::patch('/{shippingRate}/activate', 'activate')->name('admin.shipping-rates.activate');
+        Route::patch('/{shippingRate}/deactivate', 'deactivate')->name('admin.shipping-rates.deactivate');
+        Route::post('/bulk-create', 'bulkCreate')->name('admin.shipping-rates.bulk-create');
+        Route::put('/bulk-update', 'bulkUpdate')->name('admin.shipping-rates.bulk-update');
+        Route::post('/{shippingRate}/duplicate', 'duplicate')->name('admin.shipping-rates.duplicate');
+        Route::post('/calculate', 'calculate')->name('admin.shipping-rates.calculate');
     });
