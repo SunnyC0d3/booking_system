@@ -24,6 +24,7 @@ use App\Http\Controllers\V1\Admin\ReviewResponseController;
 use App\Http\Controllers\V1\Admin\ShippingMethodController;
 use App\Http\Controllers\V1\Admin\ShippingZoneController;
 use App\Http\Controllers\V1\Admin\ShippingRateController;
+use App\Http\Controllers\V1\Admin\ShipmentController;
 
 // Admin/Users
 
@@ -297,4 +298,24 @@ Route::prefix('admin/shipping-rates')
         Route::put('/bulk-update', 'bulkUpdate')->name('admin.shipping-rates.bulk-update');
         Route::post('/{shippingRate}/duplicate', 'duplicate')->name('admin.shipping-rates.duplicate');
         Route::post('/calculate', 'calculate')->name('admin.shipping-rates.calculate');
+    });
+
+// Admin/Shipments
+
+Route::prefix('admin/shipments')
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'rate_limit:admin'])
+    ->controller(ShipmentController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('admin.shipments.index');
+        Route::post('/', 'store')->name('admin.shipments.store');
+        Route::get('/stats', 'getStats')->name('admin.shipments.stats');
+        Route::get('/overdue', 'getOverdue')->name('admin.shipments.overdue');
+        Route::get('/{shipment}', 'show')->name('admin.shipments.show');
+        Route::put('/{shipment}', 'update')->name('admin.shipments.update');
+        Route::delete('/{shipment}', 'destroy')->name('admin.shipments.destroy');
+        Route::post('/{shipment}/purchase-label', 'purchaseLabel')->name('admin.shipments.purchase-label');
+        Route::post('/{shipment}/tracking-update', 'trackingUpdate')->name('admin.shipments.tracking-update');
+        Route::post('/{shipment}/mark-shipped', 'markAsShipped')->name('admin.shipments.mark-shipped');
+        Route::post('/bulk-update', 'bulkUpdate')->name('admin.shipments.bulk-update');
+        Route::post('/orders/{order}/create-shipment', 'createFromOrder')->name('admin.shipments.create-from-order');
     });

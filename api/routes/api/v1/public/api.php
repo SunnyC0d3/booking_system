@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\V1\Public\ShippingAddressController;
-use App\Http\Controllers\V1\Public\ShippingCalculationController;
 use Illuminate\Support\Facades\Route;
 
 // Auth Controllers
@@ -18,6 +16,9 @@ use App\Http\Controllers\V1\Public\ReturnsController;
 use App\Http\Controllers\V1\Public\CartController;
 use App\Http\Controllers\V1\Public\ReviewController;
 use App\Http\Controllers\V1\Public\ReviewResponseController;
+use App\Http\Controllers\V1\Public\ShippingAddressController;
+use App\Http\Controllers\V1\Public\ShippingCalculationController;
+use App\Http\Controllers\V1\Public\ShippingController;
 
 // Auth
 
