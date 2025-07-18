@@ -301,7 +301,7 @@ endpoints:
         name: filter.availability
         description: ''
         required: false
-        example: low_stock
+        example: in_stock
         type: string
         enumValues:
           - in_stock
@@ -365,7 +365,7 @@ endpoints:
         name: filter.tag_logic
         description: ''
         required: false
-        example: AND
+        example: OR
         type: string
         enumValues:
           - AND
@@ -527,7 +527,7 @@ endpoints:
         name: facets
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -537,7 +537,7 @@ endpoints:
         name: highlight
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -547,7 +547,7 @@ endpoints:
         name: personalize
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -577,7 +577,7 @@ endpoints:
         name: boost_new_products
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -587,7 +587,7 @@ endpoints:
         name: boost_in_stock
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -602,13 +602,13 @@ endpoints:
         category: '9,31'
         categories: '9,31'
         quantity: '64'
-        availability: low_stock
+        availability: in_stock
         vendors: '9,31'
         vendor: i
         brand: k
         brands: '9,31'
         tags: '9,31'
-        tag_logic: AND
+        tag_logic: OR
         attributes: '_JK:AI'
         color: k
         colors: dLJnIk
@@ -624,13 +624,13 @@ endpoints:
       sort: 'y8p,Bm,-dp,-Zm,-GH'
       diversify: false
       explain: true
-      facets: true
-      highlight: false
-      personalize: false
+      facets: false
+      highlight: true
+      personalize: true
       typo_tolerance: false
       exact_match: false
-      boost_new_products: false
-      boost_in_stock: true
+      boost_new_products: true
+      boost_in_stock: false
     fileParameters: []
     responses:
       -

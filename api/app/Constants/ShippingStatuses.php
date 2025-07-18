@@ -14,6 +14,10 @@ class ShippingStatuses
     public const CANCELLED = 'cancelled';
     public const RETURNED = 'returned';
     public const READY_TO_SHIP = 'ready_to_ship';
+
+    public const LOST = 'lost';
+
+    public const DAMAGED = 'damaged';
     public const EXCEPTION = 'exception';
     public const UNKNOWN = 'unknown';
 
@@ -30,6 +34,8 @@ class ShippingStatuses
             self::CANCELLED,
             self::RETURNED,
             self::READY_TO_SHIP,
+            self::LOST,
+            self::DAMAGED,
             self::EXCEPTION,
             self::UNKNOWN,
         ];
@@ -48,6 +54,8 @@ class ShippingStatuses
             self::CANCELLED => 'Cancelled',
             self::RETURNED => 'Returned',
             self::READY_TO_SHIP => 'Ready to Ship',
+            self::LOST => 'Lost',
+            self::DAMAGED => 'Damaged',
             self::EXCEPTION => 'Exception',
             self::UNKNOWN => 'Unknown',
             default => ucfirst($status),
@@ -65,6 +73,8 @@ class ShippingStatuses
             self::FAILED, self::CANCELLED => 'red',
             self::RETURNED => 'orange',
             self::READY_TO_SHIP => 'cyan',
+            self::LOST => 'red',
+            self::DAMAGED => 'red',
             self::EXCEPTION => 'red',
             self::UNKNOWN => 'gray',
             default => 'gray',

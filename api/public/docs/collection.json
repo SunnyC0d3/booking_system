@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "E-Commerce API Documentation",
-        "_postman_id": "c0507f99-96b6-453a-97d5-b0a84edb1854",
+        "_postman_id": "2f31fcce-0f21-4655-b066-247acf182f09",
         "description": "Comprehensive API for managing products, orders, payments, users, vendors, and more in an e-commerce platform.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json",
         "version": "1.0.0"
@@ -1598,7 +1598,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"b\",\"search\":\"n\",\"price\":\"9,3.1)\",\"priceRanges\":\"-1.42)-3268)\",\"category\":\"9,31\",\"categories\":\"9,31\",\"quantity\":\"64\",\"availability\":\"available\",\"vendors\":\"9,31\",\"vendor\":\"i\",\"brand\":\"k\",\"brands\":\"9,31\",\"tags\":\"9,31\",\"tag_logic\":\"AND\",\"attributes\":\"_JK:AI\",\"color\":\"k\",\"colors\":\"dLJnIk\",\"size\":\"h\",\"sizes\":\"DDz1Ys\",\"material\":\"h\",\"status\":\"w\",\"created_at\":\"2559-31-42\",\"updated_at\":\"2559-31-42\",\"include\":\"uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv\"},\"page\":4,\"per_page\":9,\"sort\":\"y8p,Bm,-dp,-Zm,-GH\",\"diversify\":true,\"explain\":false,\"facets\":false,\"highlight\":false,\"personalize\":false,\"typo_tolerance\":true,\"exact_match\":true,\"boost_new_products\":false,\"boost_in_stock\":false}"
+                            "raw": "{\"filter\":{\"name\":\"b\",\"search\":\"n\",\"price\":\"9,3.1)\",\"priceRanges\":\"-1.42)-3268)\",\"category\":\"9,31\",\"categories\":\"9,31\",\"quantity\":\"64\",\"availability\":\"out_of_stock\",\"vendors\":\"9,31\",\"vendor\":\"i\",\"brand\":\"k\",\"brands\":\"9,31\",\"tags\":\"9,31\",\"tag_logic\":\"AND\",\"attributes\":\"_JK:AI\",\"color\":\"k\",\"colors\":\"dLJnIk\",\"size\":\"h\",\"sizes\":\"DDz1Ys\",\"material\":\"h\",\"status\":\"w\",\"created_at\":\"2559-31-42\",\"updated_at\":\"2559-31-42\",\"include\":\"uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv\"},\"page\":4,\"per_page\":9,\"sort\":\"y8p,Bm,-dp,-Zm,-GH\",\"diversify\":true,\"explain\":true,\"facets\":false,\"highlight\":true,\"personalize\":true,\"typo_tolerance\":true,\"exact_match\":true,\"boost_new_products\":false,\"boost_in_stock\":true}"
                         },
                         "description": "Get a comprehensive paginated list of all products in the system with advanced filtering capabilities.\nThis endpoint provides administrators with complete product information including variants, media,\ncategories, tags, vendor details, relevance scoring, and faceted search results."
                     },
@@ -3015,7 +3015,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"product_id\":16,\"rating\":[2],\"verified_only\":false,\"with_media\":true,\"sort_by\":\"oldest\",\"per_page\":1,\"page\":66}"
+                            "raw": "{\"product_id\":16,\"rating\":[2],\"verified_only\":true,\"with_media\":true,\"sort_by\":\"newest\",\"per_page\":1,\"page\":66}"
                         },
                         "description": "Retrieve all reviews in the system with advanced admin filtering and sorting.\nProvides comprehensive review management including pending approvals, reported reviews,\nand detailed analytics for administrative oversight."
                     },
@@ -3046,7 +3046,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "5",
+                                    "value": "16",
                                     "description": "The ID of the review."
                                 },
                                 {
@@ -3104,7 +3104,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "5",
+                                    "value": "16",
                                     "description": "The ID of the review."
                                 },
                                 {
@@ -3162,7 +3162,7 @@
                                 {
                                     "id": "review_id",
                                     "key": "review_id",
-                                    "value": "5",
+                                    "value": "16",
                                     "description": "The ID of the review."
                                 },
                                 {
@@ -3223,7 +3223,7 @@
                                 {
                                     "id": "report_id",
                                     "key": "report_id",
-                                    "value": "1",
+                                    "value": "16",
                                     "description": "The ID of the report."
                                 },
                                 {
@@ -3469,7 +3469,7 @@
                                 {
                                     "id": "response_id",
                                     "key": "response_id",
-                                    "value": "2",
+                                    "value": "16",
                                     "description": "The ID of the response."
                                 },
                                 {
@@ -3527,7 +3527,7 @@
                                 {
                                     "id": "response_id",
                                     "key": "response_id",
-                                    "value": "2",
+                                    "value": "16",
                                     "description": "The ID of the response."
                                 },
                                 {
@@ -3585,7 +3585,7 @@
                                 {
                                     "id": "response_id",
                                     "key": "response_id",
-                                    "value": "2",
+                                    "value": "16",
                                     "description": "The ID of the response."
                                 },
                                 {
@@ -3628,6 +3628,100 @@
                             "code": 404,
                             "body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\ReviewResponse] 999\"\n}",
                             "name": "Response not found"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Checkout",
+            "description": "",
+            "item": [
+                {
+                    "name": "Get checkout summary with shipping costs",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/checkout\/summary",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/checkout\/summary"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"shipping_method_id\":1,\"shipping_address_id\":1}"
+                        },
+                        "description": "Calculate the total checkout cost including shipping for the current cart.\nThis endpoint provides a preview of costs before final order creation."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Checkout summary calculated successfully.\",\n  \"data\": {\n    \"items_total\": 4599,\n    \"items_total_formatted\": \"\u00a345.99\",\n    \"shipping_cost\": 599,\n    \"shipping_cost_formatted\": \"\u00a35.99\",\n    \"total_amount\": 5198,\n    \"total_amount_formatted\": \"\u00a351.98\",\n    \"requires_shipping\": true\n  }\n}",
+                            "name": "Checkout summary calculated successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"message\": \"Cart is empty.\"\n}",
+                            "name": "Cart is empty"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"errors\": [\n    \"The shipping method id field is required.\",\n    \"The shipping address id field is required.\"\n  ]\n}",
+                            "name": "Validation errors"
+                        }
+                    ]
+                },
+                {
+                    "name": "Validate checkout data",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/checkout\/validate",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/checkout\/validate"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"shipping_method_id\":1,\"shipping_address_id\":1}"
+                        },
+                        "description": "Validate that the selected shipping method and address are compatible\nwith the current cart contents before proceeding to payment."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Checkout validation successful.\",\n  \"data\": {\n    \"valid\": true,\n    \"shipping_available\": true,\n    \"estimated_delivery\": \"2025-01-20T17:00:00.000000Z\"\n  }\n}",
+                            "name": "Checkout validation successful"
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"message\": \"Selected shipping method is not available for this address.\"\n}",
+                            "name": "Validation failed"
                         }
                     ]
                 }
@@ -5642,7 +5736,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"b\",\"search\":\"n\",\"price\":\"9,3.1)\",\"priceRanges\":\"-1.42)-3268)\",\"category\":\"9,31\",\"categories\":\"9,31\",\"quantity\":\"64\",\"availability\":\"low_stock\",\"vendors\":\"9,31\",\"vendor\":\"i\",\"brand\":\"k\",\"brands\":\"9,31\",\"tags\":\"9,31\",\"tag_logic\":\"AND\",\"attributes\":\"_JK:AI\",\"color\":\"k\",\"colors\":\"dLJnIk\",\"size\":\"h\",\"sizes\":\"DDz1Ys\",\"material\":\"h\",\"status\":\"w\",\"created_at\":\"2559-31-42\",\"updated_at\":\"2559-31-42\",\"include\":\"uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv\"},\"page\":4,\"per_page\":9,\"sort\":\"y8p,Bm,-dp,-Zm,-GH\",\"diversify\":false,\"explain\":true,\"facets\":true,\"highlight\":false,\"personalize\":false,\"typo_tolerance\":false,\"exact_match\":false,\"boost_new_products\":false,\"boost_in_stock\":true}"
+                            "raw": "{\"filter\":{\"name\":\"b\",\"search\":\"n\",\"price\":\"9,3.1)\",\"priceRanges\":\"-1.42)-3268)\",\"category\":\"9,31\",\"categories\":\"9,31\",\"quantity\":\"64\",\"availability\":\"in_stock\",\"vendors\":\"9,31\",\"vendor\":\"i\",\"brand\":\"k\",\"brands\":\"9,31\",\"tags\":\"9,31\",\"tag_logic\":\"OR\",\"attributes\":\"_JK:AI\",\"color\":\"k\",\"colors\":\"dLJnIk\",\"size\":\"h\",\"sizes\":\"DDz1Ys\",\"material\":\"h\",\"status\":\"w\",\"created_at\":\"2559-31-42\",\"updated_at\":\"2559-31-42\",\"include\":\"uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv\"},\"page\":4,\"per_page\":9,\"sort\":\"y8p,Bm,-dp,-Zm,-GH\",\"diversify\":false,\"explain\":true,\"facets\":false,\"highlight\":true,\"personalize\":true,\"typo_tolerance\":false,\"exact_match\":false,\"boost_new_products\":true,\"boost_in_stock\":false}"
                         },
                         "description": "Get a paginated and filtered list of active products with advanced search capabilities.\nThis endpoint supports intelligent search with relevance scoring, faceted filtering,\nresult diversification, and personalized recommendations. Includes comprehensive\nproduct information optimized for customer browsing and purchasing decisions.",
                         "auth": {
@@ -6204,7 +6298,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"product_id\":16,\"rating\":[2],\"verified_only\":true,\"with_media\":true,\"sort_by\":\"newest\",\"per_page\":1,\"page\":66}"
+                            "raw": "{\"product_id\":16,\"rating\":[2],\"verified_only\":false,\"with_media\":true,\"sort_by\":\"oldest\",\"per_page\":1,\"page\":66}"
                         },
                         "description": "Retrieve all approved reviews for a product with advanced filtering capabilities.\nSupports filtering by rating, verified purchases, media presence, and various sorting options.\nEssential for product detail pages and review browsing functionality.",
                         "auth": {
@@ -6238,7 +6332,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "5",
+                                    "value": "16",
                                     "description": "The ID of the review."
                                 },
                                 {
@@ -6376,7 +6470,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "5",
+                                    "value": "16",
                                     "description": "The ID of the review."
                                 },
                                 {
@@ -6473,7 +6567,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "5",
+                                    "value": "16",
                                     "description": "The ID of the review."
                                 },
                                 {
@@ -6531,7 +6625,7 @@
                                 {
                                     "id": "review_id",
                                     "key": "review_id",
-                                    "value": "5",
+                                    "value": "16",
                                     "description": "The ID of the review."
                                 },
                                 {
@@ -6592,7 +6686,7 @@
                                 {
                                     "id": "review_id",
                                     "key": "review_id",
-                                    "value": "5",
+                                    "value": "16",
                                     "description": "The ID of the review."
                                 },
                                 {
@@ -6988,7 +7082,7 @@
                                 {
                                     "id": "review_id",
                                     "key": "review_id",
-                                    "value": "5",
+                                    "value": "16",
                                     "description": "The ID of the review."
                                 },
                                 {
@@ -7034,13 +7128,13 @@
                                 {
                                     "id": "review_id",
                                     "key": "review_id",
-                                    "value": "5",
+                                    "value": "16",
                                     "description": "The ID of the review."
                                 },
                                 {
                                     "id": "response_id",
                                     "key": "response_id",
-                                    "value": "2",
+                                    "value": "16",
                                     "description": "The ID of the response."
                                 },
                                 {
@@ -7081,46 +7175,10 @@
                                 {
                                     "key": "content-type",
                                     "value": "application\/json"
-                                },
-                                {
-                                    "key": "x-ratelimit-limit",
-                                    "value": "5"
-                                },
-                                {
-                                    "key": "x-ratelimit-remaining",
-                                    "value": "4"
-                                },
-                                {
-                                    "key": "x-ratelimit-reset",
-                                    "value": "1752766931"
-                                },
-                                {
-                                    "key": "x-content-type-options",
-                                    "value": "nosniff"
-                                },
-                                {
-                                    "key": "x-frame-options",
-                                    "value": "DENY"
-                                },
-                                {
-                                    "key": "x-xss-protection",
-                                    "value": "1; mode=block"
-                                },
-                                {
-                                    "key": "content-security-policy",
-                                    "value": "default-src 'none'; frame-ancestors 'none';"
-                                },
-                                {
-                                    "key": "referrer-policy",
-                                    "value": "strict-origin-when-cross-origin"
-                                },
-                                {
-                                    "key": "permissions-policy",
-                                    "value": "camera=(), microphone=(), geolocation=(), payment=()"
                                 }
                             ],
-                            "code": 200,
-                            "body": "{\"data\":{\"id\":2,\"vendor\":{\"id\":1,\"name\":\"Fashion Forward\",\"description\":null},\"user\":{\"id\":1,\"name\":\"Clifford Vendor Representative\"},\"content\":\"Honestly such an amazing products.\",\"is_approved\":true,\"approved_at\":\"2025-07-16T11:50:44.000000Z\",\"created_at\":\"2025-07-16T11:50:44.000000Z\",\"updated_at\":\"2025-07-16T11:50:44.000000Z\"},\"message\":\"Response retrieved successfully.\",\"status\":200}",
+                            "code": 404,
+                            "body": "{\n    \"message\": \"No query results for model [App\\\\Models\\\\Review] 16\",\n    \"exception\": \"Symfony\\\\Component\\\\HttpKernel\\\\Exception\\\\NotFoundHttpException\",\n    \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Exceptions\/Handler.php\",\n    \"line\": 636,\n    \"trace\": [\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Exceptions\/Handler.php\",\n            \"line\": 584,\n            \"function\": \"prepareException\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Exceptions\\\\Handler\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/nunomaduro\/collision\/src\/Adapters\/Laravel\/ExceptionHandler.php\",\n            \"line\": 54,\n            \"function\": \"render\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Exceptions\\\\Handler\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Pipeline.php\",\n            \"line\": 51,\n            \"function\": \"render\",\n            \"class\": \"NunoMaduro\\\\Collision\\\\Adapters\\\\Laravel\\\\ExceptionHandler\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 214,\n            \"function\": \"handleException\",\n            \"class\": \"Illuminate\\\\Routing\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 127,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 807,\n            \"function\": \"then\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 786,\n            \"function\": \"runRouteWithinStack\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 750,\n            \"function\": \"runRoute\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 739,\n            \"function\": \"dispatchToRoute\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 201,\n            \"function\": \"dispatch\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 170,\n            \"function\": \"Illuminate\\\\Foundation\\\\Http\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TransformsRequest.php\",\n            \"line\": 21,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/ConvertEmptyStringsToNull.php\",\n            \"line\": 31,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TransformsRequest\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\ConvertEmptyStringsToNull\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TransformsRequest.php\",\n            \"line\": 21,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TrimStrings.php\",\n            \"line\": 51,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TransformsRequest\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TrimStrings\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/ValidatePostSize.php\",\n            \"line\": 27,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\ValidatePostSize\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/PreventRequestsDuringMaintenance.php\",\n            \"line\": 110,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\PreventRequestsDuringMaintenance\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/HandleCors.php\",\n            \"line\": 49,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\HandleCors\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/TrustProxies.php\",\n            \"line\": 58,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\TrustProxies\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/InvokeDeferredCallbacks.php\",\n            \"line\": 22,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\InvokeDeferredCallbacks\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 127,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 176,\n            \"function\": \"then\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 145,\n            \"function\": \"sendRequestThroughRouter\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 310,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 298,\n            \"function\": \"callLaravelOrLumenRoute\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 91,\n            \"function\": \"makeApiCall\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 44,\n            \"function\": \"makeResponseCall\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 35,\n            \"function\": \"makeResponseCallIfConditionsPass\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 237,\n            \"function\": \"__invoke\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 163,\n            \"function\": \"iterateThroughStrategies\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 95,\n            \"function\": \"fetchResponses\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 125,\n            \"function\": \"processRoute\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 72,\n            \"function\": \"extractEndpointsInfoFromLaravelApp\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 50,\n            \"function\": \"extractEndpointsInfoAndWriteToDisk\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Commands\/GenerateDocumentation.php\",\n            \"line\": 53,\n            \"function\": \"get\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 36,\n            \"function\": \"handle\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Commands\\\\GenerateDocumentation\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/Util.php\",\n            \"line\": 43,\n            \"function\": \"Illuminate\\\\Container\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 95,\n            \"function\": \"unwrapIfClosure\",\n            \"class\": \"Illuminate\\\\Container\\\\Util\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 35,\n            \"function\": \"callBoundMethod\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/Container.php\",\n            \"line\": 694,\n            \"function\": \"call\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Console\/Command.php\",\n            \"line\": 213,\n            \"function\": \"call\",\n            \"class\": \"Illuminate\\\\Container\\\\Container\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Command\/Command.php\",\n            \"line\": 279,\n            \"function\": \"execute\",\n            \"class\": \"Illuminate\\\\Console\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Console\/Command.php\",\n            \"line\": 182,\n            \"function\": \"run\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Command\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 1094,\n            \"function\": \"run\",\n            \"class\": \"Illuminate\\\\Console\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 342,\n            \"function\": \"doRunCommand\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 193,\n            \"function\": \"doRun\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Console\/Kernel.php\",\n            \"line\": 198,\n            \"function\": \"run\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Application.php\",\n            \"line\": 1208,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Console\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/artisan\",\n            \"line\": 13,\n            \"function\": \"handleCommand\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Application\",\n            \"type\": \"->\"\n        }\n    ]\n}",
                             "name": ""
                         }
                     ]
@@ -9329,7 +9387,7 @@
                                 {
                                     "id": "shippingMethod_id",
                                     "key": "shippingMethod_id",
-                                    "value": "16",
+                                    "value": "1",
                                     "description": "The ID of the shippingMethod."
                                 },
                                 {
@@ -9387,7 +9445,7 @@
                                 {
                                     "id": "shippingMethod_id",
                                     "key": "shippingMethod_id",
-                                    "value": "16",
+                                    "value": "1",
                                     "description": "The ID of the shippingMethod."
                                 },
                                 {
@@ -9454,7 +9512,7 @@
                                 {
                                     "id": "shippingMethod_id",
                                     "key": "shippingMethod_id",
-                                    "value": "16",
+                                    "value": "1",
                                     "description": "The ID of the shippingMethod."
                                 },
                                 {
@@ -9524,7 +9582,7 @@
                                 {
                                     "id": "shippingMethod_id",
                                     "key": "shippingMethod_id",
-                                    "value": "16",
+                                    "value": "1",
                                     "description": "The ID of the shippingMethod."
                                 },
                                 {
@@ -9582,7 +9640,7 @@
                                 {
                                     "id": "shippingMethod_id",
                                     "key": "shippingMethod_id",
-                                    "value": "16",
+                                    "value": "1",
                                     "description": "The ID of the shippingMethod."
                                 },
                                 {
@@ -9846,7 +9904,7 @@
                                 {
                                     "id": "shippingRate_id",
                                     "key": "shippingRate_id",
-                                    "value": "16",
+                                    "value": "1",
                                     "description": "The ID of the shippingRate."
                                 },
                                 {
@@ -9904,7 +9962,7 @@
                                 {
                                     "id": "shippingRate_id",
                                     "key": "shippingRate_id",
-                                    "value": "16",
+                                    "value": "1",
                                     "description": "The ID of the shippingRate."
                                 },
                                 {
@@ -9971,7 +10029,7 @@
                                 {
                                     "id": "shippingRate_id",
                                     "key": "shippingRate_id",
-                                    "value": "16",
+                                    "value": "1",
                                     "description": "The ID of the shippingRate."
                                 },
                                 {
@@ -10029,7 +10087,7 @@
                                 {
                                     "id": "shippingRate_id",
                                     "key": "shippingRate_id",
-                                    "value": "16",
+                                    "value": "1",
                                     "description": "The ID of the shippingRate."
                                 },
                                 {
@@ -10087,7 +10145,7 @@
                                 {
                                     "id": "shippingRate_id",
                                     "key": "shippingRate_id",
-                                    "value": "16",
+                                    "value": "1",
                                     "description": "The ID of the shippingRate."
                                 },
                                 {
@@ -10245,7 +10303,7 @@
                                 {
                                     "id": "shippingRate_id",
                                     "key": "shippingRate_id",
-                                    "value": "16",
+                                    "value": "1",
                                     "description": "The ID of the shippingRate."
                                 },
                                 {
@@ -10506,7 +10564,7 @@
                                 {
                                     "id": "shippingZone_id",
                                     "key": "shippingZone_id",
-                                    "value": "16",
+                                    "value": "1",
                                     "description": "The ID of the shippingZone."
                                 },
                                 {
@@ -10564,7 +10622,7 @@
                                 {
                                     "id": "shippingZone_id",
                                     "key": "shippingZone_id",
-                                    "value": "16",
+                                    "value": "1",
                                     "description": "The ID of the shippingZone."
                                 },
                                 {
@@ -10631,7 +10689,7 @@
                                 {
                                     "id": "shippingZone_id",
                                     "key": "shippingZone_id",
-                                    "value": "16",
+                                    "value": "1",
                                     "description": "The ID of the shippingZone."
                                 },
                                 {
@@ -10695,7 +10753,7 @@
                                 {
                                     "id": "shippingZone_id",
                                     "key": "shippingZone_id",
-                                    "value": "16",
+                                    "value": "1",
                                     "description": "The ID of the shippingZone."
                                 },
                                 {
@@ -10753,7 +10811,7 @@
                                 {
                                     "id": "shippingZone_id",
                                     "key": "shippingZone_id",
-                                    "value": "16",
+                                    "value": "1",
                                     "description": "The ID of the shippingZone."
                                 },
                                 {
@@ -10858,7 +10916,7 @@
                                 {
                                     "id": "shippingZone_id",
                                     "key": "shippingZone_id",
-                                    "value": "16",
+                                    "value": "1",
                                     "description": "The ID of the shippingZone."
                                 },
                                 {
@@ -10925,13 +10983,13 @@
                                 {
                                     "id": "shippingZone_id",
                                     "key": "shippingZone_id",
-                                    "value": "16",
+                                    "value": "1",
                                     "description": "The ID of the shippingZone."
                                 },
                                 {
                                     "id": "shippingMethod_id",
                                     "key": "shippingMethod_id",
-                                    "value": "16",
+                                    "value": "1",
                                     "description": "The ID of the shippingMethod."
                                 },
                                 {
@@ -10995,13 +11053,13 @@
                                 {
                                     "id": "shippingZone_id",
                                     "key": "shippingZone_id",
-                                    "value": "16",
+                                    "value": "1",
                                     "description": "The ID of the shippingZone."
                                 },
                                 {
                                     "id": "shippingMethod_id",
                                     "key": "shippingMethod_id",
-                                    "value": "16",
+                                    "value": "1",
                                     "description": "The ID of the shippingMethod."
                                 },
                                 {
@@ -11932,7 +11990,7 @@
                                 {
                                     "id": "review_id",
                                     "key": "review_id",
-                                    "value": "5",
+                                    "value": "16",
                                     "description": "The ID of the review."
                                 },
                                 {
@@ -11993,13 +12051,13 @@
                                 {
                                     "id": "review_id",
                                     "key": "review_id",
-                                    "value": "5",
+                                    "value": "16",
                                     "description": "The ID of the review."
                                 },
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "2",
+                                    "value": "16",
                                     "description": "The ID of the response."
                                 },
                                 {
@@ -12060,13 +12118,13 @@
                                 {
                                     "id": "review_id",
                                     "key": "review_id",
-                                    "value": "5",
+                                    "value": "16",
                                     "description": "The ID of the review."
                                 },
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "2",
+                                    "value": "16",
                                     "description": "The ID of the response."
                                 },
                                 {
@@ -12193,7 +12251,7 @@
                                 {
                                     "id": "id",
                                     "key": "id",
-                                    "value": "2",
+                                    "value": "16",
                                     "description": "The ID of the response."
                                 }
                             ]
@@ -12222,34 +12280,10 @@
                                 {
                                     "key": "content-type",
                                     "value": "application\/json"
-                                },
-                                {
-                                    "key": "x-content-type-options",
-                                    "value": "nosniff"
-                                },
-                                {
-                                    "key": "x-frame-options",
-                                    "value": "DENY"
-                                },
-                                {
-                                    "key": "x-xss-protection",
-                                    "value": "1; mode=block"
-                                },
-                                {
-                                    "key": "content-security-policy",
-                                    "value": "default-src 'none'; frame-ancestors 'none';"
-                                },
-                                {
-                                    "key": "referrer-policy",
-                                    "value": "strict-origin-when-cross-origin"
-                                },
-                                {
-                                    "key": "permissions-policy",
-                                    "value": "camera=(), microphone=(), geolocation=(), payment=()"
                                 }
                             ],
-                            "code": 401,
-                            "body": "{\"message\":\"Authentication required for this action.\",\"suggestion\":\"Please log in to continue.\",\"error\":\"authentication_required\",\"action\":\"dashboard\"}",
+                            "code": 404,
+                            "body": "{\n    \"message\": \"No query results for model [App\\\\Models\\\\ReviewResponse] 16\",\n    \"exception\": \"Symfony\\\\Component\\\\HttpKernel\\\\Exception\\\\NotFoundHttpException\",\n    \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Exceptions\/Handler.php\",\n    \"line\": 636,\n    \"trace\": [\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Exceptions\/Handler.php\",\n            \"line\": 584,\n            \"function\": \"prepareException\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Exceptions\\\\Handler\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/nunomaduro\/collision\/src\/Adapters\/Laravel\/ExceptionHandler.php\",\n            \"line\": 54,\n            \"function\": \"render\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Exceptions\\\\Handler\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Pipeline.php\",\n            \"line\": 51,\n            \"function\": \"render\",\n            \"class\": \"NunoMaduro\\\\Collision\\\\Adapters\\\\Laravel\\\\ExceptionHandler\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 214,\n            \"function\": \"handleException\",\n            \"class\": \"Illuminate\\\\Routing\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 127,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 807,\n            \"function\": \"then\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 786,\n            \"function\": \"runRouteWithinStack\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 750,\n            \"function\": \"runRoute\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Routing\/Router.php\",\n            \"line\": 739,\n            \"function\": \"dispatchToRoute\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 201,\n            \"function\": \"dispatch\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 170,\n            \"function\": \"Illuminate\\\\Foundation\\\\Http\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TransformsRequest.php\",\n            \"line\": 21,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/ConvertEmptyStringsToNull.php\",\n            \"line\": 31,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TransformsRequest\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\ConvertEmptyStringsToNull\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TransformsRequest.php\",\n            \"line\": 21,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/TrimStrings.php\",\n            \"line\": 51,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TransformsRequest\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TrimStrings\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/ValidatePostSize.php\",\n            \"line\": 27,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\ValidatePostSize\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/PreventRequestsDuringMaintenance.php\",\n            \"line\": 110,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\PreventRequestsDuringMaintenance\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/HandleCors.php\",\n            \"line\": 49,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\HandleCors\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Http\/Middleware\/TrustProxies.php\",\n            \"line\": 58,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\TrustProxies\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Middleware\/InvokeDeferredCallbacks.php\",\n            \"line\": 22,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 209,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\InvokeDeferredCallbacks\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Pipeline\/Pipeline.php\",\n            \"line\": 127,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 176,\n            \"function\": \"then\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Http\/Kernel.php\",\n            \"line\": 145,\n            \"function\": \"sendRequestThroughRouter\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 310,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 298,\n            \"function\": \"callLaravelOrLumenRoute\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 91,\n            \"function\": \"makeApiCall\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 44,\n            \"function\": \"makeResponseCall\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Strategies\/Responses\/ResponseCalls.php\",\n            \"line\": 35,\n            \"function\": \"makeResponseCallIfConditionsPass\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 237,\n            \"function\": \"__invoke\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Strategies\\\\Responses\\\\ResponseCalls\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 163,\n            \"function\": \"iterateThroughStrategies\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Extracting\/Extractor.php\",\n            \"line\": 95,\n            \"function\": \"fetchResponses\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 125,\n            \"function\": \"processRoute\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Extracting\\\\Extractor\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 72,\n            \"function\": \"extractEndpointsInfoFromLaravelApp\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/GroupedEndpoints\/GroupedEndpointsFromApp.php\",\n            \"line\": 50,\n            \"function\": \"extractEndpointsInfoAndWriteToDisk\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/knuckleswtf\/scribe\/src\/Commands\/GenerateDocumentation.php\",\n            \"line\": 53,\n            \"function\": \"get\",\n            \"class\": \"Knuckles\\\\Scribe\\\\GroupedEndpoints\\\\GroupedEndpointsFromApp\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 36,\n            \"function\": \"handle\",\n            \"class\": \"Knuckles\\\\Scribe\\\\Commands\\\\GenerateDocumentation\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/Util.php\",\n            \"line\": 43,\n            \"function\": \"Illuminate\\\\Container\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 95,\n            \"function\": \"unwrapIfClosure\",\n            \"class\": \"Illuminate\\\\Container\\\\Util\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/BoundMethod.php\",\n            \"line\": 35,\n            \"function\": \"callBoundMethod\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Container\/Container.php\",\n            \"line\": 694,\n            \"function\": \"call\",\n            \"class\": \"Illuminate\\\\Container\\\\BoundMethod\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Console\/Command.php\",\n            \"line\": 213,\n            \"function\": \"call\",\n            \"class\": \"Illuminate\\\\Container\\\\Container\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Command\/Command.php\",\n            \"line\": 279,\n            \"function\": \"execute\",\n            \"class\": \"Illuminate\\\\Console\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Console\/Command.php\",\n            \"line\": 182,\n            \"function\": \"run\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Command\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 1094,\n            \"function\": \"run\",\n            \"class\": \"Illuminate\\\\Console\\\\Command\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 342,\n            \"function\": \"doRunCommand\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/symfony\/console\/Application.php\",\n            \"line\": 193,\n            \"function\": \"doRun\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Console\/Kernel.php\",\n            \"line\": 198,\n            \"function\": \"run\",\n            \"class\": \"Symfony\\\\Component\\\\Console\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/vendor\/laravel\/framework\/src\/Illuminate\/Foundation\/Application.php\",\n            \"line\": 1208,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Console\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"\/var\/www\/ecommerce_api\/api\/artisan\",\n            \"line\": 13,\n            \"function\": \"handleCommand\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Application\",\n            \"type\": \"->\"\n        }\n    ]\n}",
                             "name": ""
                         }
                     ]

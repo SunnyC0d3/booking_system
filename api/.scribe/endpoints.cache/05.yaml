@@ -345,7 +345,7 @@ endpoints:
         name: filter.availability
         description: ''
         required: false
-        example: available
+        example: out_of_stock
         type: string
         enumValues:
           - in_stock
@@ -561,7 +561,7 @@ endpoints:
         name: explain
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -581,7 +581,7 @@ endpoints:
         name: highlight
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -591,7 +591,7 @@ endpoints:
         name: personalize
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -631,7 +631,7 @@ endpoints:
         name: boost_in_stock
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -646,7 +646,7 @@ endpoints:
         category: '9,31'
         categories: '9,31'
         quantity: '64'
-        availability: available
+        availability: out_of_stock
         vendors: '9,31'
         vendor: i
         brand: k
@@ -667,14 +667,14 @@ endpoints:
       per_page: 9
       sort: 'y8p,Bm,-dp,-Zm,-GH'
       diversify: true
-      explain: false
+      explain: true
       facets: false
-      highlight: false
-      personalize: false
+      highlight: true
+      personalize: true
       typo_tolerance: true
       exact_match: true
       boost_new_products: false
-      boost_in_stock: false
+      boost_in_stock: true
     fileParameters: []
     responses:
       -

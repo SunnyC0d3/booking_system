@@ -426,7 +426,7 @@ endpoints:
         name: shippingZone_id
         description: 'The ID of the shippingZone.'
         required: true
-        example: 16
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -443,7 +443,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      shippingZone_id: 16
+      shippingZone_id: 1
       shippingZone: 9
     queryParameters:
       with_methods:
@@ -554,7 +554,7 @@ endpoints:
         name: shippingZone_id
         description: 'The ID of the shippingZone.'
         required: true
-        example: 16
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -571,7 +571,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      shippingZone_id: 16
+      shippingZone_id: 1
       shippingZone: 9
     queryParameters: []
     cleanQueryParameters: []
@@ -804,7 +804,7 @@ endpoints:
         name: shippingZone_id
         description: 'The ID of the shippingZone.'
         required: true
-        example: 16
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -821,7 +821,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      shippingZone_id: 16
+      shippingZone_id: 1
       shippingZone: 9
     queryParameters: []
     cleanQueryParameters: []
@@ -899,7 +899,7 @@ endpoints:
         name: shippingZone_id
         description: 'The ID of the shippingZone.'
         required: true
-        example: 16
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -916,7 +916,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      shippingZone_id: 16
+      shippingZone_id: 1
       shippingZone: 9
     queryParameters: []
     cleanQueryParameters: []
@@ -991,7 +991,7 @@ endpoints:
         name: shippingZone_id
         description: 'The ID of the shippingZone.'
         required: true
-        example: 16
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -1008,7 +1008,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      shippingZone_id: 16
+      shippingZone_id: 1
       shippingZone: 9
     queryParameters: []
     cleanQueryParameters: []
@@ -1181,7 +1181,7 @@ endpoints:
         name: shippingZone_id
         description: 'The ID of the shippingZone.'
         required: true
-        example: 16
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -1198,7 +1198,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      shippingZone_id: 16
+      shippingZone_id: 1
       shippingZone: 9
     queryParameters: []
     cleanQueryParameters: []
@@ -1313,7 +1313,7 @@ endpoints:
         name: shippingZone_id
         description: 'The ID of the shippingZone.'
         required: true
-        example: 16
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -1323,7 +1323,7 @@ endpoints:
         name: shippingMethod_id
         description: 'The ID of the shippingMethod.'
         required: true
-        example: 16
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -1350,8 +1350,8 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      shippingZone_id: 16
-      shippingMethod_id: 16
+      shippingZone_id: 1
+      shippingMethod_id: 1
       shippingZone: 9
       shippingMethod: 3
     queryParameters: []
@@ -1421,7 +1421,7 @@ endpoints:
         name: shippingZone_id
         description: 'The ID of the shippingZone.'
         required: true
-        example: 16
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -1431,7 +1431,7 @@ endpoints:
         name: shippingMethod_id
         description: 'The ID of the shippingMethod.'
         required: true
-        example: 16
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -1458,8 +1458,8 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      shippingZone_id: 16
-      shippingMethod_id: 16
+      shippingZone_id: 1
+      shippingMethod_id: 1
       shippingZone: 9
       shippingMethod: 3
     queryParameters: []

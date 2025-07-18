@@ -318,6 +318,19 @@
                             </li>
                                                                         </ul>
                             </ul>
+                    <ul id="tocify-header-checkout" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="checkout">
+                    <a href="#checkout">Checkout</a>
+                </li>
+                                    <ul id="tocify-subheader-checkout" class="tocify-subheader">
+                                                    <li class="tocify-item level-2" data-unique="checkout-POSTapi-checkout-summary">
+                                <a href="#checkout-POSTapi-checkout-summary">Get checkout summary with shipping costs</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="checkout-POSTapi-checkout-validate">
+                                <a href="#checkout-POSTapi-checkout-validate">Validate checkout data</a>
+                            </li>
+                                                                        </ul>
+                            </ul>
                     <ul id="tocify-header-customer-shipment-management" class="tocify-header">
                 <li class="tocify-item level-1" data-unique="customer-shipment-management">
                     <a href="#customer-shipment-management">Customer Shipment Management</a>
@@ -920,7 +933,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: July 17, 2025</li>
+        <li>Last updated: July 18, 2025</li>
     </ul>
 </div>
 
@@ -6350,7 +6363,7 @@ and managing their marketplace presence. Supports secure logo upload with compre
     --form "user_id=45"\
     --form "name=TechCraft Solutions Ltd"\
     --form "description=Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud services, and digital transformation consulting."\
-    --form "logo=@/tmp/phpLHxGDc" </code></pre></div>
+    --form "logo=@/tmp/phpO0Tg8C" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6403,7 +6416,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'logo',
-                'contents' =&gt; fopen('/tmp/phpLHxGDc', 'r')
+                'contents' =&gt; fopen('/tmp/phpO0Tg8C', 'r')
             ],
         ],
     ]
@@ -6421,7 +6434,7 @@ files = {
   'user_id': (None, '45'),
   'name': (None, 'TechCraft Solutions Ltd'),
   'description': (None, 'Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud services, and digital transformation consulting.'),
-  'logo': open('/tmp/phpLHxGDc', 'rb')}
+  'logo': open('/tmp/phpO0Tg8C', 'rb')}
 payload = {
     "user_id": 45,
     "name": "TechCraft Solutions Ltd",
@@ -6690,7 +6703,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional Business logo file. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Recommended dimensions: 200x200px minimum. Example: <code>/tmp/phpLHxGDc</code></p>
+<p>optional Business logo file. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Recommended dimensions: 200x200px minimum. Example: <code>/tmp/phpO0Tg8C</code></p>
         </div>
         </form>
 
@@ -6719,7 +6732,7 @@ replacement with comprehensive validation.</p>
     --form "user_id=67"\
     --form "name=TechCraft Solutions International Ltd"\
     --form "description=Global leader in innovative technology solutions. We specialize in enterprise software development, cloud migration services, AI integration, and digital transformation consulting with over 15 years of proven industry experience."\
-    --form "logo=@/tmp/phpvKwfVr" </code></pre></div>
+    --form "logo=@/tmp/phpchVMKm" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6772,7 +6785,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'logo',
-                'contents' =&gt; fopen('/tmp/phpvKwfVr', 'r')
+                'contents' =&gt; fopen('/tmp/phpchVMKm', 'r')
             ],
         ],
     ]
@@ -6790,7 +6803,7 @@ files = {
   'user_id': (None, '67'),
   'name': (None, 'TechCraft Solutions International Ltd'),
   'description': (None, 'Global leader in innovative technology solutions. We specialize in enterprise software development, cloud migration services, AI integration, and digital transformation consulting with over 15 years of proven industry experience.'),
-  'logo': open('/tmp/phpvKwfVr', 'rb')}
+  'logo': open('/tmp/phpchVMKm', 'rb')}
 payload = {
     "user_id": 67,
     "name": "TechCraft Solutions International Ltd",
@@ -7106,7 +7119,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional New logo file to replace existing one. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will completely replace the current logo. Example: <code>/tmp/phpvKwfVr</code></p>
+<p>optional New logo file to replace existing one. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will completely replace the current logo. Example: <code>/tmp/phpchVMKm</code></p>
         </div>
         </form>
 
@@ -7399,7 +7412,7 @@ categories, tags, vendor details, relevance scoring, and faceted search results.
         \"category\": \"9,31\",
         \"categories\": \"9,31\",
         \"quantity\": \"64\",
-        \"availability\": \"available\",
+        \"availability\": \"out_of_stock\",
         \"vendors\": \"9,31\",
         \"vendor\": \"i\",
         \"brand\": \"k\",
@@ -7421,14 +7434,14 @@ categories, tags, vendor details, relevance scoring, and faceted search results.
     \"per_page\": 9,
     \"sort\": \"y8p,Bm,-dp,-Zm,-GH\",
     \"diversify\": true,
-    \"explain\": false,
+    \"explain\": true,
     \"facets\": false,
-    \"highlight\": false,
-    \"personalize\": false,
+    \"highlight\": true,
+    \"personalize\": true,
     \"typo_tolerance\": true,
     \"exact_match\": true,
     \"boost_new_products\": false,
-    \"boost_in_stock\": false
+    \"boost_in_stock\": true
 }"
 </code></pre></div>
 
@@ -7479,7 +7492,7 @@ let body = {
         "category": "9,31",
         "categories": "9,31",
         "quantity": "64",
-        "availability": "available",
+        "availability": "out_of_stock",
         "vendors": "9,31",
         "vendor": "i",
         "brand": "k",
@@ -7501,14 +7514,14 @@ let body = {
     "per_page": 9,
     "sort": "y8p,Bm,-dp,-Zm,-GH",
     "diversify": true,
-    "explain": false,
+    "explain": true,
     "facets": false,
-    "highlight": false,
-    "personalize": false,
+    "highlight": true,
+    "personalize": true,
     "typo_tolerance": true,
     "exact_match": true,
     "boost_new_products": false,
-    "boost_in_stock": false
+    "boost_in_stock": true
 };
 
 fetch(url, {
@@ -7561,7 +7574,7 @@ $response = $client-&gt;get(
                 'category' =&gt; '9,31',
                 'categories' =&gt; '9,31',
                 'quantity' =&gt; '64',
-                'availability' =&gt; 'available',
+                'availability' =&gt; 'out_of_stock',
                 'vendors' =&gt; '9,31',
                 'vendor' =&gt; 'i',
                 'brand' =&gt; 'k',
@@ -7583,14 +7596,14 @@ $response = $client-&gt;get(
             'per_page' =&gt; 9,
             'sort' =&gt; 'y8p,Bm,-dp,-Zm,-GH',
             'diversify' =&gt; true,
-            'explain' =&gt; false,
+            'explain' =&gt; true,
             'facets' =&gt; false,
-            'highlight' =&gt; false,
-            'personalize' =&gt; false,
+            'highlight' =&gt; true,
+            'personalize' =&gt; true,
             'typo_tolerance' =&gt; true,
             'exact_match' =&gt; true,
             'boost_new_products' =&gt; false,
-            'boost_in_stock' =&gt; false,
+            'boost_in_stock' =&gt; true,
         ],
     ]
 );
@@ -7612,7 +7625,7 @@ payload = {
         "category": "9,31",
         "categories": "9,31",
         "quantity": "64",
-        "availability": "available",
+        "availability": "out_of_stock",
         "vendors": "9,31",
         "vendor": "i",
         "brand": "k",
@@ -7634,14 +7647,14 @@ payload = {
     "per_page": 9,
     "sort": "y8p,Bm,-dp,-Zm,-GH",
     "diversify": true,
-    "explain": false,
+    "explain": true,
     "facets": false,
-    "highlight": false,
-    "personalize": false,
+    "highlight": true,
+    "personalize": true,
     "typo_tolerance": true,
     "exact_match": true,
     "boost_new_products": false,
-    "boost_in_stock": false
+    "boost_in_stock": true
 }
 params = {
   'filter[0]': 'architecto',
@@ -8121,10 +8134,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="filter.availability"                data-endpoint="GETapi-admin-products"
-               value="available"
+               value="out_of_stock"
                data-component="body">
     <br>
-<p>Example: <code>available</code></p>
+<p>Example: <code>out_of_stock</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>in_stock</code></li> <li><code>out_of_stock</code></li> <li><code>low_stock</code></li> <li><code>available</code></li></ul>
                     </div>
@@ -8381,7 +8394,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>facets</code></b>&nbsp;&nbsp;
@@ -8423,7 +8436,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>personalize</code></b>&nbsp;&nbsp;
@@ -8444,7 +8457,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>typo_tolerance</code></b>&nbsp;&nbsp;
@@ -8528,7 +8541,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
         </form>
 
@@ -8755,7 +8768,7 @@ Supports secure file uploads and automatic search keyword generation for optimal
     --form "product_tags[]=3"\
     --form "product_variants[]=architecto"\
     --form "low_stock_threshold=5"\
-    --form "media[featured_image]=@/tmp/phpBnwkn3"     --form "media[gallery][]=@/tmp/phplVADDJ" </code></pre></div>
+    --form "media[featured_image]=@/tmp/phprg3b86"     --form "media[gallery][]=@/tmp/phpqnFeo8" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -8839,11 +8852,11 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'media[featured_image]',
-                'contents' =&gt; fopen('/tmp/phpBnwkn3', 'r')
+                'contents' =&gt; fopen('/tmp/phprg3b86', 'r')
             ],
             [
                 'name' =&gt; 'media[gallery][]',
-                'contents' =&gt; fopen('/tmp/phplVADDJ', 'r')
+                'contents' =&gt; fopen('/tmp/phpqnFeo8', 'r')
             ],
         ],
     ]
@@ -8867,7 +8880,7 @@ files = {
   'product_tags[]': (None, '3'),
   'product_variants[]': (None, 'architecto'),
   'low_stock_threshold': (None, '5'),
-  'media[featured_image]': open('/tmp/phpBnwkn3', 'rb')  'media[gallery][]': open('/tmp/phplVADDJ', 'rb')}
+  'media[featured_image]': open('/tmp/phprg3b86', 'rb')  'media[gallery][]': open('/tmp/phpqnFeo8', 'rb')}
 payload = {
     "name": "\"Premium Wireless Earbuds Pro\"",
     "description": "\"High-quality wireless earbuds with advanced noise cancellation and 30-hour battery life.\"",
@@ -9198,7 +9211,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional Featured product image. Max 5MB, dimensions 100x100 to 4000x4000px. Example: <code>/tmp/phpBnwkn3</code></p>
+<p>optional Featured product image. Max 5MB, dimensions 100x100 to 4000x4000px. Example: <code>/tmp/phprg3b86</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>gallery</code></b>&nbsp;&nbsp;
@@ -9258,7 +9271,7 @@ for optimal findability.</p>
     --form "product_tags[]=3"\
     --form "product_variants[]=architecto"\
     --form "low_stock_threshold=8"\
-    --form "media[featured_image]=@/tmp/phpZzHGPt"     --form "media[gallery][]=@/tmp/phpQ5byA5" </code></pre></div>
+    --form "media[featured_image]=@/tmp/phpjUKz5Z"     --form "media[gallery][]=@/tmp/php4qJCGt" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -9342,11 +9355,11 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'media[featured_image]',
-                'contents' =&gt; fopen('/tmp/phpZzHGPt', 'r')
+                'contents' =&gt; fopen('/tmp/phpjUKz5Z', 'r')
             ],
             [
                 'name' =&gt; 'media[gallery][]',
-                'contents' =&gt; fopen('/tmp/phpQ5byA5', 'r')
+                'contents' =&gt; fopen('/tmp/php4qJCGt', 'r')
             ],
         ],
     ]
@@ -9370,7 +9383,7 @@ files = {
   'product_tags[]': (None, '3'),
   'product_variants[]': (None, 'architecto'),
   'low_stock_threshold': (None, '8'),
-  'media[featured_image]': open('/tmp/phpZzHGPt', 'rb')  'media[gallery][]': open('/tmp/phpQ5byA5', 'rb')}
+  'media[featured_image]': open('/tmp/phpjUKz5Z', 'rb')  'media[gallery][]': open('/tmp/php4qJCGt', 'rb')}
 payload = {
     "name": "\"Premium Wireless Earbuds Pro Max\"",
     "description": "\"Enhanced wireless earbuds with improved noise cancellation and extended battery life.\"",
@@ -9725,7 +9738,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional New featured image (replaces existing). Example: <code>/tmp/phpZzHGPt</code></p>
+<p>optional New featured image (replaces existing). Example: <code>/tmp/phpjUKz5Z</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>gallery</code></b>&nbsp;&nbsp;
@@ -14355,9 +14368,9 @@ and detailed analytics for administrative oversight.</p>
     \"rating\": [
         2
     ],
-    \"verified_only\": false,
+    \"verified_only\": true,
     \"with_media\": true,
-    \"sort_by\": \"oldest\",
+    \"sort_by\": \"newest\",
     \"per_page\": 1,
     \"page\": 66
 }"
@@ -14396,9 +14409,9 @@ let body = {
     "rating": [
         2
     ],
-    "verified_only": false,
+    "verified_only": true,
     "with_media": true,
-    "sort_by": "oldest",
+    "sort_by": "newest",
     "per_page": 1,
     "page": 66
 };
@@ -14439,9 +14452,9 @@ $response = $client-&gt;get(
             'rating' =&gt; [
                 2,
             ],
-            'verified_only' =&gt; false,
+            'verified_only' =&gt; true,
             'with_media' =&gt; true,
-            'sort_by' =&gt; 'oldest',
+            'sort_by' =&gt; 'newest',
             'per_page' =&gt; 1,
             'page' =&gt; 66,
         ],
@@ -14461,9 +14474,9 @@ payload = {
     "rating": [
         2
     ],
-    "verified_only": false,
+    "verified_only": true,
     "with_media": true,
-    "sort_by": "oldest",
+    "sort_by": "newest",
     "per_page": 1,
     "page": 66
 }
@@ -14817,7 +14830,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>with_media</code></b>&nbsp;&nbsp;
@@ -14846,10 +14859,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="sort_by"                data-endpoint="GETapi-admin-reviews"
-               value="oldest"
+               value="newest"
                data-component="body">
     <br>
-<p>Example: <code>oldest</code></p>
+<p>Example: <code>newest</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>newest</code></li> <li><code>oldest</code></li> <li><code>rating_high</code></li> <li><code>rating_low</code></li> <li><code>helpful</code></li></ul>
         </div>
@@ -14892,7 +14905,7 @@ moderation history, user details, and administrative actions available.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://marketplace.com/api/admin/reviews/5" \
+    --get "http://marketplace.com/api/admin/reviews/16" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -14900,7 +14913,7 @@ moderation history, user details, and administrative actions available.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/reviews/5"
+    "http://marketplace.com/api/admin/reviews/16"
 );
 
 const headers = {
@@ -14917,7 +14930,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/reviews/5';
+$url = 'http://marketplace.com/api/admin/reviews/16';
 $response = $client-&gt;get(
     $url,
     [
@@ -14936,7 +14949,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/reviews/5'
+url = 'http://marketplace.com/api/admin/reviews/16'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -15110,10 +15123,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="GETapi-admin-reviews--id-"
-               value="5"
+               value="16"
                data-component="url">
     <br>
-<p>The ID of the review. Example: <code>5</code></p>
+<p>The ID of the review. Example: <code>16</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>review</code></b>&nbsp;&nbsp;
@@ -15143,7 +15156,7 @@ helpfulness votes, and reports. This action is irreversible.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://marketplace.com/api/admin/reviews/5" \
+    "http://marketplace.com/api/admin/reviews/16" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -15151,7 +15164,7 @@ helpfulness votes, and reports. This action is irreversible.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/reviews/5"
+    "http://marketplace.com/api/admin/reviews/16"
 );
 
 const headers = {
@@ -15168,7 +15181,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/reviews/5';
+$url = 'http://marketplace.com/api/admin/reviews/16';
 $response = $client-&gt;delete(
     $url,
     [
@@ -15187,7 +15200,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/reviews/5'
+url = 'http://marketplace.com/api/admin/reviews/16'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -15315,10 +15328,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="DELETEapi-admin-reviews--id-"
-               value="5"
+               value="16"
                data-component="url">
     <br>
-<p>The ID of the review. Example: <code>5</code></p>
+<p>The ID of the review. Example: <code>16</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>review</code></b>&nbsp;&nbsp;
@@ -15348,7 +15361,7 @@ and unfeaturing. All actions are logged for audit trail and accountability.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://marketplace.com/api/admin/reviews/5/moderate" \
+    "http://marketplace.com/api/admin/reviews/16/moderate" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -15361,7 +15374,7 @@ and unfeaturing. All actions are logged for audit trail and accountability.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/reviews/5/moderate"
+    "http://marketplace.com/api/admin/reviews/16/moderate"
 );
 
 const headers = {
@@ -15384,7 +15397,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/reviews/5/moderate';
+$url = 'http://marketplace.com/api/admin/reviews/16/moderate';
 $response = $client-&gt;post(
     $url,
     [
@@ -15407,7 +15420,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/reviews/5/moderate'
+url = 'http://marketplace.com/api/admin/reviews/16/moderate'
 payload = {
     "action": "approve",
     "reason": "\"Contains inappropriate language\""
@@ -15554,10 +15567,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="review_id"                data-endpoint="POSTapi-admin-reviews--review_id--moderate"
-               value="5"
+               value="16"
                data-component="url">
     <br>
-<p>The ID of the review. Example: <code>5</code></p>
+<p>The ID of the review. Example: <code>16</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>review</code></b>&nbsp;&nbsp;
@@ -15611,7 +15624,7 @@ the report was invalid or not actionable.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://marketplace.com/api/admin/reviews/reports/1/handle" \
+    "http://marketplace.com/api/admin/reviews/reports/16/handle" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -15624,7 +15637,7 @@ the report was invalid or not actionable.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/reviews/reports/1/handle"
+    "http://marketplace.com/api/admin/reviews/reports/16/handle"
 );
 
 const headers = {
@@ -15647,7 +15660,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/reviews/reports/1/handle';
+$url = 'http://marketplace.com/api/admin/reviews/reports/16/handle';
 $response = $client-&gt;post(
     $url,
     [
@@ -15670,7 +15683,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/reviews/reports/1/handle'
+url = 'http://marketplace.com/api/admin/reviews/reports/16/handle'
 payload = {
     "action": "resolve",
     "notes": "\"Review content violates community guidelines\""
@@ -15814,10 +15827,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="report_id"                data-endpoint="POSTapi-admin-reviews-reports--report_id--handle"
-               value="1"
+               value="16"
                data-component="url">
     <br>
-<p>The ID of the report. Example: <code>1</code></p>
+<p>The ID of the report. Example: <code>16</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>report</code></b>&nbsp;&nbsp;
@@ -16751,7 +16764,7 @@ review context, vendor details, approval status, and administrative actions avai
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://marketplace.com/api/admin/review-responses/2" \
+    --get "http://marketplace.com/api/admin/review-responses/16" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -16759,7 +16772,7 @@ review context, vendor details, approval status, and administrative actions avai
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/review-responses/2"
+    "http://marketplace.com/api/admin/review-responses/16"
 );
 
 const headers = {
@@ -16776,7 +16789,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/review-responses/2';
+$url = 'http://marketplace.com/api/admin/review-responses/16';
 $response = $client-&gt;get(
     $url,
     [
@@ -16795,7 +16808,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/review-responses/2'
+url = 'http://marketplace.com/api/admin/review-responses/16'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -16958,10 +16971,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="response_id"                data-endpoint="GETapi-admin-review-responses--response_id-"
-               value="2"
+               value="16"
                data-component="url">
     <br>
-<p>The ID of the response. Example: <code>2</code></p>
+<p>The ID of the response. Example: <code>16</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>response</code></b>&nbsp;&nbsp;
@@ -16991,7 +17004,7 @@ Only responses that are currently unapproved can be approved through this endpoi
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://marketplace.com/api/admin/review-responses/2/approve" \
+    "http://marketplace.com/api/admin/review-responses/16/approve" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -16999,7 +17012,7 @@ Only responses that are currently unapproved can be approved through this endpoi
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/review-responses/2/approve"
+    "http://marketplace.com/api/admin/review-responses/16/approve"
 );
 
 const headers = {
@@ -17016,7 +17029,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/review-responses/2/approve';
+$url = 'http://marketplace.com/api/admin/review-responses/16/approve';
 $response = $client-&gt;post(
     $url,
     [
@@ -17035,7 +17048,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/review-responses/2/approve'
+url = 'http://marketplace.com/api/admin/review-responses/16/approve'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -17172,10 +17185,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="response_id"                data-endpoint="POSTapi-admin-review-responses--response_id--approve"
-               value="2"
+               value="16"
                data-component="url">
     <br>
-<p>The ID of the response. Example: <code>2</code></p>
+<p>The ID of the response. Example: <code>16</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>response</code></b>&nbsp;&nbsp;
@@ -17205,7 +17218,7 @@ remove the response from the review thread completely.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://marketplace.com/api/admin/review-responses/2" \
+    "http://marketplace.com/api/admin/review-responses/16" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -17213,7 +17226,7 @@ remove the response from the review thread completely.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/review-responses/2"
+    "http://marketplace.com/api/admin/review-responses/16"
 );
 
 const headers = {
@@ -17230,7 +17243,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/review-responses/2';
+$url = 'http://marketplace.com/api/admin/review-responses/16';
 $response = $client-&gt;delete(
     $url,
     [
@@ -17249,7 +17262,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/review-responses/2'
+url = 'http://marketplace.com/api/admin/review-responses/16'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -17377,10 +17390,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="response_id"                data-endpoint="DELETEapi-admin-review-responses--response_id-"
-               value="2"
+               value="16"
                data-component="url">
     <br>
-<p>The ID of the response. Example: <code>2</code></p>
+<p>The ID of the response. Example: <code>16</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>response</code></b>&nbsp;&nbsp;
@@ -17394,6 +17407,466 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>The ID of the response to delete permanently. Example: <code>45</code></p>
             </div>
                     </form>
+
+                <h1 id="checkout">Checkout</h1>
+
+    
+
+                                <h2 id="checkout-POSTapi-checkout-summary">Get checkout summary with shipping costs</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Calculate the total checkout cost including shipping for the current cart.
+This endpoint provides a preview of costs before final order creation.</p>
+
+<span id="example-requests-POSTapi-checkout-summary">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://marketplace.com/api/checkout/summary" \
+    --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"shipping_method_id\": 1,
+    \"shipping_address_id\": 1
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://marketplace.com/api/checkout/summary"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "shipping_method_id": 1,
+    "shipping_address_id": 1
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://marketplace.com/api/checkout/summary';
+$response = $client-&gt;post(
+    $url,
+    [
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_AUTH_TOKEN}',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'shipping_method_id' =&gt; 1,
+            'shipping_address_id' =&gt; 1,
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'http://marketplace.com/api/checkout/summary'
+payload = {
+    "shipping_method_id": 1,
+    "shipping_address_id": 1
+}
+headers = {
+  'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('POST', url, headers=headers, json=payload)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-checkout-summary">
+            <blockquote>
+            <p>Example response (200, Checkout summary calculated successfully):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Checkout summary calculated successfully.&quot;,
+    &quot;data&quot;: {
+        &quot;items_total&quot;: 4599,
+        &quot;items_total_formatted&quot;: &quot;&pound;45.99&quot;,
+        &quot;shipping_cost&quot;: 599,
+        &quot;shipping_cost_formatted&quot;: &quot;&pound;5.99&quot;,
+        &quot;total_amount&quot;: 5198,
+        &quot;total_amount_formatted&quot;: &quot;&pound;51.98&quot;,
+        &quot;requires_shipping&quot;: true
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (400, Cart is empty):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Cart is empty.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422, Validation errors):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;errors&quot;: [
+        &quot;The shipping method id field is required.&quot;,
+        &quot;The shipping address id field is required.&quot;
+    ]
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-checkout-summary" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-checkout-summary"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-checkout-summary"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-checkout-summary" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-checkout-summary">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-checkout-summary" data-method="POST"
+      data-path="api/checkout/summary"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-checkout-summary', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-checkout-summary"
+                    onclick="tryItOut('POSTapi-checkout-summary');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-checkout-summary"
+                    onclick="cancelTryOut('POSTapi-checkout-summary');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-checkout-summary"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/checkout/summary</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-checkout-summary"
+               value="Bearer {YOUR_AUTH_TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-checkout-summary"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-checkout-summary"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>shipping_method_id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="shipping_method_id"                data-endpoint="POSTapi-checkout-summary"
+               value="1"
+               data-component="body">
+    <br>
+<p>The ID of the shipping method. Example: <code>1</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>shipping_address_id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="shipping_address_id"                data-endpoint="POSTapi-checkout-summary"
+               value="1"
+               data-component="body">
+    <br>
+<p>The ID of the shipping address. Example: <code>1</code></p>
+        </div>
+        </form>
+
+                    <h2 id="checkout-POSTapi-checkout-validate">Validate checkout data</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Validate that the selected shipping method and address are compatible
+with the current cart contents before proceeding to payment.</p>
+
+<span id="example-requests-POSTapi-checkout-validate">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://marketplace.com/api/checkout/validate" \
+    --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"shipping_method_id\": 1,
+    \"shipping_address_id\": 1
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://marketplace.com/api/checkout/validate"
+);
+
+const headers = {
+    "Authorization": "Bearer {YOUR_AUTH_TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "shipping_method_id": 1,
+    "shipping_address_id": 1
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://marketplace.com/api/checkout/validate';
+$response = $client-&gt;post(
+    $url,
+    [
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer {YOUR_AUTH_TOKEN}',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'shipping_method_id' =&gt; 1,
+            'shipping_address_id' =&gt; 1,
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'http://marketplace.com/api/checkout/validate'
+payload = {
+    "shipping_method_id": 1,
+    "shipping_address_id": 1
+}
+headers = {
+  'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
+
+response = requests.request('POST', url, headers=headers, json=payload)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-checkout-validate">
+            <blockquote>
+            <p>Example response (200, Checkout validation successful):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Checkout validation successful.&quot;,
+    &quot;data&quot;: {
+        &quot;valid&quot;: true,
+        &quot;shipping_available&quot;: true,
+        &quot;estimated_delivery&quot;: &quot;2025-01-20T17:00:00.000000Z&quot;
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (400, Validation failed):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Selected shipping method is not available for this address.&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-checkout-validate" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-checkout-validate"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-checkout-validate"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-checkout-validate" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-checkout-validate">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-checkout-validate" data-method="POST"
+      data-path="api/checkout/validate"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-checkout-validate', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-checkout-validate"
+                    onclick="tryItOut('POSTapi-checkout-validate');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-checkout-validate"
+                    onclick="cancelTryOut('POSTapi-checkout-validate');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-checkout-validate"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/checkout/validate</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="POSTapi-checkout-validate"
+               value="Bearer {YOUR_AUTH_TOKEN}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {YOUR_AUTH_TOKEN}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-checkout-validate"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-checkout-validate"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>shipping_method_id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="shipping_method_id"                data-endpoint="POSTapi-checkout-validate"
+               value="1"
+               data-component="body">
+    <br>
+<p>The ID of the shipping method. Example: <code>1</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>shipping_address_id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="shipping_address_id"                data-endpoint="POSTapi-checkout-validate"
+               value="1"
+               data-component="body">
+    <br>
+<p>The ID of the shipping address. Example: <code>1</code></p>
+        </div>
+        </form>
 
                 <h1 id="customer-shipment-management">Customer Shipment Management</h1>
 
@@ -25614,13 +26087,13 @@ product information optimized for customer browsing and purchasing decisions.</p
         \"category\": \"9,31\",
         \"categories\": \"9,31\",
         \"quantity\": \"64\",
-        \"availability\": \"low_stock\",
+        \"availability\": \"in_stock\",
         \"vendors\": \"9,31\",
         \"vendor\": \"i\",
         \"brand\": \"k\",
         \"brands\": \"9,31\",
         \"tags\": \"9,31\",
-        \"tag_logic\": \"AND\",
+        \"tag_logic\": \"OR\",
         \"attributes\": \"_JK:AI\",
         \"color\": \"k\",
         \"colors\": \"dLJnIk\",
@@ -25637,13 +26110,13 @@ product information optimized for customer browsing and purchasing decisions.</p
     \"sort\": \"y8p,Bm,-dp,-Zm,-GH\",
     \"diversify\": false,
     \"explain\": true,
-    \"facets\": true,
-    \"highlight\": false,
-    \"personalize\": false,
+    \"facets\": false,
+    \"highlight\": true,
+    \"personalize\": true,
     \"typo_tolerance\": false,
     \"exact_match\": false,
-    \"boost_new_products\": false,
-    \"boost_in_stock\": true
+    \"boost_new_products\": true,
+    \"boost_in_stock\": false
 }"
 </code></pre></div>
 
@@ -25689,13 +26162,13 @@ let body = {
         "category": "9,31",
         "categories": "9,31",
         "quantity": "64",
-        "availability": "low_stock",
+        "availability": "in_stock",
         "vendors": "9,31",
         "vendor": "i",
         "brand": "k",
         "brands": "9,31",
         "tags": "9,31",
-        "tag_logic": "AND",
+        "tag_logic": "OR",
         "attributes": "_JK:AI",
         "color": "k",
         "colors": "dLJnIk",
@@ -25712,13 +26185,13 @@ let body = {
     "sort": "y8p,Bm,-dp,-Zm,-GH",
     "diversify": false,
     "explain": true,
-    "facets": true,
-    "highlight": false,
-    "personalize": false,
+    "facets": false,
+    "highlight": true,
+    "personalize": true,
     "typo_tolerance": false,
     "exact_match": false,
-    "boost_new_products": false,
-    "boost_in_stock": true
+    "boost_new_products": true,
+    "boost_in_stock": false
 };
 
 fetch(url, {
@@ -25766,13 +26239,13 @@ $response = $client-&gt;get(
                 'category' =&gt; '9,31',
                 'categories' =&gt; '9,31',
                 'quantity' =&gt; '64',
-                'availability' =&gt; 'low_stock',
+                'availability' =&gt; 'in_stock',
                 'vendors' =&gt; '9,31',
                 'vendor' =&gt; 'i',
                 'brand' =&gt; 'k',
                 'brands' =&gt; '9,31',
                 'tags' =&gt; '9,31',
-                'tag_logic' =&gt; 'AND',
+                'tag_logic' =&gt; 'OR',
                 'attributes' =&gt; '_JK:AI',
                 'color' =&gt; 'k',
                 'colors' =&gt; 'dLJnIk',
@@ -25789,13 +26262,13 @@ $response = $client-&gt;get(
             'sort' =&gt; 'y8p,Bm,-dp,-Zm,-GH',
             'diversify' =&gt; false,
             'explain' =&gt; true,
-            'facets' =&gt; true,
-            'highlight' =&gt; false,
-            'personalize' =&gt; false,
+            'facets' =&gt; false,
+            'highlight' =&gt; true,
+            'personalize' =&gt; true,
             'typo_tolerance' =&gt; false,
             'exact_match' =&gt; false,
-            'boost_new_products' =&gt; false,
-            'boost_in_stock' =&gt; true,
+            'boost_new_products' =&gt; true,
+            'boost_in_stock' =&gt; false,
         ],
     ]
 );
@@ -25817,13 +26290,13 @@ payload = {
         "category": "9,31",
         "categories": "9,31",
         "quantity": "64",
-        "availability": "low_stock",
+        "availability": "in_stock",
         "vendors": "9,31",
         "vendor": "i",
         "brand": "k",
         "brands": "9,31",
         "tags": "9,31",
-        "tag_logic": "AND",
+        "tag_logic": "OR",
         "attributes": "_JK:AI",
         "color": "k",
         "colors": "dLJnIk",
@@ -25840,13 +26313,13 @@ payload = {
     "sort": "y8p,Bm,-dp,-Zm,-GH",
     "diversify": false,
     "explain": true,
-    "facets": true,
-    "highlight": false,
-    "personalize": false,
+    "facets": false,
+    "highlight": true,
+    "personalize": true,
     "typo_tolerance": false,
     "exact_match": false,
-    "boost_new_products": false,
-    "boost_in_stock": true
+    "boost_new_products": true,
+    "boost_in_stock": false
 }
 params = {
   'filter[0]': 'architecto',
@@ -26262,10 +26735,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="filter.availability"                data-endpoint="GETapi-products"
-               value="low_stock"
+               value="in_stock"
                data-component="body">
     <br>
-<p>Example: <code>low_stock</code></p>
+<p>Example: <code>in_stock</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>in_stock</code></li> <li><code>out_of_stock</code></li> <li><code>low_stock</code></li> <li><code>available</code></li></ul>
                     </div>
@@ -26330,10 +26803,10 @@ Must be one of:
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="filter.tag_logic"                data-endpoint="GETapi-products"
-               value="AND"
+               value="OR"
                data-component="body">
     <br>
-<p>Example: <code>AND</code></p>
+<p>Example: <code>OR</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>AND</code></li> <li><code>OR</code></li></ul>
                     </div>
@@ -26543,7 +27016,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>highlight</code></b>&nbsp;&nbsp;
@@ -26564,7 +27037,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>personalize</code></b>&nbsp;&nbsp;
@@ -26585,7 +27058,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>typo_tolerance</code></b>&nbsp;&nbsp;
@@ -26648,7 +27121,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>boost_in_stock</code></b>&nbsp;&nbsp;
@@ -26669,7 +27142,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
         </form>
 
@@ -28227,9 +28700,9 @@ Essential for product detail pages and review browsing functionality.</p>
     \"rating\": [
         2
     ],
-    \"verified_only\": true,
+    \"verified_only\": false,
     \"with_media\": true,
-    \"sort_by\": \"newest\",
+    \"sort_by\": \"oldest\",
     \"per_page\": 1,
     \"page\": 66
 }"
@@ -28263,9 +28736,9 @@ let body = {
     "rating": [
         2
     ],
-    "verified_only": true,
+    "verified_only": false,
     "with_media": true,
-    "sort_by": "newest",
+    "sort_by": "oldest",
     "per_page": 1,
     "page": 66
 };
@@ -28301,9 +28774,9 @@ $response = $client-&gt;get(
             'rating' =&gt; [
                 2,
             ],
-            'verified_only' =&gt; true,
+            'verified_only' =&gt; false,
             'with_media' =&gt; true,
-            'sort_by' =&gt; 'newest',
+            'sort_by' =&gt; 'oldest',
             'per_page' =&gt; 1,
             'page' =&gt; 66,
         ],
@@ -28323,9 +28796,9 @@ payload = {
     "rating": [
         2
     ],
-    "verified_only": true,
+    "verified_only": false,
     "with_media": true,
-    "sort_by": "newest",
+    "sort_by": "oldest",
     "per_page": 1,
     "page": 66
 }
@@ -28649,7 +29122,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>with_media</code></b>&nbsp;&nbsp;
@@ -28678,10 +29151,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="sort_by"                data-endpoint="GETapi-products--product_id--reviews"
-               value="newest"
+               value="oldest"
                data-component="body">
     <br>
-<p>Example: <code>newest</code></p>
+<p>Example: <code>oldest</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>newest</code></li> <li><code>oldest</code></li> <li><code>rating_high</code></li> <li><code>rating_low</code></li> <li><code>helpful</code></li></ul>
         </div>
@@ -28723,14 +29196,14 @@ media attachments, helpfulness votes, and vendor responses if available.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://marketplace.com/api/reviews/5" \
+    --get "http://marketplace.com/api/reviews/16" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/reviews/5"
+    "http://marketplace.com/api/reviews/16"
 );
 
 const headers = {
@@ -28746,7 +29219,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/reviews/5';
+$url = 'http://marketplace.com/api/reviews/16';
 $response = $client-&gt;get(
     $url,
     [
@@ -28764,7 +29237,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/reviews/5'
+url = 'http://marketplace.com/api/reviews/16'
 headers = {
   'Content-Type': 'application/json',
   'Accept': 'application/json'
@@ -28899,10 +29372,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="GETapi-reviews--id-"
-               value="5"
+               value="16"
                data-component="url">
     <br>
-<p>The ID of the review. Example: <code>5</code></p>
+<p>The ID of the review. Example: <code>16</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>review</code></b>&nbsp;&nbsp;
@@ -28942,7 +29415,7 @@ with the review for enhanced credibility.</p>
     --form "rating=5"\
     --form "title="Excellent sound quality!""\
     --form "content="These earbuds exceeded my expectations...""\
-    --form "media[]=@/tmp/phpMFSYRm" </code></pre></div>
+    --form "media[]=@/tmp/phpMgInTv" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -29005,7 +29478,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'media[]',
-                'contents' =&gt; fopen('/tmp/phpMFSYRm', 'r')
+                'contents' =&gt; fopen('/tmp/phpMgInTv', 'r')
             ],
         ],
     ]
@@ -29025,7 +29498,7 @@ files = {
   'rating': (None, '5'),
   'title': (None, '"Excellent sound quality!"'),
   'content': (None, '"These earbuds exceeded my expectations..."'),
-  'media[]': open('/tmp/phpMFSYRm', 'rb')}
+  'media[]': open('/tmp/phpMgInTv', 'rb')}
 payload = {
     "product_id": 15,
     "order_item_id": 234,
@@ -29260,7 +29733,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Photo or video file (jpg, jpeg, png, gif, mp4, mov, avi). Example: <code>/tmp/phppsPXuC</code></p>
+<p>Photo or video file (jpg, jpeg, png, gif, mp4, mov, avi). Example: <code>/tmp/phpxsFN6B</code></p>
                     </div>
                                     </details>
         </div>
@@ -29283,7 +29756,7 @@ You can modify the rating, title, content, and add/remove media attachments.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://marketplace.com/api/reviews/5" \
+    "http://marketplace.com/api/reviews/16" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: multipart/form-data" \
     --header "Accept: application/json" \
@@ -29291,12 +29764,12 @@ You can modify the rating, title, content, and add/remove media attachments.</p>
     --form "title="Good sound quality""\
     --form "content="Updated thoughts on these earbuds...""\
     --form "remove_media[]=67"\
-    --form "media[]=@/tmp/phpAlyQ4D" </code></pre></div>
+    --form "media[]=@/tmp/phpw0zllG" </code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/reviews/5"
+    "http://marketplace.com/api/reviews/16"
 );
 
 const headers = {
@@ -29321,7 +29794,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/reviews/5';
+$url = 'http://marketplace.com/api/reviews/16';
 $response = $client-&gt;post(
     $url,
     [
@@ -29349,7 +29822,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'media[]',
-                'contents' =&gt; fopen('/tmp/phpAlyQ4D', 'r')
+                'contents' =&gt; fopen('/tmp/phpw0zllG', 'r')
             ],
         ],
     ]
@@ -29362,13 +29835,13 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/reviews/5'
+url = 'http://marketplace.com/api/reviews/16'
 files = {
   'rating': (None, '4'),
   'title': (None, '"Good sound quality"'),
   'content': (None, '"Updated thoughts on these earbuds..."'),
   'remove_media[]': (None, '67'),
-  'media[]': open('/tmp/phpAlyQ4D', 'rb')}
+  'media[]': open('/tmp/phpw0zllG', 'rb')}
 payload = {
     "rating": 4,
     "title": "\"Good sound quality\"",
@@ -29512,10 +29985,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="POSTapi-reviews--id-"
-               value="5"
+               value="16"
                data-component="url">
     <br>
-<p>The ID of the review. Example: <code>5</code></p>
+<p>The ID of the review. Example: <code>16</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>review</code></b>&nbsp;&nbsp;
@@ -29605,7 +30078,7 @@ all associated media files and helpfulness votes.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://marketplace.com/api/reviews/5" \
+    "http://marketplace.com/api/reviews/16" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -29613,7 +30086,7 @@ all associated media files and helpfulness votes.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/reviews/5"
+    "http://marketplace.com/api/reviews/16"
 );
 
 const headers = {
@@ -29630,7 +30103,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/reviews/5';
+$url = 'http://marketplace.com/api/reviews/16';
 $response = $client-&gt;delete(
     $url,
     [
@@ -29649,7 +30122,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/reviews/5'
+url = 'http://marketplace.com/api/reviews/16'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -29777,10 +30250,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="DELETEapi-reviews--id-"
-               value="5"
+               value="16"
                data-component="url">
     <br>
-<p>The ID of the review. Example: <code>5</code></p>
+<p>The ID of the review. Example: <code>16</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>review</code></b>&nbsp;&nbsp;
@@ -29810,7 +30283,7 @@ and can only vote once per review (but can change their vote).</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://marketplace.com/api/reviews/5/helpfulness" \
+    "http://marketplace.com/api/reviews/16/helpfulness" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -29822,7 +30295,7 @@ and can only vote once per review (but can change their vote).</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/reviews/5/helpfulness"
+    "http://marketplace.com/api/reviews/16/helpfulness"
 );
 
 const headers = {
@@ -29844,7 +30317,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/reviews/5/helpfulness';
+$url = 'http://marketplace.com/api/reviews/16/helpfulness';
 $response = $client-&gt;post(
     $url,
     [
@@ -29866,7 +30339,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/reviews/5/helpfulness'
+url = 'http://marketplace.com/api/reviews/16/helpfulness'
 payload = {
     "is_helpful": true
 }
@@ -30004,10 +30477,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="review_id"                data-endpoint="POSTapi-reviews--review_id--helpfulness"
-               value="5"
+               value="16"
                data-component="url">
     <br>
-<p>The ID of the review. Example: <code>5</code></p>
+<p>The ID of the review. Example: <code>16</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>review</code></b>&nbsp;&nbsp;
@@ -30059,7 +30532,7 @@ Reported reviews are flagged for admin moderation review.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://marketplace.com/api/reviews/5/report" \
+    "http://marketplace.com/api/reviews/16/report" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -30072,7 +30545,7 @@ Reported reviews are flagged for admin moderation review.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/reviews/5/report"
+    "http://marketplace.com/api/reviews/16/report"
 );
 
 const headers = {
@@ -30095,7 +30568,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/reviews/5/report';
+$url = 'http://marketplace.com/api/reviews/16/report';
 $response = $client-&gt;post(
     $url,
     [
@@ -30118,7 +30591,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/reviews/5/report'
+url = 'http://marketplace.com/api/reviews/16/report'
 payload = {
     "reason": "spam",
     "details": "\"This review contains promotional links\""
@@ -30256,10 +30729,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="review_id"                data-endpoint="POSTapi-reviews--review_id--report"
-               value="5"
+               value="16"
                data-component="url">
     <br>
-<p>The ID of the review. Example: <code>5</code></p>
+<p>The ID of the review. Example: <code>16</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>review</code></b>&nbsp;&nbsp;
@@ -31533,7 +32006,7 @@ This endpoint is publicly accessible and does not require authentication.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://marketplace.com/api/reviews/5/responses?per_page=20&amp;page=2" \
+    --get "http://marketplace.com/api/reviews/16/responses?per_page=20&amp;page=2" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -31541,7 +32014,7 @@ This endpoint is publicly accessible and does not require authentication.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/reviews/5/responses"
+    "http://marketplace.com/api/reviews/16/responses"
 );
 
 const params = {
@@ -31565,7 +32038,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/reviews/5/responses';
+$url = 'http://marketplace.com/api/reviews/16/responses';
 $response = $client-&gt;get(
     $url,
     [
@@ -31588,7 +32061,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/reviews/5/responses'
+url = 'http://marketplace.com/api/reviews/16/responses'
 params = {
   'per_page': '20',
   'page': '2',
@@ -31719,10 +32192,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="review_id"                data-endpoint="GETapi-reviews--review_id--responses"
-               value="5"
+               value="16"
                data-component="url">
     <br>
-<p>The ID of the review. Example: <code>5</code></p>
+<p>The ID of the review. Example: <code>16</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>review</code></b>&nbsp;&nbsp;
@@ -31774,7 +32247,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://marketplace.com/api/reviews/5/responses/2" \
+    --get "http://marketplace.com/api/reviews/16/responses/16" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -31782,7 +32255,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/reviews/5/responses/2"
+    "http://marketplace.com/api/reviews/16/responses/16"
 );
 
 const headers = {
@@ -31799,7 +32272,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/reviews/5/responses/2';
+$url = 'http://marketplace.com/api/reviews/16/responses/16';
 $response = $client-&gt;get(
     $url,
     [
@@ -31818,7 +32291,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/reviews/5/responses/2'
+url = 'http://marketplace.com/api/reviews/16/responses/16'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -31832,7 +32305,7 @@ response.json()</code></pre></div>
 
 <span id="example-responses-GETapi-reviews--review_id--responses--response_id-">
             <blockquote>
-            <p>Example response (200):</p>
+            <p>Example response (404):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -31840,37 +32313,407 @@ response.json()</code></pre></div>
             </summary>
             <pre><code class="language-http">cache-control: no-cache, private
 content-type: application/json
-x-ratelimit-limit: 5
-x-ratelimit-remaining: 4
-x-ratelimit-reset: 1752766931
-x-content-type-options: nosniff
-x-frame-options: DENY
-x-xss-protection: 1; mode=block
-content-security-policy: default-src &#039;none&#039;; frame-ancestors &#039;none&#039;;
-referrer-policy: strict-origin-when-cross-origin
-permissions-policy: camera=(), microphone=(), geolocation=(), payment=()
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;data&quot;: {
-        &quot;id&quot;: 2,
-        &quot;vendor&quot;: {
-            &quot;id&quot;: 1,
-            &quot;name&quot;: &quot;Fashion Forward&quot;,
-            &quot;description&quot;: null
+    &quot;message&quot;: &quot;No query results for model [App\\Models\\Review] 16&quot;,
+    &quot;exception&quot;: &quot;Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException&quot;,
+    &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php&quot;,
+    &quot;line&quot;: 636,
+    &quot;trace&quot;: [
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php&quot;,
+            &quot;line&quot;: 584,
+            &quot;function&quot;: &quot;prepareException&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Foundation\\Exceptions\\Handler&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
         },
-        &quot;user&quot;: {
-            &quot;id&quot;: 1,
-            &quot;name&quot;: &quot;Clifford Vendor Representative&quot;
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/nunomaduro/collision/src/Adapters/Laravel/ExceptionHandler.php&quot;,
+            &quot;line&quot;: 54,
+            &quot;function&quot;: &quot;render&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Foundation\\Exceptions\\Handler&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
         },
-        &quot;content&quot;: &quot;Honestly such an amazing products.&quot;,
-        &quot;is_approved&quot;: true,
-        &quot;approved_at&quot;: &quot;2025-07-16T11:50:44.000000Z&quot;,
-        &quot;created_at&quot;: &quot;2025-07-16T11:50:44.000000Z&quot;,
-        &quot;updated_at&quot;: &quot;2025-07-16T11:50:44.000000Z&quot;
-    },
-    &quot;message&quot;: &quot;Response retrieved successfully.&quot;,
-    &quot;status&quot;: 200
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Pipeline.php&quot;,
+            &quot;line&quot;: 51,
+            &quot;function&quot;: &quot;render&quot;,
+            &quot;class&quot;: &quot;NunoMaduro\\Collision\\Adapters\\Laravel\\ExceptionHandler&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php&quot;,
+            &quot;line&quot;: 214,
+            &quot;function&quot;: &quot;handleException&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Routing\\Pipeline&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php&quot;,
+            &quot;line&quot;: 127,
+            &quot;function&quot;: &quot;Illuminate\\Pipeline\\{closure}&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php&quot;,
+            &quot;line&quot;: 807,
+            &quot;function&quot;: &quot;then&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php&quot;,
+            &quot;line&quot;: 786,
+            &quot;function&quot;: &quot;runRouteWithinStack&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Routing\\Router&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php&quot;,
+            &quot;line&quot;: 750,
+            &quot;function&quot;: &quot;runRoute&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Routing\\Router&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php&quot;,
+            &quot;line&quot;: 739,
+            &quot;function&quot;: &quot;dispatchToRoute&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Routing\\Router&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php&quot;,
+            &quot;line&quot;: 201,
+            &quot;function&quot;: &quot;dispatch&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Routing\\Router&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php&quot;,
+            &quot;line&quot;: 170,
+            &quot;function&quot;: &quot;Illuminate\\Foundation\\Http\\{closure}&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Foundation\\Http\\Kernel&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php&quot;,
+            &quot;line&quot;: 21,
+            &quot;function&quot;: &quot;Illuminate\\Pipeline\\{closure}&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php&quot;,
+            &quot;line&quot;: 31,
+            &quot;function&quot;: &quot;handle&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php&quot;,
+            &quot;line&quot;: 209,
+            &quot;function&quot;: &quot;handle&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php&quot;,
+            &quot;line&quot;: 21,
+            &quot;function&quot;: &quot;Illuminate\\Pipeline\\{closure}&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php&quot;,
+            &quot;line&quot;: 51,
+            &quot;function&quot;: &quot;handle&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php&quot;,
+            &quot;line&quot;: 209,
+            &quot;function&quot;: &quot;handle&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Foundation\\Http\\Middleware\\TrimStrings&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php&quot;,
+            &quot;line&quot;: 27,
+            &quot;function&quot;: &quot;Illuminate\\Pipeline\\{closure}&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php&quot;,
+            &quot;line&quot;: 209,
+            &quot;function&quot;: &quot;handle&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Http\\Middleware\\ValidatePostSize&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php&quot;,
+            &quot;line&quot;: 110,
+            &quot;function&quot;: &quot;Illuminate\\Pipeline\\{closure}&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php&quot;,
+            &quot;line&quot;: 209,
+            &quot;function&quot;: &quot;handle&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php&quot;,
+            &quot;line&quot;: 49,
+            &quot;function&quot;: &quot;Illuminate\\Pipeline\\{closure}&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php&quot;,
+            &quot;line&quot;: 209,
+            &quot;function&quot;: &quot;handle&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Http\\Middleware\\HandleCors&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php&quot;,
+            &quot;line&quot;: 58,
+            &quot;function&quot;: &quot;Illuminate\\Pipeline\\{closure}&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php&quot;,
+            &quot;line&quot;: 209,
+            &quot;function&quot;: &quot;handle&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Http\\Middleware\\TrustProxies&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php&quot;,
+            &quot;line&quot;: 22,
+            &quot;function&quot;: &quot;Illuminate\\Pipeline\\{closure}&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php&quot;,
+            &quot;line&quot;: 209,
+            &quot;function&quot;: &quot;handle&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Foundation\\Http\\Middleware\\InvokeDeferredCallbacks&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php&quot;,
+            &quot;line&quot;: 127,
+            &quot;function&quot;: &quot;Illuminate\\Pipeline\\{closure}&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php&quot;,
+            &quot;line&quot;: 176,
+            &quot;function&quot;: &quot;then&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php&quot;,
+            &quot;line&quot;: 145,
+            &quot;function&quot;: &quot;sendRequestThroughRouter&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Foundation\\Http\\Kernel&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php&quot;,
+            &quot;line&quot;: 310,
+            &quot;function&quot;: &quot;handle&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Foundation\\Http\\Kernel&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php&quot;,
+            &quot;line&quot;: 298,
+            &quot;function&quot;: &quot;callLaravelOrLumenRoute&quot;,
+            &quot;class&quot;: &quot;Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php&quot;,
+            &quot;line&quot;: 91,
+            &quot;function&quot;: &quot;makeApiCall&quot;,
+            &quot;class&quot;: &quot;Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php&quot;,
+            &quot;line&quot;: 44,
+            &quot;function&quot;: &quot;makeResponseCall&quot;,
+            &quot;class&quot;: &quot;Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php&quot;,
+            &quot;line&quot;: 35,
+            &quot;function&quot;: &quot;makeResponseCallIfConditionsPass&quot;,
+            &quot;class&quot;: &quot;Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php&quot;,
+            &quot;line&quot;: 237,
+            &quot;function&quot;: &quot;__invoke&quot;,
+            &quot;class&quot;: &quot;Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php&quot;,
+            &quot;line&quot;: 163,
+            &quot;function&quot;: &quot;iterateThroughStrategies&quot;,
+            &quot;class&quot;: &quot;Knuckles\\Scribe\\Extracting\\Extractor&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php&quot;,
+            &quot;line&quot;: 95,
+            &quot;function&quot;: &quot;fetchResponses&quot;,
+            &quot;class&quot;: &quot;Knuckles\\Scribe\\Extracting\\Extractor&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php&quot;,
+            &quot;line&quot;: 125,
+            &quot;function&quot;: &quot;processRoute&quot;,
+            &quot;class&quot;: &quot;Knuckles\\Scribe\\Extracting\\Extractor&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php&quot;,
+            &quot;line&quot;: 72,
+            &quot;function&quot;: &quot;extractEndpointsInfoFromLaravelApp&quot;,
+            &quot;class&quot;: &quot;Knuckles\\Scribe\\GroupedEndpoints\\GroupedEndpointsFromApp&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php&quot;,
+            &quot;line&quot;: 50,
+            &quot;function&quot;: &quot;extractEndpointsInfoAndWriteToDisk&quot;,
+            &quot;class&quot;: &quot;Knuckles\\Scribe\\GroupedEndpoints\\GroupedEndpointsFromApp&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Commands/GenerateDocumentation.php&quot;,
+            &quot;line&quot;: 53,
+            &quot;function&quot;: &quot;get&quot;,
+            &quot;class&quot;: &quot;Knuckles\\Scribe\\GroupedEndpoints\\GroupedEndpointsFromApp&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php&quot;,
+            &quot;line&quot;: 36,
+            &quot;function&quot;: &quot;handle&quot;,
+            &quot;class&quot;: &quot;Knuckles\\Scribe\\Commands\\GenerateDocumentation&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Util.php&quot;,
+            &quot;line&quot;: 43,
+            &quot;function&quot;: &quot;Illuminate\\Container\\{closure}&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Container\\BoundMethod&quot;,
+            &quot;type&quot;: &quot;::&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php&quot;,
+            &quot;line&quot;: 95,
+            &quot;function&quot;: &quot;unwrapIfClosure&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Container\\Util&quot;,
+            &quot;type&quot;: &quot;::&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php&quot;,
+            &quot;line&quot;: 35,
+            &quot;function&quot;: &quot;callBoundMethod&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Container\\BoundMethod&quot;,
+            &quot;type&quot;: &quot;::&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Container.php&quot;,
+            &quot;line&quot;: 694,
+            &quot;function&quot;: &quot;call&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Container\\BoundMethod&quot;,
+            &quot;type&quot;: &quot;::&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php&quot;,
+            &quot;line&quot;: 213,
+            &quot;function&quot;: &quot;call&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Container\\Container&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/symfony/console/Command/Command.php&quot;,
+            &quot;line&quot;: 279,
+            &quot;function&quot;: &quot;execute&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Console\\Command&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php&quot;,
+            &quot;line&quot;: 182,
+            &quot;function&quot;: &quot;run&quot;,
+            &quot;class&quot;: &quot;Symfony\\Component\\Console\\Command\\Command&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/symfony/console/Application.php&quot;,
+            &quot;line&quot;: 1094,
+            &quot;function&quot;: &quot;run&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Console\\Command&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/symfony/console/Application.php&quot;,
+            &quot;line&quot;: 342,
+            &quot;function&quot;: &quot;doRunCommand&quot;,
+            &quot;class&quot;: &quot;Symfony\\Component\\Console\\Application&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/symfony/console/Application.php&quot;,
+            &quot;line&quot;: 193,
+            &quot;function&quot;: &quot;doRun&quot;,
+            &quot;class&quot;: &quot;Symfony\\Component\\Console\\Application&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php&quot;,
+            &quot;line&quot;: 198,
+            &quot;function&quot;: &quot;run&quot;,
+            &quot;class&quot;: &quot;Symfony\\Component\\Console\\Application&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Application.php&quot;,
+            &quot;line&quot;: 1208,
+            &quot;function&quot;: &quot;handle&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Foundation\\Console\\Kernel&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/artisan&quot;,
+            &quot;line&quot;: 13,
+            &quot;function&quot;: &quot;handleCommand&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Foundation\\Application&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        }
+    ]
 }</code>
  </pre>
     </span>
@@ -31961,10 +32804,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="review_id"                data-endpoint="GETapi-reviews--review_id--responses--response_id-"
-               value="5"
+               value="16"
                data-component="url">
     <br>
-<p>The ID of the review. Example: <code>5</code></p>
+<p>The ID of the review. Example: <code>16</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>response_id</code></b>&nbsp;&nbsp;
@@ -31972,10 +32815,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="response_id"                data-endpoint="GETapi-reviews--review_id--responses--response_id-"
-               value="2"
+               value="16"
                data-component="url">
     <br>
-<p>The ID of the response. Example: <code>2</code></p>
+<p>The ID of the response. Example: <code>16</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>review</code></b>&nbsp;&nbsp;
@@ -41842,7 +42685,7 @@ configuration and understanding its relationship to zones and rates.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://marketplace.com/api/admin/shipping-methods/16" \
+    --get "http://marketplace.com/api/admin/shipping-methods/1" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -41850,7 +42693,7 @@ configuration and understanding its relationship to zones and rates.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/shipping-methods/16"
+    "http://marketplace.com/api/admin/shipping-methods/1"
 );
 
 const headers = {
@@ -41867,7 +42710,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/shipping-methods/16';
+$url = 'http://marketplace.com/api/admin/shipping-methods/1';
 $response = $client-&gt;get(
     $url,
     [
@@ -41886,7 +42729,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/shipping-methods/16'
+url = 'http://marketplace.com/api/admin/shipping-methods/1'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -42043,10 +42886,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="shippingMethod_id"                data-endpoint="GETapi-admin-shipping-methods--shippingMethod_id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the shippingMethod. Example: <code>16</code></p>
+<p>The ID of the shippingMethod. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>shippingMethod</code></b>&nbsp;&nbsp;
@@ -42077,7 +42920,7 @@ to active status will immediately affect checkout options for customers.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://marketplace.com/api/admin/shipping-methods/16" \
+    "http://marketplace.com/api/admin/shipping-methods/1" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -42112,7 +42955,7 @@ to active status will immediately affect checkout options for customers.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/shipping-methods/16"
+    "http://marketplace.com/api/admin/shipping-methods/1"
 );
 
 const headers = {
@@ -42157,7 +43000,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/shipping-methods/16';
+$url = 'http://marketplace.com/api/admin/shipping-methods/1';
 $response = $client-&gt;put(
     $url,
     [
@@ -42202,7 +43045,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/shipping-methods/16'
+url = 'http://marketplace.com/api/admin/shipping-methods/1'
 payload = {
     "name": "Standard Delivery Updated",
     "description": "Updated tracked delivery within 2-3 working days",
@@ -42381,10 +43224,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="shippingMethod_id"                data-endpoint="PUTapi-admin-shipping-methods--shippingMethod_id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the shippingMethod. Example: <code>16</code></p>
+<p>The ID of the shippingMethod. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>shippingMethod</code></b>&nbsp;&nbsp;
@@ -42654,7 +43497,7 @@ zones and rates when the method is successfully deleted.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://marketplace.com/api/admin/shipping-methods/16" \
+    "http://marketplace.com/api/admin/shipping-methods/1" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -42662,7 +43505,7 @@ zones and rates when the method is successfully deleted.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/shipping-methods/16"
+    "http://marketplace.com/api/admin/shipping-methods/1"
 );
 
 const headers = {
@@ -42679,7 +43522,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/shipping-methods/16';
+$url = 'http://marketplace.com/api/admin/shipping-methods/1';
 $response = $client-&gt;delete(
     $url,
     [
@@ -42698,7 +43541,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/shipping-methods/16'
+url = 'http://marketplace.com/api/admin/shipping-methods/1'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -42844,10 +43687,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="shippingMethod_id"                data-endpoint="DELETEapi-admin-shipping-methods--shippingMethod_id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the shippingMethod. Example: <code>16</code></p>
+<p>The ID of the shippingMethod. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>shippingMethod</code></b>&nbsp;&nbsp;
@@ -42878,7 +43721,7 @@ for order fulfillment.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PATCH \
-    "http://marketplace.com/api/admin/shipping-methods/16/activate" \
+    "http://marketplace.com/api/admin/shipping-methods/1/activate" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -42886,7 +43729,7 @@ for order fulfillment.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/shipping-methods/16/activate"
+    "http://marketplace.com/api/admin/shipping-methods/1/activate"
 );
 
 const headers = {
@@ -42903,7 +43746,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/shipping-methods/16/activate';
+$url = 'http://marketplace.com/api/admin/shipping-methods/1/activate';
 $response = $client-&gt;patch(
     $url,
     [
@@ -42922,7 +43765,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/shipping-methods/16/activate'
+url = 'http://marketplace.com/api/admin/shipping-methods/1/activate'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -43058,10 +43901,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="shippingMethod_id"                data-endpoint="PATCHapi-admin-shipping-methods--shippingMethod_id--activate"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the shippingMethod. Example: <code>16</code></p>
+<p>The ID of the shippingMethod. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>shippingMethod</code></b>&nbsp;&nbsp;
@@ -43092,7 +43935,7 @@ are not affected by this change.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PATCH \
-    "http://marketplace.com/api/admin/shipping-methods/16/deactivate" \
+    "http://marketplace.com/api/admin/shipping-methods/1/deactivate" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -43100,7 +43943,7 @@ are not affected by this change.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/shipping-methods/16/deactivate"
+    "http://marketplace.com/api/admin/shipping-methods/1/deactivate"
 );
 
 const headers = {
@@ -43117,7 +43960,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/shipping-methods/16/deactivate';
+$url = 'http://marketplace.com/api/admin/shipping-methods/1/deactivate';
 $response = $client-&gt;patch(
     $url,
     [
@@ -43136,7 +43979,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/shipping-methods/16/deactivate'
+url = 'http://marketplace.com/api/admin/shipping-methods/1/deactivate'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -43272,10 +44115,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="shippingMethod_id"                data-endpoint="PATCHapi-admin-shipping-methods--shippingMethod_id--deactivate"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the shippingMethod. Example: <code>16</code></p>
+<p>The ID of the shippingMethod. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>shippingMethod</code></b>&nbsp;&nbsp;
@@ -44370,7 +45213,7 @@ Useful for viewing complete rate configuration.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://marketplace.com/api/admin/shipping-rates/16?with_relationships=1" \
+    --get "http://marketplace.com/api/admin/shipping-rates/1?with_relationships=1" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -44378,7 +45221,7 @@ Useful for viewing complete rate configuration.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/shipping-rates/16"
+    "http://marketplace.com/api/admin/shipping-rates/1"
 );
 
 const params = {
@@ -44401,7 +45244,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/shipping-rates/16';
+$url = 'http://marketplace.com/api/admin/shipping-rates/1';
 $response = $client-&gt;get(
     $url,
     [
@@ -44423,7 +45266,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/shipping-rates/16'
+url = 'http://marketplace.com/api/admin/shipping-rates/1'
 params = {
   'with_relationships': '1',
 }
@@ -44590,10 +45433,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="shippingRate_id"                data-endpoint="GETapi-admin-shipping-rates--shippingRate_id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the shippingRate. Example: <code>16</code></p>
+<p>The ID of the shippingRate. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>shippingRate</code></b>&nbsp;&nbsp;
@@ -44646,7 +45489,7 @@ weight and total thresholds remain logically consistent.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://marketplace.com/api/admin/shipping-rates/16" \
+    "http://marketplace.com/api/admin/shipping-rates/1" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -44667,7 +45510,7 @@ weight and total thresholds remain logically consistent.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/shipping-rates/16"
+    "http://marketplace.com/api/admin/shipping-rates/1"
 );
 
 const headers = {
@@ -44698,7 +45541,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/shipping-rates/16';
+$url = 'http://marketplace.com/api/admin/shipping-rates/1';
 $response = $client-&gt;put(
     $url,
     [
@@ -44729,7 +45572,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/shipping-rates/16'
+url = 'http://marketplace.com/api/admin/shipping-rates/1'
 payload = {
     "shipping_method_id": 1,
     "shipping_zone_id": 1,
@@ -44909,10 +45752,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="shippingRate_id"                data-endpoint="PUTapi-admin-shipping-rates--shippingRate_id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the shippingRate. Example: <code>16</code></p>
+<p>The ID of the shippingRate. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>shippingRate</code></b>&nbsp;&nbsp;
@@ -45074,7 +45917,7 @@ combination. Use with caution as this cannot be undone.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://marketplace.com/api/admin/shipping-rates/16" \
+    "http://marketplace.com/api/admin/shipping-rates/1" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -45082,7 +45925,7 @@ combination. Use with caution as this cannot be undone.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/shipping-rates/16"
+    "http://marketplace.com/api/admin/shipping-rates/1"
 );
 
 const headers = {
@@ -45099,7 +45942,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/shipping-rates/16';
+$url = 'http://marketplace.com/api/admin/shipping-rates/1';
 $response = $client-&gt;delete(
     $url,
     [
@@ -45118,7 +45961,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/shipping-rates/16'
+url = 'http://marketplace.com/api/admin/shipping-rates/1'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -45246,10 +46089,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="shippingRate_id"                data-endpoint="DELETEapi-admin-shipping-rates--shippingRate_id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the shippingRate. Example: <code>16</code></p>
+<p>The ID of the shippingRate. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>shippingRate</code></b>&nbsp;&nbsp;
@@ -45280,7 +46123,7 @@ weight and total criteria.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PATCH \
-    "http://marketplace.com/api/admin/shipping-rates/16/activate" \
+    "http://marketplace.com/api/admin/shipping-rates/1/activate" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -45288,7 +46131,7 @@ weight and total criteria.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/shipping-rates/16/activate"
+    "http://marketplace.com/api/admin/shipping-rates/1/activate"
 );
 
 const headers = {
@@ -45305,7 +46148,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/shipping-rates/16/activate';
+$url = 'http://marketplace.com/api/admin/shipping-rates/1/activate';
 $response = $client-&gt;patch(
     $url,
     [
@@ -45324,7 +46167,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/shipping-rates/16/activate'
+url = 'http://marketplace.com/api/admin/shipping-rates/1/activate'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -45461,10 +46304,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="shippingRate_id"                data-endpoint="PATCHapi-admin-shipping-rates--shippingRate_id--activate"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the shippingRate. Example: <code>16</code></p>
+<p>The ID of the shippingRate. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>shippingRate</code></b>&nbsp;&nbsp;
@@ -45495,7 +46338,7 @@ for potential future reactivation.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PATCH \
-    "http://marketplace.com/api/admin/shipping-rates/16/deactivate" \
+    "http://marketplace.com/api/admin/shipping-rates/1/deactivate" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -45503,7 +46346,7 @@ for potential future reactivation.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/shipping-rates/16/deactivate"
+    "http://marketplace.com/api/admin/shipping-rates/1/deactivate"
 );
 
 const headers = {
@@ -45520,7 +46363,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/shipping-rates/16/deactivate';
+$url = 'http://marketplace.com/api/admin/shipping-rates/1/deactivate';
 $response = $client-&gt;patch(
     $url,
     [
@@ -45539,7 +46382,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/shipping-rates/16/deactivate'
+url = 'http://marketplace.com/api/admin/shipping-rates/1/deactivate'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -45676,10 +46519,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="shippingRate_id"                data-endpoint="PATCHapi-admin-shipping-rates--shippingRate_id--deactivate"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the shippingRate. Example: <code>16</code></p>
+<p>The ID of the shippingRate. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>shippingRate</code></b>&nbsp;&nbsp;
@@ -46591,7 +47434,7 @@ for setting up similar rates across multiple zones.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://marketplace.com/api/admin/shipping-rates/16/duplicate" \
+    "http://marketplace.com/api/admin/shipping-rates/1/duplicate" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -46607,7 +47450,7 @@ for setting up similar rates across multiple zones.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/shipping-rates/16/duplicate"
+    "http://marketplace.com/api/admin/shipping-rates/1/duplicate"
 );
 
 const headers = {
@@ -46633,7 +47476,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/shipping-rates/16/duplicate';
+$url = 'http://marketplace.com/api/admin/shipping-rates/1/duplicate';
 $response = $client-&gt;post(
     $url,
     [
@@ -46659,7 +47502,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/shipping-rates/16/duplicate'
+url = 'http://marketplace.com/api/admin/shipping-rates/1/duplicate'
 payload = {
     "shipping_zone_ids": [
         2,
@@ -46833,10 +47676,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="shippingRate_id"                data-endpoint="POSTapi-admin-shipping-rates--shippingRate_id--duplicate"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the shippingRate. Example: <code>16</code></p>
+<p>The ID of the shippingRate. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>shippingRate</code></b>&nbsp;&nbsp;
@@ -48054,7 +48897,7 @@ Optionally includes associated shipping methods with their zone-specific setting
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://marketplace.com/api/admin/shipping-zones/16?with_methods=1" \
+    --get "http://marketplace.com/api/admin/shipping-zones/1?with_methods=1" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -48062,7 +48905,7 @@ Optionally includes associated shipping methods with their zone-specific setting
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/shipping-zones/16"
+    "http://marketplace.com/api/admin/shipping-zones/1"
 );
 
 const params = {
@@ -48085,7 +48928,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/shipping-zones/16';
+$url = 'http://marketplace.com/api/admin/shipping-zones/1';
 $response = $client-&gt;get(
     $url,
     [
@@ -48107,7 +48950,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/shipping-zones/16'
+url = 'http://marketplace.com/api/admin/shipping-zones/1'
 params = {
   'with_methods': '1',
 }
@@ -48288,10 +49131,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="shippingZone_id"                data-endpoint="GETapi-admin-shipping-zones--shippingZone_id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the shippingZone. Example: <code>16</code></p>
+<p>The ID of the shippingZone. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>shippingZone</code></b>&nbsp;&nbsp;
@@ -48344,7 +49187,7 @@ Country codes will be automatically converted to uppercase.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://marketplace.com/api/admin/shipping-zones/16" \
+    "http://marketplace.com/api/admin/shipping-zones/1" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -48380,7 +49223,7 @@ Country codes will be automatically converted to uppercase.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/shipping-zones/16"
+    "http://marketplace.com/api/admin/shipping-zones/1"
 );
 
 const headers = {
@@ -48426,7 +49269,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/shipping-zones/16';
+$url = 'http://marketplace.com/api/admin/shipping-zones/1';
 $response = $client-&gt;put(
     $url,
     [
@@ -48472,7 +49315,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/shipping-zones/16'
+url = 'http://marketplace.com/api/admin/shipping-zones/1'
 payload = {
     "name": "Nordic &amp; Baltic Countries",
     "description": "Nordic, Scandinavian, and Baltic countries",
@@ -48681,10 +49524,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="shippingZone_id"                data-endpoint="PUTapi-admin-shipping-zones--shippingZone_id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the shippingZone. Example: <code>16</code></p>
+<p>The ID of the shippingZone. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>shippingZone</code></b>&nbsp;&nbsp;
@@ -48836,7 +49679,7 @@ as this would affect shipping calculations.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://marketplace.com/api/admin/shipping-zones/16" \
+    "http://marketplace.com/api/admin/shipping-zones/1" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -48844,7 +49687,7 @@ as this would affect shipping calculations.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/shipping-zones/16"
+    "http://marketplace.com/api/admin/shipping-zones/1"
 );
 
 const headers = {
@@ -48861,7 +49704,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/shipping-zones/16';
+$url = 'http://marketplace.com/api/admin/shipping-zones/1';
 $response = $client-&gt;delete(
     $url,
     [
@@ -48880,7 +49723,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/shipping-zones/16'
+url = 'http://marketplace.com/api/admin/shipping-zones/1'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -49017,10 +49860,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="shippingZone_id"                data-endpoint="DELETEapi-admin-shipping-zones--shippingZone_id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the shippingZone. Example: <code>16</code></p>
+<p>The ID of the shippingZone. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>shippingZone</code></b>&nbsp;&nbsp;
@@ -49051,7 +49894,7 @@ and rates for customer addresses.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PATCH \
-    "http://marketplace.com/api/admin/shipping-zones/16/activate" \
+    "http://marketplace.com/api/admin/shipping-zones/1/activate" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -49059,7 +49902,7 @@ and rates for customer addresses.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/shipping-zones/16/activate"
+    "http://marketplace.com/api/admin/shipping-zones/1/activate"
 );
 
 const headers = {
@@ -49076,7 +49919,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/shipping-zones/16/activate';
+$url = 'http://marketplace.com/api/admin/shipping-zones/1/activate';
 $response = $client-&gt;patch(
     $url,
     [
@@ -49095,7 +49938,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/shipping-zones/16/activate'
+url = 'http://marketplace.com/api/admin/shipping-zones/1/activate'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -49229,10 +50072,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="shippingZone_id"                data-endpoint="PATCHapi-admin-shipping-zones--shippingZone_id--activate"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the shippingZone. Example: <code>16</code></p>
+<p>The ID of the shippingZone. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>shippingZone</code></b>&nbsp;&nbsp;
@@ -49263,7 +50106,7 @@ methods and rates, but existing orders remain unaffected.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PATCH \
-    "http://marketplace.com/api/admin/shipping-zones/16/deactivate" \
+    "http://marketplace.com/api/admin/shipping-zones/1/deactivate" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -49271,7 +50114,7 @@ methods and rates, but existing orders remain unaffected.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/shipping-zones/16/deactivate"
+    "http://marketplace.com/api/admin/shipping-zones/1/deactivate"
 );
 
 const headers = {
@@ -49288,7 +50131,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/shipping-zones/16/deactivate';
+$url = 'http://marketplace.com/api/admin/shipping-zones/1/deactivate';
 $response = $client-&gt;patch(
     $url,
     [
@@ -49307,7 +50150,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/shipping-zones/16/deactivate'
+url = 'http://marketplace.com/api/admin/shipping-zones/1/deactivate'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -49441,10 +50284,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="shippingZone_id"                data-endpoint="PATCHapi-admin-shipping-zones--shippingZone_id--deactivate"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the shippingZone. Example: <code>16</code></p>
+<p>The ID of the shippingZone. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>shippingZone</code></b>&nbsp;&nbsp;
@@ -49721,7 +50564,7 @@ and set the display order for methods within the zone.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://marketplace.com/api/admin/shipping-zones/16/methods" \
+    "http://marketplace.com/api/admin/shipping-zones/1/methods" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -49735,7 +50578,7 @@ and set the display order for methods within the zone.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/shipping-zones/16/methods"
+    "http://marketplace.com/api/admin/shipping-zones/1/methods"
 );
 
 const headers = {
@@ -49759,7 +50602,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/shipping-zones/16/methods';
+$url = 'http://marketplace.com/api/admin/shipping-zones/1/methods';
 $response = $client-&gt;post(
     $url,
     [
@@ -49783,7 +50626,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/shipping-zones/16/methods'
+url = 'http://marketplace.com/api/admin/shipping-zones/1/methods'
 payload = {
     "method_id": 3,
     "is_active": true,
@@ -49929,10 +50772,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="shippingZone_id"                data-endpoint="POSTapi-admin-shipping-zones--shippingZone_id--methods"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the shippingZone. Example: <code>16</code></p>
+<p>The ID of the shippingZone. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>shippingZone</code></b>&nbsp;&nbsp;
@@ -50007,7 +50850,7 @@ Also removes any rates configured for this method-zone combination.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://marketplace.com/api/admin/shipping-zones/16/methods/16" \
+    "http://marketplace.com/api/admin/shipping-zones/1/methods/1" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -50015,7 +50858,7 @@ Also removes any rates configured for this method-zone combination.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/shipping-zones/16/methods/16"
+    "http://marketplace.com/api/admin/shipping-zones/1/methods/1"
 );
 
 const headers = {
@@ -50032,7 +50875,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/shipping-zones/16/methods/16';
+$url = 'http://marketplace.com/api/admin/shipping-zones/1/methods/1';
 $response = $client-&gt;delete(
     $url,
     [
@@ -50051,7 +50894,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/shipping-zones/16/methods/16'
+url = 'http://marketplace.com/api/admin/shipping-zones/1/methods/1'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -50179,10 +51022,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="shippingZone_id"                data-endpoint="DELETEapi-admin-shipping-zones--shippingZone_id--methods--shippingMethod_id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the shippingZone. Example: <code>16</code></p>
+<p>The ID of the shippingZone. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>shippingMethod_id</code></b>&nbsp;&nbsp;
@@ -50190,10 +51033,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="shippingMethod_id"                data-endpoint="DELETEapi-admin-shipping-zones--shippingZone_id--methods--shippingMethod_id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the shippingMethod. Example: <code>16</code></p>
+<p>The ID of the shippingMethod. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>shippingZone</code></b>&nbsp;&nbsp;
@@ -50235,7 +51078,7 @@ on a per-zone basis without affecting the method globally.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request PUT \
-    "http://marketplace.com/api/admin/shipping-zones/16/methods/16" \
+    "http://marketplace.com/api/admin/shipping-zones/1/methods/1" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -50248,7 +51091,7 @@ on a per-zone basis without affecting the method globally.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/admin/shipping-zones/16/methods/16"
+    "http://marketplace.com/api/admin/shipping-zones/1/methods/1"
 );
 
 const headers = {
@@ -50271,7 +51114,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/admin/shipping-zones/16/methods/16';
+$url = 'http://marketplace.com/api/admin/shipping-zones/1/methods/1';
 $response = $client-&gt;put(
     $url,
     [
@@ -50294,7 +51137,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/admin/shipping-zones/16/methods/16'
+url = 'http://marketplace.com/api/admin/shipping-zones/1/methods/1'
 payload = {
     "is_active": false,
     "sort_order": 2
@@ -50438,10 +51281,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="shippingZone_id"                data-endpoint="PUTapi-admin-shipping-zones--shippingZone_id--methods--shippingMethod_id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the shippingZone. Example: <code>16</code></p>
+<p>The ID of the shippingZone. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>shippingMethod_id</code></b>&nbsp;&nbsp;
@@ -50449,10 +51292,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="shippingMethod_id"                data-endpoint="PUTapi-admin-shipping-zones--shippingZone_id--methods--shippingMethod_id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the shippingMethod. Example: <code>16</code></p>
+<p>The ID of the shippingMethod. Example: <code>1</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>shippingZone</code></b>&nbsp;&nbsp;
@@ -53912,7 +54755,7 @@ fields will be updated, others remain unchanged. Logo uploads are processed secu
     --form "user_id=45"\
     --form "name=TechCraft Solutions Ltd"\
     --form "description=Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud migration services, and digital transformation consulting with over 10 years of industry experience."\
-    --form "logo=@/tmp/phpsKYDNR" </code></pre></div>
+    --form "logo=@/tmp/phpix5i3h" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -53965,7 +54808,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'logo',
-                'contents' =&gt; fopen('/tmp/phpsKYDNR', 'r')
+                'contents' =&gt; fopen('/tmp/phpix5i3h', 'r')
             ],
         ],
     ]
@@ -53983,7 +54826,7 @@ files = {
   'user_id': (None, '45'),
   'name': (None, 'TechCraft Solutions Ltd'),
   'description': (None, 'Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud migration services, and digital transformation consulting with over 10 years of industry experience.'),
-  'logo': open('/tmp/phpsKYDNR', 'rb')}
+  'logo': open('/tmp/phpix5i3h', 'rb')}
 payload = {
     "user_id": 45,
     "name": "TechCraft Solutions Ltd",
@@ -54295,7 +55138,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional New logo file for the vendor. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will replace existing logo if provided. Example: <code>/tmp/phpsKYDNR</code></p>
+<p>optional New logo file for the vendor. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will replace existing logo if provided. Example: <code>/tmp/phpix5i3h</code></p>
         </div>
         </form>
 
@@ -54318,7 +55161,7 @@ respond once per review, but can edit their response within 24 hours.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://marketplace.com/api/reviews/5/responses" \
+    "http://marketplace.com/api/reviews/16/responses" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -54330,7 +55173,7 @@ respond once per review, but can edit their response within 24 hours.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/reviews/5/responses"
+    "http://marketplace.com/api/reviews/16/responses"
 );
 
 const headers = {
@@ -54352,7 +55195,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/reviews/5/responses';
+$url = 'http://marketplace.com/api/reviews/16/responses';
 $response = $client-&gt;post(
     $url,
     [
@@ -54374,7 +55217,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/reviews/5/responses'
+url = 'http://marketplace.com/api/reviews/16/responses'
 payload = {
     "content": "\"Thank you for your feedback! We're glad you enjoyed our product.\""
 }
@@ -54520,10 +55363,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="review_id"                data-endpoint="POSTapi-reviews--review_id--responses"
-               value="5"
+               value="16"
                data-component="url">
     <br>
-<p>The ID of the review. Example: <code>5</code></p>
+<p>The ID of the review. Example: <code>16</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>review</code></b>&nbsp;&nbsp;
@@ -54565,7 +55408,7 @@ After 24 hours, responses become locked to maintain transparency.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://marketplace.com/api/reviews/5/responses/2" \
+    "http://marketplace.com/api/reviews/16/responses/16" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -54577,7 +55420,7 @@ After 24 hours, responses become locked to maintain transparency.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/reviews/5/responses/2"
+    "http://marketplace.com/api/reviews/16/responses/16"
 );
 
 const headers = {
@@ -54599,7 +55442,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/reviews/5/responses/2';
+$url = 'http://marketplace.com/api/reviews/16/responses/16';
 $response = $client-&gt;post(
     $url,
     [
@@ -54621,7 +55464,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/reviews/5/responses/2'
+url = 'http://marketplace.com/api/reviews/16/responses/16'
 payload = {
     "content": "\"Thank you for your updated feedback!\""
 }
@@ -54748,10 +55591,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="review_id"                data-endpoint="POSTapi-reviews--review_id--responses--id-"
-               value="5"
+               value="16"
                data-component="url">
     <br>
-<p>The ID of the review. Example: <code>5</code></p>
+<p>The ID of the review. Example: <code>16</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
@@ -54759,10 +55602,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="POSTapi-reviews--review_id--responses--id-"
-               value="2"
+               value="16"
                data-component="url">
     <br>
-<p>The ID of the response. Example: <code>2</code></p>
+<p>The ID of the response. Example: <code>16</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>review</code></b>&nbsp;&nbsp;
@@ -54815,7 +55658,7 @@ This action is irreversible.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://marketplace.com/api/reviews/5/responses/2" \
+    "http://marketplace.com/api/reviews/16/responses/16" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -54823,7 +55666,7 @@ This action is irreversible.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/reviews/5/responses/2"
+    "http://marketplace.com/api/reviews/16/responses/16"
 );
 
 const headers = {
@@ -54840,7 +55683,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/reviews/5/responses/2';
+$url = 'http://marketplace.com/api/reviews/16/responses/16';
 $response = $client-&gt;delete(
     $url,
     [
@@ -54859,7 +55702,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/reviews/5/responses/2'
+url = 'http://marketplace.com/api/reviews/16/responses/16'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -54978,10 +55821,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="review_id"                data-endpoint="DELETEapi-reviews--review_id--responses--id-"
-               value="5"
+               value="16"
                data-component="url">
     <br>
-<p>The ID of the review. Example: <code>5</code></p>
+<p>The ID of the review. Example: <code>16</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
@@ -54989,10 +55832,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="DELETEapi-reviews--review_id--responses--id-"
-               value="2"
+               value="16"
                data-component="url">
     <br>
-<p>The ID of the response. Example: <code>2</code></p>
+<p>The ID of the response. Example: <code>16</code></p>
             </div>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>review</code></b>&nbsp;&nbsp;
@@ -55310,7 +56153,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://marketplace.com/api/vendor/responses/2" \
+    --get "http://marketplace.com/api/vendor/responses/16" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
@@ -55318,7 +56161,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://marketplace.com/api/vendor/responses/2"
+    "http://marketplace.com/api/vendor/responses/16"
 );
 
 const headers = {
@@ -55335,7 +56178,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://marketplace.com/api/vendor/responses/2';
+$url = 'http://marketplace.com/api/vendor/responses/16';
 $response = $client-&gt;get(
     $url,
     [
@@ -55354,7 +56197,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://marketplace.com/api/vendor/responses/2'
+url = 'http://marketplace.com/api/vendor/responses/16'
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
   'Content-Type': 'application/json',
@@ -55368,7 +56211,7 @@ response.json()</code></pre></div>
 
 <span id="example-responses-GETapi-vendor-responses--id-">
             <blockquote>
-            <p>Example response (401):</p>
+            <p>Example response (404):</p>
         </blockquote>
                 <details class="annotation">
             <summary style="cursor: pointer;">
@@ -55376,19 +56219,407 @@ response.json()</code></pre></div>
             </summary>
             <pre><code class="language-http">cache-control: no-cache, private
 content-type: application/json
-x-content-type-options: nosniff
-x-frame-options: DENY
-x-xss-protection: 1; mode=block
-content-security-policy: default-src &#039;none&#039;; frame-ancestors &#039;none&#039;;
-referrer-policy: strict-origin-when-cross-origin
-permissions-policy: camera=(), microphone=(), geolocation=(), payment=()
  </code></pre></details>         <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Authentication required for this action.&quot;,
-    &quot;suggestion&quot;: &quot;Please log in to continue.&quot;,
-    &quot;error&quot;: &quot;authentication_required&quot;,
-    &quot;action&quot;: &quot;dashboard&quot;
+    &quot;message&quot;: &quot;No query results for model [App\\Models\\ReviewResponse] 16&quot;,
+    &quot;exception&quot;: &quot;Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException&quot;,
+    &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php&quot;,
+    &quot;line&quot;: 636,
+    &quot;trace&quot;: [
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php&quot;,
+            &quot;line&quot;: 584,
+            &quot;function&quot;: &quot;prepareException&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Foundation\\Exceptions\\Handler&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/nunomaduro/collision/src/Adapters/Laravel/ExceptionHandler.php&quot;,
+            &quot;line&quot;: 54,
+            &quot;function&quot;: &quot;render&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Foundation\\Exceptions\\Handler&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Pipeline.php&quot;,
+            &quot;line&quot;: 51,
+            &quot;function&quot;: &quot;render&quot;,
+            &quot;class&quot;: &quot;NunoMaduro\\Collision\\Adapters\\Laravel\\ExceptionHandler&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php&quot;,
+            &quot;line&quot;: 214,
+            &quot;function&quot;: &quot;handleException&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Routing\\Pipeline&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php&quot;,
+            &quot;line&quot;: 127,
+            &quot;function&quot;: &quot;Illuminate\\Pipeline\\{closure}&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php&quot;,
+            &quot;line&quot;: 807,
+            &quot;function&quot;: &quot;then&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php&quot;,
+            &quot;line&quot;: 786,
+            &quot;function&quot;: &quot;runRouteWithinStack&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Routing\\Router&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php&quot;,
+            &quot;line&quot;: 750,
+            &quot;function&quot;: &quot;runRoute&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Routing\\Router&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php&quot;,
+            &quot;line&quot;: 739,
+            &quot;function&quot;: &quot;dispatchToRoute&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Routing\\Router&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php&quot;,
+            &quot;line&quot;: 201,
+            &quot;function&quot;: &quot;dispatch&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Routing\\Router&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php&quot;,
+            &quot;line&quot;: 170,
+            &quot;function&quot;: &quot;Illuminate\\Foundation\\Http\\{closure}&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Foundation\\Http\\Kernel&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php&quot;,
+            &quot;line&quot;: 21,
+            &quot;function&quot;: &quot;Illuminate\\Pipeline\\{closure}&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php&quot;,
+            &quot;line&quot;: 31,
+            &quot;function&quot;: &quot;handle&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php&quot;,
+            &quot;line&quot;: 209,
+            &quot;function&quot;: &quot;handle&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php&quot;,
+            &quot;line&quot;: 21,
+            &quot;function&quot;: &quot;Illuminate\\Pipeline\\{closure}&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php&quot;,
+            &quot;line&quot;: 51,
+            &quot;function&quot;: &quot;handle&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php&quot;,
+            &quot;line&quot;: 209,
+            &quot;function&quot;: &quot;handle&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Foundation\\Http\\Middleware\\TrimStrings&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php&quot;,
+            &quot;line&quot;: 27,
+            &quot;function&quot;: &quot;Illuminate\\Pipeline\\{closure}&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php&quot;,
+            &quot;line&quot;: 209,
+            &quot;function&quot;: &quot;handle&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Http\\Middleware\\ValidatePostSize&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php&quot;,
+            &quot;line&quot;: 110,
+            &quot;function&quot;: &quot;Illuminate\\Pipeline\\{closure}&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php&quot;,
+            &quot;line&quot;: 209,
+            &quot;function&quot;: &quot;handle&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php&quot;,
+            &quot;line&quot;: 49,
+            &quot;function&quot;: &quot;Illuminate\\Pipeline\\{closure}&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php&quot;,
+            &quot;line&quot;: 209,
+            &quot;function&quot;: &quot;handle&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Http\\Middleware\\HandleCors&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php&quot;,
+            &quot;line&quot;: 58,
+            &quot;function&quot;: &quot;Illuminate\\Pipeline\\{closure}&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php&quot;,
+            &quot;line&quot;: 209,
+            &quot;function&quot;: &quot;handle&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Http\\Middleware\\TrustProxies&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php&quot;,
+            &quot;line&quot;: 22,
+            &quot;function&quot;: &quot;Illuminate\\Pipeline\\{closure}&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php&quot;,
+            &quot;line&quot;: 209,
+            &quot;function&quot;: &quot;handle&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Foundation\\Http\\Middleware\\InvokeDeferredCallbacks&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php&quot;,
+            &quot;line&quot;: 127,
+            &quot;function&quot;: &quot;Illuminate\\Pipeline\\{closure}&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php&quot;,
+            &quot;line&quot;: 176,
+            &quot;function&quot;: &quot;then&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Pipeline\\Pipeline&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php&quot;,
+            &quot;line&quot;: 145,
+            &quot;function&quot;: &quot;sendRequestThroughRouter&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Foundation\\Http\\Kernel&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php&quot;,
+            &quot;line&quot;: 310,
+            &quot;function&quot;: &quot;handle&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Foundation\\Http\\Kernel&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php&quot;,
+            &quot;line&quot;: 298,
+            &quot;function&quot;: &quot;callLaravelOrLumenRoute&quot;,
+            &quot;class&quot;: &quot;Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php&quot;,
+            &quot;line&quot;: 91,
+            &quot;function&quot;: &quot;makeApiCall&quot;,
+            &quot;class&quot;: &quot;Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php&quot;,
+            &quot;line&quot;: 44,
+            &quot;function&quot;: &quot;makeResponseCall&quot;,
+            &quot;class&quot;: &quot;Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php&quot;,
+            &quot;line&quot;: 35,
+            &quot;function&quot;: &quot;makeResponseCallIfConditionsPass&quot;,
+            &quot;class&quot;: &quot;Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php&quot;,
+            &quot;line&quot;: 237,
+            &quot;function&quot;: &quot;__invoke&quot;,
+            &quot;class&quot;: &quot;Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php&quot;,
+            &quot;line&quot;: 163,
+            &quot;function&quot;: &quot;iterateThroughStrategies&quot;,
+            &quot;class&quot;: &quot;Knuckles\\Scribe\\Extracting\\Extractor&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php&quot;,
+            &quot;line&quot;: 95,
+            &quot;function&quot;: &quot;fetchResponses&quot;,
+            &quot;class&quot;: &quot;Knuckles\\Scribe\\Extracting\\Extractor&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php&quot;,
+            &quot;line&quot;: 125,
+            &quot;function&quot;: &quot;processRoute&quot;,
+            &quot;class&quot;: &quot;Knuckles\\Scribe\\Extracting\\Extractor&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php&quot;,
+            &quot;line&quot;: 72,
+            &quot;function&quot;: &quot;extractEndpointsInfoFromLaravelApp&quot;,
+            &quot;class&quot;: &quot;Knuckles\\Scribe\\GroupedEndpoints\\GroupedEndpointsFromApp&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php&quot;,
+            &quot;line&quot;: 50,
+            &quot;function&quot;: &quot;extractEndpointsInfoAndWriteToDisk&quot;,
+            &quot;class&quot;: &quot;Knuckles\\Scribe\\GroupedEndpoints\\GroupedEndpointsFromApp&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Commands/GenerateDocumentation.php&quot;,
+            &quot;line&quot;: 53,
+            &quot;function&quot;: &quot;get&quot;,
+            &quot;class&quot;: &quot;Knuckles\\Scribe\\GroupedEndpoints\\GroupedEndpointsFromApp&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php&quot;,
+            &quot;line&quot;: 36,
+            &quot;function&quot;: &quot;handle&quot;,
+            &quot;class&quot;: &quot;Knuckles\\Scribe\\Commands\\GenerateDocumentation&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Util.php&quot;,
+            &quot;line&quot;: 43,
+            &quot;function&quot;: &quot;Illuminate\\Container\\{closure}&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Container\\BoundMethod&quot;,
+            &quot;type&quot;: &quot;::&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php&quot;,
+            &quot;line&quot;: 95,
+            &quot;function&quot;: &quot;unwrapIfClosure&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Container\\Util&quot;,
+            &quot;type&quot;: &quot;::&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php&quot;,
+            &quot;line&quot;: 35,
+            &quot;function&quot;: &quot;callBoundMethod&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Container\\BoundMethod&quot;,
+            &quot;type&quot;: &quot;::&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Container.php&quot;,
+            &quot;line&quot;: 694,
+            &quot;function&quot;: &quot;call&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Container\\BoundMethod&quot;,
+            &quot;type&quot;: &quot;::&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php&quot;,
+            &quot;line&quot;: 213,
+            &quot;function&quot;: &quot;call&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Container\\Container&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/symfony/console/Command/Command.php&quot;,
+            &quot;line&quot;: 279,
+            &quot;function&quot;: &quot;execute&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Console\\Command&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php&quot;,
+            &quot;line&quot;: 182,
+            &quot;function&quot;: &quot;run&quot;,
+            &quot;class&quot;: &quot;Symfony\\Component\\Console\\Command\\Command&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/symfony/console/Application.php&quot;,
+            &quot;line&quot;: 1094,
+            &quot;function&quot;: &quot;run&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Console\\Command&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/symfony/console/Application.php&quot;,
+            &quot;line&quot;: 342,
+            &quot;function&quot;: &quot;doRunCommand&quot;,
+            &quot;class&quot;: &quot;Symfony\\Component\\Console\\Application&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/symfony/console/Application.php&quot;,
+            &quot;line&quot;: 193,
+            &quot;function&quot;: &quot;doRun&quot;,
+            &quot;class&quot;: &quot;Symfony\\Component\\Console\\Application&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php&quot;,
+            &quot;line&quot;: 198,
+            &quot;function&quot;: &quot;run&quot;,
+            &quot;class&quot;: &quot;Symfony\\Component\\Console\\Application&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Application.php&quot;,
+            &quot;line&quot;: 1208,
+            &quot;function&quot;: &quot;handle&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Foundation\\Console\\Kernel&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        },
+        {
+            &quot;file&quot;: &quot;/var/www/ecommerce_api/api/artisan&quot;,
+            &quot;line&quot;: 13,
+            &quot;function&quot;: &quot;handleCommand&quot;,
+            &quot;class&quot;: &quot;Illuminate\\Foundation\\Application&quot;,
+            &quot;type&quot;: &quot;-&gt;&quot;
+        }
+    ]
 }</code>
  </pre>
     </span>
@@ -55479,10 +56710,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="GETapi-vendor-responses--id-"
-               value="2"
+               value="16"
                data-component="url">
     <br>
-<p>The ID of the response. Example: <code>2</code></p>
+<p>The ID of the response. Example: <code>16</code></p>
             </div>
                     </form>
 

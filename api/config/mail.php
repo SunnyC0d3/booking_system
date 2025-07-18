@@ -16,6 +16,11 @@ return [
 
     'default' => env('MAIL_MAILER', 'log'),
 
+    'admin_email' => env('ADMIN_EMAIL', 'admin@yoursite.com'),
+    'shipping_manager_email' => env('SHIPPING_MANAGER_EMAIL'),
+    'operations_email' => env('OPERATIONS_EMAIL'),
+    'customer_service_email' => env('CUSTOMER_SERVICE_EMAIL'),
+
     /*
     |--------------------------------------------------------------------------
     | Mailer Configurations

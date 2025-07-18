@@ -482,7 +482,7 @@ endpoints:
         name: shippingMethod_id
         description: 'The ID of the shippingMethod.'
         required: true
-        example: 16
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -499,7 +499,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      shippingMethod_id: 16
+      shippingMethod_id: 1
       shippingMethod: 1
     queryParameters: []
     cleanQueryParameters: []
@@ -597,7 +597,7 @@ endpoints:
         name: shippingMethod_id
         description: 'The ID of the shippingMethod.'
         required: true
-        example: 16
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -614,7 +614,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      shippingMethod_id: 16
+      shippingMethod_id: 1
       shippingMethod: 1
     queryParameters: []
     cleanQueryParameters: []
@@ -915,7 +915,7 @@ endpoints:
         name: shippingMethod_id
         description: 'The ID of the shippingMethod.'
         required: true
-        example: 16
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -932,7 +932,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      shippingMethod_id: 16
+      shippingMethod_id: 1
       shippingMethod: 1
     queryParameters: []
     cleanQueryParameters: []
@@ -1019,7 +1019,7 @@ endpoints:
         name: shippingMethod_id
         description: 'The ID of the shippingMethod.'
         required: true
-        example: 16
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -1036,7 +1036,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      shippingMethod_id: 16
+      shippingMethod_id: 1
       shippingMethod: 1
     queryParameters: []
     cleanQueryParameters: []
@@ -1113,7 +1113,7 @@ endpoints:
         name: shippingMethod_id
         description: 'The ID of the shippingMethod.'
         required: true
-        example: 16
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
@@ -1130,7 +1130,7 @@ endpoints:
         nullable: false
         custom: []
     cleanUrlParameters:
-      shippingMethod_id: 16
+      shippingMethod_id: 1
       shippingMethod: 1
     queryParameters: []
     cleanQueryParameters: []

@@ -158,6 +158,7 @@ class ShippingService
                 'FAILURE' => ShippingStatuses::FAILED,
             ];
 
+            $oldStatus = $shipment->status;
             $newStatus = $statusMapping[$trackingData['status']] ?? $shipment->status;
 
             $updateData = [
@@ -174,9 +175,13 @@ class ShippingService
 
             $shipment->update($updateData);
 
+            if ($oldStatus !== $newStatus && $this->shouldSendTrackingEmail($oldStatus, $newStatus)) {
+                $this->sendTrackingUpdateEmail($shipment, $trackingData);
+            }
+
             Log::info('Tracking status updated', [
                 'shipment_id' => $shipment->id,
-                'old_status' => $shipment->status,
+                'old_status' => $oldStatus,
                 'new_status' => $newStatus,
             ]);
 
@@ -329,6 +334,32 @@ class ShippingService
 
         } catch (Exception $e) {
             Log::error('Failed to send shipping notification', [
+                'shipment_id' => $shipment->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    protected function shouldSendTrackingEmail(string $oldStatus, string $newStatus): bool
+    {
+        $emailableStatuses = [
+            ShippingStatuses::IN_TRANSIT,
+            ShippingStatuses::OUT_FOR_DELIVERY,
+            ShippingStatuses::EXCEPTION,
+            ShippingStatuses::FAILED
+        ];
+
+        return in_array($newStatus, $emailableStatuses) && $oldStatus !== $newStatus;
+    }
+
+    protected function sendTrackingUpdateEmail(Shipment $shipment, array $trackingData): void
+    {
+        try {
+            $emailService = app(\App\Services\V1\Emails\Email::class);
+            $trackingEmailData = $emailService->formatTrackingData($shipment, $trackingData);
+            $emailService->sendTrackingUpdate($trackingEmailData, $shipment->order->user->email);
+        } catch (Exception $e) {
+            Log::error('Failed to send tracking update email', [
                 'shipment_id' => $shipment->id,
                 'error' => $e->getMessage(),
             ]);

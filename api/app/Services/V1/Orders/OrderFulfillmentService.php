@@ -24,9 +24,6 @@ class OrderFulfillmentService
         $this->emailService = $emailService;
     }
 
-    /**
-     * Process order fulfillment when order status changes
-     */
     public function processOrderStatusChange(Order $order, string $newStatus, string $oldStatus = null): void
     {
         Log::info('Processing order status change', [
@@ -64,9 +61,6 @@ class OrderFulfillmentService
         }
     }
 
-    /**
-     * Handle order confirmed - prepare for fulfillment
-     */
     protected function handleOrderConfirmed(Order $order): void
     {
         if (!$order->requiresShipping()) {
@@ -84,9 +78,6 @@ class OrderFulfillmentService
         }
     }
 
-    /**
-     * Handle order processing - create shipments
-     */
     protected function handleOrderProcessing(Order $order): void
     {
         if (!$order->requiresShipping()) {
@@ -102,9 +93,6 @@ class OrderFulfillmentService
         $order->update(['fulfillment_status' => FulfillmentStatuses::FULFILLED]);
     }
 
-    /**
-     * Handle order shipped status
-     */
     protected function handleOrderShipped(Order $order): void
     {
         $order->update([
@@ -116,9 +104,6 @@ class OrderFulfillmentService
         $this->sendShippingNotification($order);
     }
 
-    /**
-     * Handle order delivered status
-     */
     protected function handleOrderDelivered(Order $order): void
     {
         $order->update(['fulfillment_status' => FulfillmentStatuses::DELIVERED]);
@@ -127,9 +112,6 @@ class OrderFulfillmentService
         $this->sendDeliveryConfirmation($order);
     }
 
-    /**
-     * Handle order cancelled
-     */
     protected function handleOrderCancelled(Order $order): void
     {
         // Cancel any active shipments
@@ -141,9 +123,6 @@ class OrderFulfillmentService
         $order->update(['fulfillment_status' => FulfillmentStatuses::CANCELLED]);
     }
 
-    /**
-     * Create shipment for order
-     */
     protected function createShipmentForOrder(Order $order): Shipment
     {
         try {
@@ -169,9 +148,6 @@ class OrderFulfillmentService
         }
     }
 
-    /**
-     * Update order status based on shipment status changes
-     */
     public function processShipmentStatusChange(Shipment $shipment, string $newStatus, string $oldStatus = null): void
     {
         Log::info('Processing shipment status change', [
@@ -213,9 +189,6 @@ class OrderFulfillmentService
         }
     }
 
-    /**
-     * Handle shipment shipped
-     */
     protected function handleShipmentShipped(Shipment $shipment, Order $order): void
     {
         // Update order tracking number if not set
@@ -233,9 +206,6 @@ class OrderFulfillmentService
         $this->sendShippingNotification($order);
     }
 
-    /**
-     * Handle shipment in transit
-     */
     protected function handleShipmentInTransit(Shipment $shipment, Order $order): void
     {
         // Update to out for delivery if appropriate
@@ -245,9 +215,6 @@ class OrderFulfillmentService
         }
     }
 
-    /**
-     * Handle shipment delivered
-     */
     protected function handleShipmentDelivered(Shipment $shipment, Order $order): void
     {
         $deliveredStatusId = OrderStatus::where('name', OrderStatuses::DELIVERED)->value('id');
@@ -257,22 +224,16 @@ class OrderFulfillmentService
         $this->sendDeliveryConfirmation($order);
     }
 
-    /**
-     * Handle shipment failed or returned
-     */
     protected function handleShipmentFailed(Shipment $shipment, Order $order): void
     {
-        // Put order on hold for investigation
         $onHoldStatusId = OrderStatus::where('name', OrderStatuses::ON_HOLD)->value('id');
         $order->update(['status_id' => $onHoldStatusId]);
 
-        // Send notification to admin/customer service
-        $this->sendShippingIssueNotification($order, $shipment);
+        if ($this->shouldSendShippingAlert($shipment->status)) {
+            $this->sendShippingIssueNotification($order, $shipment);
+        }
     }
 
-    /**
-     * Check if order should auto-transition to processing
-     */
     protected function shouldAutoTransitionToProcessing(Order $order): bool
     {
         // Auto-transition if all items are in stock and shipping info is complete
@@ -281,9 +242,6 @@ class OrderFulfillmentService
             $this->allItemsInStock($order);
     }
 
-    /**
-     * Check if all order items are in stock
-     */
     protected function allItemsInStock(Order $order): bool
     {
         foreach ($order->orderItems as $item) {
@@ -304,9 +262,6 @@ class OrderFulfillmentService
         return true;
     }
 
-    /**
-     * Transition order to processing status
-     */
     protected function transitionOrderToProcessing(Order $order): void
     {
         $processingStatusId = OrderStatus::where('name', OrderStatuses::PROCESSING)->value('id');
@@ -317,9 +272,6 @@ class OrderFulfillmentService
         ]);
     }
 
-    /**
-     * Check if should auto-purchase shipping label
-     */
     protected function shouldAutoPurchaseLabel(Order $order): bool
     {
         // You can add business logic here
@@ -327,9 +279,6 @@ class OrderFulfillmentService
         return $order->getTotalAmountInPounds() >= 50;
     }
 
-    /**
-     * Check if shipment is near delivery
-     */
     protected function isNearDelivery(Shipment $shipment): bool
     {
         if (!$shipment->estimated_delivery) {
@@ -340,14 +289,14 @@ class OrderFulfillmentService
         return now()->diffInHours($shipment->estimated_delivery) <= 24;
     }
 
-    /**
-     * Send shipping notification email
-     */
     protected function sendShippingNotification(Order $order): void
     {
         try {
-            $orderData = $this->emailService->formatOrderData($order);
-            $this->emailService->sendShippingNotification($orderData, $order->user->email);
+            $shipment = $order->getActiveShipment();
+            if ($shipment) {
+                $shippingData = $this->emailService->formatShippingData($shipment);
+                $this->emailService->sendShippingConfirmation($shippingData, $order->user->email);
+            }
         } catch (Exception $e) {
             Log::error('Failed to send shipping notification', [
                 'order_id' => $order->id,
@@ -356,9 +305,6 @@ class OrderFulfillmentService
         }
     }
 
-    /**
-     * Send delivery confirmation email
-     */
     protected function sendDeliveryConfirmation(Order $order): void
     {
         try {
@@ -372,33 +318,76 @@ class OrderFulfillmentService
         }
     }
 
-    /**
-     * Send shipping issue notification
-     */
     protected function sendShippingIssueNotification(Order $order, Shipment $shipment): void
     {
         try {
-            // Send to admin/customer service
-            Log::warning('Shipping issue detected', [
+            // Format the shipment data for the email
+            $shipmentData = $this->emailService->formatShipmentData($shipment);
+
+            // Get admin/customer service email(s)
+            $adminEmails = $this->getAdminNotificationEmails();
+
+            // Send to each admin email
+            foreach ($adminEmails as $email) {
+                $this->emailService->sendShippingIssueAlert($shipmentData, $email);
+            }
+
+            // Also send to customer service if different from admin
+            $customerServiceEmail = config('mail.customer_service_email');
+            if ($customerServiceEmail && !in_array($customerServiceEmail, $adminEmails)) {
+                $this->emailService->sendShippingIssueAlert($shipmentData, $customerServiceEmail);
+            }
+
+            Log::info('Shipping issue notifications sent', [
                 'order_id' => $order->id,
                 'shipment_id' => $shipment->id,
                 'shipment_status' => $shipment->status,
+                'recipients_count' => count($adminEmails) + (isset($customerServiceEmail) ? 1 : 0)
             ]);
 
-            // You can implement admin notification email here
-            // $this->emailService->sendShippingIssueAlert($order, $shipment);
-        } catch (Exception $e) {
-            Log::error('Failed to send shipping issue notification', [
+        } catch (\Exception $e) {
+            Log::error('Failed to send shipping issue notifications', [
                 'order_id' => $order->id,
                 'shipment_id' => $shipment->id,
-                'error' => $e->getMessage(),
+                'error' => $e->getMessage()
             ]);
         }
     }
 
-    /**
-     * Process overdue shipments
-     */
+    protected function getAdminNotificationEmails(): array
+    {
+        $emails = [];
+
+        if ($adminEmail = config('mail.admin_email')) {
+            $emails[] = $adminEmail;
+        }
+
+        if ($shippingEmail = config('mail.shipping_manager_email')) {
+            $emails[] = $shippingEmail;
+        }
+
+        if ($operationsEmail = config('mail.operations_email')) {
+            $emails[] = $operationsEmail;
+        }
+
+        if (empty($emails)) {
+            $emails[] = config('mail.from.address');
+        }
+
+        return array_unique($emails);
+    }
+
+    protected function shouldSendShippingAlert(string $status): bool
+    {
+        return in_array($status, [
+            ShippingStatuses::FAILED,
+            ShippingStatuses::RETURNED,
+            ShippingStatuses::EXCEPTION,
+            ShippingStatuses::LOST,
+            ShippingStatuses::DAMAGED,
+        ]);
+    }
+
     public function processOverdueShipments(): int
     {
         $overdueShipments = Shipment::where('estimated_delivery', '<', now())
@@ -424,12 +413,8 @@ class OrderFulfillmentService
         return $processedCount;
     }
 
-    /**
-     * Handle overdue shipment
-     */
     protected function handleOverdueShipment(Shipment $shipment): void
     {
-        // Try to update tracking status first
         try {
             $this->shippingService->updateTrackingStatus($shipment);
         } catch (Exception $e) {
@@ -439,21 +424,16 @@ class OrderFulfillmentService
             ]);
         }
 
-        // Send delay notification if still overdue
         if ($shipment->estimated_delivery < now() && !$shipment->isDelivered()) {
             $this->sendDelayNotification($shipment);
         }
     }
 
-    /**
-     * Send delay notification
-     */
     protected function sendDelayNotification(Shipment $shipment): void
     {
         try {
             $orderData = $this->emailService->formatOrderData($shipment->order);
-            // You can implement delay notification email here
-            // $this->emailService->sendShippingDelayNotification($orderData, $shipment->order->user->email);
+            $this->emailService->sendShippingDelayNotification($orderData, $shipment->order->user->email);
 
             Log::info('Shipping delay notification sent', [
                 'order_id' => $shipment->order_id,
