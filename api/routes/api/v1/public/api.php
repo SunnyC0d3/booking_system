@@ -19,6 +19,7 @@ use App\Http\Controllers\V1\Public\ReviewResponseController;
 use App\Http\Controllers\V1\Public\ShippingAddressController;
 use App\Http\Controllers\V1\Public\ShippingCalculationController;
 use App\Http\Controllers\V1\Public\ShippingController;
+use App\Http\Controllers\V1\Public\CheckoutController;
 
 // Auth
 
@@ -111,6 +112,7 @@ Route::prefix('orders')
     ->group(function () {
         Route::get('/', 'index')->name('orders.index');
         Route::get('/{order}', 'show')->name('orders.show');
+        Route::post('/from-cart', 'create')->name('orders.create-from-cart');
     });
 
 // Returns
@@ -285,4 +287,14 @@ Route::prefix('my-shipments')
     ->group(function () {
         Route::get('/', 'getUserShipments')->name('my-shipments.index');
         Route::get('/{shipment}', 'getUserShipment')->name('my-shipments.show');
+    });
+
+// Checkout
+
+Route::prefix('checkout')
+    ->middleware(['auth:api', 'emailVerified', 'rate_limit:checkout'])
+    ->controller(CheckoutController::class)
+    ->group(function () {
+        Route::post('/summary', 'getCheckoutSummary')->name('checkout.summary');
+        Route::post('/validate', 'validateCheckout')->name('checkout.validate');
     });

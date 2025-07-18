@@ -12,3 +12,4 @@ Schedule::command(RevokeExpiredTokens::class)->everyThirtyMinutes();
 Schedule::command(CleanupExpiredCarts::class)->hourly();
 Schedule::command(CleanupEmptyCarts::class, ['--days=7'])->dailyAt('02:00');
 Schedule::command('inventory:check')->hourly();
+Schedule::command('orders:process-overdue-shipments')->hourly();

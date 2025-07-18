@@ -17,10 +17,12 @@ class Order
     use ApiResponses;
 
     private $inventoryService;
+    private CheckoutService $checkoutService;
 
-    public function __construct(InventoryAlertService $inventoryService)
+    public function __construct(InventoryAlertService $inventoryService, CheckoutService $checkoutService)
     {
         $this->inventoryService = $inventoryService;
+        $this->checkoutService = $checkoutService;
     }
 
     public function all(Request $request)
@@ -96,62 +98,22 @@ class Order
             return $this->error('You do not have the required permissions.', 403);
         }
 
-        DB::transaction(function () use ($data, $userId, &$order) {
-            $order = OrderDB::create([
+        try {
+            if (isset($data['from_cart']) && $data['from_cart']) {
+                return $this->createFromCart($userId, $data);
+            }
+
+            return $this->createManualOrder($userId, $data);
+
+        } catch (\Exception $e) {
+            Log::error('Order creation failed', [
                 'user_id' => $userId,
-                'status_id' => $data['status_id'],
-                'total_amount' => 0,
+                'error' => $e->getMessage(),
+                'data' => $data
             ]);
 
-            if (!empty($data['order_items'])) {
-                $totalInPennies = 0;
-                $orderItems = [];
-
-                foreach ($data['order_items'] as $item) {
-                    $priceInPennies = isset($item['price_pennies'])
-                        ? (int) $item['price_pennies']
-                        : (int) round($item['price'] * 100);
-
-                    $quantity = $item['quantity'];
-                    $lineTotal = $priceInPennies * $quantity;
-                    $totalInPennies += $lineTotal;
-
-                    $orderItem = $order->orderItems()->create([
-                        'product_id' => $item['product_id'],
-                        'product_variant_id' => $item['product_variant_id'] ?? null,
-                        'quantity' => $quantity,
-                        'price' => $priceInPennies,
-                    ]);
-
-                    $orderItems[] = $item;
-
-                    Log::info('Order item created', [
-                        'order_item_id' => $orderItem->id,
-                        'product_id' => $item['product_id'],
-                        'price_pennies' => $priceInPennies,
-                        'price_pounds' => $priceInPennies / 100,
-                        'quantity' => $quantity,
-                        'line_total_pennies' => $lineTotal,
-                        'line_total_pounds' => $lineTotal / 100
-                    ]);
-                }
-
-                $order->setTotalAmountFromPennies($totalInPennies);
-                $order->save();
-
-                $this->updateInventoryAfterOrder($orderItems);
-
-                Log::info('Order total calculated', [
-                    'order_id' => $order->id,
-                    'total_pennies' => $totalInPennies,
-                    'total_pounds' => $totalInPennies / 100
-                ]);
-            }
-        });
-
-        $order->load(['user', 'orderItems.product', 'orderItems.productVariant', 'orderItems.orderReturn.status', 'status']);
-
-        return $this->ok('Order created successfully.', new OrderResource($order));
+            return $this->error('Failed to create order: ' . $e->getMessage(), 500);
+        }
     }
 
     public function update(Request $request, OrderDB $order)
@@ -283,20 +245,98 @@ class Order
     protected function updateInventoryAfterOrder($orderItems)
     {
         foreach ($orderItems as $item) {
-            $product = Product::find($item['product_id']);
+            $productId = is_array($item) ? $item['product_id'] : $item->product_id;
+            $variantId = is_array($item) ? ($item['product_variant_id'] ?? null) : $item->product_variant_id;
+            $quantity = is_array($item) ? $item['quantity'] : $item->quantity;
+
+            $product = Product::find($productId);
 
             if ($product) {
-                $product->decrement('quantity', $item['quantity']);
+                $product->decrement('quantity', $quantity);
                 $this->inventoryService->checkProductStock($product->fresh());
             }
 
-            if (!empty($item['product_variant_id'])) {
-                $variant = ProductVariant::find($item['product_variant_id']);
+            if ($variantId) {
+                $variant = ProductVariant::find($variantId);
                 if ($variant) {
-                    $variant->decrement('quantity', $item['quantity']);
+                    $variant->decrement('quantity', $quantity);
                     $this->inventoryService->checkVariantStock($variant->fresh());
                 }
             }
         }
+    }
+
+    protected function createManualOrder(int $userId, array $data): \Illuminate\Http\JsonResponse
+    {
+        $order = null;
+
+        DB::transaction(function () use ($data, $userId, &$order) {
+            $order = OrderDB::create([
+                'user_id' => $userId,
+                'status_id' => $data['status_id'],
+                'shipping_method_id' => $data['shipping_method_id'] ?? null,
+                'shipping_address_id' => $data['shipping_address_id'] ?? null,
+                'shipping_cost' => isset($data['shipping_cost']) ? (int) round($data['shipping_cost'] * 100) : 0,
+                'shipping_notes' => $data['shipping_notes'] ?? null,
+                'total_amount' => 0,
+            ]);
+
+            if (!empty($data['order_items'])) {
+                $totalInPennies = 0;
+                $orderItems = [];
+
+                foreach ($data['order_items'] as $item) {
+                    $priceInPennies = isset($item['price_pennies'])
+                        ? (int) $item['price_pennies']
+                        : (int) round($item['price'] * 100);
+
+                    $quantity = $item['quantity'];
+                    $lineTotal = $priceInPennies * $quantity;
+                    $totalInPennies += $lineTotal;
+
+                    $orderItem = $order->orderItems()->create([
+                        'product_id' => $item['product_id'],
+                        'product_variant_id' => $item['product_variant_id'] ?? null,
+                        'quantity' => $quantity,
+                        'price' => $priceInPennies,
+                    ]);
+
+                    $orderItems[] = $item;
+                }
+
+                $totalWithShipping = $totalInPennies + $order->shipping_cost;
+                $order->setTotalAmountFromPennies($totalWithShipping);
+                $order->save();
+
+                $this->updateInventoryAfterOrder($orderItems);
+            }
+        });
+
+        $order->load(['user', 'orderItems.product', 'orderItems.productVariant', 'orderItems.orderReturn.status', 'status', 'shippingMethod', 'shippingAddress']);
+
+        return $this->ok('Order created successfully.', new OrderResource($order));
+    }
+
+    protected function createFromCart(int $userId, array $data): \Illuminate\Http\JsonResponse
+    {
+        $cart = Cart::where('user_id', $userId)->with('cartItems.product')->first();
+
+        if (!$cart || $cart->isEmpty()) {
+            return $this->error('Cart is empty.', 400);
+        }
+
+        $checkoutData = [
+            'shipping_method_id' => $data['shipping_method_id'] ?? null,
+            'shipping_address_id' => $data['shipping_address_id'] ?? null,
+            'shipping_notes' => $data['shipping_notes'] ?? null,
+        ];
+
+        $order = $this->checkoutService->createOrderFromCart($cart, $checkoutData);
+
+        $this->updateInventoryAfterOrder($order->orderItems->toArray());
+
+        $cart->cartItems()->delete();
+
+        return $this->ok('Order created successfully from cart.', new OrderResource($order));
     }
 }
