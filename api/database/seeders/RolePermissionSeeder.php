@@ -64,6 +64,16 @@ class RolePermissionSeeder extends Seeder
                 'view_shipments', 'create_shipments', 'edit_shipments', 'delete_shipments', 'manage_shipments',
                 'view_shipping_addresses', 'create_shipping_addresses', 'edit_shipping_addresses', 'delete_shipping_addresses',
                 'calculate_shipping', 'validate_addresses', 'purchase_labels', 'track_shipments',
+
+                // Dropshipping - Full Access
+                'view_suppliers', 'create_suppliers', 'edit_suppliers', 'delete_suppliers', 'approve_suppliers',
+                'manage_supplier_integrations', 'test_supplier_connections',
+                'view_supplier_products', 'sync_supplier_products', 'map_supplier_products', 'bulk_update_supplier_products', 'manage_product_mappings',
+                'view_dropship_orders', 'create_dropship_orders', 'edit_dropship_orders', 'cancel_dropship_orders', 'retry_dropship_orders', 'bulk_manage_dropship_orders',
+                'view_supplier_integrations', 'create_supplier_integrations', 'edit_supplier_integrations', 'delete_supplier_integrations', 'test_integrations', 'view_integration_logs',
+                'view_dropshipping_analytics', 'view_supplier_performance', 'view_profit_margins', 'export_dropshipping_data',
+                'manage_automated_fulfillment', 'configure_sync_settings', 'manage_markup_rules', 'override_supplier_prices',
+                'view_dropshipping_settings', 'edit_dropshipping_settings', 'manage_default_markups', 'configure_automation_rules',
             ],
 
             'Vendor Manager' => [
@@ -94,6 +104,15 @@ class RolePermissionSeeder extends Seeder
                 'view_shipping_methods', 'view_shipping_zones', 'view_shipping_rates',
                 'view_shipments', 'edit_shipments', 'manage_shipments',
                 'calculate_shipping', 'track_shipments',
+
+                // Dropshipping - Management Level
+                'view_suppliers', 'edit_suppliers',
+                'view_supplier_products', 'sync_supplier_products', 'map_supplier_products', 'manage_product_mappings',
+                'view_dropship_orders', 'create_dropship_orders', 'edit_dropship_orders', 'cancel_dropship_orders',
+                'view_supplier_integrations', 'test_integrations',
+                'view_dropshipping_analytics', 'view_supplier_performance', 'view_profit_margins',
+                'manage_automated_fulfillment', 'configure_sync_settings', 'manage_markup_rules',
+                'view_dropshipping_settings',
             ],
 
             'Vendor' => [
@@ -124,6 +143,13 @@ class RolePermissionSeeder extends Seeder
                 // Shipping Management - Vendor Level
                 'view_shipping_methods', 'view_shipping_zones', 'view_shipments',
                 'calculate_shipping', 'track_shipments',
+
+                // Dropshipping - Vendor Level
+                'view_suppliers',
+                'view_supplier_products',
+                'view_dropship_orders',
+                'view_supplier_performance',
+                'view_profit_margins',
             ],
 
             'Customer Service' => [
@@ -154,6 +180,12 @@ class RolePermissionSeeder extends Seeder
                 // Shipping Management - Customer Service Level
                 'view_shipping_methods', 'view_shipping_zones', 'view_shipments',
                 'edit_shipments', 'track_shipments', 'validate_addresses',
+
+                // Dropshipping - Customer Service Level
+                'view_suppliers',
+                'view_supplier_products',
+                'view_dropship_orders', 'edit_dropship_orders',
+                'view_dropshipping_analytics',
             ],
 
             'Content Manager' => [
@@ -182,6 +214,12 @@ class RolePermissionSeeder extends Seeder
 
                 // Shipping Management - Content Management Level
                 'view_shipping_methods', 'view_shipping_zones', 'calculate_shipping',
+
+                // Dropshipping - Content Management Level
+                'view_suppliers',
+                'view_supplier_products', 'sync_supplier_products', 'map_supplier_products',
+                'view_dropship_orders',
+                'view_dropshipping_analytics',
             ],
 
             'User' => [

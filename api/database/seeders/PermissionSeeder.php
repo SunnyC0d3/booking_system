@@ -1,3 +1,4 @@
+
 <?php
 
 namespace Database\Seeders;
@@ -204,6 +205,56 @@ class PermissionSeeder extends Seeder
             ['name' => 'validate_addresses'],
             ['name' => 'purchase_labels'],
             ['name' => 'track_shipments'],
+
+            // Dropshipping - Supplier Management
+            ['name' => 'view_suppliers'],
+            ['name' => 'create_suppliers'],
+            ['name' => 'edit_suppliers'],
+            ['name' => 'delete_suppliers'],
+            ['name' => 'approve_suppliers'],
+            ['name' => 'manage_supplier_integrations'],
+            ['name' => 'test_supplier_connections'],
+
+            // Dropshipping - Supplier Products
+            ['name' => 'view_supplier_products'],
+            ['name' => 'sync_supplier_products'],
+            ['name' => 'map_supplier_products'],
+            ['name' => 'bulk_update_supplier_products'],
+            ['name' => 'manage_product_mappings'],
+
+            // Dropshipping - Orders
+            ['name' => 'view_dropship_orders'],
+            ['name' => 'create_dropship_orders'],
+            ['name' => 'edit_dropship_orders'],
+            ['name' => 'cancel_dropship_orders'],
+            ['name' => 'retry_dropship_orders'],
+            ['name' => 'bulk_manage_dropship_orders'],
+
+            // Dropshipping - Integrations
+            ['name' => 'view_supplier_integrations'],
+            ['name' => 'create_supplier_integrations'],
+            ['name' => 'edit_supplier_integrations'],
+            ['name' => 'delete_supplier_integrations'],
+            ['name' => 'test_integrations'],
+            ['name' => 'view_integration_logs'],
+
+            // Dropshipping - Analytics & Reporting
+            ['name' => 'view_dropshipping_analytics'],
+            ['name' => 'view_supplier_performance'],
+            ['name' => 'view_profit_margins'],
+            ['name' => 'export_dropshipping_data'],
+
+            // Dropshipping - Automation & Configuration
+            ['name' => 'manage_automated_fulfillment'],
+            ['name' => 'configure_sync_settings'],
+            ['name' => 'manage_markup_rules'],
+            ['name' => 'override_supplier_prices'],
+
+            // Dropshipping - Settings
+            ['name' => 'view_dropshipping_settings'],
+            ['name' => 'edit_dropshipping_settings'],
+            ['name' => 'manage_default_markups'],
+            ['name' => 'configure_automation_rules'],
         ];
 
         $permissionsToInsert = array_map(function ($permission) {
