@@ -3,7 +3,6 @@
 namespace App\Services\V1\Dropshipping;
 
 use App\Models\Order;
-use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\Supplier;
 use App\Models\DropshipOrder;
@@ -11,6 +10,11 @@ use App\Models\DropshipOrderItem;
 use App\Models\ProductSupplierMapping;
 use App\Constants\DropshipStatuses;
 use App\Constants\OrderStatuses;
+use App\Events\DropshipOrderConfirmed;
+use App\Events\DropshipOrderShipped;
+use App\Events\DropshipOrderRetried;
+use App\Events\SupplierIntegrationFailed;
+use App\Events\SupplierPerformanceAlert;
 use App\Services\V1\Emails\Email;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -562,10 +566,8 @@ class DropshipOrderService
 
     public function markAsRejectedWithEmail(DropshipOrder $dropshipOrder, string $reason): void
     {
-        // Your existing rejection logic
         $dropshipOrder->markAsRejected($reason);
 
-        // Fire event for email notification
         event(new DropshipOrderRejected($dropshipOrder, $reason));
 
         Log::info('Dropship order rejected with email notification', [
@@ -576,13 +578,11 @@ class DropshipOrderService
 
     public function handleOrderDelayWithEmail(DropshipOrder $dropshipOrder, array $delayInfo): void
     {
-        // Update the order with delay information
         $dropshipOrder->update([
             'estimated_delivery' => $delayInfo['new_delivery'] ?? null,
             'notes' => ($dropshipOrder->notes ?? '') . "\nDelayed: " . ($delayInfo['reason'] ?? 'Unknown reason')
         ]);
 
-        // Fire event for email notification
         event(new DropshipOrderDelayed($dropshipOrder, $delayInfo));
 
         Log::info('Dropship order delay handled with email notification', [

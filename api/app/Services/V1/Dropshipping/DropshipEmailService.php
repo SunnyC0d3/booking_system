@@ -15,6 +15,8 @@ use App\Models\DropshipOrder;
 use App\Models\Supplier;
 use App\Models\User;
 use App\Models\Vendor;
+use App\Constants\DropshipStatuses;
+use App\Constants\SupplierStatuses;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 
@@ -448,8 +450,8 @@ class DropshipEmailService
 
             // Get today's issues
             $overdueOrders = DropshipOrder::overdue()->count();
-            $failedOrders = DropshipOrder::whereIn('status', ['rejected_by_supplier', 'cancelled'])->whereDate('updated_at', today())->count();
-            $supplierIssues = Supplier::where('status', 'inactive')->whereDate('updated_at', today())->count();
+            $failedOrders = DropshipOrder::whereIn('status', [DropshipStatuses::REJECTED_BY_SUPPLIER, DropshipStatuses::CANCELLED])->whereDate('updated_at', today())->count();
+            $supplierIssues = Supplier::where('status', SupplierStatuses::INACTIVE)->whereDate('updated_at', today())->count();
 
             if ($overdueOrders === 0 && $failedOrders === 0 && $supplierIssues === 0) {
                 return; // No issues to report
@@ -495,7 +497,7 @@ class DropshipEmailService
     private function getAffectedSuppliers(): array
     {
         return Supplier::whereHas('dropshipOrders', function ($query) {
-            $query->whereIn('status', ['rejected_by_supplier', 'cancelled'])
+            $query->whereIn('status', [DropshipStatuses::REJECTED_BY_SUPPLIER, DropshipStatuses::CANCELLED])
                 ->whereDate('updated_at', today());
         })
             ->limit(5)

@@ -3,9 +3,10 @@
 namespace App\Console\Commands;
 
 use App\Models\Vendor;
+use App\Services\V1\Dropshipping\DropshipEmailService;
 use Illuminate\Console\Command;
 
-class SendDailyDropshipReportsCommand extends Command
+class SendDailyDropshipReports extends Command
 {
     protected $signature = 'dropship:send-daily-reports';
     protected $description = 'Send daily dropshipping reports to admins and vendors';
@@ -33,7 +34,6 @@ class SendDailyDropshipReportsCommand extends Command
 
     private function generateVendorReport(Vendor $vendor): array
     {
-        // Generate report data for vendor
         return [
             'period' => now()->subWeek()->format('M j') . ' - ' . now()->format('M j, Y'),
             'total_orders' => 25,
