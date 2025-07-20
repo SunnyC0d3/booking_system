@@ -15,6 +15,8 @@ class DropshipStatuses
     public const REFUNDED = 'refunded';
     public const ON_HOLD = 'on_hold';
 
+    public const OUT_FOR_DELIVERY = 'Out for Delivery';
+
     public static function all(): array
     {
         return [
@@ -28,6 +30,7 @@ class DropshipStatuses
             self::REJECTED_BY_SUPPLIER,
             self::REFUNDED,
             self::ON_HOLD,
+            self::OUT_FOR_DELIVERY,
         ];
     }
 
