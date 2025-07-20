@@ -535,4 +535,217 @@ class DropshipOrderService
             ]);
         }
     }
+
+    public function markAsConfirmedWithEmail(DropshipOrder $dropshipOrder, string $supplierOrderId, array $supplierResponse = []): void
+    {
+        $dropshipOrder->markAsConfirmed($supplierOrderId, $supplierResponse);
+
+        event(new DropshipOrderConfirmed($dropshipOrder));
+
+        Log::info('Dropship order confirmed with email notification', [
+            'dropship_order_id' => $dropshipOrder->id,
+            'supplier_order_id' => $supplierOrderId
+        ]);
+    }
+
+    public function markAsShippedWithEmail(DropshipOrder $dropshipOrder, string $trackingNumber, ?string $carrier = null, ?\Carbon\Carbon $estimatedDelivery = null): void
+    {
+        $dropshipOrder->markAsShipped($trackingNumber, $carrier, $estimatedDelivery);
+
+        event(new DropshipOrderShipped($dropshipOrder));
+
+        Log::info('Dropship order shipped with email notification', [
+            'dropship_order_id' => $dropshipOrder->id,
+            'tracking_number' => $trackingNumber
+        ]);
+    }
+
+    public function markAsRejectedWithEmail(DropshipOrder $dropshipOrder, string $reason): void
+    {
+        // Your existing rejection logic
+        $dropshipOrder->markAsRejected($reason);
+
+        // Fire event for email notification
+        event(new DropshipOrderRejected($dropshipOrder, $reason));
+
+        Log::info('Dropship order rejected with email notification', [
+            'dropship_order_id' => $dropshipOrder->id,
+            'reason' => $reason
+        ]);
+    }
+
+    public function handleOrderDelayWithEmail(DropshipOrder $dropshipOrder, array $delayInfo): void
+    {
+        // Update the order with delay information
+        $dropshipOrder->update([
+            'estimated_delivery' => $delayInfo['new_delivery'] ?? null,
+            'notes' => ($dropshipOrder->notes ?? '') . "\nDelayed: " . ($delayInfo['reason'] ?? 'Unknown reason')
+        ]);
+
+        // Fire event for email notification
+        event(new DropshipOrderDelayed($dropshipOrder, $delayInfo));
+
+        Log::info('Dropship order delay handled with email notification', [
+            'dropship_order_id' => $dropshipOrder->id,
+            'days_delayed' => $delayInfo['days_delayed'] ?? 'unknown'
+        ]);
+    }
+
+    public function retryFailedOrderWithEmail(DropshipOrder $dropshipOrder, string $reason = null): bool
+    {
+        if (!$dropshipOrder->canRetry()) {
+            return false;
+        }
+
+        $attemptNumber = $dropshipOrder->retry_count + 1;
+
+        $dropshipOrder->incrementRetryCount();
+        $dropshipOrder->updateStatus(DropshipStatuses::PENDING);
+
+        event(new DropshipOrderRetried($dropshipOrder, $attemptNumber, $reason));
+
+        $success = $this->sendToSupplier($dropshipOrder);
+
+        Log::info('Dropship order retry attempted with email notification', [
+            'dropship_order_id' => $dropshipOrder->id,
+            'attempt' => $attemptNumber,
+            'success' => $success
+        ]);
+
+        return $success;
+    }
+
+    public function handleIntegrationFailure(Supplier $supplier, \Exception $exception, array $context = []): void
+    {
+        $integrationData = [
+            'type' => $supplier->integration_type,
+            'failed_at' => now()->toISOString(),
+            'error_message' => $exception->getMessage(),
+            'consecutive_failures' => $supplier->consecutive_failures + 1,
+            'last_successful_sync' => $supplier->last_successful_sync?->toISOString(),
+            'affected_operations' => $context['operations'] ?? [],
+            'pending_orders' => DropshipOrder::where('supplier_id', $supplier->id)
+                ->whereIn('status', [DropshipStatuses::PENDING])
+                ->count(),
+        ];
+
+        $supplier->increment('consecutive_failures');
+        $supplier->update(['last_failed_sync' => now()]);
+
+        event(new SupplierIntegrationFailed($supplier, $integrationData));
+
+        Log::error('Supplier integration failed with email notification', [
+            'supplier_id' => $supplier->id,
+            'error' => $exception->getMessage(),
+            'context' => $context
+        ]);
+    }
+
+    public function checkSupplierPerformance(Supplier $supplier): void
+    {
+        $performanceData = $this->calculateSupplierPerformance($supplier);
+
+        $alerts = [];
+
+        if ($performanceData['success_rate'] < 90) {
+            $alerts[] = 'Success rate below 90%';
+        }
+
+        if ($performanceData['avg_fulfillment_time'] > 5) {
+            $alerts[] = 'Average fulfillment time over 5 days';
+        }
+
+        if ($performanceData['failed_orders'] > 10) {
+            $alerts[] = 'High number of failed orders';
+        }
+
+        if (!empty($alerts)) {
+            $performanceData['metric'] = implode(', ', $alerts);
+            $performanceData['recommendations'] = $this->getPerformanceRecommendations($performanceData);
+            $performanceData['action_required'] = $performanceData['success_rate'] < 80;
+
+            event(new SupplierPerformanceAlert($supplier, $performanceData));
+
+            Log::warning('Supplier performance alert triggered', [
+                'supplier_id' => $supplier->id,
+                'alerts' => $alerts,
+                'performance' => $performanceData
+            ]);
+        }
+    }
+
+    private function calculateSupplierPerformance(Supplier $supplier): array
+    {
+        $orders = $supplier->dropshipOrders()
+            ->where('created_at', '>=', now()->subMonth())
+            ->get();
+
+        $totalOrders = $orders->count();
+        $successfulOrders = $orders->where('status', DropshipStatuses::DELIVERED)->count();
+        $failedOrders = $orders->whereIn('status', [
+            DropshipStatuses::REJECTED_BY_SUPPLIER,
+            DropshipStatuses::CANCELLED
+        ])->count();
+
+        $avgFulfillmentTime = $orders
+            ->whereNotNull('shipped_by_supplier_at')
+            ->whereNotNull('sent_to_supplier_at')
+            ->avg(function ($order) {
+                return $order->sent_to_supplier_at->diffInDays($order->shipped_by_supplier_at);
+            });
+
+        return [
+            'success_rate' => $totalOrders > 0 ? round(($successfulOrders / $totalOrders) * 100, 2) : 0,
+            'avg_fulfillment_time' => round($avgFulfillmentTime ?? 0, 1),
+            'orders_this_month' => $totalOrders,
+            'failed_orders' => $failedOrders,
+            'complaints' => 0,
+            'current_value' => $totalOrders > 0 ? round(($successfulOrders / $totalOrders) * 100, 2) : 0,
+            'threshold' => 90,
+            'detected_at' => now()->toISOString(),
+            'recent_issues' => $this->getRecentIssues($supplier),
+        ];
+    }
+
+    private function getPerformanceRecommendations(array $performanceData): array
+    {
+        $recommendations = [];
+
+        if ($performanceData['success_rate'] < 90) {
+            $recommendations[] = 'Review order processing workflow with supplier';
+            $recommendations[] = 'Implement quality control measures';
+        }
+
+        if ($performanceData['avg_fulfillment_time'] > 5) {
+            $recommendations[] = 'Discuss faster fulfillment options';
+            $recommendations[] = 'Consider backup suppliers for urgent orders';
+        }
+
+        if ($performanceData['failed_orders'] > 10) {
+            $recommendations[] = 'Analyze root causes of order failures';
+            $recommendations[] = 'Implement pre-order inventory verification';
+        }
+
+        return $recommendations;
+    }
+
+    private function getRecentIssues(Supplier $supplier): array
+    {
+        return $supplier->dropshipOrders()
+            ->whereIn('status', [
+                DropshipStatuses::REJECTED_BY_SUPPLIER,
+                DropshipStatuses::CANCELLED
+            ])
+            ->where('updated_at', '>=', now()->subWeek())
+            ->limit(5)
+            ->get()
+            ->map(function ($order) {
+                return [
+                    'type' => ucfirst(str_replace('_', ' ', $order->status)),
+                    'description' => "Order #{$order->order_id} - {$order->notes}",
+                    'date' => $order->updated_at->format('M j, Y'),
+                ];
+            })
+            ->toArray();
+    }
 }
