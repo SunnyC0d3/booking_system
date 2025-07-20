@@ -20,6 +20,7 @@ use App\Http\Controllers\V1\Public\ShippingAddressController;
 use App\Http\Controllers\V1\Public\ShippingCalculationController;
 use App\Http\Controllers\V1\Public\ShippingController;
 use App\Http\Controllers\V1\Public\CheckoutController;
+use App\Http\Controllers\V1\Public\VendorDropshippingController;
 
 // Auth
 
@@ -220,6 +221,26 @@ Route::prefix('vendor/responses')
 Route::get('vendor/unanswered-reviews', [ReviewResponseController::class, 'getUnansweredReviews'])
     ->middleware(['review.smart_throttle:dashboard,true', 'roles:vendor'])
     ->name('vendor.responses.unanswered');
+
+// Vendor Dropshipping (Read-Only Access)
+
+Route::prefix('vendor/dropshipping')
+    ->middleware(['auth:api', 'roles:vendor', 'emailVerified', 'rate_limit:dropshipping'])
+    ->controller(VendorDropshippingController::class)
+    ->group(function () {
+        Route::get('/dashboard', 'getDashboard')->name('vendor.dropshipping.dashboard');
+        Route::get('/orders', 'getDropshipOrders')->name('vendor.dropshipping.orders.index');
+        Route::get('/orders/{dropshipOrder}', 'getDropshipOrder')->name('vendor.dropshipping.orders.show');
+        Route::get('/suppliers', 'getSuppliers')->name('vendor.dropshipping.suppliers.index');
+        Route::get('/suppliers/{supplier}', 'getSupplier')->name('vendor.dropshipping.suppliers.show');
+        Route::get('/supplier-products', 'getSupplierProducts')->name('vendor.dropshipping.supplier-products.index');
+        Route::get('/supplier-products/{supplierProduct}', 'getSupplierProduct')->name('vendor.dropshipping.supplier-products.show');
+        Route::get('/product-mappings', 'getProductMappings')->name('vendor.dropshipping.product-mappings.index');
+        Route::get('/product-mappings/{productSupplierMapping}', 'getProductMapping')->name('vendor.dropshipping.product-mappings.show');
+        Route::get('/analytics', 'getAnalytics')->name('vendor.dropshipping.analytics');
+        Route::get('/profit-margins', 'getProfitMargins')->name('vendor.dropshipping.profit-margins');
+        Route::get('/supplier-performance', 'getSupplierPerformance')->name('vendor.dropshipping.supplier-performance');
+    });
 
 // Shipping Addresses (User-specific)
 

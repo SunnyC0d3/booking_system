@@ -25,6 +25,11 @@ use App\Http\Controllers\V1\Admin\ShippingMethodController;
 use App\Http\Controllers\V1\Admin\ShippingZoneController;
 use App\Http\Controllers\V1\Admin\ShippingRateController;
 use App\Http\Controllers\V1\Admin\ShipmentController;
+use App\Http\Controllers\V1\Admin\SupplierController;
+use App\Http\Controllers\V1\Admin\SupplierProductController;
+use App\Http\Controllers\V1\Admin\SupplierIntegrationController;
+use App\Http\Controllers\V1\Admin\ProductSupplierMappingController;
+use App\Http\Controllers\V1\Admin\DropshipOrderController;
 
 // Admin/Users
 
@@ -318,4 +323,100 @@ Route::prefix('admin/shipments')
         Route::post('/{shipment}/mark-shipped', 'markAsShipped')->name('admin.shipments.mark-shipped');
         Route::post('/bulk-update', 'bulkUpdate')->name('admin.shipments.bulk-update');
         Route::post('/orders/{order}/create-shipment', 'createFromOrder')->name('admin.shipments.create-from-order');
+    });
+
+// Admin/Suppliers
+
+Route::prefix('admin/suppliers')
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'rate_limit:admin'])
+    ->controller(SupplierController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('admin.suppliers.index');
+        Route::post('/', 'store')->name('admin.suppliers.store');
+        Route::get('/{supplier}', 'show')->name('admin.suppliers.show');
+        Route::put('/{supplier}', 'update')->name('admin.suppliers.update');
+        Route::delete('/{supplier}', 'destroy')->name('admin.suppliers.destroy');
+        Route::patch('/{supplier}/activate', 'activate')->name('admin.suppliers.activate');
+        Route::patch('/{supplier}/deactivate', 'deactivate')->name('admin.suppliers.deactivate');
+        Route::get('/{supplier}/stats', 'getStats')->name('admin.suppliers.stats');
+        Route::post('/{supplier}/test-connection', 'testConnection')->name('admin.suppliers.test-connection');
+    });
+
+// Admin/Supplier Products
+
+Route::prefix('admin/supplier-products')
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'rate_limit:admin'])
+    ->controller(SupplierProductController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('admin.supplier-products.index');
+        Route::post('/', 'store')->name('admin.supplier-products.store');
+        Route::get('/{supplierProduct}', 'show')->name('admin.supplier-products.show');
+        Route::put('/{supplierProduct}', 'update')->name('admin.supplier-products.update');
+        Route::delete('/{supplierProduct}', 'destroy')->name('admin.supplier-products.destroy');
+        Route::post('/suppliers/{supplier}/sync', 'syncFromSupplier')->name('admin.supplier-products.sync');
+        Route::post('/{supplierProduct}/map-to-product', 'mapToProduct')->name('admin.supplier-products.map');
+        Route::post('/bulk-update-stock', 'bulkUpdateStock')->name('admin.supplier-products.bulk-stock');
+        Route::post('/bulk-update-prices', 'bulkUpdatePrices')->name('admin.supplier-products.bulk-prices');
+        Route::post('/bulk-mark-status', 'bulkMarkStatus')->name('admin.supplier-products.bulk-status');
+    });
+
+// Admin/Supplier Integrations
+
+Route::prefix('admin/supplier-integrations')
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'rate_limit:admin'])
+    ->controller(SupplierIntegrationController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('admin.supplier-integrations.index');
+        Route::post('/', 'store')->name('admin.supplier-integrations.store');
+        Route::get('/{supplierIntegration}', 'show')->name('admin.supplier-integrations.show');
+        Route::put('/{supplierIntegration}', 'update')->name('admin.supplier-integrations.update');
+        Route::delete('/{supplierIntegration}', 'destroy')->name('admin.supplier-integrations.destroy');
+        Route::patch('/{supplierIntegration}/enable', 'enable')->name('admin.supplier-integrations.enable');
+        Route::patch('/{supplierIntegration}/disable', 'disable')->name('admin.supplier-integrations.disable');
+        Route::post('/{supplierIntegration}/test', 'testIntegration')->name('admin.supplier-integrations.test');
+        Route::post('/{supplierIntegration}/sync', 'syncNow')->name('admin.supplier-integrations.sync');
+        Route::post('/{supplierIntegration}/reset-failures', 'resetFailures')->name('admin.supplier-integrations.reset-failures');
+        Route::get('/{supplierIntegration}/logs', 'getLogs')->name('admin.supplier-integrations.logs');
+    });
+
+// Admin/Product Supplier Mappings
+
+Route::prefix('admin/product-supplier-mappings')
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'rate_limit:admin'])
+    ->controller(ProductSupplierMappingController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('admin.product-supplier-mappings.index');
+        Route::post('/', 'store')->name('admin.product-supplier-mappings.store');
+        Route::get('/{productSupplierMapping}', 'show')->name('admin.product-supplier-mappings.show');
+        Route::put('/{productSupplierMapping}', 'update')->name('admin.product-supplier-mappings.update');
+        Route::delete('/{productSupplierMapping}', 'destroy')->name('admin.product-supplier-mappings.destroy');
+        Route::patch('/{productSupplierMapping}/make-primary', 'makePrimary')->name('admin.product-supplier-mappings.make-primary');
+        Route::patch('/{productSupplierMapping}/activate', 'activate')->name('admin.product-supplier-mappings.activate');
+        Route::patch('/{productSupplierMapping}/deactivate', 'deactivate')->name('admin.product-supplier-mappings.deactivate');
+        Route::post('/{productSupplierMapping}/update-markup', 'updateMarkup')->name('admin.product-supplier-mappings.update-markup');
+        Route::post('/{productSupplierMapping}/sync-from-supplier', 'syncFromSupplier')->name('admin.product-supplier-mappings.sync-from-supplier');
+        Route::post('/bulk-update-settings', 'bulkUpdateSettings')->name('admin.product-supplier-mappings.bulk-settings');
+        Route::post('/bulk-sync-prices', 'bulkSyncPrices')->name('admin.product-supplier-mappings.bulk-sync-prices');
+        Route::get('/health-report', 'getHealthReport')->name('admin.product-supplier-mappings.health-report');
+    });
+
+// Admin/Dropship Orders
+
+Route::prefix('admin/dropship-orders')
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'rate_limit:admin'])
+    ->controller(DropshipOrderController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('admin.dropship-orders.index');
+        Route::post('/', 'store')->name('admin.dropship-orders.store');
+        Route::get('/stats', 'getStats')->name('admin.dropship-orders.stats');
+        Route::get('/{dropshipOrder}', 'show')->name('admin.dropship-orders.show');
+        Route::put('/{dropshipOrder}', 'update')->name('admin.dropship-orders.update');
+        Route::delete('/{dropshipOrder}', 'destroy')->name('admin.dropship-orders.destroy');
+        Route::post('/{dropshipOrder}/send-to-supplier', 'sendToSupplier')->name('admin.dropship-orders.send-to-supplier');
+        Route::post('/{dropshipOrder}/mark-confirmed', 'markAsConfirmed')->name('admin.dropship-orders.mark-confirmed');
+        Route::post('/{dropshipOrder}/mark-shipped', 'markAsShipped')->name('admin.dropship-orders.mark-shipped');
+        Route::post('/{dropshipOrder}/mark-delivered', 'markAsDelivered')->name('admin.dropship-orders.mark-delivered');
+        Route::post('/{dropshipOrder}/cancel', 'cancel')->name('admin.dropship-orders.cancel');
+        Route::post('/{dropshipOrder}/retry', 'retry')->name('admin.dropship-orders.retry');
+        Route::post('/bulk-update-status', 'bulkUpdateStatus')->name('admin.dropship-orders.bulk-status');
     });

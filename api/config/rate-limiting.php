@@ -68,8 +68,6 @@ return [
         'dashboard' => '30,1',      // 30 vendor dashboard requests per minute
     ],
 
-    // NEW: Missing rate limits from routes analysis
-
     'shipping' => [
         'attempts' => 50,           // 50 shipping requests per minute
         'decay_minutes' => 1,
