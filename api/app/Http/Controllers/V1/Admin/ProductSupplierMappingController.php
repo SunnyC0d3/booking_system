@@ -19,6 +19,7 @@ use App\Mail\BulkMappingUpdateCompletedMail;
 use App\Constants\DropshipProductSyncStatuses;
 use App\Constants\SupplierStatuses;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -43,13 +44,108 @@ class ProductSupplierMappingController extends Controller
     }
 
     /**
-     * Display a paginated listing of product supplier mappings with filtering
+     * Retrieve product supplier mappings
      *
-     * @param IndexProductSupplierMappingRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * Get a paginated list of all product supplier mappings with comprehensive filtering options.
+     * This endpoint supports filtering by product, supplier, status, mapping type, health status,
+     * and search queries. Essential for dropshipping management and monitoring.
+     *
+     * @group Product Supplier Mappings
+     * @authenticated
+     *
+     * @queryParam product_id integer optional Filter by product ID. Example: 123
+     * @queryParam supplier_id integer optional Filter by supplier ID. Example: 456
+     * @queryParam is_primary boolean optional Filter by primary mapping status. Example: true
+     * @queryParam is_active boolean optional Filter by active status. Example: true
+     * @queryParam markup_type string optional Filter by markup type (percentage, fixed). Example: percentage
+     * @queryParam auto_update_price boolean optional Filter by auto price update setting. Example: true
+     * @queryParam auto_update_stock boolean optional Filter by auto stock update setting. Example: true
+     * @queryParam health_status string optional Filter by health status (healthy, inactive, supplier_inactive, sync_issues). Example: healthy
+     * @queryParam search string optional Search in product or supplier names. Example: iPhone
+     * @queryParam page integer optional Page number for pagination. Default: 1. Example: 1
+     * @queryParam per_page integer optional Number of mappings per page (max 100). Default: 15. Example: 25
+     *
+     * @response 200 scenario="Success with mappings" {
+     *   "message": "Product supplier mappings retrieved successfully.",
+     *   "data": {
+     *     "data": [
+     *       {
+     *         "id": 1,
+     *         "product_id": 123,
+     *         "supplier_id": 456,
+     *         "supplier_product_id": 789,
+     *         "is_primary": true,
+     *         "is_active": true,
+     *         "markup_type": "percentage",
+     *         "markup_percentage": 25.50,
+     *         "fixed_markup": null,
+     *         "auto_update_price": true,
+     *         "auto_update_stock": true,
+     *         "auto_update_description": false,
+     *         "minimum_stock_threshold": 5,
+     *         "priority_order": 1,
+     *         "last_price_update": "2025-01-15T10:30:00.000000Z",
+     *         "last_stock_update": "2025-01-15T11:00:00.000000Z",
+     *         "product": {
+     *           "id": 123,
+     *           "name": "iPhone 15 Pro",
+     *           "sku": "IP15P-128-BLU",
+     *           "vendor": {
+     *             "id": 67,
+     *             "name": "Apple Store UK"
+     *           }
+     *         },
+     *         "supplier": {
+     *           "id": 456,
+     *           "name": "Tech Wholesale Ltd",
+     *           "status": "active",
+     *           "performance_rating": 4.8
+     *         },
+     *         "supplier_product": {
+     *           "id": 789,
+     *           "supplier_sku": "TWL-IP15P-128-BLU",
+     *           "supplier_price": 85000,
+     *           "supplier_price_formatted": "£850.00",
+     *           "stock_quantity": 25,
+     *           "is_active": true,
+     *           "sync_status": "synced",
+     *           "last_synced": "2025-01-15T09:45:00.000000Z"
+     *         },
+     *         "calculated_price": 106250,
+     *         "calculated_price_formatted": "£1,062.50",
+     *         "profit_margin": 21250,
+     *         "profit_margin_formatted": "£212.50",
+     *         "profit_percentage": 25.0,
+     *         "is_healthy": true,
+     *         "health_issues": [],
+     *         "performance_metrics": {
+     *           "order_count_30d": 15,
+     *           "success_rate": 98.5,
+     *           "avg_fulfillment_time": 2.3
+     *         },
+     *         "created_at": "2025-01-10T14:20:00.000000Z",
+     *         "updated_at": "2025-01-15T10:30:00.000000Z"
+     *       }
+     *     ],
+     *     "current_page": 1,
+     *     "per_page": 15,
+     *     "total": 247,
+     *     "last_page": 17
+     *   }
+     * }
+     *
+     * @response 403 scenario="Insufficient permissions" {
+     *   "message": "You do not have the required permissions."
+     * }
      */
-    public function index(IndexProductSupplierMappingRequest $request)
+    public function index(IndexProductSupplierMappingRequest $request): JsonResponse
     {
+        $user = $request->user();
+
+        if (!$user->hasPermission('view_supplier_products')) {
+            return $this->error('You do not have the required permissions.', 403);
+        }
+
         try {
             $data = $request->validated();
 
@@ -123,13 +219,92 @@ class ProductSupplierMappingController extends Controller
     }
 
     /**
-     * Store a newly created product supplier mapping
+     * Create a new product supplier mapping
      *
-     * @param StoreProductSupplierMappingRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * Create a new mapping between a product and supplier with pricing, markup, and automation settings.
+     * The system validates that the mapping doesn't already exist and handles primary mapping conflicts.
+     * Optionally sends notification emails to administrators.
+     *
+     * @group Product Supplier Mappings
+     * @authenticated
+     *
+     * @bodyParam product_id integer required The ID of the product to map. Example: 123
+     * @bodyParam supplier_id integer required The ID of the supplier to map. Example: 456
+     * @bodyParam supplier_product_id integer optional The ID of the supplier's product. Example: 789
+     * @bodyParam is_primary boolean optional Whether this is the primary supplier for the product. Default: false. Example: true
+     * @bodyParam is_active boolean optional Whether the mapping is active. Default: true. Example: true
+     * @bodyParam markup_type string required The type of markup (percentage, fixed). Example: percentage
+     * @bodyParam markup_percentage numeric optional Markup percentage (required if markup_type is percentage). Example: 25.50
+     * @bodyParam fixed_markup numeric optional Fixed markup amount in pence (required if markup_type is fixed). Example: 2000
+     * @bodyParam auto_update_price boolean optional Whether to automatically update product prices. Default: false. Example: true
+     * @bodyParam auto_update_stock boolean optional Whether to automatically update stock levels. Default: false. Example: true
+     * @bodyParam auto_update_description boolean optional Whether to automatically update descriptions. Default: false. Example: false
+     * @bodyParam minimum_stock_threshold integer optional Minimum stock level before alerts. Example: 5
+     * @bodyParam priority_order integer optional Priority order for multiple suppliers. Example: 1
+     *
+     * @response 200 scenario="Mapping created successfully" {
+     *   "message": "Product supplier mapping created successfully.",
+     *   "data": {
+     *     "id": 48,
+     *     "product_id": 123,
+     *     "supplier_id": 456,
+     *     "supplier_product_id": 789,
+     *     "is_primary": true,
+     *     "is_active": true,
+     *     "markup_type": "percentage",
+     *     "markup_percentage": 25.50,
+     *     "fixed_markup": null,
+     *     "auto_update_price": true,
+     *     "auto_update_stock": true,
+     *     "auto_update_description": false,
+     *     "minimum_stock_threshold": 5,
+     *     "priority_order": 1,
+     *     "product": {
+     *       "id": 123,
+     *       "name": "iPhone 15 Pro",
+     *       "primary_supplier_id": 456
+     *     },
+     *     "supplier": {
+     *       "id": 456,
+     *       "name": "Tech Wholesale Ltd",
+     *       "status": "active"
+     *     },
+     *     "supplier_product": {
+     *       "id": 789,
+     *       "supplier_sku": "TWL-IP15P-128-BLU",
+     *       "supplier_price": 85000,
+     *       "supplier_price_formatted": "£850.00"
+     *     },
+     *     "created_at": "2025-01-15T14:20:00.000000Z",
+     *     "updated_at": "2025-01-15T14:20:00.000000Z"
+     *   }
+     * }
+     *
+     * @response 403 scenario="Insufficient permissions" {
+     *   "message": "You do not have the required permissions."
+     * }
+     *
+     * @response 422 scenario="Validation errors" {
+     *   "errors": [
+     *     "The product id field is required.",
+     *     "The supplier id field is required.",
+     *     "The markup type field is required.",
+     *     "The markup percentage field is required when markup type is percentage."
+     *   ]
+     * }
+     *
+     * @response 400 scenario="Mapping already exists" {
+     *   "message": "A mapping between this product and supplier already exists."
+     * }
      */
-    public function store(StoreProductSupplierMappingRequest $request)
+    public function store(StoreProductSupplierMappingRequest $request): JsonResponse
     {
+        $user = $request->user();
+
+        if (!$user->hasPermission('manage_product_mappings')) {
+            return $this->error('You do not have the required permissions.', 403);
+        }
+
         try {
             $data = $request->validated();
 
@@ -191,14 +366,108 @@ class ProductSupplierMappingController extends Controller
     }
 
     /**
-     * Display the specified product supplier mapping
+     * Retrieve a specific product supplier mapping
      *
-     * @param Request $request
-     * @param ProductSupplierMapping $productSupplierMapping
-     * @return \Illuminate\Http\JsonResponse
+     * Get detailed information about a specific product supplier mapping including related
+     * product, supplier, and supplier product data. Shows calculated pricing, profit margins,
+     * and health status information.
+     *
+     * @group Product Supplier Mappings
+     * @authenticated
+     *
+     * @urlParam productSupplierMapping integer required The ID of the mapping to retrieve. Example: 48
+     *
+     * @response 200 scenario="Mapping found" {
+     *   "message": "Product supplier mapping retrieved successfully.",
+     *   "data": {
+     *     "id": 48,
+     *     "product_id": 123,
+     *     "supplier_id": 456,
+     *     "supplier_product_id": 789,
+     *     "is_primary": true,
+     *     "is_active": true,
+     *     "markup_type": "percentage",
+     *     "markup_percentage": 25.50,
+     *     "fixed_markup": null,
+     *     "auto_update_price": true,
+     *     "auto_update_stock": true,
+     *     "auto_update_description": false,
+     *     "minimum_stock_threshold": 5,
+     *     "priority_order": 1,
+     *     "last_price_update": "2025-01-15T10:30:00.000000Z",
+     *     "last_stock_update": "2025-01-15T11:00:00.000000Z",
+     *     "product": {
+     *       "id": 123,
+     *       "name": "iPhone 15 Pro",
+     *       "sku": "IP15P-128-BLU",
+     *       "current_price": 106250,
+     *       "current_price_formatted": "£1,062.50",
+     *       "vendor": {
+     *         "id": 67,
+     *         "name": "Apple Store UK"
+     *       }
+     *     },
+     *     "supplier": {
+     *       "id": 456,
+     *       "name": "Tech Wholesale Ltd",
+     *       "status": "active",
+     *       "performance_rating": 4.8,
+     *       "contact_email": "orders@techwholesale.co.uk"
+     *     },
+     *     "supplier_product": {
+     *       "id": 789,
+     *       "supplier_sku": "TWL-IP15P-128-BLU",
+     *       "supplier_price": 85000,
+     *       "supplier_price_formatted": "£850.00",
+     *       "stock_quantity": 25,
+     *       "is_active": true,
+     *       "sync_status": "synced",
+     *       "last_synced": "2025-01-15T09:45:00.000000Z",
+     *       "description": "iPhone 15 Pro 128GB Blue - Latest model"
+     *     },
+     *     "calculated_price": 106250,
+     *     "calculated_price_formatted": "£1,062.50",
+     *     "profit_margin": 21250,
+     *     "profit_margin_formatted": "£212.50",
+     *     "profit_percentage": 25.0,
+     *     "is_healthy": true,
+     *     "health_issues": [],
+     *     "performance_metrics": {
+     *       "order_count_30d": 15,
+     *       "success_rate": 98.5,
+     *       "avg_fulfillment_time": 2.3,
+     *       "customer_satisfaction": 4.7
+     *     },
+     *     "sync_history": [
+     *       {
+     *         "type": "price_update",
+     *         "timestamp": "2025-01-15T10:30:00.000000Z",
+     *         "old_value": 104000,
+     *         "new_value": 106250,
+     *         "status": "success"
+     *       }
+     *     ],
+     *     "created_at": "2025-01-10T14:20:00.000000Z",
+     *     "updated_at": "2025-01-15T10:30:00.000000Z"
+     *   }
+     * }
+     *
+     * @response 403 scenario="Insufficient permissions" {
+     *   "message": "You do not have the required permissions."
+     * }
+     *
+     * @response 404 scenario="Mapping not found" {
+     *   "message": "No query results for model [App\\Models\\ProductSupplierMapping] 999"
+     * }
      */
-    public function show(Request $request, ProductSupplierMapping $productSupplierMapping)
+    public function show(Request $request, ProductSupplierMapping $productSupplierMapping): JsonResponse
     {
+        $user = $request->user();
+
+        if (!$user->hasPermission('view_supplier_products')) {
+            return $this->error('You do not have the required permissions.', 403);
+        }
+
         try {
             Log::info('Retrieving product supplier mapping details', [
                 'user_id' => auth()->id(),
@@ -228,14 +497,90 @@ class ProductSupplierMappingController extends Controller
     }
 
     /**
-     * Update the specified product supplier mapping
+     * Update an existing product supplier mapping
      *
-     * @param UpdateProductSupplierMappingRequest $request
-     * @param ProductSupplierMapping $productSupplierMapping
-     * @return \Illuminate\Http\JsonResponse
+     * Update mapping details including pricing, markup settings, automation preferences, and status.
+     * The system validates status transitions and automatically updates product pricing when
+     * markup settings change and auto-pricing is enabled.
+     *
+     * @group Product Supplier Mappings
+     * @authenticated
+     *
+     * @urlParam productSupplierMapping integer required The ID of the mapping to update. Example: 48
+     *
+     * @bodyParam supplier_product_id integer optional The ID of the supplier's product. Example: 789
+     * @bodyParam is_primary boolean optional Whether this is the primary supplier for the product. Example: true
+     * @bodyParam is_active boolean optional Whether the mapping is active. Example: true
+     * @bodyParam markup_type string optional The type of markup (percentage, fixed). Example: percentage
+     * @bodyParam markup_percentage numeric optional Markup percentage (required if markup_type is percentage). Example: 30.00
+     * @bodyParam fixed_markup numeric optional Fixed markup amount in pence (required if markup_type is fixed). Example: 2500
+     * @bodyParam auto_update_price boolean optional Whether to automatically update product prices. Example: true
+     * @bodyParam auto_update_stock boolean optional Whether to automatically update stock levels. Example: true
+     * @bodyParam auto_update_description boolean optional Whether to automatically update descriptions. Example: false
+     * @bodyParam minimum_stock_threshold integer optional Minimum stock level before alerts. Example: 10
+     * @bodyParam priority_order integer optional Priority order for multiple suppliers. Example: 1
+     *
+     * @response 200 scenario="Mapping updated successfully" {
+     *   "message": "Product supplier mapping updated successfully.",
+     *   "data": {
+     *     "id": 48,
+     *     "product_id": 123,
+     *     "supplier_id": 456,
+     *     "supplier_product_id": 789,
+     *     "is_primary": true,
+     *     "is_active": true,
+     *     "markup_type": "percentage",
+     *     "markup_percentage": 30.00,
+     *     "auto_update_price": true,
+     *     "auto_update_stock": true,
+     *     "minimum_stock_threshold": 10,
+     *     "product": {
+     *       "id": 123,
+     *       "name": "iPhone 15 Pro",
+     *       "current_price": 110500,
+     *       "current_price_formatted": "£1,105.00"
+     *     },
+     *     "supplier": {
+     *       "id": 456,
+     *       "name": "Tech Wholesale Ltd"
+     *     },
+     *     "supplier_product": {
+     *       "id": 789,
+     *       "supplier_price": 85000,
+     *       "supplier_price_formatted": "£850.00"
+     *     },
+     *     "calculated_price": 110500,
+     *     "calculated_price_formatted": "£1,105.00",
+     *     "profit_margin": 25500,
+     *     "profit_margin_formatted": "£255.00",
+     *     "profit_percentage": 30.0,
+     *     "updated_at": "2025-01-15T15:30:00.000000Z"
+     *   }
+     * }
+     *
+     * @response 403 scenario="Insufficient permissions" {
+     *   "message": "You do not have the required permissions."
+     * }
+     *
+     * @response 422 scenario="Validation errors" {
+     *   "errors": [
+     *     "The markup percentage must be greater than 0.",
+     *     "The minimum stock threshold must be at least 0."
+     *   ]
+     * }
+     *
+     * @response 400 scenario="Invalid update" {
+     *   "message": "Cannot update inactive mapping to primary status."
+     * }
      */
-    public function update(UpdateProductSupplierMappingRequest $request, ProductSupplierMapping $productSupplierMapping)
+    public function update(UpdateProductSupplierMappingRequest $request, ProductSupplierMapping $productSupplierMapping): JsonResponse
     {
+        $user = $request->user();
+
+        if (!$user->hasPermission('manage_product_mappings')) {
+            return $this->error('You do not have the required permissions.', 403);
+        }
+
         try {
             $data = $request->validated();
 
@@ -318,14 +663,39 @@ class ProductSupplierMappingController extends Controller
     }
 
     /**
-     * Remove the specified product supplier mapping
+     * Delete a product supplier mapping
      *
-     * @param Request $request
-     * @param ProductSupplierMapping $productSupplierMapping
-     * @return \Illuminate\Http\JsonResponse
+     * Remove a product supplier mapping with an optional reason. If the mapping being deleted
+     * is the primary mapping, the system will automatically promote another active mapping
+     * to primary status. Cannot delete the only mapping for a product with active orders.
+     *
+     * @group Product Supplier Mappings
+     * @authenticated
+     *
+     * @urlParam productSupplierMapping integer required The ID of the mapping to delete. Example: 48
+     *
+     * @bodyParam reason string optional Reason for deletion. Example: Supplier no longer available
+     *
+     * @response 200 scenario="Mapping deleted successfully" {
+     *   "message": "Product supplier mapping deleted successfully."
+     * }
+     *
+     * @response 403 scenario="Insufficient permissions" {
+     *   "message": "You do not have the required permissions."
+     * }
+     *
+     * @response 400 scenario="Cannot delete mapping" {
+     *   "message": "Cannot delete the only mapping for a product with active orders."
+     * }
      */
-    public function destroy(Request $request, ProductSupplierMapping $productSupplierMapping)
+    public function destroy(Request $request, ProductSupplierMapping $productSupplierMapping): JsonResponse
     {
+        $user = $request->user();
+
+        if (!$user->hasPermission('manage_product_mappings')) {
+            return $this->error('You do not have the required permissions.', 403);
+        }
+
         try {
             Log::info('Deleting product supplier mapping', [
                 'user_id' => auth()->id(),
@@ -387,14 +757,53 @@ class ProductSupplierMappingController extends Controller
     }
 
     /**
-     * Make the specified mapping the primary one for its product
+     * Set mapping as primary supplier
      *
-     * @param Request $request
-     * @param ProductSupplierMapping $productSupplierMapping
-     * @return \Illuminate\Http\JsonResponse
+     * Make the specified mapping the primary supplier for its product. This automatically
+     * removes the primary status from any existing primary mapping and updates the product's
+     * primary supplier reference. Only active mappings can be set as primary.
+     *
+     * @group Product Supplier Mappings
+     * @authenticated
+     *
+     * @urlParam productSupplierMapping integer required The ID of the mapping to make primary. Example: 48
+     *
+     * @response 200 scenario="Mapping made primary successfully" {
+     *   "message": "Mapping set as primary successfully.",
+     *   "data": {
+     *     "id": 48,
+     *     "product_id": 123,
+     *     "supplier_id": 456,
+     *     "is_primary": true,
+     *     "is_active": true,
+     *     "product": {
+     *       "id": 123,
+     *       "name": "iPhone 15 Pro",
+     *       "primary_supplier_id": 456
+     *     },
+     *     "supplier": {
+     *       "id": 456,
+     *       "name": "Tech Wholesale Ltd"
+     *     }
+     *   }
+     * }
+     *
+     * @response 403 scenario="Insufficient permissions" {
+     *   "message": "You do not have the required permissions."
+     * }
+     *
+     * @response 400 scenario="Cannot make primary" {
+     *   "message": "Cannot make inactive mapping primary."
+     * }
      */
-    public function makePrimary(Request $request, ProductSupplierMapping $productSupplierMapping)
+    public function makePrimary(Request $request, ProductSupplierMapping $productSupplierMapping): JsonResponse
     {
+        $user = $request->user();
+
+        if (!$user->hasPermission('manage_product_mappings')) {
+            return $this->error('You do not have the required permissions.', 403);
+        }
+
         try {
             if (!$productSupplierMapping->is_active) {
                 Log::warning('Attempted to make inactive mapping primary', [
@@ -435,14 +844,45 @@ class ProductSupplierMappingController extends Controller
     }
 
     /**
-     * Activate the specified product supplier mapping
+     * Activate a product supplier mapping
      *
-     * @param Request $request
-     * @param ProductSupplierMapping $productSupplierMapping
-     * @return \Illuminate\Http\JsonResponse
+     * Activate the specified product supplier mapping, enabling it for dropship operations.
+     * This will restore automated sync operations if they were configured and allow the
+     * mapping to be used for order fulfillment.
+     *
+     * @group Product Supplier Mappings
+     * @authenticated
+     *
+     * @urlParam productSupplierMapping integer required The ID of the mapping to activate. Example: 48
+     *
+     * @response 200 scenario="Mapping activated successfully" {
+     *   "message": "Mapping activated successfully.",
+     *   "data": {
+     *     "id": 48,
+     *     "is_active": true,
+     *     "product": {
+     *       "id": 123,
+     *       "name": "iPhone 15 Pro"
+     *     },
+     *     "supplier": {
+     *       "id": 456,
+     *       "name": "Tech Wholesale Ltd"
+     *     }
+     *   }
+     * }
+     *
+     * @response 403 scenario="Insufficient permissions" {
+     *   "message": "You do not have the required permissions."
+     * }
      */
-    public function activate(Request $request, ProductSupplierMapping $productSupplierMapping)
+    public function activate(Request $request, ProductSupplierMapping $productSupplierMapping): JsonResponse
     {
+        $user = $request->user();
+
+        if (!$user->hasPermission('manage_product_mappings')) {
+            return $this->error('You do not have the required permissions.', 403);
+        }
+
         try {
             Log::info('Activating product supplier mapping', [
                 'user_id' => auth()->id(),
@@ -473,14 +913,50 @@ class ProductSupplierMappingController extends Controller
     }
 
     /**
-     * Deactivate the specified product supplier mapping
+     * Deactivate a product supplier mapping
      *
-     * @param Request $request
-     * @param ProductSupplierMapping $productSupplierMapping
-     * @return \Illuminate\Http\JsonResponse
+     * Deactivate the specified product supplier mapping, disabling it from dropship operations.
+     * This will pause automated sync operations and prevent the mapping from being used for
+     * new orders. Cannot deactivate the primary mapping if it's the only active mapping.
+     *
+     * @group Product Supplier Mappings
+     * @authenticated
+     *
+     * @urlParam productSupplierMapping integer required The ID of the mapping to deactivate. Example: 48
+     *
+     * @response 200 scenario="Mapping deactivated successfully" {
+     *   "message": "Mapping deactivated successfully.",
+     *   "data": {
+     *     "id": 48,
+     *     "is_active": false,
+     *     "is_primary": false,
+     *     "product": {
+     *       "id": 123,
+     *       "name": "iPhone 15 Pro"
+     *     },
+     *     "supplier": {
+     *       "id": 456,
+     *       "name": "Tech Wholesale Ltd"
+     *     }
+     *   }
+     * }
+     *
+     * @response 403 scenario="Insufficient permissions" {
+     *   "message": "You do not have the required permissions."
+     * }
+     *
+     * @response 400 scenario="Cannot deactivate" {
+     *   "message": "Cannot deactivate the only active mapping for this product."
+     * }
      */
-    public function deactivate(Request $request, ProductSupplierMapping $productSupplierMapping)
+    public function deactivate(Request $request, ProductSupplierMapping $productSupplierMapping): JsonResponse
     {
+        $user = $request->user();
+
+        if (!$user->hasPermission('manage_product_mappings')) {
+            return $this->error('You do not have the required permissions.', 403);
+        }
+
         try {
             Log::info('Deactivating product supplier mapping', [
                 'user_id' => auth()->id(),
@@ -511,14 +987,61 @@ class ProductSupplierMappingController extends Controller
     }
 
     /**
-     * Update markup settings for the specified mapping
+     * Update markup settings
      *
-     * @param Request $request
-     * @param ProductSupplierMapping $productSupplierMapping
-     * @return \Illuminate\Http\JsonResponse
+     * Update the markup configuration for the specified mapping including markup type and value.
+     * When apply_immediately is set to true, the system will instantly recalculate and update
+     * the product's selling price based on the new markup settings.
+     *
+     * @group Product Supplier Mappings
+     * @authenticated
+     *
+     * @urlParam productSupplierMapping integer required The ID of the mapping to update markup for. Example: 48
+     *
+     * @bodyParam markup_type string required The type of markup (percentage, fixed). Example: percentage
+     * @bodyParam markup_value numeric required The markup value (percentage or amount in pence). Example: 30.50
+     * @bodyParam apply_immediately boolean optional Whether to apply pricing changes immediately. Default: false. Example: true
+     *
+     * @response 200 scenario="Markup updated successfully" {
+     *   "message": "Markup updated successfully.",
+     *   "data": {
+     *     "id": 48,
+     *     "markup_type": "percentage",
+     *     "markup_percentage": 30.50,
+     *     "fixed_markup": null,
+     *     "supplier_product": {
+     *       "supplier_price": 85000,
+     *       "supplier_price_formatted": "£850.00"
+     *     },
+     *     "calculated_price": 110925,
+     *     "calculated_price_formatted": "£1,109.25",
+     *     "profit_margin": 25925,
+     *     "profit_margin_formatted": "£259.25",
+     *     "profit_percentage": 30.5,
+     *     "pricing_applied": true
+     *   }
+     * }
+     *
+     * @response 403 scenario="Insufficient permissions" {
+     *   "message": "You do not have the required permissions."
+     * }
+     *
+     * @response 422 scenario="Validation errors" {
+     *   "errors": [
+     *     "The markup type field is required.",
+     *     "The markup value field is required.",
+     *     "The markup value must be greater than 0."
+     *   ]
+     * }
      */
-    public function updateMarkup(Request $request, ProductSupplierMapping $productSupplierMapping)
+    public function updateMarkup(Request $request, ProductSupplierMapping $productSupplierMapping): JsonResponse
     {
+        $user = $request->user();
+
+        if (!$user->hasPermission('manage_product_mappings')) {
+            return $this->error('You do not have the required permissions.', 403);
+        }
+
         $request->validate([
             'markup_type' => 'required|string|in:percentage,fixed',
             'markup_value' => 'required|numeric|min:0',
@@ -581,14 +1104,64 @@ class ProductSupplierMappingController extends Controller
     }
 
     /**
-     * Sync product data from the supplier product
+     * Sync product data from supplier
      *
-     * @param Request $request
-     * @param ProductSupplierMapping $productSupplierMapping
-     * @return \Illuminate\Http\JsonResponse
+     * Manually trigger a synchronization of product data from the supplier product. This updates
+     * pricing, stock levels, and product information based on the current supplier data and
+     * the mapping's automation settings. Only works for active mappings with valid supplier products.
+     *
+     * @group Product Supplier Mappings
+     * @authenticated
+     *
+     * @urlParam productSupplierMapping integer required The ID of the mapping to sync from supplier. Example: 48
+     *
+     * @response 200 scenario="Sync completed successfully" {
+     *   "message": "Product synced from supplier successfully.",
+     *   "data": {
+     *     "id": 48,
+     *     "last_price_update": "2025-01-15T16:45:00.000000Z",
+     *     "last_stock_update": "2025-01-15T16:45:00.000000Z",
+     *     "product": {
+     *       "id": 123,
+     *       "current_price": 110925,
+     *       "current_price_formatted": "£1,109.25",
+     *       "stock_quantity": 25
+     *     },
+     *     "supplier_product": {
+     *       "supplier_price": 85000,
+     *       "supplier_price_formatted": "£850.00",
+     *       "stock_quantity": 25,
+     *       "last_synced": "2025-01-15T16:45:00.000000Z"
+     *     },
+     *     "sync_summary": {
+     *       "price_updated": true,
+     *       "stock_updated": true,
+     *       "description_updated": false,
+     *       "changes_applied": 2
+     *     }
+     *   }
+     * }
+     *
+     * @response 403 scenario="Insufficient permissions" {
+     *   "message": "You do not have the required permissions."
+     * }
+     *
+     * @response 400 scenario="Cannot sync" {
+     *   "message": "Cannot sync from inactive mapping."
+     * }
+     *
+     * @response 400 scenario="No supplier product" {
+     *   "message": "No supplier product found for this mapping."
+     * }
      */
-    public function syncFromSupplier(Request $request, ProductSupplierMapping $productSupplierMapping)
+    public function syncFromSupplier(Request $request, ProductSupplierMapping $productSupplierMapping): JsonResponse
     {
+        $user = $request->user();
+
+        if (!$user->hasPermission('manage_product_mappings')) {
+            return $this->error('You do not have the required permissions.', 403);
+        }
+
         try {
             if (!$productSupplierMapping->is_active) {
                 Log::warning('Attempted to sync from inactive mapping', [
@@ -638,14 +1211,53 @@ class ProductSupplierMappingController extends Controller
     }
 
     /**
-     * Bulk update settings for multiple mappings
+     * Bulk update mapping settings
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * Perform bulk operations on multiple product supplier mappings such as updating automation
+     * settings, stock thresholds, or other configuration options. This is useful for applying
+     * consistent settings across multiple mappings efficiently. Returns detailed results.
+     *
+     * @group Product Supplier Mappings
+     * @authenticated
+     *
+     * @bodyParam mapping_ids array required Array of mapping IDs to update. Example: [1, 2, 3]
+     * @bodyParam mapping_ids.* integer required Each mapping ID must be a valid integer. Example: 1
+     * @bodyParam auto_update_price boolean optional Whether to automatically update prices. Example: true
+     * @bodyParam auto_update_stock boolean optional Whether to automatically update stock levels. Example: true
+     * @bodyParam auto_update_description boolean optional Whether to automatically update descriptions. Example: false
+     * @bodyParam minimum_stock_threshold integer optional Minimum stock level before alerts. Example: 10
+     *
+     * @response 200 scenario="Bulk operation completed" {
+     *   "message": "Successfully updated settings for 3 mappings.",
+     *   "data": {
+     *     "updated_count": 3,
+     *     "applied_settings": {
+     *       "auto_update_price": true,
+     *       "auto_update_stock": true,
+     *       "minimum_stock_threshold": 10
+     *     }
+     *   }
+     * }
+     *
+     * @response 403 scenario="Insufficient permissions" {
+     *   "message": "You do not have the required permissions."
+     * }
+     *
+     * @response 422 scenario="Validation errors" {
+     *   "errors": [
+     *     "The mapping ids field is required.",
+     *     "The mapping ids must contain at least 1 items.",
+     *     "The minimum stock threshold must be at least 0."
+     *   ]
+     * }
      */
-    public function bulkUpdateSettings(Request $request)
+    public function bulkUpdateSettings(Request $request): JsonResponse
     {
-        $this->middleware('permission:bulk_update_supplier_products');
+        $user = $request->user();
+
+        if (!$user->hasPermission('bulk_update_supplier_products')) {
+            return $this->error('You do not have the required permissions.', 403);
+        }
 
         $request->validate([
             'mapping_ids' => 'required|array|min:1',
@@ -695,14 +1307,45 @@ class ProductSupplierMappingController extends Controller
     }
 
     /**
-     * Bulk sync prices for multiple mappings
+     * Bulk sync prices from suppliers
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * Perform bulk price synchronization for multiple product supplier mappings. This fetches
+     * the latest supplier pricing and updates product prices according to each mapping's markup
+     * settings. Only processes active mappings with auto-pricing enabled. Returns detailed sync results.
+     *
+     * @group Product Supplier Mappings
+     * @authenticated
+     *
+     * @bodyParam mapping_ids array required Array of mapping IDs to sync prices for. Example: [1, 2, 3]
+     * @bodyParam mapping_ids.* integer required Each mapping ID must be a valid integer. Example: 1
+     *
+     * @response 200 scenario="Bulk sync completed" {
+     *   "message": "Bulk price sync completed.",
+     *   "data": {
+     *     "synced": 2,
+     *     "failed": 0,
+     *     "skipped": 1
+     *   }
+     * }
+     *
+     * @response 403 scenario="Insufficient permissions" {
+     *   "message": "You do not have the required permissions."
+     * }
+     *
+     * @response 422 scenario="Validation errors" {
+     *   "errors": [
+     *     "The mapping ids field is required.",
+     *     "The mapping ids must contain at least 1 items."
+     *   ]
+     * }
      */
-    public function bulkSyncPrices(Request $request)
+    public function bulkSyncPrices(Request $request): JsonResponse
     {
-        $this->middleware('permission:bulk_update_supplier_products');
+        $user = $request->user();
+
+        if (!$user->hasPermission('bulk_update_supplier_products')) {
+            return $this->error('You do not have the required permissions.', 403);
+        }
 
         $request->validate([
             'mapping_ids' => 'required|array|min:1',
@@ -770,13 +1413,59 @@ class ProductSupplierMappingController extends Controller
     }
 
     /**
-     * Generate a comprehensive health report for all mappings
+     * Get comprehensive health report
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * Retrieve a comprehensive health report for all product supplier mappings including
+     * summary statistics, health issues identification, sync status monitoring, and performance
+     * metrics. Essential for system monitoring and identifying potential problems.
+     *
+     * @group Product Supplier Mappings
+     * @authenticated
+     *
+     * @response 200 scenario="Health report generated successfully" {
+     *   "message": "Health report generated successfully.",
+     *   "data": {
+     *     "summary": {
+     *       "total_mappings": 247,
+     *       "active_mappings": 198,
+     *       "primary_mappings": 156,
+     *       "auto_price_sync_enabled": 145,
+     *       "auto_stock_sync_enabled": 167
+     *     },
+     *     "health_issues": {
+     *       "inactive_mappings": 49,
+     *       "missing_supplier_products": 12,
+     *       "inactive_supplier_products": 23,
+     *       "sync_failed_products": 8,
+     *       "low_stock_suppliers": 15,
+     *       "inactive_suppliers": 5
+     *     },
+     *     "sync_status": {
+     *       "recent_price_updates": 67,
+     *       "recent_stock_updates": 89,
+     *       "outdated_price_sync": 23,
+     *       "outdated_stock_sync": 14
+     *     },
+     *     "performance_metrics": {
+     *       "avg_markup_percentage": 28.5,
+     *       "avg_fixed_markup": 1250,
+     *       "most_used_markup_type": "percentage"
+     *     }
+     *   }
+     * }
+     *
+     * @response 403 scenario="Insufficient permissions" {
+     *   "message": "You do not have the required permissions."
+     * }
      */
-    public function getHealthReport(Request $request)
+    public function getHealthReport(Request $request): JsonResponse
     {
+        $user = $request->user();
+
+        if (!$user->hasPermission('view_supplier_products')) {
+            return $this->error('You do not have the required permissions.', 403);
+        }
+
         try {
             Log::info('Generating mapping health report', [
                 'user_id' => auth()->id()
