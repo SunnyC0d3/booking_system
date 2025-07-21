@@ -35,14 +35,6 @@ class ProductSupplierMappingController extends Controller
 {
     use ApiResponses;
 
-    public function __construct()
-    {
-        // Apply middleware and permissions for all methods
-        $this->middleware('auth:api');
-        $this->middleware('permission:manage_product_mappings')->except(['index', 'show', 'getHealthReport']);
-        $this->middleware('permission:view_supplier_products')->only(['index', 'show', 'getHealthReport']);
-    }
-
     /**
      * Retrieve product supplier mappings
      *

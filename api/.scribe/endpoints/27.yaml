@@ -1,51 +1,256 @@
-name: 'Vendor Profile'
+name: Authentication
 description: ''
 endpoints:
   -
     httpMethods:
-      - GET
-    uri: 'api/vendors/{id}'
+      - POST
+    uri: api/register
     metadata:
-      groupName: 'Vendor Profile'
+      groupName: Authentication
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Retrieve a specific vendor profile'
+      title: 'Register a new user'
       description: |-
-        Get detailed information about a specific vendor including their profile details, logo, and media.
-        This endpoint is typically used for vendor profile pages and allows authenticated users to view
-        vendor information. Vendors can view their own complete profile, while other users may see
-        limited public information depending on privacy settings.
+        Creates a new user account with email verification. The user will receive an email to verify their account.
+        Passwords must meet security requirements including minimum length, character diversity, and cannot be common passwords.
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        name: name
+        description: "The user's full name."
+        required: true
+        example: 'John Doe'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      email:
+        name: email
+        description: "The user's email address. Must be unique."
+        required: true
+        example: john@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      password:
+        name: password
+        description: "The user's password. Must be at least 12 characters with uppercase, lowercase, numbers, and symbols."
+        required: true
+        example: MySecurePass123!
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      password_confirmation:
+        name: password_confirmation
+        description: 'Password confirmation. Must match the password field.'
+        required: true
+        example: MySecurePass123!
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      name: 'John Doe'
+      email: john@example.com
+      password: MySecurePass123!
+      password_confirmation: MySecurePass123!
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "data": [],
+            "message": "User registered successfully.",
+            "status": 200
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "message": "Password does not meet security requirements.",
+            "errors": [
+              "Password must contain at least 1 uppercase letter(s).",
+              "Password cannot contain common words or patterns that are not secure."
+            ],
+            "strength": {
+              "score": 45,
+              "strength": "medium",
+              "feedback": ["Add special characters", "Use more unique characters"]
+            }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 423
+        content: |-
+          {
+            "message": "Registration temporarily blocked. Please try again later.",
+            "time_remaining_minutes": 15
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/login
+    metadata:
+      groupName: Authentication
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'User login'
+      description: 'Authenticates a user and returns an access token. Implements account lockout protection and tracks failed attempts.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      email:
+        name: email
+        description: "The user's email address."
+        required: true
+        example: john@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      password:
+        name: password
+        description: "The user's password."
+        required: true
+        example: MySecurePass123!
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      remember:
+        name: remember
+        description: 'optional Whether to remember the user for extended period.'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+    cleanBodyParameters:
+      email: john@example.com
+      password: MySecurePass123!
+      remember: true
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "data": {
+              "token_type": "Bearer",
+              "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...",
+              "expires_at": 1640995200,
+              "user": {
+                "id": 1,
+                "email": "john@example.com",
+                "role": "user"
+              }
+            },
+            "message": "User logged in successfully.",
+            "status": 200
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+            "message": "Invalid credentials"
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 423
+        content: |-
+          {
+            "message": "Account is temporarily locked due to multiple failed login attempts.",
+            "locked_until": "2024-01-15T15:30:00.000000Z",
+            "time_remaining_seconds": 1800,
+            "time_remaining_minutes": 30,
+            "lockout_count": 2
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 426
+        content: |-
+          {
+            "message": "Your password has expired and must be changed before logging in.",
+            "password_expired": true,
+            "change_password_required": true
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/logout
+    metadata:
+      groupName: Authentication
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'User logout'
+      description: 'Logs out the authenticated user and revokes their access token.'
       authenticated: true
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
-    urlParameters:
-      id:
-        name: id
-        description: 'The ID of the vendor.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      vendor:
-        name: vendor
-        description: 'The ID of the vendor to retrieve.'
-        required: true
-        example: 12
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      id: 1
-      vendor: 12
+    urlParameters: []
+    cleanUrlParameters: []
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -56,91 +261,12 @@ endpoints:
         status: 200
         content: |-
           {
-            "message": "Vendor details retrieved.",
-            "data": {
-              "id": 12,
-              "name": "TechCraft Solutions",
-              "description": "Innovative technology solutions for modern businesses. We specialize in custom software development, cloud services, and digital transformation consulting.",
-              "user": {
-                "id": 45,
-                "name": "Sarah Mitchell",
-                "email": "sarah@techcraft.com",
-                "email_verified_at": "2025-01-10T08:00:00.000000Z",
-                "created_at": "2024-12-15T10:30:00.000000Z",
-                "updated_at": "2025-01-16T09:15:00.000000Z"
-              },
-              "logo": "https://yourapi.com/storage/vendor-logos/techcraft-logo.jpg",
-              "media": [
-                {
-                  "id": 78,
-                  "url": "https://yourapi.com/storage/vendor-logos/techcraft-logo.jpg",
-                  "name": "TechCraft Logo",
-                  "file_name": "techcraft-logo.jpg",
-                  "mime_type": "image/jpeg",
-                  "size": 156789
-                }
-              ],
-              "products_count": 23,
-              "created_at": "2025-01-05T14:20:00.000000Z",
-              "updated_at": "2025-01-15T16:45:00.000000Z",
-              "deleted_at": null
-            }
+            "data": [],
+            "message": "User logged out successfully",
+            "status": 200
           }
         headers: []
-        description: 'Vendor profile retrieved successfully'
-        custom: []
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Vendor details retrieved.",
-            "data": {
-              "id": 8,
-              "name": "Startup Innovations",
-              "description": "New vendor focused on innovative product development",
-              "user": {
-                "id": 23,
-                "name": "Alex Johnson",
-                "email": "alex@startup-innovations.com",
-                "email_verified_at": "2025-01-14T10:00:00.000000Z"
-              },
-              "logo": "",
-              "media": [],
-              "products_count": 0,
-              "created_at": "2025-01-14T09:30:00.000000Z",
-              "updated_at": "2025-01-14T09:30:00.000000Z",
-              "deleted_at": null
-            }
-          }
-        headers: []
-        description: 'Vendor with no products'
-        custom: []
-      -
-        status: 401
-        content: |-
-          {
-            "message": "Unauthenticated."
-          }
-        headers: []
-        description: 'User not authenticated'
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-            "message": "You do not have the required permissions."
-          }
-        headers: []
-        description: 'Insufficient permissions'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "No query results for model [App\\Models\\Vendor] 999"
-          }
-        headers: []
-        description: 'Vendor not found'
+        description: ''
         custom: []
     responseFields: []
     auth:
@@ -154,249 +280,348 @@ endpoints:
   -
     httpMethods:
       - POST
-    uri: 'api/vendors/{id}'
+    uri: api/change-password
     metadata:
-      groupName: 'Vendor Profile'
+      groupName: Authentication
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Update vendor profile information'
-      description: |-
-        Update the authenticated vendor's profile information including business details, description, and logo.
-        Vendors can only update their own profiles. This endpoint supports partial updates - only provided
-        fields will be updated, others remain unchanged. Logo uploads are processed securely with validation.
+      title: 'Change password'
+      description: "Changes the authenticated user's password. Requires current password verification and validates new password strength."
       authenticated: true
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: multipart/form-data
+      Content-Type: application/json
       Accept: application/json
-    urlParameters:
-      id:
-        name: id
-        description: 'The ID of the vendor.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      vendor:
-        name: vendor
-        description: 'The ID of the vendor to update. Must belong to the authenticated user.'
-        required: true
-        example: 12
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      id: 1
-      vendor: 12
+    urlParameters: []
+    cleanUrlParameters: []
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
-      user_id:
-        name: user_id
-        description: 'optional The user ID associated with this vendor. Only admins can change this.'
-        required: false
-        example: 45
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      name:
-        name: name
-        description: "optional The vendor's business name. Will be used for public display."
-        required: false
-        example: 'TechCraft Solutions Ltd'
+      current_password:
+        name: current_password
+        description: "The user's current password."
+        required: true
+        example: MyOldPass123!
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-      description:
-        name: description
-        description: "optional Detailed description of the vendor's business, services, or products. Maximum 1000 characters."
-        required: false
-        example: 'Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud migration services, and digital transformation consulting with over 10 years of industry experience.'
+      new_password:
+        name: new_password
+        description: 'The new password. Must meet security requirements.'
+        required: true
+        example: MyNewSecurePass456!
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-      logo:
-        name: logo
-        description: 'optional New logo file for the vendor. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will replace existing logo if provided.'
-        required: false
-        example: null
-        type: file
+      new_password_confirmation:
+        name: new_password_confirmation
+        description: 'Confirmation of the new password.'
+        required: true
+        example: MyNewSecurePass456!
+        type: string
         enumValues: []
-        exampleWasSpecified: false
-        nullable: true
+        exampleWasSpecified: true
+        nullable: false
         custom: []
     cleanBodyParameters:
-      user_id: 45
-      name: 'TechCraft Solutions Ltd'
-      description: 'Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud migration services, and digital transformation consulting with over 10 years of industry experience.'
-    fileParameters:
-      logo: null
+      current_password: MyOldPass123!
+      new_password: MyNewSecurePass456!
+      new_password_confirmation: MyNewSecurePass456!
+    fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
-            "message": "Vendor updated successfully.",
             "data": {
-              "id": 12,
-              "name": "TechCraft Solutions Ltd",
-              "description": "Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud migration services, and digital transformation consulting with over 10 years of industry experience.",
-              "user": {
-                "id": 45,
-                "name": "Sarah Mitchell",
-                "email": "sarah@techcraft.com",
-                "email_verified_at": "2025-01-10T08:00:00.000000Z"
+              "password_strength": {
+                "score": 85,
+                "strength": "very strong",
+                "feedback": []
               },
-              "logo": "https://yourapi.com/storage/vendor-logos/new-techcraft-logo.jpg",
-              "media": [
-                {
-                  "id": 82,
-                  "url": "https://yourapi.com/storage/vendor-logos/new-techcraft-logo.jpg",
-                  "name": "Updated TechCraft Logo",
-                  "file_name": "new-techcraft-logo.jpg",
-                  "mime_type": "image/jpeg",
-                  "size": 189456
-                }
-              ],
-              "products_count": 23,
-              "created_at": "2025-01-05T14:20:00.000000Z",
-              "updated_at": "2025-01-16T11:30:00.000000Z",
-              "deleted_at": null
-            }
+              "security_score": {
+                "score": 95,
+                "level": "excellent",
+                "issues": []
+              }
+            },
+            "message": "Password changed successfully",
+            "status": 200
           }
         headers: []
-        description: 'Vendor profile updated successfully'
-        custom: []
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Vendor updated successfully.",
-            "data": {
-              "id": 12,
-              "name": "TechCraft Solutions Ltd",
-              "description": "Updated business description with new focus areas and expanded service offerings.",
-              "user": {
-                "id": 45,
-                "name": "Sarah Mitchell",
-                "email": "sarah@techcraft.com"
-              },
-              "logo": "https://yourapi.com/storage/vendor-logos/techcraft-logo.jpg",
-              "media": [
-                {
-                  "id": 78,
-                  "url": "https://yourapi.com/storage/vendor-logos/techcraft-logo.jpg",
-                  "name": "TechCraft Logo",
-                  "file_name": "techcraft-logo.jpg",
-                  "mime_type": "image/jpeg",
-                  "size": 156789
-                }
-              ],
-              "products_count": 23,
-              "created_at": "2025-01-05T14:20:00.000000Z",
-              "updated_at": "2025-01-16T11:45:00.000000Z",
-              "deleted_at": null
-            }
-          }
-        headers: []
-        description: 'Partial update without logo'
+        description: ''
         custom: []
       -
         status: 401
         content: |-
           {
-            "message": "Unauthenticated."
+            "message": "Current password is incorrect"
           }
         headers: []
-        description: 'User not authenticated'
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-            "message": "You do not have the required permissions."
-          }
-        headers: []
-        description: "Cannot update other vendor's profile"
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-            "message": "You do not have the required permissions."
-          }
-        headers: []
-        description: 'Insufficient permissions for user_id change'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "No query results for model [App\\Models\\Vendor] 999"
-          }
-        headers: []
-        description: 'Vendor not found'
-        custom: []
-      -
-        status: 413
-        content: |-
-          {
-            "message": "File too large. Maximum size is 2.0 MB."
-          }
-        headers: []
-        description: 'Logo file too large'
+        description: ''
         custom: []
       -
         status: 422
         content: |-
           {
+            "message": "New password does not meet security requirements.",
             "errors": [
-              "The name field is required.",
-              "The description may not be greater than 1000 characters.",
-              "The logo must be an image.",
-              "The logo may not be greater than 2048 kilobytes.",
-              "The logo must be a file of type: jpg, jpeg, png."
-            ]
+              "Password cannot be the same as your last 5 passwords."
+            ],
+            "strength": {
+              "score": 45,
+              "strength": "medium",
+              "feedback": ["Add special characters"]
+            }
           }
         headers: []
-        description: 'Validation errors'
-        custom: []
-      -
-        status: 422
-        content: |-
-          {
-            "message": "File type .gif not allowed. Allowed types: jpg, jpeg, png"
-          }
-        headers: []
-        description: 'Invalid file type'
-        custom: []
-      -
-        status: 500
-        content: |-
-          {
-            "message": "Failed to process logo file: Unable to write file to disk."
-          }
-        headers: []
-        description: 'Logo upload failed'
+        description: ''
         custom: []
     responseFields: []
     auth:
       - headers
       - Authorization
       - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/security-info
+    metadata:
+      groupName: Authentication
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get security information'
+      description: 'Retrieves comprehensive security information for the authenticated user including account lock status, security score, and password expiry details.'
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "data": {
+              "account_lock": {
+                "is_locked": false,
+                "failed_attempts": 0,
+                "max_attempts": 5,
+                "lockout_count": 0,
+                "locked_until": null,
+                "time_until_unlock": null,
+                "last_attempt_at": null,
+                "last_successful_login": "2024-01-15T10:30:00.000000Z",
+                "should_reset": false
+              },
+              "security_score": {
+                "score": 85,
+                "level": "good",
+                "issues": ["Medium strength password"]
+              },
+              "password_expiry": {
+                "requires_change": false,
+                "days_until_expiry": 45,
+                "last_changed": "2024-01-01T12:00:00.000000Z"
+              },
+              "login_history": {
+                "last_login": "2024-01-15T10:30:00.000000Z",
+                "last_login_ip": "192.168.1.100"
+              }
+            },
+            "message": "Security information retrieved",
+            "status": 200
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/forgot-password
+    metadata:
+      groupName: Authentication
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Forgot password'
+      description: "Sends a password reset link to the user's email address."
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      email:
+        name: email
+        description: "The user's email address."
+        required: true
+        example: john@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      email: john@example.com
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "data": [],
+            "message": "We have emailed your password reset link!",
+            "status": 200
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 423
+        content: |-
+          {
+            "message": "Password reset temporarily blocked. Please try again later."
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/reset-password
+    metadata:
+      groupName: Authentication
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Reset password'
+      description: "Resets the user's password using a valid reset token from the forgot password email."
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      token:
+        name: token
+        description: 'The password reset token from the email.'
+        required: true
+        example: abc123def456
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      email:
+        name: email
+        description: "The user's email address."
+        required: true
+        example: john@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      password:
+        name: password
+        description: 'The new password. Must meet security requirements.'
+        required: true
+        example: MyNewSecurePass456!
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      password_confirmation:
+        name: password_confirmation
+        description: 'Confirmation of the new password.'
+        required: true
+        example: MyNewSecurePass456!
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      token: abc123def456
+      email: john@example.com
+      password: MyNewSecurePass456!
+      password_confirmation: MyNewSecurePass456!
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "data": [],
+            "message": "Your password has been reset!",
+            "status": 200
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "message": "New password does not meet security requirements.",
+            "errors": [
+              "Password must contain at least 1 special character(s)."
+            ],
+            "strength": {
+              "score": 60,
+              "strength": "strong",
+              "feedback": ["Add special characters"]
+            }
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
     controller: null
     method: null
     route: null

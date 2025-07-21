@@ -1,342 +1,21 @@
-name: 'Vendor Review Responses'
+name: 'User Orders'
 description: ''
 endpoints:
   -
     httpMethods:
-      - POST
-    uri: 'api/reviews/{review_id}/responses'
-    metadata:
-      groupName: 'Vendor Review Responses'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Store a new vendor response to a review'
-      description: |-
-        Allows vendors to respond to reviews on their products. Each vendor can only
-        respond once per review, but can edit their response within 24 hours.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      review_id:
-        name: review_id
-        description: 'The ID of the review.'
-        required: true
-        example: 16
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      review:
-        name: review
-        description: 'The ID of the review to respond to.'
-        required: true
-        example: 123
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      review_id: 16
-      review: 123
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      content:
-        name: content
-        description: 'Response content (10-1000 characters).'
-        required: true
-        example: '"Thank you for your feedback! We''re glad you enjoyed our product."'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      content: '"Thank you for your feedback! We''re glad you enjoyed our product."'
-    fileParameters: []
-    responses:
-      -
-        status: 201
-        content: |-
-          {
-            "message": "Response submitted successfully.",
-            "data": {
-              "id": 45,
-              "review_id": 123,
-              "vendor": {
-                "id": 15,
-                "name": "Tech Haven"
-              },
-              "user": {
-                "id": 12,
-                "name": "John Vendor"
-              },
-              "content": "Thank you for your feedback! We're glad you enjoyed our product.",
-              "is_approved": true,
-              "created_at": "2025-01-16T14:30:00.000000Z"
-            }
-          }
-        headers: []
-        description: 'Response created successfully'
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-            "message": "You can only respond to reviews on your products."
-          }
-        headers: []
-        description: 'Not authorized to respond'
-        custom: []
-      -
-        status: 409
-        content: |-
-          {
-            "message": "You have already responded to this review."
-          }
-        headers: []
-        description: 'Already responded'
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: 'api/reviews/{review_id}/responses/{id}'
-    metadata:
-      groupName: 'Vendor Review Responses'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Update an existing vendor response'
-      description: |-
-        Vendors can edit their response within 24 hours of creation.
-        After 24 hours, responses become locked to maintain transparency.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      review_id:
-        name: review_id
-        description: 'The ID of the review.'
-        required: true
-        example: 16
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      id:
-        name: id
-        description: 'The ID of the response.'
-        required: true
-        example: 16
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      review:
-        name: review
-        description: 'The ID of the review.'
-        required: true
-        example: 123
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      response:
-        name: response
-        description: 'The ID of the response to update.'
-        required: true
-        example: 45
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      review_id: 16
-      id: 16
-      review: 123
-      response: 45
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      content:
-        name: content
-        description: 'Updated response content (10-1000 characters).'
-        required: true
-        example: '"Thank you for your updated feedback!"'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      content: '"Thank you for your updated feedback!"'
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Response updated successfully.",
-            "data": {
-              "id": 45,
-              "content": "Thank you for your updated feedback!",
-              "updated_at": "2025-01-16T15:45:00.000000Z"
-            }
-          }
-        headers: []
-        description: 'Response updated successfully'
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-            "message": "You can only edit your responses within 24 hours of creation."
-          }
-        headers: []
-        description: 'Cannot edit response'
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - DELETE
-    uri: 'api/reviews/{review_id}/responses/{id}'
-    metadata:
-      groupName: 'Vendor Review Responses'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Delete a vendor response'
-      description: |-
-        Vendors can delete their response within 24 hours of creation.
-        This action is irreversible.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      review_id:
-        name: review_id
-        description: 'The ID of the review.'
-        required: true
-        example: 16
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      id:
-        name: id
-        description: 'The ID of the response.'
-        required: true
-        example: 16
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      review:
-        name: review
-        description: 'The ID of the review.'
-        required: true
-        example: 123
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      response:
-        name: response
-        description: 'The ID of the response to delete.'
-        required: true
-        example: 45
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      review_id: 16
-      id: 16
-      review: 123
-      response: 45
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Response deleted successfully."
-          }
-        headers: []
-        description: 'Response deleted successfully'
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-            "message": "You can only delete your responses within 24 hours of creation."
-          }
-        headers: []
-        description: 'Cannot delete response'
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
       - GET
-    uri: api/vendor/responses
+    uri: api/orders
     metadata:
-      groupName: 'Vendor Review Responses'
+      groupName: 'User Orders'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: "Get vendor's responses (for vendor dashboard)"
+      title: "Retrieve user's orders"
       description: |-
-        Retrieve all responses made by the authenticated vendor with filtering
-        and sorting options for vendor dashboard management.
+        Get a paginated list of orders for the authenticated user. This endpoint allows users to view
+        their order history with optional filtering by status. Orders include complete information about
+        items purchased, payment status, delivery details, and current order status. Users can only
+        access their own orders for privacy and security.
       authenticated: true
       custom: []
     headers:
@@ -346,43 +25,21 @@ endpoints:
     urlParameters: []
     cleanUrlParameters: []
     queryParameters:
-      product_id:
-        name: product_id
-        description: 'optional Filter by specific product ID.'
+      user_id:
+        name: user_id
+        description: 'optional Filter orders by user ID (must match authenticated user).'
         required: false
-        example: 15
+        example: 123
         type: integer
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-      rating:
-        name: rating
-        description: 'optional Filter by review ratings.'
+      status_id:
+        name: status_id
+        description: 'optional Filter orders by specific status ID. See order statuses endpoint for available options.'
         required: false
-        example:
-          - 1
-          - 2
-        type: 'string[]'
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      sort_by:
-        name: sort_by
-        description: 'optional Sort responses. Options: newest, oldest, rating_high, rating_low. Default: newest.'
-        required: false
-        example: newest
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      per_page:
-        name: per_page
-        description: 'optional Number of responses per page (1-50). Default: 15.'
-        required: false
-        example: 20
+        example: 2
         type: integer
         enumValues: []
         exampleWasSpecified: true
@@ -398,15 +55,42 @@ endpoints:
         exampleWasSpecified: true
         nullable: false
         custom: []
+      per_page:
+        name: per_page
+        description: 'optional Number of orders per page (max 50). Default: 15.'
+        required: false
+        example: 10
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
     cleanQueryParameters:
-      product_id: 15
-      rating:
-        - 1
-        - 2
-      sort_by: newest
-      per_page: 20
+      user_id: 123
+      status_id: 2
       page: 2
-    bodyParameters: []
+      per_page: 10
+    bodyParameters:
+      user_id:
+        name: user_id
+        description: 'The <code>id</code> of an existing record in the users table.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      status_id:
+        name: status_id
+        description: 'The <code>id</code> of an existing record in the order_statuses table.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
     cleanBodyParameters: []
     fileParameters: []
     responses:
@@ -414,39 +98,209 @@ endpoints:
         status: 200
         content: |-
           {
-            "message": "Your responses retrieved successfully.",
+            "message": "Orders retrieved successfully.",
             "data": {
               "data": [
                 {
                   "id": 45,
-                  "review": {
+                  "total_amount": 8498,
+                  "total_amount_formatted": "£84.98",
+                  "created_at": "2025-01-15T14:20:00.000000Z",
+                  "updated_at": "2025-01-16T09:45:00.000000Z",
+                  "deleted_at": null,
+                  "user": {
                     "id": 123,
-                    "rating": 4,
-                    "title": "Good product",
-                    "content": "Works well but could be better...",
-                    "user": {
-                      "name": "Customer Name"
-                    },
-                    "product": {
-                      "id": 15,
-                      "name": "Premium Wireless Earbuds"
-                    }
+                    "name": "Sarah Johnson",
+                    "email": "sarah.johnson@example.com",
+                    "email_verified_at": "2025-01-10T08:00:00.000000Z"
                   },
-                  "content": "Thank you for your feedback!",
-                  "is_approved": true,
-                  "created_at": "2025-01-16T14:30:00.000000Z",
-                  "can_edit": true,
-                  "can_delete": true
+                  "status": {
+                    "id": 4,
+                    "name": "Shipped"
+                  },
+                  "order_items": [
+                    {
+                      "id": 89,
+                      "quantity": 1,
+                      "price": 7999,
+                      "price_formatted": "£79.99",
+                      "line_total": 7999,
+                      "line_total_formatted": "£79.99",
+                      "created_at": "2025-01-15T14:20:00.000000Z",
+                      "product": {
+                        "id": 15,
+                        "name": "Wireless Bluetooth Headphones",
+                        "description": "Premium quality wireless headphones with active noise cancellation",
+                        "price": 7999,
+                        "price_formatted": "£79.99"
+                      },
+                      "product_variant": {
+                        "id": 24,
+                        "value": "White",
+                        "additional_price": 500,
+                        "additional_price_formatted": "£5.00",
+                        "product_attribute": {
+                          "id": 1,
+                          "name": "Color"
+                        }
+                      },
+                      "order_return": null
+                    },
+                    {
+                      "id": 90,
+                      "quantity": 1,
+                      "price": 499,
+                      "price_formatted": "£4.99",
+                      "line_total": 499,
+                      "line_total_formatted": "£4.99",
+                      "created_at": "2025-01-15T14:20:00.000000Z",
+                      "product": {
+                        "id": 28,
+                        "name": "USB-C Charging Cable",
+                        "description": "High-speed USB-C to USB-A charging cable",
+                        "price": 499,
+                        "price_formatted": "£4.99"
+                      },
+                      "product_variant": null,
+                      "order_return": null
+                    }
+                  ],
+                  "payments": [
+                    {
+                      "id": 67,
+                      "amount": 8498,
+                      "amount_formatted": "£84.98",
+                      "status": "Paid",
+                      "method": "stripe",
+                      "transaction_reference": "pi_1Hxxxxxxxxxxxx",
+                      "processed_at": "2025-01-15T14:22:00.000000Z",
+                      "created_at": "2025-01-15T14:21:00.000000Z"
+                    }
+                  ]
+                },
+                {
+                  "id": 38,
+                  "total_amount": 2999,
+                  "total_amount_formatted": "£29.99",
+                  "created_at": "2025-01-10T16:30:00.000000Z",
+                  "updated_at": "2025-01-12T11:15:00.000000Z",
+                  "deleted_at": null,
+                  "user": {
+                    "id": 123,
+                    "name": "Sarah Johnson",
+                    "email": "sarah.johnson@example.com",
+                    "email_verified_at": "2025-01-10T08:00:00.000000Z"
+                  },
+                  "status": {
+                    "id": 6,
+                    "name": "Delivered"
+                  },
+                  "order_items": [
+                    {
+                      "id": 75,
+                      "quantity": 1,
+                      "price": 2999,
+                      "price_formatted": "£29.99",
+                      "line_total": 2999,
+                      "line_total_formatted": "£29.99",
+                      "created_at": "2025-01-10T16:30:00.000000Z",
+                      "product": {
+                        "id": 22,
+                        "name": "Bluetooth Portable Speaker",
+                        "description": "Compact waterproof speaker with 12-hour battery",
+                        "price": 2999,
+                        "price_formatted": "£29.99"
+                      },
+                      "product_variant": null,
+                      "order_return": {
+                        "id": 12,
+                        "reason": "Product quality issue - speaker has crackling sound",
+                        "status": {
+                          "id": 3,
+                          "name": "Approved"
+                        },
+                        "created_at": "2025-01-14T09:30:00.000000Z",
+                        "updated_at": "2025-01-15T14:20:00.000000Z"
+                      }
+                    }
+                  ],
+                  "payments": [
+                    {
+                      "id": 58,
+                      "amount": 2999,
+                      "amount_formatted": "£29.99",
+                      "status": "Paid",
+                      "method": "stripe",
+                      "transaction_reference": "pi_1Gxxxxxxxxxx",
+                      "processed_at": "2025-01-10T16:32:00.000000Z",
+                      "created_at": "2025-01-10T16:31:00.000000Z"
+                    }
+                  ]
                 }
               ],
               "current_page": 1,
               "per_page": 15,
-              "total": 25,
-              "last_page": 2
+              "total": 12,
+              "last_page": 1,
+              "from": 1,
+              "to": 12,
+              "path": "https://yourapi.com/api/v1/orders",
+              "first_page_url": "https://yourapi.com/api/v1/orders?page=1",
+              "last_page_url": "https://yourapi.com/api/v1/orders?page=1",
+              "next_page_url": null,
+              "prev_page_url": null
             }
           }
         headers: []
-        description: 'Responses retrieved successfully'
+        description: 'User orders retrieved successfully'
+        custom: []
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Orders retrieved successfully.",
+            "data": {
+              "data": [],
+              "current_page": 1,
+              "per_page": 15,
+              "total": 0,
+              "last_page": 1,
+              "from": null,
+              "to": null
+            }
+          }
+        headers: []
+        description: 'No orders found for user'
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated."
+          }
+        headers: []
+        description: 'User not authenticated'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You can only access your own orders."
+          }
+        headers: []
+        description: "Access denied to other user's orders"
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "errors": [
+              "The user id must be an integer.",
+              "The status id must exist in order_statuses table."
+            ]
+          }
+        headers: []
+        description: 'Invalid filter parameters'
         custom: []
     responseFields: []
     auth:
@@ -460,14 +314,18 @@ endpoints:
   -
     httpMethods:
       - GET
-    uri: 'api/vendor/responses/{id}'
+    uri: 'api/orders/{id}'
     metadata:
-      groupName: 'Vendor Review Responses'
+      groupName: 'User Orders'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Get individual response details'
-      description: ''
+      title: 'Retrieve a specific order'
+      description: |-
+        Get detailed information about a specific order belonging to the authenticated user.
+        This includes complete order details, all purchased items with product information,
+        payment records, shipping status, and any returns or refunds. Users can only access
+        their own orders. This endpoint is perfect for order confirmation pages and order tracking.
       authenticated: true
       custom: []
     headers:
@@ -477,477 +335,245 @@ endpoints:
     urlParameters:
       id:
         name: id
-        description: 'The ID of the response.'
+        description: 'The ID of the order.'
         required: true
-        example: 16
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
+      order:
+        name: order
+        description: 'The ID of the order to retrieve. Must belong to the authenticated user.'
+        required: true
+        example: 45
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
     cleanUrlParameters:
-      id: 16
+      id: 1
+      order: 45
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
     responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Order retrieved successfully.",
+            "data": {
+              "id": 45,
+              "total_amount": 8498,
+              "total_amount_formatted": "£84.98",
+              "created_at": "2025-01-15T14:20:00.000000Z",
+              "updated_at": "2025-01-16T09:45:00.000000Z",
+              "deleted_at": null,
+              "user": {
+                "id": 123,
+                "name": "Sarah Johnson",
+                "email": "sarah.johnson@example.com",
+                "email_verified_at": "2025-01-10T08:00:00.000000Z",
+                "user_address": {
+                  "id": 45,
+                  "address_line1": "123 Oak Street",
+                  "address_line2": "Apartment 4B",
+                  "city": "London",
+                  "state": "England",
+                  "country": "United Kingdom",
+                  "postal_code": "SW1A 1AA"
+                }
+              },
+              "status": {
+                "id": 4,
+                "name": "Shipped"
+              },
+              "order_items": [
+                {
+                  "id": 89,
+                  "quantity": 1,
+                  "price": 7999,
+                  "price_formatted": "£79.99",
+                  "line_total": 7999,
+                  "line_total_formatted": "£79.99",
+                  "created_at": "2025-01-15T14:20:00.000000Z",
+                  "updated_at": "2025-01-15T14:20:00.000000Z",
+                  "product": {
+                    "id": 15,
+                    "name": "Wireless Bluetooth Headphones",
+                    "description": "Premium quality wireless headphones with active noise cancellation, 30-hour battery life, and superior sound quality.",
+                    "price": 7999,
+                    "price_formatted": "£79.99",
+                    "featured_image": "https://yourapi.com/storage/products/headphones-featured.jpg"
+                  },
+                  "product_variant": {
+                    "id": 24,
+                    "value": "White",
+                    "additional_price": 500,
+                    "additional_price_formatted": "£5.00",
+                    "quantity": 20,
+                    "product_attribute": {
+                      "id": 1,
+                      "name": "Color"
+                    }
+                  },
+                  "order_return": null
+                },
+                {
+                  "id": 90,
+                  "quantity": 1,
+                  "price": 499,
+                  "price_formatted": "£4.99",
+                  "line_total": 499,
+                  "line_total_formatted": "£4.99",
+                  "created_at": "2025-01-15T14:20:00.000000Z",
+                  "updated_at": "2025-01-15T14:20:00.000000Z",
+                  "product": {
+                    "id": 28,
+                    "name": "USB-C Charging Cable",
+                    "description": "High-speed USB-C to USB-A charging cable - 1 meter length",
+                    "price": 499,
+                    "price_formatted": "£4.99",
+                    "featured_image": "https://yourapi.com/storage/products/usb-cable-featured.jpg"
+                  },
+                  "product_variant": null,
+                  "order_return": null
+                }
+              ],
+              "payments": [
+                {
+                  "id": 67,
+                  "amount": 8498,
+                  "amount_formatted": "£84.98",
+                  "status": "Paid",
+                  "method": "stripe",
+                  "transaction_reference": "pi_1Hxxxxxxxxxxxx",
+                  "processed_at": "2025-01-15T14:22:00.000000Z",
+                  "created_at": "2025-01-15T14:21:00.000000Z",
+                  "updated_at": "2025-01-15T14:22:00.000000Z",
+                  "payment_method": {
+                    "id": 1,
+                    "name": "stripe"
+                  }
+                }
+              ]
+            }
+          }
+        headers: []
+        description: 'Order details retrieved successfully'
+        custom: []
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Order retrieved successfully.",
+            "data": {
+              "id": 38,
+              "total_amount": 2999,
+              "total_amount_formatted": "£29.99",
+              "created_at": "2025-01-10T16:30:00.000000Z",
+              "updated_at": "2025-01-15T11:30:00.000000Z",
+              "deleted_at": null,
+              "user": {
+                "id": 123,
+                "name": "Sarah Johnson",
+                "email": "sarah.johnson@example.com"
+              },
+              "status": {
+                "id": 8,
+                "name": "Partially Refunded"
+              },
+              "order_items": [
+                {
+                  "id": 75,
+                  "quantity": 1,
+                  "price": 2999,
+                  "price_formatted": "£29.99",
+                  "line_total": 2999,
+                  "line_total_formatted": "£29.99",
+                  "product": {
+                    "id": 22,
+                    "name": "Bluetooth Portable Speaker",
+                    "description": "Compact waterproof speaker with 12-hour battery"
+                  },
+                  "product_variant": null,
+                  "order_return": {
+                    "id": 12,
+                    "reason": "Product quality issue - speaker has crackling sound at high volume",
+                    "status": {
+                      "id": 7,
+                      "name": "Completed"
+                    },
+                    "created_at": "2025-01-14T09:30:00.000000Z",
+                    "updated_at": "2025-01-15T11:30:00.000000Z",
+                    "has_refunds": true,
+                    "total_refunded_amount": 2999,
+                    "total_refunded_amount_formatted": "£29.99",
+                    "order_refunds": [
+                      {
+                        "id": 8,
+                        "amount": 2999,
+                        "amount_formatted": "£29.99",
+                        "processed_at": "2025-01-15T11:25:00.000000Z",
+                        "notes": "Refund processed for defective product",
+                        "status": {
+                          "id": 3,
+                          "name": "Refunded"
+                        },
+                        "created_at": "2025-01-15T11:20:00.000000Z",
+                        "updated_at": "2025-01-15T11:25:00.000000Z"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "payments": [
+                {
+                  "id": 58,
+                  "amount": 2999,
+                  "amount_formatted": "£29.99",
+                  "status": "Partially Refunded",
+                  "method": "stripe",
+                  "transaction_reference": "pi_1Gxxxxxxxxxx",
+                  "processed_at": "2025-01-10T16:32:00.000000Z"
+                }
+              ]
+            }
+          }
+        headers: []
+        description: 'Order with returns and refunds'
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated."
+          }
+        headers: []
+        description: 'User not authenticated'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You can only access your own orders."
+          }
+        headers: []
+        description: "Access denied to other user's order"
+        custom: []
       -
         status: 404
         content: |-
           {
-              "message": "No query results for model [App\\Models\\ReviewResponse] 16",
-              "exception": "Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException",
-              "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php",
-              "line": 636,
-              "trace": [
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php",
-                      "line": 584,
-                      "function": "prepareException",
-                      "class": "Illuminate\\Foundation\\Exceptions\\Handler",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/nunomaduro/collision/src/Adapters/Laravel/ExceptionHandler.php",
-                      "line": 54,
-                      "function": "render",
-                      "class": "Illuminate\\Foundation\\Exceptions\\Handler",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Pipeline.php",
-                      "line": 51,
-                      "function": "render",
-                      "class": "NunoMaduro\\Collision\\Adapters\\Laravel\\ExceptionHandler",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
-                      "line": 214,
-                      "function": "handleException",
-                      "class": "Illuminate\\Routing\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
-                      "line": 127,
-                      "function": "Illuminate\\Pipeline\\{closure}",
-                      "class": "Illuminate\\Pipeline\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
-                      "line": 807,
-                      "function": "then",
-                      "class": "Illuminate\\Pipeline\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
-                      "line": 786,
-                      "function": "runRouteWithinStack",
-                      "class": "Illuminate\\Routing\\Router",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
-                      "line": 750,
-                      "function": "runRoute",
-                      "class": "Illuminate\\Routing\\Router",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
-                      "line": 739,
-                      "function": "dispatchToRoute",
-                      "class": "Illuminate\\Routing\\Router",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php",
-                      "line": 201,
-                      "function": "dispatch",
-                      "class": "Illuminate\\Routing\\Router",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
-                      "line": 170,
-                      "function": "Illuminate\\Foundation\\Http\\{closure}",
-                      "class": "Illuminate\\Foundation\\Http\\Kernel",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php",
-                      "line": 21,
-                      "function": "Illuminate\\Pipeline\\{closure}",
-                      "class": "Illuminate\\Pipeline\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php",
-                      "line": 31,
-                      "function": "handle",
-                      "class": "Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
-                      "line": 209,
-                      "function": "handle",
-                      "class": "Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php",
-                      "line": 21,
-                      "function": "Illuminate\\Pipeline\\{closure}",
-                      "class": "Illuminate\\Pipeline\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php",
-                      "line": 51,
-                      "function": "handle",
-                      "class": "Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
-                      "line": 209,
-                      "function": "handle",
-                      "class": "Illuminate\\Foundation\\Http\\Middleware\\TrimStrings",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php",
-                      "line": 27,
-                      "function": "Illuminate\\Pipeline\\{closure}",
-                      "class": "Illuminate\\Pipeline\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
-                      "line": 209,
-                      "function": "handle",
-                      "class": "Illuminate\\Http\\Middleware\\ValidatePostSize",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php",
-                      "line": 110,
-                      "function": "Illuminate\\Pipeline\\{closure}",
-                      "class": "Illuminate\\Pipeline\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
-                      "line": 209,
-                      "function": "handle",
-                      "class": "Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php",
-                      "line": 49,
-                      "function": "Illuminate\\Pipeline\\{closure}",
-                      "class": "Illuminate\\Pipeline\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
-                      "line": 209,
-                      "function": "handle",
-                      "class": "Illuminate\\Http\\Middleware\\HandleCors",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php",
-                      "line": 58,
-                      "function": "Illuminate\\Pipeline\\{closure}",
-                      "class": "Illuminate\\Pipeline\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
-                      "line": 209,
-                      "function": "handle",
-                      "class": "Illuminate\\Http\\Middleware\\TrustProxies",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php",
-                      "line": 22,
-                      "function": "Illuminate\\Pipeline\\{closure}",
-                      "class": "Illuminate\\Pipeline\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
-                      "line": 209,
-                      "function": "handle",
-                      "class": "Illuminate\\Foundation\\Http\\Middleware\\InvokeDeferredCallbacks",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
-                      "line": 127,
-                      "function": "Illuminate\\Pipeline\\{closure}",
-                      "class": "Illuminate\\Pipeline\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php",
-                      "line": 176,
-                      "function": "then",
-                      "class": "Illuminate\\Pipeline\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php",
-                      "line": 145,
-                      "function": "sendRequestThroughRouter",
-                      "class": "Illuminate\\Foundation\\Http\\Kernel",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
-                      "line": 310,
-                      "function": "handle",
-                      "class": "Illuminate\\Foundation\\Http\\Kernel",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
-                      "line": 298,
-                      "function": "callLaravelOrLumenRoute",
-                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
-                      "line": 91,
-                      "function": "makeApiCall",
-                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
-                      "line": 44,
-                      "function": "makeResponseCall",
-                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
-                      "line": 35,
-                      "function": "makeResponseCallIfConditionsPass",
-                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php",
-                      "line": 237,
-                      "function": "__invoke",
-                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php",
-                      "line": 163,
-                      "function": "iterateThroughStrategies",
-                      "class": "Knuckles\\Scribe\\Extracting\\Extractor",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php",
-                      "line": 95,
-                      "function": "fetchResponses",
-                      "class": "Knuckles\\Scribe\\Extracting\\Extractor",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php",
-                      "line": 125,
-                      "function": "processRoute",
-                      "class": "Knuckles\\Scribe\\Extracting\\Extractor",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php",
-                      "line": 72,
-                      "function": "extractEndpointsInfoFromLaravelApp",
-                      "class": "Knuckles\\Scribe\\GroupedEndpoints\\GroupedEndpointsFromApp",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php",
-                      "line": 50,
-                      "function": "extractEndpointsInfoAndWriteToDisk",
-                      "class": "Knuckles\\Scribe\\GroupedEndpoints\\GroupedEndpointsFromApp",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Commands/GenerateDocumentation.php",
-                      "line": 53,
-                      "function": "get",
-                      "class": "Knuckles\\Scribe\\GroupedEndpoints\\GroupedEndpointsFromApp",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php",
-                      "line": 36,
-                      "function": "handle",
-                      "class": "Knuckles\\Scribe\\Commands\\GenerateDocumentation",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Util.php",
-                      "line": 43,
-                      "function": "Illuminate\\Container\\{closure}",
-                      "class": "Illuminate\\Container\\BoundMethod",
-                      "type": "::"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php",
-                      "line": 95,
-                      "function": "unwrapIfClosure",
-                      "class": "Illuminate\\Container\\Util",
-                      "type": "::"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php",
-                      "line": 35,
-                      "function": "callBoundMethod",
-                      "class": "Illuminate\\Container\\BoundMethod",
-                      "type": "::"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Container.php",
-                      "line": 694,
-                      "function": "call",
-                      "class": "Illuminate\\Container\\BoundMethod",
-                      "type": "::"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php",
-                      "line": 213,
-                      "function": "call",
-                      "class": "Illuminate\\Container\\Container",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/symfony/console/Command/Command.php",
-                      "line": 279,
-                      "function": "execute",
-                      "class": "Illuminate\\Console\\Command",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php",
-                      "line": 182,
-                      "function": "run",
-                      "class": "Symfony\\Component\\Console\\Command\\Command",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/symfony/console/Application.php",
-                      "line": 1094,
-                      "function": "run",
-                      "class": "Illuminate\\Console\\Command",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/symfony/console/Application.php",
-                      "line": 342,
-                      "function": "doRunCommand",
-                      "class": "Symfony\\Component\\Console\\Application",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/symfony/console/Application.php",
-                      "line": 193,
-                      "function": "doRun",
-                      "class": "Symfony\\Component\\Console\\Application",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php",
-                      "line": 198,
-                      "function": "run",
-                      "class": "Symfony\\Component\\Console\\Application",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Application.php",
-                      "line": 1208,
-                      "function": "handle",
-                      "class": "Illuminate\\Foundation\\Console\\Kernel",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/artisan",
-                      "line": 13,
-                      "function": "handleCommand",
-                      "class": "Illuminate\\Foundation\\Application",
-                      "type": "->"
-                  }
-              ]
+            "message": "No query results for model [App\\Models\\Order] 999"
           }
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-        description: null
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - GET
-    uri: api/vendor/unanswered-reviews
-    metadata:
-      groupName: 'Vendor Review Responses'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Get unanswered reviews for vendor'
-      description: ''
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 401
-        content: '{"message":"Authentication required for this action.","suggestion":"Please log in to continue.","error":"authentication_required","action":"dashboard"}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          x-content-type-options: nosniff
-          x-frame-options: DENY
-          x-xss-protection: '1; mode=block'
-          content-security-policy: "default-src 'none'; frame-ancestors 'none';"
-          referrer-policy: strict-origin-when-cross-origin
-          permissions-policy: 'camera=(), microphone=(), geolocation=(), payment=()'
-        description: null
+        headers: []
+        description: 'Order not found'
         custom: []
     responseFields: []
     auth:

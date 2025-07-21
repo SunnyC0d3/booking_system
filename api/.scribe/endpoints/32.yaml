@@ -1,331 +1,51 @@
-name: 'Product Reviews'
+name: 'Vendor Profile'
 description: ''
 endpoints:
   -
     httpMethods:
       - GET
-    uri: 'api/products/{product_id}/reviews'
+    uri: 'api/vendors/{id}'
     metadata:
-      groupName: 'Product Reviews'
+      groupName: 'Vendor Profile'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Get reviews for a specific product with filtering and sorting'
+      title: 'Retrieve a specific vendor profile'
       description: |-
-        Retrieve all approved reviews for a product with advanced filtering capabilities.
-        Supports filtering by rating, verified purchases, media presence, and various sorting options.
-        Essential for product detail pages and review browsing functionality.
-      authenticated: false
+        Get detailed information about a specific vendor including their profile details, logo, and media.
+        This endpoint is typically used for vendor profile pages and allows authenticated users to view
+        vendor information. Vendors can view their own complete profile, while other users may see
+        limited public information depending on privacy settings.
+      authenticated: true
       custom: []
     headers:
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      product_id:
-        name: product_id
-        description: 'The ID of the product.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      product:
-        name: product
-        description: 'The ID of the product to get reviews for.'
-        required: true
-        example: 15
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      product_id: 1
-      product: 15
-    queryParameters:
-      rating:
-        name: rating
-        description: 'optional Filter by specific ratings (1-5). Can be multiple values.'
-        required: false
-        example:
-          - 4
-          - 5
-        type: 'string[]'
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      verified_only:
-        name: verified_only
-        description: 'optional Show only verified purchase reviews. Default: false.'
-        required: false
-        example: true
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      with_media:
-        name: with_media
-        description: 'optional Show only reviews with photos/videos. Default: false.'
-        required: false
-        example: true
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      sort_by:
-        name: sort_by
-        description: 'optional Sort reviews. Options: newest, oldest, rating_high, rating_low, helpful. Default: newest.'
-        required: false
-        example: helpful
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      per_page:
-        name: per_page
-        description: 'optional Number of reviews per page (1-50). Default: 15.'
-        required: false
-        example: 20
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      page:
-        name: page
-        description: 'optional Page number for pagination. Default: 1.'
-        required: false
-        example: 2
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanQueryParameters:
-      rating:
-        - 4
-        - 5
-      verified_only: true
-      with_media: true
-      sort_by: helpful
-      per_page: 20
-      page: 2
-    bodyParameters:
-      product_id:
-        name: product_id
-        description: 'The <code>id</code> of an existing record in the products table.'
-        required: false
-        example: 16
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      rating:
-        name: rating
-        description: 'Must be between 1 and 5.'
-        required: false
-        example:
-          - 2
-        type: 'integer[]'
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      verified_only:
-        name: verified_only
-        description: ''
-        required: false
-        example: false
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      with_media:
-        name: with_media
-        description: ''
-        required: false
-        example: true
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      sort_by:
-        name: sort_by
-        description: ''
-        required: false
-        example: oldest
-        type: string
-        enumValues:
-          - newest
-          - oldest
-          - rating_high
-          - rating_low
-          - helpful
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      per_page:
-        name: per_page
-        description: 'Must be between 1 and 50.'
-        required: false
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      page:
-        name: page
-        description: 'Must be at least 1.'
-        required: false
-        example: 66
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      product_id: 16
-      rating:
-        - 2
-      verified_only: false
-      with_media: true
-      sort_by: oldest
-      per_page: 1
-      page: 66
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Product reviews retrieved successfully.",
-            "data": {
-              "data": [
-                {
-                  "id": 123,
-                  "user": {
-                    "id": 45,
-                    "name": "Sarah Johnson",
-                    "email": "s***@example.com"
-                  },
-                  "product": {
-                    "id": 15,
-                    "name": "Premium Wireless Earbuds",
-                    "price_formatted": "£89.99"
-                  },
-                  "rating": 5,
-                  "title": "Excellent sound quality!",
-                  "content": "These earbuds exceeded my expectations. The noise cancellation is fantastic and battery life is exactly as advertised.",
-                  "is_verified_purchase": true,
-                  "is_featured": false,
-                  "helpful_votes": 12,
-                  "total_votes": 15,
-                  "helpfulness_ratio": 80.0,
-                  "user_voted": null,
-                  "media": [
-                    {
-                      "id": 67,
-                      "media_type": "image",
-                      "url": "https://yourapi.com/storage/reviews/review-image-1.jpg",
-                      "thumbnail_url": "https://yourapi.com/storage/reviews/thumb_review-image-1.jpg"
-                    }
-                  ],
-                  "response": null,
-                  "created_at": "2025-01-10T14:30:00.000000Z",
-                  "can_edit": false,
-                  "can_delete": false
-                }
-              ],
-              "current_page": 1,
-              "per_page": 15,
-              "total": 127,
-              "last_page": 9
-            },
-            "meta": {
-              "product_id": 15,
-              "total_reviews": 127,
-              "average_rating": 4.3,
-              "rating_breakdown": {
-                "1": 2,
-                "2": 8,
-                "3": 15,
-                "4": 45,
-                "5": 57
-              },
-              "verified_purchase_count": 89,
-              "with_media_count": 34
-            }
-          }
-        headers: []
-        description: 'Reviews retrieved successfully'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "No query results for model [App\\Models\\Product] 999"
-          }
-        headers: []
-        description: 'Product not found'
-        custom: []
-    responseFields: []
-    auth: []
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - GET
-    uri: 'api/reviews/{id}'
-    metadata:
-      groupName: 'Product Reviews'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Get detailed information about a specific review'
-      description: |-
-        Retrieve comprehensive details about a single review including user information,
-        media attachments, helpfulness votes, and vendor responses if available.
-      authenticated: false
-      custom: []
-    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
       id:
         name: id
-        description: 'The ID of the review.'
+        description: 'The ID of the vendor.'
         required: true
-        example: 16
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
-      review:
-        name: review
-        description: 'The ID of the review to retrieve.'
+      vendor:
+        name: vendor
+        description: 'The ID of the vendor to retrieve.'
         required: true
-        example: 123
+        example: 12
         type: integer
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
     cleanUrlParameters:
-      id: 16
-      review: 123
+      id: 1
+      vendor: 12
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -336,50 +56,97 @@ endpoints:
         status: 200
         content: |-
           {
-            "message": "Review retrieved successfully.",
+            "message": "Vendor details retrieved.",
             "data": {
-              "id": 123,
+              "id": 12,
+              "name": "TechCraft Solutions",
+              "description": "Innovative technology solutions for modern businesses. We specialize in custom software development, cloud services, and digital transformation consulting.",
               "user": {
                 "id": 45,
-                "name": "Sarah Johnson",
-                "email": "s***@example.com"
+                "name": "Sarah Mitchell",
+                "email": "sarah@techcraft.com",
+                "email_verified_at": "2025-01-10T08:00:00.000000Z",
+                "created_at": "2024-12-15T10:30:00.000000Z",
+                "updated_at": "2025-01-16T09:15:00.000000Z"
               },
-              "product": {
-                "id": 15,
-                "name": "Premium Wireless Earbuds",
-                "price_formatted": "£89.99",
-                "featured_image": "https://yourapi.com/storage/products/featured-image.jpg"
-              },
-              "rating": 5,
-              "title": "Excellent sound quality!",
-              "content": "These earbuds exceeded my expectations...",
-              "is_verified_purchase": true,
-              "is_featured": false,
-              "helpful_votes": 12,
-              "total_votes": 15,
-              "helpfulness_ratio": 80.0,
-              "user_voted": null,
-              "media": [],
-              "response": null,
-              "created_at": "2025-01-10T14:30:00.000000Z",
-              "can_edit": false,
-              "can_delete": false
+              "logo": "https://yourapi.com/storage/vendor-logos/techcraft-logo.jpg",
+              "media": [
+                {
+                  "id": 78,
+                  "url": "https://yourapi.com/storage/vendor-logos/techcraft-logo.jpg",
+                  "name": "TechCraft Logo",
+                  "file_name": "techcraft-logo.jpg",
+                  "mime_type": "image/jpeg",
+                  "size": 156789
+                }
+              ],
+              "products_count": 23,
+              "created_at": "2025-01-05T14:20:00.000000Z",
+              "updated_at": "2025-01-15T16:45:00.000000Z",
+              "deleted_at": null
             }
           }
         headers: []
-        description: 'Review retrieved successfully'
+        description: 'Vendor profile retrieved successfully'
+        custom: []
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Vendor details retrieved.",
+            "data": {
+              "id": 8,
+              "name": "Startup Innovations",
+              "description": "New vendor focused on innovative product development",
+              "user": {
+                "id": 23,
+                "name": "Alex Johnson",
+                "email": "alex@startup-innovations.com",
+                "email_verified_at": "2025-01-14T10:00:00.000000Z"
+              },
+              "logo": "",
+              "media": [],
+              "products_count": 0,
+              "created_at": "2025-01-14T09:30:00.000000Z",
+              "updated_at": "2025-01-14T09:30:00.000000Z",
+              "deleted_at": null
+            }
+          }
+        headers: []
+        description: 'Vendor with no products'
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated."
+          }
+        headers: []
+        description: 'User not authenticated'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
         custom: []
       -
         status: 404
         content: |-
           {
-            "message": "No query results for model [App\\Models\\Review] 999"
+            "message": "No query results for model [App\\Models\\Vendor] 999"
           }
         headers: []
-        description: 'Review not found'
+        description: 'Vendor not found'
         custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
     controller: null
     method: null
     route: null
@@ -387,613 +154,243 @@ endpoints:
   -
     httpMethods:
       - POST
-    uri: api/reviews
+    uri: 'api/vendors/{id}'
     metadata:
-      groupName: 'Product Reviews'
+      groupName: 'Vendor Profile'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Create a new product review'
+      title: 'Update vendor profile information'
       description: |-
-        Submit a new review for a product. Users can only review products they have purchased
-        and can only submit one review per product. Supports uploading media files (images/videos)
-        with the review for enhanced credibility.
+        Update the authenticated vendor's profile information including business details, description, and logo.
+        Vendors can only update their own profiles. This endpoint supports partial updates - only provided
+        fields will be updated, others remain unchanged. Logo uploads are processed securely with validation.
       authenticated: true
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: multipart/form-data
       Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      product_id:
-        name: product_id
-        description: 'The ID of the product being reviewed.'
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the vendor.'
         required: true
-        example: 15
+        example: 1
         type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      order_item_id:
-        name: order_item_id
-        description: 'optional The order item ID for verified purchase reviews.'
-        required: false
-        example: 234
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        custom: []
-      rating:
-        name: rating
-        description: 'Rating from 1-5 stars.'
-        required: true
-        example: 5
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      title:
-        name: title
-        description: 'optional Short review title (3-255 characters).'
-        required: false
-        example: '"Excellent sound quality!"'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        custom: []
-      content:
-        name: content
-        description: 'Detailed review content (10-2000 characters).'
-        required: true
-        example: '"These earbuds exceeded my expectations..."'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      media:
-        name: media
-        description: 'optional Upload images or videos with review (max 5 files, 10MB each).'
-        required: false
-        example:
-          - null
-        type: 'file[]'
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
-      'media.*.file':
-        name: 'media.*.file'
-        description: 'Photo or video file (jpg, jpeg, png, gif, mp4, mov, avi).'
+      vendor:
+        name: vendor
+        description: 'The ID of the vendor to update. Must belong to the authenticated user.'
+        required: true
+        example: 12
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+      vendor: 12
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      user_id:
+        name: user_id
+        description: 'optional The user ID associated with this vendor. Only admins can change this.'
+        required: false
+        example: 45
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      name:
+        name: name
+        description: "optional The vendor's business name. Will be used for public display."
+        required: false
+        example: 'TechCraft Solutions Ltd'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      description:
+        name: description
+        description: "optional Detailed description of the vendor's business, services, or products. Maximum 1000 characters."
+        required: false
+        example: 'Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud migration services, and digital transformation consulting with over 10 years of industry experience.'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      logo:
+        name: logo
+        description: 'optional New logo file for the vendor. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will replace existing logo if provided.'
         required: false
         example: null
         type: file
         enumValues: []
         exampleWasSpecified: false
-        nullable: false
+        nullable: true
         custom: []
     cleanBodyParameters:
-      product_id: 15
-      order_item_id: 234
-      rating: 5
-      title: '"Excellent sound quality!"'
-      content: '"These earbuds exceeded my expectations..."'
+      user_id: 45
+      name: 'TechCraft Solutions Ltd'
+      description: 'Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud migration services, and digital transformation consulting with over 10 years of industry experience.'
     fileParameters:
-      media:
-        - null
+      logo: null
     responses:
       -
-        status: 201
+        status: 200
         content: |-
           {
-            "message": "Review submitted successfully.",
+            "message": "Vendor updated successfully.",
             "data": {
-              "id": 123,
+              "id": 12,
+              "name": "TechCraft Solutions Ltd",
+              "description": "Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud migration services, and digital transformation consulting with over 10 years of industry experience.",
               "user": {
                 "id": 45,
-                "name": "Sarah Johnson"
+                "name": "Sarah Mitchell",
+                "email": "sarah@techcraft.com",
+                "email_verified_at": "2025-01-10T08:00:00.000000Z"
               },
-              "product": {
-                "id": 15,
-                "name": "Premium Wireless Earbuds"
-              },
-              "rating": 5,
-              "title": "Excellent sound quality!",
-              "content": "These earbuds exceeded my expectations...",
-              "is_verified_purchase": true,
-              "is_featured": false,
-              "helpful_votes": 0,
-              "total_votes": 0,
-              "media": [],
-              "created_at": "2025-01-10T14:30:00.000000Z"
+              "logo": "https://yourapi.com/storage/vendor-logos/new-techcraft-logo.jpg",
+              "media": [
+                {
+                  "id": 82,
+                  "url": "https://yourapi.com/storage/vendor-logos/new-techcraft-logo.jpg",
+                  "name": "Updated TechCraft Logo",
+                  "file_name": "new-techcraft-logo.jpg",
+                  "mime_type": "image/jpeg",
+                  "size": 189456
+                }
+              ],
+              "products_count": 23,
+              "created_at": "2025-01-05T14:20:00.000000Z",
+              "updated_at": "2025-01-16T11:30:00.000000Z",
+              "deleted_at": null
             }
           }
         headers: []
-        description: 'Review created successfully'
+        description: 'Vendor profile updated successfully'
+        custom: []
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Vendor updated successfully.",
+            "data": {
+              "id": 12,
+              "name": "TechCraft Solutions Ltd",
+              "description": "Updated business description with new focus areas and expanded service offerings.",
+              "user": {
+                "id": 45,
+                "name": "Sarah Mitchell",
+                "email": "sarah@techcraft.com"
+              },
+              "logo": "https://yourapi.com/storage/vendor-logos/techcraft-logo.jpg",
+              "media": [
+                {
+                  "id": 78,
+                  "url": "https://yourapi.com/storage/vendor-logos/techcraft-logo.jpg",
+                  "name": "TechCraft Logo",
+                  "file_name": "techcraft-logo.jpg",
+                  "mime_type": "image/jpeg",
+                  "size": 156789
+                }
+              ],
+              "products_count": 23,
+              "created_at": "2025-01-05T14:20:00.000000Z",
+              "updated_at": "2025-01-16T11:45:00.000000Z",
+              "deleted_at": null
+            }
+          }
+        headers: []
+        description: 'Partial update without logo'
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated."
+          }
+        headers: []
+        description: 'User not authenticated'
         custom: []
       -
         status: 403
         content: |-
           {
-            "message": "You can only review products you have purchased."
+            "message": "You do not have the required permissions."
           }
         headers: []
-        description: 'Cannot review product'
+        description: "Cannot update other vendor's profile"
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions for user_id change'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\Vendor] 999"
+          }
+        headers: []
+        description: 'Vendor not found'
+        custom: []
+      -
+        status: 413
+        content: |-
+          {
+            "message": "File too large. Maximum size is 2.0 MB."
+          }
+        headers: []
+        description: 'Logo file too large'
         custom: []
       -
         status: 422
         content: |-
           {
             "errors": [
-              "You have already reviewed this product.",
-              "Rating must be between 1 and 5 stars.",
-              "Review content must be at least 10 characters long."
+              "The name field is required.",
+              "The description may not be greater than 1000 characters.",
+              "The logo must be an image.",
+              "The logo may not be greater than 2048 kilobytes.",
+              "The logo must be a file of type: jpg, jpeg, png."
             ]
           }
         headers: []
         description: 'Validation errors'
         custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: 'api/reviews/{id}'
-    metadata:
-      groupName: 'Product Reviews'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Update an existing review'
-      description: |-
-        Update your own review within the allowed time window (30 days after creation).
-        You can modify the rating, title, content, and add/remove media attachments.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: multipart/form-data
-      Accept: application/json
-    urlParameters:
-      id:
-        name: id
-        description: 'The ID of the review.'
-        required: true
-        example: 16
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      review:
-        name: review
-        description: 'The ID of the review to update.'
-        required: true
-        example: 123
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      id: 16
-      review: 123
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      rating:
-        name: rating
-        description: 'optional Updated rating from 1-5 stars.'
-        required: false
-        example: 4
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      title:
-        name: title
-        description: 'optional Updated review title (3-255 characters).'
-        required: false
-        example: '"Good sound quality"'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        custom: []
-      content:
-        name: content
-        description: 'optional Updated review content (10-2000 characters).'
-        required: false
-        example: '"Updated thoughts on these earbuds..."'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      media:
-        name: media
-        description: 'optional New media files to add (max 5 total files).'
-        required: false
-        example:
-          - null
-        type: 'file[]'
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      remove_media:
-        name: remove_media
-        description: 'optional Array of media IDs to remove.'
-        required: false
-        example:
-          - 67
-          - 68
-        type: 'integer[]'
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      rating: 4
-      title: '"Good sound quality"'
-      content: '"Updated thoughts on these earbuds..."'
-      remove_media:
-        - 67
-        - 68
-    fileParameters:
-      media:
-        - null
-    responses:
       -
-        status: 200
+        status: 422
         content: |-
           {
-            "message": "Review updated successfully.",
-            "data": {
-              "id": 123,
-              "rating": 4,
-              "title": "Good sound quality",
-              "content": "Updated thoughts on these earbuds...",
-              "updated_at": "2025-01-15T10:20:00.000000Z"
-            }
+            "message": "File type .gif not allowed. Allowed types: jpg, jpeg, png"
           }
         headers: []
-        description: 'Review updated successfully'
+        description: 'Invalid file type'
         custom: []
       -
-        status: 403
+        status: 500
         content: |-
           {
-            "message": "You can only edit your own reviews within 30 days of creation."
+            "message": "Failed to process logo file: Unable to write file to disk."
           }
         headers: []
-        description: 'Cannot edit review'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "No query results for model [App\\Models\\Review] 999"
-          }
-        headers: []
-        description: 'Review not found'
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - DELETE
-    uri: 'api/reviews/{id}'
-    metadata:
-      groupName: 'Product Reviews'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Delete a review'
-      description: |-
-        Delete your own review. This action is irreversible and will also remove
-        all associated media files and helpfulness votes.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      id:
-        name: id
-        description: 'The ID of the review.'
-        required: true
-        example: 16
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      review:
-        name: review
-        description: 'The ID of the review to delete.'
-        required: true
-        example: 123
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      id: 16
-      review: 123
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Review deleted successfully."
-          }
-        headers: []
-        description: 'Review deleted successfully'
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-            "message": "You can only delete your own reviews."
-          }
-        headers: []
-        description: 'Cannot delete review'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "No query results for model [App\\Models\\Review] 999"
-          }
-        headers: []
-        description: 'Review not found'
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: 'api/reviews/{review_id}/helpfulness'
-    metadata:
-      groupName: 'Product Reviews'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Vote on review helpfulness'
-      description: |-
-        Mark a review as helpful or not helpful. Users cannot vote on their own reviews
-        and can only vote once per review (but can change their vote).
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      review_id:
-        name: review_id
-        description: 'The ID of the review.'
-        required: true
-        example: 16
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      review:
-        name: review
-        description: 'The ID of the review to vote on.'
-        required: true
-        example: 123
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      review_id: 16
-      review: 123
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      is_helpful:
-        name: is_helpful
-        description: 'Whether the review was helpful.'
-        required: true
-        example: true
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      is_helpful: true
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Thank you for your feedback!",
-            "data": {
-              "review_id": 123,
-              "helpful_votes": 13,
-              "total_votes": 16,
-              "helpfulness_ratio": 81.3,
-              "user_vote": true
-            }
-          }
-        headers: []
-        description: 'Vote recorded successfully'
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-            "message": "You cannot vote on your own review."
-          }
-        headers: []
-        description: 'Cannot vote on own review'
-        custom: []
-      -
-        status: 409
-        content: |-
-          {
-            "message": "You have already voted on this review with the same rating."
-          }
-        headers: []
-        description: 'Already voted'
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: 'api/reviews/{review_id}/report'
-    metadata:
-      groupName: 'Product Reviews'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Report an inappropriate review'
-      description: |-
-        Report a review for inappropriate content, spam, or other violations.
-        Reported reviews are flagged for admin moderation review.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      review_id:
-        name: review_id
-        description: 'The ID of the review.'
-        required: true
-        example: 16
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      review:
-        name: review
-        description: 'The ID of the review to report.'
-        required: true
-        example: 123
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      review_id: 16
-      review: 123
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      reason:
-        name: reason
-        description: 'Reason for reporting. Options: spam, inappropriate_language, fake_review, off_topic, personal_information, other.'
-        required: true
-        example: spam
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      details:
-        name: details
-        description: 'optional Additional details (required if reason is "other").'
-        required: false
-        example: '"This review contains promotional links"'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        custom: []
-    cleanBodyParameters:
-      reason: spam
-      details: '"This review contains promotional links"'
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Review reported successfully. Our moderation team will review it shortly.",
-            "data": {
-              "report_id": 45,
-              "review_id": 123,
-              "reason": "spam",
-              "status": "pending"
-            }
-          }
-        headers: []
-        description: 'Review reported successfully'
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-            "message": "You cannot report your own review."
-          }
-        headers: []
-        description: 'Cannot report own review'
-        custom: []
-      -
-        status: 409
-        content: |-
-          {
-            "message": "You have already reported this review."
-          }
-        headers: []
-        description: 'Already reported'
+        description: 'Logo upload failed'
         custom: []
     responseFields: []
     auth:

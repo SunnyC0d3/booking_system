@@ -1,149 +1,207 @@
-name: 'Payment Processing'
+name: 'Supplier Integrations'
 description: ''
 endpoints:
   -
     httpMethods:
-      - POST
-    uri: 'api/payments/{gateway}/create'
+      - GET
+    uri: api/admin/supplier-integrations
     metadata:
-      groupName: 'Payment Processing'
+      groupName: 'Supplier Integrations'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Create or retrieve payment intent'
+      title: 'Retrieve paginated list of supplier integrations'
       description: |-
-        Creates a new Stripe PaymentIntent for the specified order, or returns an existing one if already created.
-        This prevents duplicate payment intents for the same order. The client secret returned should be used
-        on the frontend to complete the payment with Stripe's client-side libraries.
+        Get a paginated list of all supplier integrations in the system. This endpoint supports filtering
+        by supplier, integration type, status, and health status. Includes integration performance metrics.
       authenticated: true
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
-    urlParameters:
-      gateway:
-        name: gateway
-        description: 'The payment gateway to use. Currently only "stripe" is supported.'
-        required: true
-        example: stripe
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      gateway: stripe
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      order_id:
-        name: order_id
-        description: 'The ID of the order to create payment for. Must be a valid, unpaid order.'
-        required: true
-        example: 123
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      supplier_id:
+        name: supplier_id
+        description: 'optional Filter integrations by specific supplier ID.'
+        required: false
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-    cleanBodyParameters:
-      order_id: 123
+      integration_type:
+        name: integration_type
+        description: 'optional Filter by integration type (api, webhook, email, ftp, manual).'
+        required: false
+        example: api
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      is_active:
+        name: is_active
+        description: 'optional Filter by active status (1 for active, 0 for inactive).'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      status:
+        name: status
+        description: 'optional Filter by integration status (active, inactive, error, maintenance).'
+        required: false
+        example: active
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      search:
+        name: search
+        description: 'optional Search integrations by name or supplier name.'
+        required: false
+        example: GlobalTech
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      healthy:
+        name: healthy
+        description: 'optional Filter by health status (1 for healthy, 0 for unhealthy).'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      page:
+        name: page
+        description: 'optional Page number for pagination. Default: 1.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      per_page:
+        name: per_page
+        description: 'optional Number of integrations per page (max 50). Default: 15.'
+        required: false
+        example: 20
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanQueryParameters:
+      supplier_id: 1
+      integration_type: api
+      is_active: true
+      status: active
+      search: GlobalTech
+      healthy: true
+      page: 1
+      per_page: 20
+    bodyParameters: []
+    cleanBodyParameters: []
     fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
-            "status": true,
-            "message": "PaymentIntent created successfully.",
+            "message": "Supplier integrations retrieved successfully.",
             "data": {
-              "client_secret": "pi_1234567890abcdef_secret_xyz789abc123"
+              "data": [
+                {
+                  "id": 1,
+                  "supplier_id": 1,
+                  "integration_type": "api",
+                  "name": "GlobalTech API Integration",
+                  "is_active": true,
+                  "status": "active",
+                  "configuration": {
+                    "api_endpoint": "https://api.globaltech-dist.com/v1",
+                    "rate_limit": 100,
+                    "timeout": 30,
+                    "format": "json"
+                  },
+                  "sync_frequency_minutes": 60,
+                  "auto_retry_enabled": true,
+                  "max_retry_attempts": 3,
+                  "consecutive_failures": 0,
+                  "last_successful_sync": "2025-01-15T15:30:00.000000Z",
+                  "last_failed_sync": null,
+                  "last_error": null,
+                  "webhook_events": ["order.status_changed", "product.stock_updated"],
+                  "supplier": {
+                    "id": 1,
+                    "name": "GlobalTech Distributors",
+                    "status": "active"
+                  },
+                  "created_at": "2025-01-10T08:00:00.000000Z",
+                  "updated_at": "2025-01-15T15:30:00.000000Z"
+                }
+              ],
+              "current_page": 1,
+              "per_page": 15,
+              "total": 4,
+              "last_page": 1,
+              "from": 1,
+              "to": 4
             }
           }
         headers: []
-        description: 'New PaymentIntent created'
+        description: 'Success with integrations'
         custom: []
       -
         status: 200
         content: |-
           {
-            "status": true,
-            "message": "Existing PaymentIntent retrieved.",
+            "message": "Supplier integrations retrieved successfully.",
             "data": {
-              "client_secret": "pi_1234567890abcdef_secret_xyz789abc123"
+              "data": [],
+              "current_page": 1,
+              "per_page": 15,
+              "total": 0,
+              "last_page": 1,
+              "from": null,
+              "to": null
             }
           }
         headers: []
-        description: 'Existing PaymentIntent retrieved'
+        description: 'No integrations found'
         custom: []
       -
-        status: 200
+        status: 403
         content: |-
           {
-            "status": true,
-            "message": "Payment has already been processed for this order.",
-            "data": null
+            "message": "You do not have the required permissions."
           }
         headers: []
-        description: 'Order already paid'
-        custom: []
-      -
-        status: 400
-        content: |-
-          {
-            "status": false,
-            "message": "Unsupported payment gateway",
-            "data": null
-          }
-        headers: []
-        description: 'Unsupported gateway'
-        custom: []
-      -
-        status: 400
-        content: |-
-          {
-            "status": false,
-            "message": "Order has already been paid or is not in a payable state.",
-            "data": null
-          }
-        headers: []
-        description: 'Order not eligible for payment'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "status": false,
-            "message": "No query results for model [App\\Models\\Order] 999",
-            "data": null
-          }
-        headers: []
-        description: 'Order not found'
+        description: 'Insufficient permissions'
         custom: []
       -
         status: 422
         content: |-
           {
             "errors": [
-              "The order id field is required.",
-              "The order id must be an integer.",
-              "The selected order id is invalid."
+              "The supplier id field must be an integer.",
+              "The integration type field must be one of: api, webhook, email, ftp, manual."
             ]
           }
         headers: []
-        description: 'Invalid order data'
-        custom: []
-      -
-        status: 500
-        content: |-
-          {
-            "status": false,
-            "message": "Unable to create payment intent with Stripe. Please try again.",
-            "data": null
-          }
-        headers: []
-        description: 'Stripe API error'
+        description: 'Invalid filter parameters'
         custom: []
     responseFields: []
     auth:
@@ -157,148 +215,215 @@ endpoints:
   -
     httpMethods:
       - POST
-    uri: 'api/payments/{gateway}/verify'
+    uri: api/admin/supplier-integrations
     metadata:
-      groupName: 'Payment Processing'
+      groupName: 'Supplier Integrations'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Verify payment status'
+      title: 'Create a new supplier integration'
       description: |-
-        Manually verifies the status of a payment with Stripe and updates the local database accordingly.
-        This is useful for handling cases where webhooks might have failed or been delayed.
-        It fetches the latest payment status directly from Stripe and synchronizes it with your database.
+        Create a new integration for a supplier with specified configuration and authentication settings.
+        Only one integration per supplier can be active at a time. Creating an active integration will
+        automatically deactivate existing ones for the same supplier.
       authenticated: true
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
-    urlParameters:
-      gateway:
-        name: gateway
-        description: 'The payment gateway used. Currently only "stripe" is supported.'
-        required: true
-        example: stripe
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      gateway: stripe
+    urlParameters: []
+    cleanUrlParameters: []
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
-      payment_intent_id:
-        name: payment_intent_id
-        description: 'The Stripe PaymentIntent ID to verify. Must be a valid Stripe PaymentIntent ID format.'
+      supplier_id:
+        name: supplier_id
+        description: 'The ID of the supplier for this integration.'
         required: true
-        example: pi_1234567890abcdef
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      order_id:
-        name: order_id
-        description: 'The ID of the order associated with this payment for verification.'
-        required: true
-        example: 123
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
+      integration_type:
+        name: integration_type
+        description: 'Integration method (api, webhook, email, ftp, manual).'
+        required: true
+        example: api
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      name:
+        name: name
+        description: 'Display name for the integration.'
+        required: true
+        example: 'GlobalTech API v2'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      is_active:
+        name: is_active
+        description: 'optional Whether this integration is active. Default: true.'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      configuration:
+        name: configuration
+        description: 'Integration-specific configuration parameters.'
+        required: true
+        example:
+          api_endpoint: 'https://api.example.com/v1'
+          rate_limit: 100
+        type: object
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      authentication:
+        name: authentication
+        description: 'Authentication credentials and settings.'
+        required: true
+        example:
+          type: api_key
+          api_key: your-api-key
+        type: object
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      sync_frequency_minutes:
+        name: sync_frequency_minutes
+        description: 'optional Sync frequency in minutes. Default: 60.'
+        required: false
+        example: 30
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      auto_retry_enabled:
+        name: auto_retry_enabled
+        description: 'optional Enable automatic retry on failures. Default: true.'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      max_retry_attempts:
+        name: max_retry_attempts
+        description: 'optional Maximum retry attempts. Default: 3.'
+        required: false
+        example: 5
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      webhook_events:
+        name: webhook_events
+        description: 'optional Webhook events to subscribe to.'
+        required: false
+        example:
+          - order.created
+          - stock.updated
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
     cleanBodyParameters:
-      payment_intent_id: pi_1234567890abcdef
-      order_id: 123
+      supplier_id: 1
+      integration_type: api
+      name: 'GlobalTech API v2'
+      is_active: true
+      configuration:
+        api_endpoint: 'https://api.example.com/v1'
+        rate_limit: 100
+      authentication:
+        type: api_key
+        api_key: your-api-key
+      sync_frequency_minutes: 30
+      auto_retry_enabled: true
+      max_retry_attempts: 5
+      webhook_events:
+        - order.created
+        - stock.updated
     fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
-            "status": true,
-            "message": "Payment verified",
+            "message": "Supplier integration created successfully.",
             "data": {
-              "payment_status": "Paid",
-              "order_status": "Confirmed"
+              "id": 5,
+              "supplier_id": 1,
+              "integration_type": "api",
+              "name": "GlobalTech API v2",
+              "is_active": true,
+              "status": "active",
+              "configuration": {
+                "api_endpoint": "https://api.example.com/v1",
+                "rate_limit": 100,
+                "timeout": 30
+              },
+              "sync_frequency_minutes": 30,
+              "auto_retry_enabled": true,
+              "max_retry_attempts": 5,
+              "webhook_events": ["order.created", "stock.updated"],
+              "consecutive_failures": 0,
+              "last_successful_sync": null,
+              "supplier": {
+                "id": 1,
+                "name": "GlobalTech Distributors",
+                "status": "active"
+              },
+              "created_at": "2025-01-15T18:30:00.000000Z",
+              "updated_at": "2025-01-15T18:30:00.000000Z"
             }
           }
         headers: []
-        description: 'Payment verified as successful'
+        description: 'Integration created successfully'
         custom: []
       -
-        status: 200
+        status: 403
         content: |-
           {
-            "status": true,
-            "message": "Payment verified",
-            "data": {
-              "payment_status": "Pending",
-              "order_status": "Pending Payment"
-            }
+            "message": "You do not have the required permissions."
           }
         headers: []
-        description: 'Payment still pending'
-        custom: []
-      -
-        status: 200
-        content: |-
-          {
-            "status": true,
-            "message": "Payment verified",
-            "data": {
-              "payment_status": "Failed",
-              "order_status": "Failed"
-            }
-          }
-        headers: []
-        description: 'Payment failed'
-        custom: []
-      -
-        status: 400
-        content: |-
-          {
-            "status": false,
-            "message": "Unsupported payment gateway",
-            "data": null
-          }
-        headers: []
-        description: 'Unsupported gateway'
-        custom: []
-      -
-        status: 400
-        content: |-
-          {
-            "status": false,
-            "message": "Payment amount mismatch",
-            "data": null
-          }
-        headers: []
-        description: 'Payment amount mismatch'
+        description: 'Insufficient permissions'
         custom: []
       -
         status: 404
         content: |-
           {
-            "status": false,
-            "message": "Payment not found",
-            "data": null
+            "message": "The selected supplier id is invalid."
           }
         headers: []
-        description: 'Payment not found in database'
+        description: 'Supplier not found'
         custom: []
       -
         status: 422
         content: |-
           {
             "errors": [
-              "The payment intent id field is required.",
-              "The payment intent id format is invalid. Must be a valid Stripe payment intent ID.",
-              "The order id field is required.",
-              "The selected order id is invalid."
+              "The supplier id field is required.",
+              "The integration type field must be one of: api, webhook, email, ftp, manual.",
+              "The configuration field is required.",
+              "The authentication field is required."
             ]
           }
         headers: []
@@ -308,12 +433,1161 @@ endpoints:
         status: 500
         content: |-
           {
-            "status": false,
-            "message": "Unable to retrieve payment from Stripe: No such payment_intent: 'pi_invalid'",
-            "data": null
+            "message": "Failed to create supplier integration."
           }
         headers: []
-        description: 'Stripe API error'
+        description: 'Server error'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/admin/supplier-integrations/{supplierIntegration_id}'
+    metadata:
+      groupName: 'Supplier Integrations'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Retrieve a specific supplier integration'
+      description: |-
+        Get detailed information about a specific supplier integration including configuration,
+        authentication settings, sync statistics, and health metrics.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      supplierIntegration_id:
+        name: supplierIntegration_id
+        description: 'The ID of the supplierIntegration.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      supplierIntegration:
+        name: supplierIntegration
+        description: 'The ID of the integration to retrieve.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      supplierIntegration_id: 16
+      supplierIntegration: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Supplier integration retrieved successfully.",
+            "data": {
+              "id": 1,
+              "supplier_id": 1,
+              "integration_type": "api",
+              "name": "GlobalTech API Integration",
+              "is_active": true,
+              "status": "active",
+              "configuration": {
+                "api_endpoint": "https://api.globaltech-dist.com/v1",
+                "rate_limit": 100,
+                "timeout": 30,
+                "format": "json",
+                "endpoints": {
+                  "products": "/products",
+                  "orders": "/orders",
+                  "stock": "/stock"
+                }
+              },
+              "authentication": {
+                "type": "api_key",
+                "headers": {
+                  "Authorization": "Bearer {api_key}",
+                  "Content-Type": "application/json"
+                }
+              },
+              "sync_frequency_minutes": 60,
+              "auto_retry_enabled": true,
+              "max_retry_attempts": 3,
+              "consecutive_failures": 0,
+              "last_successful_sync": "2025-01-15T15:30:00.000000Z",
+              "last_failed_sync": null,
+              "last_error": null,
+              "webhook_events": ["order.status_changed", "product.stock_updated"],
+              "supplier": {
+                "id": 1,
+                "name": "GlobalTech Distributors",
+                "company_name": "GlobalTech Distributors Ltd",
+                "status": "active",
+                "integration_type": "api"
+              },
+              "created_at": "2025-01-10T08:00:00.000000Z",
+              "updated_at": "2025-01-15T15:30:00.000000Z"
+            }
+          }
+        headers: []
+        description: 'Integration found'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\SupplierIntegration] 999"
+          }
+        headers: []
+        description: 'Integration not found'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PUT
+    uri: 'api/admin/supplier-integrations/{supplierIntegration_id}'
+    metadata:
+      groupName: 'Supplier Integrations'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update an existing supplier integration'
+      description: |-
+        Update integration configuration, authentication settings, and operational parameters.
+        Activating an integration will automatically deactivate other integrations for the same supplier.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      supplierIntegration_id:
+        name: supplierIntegration_id
+        description: 'The ID of the supplierIntegration.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      supplierIntegration:
+        name: supplierIntegration
+        description: 'The ID of the integration to update.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      supplierIntegration_id: 16
+      supplierIntegration: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      integration_type:
+        name: integration_type
+        description: 'optional Integration method (api, webhook, email, ftp, manual).'
+        required: false
+        example: webhook
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      name:
+        name: name
+        description: 'optional Display name for the integration.'
+        required: false
+        example: 'Updated GlobalTech API'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      is_active:
+        name: is_active
+        description: 'optional Whether this integration is active.'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      configuration:
+        name: configuration
+        description: 'optional Integration-specific configuration parameters.'
+        required: false
+        example:
+          api_endpoint: 'https://api.example.com/v2'
+        type: object
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      authentication:
+        name: authentication
+        description: 'optional Authentication credentials and settings.'
+        required: false
+        example:
+          type: bearer
+          token: new-token
+        type: object
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      sync_frequency_minutes:
+        name: sync_frequency_minutes
+        description: 'optional Sync frequency in minutes.'
+        required: false
+        example: 30
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      auto_retry_enabled:
+        name: auto_retry_enabled
+        description: 'optional Enable automatic retry on failures.'
+        required: false
+        example: false
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      max_retry_attempts:
+        name: max_retry_attempts
+        description: 'optional Maximum retry attempts.'
+        required: false
+        example: 5
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      webhook_events:
+        name: webhook_events
+        description: 'optional Webhook events to subscribe to.'
+        required: false
+        example:
+          - order.shipped
+          - stock.updated
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      integration_type: webhook
+      name: 'Updated GlobalTech API'
+      is_active: true
+      configuration:
+        api_endpoint: 'https://api.example.com/v2'
+      authentication:
+        type: bearer
+        token: new-token
+      sync_frequency_minutes: 30
+      auto_retry_enabled: false
+      max_retry_attempts: 5
+      webhook_events:
+        - order.shipped
+        - stock.updated
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Supplier integration updated successfully.",
+            "data": {
+              "id": 1,
+              "supplier_id": 1,
+              "integration_type": "webhook",
+              "name": "Updated GlobalTech API",
+              "is_active": true,
+              "sync_frequency_minutes": 30,
+              "auto_retry_enabled": false,
+              "max_retry_attempts": 5,
+              "webhook_events": ["order.shipped", "stock.updated"],
+              "updated_at": "2025-01-15T19:00:00.000000Z"
+            }
+          }
+        headers: []
+        description: 'Integration updated successfully'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\SupplierIntegration] 999"
+          }
+        headers: []
+        description: 'Integration not found'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "errors": [
+              "The integration type field must be one of: api, webhook, email, ftp, manual.",
+              "The sync frequency minutes must be at least 1."
+            ]
+          }
+        headers: []
+        description: 'Validation errors'
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+            "message": "Failed to update supplier integration."
+          }
+        headers: []
+        description: 'Server error'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/admin/supplier-integrations/{supplierIntegration_id}'
+    metadata:
+      groupName: 'Supplier Integrations'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Delete a supplier integration'
+      description: |-
+        Permanently delete a supplier integration. Only inactive integrations can be deleted.
+        This action cannot be undone and will remove all configuration and historical data.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      supplierIntegration_id:
+        name: supplierIntegration_id
+        description: 'The ID of the supplierIntegration.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      supplierIntegration:
+        name: supplierIntegration
+        description: 'The ID of the integration to delete.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      supplierIntegration_id: 16
+      supplierIntegration: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Supplier integration deleted successfully."
+          }
+        headers: []
+        description: 'Integration deleted successfully'
+        custom: []
+      -
+        status: 400
+        content: |-
+          {
+            "message": "Cannot delete active integration. Disable it first."
+          }
+        headers: []
+        description: 'Cannot delete active integration'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\SupplierIntegration] 999"
+          }
+        headers: []
+        description: 'Integration not found'
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+            "message": "Failed to delete supplier integration."
+          }
+        headers: []
+        description: 'Server error'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PATCH
+    uri: 'api/admin/supplier-integrations/{supplierIntegration_id}/enable'
+    metadata:
+      groupName: 'Supplier Integrations'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Enable a supplier integration'
+      description: |-
+        Activate a supplier integration, making it the primary integration for the supplier.
+        This will automatically disable any other active integrations for the same supplier.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      supplierIntegration_id:
+        name: supplierIntegration_id
+        description: 'The ID of the supplierIntegration.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      supplierIntegration:
+        name: supplierIntegration
+        description: 'The ID of the integration to enable.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      supplierIntegration_id: 16
+      supplierIntegration: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Supplier integration enabled successfully.",
+            "data": {
+              "id": 1,
+              "name": "GlobalTech API Integration",
+              "is_active": true,
+              "status": "active",
+              "updated_at": "2025-01-15T19:15:00.000000Z"
+            }
+          }
+        headers: []
+        description: 'Integration enabled successfully'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\SupplierIntegration] 999"
+          }
+        headers: []
+        description: 'Integration not found'
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+            "message": "Failed to enable supplier integration."
+          }
+        headers: []
+        description: 'Server error'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PATCH
+    uri: 'api/admin/supplier-integrations/{supplierIntegration_id}/disable'
+    metadata:
+      groupName: 'Supplier Integrations'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Disable a supplier integration'
+      description: |-
+        Deactivate a supplier integration, stopping all automated sync and webhook operations.
+        The integration configuration will be preserved for potential future reactivation.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      supplierIntegration_id:
+        name: supplierIntegration_id
+        description: 'The ID of the supplierIntegration.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      supplierIntegration:
+        name: supplierIntegration
+        description: 'The ID of the integration to disable.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      supplierIntegration_id: 16
+      supplierIntegration: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Supplier integration disabled successfully.",
+            "data": {
+              "id": 1,
+              "name": "GlobalTech API Integration",
+              "is_active": false,
+              "status": "inactive",
+              "updated_at": "2025-01-15T19:20:00.000000Z"
+            }
+          }
+        headers: []
+        description: 'Integration disabled successfully'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\SupplierIntegration] 999"
+          }
+        headers: []
+        description: 'Integration not found'
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+            "message": "Failed to disable supplier integration."
+          }
+        headers: []
+        description: 'Server error'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: 'api/admin/supplier-integrations/{supplierIntegration_id}/test'
+    metadata:
+      groupName: 'Supplier Integrations'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Test supplier integration connection'
+      description: |-
+        Test the connection and configuration of a supplier integration to verify it's working correctly.
+        This endpoint validates authentication, connectivity, and basic functionality.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      supplierIntegration_id:
+        name: supplierIntegration_id
+        description: 'The ID of the supplierIntegration.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      supplierIntegration:
+        name: supplierIntegration
+        description: 'The ID of the integration to test.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      supplierIntegration_id: 16
+      supplierIntegration: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Integration test completed.",
+            "data": {
+              "success": true,
+              "response_time": 245,
+              "status_code": 200,
+              "integration_type": "api",
+              "endpoint_tested": "https://api.globaltech-dist.com/v1/test",
+              "message": "Connection successful",
+              "additional_info": {
+                "api_version": "1.2.3",
+                "rate_limit_remaining": 98,
+                "server_time": "2025-01-15T19:25:00Z"
+              }
+            }
+          }
+        headers: []
+        description: 'Connection test successful'
+        custom: []
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Integration test completed.",
+            "data": {
+              "success": false,
+              "response_time": null,
+              "status_code": 401,
+              "integration_type": "api",
+              "endpoint_tested": "https://api.globaltech-dist.com/v1/test",
+              "message": "Authentication failed",
+              "error_details": "Invalid API key provided"
+            }
+          }
+        headers: []
+        description: 'Connection test failed'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\SupplierIntegration] 999"
+          }
+        headers: []
+        description: 'Integration not found'
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+            "message": "Failed to test integration."
+          }
+        headers: []
+        description: 'Server error'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: 'api/admin/supplier-integrations/{supplierIntegration_id}/sync'
+    metadata:
+      groupName: 'Supplier Integrations'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Manually sync supplier integration'
+      description: |-
+        Trigger a manual synchronization for an active supplier integration. This will attempt to
+        sync products, stock levels, and order statuses depending on the integration configuration.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      supplierIntegration_id:
+        name: supplierIntegration_id
+        description: 'The ID of the supplierIntegration.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      supplierIntegration:
+        name: supplierIntegration
+        description: 'The ID of the integration to sync.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      supplierIntegration_id: 16
+      supplierIntegration: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Sync completed successfully.",
+            "data": {
+              "started_at": "2025-01-15T19:30:00.000000Z",
+              "integration_type": "api",
+              "supplier_name": "GlobalTech Distributors",
+              "status": "completed",
+              "products_processed": 45,
+              "products_updated": 12,
+              "duration_seconds": 8.5,
+              "errors": []
+            }
+          }
+        headers: []
+        description: 'Sync completed successfully'
+        custom: []
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Sync completed successfully.",
+            "data": {
+              "started_at": "2025-01-15T19:30:00.000000Z",
+              "integration_type": "api",
+              "supplier_name": "GlobalTech Distributors",
+              "status": "completed_with_errors",
+              "products_processed": 45,
+              "products_updated": 10,
+              "duration_seconds": 12.3,
+              "errors": [
+                "Product GT-001 not found in supplier catalog",
+                "Rate limit exceeded for stock update"
+              ]
+            }
+          }
+        headers: []
+        description: 'Sync completed with errors'
+        custom: []
+      -
+        status: 400
+        content: |-
+          {
+            "message": "Cannot sync inactive integration."
+          }
+        headers: []
+        description: 'Cannot sync inactive integration'
+        custom: []
+      -
+        status: 400
+        content: |-
+          {
+            "message": "Manual integrations cannot be synced automatically."
+          }
+        headers: []
+        description: 'Manual sync not supported'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\SupplierIntegration] 999"
+          }
+        headers: []
+        description: 'Integration not found'
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+            "message": "Failed to sync integration."
+          }
+        headers: []
+        description: 'Server error'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: 'api/admin/supplier-integrations/{supplierIntegration_id}/reset-failures'
+    metadata:
+      groupName: 'Supplier Integrations'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Reset integration failure counters'
+      description: |-
+        Reset the consecutive failure counter and clear error status for a supplier integration.
+        This is useful when issues have been resolved and you want to restart the retry mechanism.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      supplierIntegration_id:
+        name: supplierIntegration_id
+        description: 'The ID of the supplierIntegration.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      supplierIntegration:
+        name: supplierIntegration
+        description: 'The ID of the integration to reset.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      supplierIntegration_id: 16
+      supplierIntegration: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Integration failures reset successfully.",
+            "data": {
+              "id": 1,
+              "consecutive_failures": 0,
+              "last_error": null,
+              "status": "active",
+              "updated_at": "2025-01-15T19:35:00.000000Z"
+            }
+          }
+        headers: []
+        description: 'Failures reset successfully'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\SupplierIntegration] 999"
+          }
+        headers: []
+        description: 'Integration not found'
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+            "message": "Failed to reset failures."
+          }
+        headers: []
+        description: 'Server error'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/admin/supplier-integrations/{supplierIntegration_id}/logs'
+    metadata:
+      groupName: 'Supplier Integrations'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get integration logs and analytics'
+      description: |-
+        Retrieve comprehensive logs and analytics for a supplier integration including sync history,
+        performance metrics, health scores, and operational statistics.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      supplierIntegration_id:
+        name: supplierIntegration_id
+        description: 'The ID of the supplierIntegration.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      supplierIntegration:
+        name: supplierIntegration
+        description: 'The ID of the integration.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      supplierIntegration_id: 16
+      supplierIntegration: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Integration logs retrieved successfully.",
+            "data": {
+              "integration_id": 1,
+              "integration_name": "GlobalTech API Integration",
+              "last_successful_sync": "2025-01-15T15:30:00.000000Z",
+              "last_failed_sync": "2025-01-14T10:15:00.000000Z",
+              "consecutive_failures": 0,
+              "last_error": null,
+              "sync_statistics": {
+                "total_syncs": 245,
+                "successful_syncs": 241,
+                "failed_syncs": 4,
+                "products_synced": 1250,
+                "orders_sent": 89,
+                "last_sync_duration": 8.5,
+                "average_sync_duration": 6.2,
+                "success_rate": 98.37
+              },
+              "health_score": 95,
+              "health_status": "excellent",
+              "success_rate": 98.37,
+              "last_sync_status": "success",
+              "last_sync_time": "2025-01-15T15:30:00.000000Z",
+              "last_sync_ago": "4 hours ago",
+              "needs_sync": false,
+              "can_retry": true,
+              "sync_frequency": "Every 60 minutes"
+            }
+          }
+        headers: []
+        description: 'Logs retrieved successfully'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\SupplierIntegration] 999"
+          }
+        headers: []
+        description: 'Integration not found'
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+            "message": "Failed to retrieve logs."
+          }
+        headers: []
+        description: 'Server error'
         custom: []
     responseFields: []
     auth:

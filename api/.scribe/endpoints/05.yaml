@@ -343,7 +343,7 @@ endpoints:
         name: filter.availability
         description: ''
         required: false
-        example: out_of_stock
+        example: low_stock
         type: string
         enumValues:
           - in_stock
@@ -549,7 +549,7 @@ endpoints:
         name: diversify
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -569,7 +569,7 @@ endpoints:
         name: facets
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -589,7 +589,7 @@ endpoints:
         name: personalize
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -619,7 +619,7 @@ endpoints:
         name: boost_new_products
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -629,7 +629,7 @@ endpoints:
         name: boost_in_stock
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -644,7 +644,7 @@ endpoints:
         category: '9,31'
         categories: '9,31'
         quantity: '64'
-        availability: out_of_stock
+        availability: low_stock
         vendors: '9,31'
         vendor: i
         brand: k
@@ -664,15 +664,15 @@ endpoints:
       page: 4
       per_page: 9
       sort: 'y8p,Bm,-dp,-Zm,-GH'
-      diversify: true
+      diversify: false
       explain: true
-      facets: false
+      facets: true
       highlight: true
-      personalize: true
+      personalize: false
       typo_tolerance: true
       exact_match: true
-      boost_new_products: false
-      boost_in_stock: true
+      boost_new_products: true
+      boost_in_stock: false
     fileParameters: []
     responses:
       -

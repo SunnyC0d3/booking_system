@@ -1,610 +1,468 @@
-name: 'Email Verification'
+name: 'Supplier Products'
 description: ''
 endpoints:
   -
     httpMethods:
       - GET
-    uri: 'api/email/verify/{id}/{hash}'
+    uri: api/admin/supplier-products
     metadata:
-      groupName: 'Email Verification'
+      groupName: 'Supplier Products'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: "Verify a user's email address"
+      title: 'Retrieve paginated list of supplier products'
       description: |-
-        This endpoint verifies a user's email address using a signed URL that is sent to their email
-        after registration. The verification link contains the user ID and a hash for security.
-        Once verified, the user's email_verified_at timestamp is set and they can access protected features.
-      authenticated: false
+        Get a paginated list of all supplier products in the system. This endpoint supports filtering
+        by supplier, sync status, active status, mapping status, and stock levels. Includes product
+        sync information and mapping details.
+      authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
-    urlParameters:
-      id:
-        name: id
-        description: 'The ID of the verify.'
-        required: true
-        example: architecto
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      hash:
-        name: hash
-        description: "The verification hash that ensures the link is valid and hasn't been tampered with. This is automatically included in the verification link."
-        required: true
-        example: abc123def456ghi789
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      user_id:
-        name: user_id
-        description: 'The ID of the user whose email is being verified. This is automatically included in the verification link.'
-        required: true
-        example: 123
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      id: architecto
-      hash: abc123def456ghi789
-      user_id: 123
+    urlParameters: []
+    cleanUrlParameters: []
     queryParameters:
-      expires:
-        name: expires
-        description: 'The expiration timestamp for the verification link. Automatically included.'
-        required: true
-        example: 1640995200
+      supplier_id:
+        name: supplier_id
+        description: 'optional Filter products by specific supplier ID.'
+        required: false
+        example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-      signature:
-        name: signature
-        description: 'The signature that validates the signed URL. Automatically included.'
-        required: true
-        example: xyz789abc123def456
+      sync_status:
+        name: sync_status
+        description: 'optional Filter by sync status (synced, pending_sync, out_of_sync, sync_error).'
+        required: false
+        example: synced
         type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      is_active:
+        name: is_active
+        description: 'optional Filter by active status (1 for active, 0 for inactive).'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      is_mapped:
+        name: is_mapped
+        description: 'optional Filter by mapping status (1 for mapped, 0 for unmapped).'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      search:
+        name: search
+        description: 'optional Search products by name, supplier SKU, or supplier product ID.'
+        required: false
+        example: Wireless
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      stock_status:
+        name: stock_status
+        description: 'optional Filter by stock status (in_stock, out_of_stock, low_stock).'
+        required: false
+        example: in_stock
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      page:
+        name: page
+        description: 'optional Page number for pagination. Default: 1.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      per_page:
+        name: per_page
+        description: 'optional Number of products per page (max 50). Default: 15.'
+        required: false
+        example: 20
+        type: integer
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
     cleanQueryParameters:
-      expires: 1640995200
-      signature: xyz789abc123def456
-    bodyParameters: []
-    cleanBodyParameters: []
+      supplier_id: 1
+      sync_status: synced
+      is_active: true
+      is_mapped: true
+      search: Wireless
+      stock_status: in_stock
+      page: 1
+      per_page: 20
+    bodyParameters:
+      supplier_id:
+        name: supplier_id
+        description: 'The <code>id</code> of an existing record in the suppliers table.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      sync_status:
+        name: sync_status
+        description: ''
+        required: false
+        example: out_of_sync
+        type: string
+        enumValues:
+          - synced
+          - pending_sync
+          - sync_failed
+          - out_of_sync
+          - supplier_discontinued
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      is_active:
+        name: is_active
+        description: ''
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      is_mapped:
+        name: is_mapped
+        description: ''
+        required: false
+        example: false
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      search:
+        name: search
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: b
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      stock_status:
+        name: stock_status
+        description: ''
+        required: false
+        example: in_stock
+        type: string
+        enumValues:
+          - in_stock
+          - out_of_stock
+          - low_stock
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      category:
+        name: category
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: 'n'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      min_price:
+        name: min_price
+        description: 'Must be at least 0.'
+        required: false
+        example: 84
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      max_price:
+        name: max_price
+        description: 'Must be at least 0.'
+        required: false
+        example: 12
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      min_stock:
+        name: min_stock
+        description: 'Must be at least 0.'
+        required: false
+        example: 77
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      max_stock:
+        name: max_stock
+        description: 'Must be at least 0.'
+        required: false
+        example: 8
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      last_synced_from:
+        name: last_synced_from
+        description: 'Must be a valid date.'
+        required: false
+        example: '2025-07-21T08:45:17'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      last_synced_to:
+        name: last_synced_to
+        description: 'Must be a valid date. Must be a date after or equal to <code>last_synced_from</code>.'
+        required: false
+        example: '2051-08-14'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      page:
+        name: page
+        description: 'Must be at least 1.'
+        required: false
+        example: 22
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      per_page:
+        name: per_page
+        description: 'Must be at least 1. Must not be greater than 100.'
+        required: false
+        example: 7
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      sort_by:
+        name: sort_by
+        description: ''
+        required: false
+        example: created_at
+        type: string
+        enumValues:
+          - name
+          - supplier_sku
+          - supplier_price
+          - retail_price
+          - stock_quantity
+          - last_synced_at
+          - created_at
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      sort_direction:
+        name: sort_direction
+        description: ''
+        required: false
+        example: desc
+        type: string
+        enumValues:
+          - asc
+          - desc
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      include_images:
+        name: include_images
+        description: ''
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      include_attributes:
+        name: include_attributes
+        description: ''
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      sync_status: out_of_sync
+      is_active: true
+      is_mapped: false
+      search: b
+      stock_status: in_stock
+      category: 'n'
+      min_price: 84
+      max_price: 12
+      min_stock: 77
+      max_stock: 8
+      last_synced_from: '2025-07-21T08:45:17'
+      last_synced_to: '2051-08-14'
+      page: 22
+      per_page: 7
+      sort_by: created_at
+      sort_direction: desc
+      include_images: true
+      include_attributes: true
     fileParameters: []
     responses:
       -
-        status: 302
+        status: 200
         content: |-
           {
-            "description": "User is redirected to the frontend email verification success page",
-            "headers": {
-              "Location": "https://yourfrontend.com/email-verified"
+            "message": "Supplier products retrieved successfully.",
+            "data": {
+              "data": [
+                {
+                  "id": 1,
+                  "supplier_id": 1,
+                  "supplier_sku": "GT-WH-001",
+                  "supplier_product_id": "GT001",
+                  "name": "Wireless Bluetooth Headphones Pro",
+                  "description": "Premium noise-cancelling wireless headphones with 30-hour battery life",
+                  "supplier_price": 4500,
+                  "supplier_price_formatted": "£45.00",
+                  "retail_price": 7999,
+                  "retail_price_formatted": "£79.99",
+                  "stock_quantity": 150,
+                  "weight": 0.35,
+                  "length": 20.0,
+                  "width": 18.0,
+                  "height": 8.0,
+                  "sync_status": "synced",
+                  "is_active": true,
+                  "is_mapped": true,
+                  "minimum_order_quantity": 1,
+                  "processing_time_days": 2,
+                  "images": ["headphones-1.jpg", "headphones-2.jpg"],
+                  "attributes": {
+                    "color": "Black",
+                    "connectivity": "Bluetooth 5.0"
+                  },
+                  "categories": ["Electronics", "Audio"],
+                  "last_synced_at": "2025-01-15T14:30:00.000000Z",
+                  "supplier": {
+                    "id": 1,
+                    "name": "GlobalTech Distributors",
+                    "status": "active"
+                  },
+                  "product": {
+                    "id": 25,
+                    "name": "Wireless Bluetooth Headphones Pro",
+                    "price": 7999
+                  },
+                  "created_at": "2025-01-10T08:00:00.000000Z",
+                  "updated_at": "2025-01-15T14:30:00.000000Z"
+                }
+              ],
+              "current_page": 1,
+              "per_page": 15,
+              "total": 23,
+              "last_page": 2,
+              "from": 1,
+              "to": 15
             }
           }
         headers: []
-        description: 'Email verified successfully'
+        description: 'Success with products'
         custom: []
       -
-        status: 302
+        status: 200
         content: |-
           {
-            "description": "User is redirected to the frontend (email was already verified previously)",
-            "headers": {
-              "Location": "https://yourfrontend.com/email-verified"
+            "message": "Supplier products retrieved successfully.",
+            "data": {
+              "data": [],
+              "current_page": 1,
+              "per_page": 15,
+              "total": 0,
+              "last_page": 1,
+              "from": null,
+              "to": null
             }
           }
         headers: []
-        description: 'Email already verified'
-        custom: []
-      -
-        status: 401
-        content: |-
-          {
-            "message": "Invalid/Expired url provided.",
-            "status": 401
-          }
-        headers: []
-        description: 'Invalid or expired verification link'
+        description: 'No products found'
         custom: []
       -
         status: 403
         content: |-
           {
-            "message": "Invalid/Expired url provided.",
-            "status": 401
+            "message": "You do not have the required permissions."
           }
         headers: []
-        description: 'Signature verification failed'
+        description: 'Insufficient permissions'
         custom: []
       -
-        status: 403
+        status: 422
         content: |-
           {
-              "message": "Invalid signature.",
-              "exception": "Illuminate\\Routing\\Exceptions\\InvalidSignatureException",
-              "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/ValidateSignature.php",
-              "line": 73,
-              "trace": [
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
-                      "line": 209,
-                      "function": "handle",
-                      "class": "Illuminate\\Routing\\Middleware\\ValidateSignature",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityMonitoring.php",
-                      "line": 27,
-                      "function": "Illuminate\\Pipeline\\{closure}",
-                      "class": "Illuminate\\Pipeline\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
-                      "line": 209,
-                      "function": "handle",
-                      "class": "App\\Http\\Middleware\\V1\\SecurityMonitoring",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityLogger.php",
-                      "line": 23,
-                      "function": "Illuminate\\Pipeline\\{closure}",
-                      "class": "Illuminate\\Pipeline\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
-                      "line": 209,
-                      "function": "handle",
-                      "class": "App\\Http\\Middleware\\V1\\SecurityLogger",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/app/Http/Middleware/V1/SecurityHeaders.php",
-                      "line": 12,
-                      "function": "Illuminate\\Pipeline\\{closure}",
-                      "class": "Illuminate\\Pipeline\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
-                      "line": 209,
-                      "function": "handle",
-                      "class": "App\\Http\\Middleware\\V1\\SecurityHeaders",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php",
-                      "line": 51,
-                      "function": "Illuminate\\Pipeline\\{closure}",
-                      "class": "Illuminate\\Pipeline\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
-                      "line": 209,
-                      "function": "handle",
-                      "class": "Illuminate\\Routing\\Middleware\\SubstituteBindings",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
-                      "line": 127,
-                      "function": "Illuminate\\Pipeline\\{closure}",
-                      "class": "Illuminate\\Pipeline\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
-                      "line": 807,
-                      "function": "then",
-                      "class": "Illuminate\\Pipeline\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
-                      "line": 786,
-                      "function": "runRouteWithinStack",
-                      "class": "Illuminate\\Routing\\Router",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
-                      "line": 750,
-                      "function": "runRoute",
-                      "class": "Illuminate\\Routing\\Router",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
-                      "line": 739,
-                      "function": "dispatchToRoute",
-                      "class": "Illuminate\\Routing\\Router",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php",
-                      "line": 201,
-                      "function": "dispatch",
-                      "class": "Illuminate\\Routing\\Router",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
-                      "line": 170,
-                      "function": "Illuminate\\Foundation\\Http\\{closure}",
-                      "class": "Illuminate\\Foundation\\Http\\Kernel",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php",
-                      "line": 21,
-                      "function": "Illuminate\\Pipeline\\{closure}",
-                      "class": "Illuminate\\Pipeline\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php",
-                      "line": 31,
-                      "function": "handle",
-                      "class": "Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
-                      "line": 209,
-                      "function": "handle",
-                      "class": "Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php",
-                      "line": 21,
-                      "function": "Illuminate\\Pipeline\\{closure}",
-                      "class": "Illuminate\\Pipeline\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php",
-                      "line": 51,
-                      "function": "handle",
-                      "class": "Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
-                      "line": 209,
-                      "function": "handle",
-                      "class": "Illuminate\\Foundation\\Http\\Middleware\\TrimStrings",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php",
-                      "line": 27,
-                      "function": "Illuminate\\Pipeline\\{closure}",
-                      "class": "Illuminate\\Pipeline\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
-                      "line": 209,
-                      "function": "handle",
-                      "class": "Illuminate\\Http\\Middleware\\ValidatePostSize",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php",
-                      "line": 110,
-                      "function": "Illuminate\\Pipeline\\{closure}",
-                      "class": "Illuminate\\Pipeline\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
-                      "line": 209,
-                      "function": "handle",
-                      "class": "Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php",
-                      "line": 49,
-                      "function": "Illuminate\\Pipeline\\{closure}",
-                      "class": "Illuminate\\Pipeline\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
-                      "line": 209,
-                      "function": "handle",
-                      "class": "Illuminate\\Http\\Middleware\\HandleCors",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php",
-                      "line": 58,
-                      "function": "Illuminate\\Pipeline\\{closure}",
-                      "class": "Illuminate\\Pipeline\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
-                      "line": 209,
-                      "function": "handle",
-                      "class": "Illuminate\\Http\\Middleware\\TrustProxies",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php",
-                      "line": 22,
-                      "function": "Illuminate\\Pipeline\\{closure}",
-                      "class": "Illuminate\\Pipeline\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
-                      "line": 209,
-                      "function": "handle",
-                      "class": "Illuminate\\Foundation\\Http\\Middleware\\InvokeDeferredCallbacks",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
-                      "line": 127,
-                      "function": "Illuminate\\Pipeline\\{closure}",
-                      "class": "Illuminate\\Pipeline\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php",
-                      "line": 176,
-                      "function": "then",
-                      "class": "Illuminate\\Pipeline\\Pipeline",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php",
-                      "line": 145,
-                      "function": "sendRequestThroughRouter",
-                      "class": "Illuminate\\Foundation\\Http\\Kernel",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
-                      "line": 310,
-                      "function": "handle",
-                      "class": "Illuminate\\Foundation\\Http\\Kernel",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
-                      "line": 298,
-                      "function": "callLaravelOrLumenRoute",
-                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
-                      "line": 91,
-                      "function": "makeApiCall",
-                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
-                      "line": 44,
-                      "function": "makeResponseCall",
-                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
-                      "line": 35,
-                      "function": "makeResponseCallIfConditionsPass",
-                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php",
-                      "line": 237,
-                      "function": "__invoke",
-                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php",
-                      "line": 163,
-                      "function": "iterateThroughStrategies",
-                      "class": "Knuckles\\Scribe\\Extracting\\Extractor",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php",
-                      "line": 95,
-                      "function": "fetchResponses",
-                      "class": "Knuckles\\Scribe\\Extracting\\Extractor",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php",
-                      "line": 125,
-                      "function": "processRoute",
-                      "class": "Knuckles\\Scribe\\Extracting\\Extractor",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php",
-                      "line": 72,
-                      "function": "extractEndpointsInfoFromLaravelApp",
-                      "class": "Knuckles\\Scribe\\GroupedEndpoints\\GroupedEndpointsFromApp",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php",
-                      "line": 50,
-                      "function": "extractEndpointsInfoAndWriteToDisk",
-                      "class": "Knuckles\\Scribe\\GroupedEndpoints\\GroupedEndpointsFromApp",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Commands/GenerateDocumentation.php",
-                      "line": 53,
-                      "function": "get",
-                      "class": "Knuckles\\Scribe\\GroupedEndpoints\\GroupedEndpointsFromApp",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php",
-                      "line": 36,
-                      "function": "handle",
-                      "class": "Knuckles\\Scribe\\Commands\\GenerateDocumentation",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Util.php",
-                      "line": 43,
-                      "function": "Illuminate\\Container\\{closure}",
-                      "class": "Illuminate\\Container\\BoundMethod",
-                      "type": "::"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php",
-                      "line": 95,
-                      "function": "unwrapIfClosure",
-                      "class": "Illuminate\\Container\\Util",
-                      "type": "::"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php",
-                      "line": 35,
-                      "function": "callBoundMethod",
-                      "class": "Illuminate\\Container\\BoundMethod",
-                      "type": "::"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Container.php",
-                      "line": 694,
-                      "function": "call",
-                      "class": "Illuminate\\Container\\BoundMethod",
-                      "type": "::"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php",
-                      "line": 213,
-                      "function": "call",
-                      "class": "Illuminate\\Container\\Container",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/symfony/console/Command/Command.php",
-                      "line": 279,
-                      "function": "execute",
-                      "class": "Illuminate\\Console\\Command",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php",
-                      "line": 182,
-                      "function": "run",
-                      "class": "Symfony\\Component\\Console\\Command\\Command",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/symfony/console/Application.php",
-                      "line": 1094,
-                      "function": "run",
-                      "class": "Illuminate\\Console\\Command",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/symfony/console/Application.php",
-                      "line": 342,
-                      "function": "doRunCommand",
-                      "class": "Symfony\\Component\\Console\\Application",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/symfony/console/Application.php",
-                      "line": 193,
-                      "function": "doRun",
-                      "class": "Symfony\\Component\\Console\\Application",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php",
-                      "line": 198,
-                      "function": "run",
-                      "class": "Symfony\\Component\\Console\\Application",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Application.php",
-                      "line": 1208,
-                      "function": "handle",
-                      "class": "Illuminate\\Foundation\\Console\\Kernel",
-                      "type": "->"
-                  },
-                  {
-                      "file": "/var/www/ecommerce_api/api/artisan",
-                      "line": 13,
-                      "function": "handleCommand",
-                      "class": "Illuminate\\Foundation\\Application",
-                      "type": "->"
-                  }
-              ]
-          }
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          x-content-type-options: nosniff
-          x-frame-options: DENY
-          x-xss-protection: '1; mode=block'
-          content-security-policy: "default-src 'none'; frame-ancestors 'none';"
-          referrer-policy: strict-origin-when-cross-origin
-          permissions-policy: 'camera=(), microphone=(), geolocation=(), payment=()'
-        description: null
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "No query results for model [App\\Models\\User] 123"
+            "errors": [
+              "The supplier id field must be an integer.",
+              "The sync status field must be one of: synced, pending_sync, out_of_sync, sync_error."
+            ]
           }
         headers: []
-        description: 'User not found'
+        description: 'Invalid filter parameters'
         custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
     controller: null
     method: null
     route: null
     custom: []
   -
     httpMethods:
-      - GET
-    uri: api/email/resend
+      - POST
+    uri: api/admin/supplier-products
     metadata:
-      groupName: 'Email Verification'
+      groupName: 'Supplier Products'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Resend email verification notification'
+      title: 'Create a new supplier product'
       description: |-
-        Sends a new email verification link to the authenticated user's email address.
-        This is useful when users don't receive the initial verification email or when
-        the verification link has expired. The user must be authenticated to request a resend.
+        Create a new product entry from a supplier catalog. This creates a supplier product record
+        that can later be mapped to store products. All monetary values should be provided in pennies.
       authenticated: true
       custom: []
     headers:
@@ -615,6 +473,389 @@ endpoints:
     cleanUrlParameters: []
     queryParameters: []
     cleanQueryParameters: []
+    bodyParameters:
+      supplier_id:
+        name: supplier_id
+        description: 'The ID of the supplier for this product.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      product_id:
+        name: product_id
+        description: 'The <code>id</code> of an existing record in the products table.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      supplier_sku:
+        name: supplier_sku
+        description: "The supplier's SKU/part number."
+        required: true
+        example: GT-WH-001
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      supplier_product_id:
+        name: supplier_product_id
+        description: "The supplier's internal product ID."
+        required: true
+        example: GT001
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      name:
+        name: name
+        description: 'The product name from supplier catalog.'
+        required: true
+        example: 'Wireless Bluetooth Headphones Pro'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      description:
+        name: description
+        description: 'optional Product description from supplier.'
+        required: false
+        example: 'Premium noise-cancelling wireless headphones'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      supplier_price:
+        name: supplier_price
+        description: 'Supplier wholesale price in pennies.'
+        required: true
+        example: 4500
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      retail_price:
+        name: retail_price
+        description: 'optional Suggested retail price in pennies.'
+        required: false
+        example: 7999
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      stock_quantity:
+        name: stock_quantity
+        description: 'Current stock quantity.'
+        required: true
+        example: 150
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      weight:
+        name: weight
+        description: 'optional Product weight in kg.'
+        required: false
+        example: '0.35'
+        type: numeric
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      length:
+        name: length
+        description: 'optional Product length in cm.'
+        required: false
+        example: '20.0'
+        type: numeric
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      width:
+        name: width
+        description: 'optional Product width in cm.'
+        required: false
+        example: '18.0'
+        type: numeric
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      height:
+        name: height
+        description: 'optional Product height in cm.'
+        required: false
+        example: '8.0'
+        type: numeric
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      sync_status:
+        name: sync_status
+        description: 'optional Sync status (synced, pending_sync, out_of_sync, sync_error). Default: pending_sync.'
+        required: false
+        example: synced
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      images:
+        name: images
+        description: 'optional Array of product image URLs.'
+        required: false
+        example:
+          - image1.jpg
+          - image2.jpg
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      attributes:
+        name: attributes
+        description: 'optional Product attributes as key-value pairs.'
+        required: false
+        example:
+          color: Black
+          connectivity: 'Bluetooth 5.0'
+        type: object
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      categories:
+        name: categories
+        description: 'optional Product categories.'
+        required: false
+        example:
+          - Electronics
+          - Audio
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      is_active:
+        name: is_active
+        description: 'optional Whether the product is active. Default: true.'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      is_mapped:
+        name: is_mapped
+        description: ''
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      minimum_order_quantity:
+        name: minimum_order_quantity
+        description: 'optional Minimum order quantity. Default: 1.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      processing_time_days:
+        name: processing_time_days
+        description: 'optional Processing time in days.'
+        required: false
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+    cleanBodyParameters:
+      supplier_id: 1
+      supplier_sku: GT-WH-001
+      supplier_product_id: GT001
+      name: 'Wireless Bluetooth Headphones Pro'
+      description: 'Premium noise-cancelling wireless headphones'
+      supplier_price: 4500
+      retail_price: 7999
+      stock_quantity: 150
+      weight: '0.35'
+      length: '20.0'
+      width: '18.0'
+      height: '8.0'
+      sync_status: synced
+      images:
+        - image1.jpg
+        - image2.jpg
+      attributes:
+        color: Black
+        connectivity: 'Bluetooth 5.0'
+      categories:
+        - Electronics
+        - Audio
+      is_active: true
+      is_mapped: true
+      minimum_order_quantity: 1
+      processing_time_days: 2
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Supplier product created successfully.",
+            "data": {
+              "id": 24,
+              "supplier_id": 1,
+              "supplier_sku": "GT-WH-001",
+              "supplier_product_id": "GT001",
+              "name": "Wireless Bluetooth Headphones Pro",
+              "description": "Premium noise-cancelling wireless headphones",
+              "supplier_price": 4500,
+              "supplier_price_formatted": "£45.00",
+              "retail_price": 7999,
+              "retail_price_formatted": "£79.99",
+              "stock_quantity": 150,
+              "weight": 0.35,
+              "sync_status": "synced",
+              "is_active": true,
+              "is_mapped": false,
+              "minimum_order_quantity": 1,
+              "processing_time_days": 2,
+              "images": ["image1.jpg", "image2.jpg"],
+              "attributes": {
+                "color": "Black",
+                "connectivity": "Bluetooth 5.0"
+              },
+              "categories": ["Electronics", "Audio"],
+              "supplier": {
+                "id": 1,
+                "name": "GlobalTech Distributors"
+              },
+              "product": null,
+              "created_at": "2025-01-15T20:00:00.000000Z",
+              "updated_at": "2025-01-15T20:00:00.000000Z"
+            }
+          }
+        headers: []
+        description: 'Product created successfully'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 409
+        content: |-
+          {
+            "message": "A product with this supplier SKU already exists for this supplier."
+          }
+        headers: []
+        description: 'Duplicate SKU'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "errors": [
+              "The supplier id field is required.",
+              "The supplier sku field is required.",
+              "The name field is required.",
+              "The supplier price must be greater than 0."
+            ]
+          }
+        headers: []
+        description: 'Validation errors'
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+            "message": "Failed to create supplier product."
+          }
+        headers: []
+        description: 'Server error'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/admin/supplier-products/{supplierProduct_id}'
+    metadata:
+      groupName: 'Supplier Products'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Retrieve a specific supplier product'
+      description: |-
+        Get detailed information about a specific supplier product including mapping information,
+        recent dropship order items, and sync history. This provides a comprehensive view of the
+        product's performance and relationships.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      supplierProduct_id:
+        name: supplierProduct_id
+        description: 'The ID of the supplierProduct.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      supplierProduct:
+        name: supplierProduct
+        description: 'The ID of the supplier product to retrieve.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      supplierProduct_id: 16
+      supplierProduct: 1
+    queryParameters: []
+    cleanQueryParameters: []
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
@@ -623,51 +864,980 @@ endpoints:
         status: 200
         content: |-
           {
-            "message": "Email verification link sent on your email id.",
-            "status": 200
+            "message": "Supplier product retrieved successfully.",
+            "data": {
+              "id": 1,
+              "supplier_id": 1,
+              "supplier_sku": "GT-WH-001",
+              "supplier_product_id": "GT001",
+              "name": "Wireless Bluetooth Headphones Pro",
+              "description": "Premium noise-cancelling wireless headphones with 30-hour battery life",
+              "supplier_price": 4500,
+              "supplier_price_formatted": "£45.00",
+              "retail_price": 7999,
+              "retail_price_formatted": "£79.99",
+              "stock_quantity": 150,
+              "weight": 0.35,
+              "length": 20.0,
+              "width": 18.0,
+              "height": 8.0,
+              "sync_status": "synced",
+              "is_active": true,
+              "is_mapped": true,
+              "minimum_order_quantity": 1,
+              "processing_time_days": 2,
+              "images": ["headphones-1.jpg", "headphones-2.jpg"],
+              "attributes": {
+                "color": "Black",
+                "connectivity": "Bluetooth 5.0"
+              },
+              "categories": ["Electronics", "Audio"],
+              "sync_errors": null,
+              "last_synced_at": "2025-01-15T14:30:00.000000Z",
+              "supplier": {
+                "id": 1,
+                "name": "GlobalTech Distributors",
+                "status": "active",
+                "integration_type": "api"
+              },
+              "product": {
+                "id": 25,
+                "name": "Wireless Bluetooth Headphones Pro",
+                "price": 7999,
+                "vendor": {
+                  "id": 1,
+                  "name": "Tech Haven"
+                }
+              },
+              "product_mapping": {
+                "id": 1,
+                "is_primary": true,
+                "is_active": true,
+                "markup_percentage": 78.0,
+                "markup_type": "percentage"
+              },
+              "dropship_order_items": [
+                {
+                  "id": 1,
+                  "quantity": 2,
+                  "supplier_price": 4500,
+                  "retail_price": 7999,
+                  "created_at": "2025-01-15T16:20:00.000000Z",
+                  "dropship_order": {
+                    "id": 1,
+                    "status": "confirmed",
+                    "order": {
+                      "id": 98,
+                      "user": {
+                        "name": "Customer Name"
+                      }
+                    }
+                  }
+                }
+              ],
+              "created_at": "2025-01-10T08:00:00.000000Z",
+              "updated_at": "2025-01-15T14:30:00.000000Z"
+            }
           }
         headers: []
-        description: 'Verification email sent successfully'
+        description: 'Product found'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\SupplierProduct] 999"
+          }
+        headers: []
+        description: 'Product not found'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/admin/supplier-products/{supplierProduct_id}'
+    metadata:
+      groupName: 'Supplier Products'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Delete a supplier product'
+      description: |-
+        Soft delete a supplier product after validating that there are no active dependencies.
+        Products with active dropship orders cannot be deleted. If the product is mapped to
+        a store product, the mapping will be updated accordingly.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      supplierProduct_id:
+        name: supplierProduct_id
+        description: 'The ID of the supplierProduct.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      supplierProduct:
+        name: supplierProduct
+        description: 'The ID of the supplier product to delete.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      supplierProduct_id: 16
+      supplierProduct: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Supplier product deleted successfully."
+          }
+        headers: []
+        description: 'Product deleted successfully'
         custom: []
       -
         status: 400
         content: |-
           {
-            "message": "Email already verified.",
-            "status": 400
+            "message": "Cannot delete supplier product with active dropship orders."
           }
         headers: []
-        description: 'Email already verified'
+        description: 'Cannot delete - has active orders'
         custom: []
       -
-        status: 401
+        status: 403
         content: |-
           {
-            "message": "Unauthenticated.",
-            "status": 401
+            "message": "You do not have the required permissions."
           }
         headers: []
-        description: 'User not authenticated'
+        description: 'Insufficient permissions'
         custom: []
       -
-        status: 429
+        status: 404
         content: |-
           {
-            "message": "Too many verification emails sent. Please wait before requesting another.",
-            "status": 429
+            "message": "No query results for model [App\\Models\\SupplierProduct] 999"
           }
         headers: []
-        description: 'Too many requests'
+        description: 'Product not found'
         custom: []
       -
         status: 500
         content: |-
           {
-            "message": "Failed to send verification email. Please try again later.",
-            "status": 500
+            "message": "Failed to delete supplier product."
           }
         headers: []
-        description: 'Email sending failed'
+        description: 'Server error'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: 'api/admin/supplier-products/suppliers/{supplier_id}/sync'
+    metadata:
+      groupName: 'Supplier Products'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Sync products from supplier'
+      description: |-
+        Trigger a synchronization of products from a specific supplier using their active integration.
+        This will fetch the latest product catalog, prices, and stock levels from the supplier's system.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      supplier_id:
+        name: supplier_id
+        description: 'The ID of the supplier.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      supplier:
+        name: supplier
+        description: 'The ID of the supplier to sync products from.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      supplier_id: 16
+      supplier: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Product sync completed successfully.",
+            "data": {
+              "products_found": 45,
+              "products_created": 3,
+              "products_updated": 12,
+              "errors": []
+            }
+          }
+        headers: []
+        description: 'Sync completed successfully'
+        custom: []
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Product sync completed successfully.",
+            "data": {
+              "products_found": 45,
+              "products_created": 3,
+              "products_updated": 10,
+              "errors": [
+                "Product GT-005 missing required attributes",
+                "Invalid price format for product GT-007"
+              ]
+            }
+          }
+        headers: []
+        description: 'Sync completed with errors'
+        custom: []
+      -
+        status: 400
+        content: |-
+          {
+            "message": "No active integration found for this supplier."
+          }
+        headers: []
+        description: 'No integration found'
+        custom: []
+      -
+        status: 400
+        content: |-
+          {
+            "message": "Supplier integration does not support automated syncing."
+          }
+        headers: []
+        description: 'Integration not automated'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\Supplier] 999"
+          }
+        headers: []
+        description: 'Supplier not found'
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+            "message": "Failed to sync supplier products."
+          }
+        headers: []
+        description: 'Server error'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: 'api/admin/supplier-products/{supplierProduct_id}/map-to-product'
+    metadata:
+      groupName: 'Supplier Products'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Map supplier product to store product'
+      description: |-
+        Create a mapping between a supplier product and a store product. This can either map to an
+        existing product or create a new product automatically. The mapping includes markup configuration
+        and sync settings.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      supplierProduct_id:
+        name: supplierProduct_id
+        description: 'The ID of the supplierProduct.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      supplierProduct:
+        name: supplierProduct
+        description: 'The ID of the supplier product to map.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      supplierProduct_id: 16
+      supplierProduct: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      create_new_product:
+        name: create_new_product
+        description: 'Whether to create a new product or map to existing.'
+        required: true
+        example: false
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      product_id:
+        name: product_id
+        description: 'required_if:create_new_product,false The ID of existing product to map to.'
+        required: false
+        example: 25
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      markup_percentage:
+        name: markup_percentage
+        description: 'optional Markup percentage for pricing.'
+        required: false
+        example: '78.5'
+        type: numeric
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      markup_type:
+        name: markup_type
+        description: 'optional Markup type (percentage, fixed). Default: percentage.'
+        required: false
+        example: percentage
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      fixed_markup:
+        name: fixed_markup
+        description: 'optional Fixed markup amount in pennies (if markup_type is fixed).'
+        required: false
+        example: 1000
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+    cleanBodyParameters:
+      create_new_product: false
+      product_id: 25
+      markup_percentage: '78.5'
+      markup_type: percentage
+      fixed_markup: 1000
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Supplier product mapped successfully.",
+            "data": {
+              "id": 1,
+              "supplier_id": 1,
+              "supplier_sku": "GT-WH-001",
+              "name": "Wireless Bluetooth Headphones Pro",
+              "is_mapped": true,
+              "product": {
+                "id": 25,
+                "name": "Wireless Bluetooth Headphones Pro",
+                "price": 7999,
+                "is_dropship": true
+              },
+              "product_mapping": {
+                "id": 1,
+                "is_primary": true,
+                "is_active": true,
+                "markup_percentage": 78.5,
+                "markup_type": "percentage"
+              }
+            }
+          }
+        headers: []
+        description: 'Product mapped successfully'
+        custom: []
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Supplier product mapped successfully.",
+            "data": {
+              "id": 1,
+              "is_mapped": true,
+              "product": {
+                "id": 52,
+                "name": "Wireless Bluetooth Headphones Pro",
+                "price": 7999,
+                "is_dropship": true,
+                "created_from_supplier": true
+              }
+            }
+          }
+        headers: []
+        description: 'New product created and mapped'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\SupplierProduct] 999"
+          }
+        headers: []
+        description: 'Product not found'
+        custom: []
+      -
+        status: 409
+        content: |-
+          {
+            "message": "This supplier product is already mapped to a store product."
+          }
+        headers: []
+        description: 'Product already mapped'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "errors": [
+              "The product id field is required when create new product is false.",
+              "The markup percentage must be greater than 0."
+            ]
+          }
+        headers: []
+        description: 'Validation errors'
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+            "message": "Failed to map supplier product."
+          }
+        headers: []
+        description: 'Server error'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/admin/supplier-products/bulk-update-stock
+    metadata:
+      groupName: 'Supplier Products'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Bulk update stock quantities'
+      description: |-
+        Update stock quantities for multiple supplier products in a single operation.
+        This is useful for processing bulk stock updates from supplier feeds or integrations.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      updates:
+        name: updates
+        description: 'Array of stock update objects.'
+        required: true
+        example:
+          -
+            supplier_product_id: 1
+            stock_quantity: 150
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      'updates[].supplier_product_id':
+        name: 'updates[].supplier_product_id'
+        description: 'The <code>id</code> of an existing record in the supplier_products table.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      'updates[].stock_quantity':
+        name: 'updates[].stock_quantity'
+        description: 'Must be at least 0.'
+        required: true
+        example: 39
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      'updates.*.supplier_product_id':
+        name: 'updates.*.supplier_product_id'
+        description: 'The supplier product ID to update.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      'updates.*.stock_quantity':
+        name: 'updates.*.stock_quantity'
+        description: 'The new stock quantity.'
+        required: true
+        example: 150
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      updates:
+        -
+          supplier_product_id: 1
+          stock_quantity: 150
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Successfully updated stock for 3 products.",
+            "data": {
+              "updated_count": 3,
+              "total_requested": 3
+            }
+          }
+        headers: []
+        description: 'Stock updated successfully'
+        custom: []
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Successfully updated stock for 2 products.",
+            "data": {
+              "updated_count": 2,
+              "total_requested": 3
+            }
+          }
+        headers: []
+        description: 'Partial success'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "errors": [
+              "The updates field is required.",
+              "The updates.0.supplier product id field is required.",
+              "The updates.0.stock quantity must be at least 0."
+            ]
+          }
+        headers: []
+        description: 'Validation errors'
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+            "message": "Failed to bulk update stock."
+          }
+        headers: []
+        description: 'Server error'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/admin/supplier-products/bulk-update-prices
+    metadata:
+      groupName: 'Supplier Products'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Bulk update prices'
+      description: |-
+        Update supplier and retail prices for multiple supplier products in a single operation.
+        This is useful for processing bulk price updates from supplier feeds or applying
+        market-wide pricing changes.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      updates:
+        name: updates
+        description: 'Array of price update objects.'
+        required: true
+        example:
+          -
+            supplier_product_id: 1
+            supplier_price: 4750
+            retail_price: 8500
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      'updates[].supplier_product_id':
+        name: 'updates[].supplier_product_id'
+        description: 'The <code>id</code> of an existing record in the supplier_products table.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      'updates[].supplier_price':
+        name: 'updates[].supplier_price'
+        description: 'Must be at least 0.'
+        required: true
+        example: 39
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      'updates[].retail_price':
+        name: 'updates[].retail_price'
+        description: 'Must be at least 0.'
+        required: false
+        example: 84
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      'updates.*.supplier_product_id':
+        name: 'updates.*.supplier_product_id'
+        description: 'The supplier product ID to update.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      'updates.*.supplier_price':
+        name: 'updates.*.supplier_price'
+        description: 'The new supplier price in pennies.'
+        required: true
+        example: 4750
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      'updates.*.retail_price':
+        name: 'updates.*.retail_price'
+        description: 'optional The new retail price in pennies.'
+        required: false
+        example: 8500
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      updates:
+        -
+          supplier_product_id: 1
+          supplier_price: 4750
+          retail_price: 8500
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Successfully updated prices for 3 products.",
+            "data": {
+              "updated_count": 3,
+              "total_requested": 3
+            }
+          }
+        headers: []
+        description: 'Prices updated successfully'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "errors": [
+              "The updates field is required.",
+              "The updates.0.supplier price must be greater than 0."
+            ]
+          }
+        headers: []
+        description: 'Validation errors'
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+            "message": "Failed to bulk update prices."
+          }
+        headers: []
+        description: 'Server error'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/admin/supplier-products/bulk-mark-status
+    metadata:
+      groupName: 'Supplier Products'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Bulk mark sync status'
+      description: |-
+        Update the sync status for multiple supplier products in a single operation.
+        This is useful for marking products as synced, out of sync, or having sync errors
+        after batch processing operations.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      supplier_product_ids:
+        name: supplier_product_ids
+        description: 'Array of supplier product IDs to update.'
+        required: true
+        example:
+          - 1
+          - 2
+          - 3
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      sync_status:
+        name: sync_status
+        description: 'New sync status (synced, pending_sync, out_of_sync, sync_error).'
+        required: true
+        example: synced
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      notes:
+        name: notes
+        description: 'optional Additional notes about the status change.'
+        required: false
+        example: 'Batch sync completed successfully'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+    cleanBodyParameters:
+      supplier_product_ids:
+        - 1
+        - 2
+        - 3
+      sync_status: synced
+      notes: 'Batch sync completed successfully'
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Successfully updated status for 3 products.",
+            "data": {
+              "updated_count": 3,
+              "new_status": "synced"
+            }
+          }
+        headers: []
+        description: 'Status updated successfully'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "errors": [
+              "The supplier product ids field is required.",
+              "The sync status field must be one of: synced, pending_sync, out_of_sync, sync_error."
+            ]
+          }
+        headers: []
+        description: 'Validation errors'
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+            "message": "Failed to bulk update status."
+          }
+        headers: []
+        description: 'Server error'
         custom: []
     responseFields: []
     auth:
