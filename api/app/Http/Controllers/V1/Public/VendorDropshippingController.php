@@ -15,7 +15,6 @@ use App\Resources\V1\ProductSupplierMappingResource;
 use App\Traits\V1\ApiResponses;
 use App\Constants\DropshipStatuses;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Exception;
 

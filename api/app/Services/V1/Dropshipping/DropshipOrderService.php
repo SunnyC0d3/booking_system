@@ -2,222 +2,502 @@
 
 namespace App\Services\V1\Dropshipping;
 
-use App\Models\Order;
-use App\Models\Product;
-use App\Models\Supplier;
 use App\Models\DropshipOrder;
-use App\Models\DropshipOrderItem;
-use App\Models\ProductSupplierMapping;
+use App\Models\Order;
+use App\Models\Supplier;
+use App\Models\User;
 use App\Constants\DropshipStatuses;
-use App\Constants\OrderStatuses;
-use App\Events\DropshipOrderConfirmed;
-use App\Events\DropshipOrderShipped;
-use App\Events\DropshipOrderRetried;
-use App\Events\SupplierIntegrationFailed;
-use App\Events\SupplierPerformanceAlert;
-use App\Services\V1\Emails\Email;
+use App\Resources\V1\DropshipOrderResource;
+use App\Services\V1\Dropshipping\DropshipEmailService;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\JsonResponse;
 use Exception;
 
 class DropshipOrderService
 {
-    protected Email $emailService;
+    protected DropshipEmailService $emailService;
 
-    public function __construct(Email $emailService)
+    public function __construct(DropshipEmailService $emailService)
     {
         $this->emailService = $emailService;
     }
 
-    public function createDropshipOrdersFromOrder(Order $order): array
+    public function getPaginatedOrders(array $filters, User $user): \Illuminate\Pagination\LengthAwarePaginator
     {
-        try {
-            $dropshipOrders = [];
+        Log::info('Retrieving dropship orders', [
+            'user_id' => $user->id,
+            'filters' => $filters,
+        ]);
 
-            $dropshipItems = $this->identifyDropshipItems($order);
-
-            if (empty($dropshipItems)) {
-                return [];
-            }
-
-            $groupedItems = $this->groupItemsBySupplier($dropshipItems);
-
-            DB::transaction(function () use ($order, $groupedItems, &$dropshipOrders) {
-                foreach ($groupedItems as $supplierId => $items) {
-                    $dropshipOrder = $this->createDropshipOrderForSupplier($order, $supplierId, $items);
-                    $dropshipOrders[] = $dropshipOrder;
+        $dropshipOrders = DropshipOrder::query()
+            ->with(['order.user', 'supplier', 'dropshipOrderItems.supplierProduct'])
+            ->when(!empty($filters['supplier_id']), fn($query) => $query->where('supplier_id', $filters['supplier_id']))
+            ->when(!empty($filters['status']), fn($query) => $query->where('status', $filters['status']))
+            ->when(!empty($filters['order_id']), fn($query) => $query->where('order_id', $filters['order_id']))
+            ->when(!empty($filters['search']), function($query) use ($filters) {
+                $query->where(function($q) use ($filters) {
+                    $q->where('supplier_order_id', 'like', '%' . $filters['search'] . '%')
+                        ->orWhere('tracking_number', 'like', '%' . $filters['search'] . '%')
+                        ->orWhereHas('order.user', function($userQuery) use ($filters) {
+                            $userQuery->where('name', 'like', '%' . $filters['search'] . '%')
+                                ->orWhere('email', 'like', '%' . $filters['search'] . '%');
+                        });
+                });
+            })
+            ->when(!empty($filters['date_from']), fn($query) => $query->where('created_at', '>=', $filters['date_from']))
+            ->when(!empty($filters['date_to']), fn($query) => $query->where('created_at', '<=', $filters['date_to']))
+            ->when(isset($filters['overdue']), function($query) use ($filters) {
+                if ($filters['overdue']) {
+                    $query->overdue();
                 }
-            });
+            })
+            ->when(isset($filters['needs_retry']), function($query) use ($filters) {
+                if ($filters['needs_retry']) {
+                    $query->needsRetry();
+                }
+            })
+            ->latest()
+            ->paginate($filters['per_page'] ?? 15);
 
-            Log::info('Dropship orders created from order', [
-                'order_id' => $order->id,
-                'dropship_orders_created' => count($dropshipOrders),
-                'total_value' => array_sum(array_column($dropshipOrders, 'total_retail'))
-            ]);
+        Log::info('Dropship orders retrieved successfully', [
+            'user_id' => $user->id,
+            'total_orders' => $dropshipOrders->total(),
+            'current_page' => $dropshipOrders->currentPage()
+        ]);
 
-            return $dropshipOrders;
-        } catch (Exception $e) {
-            Log::error('Failed to create dropship orders from order', [
-                'order_id' => $order->id,
-                'error' => $e->getMessage()
-            ]);
-            throw $e;
-        }
+        return $dropshipOrders;
     }
 
-    public function processDropshipOrderWorkflow(DropshipOrder $dropshipOrder): void
+    public function createDropshipOrder(array $data): DropshipOrder
     {
-        try {
-            if (!$dropshipOrder->supplier->canAutoFulfill()) {
-                Log::info('Dropship order requires manual processing', [
-                    'dropship_order_id' => $dropshipOrder->id,
-                    'supplier' => $dropshipOrder->supplier->name
-                ]);
-                return;
-            }
-
-            if ($dropshipOrder->isPending()) {
-                $this->sendToSupplier($dropshipOrder);
-            }
-        } catch (Exception $e) {
-            Log::error('Failed to process dropship order workflow', [
-                'dropship_order_id' => $dropshipOrder->id,
-                'error' => $e->getMessage()
-            ]);
-            throw $e;
-        }
-    }
-
-    public function sendToSupplier(DropshipOrder $dropshipOrder): bool
-    {
-        try {
-            if (!$dropshipOrder->isPending()) {
-                throw new Exception('Dropship order is not in pending status');
-            }
-
-            $supplier = $dropshipOrder->supplier;
+        return DB::transaction(function () use ($data) {
+            $order = Order::findOrFail($data['order_id']);
+            $supplier = Supplier::findOrFail($data['supplier_id']);
 
             if (!$supplier->isActive()) {
-                throw new Exception('Supplier is not active');
+                throw new Exception('Supplier is not active.');
             }
 
-            $integration = $supplier->getActiveIntegration();
+            $dropshipOrder = DropshipOrder::create([
+                'order_id' => $order->id,
+                'supplier_id' => $supplier->id,
+                'status' => DropshipStatuses::PENDING,
+                'total_cost' => (int) ($data['total_cost'] * 100), // Convert to pennies
+                'total_retail' => (int) ($data['total_retail'] * 100), // Convert to pennies
+                'profit_margin' => (int) (($data['total_retail'] - $data['total_cost']) * 100),
+                'shipping_address' => $data['shipping_address'],
+                'notes' => $data['notes'] ?? null,
+                'auto_retry_enabled' => $data['auto_retry_enabled'] ?? true,
+            ]);
 
-            if ($integration && $integration->isAutomated()) {
-                $result = $this->sendViaIntegration($dropshipOrder, $integration);
-            } else {
-                $result = $this->sendManually($dropshipOrder);
-            }
-
-            if ($result) {
-                $dropshipOrder->markAsSentToSupplier([
-                    'sent_at' => now(),
-                    'integration_type' => $integration?->integration_type ?? 'manual',
-                    'method' => $integration ? 'automated' : 'manual'
+            foreach ($data['items'] as $itemData) {
+                $dropshipOrder->dropshipOrderItems()->create([
+                    'order_item_id' => $itemData['order_item_id'],
+                    'supplier_product_id' => $itemData['supplier_product_id'],
+                    'supplier_sku' => $itemData['supplier_sku'],
+                    'quantity' => $itemData['quantity'],
+                    'supplier_price' => (int) ($itemData['supplier_price'] * 100), // Convert to pennies
+                    'retail_price' => (int) ($itemData['retail_price'] * 100), // Convert to pennies
+                    'profit_per_item' => (int) (($itemData['retail_price'] - $itemData['supplier_price']) * 100),
+                    'product_details' => $itemData['product_details'] ?? null,
+                    'status' => DropshipStatuses::PENDING,
                 ]);
+            }
 
-                Log::info('Dropship order sent to supplier', [
+            return $dropshipOrder;
+        });
+    }
+
+    public function getDropshipOrder(DropshipOrder $dropshipOrder, User $user): DropshipOrder
+    {
+        Log::info('Retrieving dropship order', [
+            'user_id' => $user->id,
+            'dropship_order_id' => $dropshipOrder->id,
+        ]);
+
+        $dropshipOrder->load([
+            'order.user',
+            'supplier',
+            'dropshipOrderItems.supplierProduct',
+            'dropshipOrderItems.orderItem.product'
+        ]);
+
+        Log::info('Dropship order retrieved successfully', [
+            'user_id' => $user->id,
+            'dropship_order_id' => $dropshipOrder->id,
+            'order_id' => $dropshipOrder->order_id,
+            'supplier_id' => $dropshipOrder->supplier_id
+        ]);
+
+        return $dropshipOrder;
+    }
+
+    public function updateDropshipOrder(DropshipOrder $dropshipOrder, array $data): DropshipOrder
+    {
+        return DB::transaction(function () use ($dropshipOrder, $data) {
+            $originalStatus = $dropshipOrder->status;
+
+            $dropshipOrder->update($data);
+
+            if (isset($data['status']) && $originalStatus !== $data['status']) {
+                $this->updateOrderFromDropshipStatus($dropshipOrder);
+
+                Log::info('Dropship order status changed', [
                     'dropship_order_id' => $dropshipOrder->id,
-                    'supplier_id' => $supplier->id,
-                    'method' => $integration ? 'automated' : 'manual'
+                    'old_status' => $originalStatus,
+                    'new_status' => $data['status']
                 ]);
             }
 
-            return $result;
-        } catch (Exception $e) {
-            Log::error('Failed to send dropship order to supplier', [
-                'dropship_order_id' => $dropshipOrder->id,
-                'error' => $e->getMessage()
-            ]);
-            throw $e;
-        }
+            return $dropshipOrder;
+        });
     }
 
-    public function retryFailedOrder(DropshipOrder $dropshipOrder): bool
+    public function deleteDropshipOrder(DropshipOrder $dropshipOrder): void
     {
-        try {
-            if (!$dropshipOrder->canRetry()) {
-                return false;
-            }
+        if (!in_array($dropshipOrder->status, [DropshipStatuses::PENDING, DropshipStatuses::CANCELLED])) {
+            throw new Exception('Cannot delete dropship order that has been sent to supplier.');
+        }
 
-            $dropshipOrder->incrementRetryCount();
+        DB::transaction(function () use ($dropshipOrder) {
+            $dropshipOrder->dropshipOrderItems()->delete();
+            $dropshipOrder->delete();
+        });
+    }
 
-            if ($dropshipOrder->isRejected() || in_array($dropshipOrder->status, [DropshipStatuses::PENDING, DropshipStatuses::REJECTED_BY_SUPPLIER])) {
-                $dropshipOrder->updateStatus(DropshipStatuses::PENDING);
+    public function sendToSupplier(DropshipOrder $dropshipOrder, User $user): DropshipOrder
+    {
+        Log::info('Attempting to send dropship order to supplier', [
+            'user_id' => $user->id,
+            'dropship_order_id' => $dropshipOrder->id,
+            'supplier_id' => $dropshipOrder->supplier_id,
+            'current_status' => $dropshipOrder->status,
+        ]);
 
-                $success = $this->sendToSupplier($dropshipOrder);
+        if (!$dropshipOrder->isPending()) {
+            Log::warning('Cannot send dropship order - not in pending status', [
+                'user_id' => $user->id,
+                'dropship_order_id' => $dropshipOrder->id,
+                'status' => $dropshipOrder->status
+            ]);
+            throw new Exception('Dropship order has already been sent to supplier.');
+        }
 
-                if ($success) {
-                    Log::info('Dropship order retry successful', [
-                        'dropship_order_id' => $dropshipOrder->id,
-                        'retry_count' => $dropshipOrder->retry_count
+        $supplier = $dropshipOrder->supplier;
+        if (!$supplier->isActive()) {
+            Log::warning('Cannot send dropship order - supplier not active', [
+                'user_id' => $user->id,
+                'dropship_order_id' => $dropshipOrder->id,
+                'supplier_id' => $supplier->id,
+                'supplier_status' => $supplier->status
+            ]);
+            throw new Exception('Supplier is not active.');
+        }
+
+        DB::transaction(function () use ($dropshipOrder, $supplier, $user) {
+            $dropshipOrder->markAsSentToSupplier([
+                'sent_at' => now(),
+                'integration_type' => $supplier->integration_type,
+                'sent_by_user_id' => $user->id,
+            ]);
+
+            Log::info('Dropship order sent to supplier successfully', [
+                'user_id' => $user->id,
+                'dropship_order_id' => $dropshipOrder->id,
+                'supplier_id' => $supplier->id,
+                'integration_type' => $supplier->integration_type
+            ]);
+        });
+
+        return $dropshipOrder;
+    }
+
+    public function markAsConfirmed(DropshipOrder $dropshipOrder, array $data, User $user): DropshipOrder
+    {
+        Log::info('Marking dropship order as confirmed', [
+            'user_id' => $user->id,
+            'dropship_order_id' => $dropshipOrder->id,
+            'supplier_order_id' => $data['supplier_order_id'],
+        ]);
+
+        $dropshipOrder->markAsConfirmed(
+            $data['supplier_order_id'],
+            $data['supplier_response'] ?? []
+        );
+
+        if (isset($data['estimated_delivery'])) {
+            $dropshipOrder->update(['estimated_delivery' => $data['estimated_delivery']]);
+        }
+
+        // Send confirmation email
+        $this->emailService->sendOrderConfirmed($dropshipOrder);
+
+        Log::info('Dropship order confirmed by supplier', [
+            'user_id' => $user->id,
+            'dropship_order_id' => $dropshipOrder->id,
+            'supplier_order_id' => $data['supplier_order_id']
+        ]);
+
+        return $dropshipOrder;
+    }
+
+    public function markAsShipped(DropshipOrder $dropshipOrder, array $data, User $user): DropshipOrder
+    {
+        Log::info('Marking dropship order as shipped', [
+            'user_id' => $user->id,
+            'dropship_order_id' => $dropshipOrder->id,
+            'tracking_number' => $data['tracking_number'],
+            'carrier' => $data['carrier'] ?? 'Unknown',
+        ]);
+
+        $dropshipOrder->markAsShipped(
+            $data['tracking_number'],
+            $data['carrier'] ?? null,
+            isset($data['estimated_delivery']) ? \Carbon\Carbon::parse($data['estimated_delivery']) : null
+        );
+
+        // Send shipping email
+        $this->emailService->sendOrderShipped($dropshipOrder);
+
+        Log::info('Dropship order marked as shipped', [
+            'user_id' => $user->id,
+            'dropship_order_id' => $dropshipOrder->id,
+            'tracking_number' => $data['tracking_number'],
+            'carrier' => $data['carrier'] ?? 'Unknown'
+        ]);
+
+        return $dropshipOrder;
+    }
+
+    public function markAsDelivered(DropshipOrder $dropshipOrder, User $user): DropshipOrder
+    {
+        Log::info('Marking dropship order as delivered', [
+            'user_id' => $user->id,
+            'dropship_order_id' => $dropshipOrder->id,
+        ]);
+
+        $dropshipOrder->markAsDelivered();
+
+        Log::info('Dropship order marked as delivered', [
+            'user_id' => $user->id,
+            'dropship_order_id' => $dropshipOrder->id
+        ]);
+
+        return $dropshipOrder;
+    }
+
+    public function cancelDropshipOrder(DropshipOrder $dropshipOrder, ?string $reason = null): void
+    {
+        if ($dropshipOrder->isDelivered()) {
+            throw new Exception('Cannot cancel delivered dropship order.');
+        }
+
+        $dropshipOrder->markAsCancelled($reason);
+        $this->updateOrderFromDropshipStatus($dropshipOrder);
+    }
+
+    public function retryDropshipOrder(DropshipOrder $dropshipOrder, User $user): DropshipOrder
+    {
+        Log::info('Retrying dropship order', [
+            'user_id' => $user->id,
+            'dropship_order_id' => $dropshipOrder->id,
+            'current_retry_count' => $dropshipOrder->retry_count,
+        ]);
+
+        if (!$dropshipOrder->canRetry()) {
+            Log::warning('Cannot retry dropship order', [
+                'user_id' => $user->id,
+                'dropship_order_id' => $dropshipOrder->id,
+                'status' => $dropshipOrder->status,
+                'retry_count' => $dropshipOrder->retry_count
+            ]);
+            throw new Exception('Dropship order cannot be retried.');
+        }
+
+        $dropshipOrder->incrementRetryCount();
+        $dropshipOrder->updateStatus(DropshipStatuses::PENDING);
+
+        Log::info('Dropship order retry initiated', [
+            'user_id' => $user->id,
+            'dropship_order_id' => $dropshipOrder->id,
+            'retry_count' => $dropshipOrder->retry_count
+        ]);
+
+        return $dropshipOrder;
+    }
+
+    public function bulkUpdateStatus(array $orderIds, string $status, ?string $notes = null): array
+    {
+        $updated = 0;
+        $errors = [];
+
+        DB::transaction(function () use ($orderIds, $status, $notes, &$updated, &$errors) {
+            $orders = DropshipOrder::whereIn('id', $orderIds)->get();
+
+            foreach ($orders as $order) {
+                try {
+                    $this->updateDropshipOrder($order, [
+                        'status' => $status,
+                        'notes' => $notes ? ($order->notes . "\n" . $notes) : $order->notes
                     ]);
-                } else {
-                    Log::warning('Dropship order retry failed', [
-                        'dropship_order_id' => $dropshipOrder->id,
-                        'retry_count' => $dropshipOrder->retry_count
-                    ]);
+                    $updated++;
+                } catch (Exception $e) {
+                    $errors[] = "Order {$order->id}: " . $e->getMessage();
                 }
-
-                return $success;
             }
+        });
 
-            return false;
-        } catch (Exception $e) {
-            Log::error('Failed to retry dropship order', [
-                'dropship_order_id' => $dropshipOrder->id,
-                'error' => $e->getMessage()
-            ]);
-            return false;
-        }
+        return [
+            'updated_count' => $updated,
+            'error_count' => count($errors),
+            'new_status' => $status,
+            'errors' => $errors
+        ];
     }
 
-    public function processSupplierResponse(DropshipOrder $dropshipOrder, array $response): void
+    public function getStatistics(User $user): array
+    {
+        Log::info('Retrieving dropship order statistics', [
+            'user_id' => $user->id,
+        ]);
+
+        $stats = [
+            'totals' => [
+                'all_orders' => DropshipOrder::count(),
+                'pending' => DropshipOrder::pending()->count(),
+                'active' => DropshipOrder::active()->count(),
+                'completed' => DropshipOrder::completed()->count(),
+                'overdue' => DropshipOrder::overdue()->count(),
+            ],
+            'by_status' => DropshipOrder::selectRaw('status, count(*) as count')
+                ->groupBy('status')
+                ->pluck('count', 'status')
+                ->toArray(),
+            'by_supplier' => DropshipOrder::with('supplier:id,name')
+                ->selectRaw('supplier_id, count(*) as count')
+                ->groupBy('supplier_id')
+                ->get()
+                ->map(function($item) {
+                    return [
+                        'supplier_name' => $item->supplier->name ?? 'Unknown',
+                        'count' => $item->count
+                    ];
+                }),
+            'recent_activity' => DropshipOrder::with(['order.user', 'supplier'])
+                ->latest()
+                ->limit(10)
+                ->get()
+                ->map(function($order) {
+                    return [
+                        'id' => $order->id,
+                        'order_id' => $order->order_id,
+                        'supplier_name' => $order->supplier->name,
+                        'customer_name' => $order->order->user->name ?? 'Guest',
+                        'status' => $order->status,
+                        'total_cost' => $order->getTotalCostFormatted(),
+                        'created_at' => $order->created_at,
+                    ];
+                }),
+        ];
+
+        Log::info('Dropship order statistics retrieved successfully', [
+            'user_id' => $user->id,
+            'total_orders' => $stats['totals']['all_orders'],
+            'pending_orders' => $stats['totals']['pending']
+        ]);
+
+        return $stats;
+    }
+
+    public function getFilteredOrders(array $filters): LengthAwarePaginator
+    {
+        $query = DropshipOrder::query()
+            ->with(['order.user', 'supplier', 'dropshipOrderItems.supplierProduct'])
+            ->when(!empty($filters['supplier_id']), fn($q) => $q->where('supplier_id', $filters['supplier_id']))
+            ->when(!empty($filters['status']), fn($q) => $q->where('status', $filters['status']))
+            ->when(!empty($filters['order_id']), fn($q) => $q->where('order_id', $filters['order_id']))
+            ->when(!empty($filters['search']), function($q) use ($filters) {
+                $q->where(function($subQuery) use ($filters) {
+                    $subQuery->where('supplier_order_id', 'like', '%' . $filters['search'] . '%')
+                        ->orWhere('tracking_number', 'like', '%' . $filters['search'] . '%')
+                        ->orWhereHas('order.user', function($userQuery) use ($filters) {
+                            $userQuery->where('name', 'like', '%' . $filters['search'] . '%')
+                                ->orWhere('email', 'like', '%' . $filters['search'] . '%');
+                        });
+                });
+            })
+            ->when(!empty($filters['date_from']), fn($q) => $q->where('created_at', '>=', $filters['date_from']))
+            ->when(!empty($filters['date_to']), fn($q) => $q->where('created_at', '<=', $filters['date_to']))
+            ->when(isset($filters['overdue']) && $filters['overdue'], fn($q) => $q->overdue())
+            ->when(isset($filters['needs_retry']) && $filters['needs_retry'], fn($q) => $q->needsRetry())
+            ->latest();
+
+        return $query->paginate($filters['per_page'] ?? 15);
+    }
+
+    public function getOrderStatistics(): array
+    {
+        $totalOrders = DropshipOrder::count();
+        $pendingOrders = DropshipOrder::pending()->count();
+        $activeOrders = DropshipOrder::active()->count();
+        $completedOrders = DropshipOrder::completed()->count();
+        $overdueOrders = DropshipOrder::overdue()->count();
+
+        $statusBreakdown = DropshipOrder::selectRaw('status, count(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+
+        $supplierBreakdown = DropshipOrder::with('supplier:id,name')
+            ->selectRaw('supplier_id, count(*) as count')
+            ->groupBy('supplier_id')
+            ->get()
+            ->map(function($item) {
+                return [
+                    'supplier_name' => $item->supplier->name ?? 'Unknown',
+                    'count' => $item->count
+                ];
+            });
+
+        $recentActivity = DropshipOrder::with(['order.user', 'supplier'])
+            ->latest()
+            ->limit(10)
+            ->get()
+            ->map(function($order) {
+                return [
+                    'id' => $order->id,
+                    'order_id' => $order->order_id,
+                    'supplier_name' => $order->supplier->name,
+                    'customer_name' => $order->order->user->name ?? 'Guest',
+                    'status' => $order->status,
+                    'total_cost' => $order->getTotalCostFormatted(),
+                    'created_at' => $order->created_at,
+                ];
+            });
+
+        return [
+            'totals' => [
+                'all_orders' => $totalOrders,
+                'pending' => $pendingOrders,
+                'active' => $activeOrders,
+                'completed' => $completedOrders,
+                'overdue' => $overdueOrders,
+            ],
+            'by_status' => $statusBreakdown,
+            'by_supplier' => $supplierBreakdown,
+            'recent_activity' => $recentActivity,
+        ];
+    }
+
+    public function handleSupplierResponse(DropshipOrder $dropshipOrder, array $response): void
     {
         try {
-            $status = $response['status'] ?? null;
-            $supplierOrderId = $response['supplier_order_id'] ?? null;
-            $trackingNumber = $response['tracking_number'] ?? null;
-            $estimatedDelivery = $response['estimated_delivery'] ?? null;
-
-            switch ($status) {
-                case 'confirmed':
-                    if ($supplierOrderId) {
-                        $dropshipOrder->markAsConfirmed($supplierOrderId, $response);
-                    }
-                    break;
-
-                case 'shipped':
-                    if ($trackingNumber) {
-                        $estimatedDeliveryDate = $estimatedDelivery ? \Carbon\Carbon::parse($estimatedDelivery) : null;
-                        $dropshipOrder->markAsShipped(
-                            $trackingNumber,
-                            $response['carrier'] ?? null,
-                            $estimatedDeliveryDate
-                        );
-                    }
-                    break;
-
-                case 'delivered':
-                    $dropshipOrder->markAsDelivered();
-                    break;
-
-                case 'rejected':
-                    $dropshipOrder->markAsRejected($response['reason'] ?? 'Order rejected by supplier');
-                    break;
-
-                case 'cancelled':
-                    $dropshipOrder->markAsCancelled($response['reason'] ?? 'Order cancelled by supplier');
-                    break;
-            }
-
-            Log::info('Supplier response processed', [
-                'dropship_order_id' => $dropshipOrder->id,
-                'status' => $status,
-                'supplier_order_id' => $supplierOrderId
-            ]);
+            $this->processSupplierResponse($dropshipOrder, $response);
+            $this->updateOrderFromDropshipStatus($dropshipOrder);
         } catch (Exception $e) {
-            Log::error('Failed to process supplier response', [
+            Log::error('Failed to handle supplier response', [
                 'dropship_order_id' => $dropshipOrder->id,
                 'response' => $response,
                 'error' => $e->getMessage()
@@ -226,462 +506,111 @@ class DropshipOrderService
         }
     }
 
-    public function calculateOrderProfitability(Order $order): array
+    public function getSupplierOrderPayload(DropshipOrder $dropshipOrder): array
     {
-        try {
-            $profitability = [
-                'total_cost' => 0,
-                'total_retail' => 0,
-                'total_profit' => 0,
-                'profit_margin_percentage' => 0,
-                'items' => []
+        $orderData = $this->getSupplierOrderData($dropshipOrder);
+
+        // Add any additional formatting needed for specific supplier integrations
+        $supplier = $dropshipOrder->supplier;
+        $integration = $supplier->getActiveIntegration();
+
+        if ($integration && $integration->isApiIntegration()) {
+            // Format for API integration
+            $orderData['integration'] = [
+                'type' => 'api',
+                'endpoint' => $integration->getApiEndpoint(),
+                'format' => 'json'
             ];
-
-            foreach ($order->orderItems as $orderItem) {
-                $product = $orderItem->product;
-                $mapping = $this->getPrimaryMapping($product);
-
-                if ($mapping && $mapping->supplierProduct) {
-                    $supplierPrice = $mapping->supplierProduct->supplier_price;
-                    $retailPrice = $orderItem->price;
-                    $quantity = $orderItem->quantity;
-
-                    $itemCost = $supplierPrice * $quantity;
-                    $itemRetail = $retailPrice * $quantity;
-                    $itemProfit = $itemRetail - $itemCost;
-
-                    $profitability['total_cost'] += $itemCost;
-                    $profitability['total_retail'] += $itemRetail;
-                    $profitability['total_profit'] += $itemProfit;
-
-                    $profitability['items'][] = [
-                        'order_item_id' => $orderItem->id,
-                        'product_name' => $product->name,
-                        'quantity' => $quantity,
-                        'supplier_price' => $supplierPrice,
-                        'retail_price' => $retailPrice,
-                        'total_cost' => $itemCost,
-                        'total_retail' => $itemRetail,
-                        'profit' => $itemProfit,
-                        'profit_margin' => $retailPrice > 0 ? round(($itemProfit / $itemRetail) * 100, 2) : 0,
-                        'supplier' => $mapping->supplier->name
-                    ];
-                }
-            }
-
-            $profitability['profit_margin_percentage'] = $profitability['total_retail'] > 0
-                ? round(($profitability['total_profit'] / $profitability['total_retail']) * 100, 2)
-                : 0;
-
-            return $profitability;
-        } catch (Exception $e) {
-            Log::error('Failed to calculate order profitability', [
-                'order_id' => $order->id,
-                'error' => $e->getMessage()
-            ]);
-            throw $e;
-        }
-    }
-
-    public function updateOrderFromDropshipStatus(DropshipOrder $dropshipOrder): void
-    {
-        try {
-            $order = $dropshipOrder->order;
-            $allDropshipOrders = $order->dropshipOrders;
-
-            if ($allDropshipOrders->every(fn($ds) => $ds->isDelivered())) {
-                $this->updateOrderStatus($order, OrderStatuses::DELIVERED);
-            } elseif ($allDropshipOrders->some(fn($ds) => $ds->isShipped())) {
-                $this->updateOrderStatus($order, OrderStatuses::SHIPPED);
-            } elseif ($allDropshipOrders->some(fn($ds) => $ds->isConfirmed())) {
-                $this->updateOrderStatus($order, OrderStatuses::PROCESSING);
-            }
-
-            Log::info('Order status updated from dropship status', [
-                'order_id' => $order->id,
-                'dropship_order_id' => $dropshipOrder->id,
-                'new_status' => $order->status->name ?? 'unknown'
-            ]);
-        } catch (Exception $e) {
-            Log::error('Failed to update order from dropship status', [
-                'dropship_order_id' => $dropshipOrder->id,
-                'error' => $e->getMessage()
-            ]);
-        }
-    }
-
-    public function processOverdueOrders(): int
-    {
-        try {
-            $overdueOrders = DropshipOrder::overdue()->get();
-            $processedCount = 0;
-
-            foreach ($overdueOrders as $dropshipOrder) {
-                try {
-                    $this->handleOverdueOrder($dropshipOrder);
-                    $processedCount++;
-                } catch (Exception $e) {
-                    Log::error('Failed to process overdue dropship order', [
-                        'dropship_order_id' => $dropshipOrder->id,
-                        'error' => $e->getMessage()
-                    ]);
-                }
-            }
-
-            Log::info('Processed overdue dropship orders', [
-                'total_overdue' => $overdueOrders->count(),
-                'processed' => $processedCount
-            ]);
-
-            return $processedCount;
-        } catch (Exception $e) {
-            Log::error('Failed to process overdue orders', [
-                'error' => $e->getMessage()
-            ]);
-            return 0;
-        }
-    }
-
-    public function getSupplierOrderData(DropshipOrder $dropshipOrder): array
-    {
-        try {
-            $orderData = [
-                'order_id' => $dropshipOrder->order_id,
-                'dropship_order_id' => $dropshipOrder->id,
-                'customer' => [
-                    'name' => $dropshipOrder->order->user->name ?? 'Guest Customer',
-                    'email' => $dropshipOrder->order->user->email ?? null,
-                ],
-                'shipping_address' => $dropshipOrder->shipping_address,
-                'items' => [],
-                'total_cost' => $dropshipOrder->getTotalCostInPounds(),
-                'notes' => $dropshipOrder->notes,
-                'created_at' => $dropshipOrder->created_at->toISOString(),
+        } elseif ($integration && $integration->isEmailIntegration()) {
+            // Format for email integration
+            $orderData['integration'] = [
+                'type' => 'email',
+                'email' => $integration->getEmailAddress(),
+                'format' => 'formatted_email'
             ];
-
-            foreach ($dropshipOrder->dropshipOrderItems as $item) {
-                $orderData['items'][] = [
-                    'supplier_sku' => $item->supplier_sku,
-                    'product_name' => $item->getProductName(),
-                    'quantity' => $item->quantity,
-                    'unit_price' => $item->getSupplierPriceInPounds(),
-                    'total_price' => $item->getTotalSupplierCostInPounds(),
-                    'product_details' => $item->product_details,
-                ];
-            }
-
-            return $orderData;
-        } catch (Exception $e) {
-            Log::error('Failed to get supplier order data', [
-                'dropship_order_id' => $dropshipOrder->id,
-                'error' => $e->getMessage()
-            ]);
-            throw $e;
         }
+
+        return $orderData;
     }
 
-    protected function identifyDropshipItems(Order $order): array
+    public function processOverdueOrdersDaily(): array
     {
-        $dropshipItems = [];
+        $processedCount = $this->processOverdueOrders();
 
-        foreach ($order->orderItems as $orderItem) {
-            $product = $orderItem->product;
-            $mapping = $this->getPrimaryMapping($product);
+        // Additional overdue processing logic
+        $overdueOrders = DropshipOrder::overdue()->with('supplier')->get();
+        $supplierAlerts = [];
 
-            if ($mapping && $mapping->is_active && $mapping->supplierProduct) {
-                $dropshipItems[] = [
-                    'order_item' => $orderItem,
-                    'product' => $product,
-                    'mapping' => $mapping,
-                    'supplier_product' => $mapping->supplierProduct,
-                    'supplier' => $mapping->supplier
+        foreach ($overdueOrders->groupBy('supplier_id') as $supplierId => $orders) {
+            $supplier = $orders->first()->supplier;
+            $overdueCount = $orders->count();
+
+            if ($overdueCount >= 5) { // Alert threshold
+                $supplierAlerts[] = [
+                    'supplier' => $supplier,
+                    'overdue_count' => $overdueCount,
+                    'orders' => $orders->pluck('id')->toArray()
                 ];
             }
         }
 
-        return $dropshipItems;
-    }
-
-    protected function groupItemsBySupplier(array $dropshipItems): array
-    {
-        $grouped = [];
-
-        foreach ($dropshipItems as $item) {
-            $supplierId = $item['supplier']->id;
-
-            if (!isset($grouped[$supplierId])) {
-                $grouped[$supplierId] = [];
-            }
-
-            $grouped[$supplierId][] = $item;
-        }
-
-        return $grouped;
-    }
-
-    protected function createDropshipOrderForSupplier(Order $order, int $supplierId, array $items): DropshipOrder
-    {
-        $supplier = Supplier::find($supplierId);
-        $totalCost = 0;
-        $totalRetail = 0;
-
-        foreach ($items as $item) {
-            $orderItem = $item['order_item'];
-            $supplierProduct = $item['supplier_product'];
-
-            $itemCost = $supplierProduct->supplier_price * $orderItem->quantity;
-            $itemRetail = $orderItem->price * $orderItem->quantity;
-
-            $totalCost += $itemCost;
-            $totalRetail += $itemRetail;
-        }
-
-        $dropshipOrder = DropshipOrder::create([
-            'order_id' => $order->id,
-            'supplier_id' => $supplierId,
-            'status' => DropshipStatuses::PENDING,
-            'total_cost' => $totalCost,
-            'total_retail' => $totalRetail,
-            'profit_margin' => $totalRetail - $totalCost,
-            'shipping_address' => $order->shippingAddress?->toArray() ?? [],
-            'auto_retry_enabled' => $supplier->auto_fulfill,
-        ]);
-
-        foreach ($items as $item) {
-            $this->createDropshipOrderItem($dropshipOrder, $item);
-        }
-
-        return $dropshipOrder;
-    }
-
-    protected function createDropshipOrderItem(DropshipOrder $dropshipOrder, array $itemData): DropshipOrderItem
-    {
-        $orderItem = $itemData['order_item'];
-        $supplierProduct = $itemData['supplier_product'];
-
-        return $dropshipOrder->dropshipOrderItems()->create([
-            'order_item_id' => $orderItem->id,
-            'supplier_product_id' => $supplierProduct->id,
-            'supplier_sku' => $supplierProduct->supplier_sku,
-            'quantity' => $orderItem->quantity,
-            'supplier_price' => $supplierProduct->supplier_price,
-            'retail_price' => $orderItem->price,
-            'profit_per_item' => $orderItem->price - $supplierProduct->supplier_price,
-            'product_details' => [
-                'name' => $supplierProduct->name,
-                'description' => $supplierProduct->description,
-                'weight' => $supplierProduct->weight,
-                'dimensions' => $supplierProduct->getDimensions(),
-                'images' => $supplierProduct->images,
-                'attributes' => $supplierProduct->attributes,
-            ],
-            'status' => DropshipStatuses::PENDING,
-        ]);
-    }
-
-    protected function getPrimaryMapping(Product $product): ?ProductSupplierMapping
-    {
-        return $product->productMappings()
-            ->where('is_primary', true)
-            ->where('is_active', true)
-            ->with(['supplier', 'supplierProduct'])
-            ->first();
-    }
-
-    protected function sendViaIntegration(DropshipOrder $dropshipOrder, $integration): bool
-    {
-        Log::info('Sending dropship order via integration', [
-            'dropship_order_id' => $dropshipOrder->id,
-            'integration_type' => $integration->integration_type
-        ]);
-
-        return true;
-    }
-
-    protected function sendManually(DropshipOrder $dropshipOrder): bool
-    {
-        try {
-            $orderData = $this->getSupplierOrderData($dropshipOrder);
-
-            Log::info('Dropship order prepared for manual processing', [
-                'dropship_order_id' => $dropshipOrder->id,
-                'supplier' => $dropshipOrder->supplier->name,
-                'order_data' => $orderData
-            ]);
-
-            return true;
-        } catch (Exception $e) {
-            Log::error('Failed to prepare manual dropship order', [
-                'dropship_order_id' => $dropshipOrder->id,
-                'error' => $e->getMessage()
-            ]);
-            return false;
-        }
-    }
-
-    protected function updateOrderStatus(Order $order, string $status): void
-    {
-        $statusId = \App\Models\OrderStatus::where('name', $status)->value('id');
-        if ($statusId) {
-            $order->update(['status_id' => $statusId]);
-        }
-    }
-
-    protected function handleOverdueOrder(DropshipOrder $dropshipOrder): void
-    {
-        if ($dropshipOrder->canRetry()) {
-            $this->retryFailedOrder($dropshipOrder);
-        } else {
-            Log::warning('Dropship order is overdue and cannot be retried', [
-                'dropship_order_id' => $dropshipOrder->id,
-                'estimated_delivery' => $dropshipOrder->estimated_delivery,
-                'days_overdue' => $dropshipOrder->estimated_delivery ? now()->diffInDays($dropshipOrder->estimated_delivery) : null
-            ]);
-        }
-    }
-
-    public function markAsConfirmedWithEmail(DropshipOrder $dropshipOrder, string $supplierOrderId, array $supplierResponse = []): void
-    {
-        $dropshipOrder->markAsConfirmed($supplierOrderId, $supplierResponse);
-
-        event(new DropshipOrderConfirmed($dropshipOrder));
-
-        Log::info('Dropship order confirmed with email notification', [
-            'dropship_order_id' => $dropshipOrder->id,
-            'supplier_order_id' => $supplierOrderId
-        ]);
-    }
-
-    public function markAsShippedWithEmail(DropshipOrder $dropshipOrder, string $trackingNumber, ?string $carrier = null, ?\Carbon\Carbon $estimatedDelivery = null): void
-    {
-        $dropshipOrder->markAsShipped($trackingNumber, $carrier, $estimatedDelivery);
-
-        event(new DropshipOrderShipped($dropshipOrder));
-
-        Log::info('Dropship order shipped with email notification', [
-            'dropship_order_id' => $dropshipOrder->id,
-            'tracking_number' => $trackingNumber
-        ]);
-    }
-
-    public function markAsRejectedWithEmail(DropshipOrder $dropshipOrder, string $reason): void
-    {
-        $dropshipOrder->markAsRejected($reason);
-
-        event(new DropshipOrderRejected($dropshipOrder, $reason));
-
-        Log::info('Dropship order rejected with email notification', [
-            'dropship_order_id' => $dropshipOrder->id,
-            'reason' => $reason
-        ]);
-    }
-
-    public function handleOrderDelayWithEmail(DropshipOrder $dropshipOrder, array $delayInfo): void
-    {
-        $dropshipOrder->update([
-            'estimated_delivery' => $delayInfo['new_delivery'] ?? null,
-            'notes' => ($dropshipOrder->notes ?? '') . "\nDelayed: " . ($delayInfo['reason'] ?? 'Unknown reason')
-        ]);
-
-        event(new DropshipOrderDelayed($dropshipOrder, $delayInfo));
-
-        Log::info('Dropship order delay handled with email notification', [
-            'dropship_order_id' => $dropshipOrder->id,
-            'days_delayed' => $delayInfo['days_delayed'] ?? 'unknown'
-        ]);
-    }
-
-    public function retryFailedOrderWithEmail(DropshipOrder $dropshipOrder, string $reason = null): bool
-    {
-        if (!$dropshipOrder->canRetry()) {
-            return false;
-        }
-
-        $attemptNumber = $dropshipOrder->retry_count + 1;
-
-        $dropshipOrder->incrementRetryCount();
-        $dropshipOrder->updateStatus(DropshipStatuses::PENDING);
-
-        event(new DropshipOrderRetried($dropshipOrder, $attemptNumber, $reason));
-
-        $success = $this->sendToSupplier($dropshipOrder);
-
-        Log::info('Dropship order retry attempted with email notification', [
-            'dropship_order_id' => $dropshipOrder->id,
-            'attempt' => $attemptNumber,
-            'success' => $success
-        ]);
-
-        return $success;
-    }
-
-    public function handleIntegrationFailure(Supplier $supplier, \Exception $exception, array $context = []): void
-    {
-        $integrationData = [
-            'type' => $supplier->integration_type,
-            'failed_at' => now()->toISOString(),
-            'error_message' => $exception->getMessage(),
-            'consecutive_failures' => $supplier->consecutive_failures + 1,
-            'last_successful_sync' => $supplier->last_successful_sync?->toISOString(),
-            'affected_operations' => $context['operations'] ?? [],
-            'pending_orders' => DropshipOrder::where('supplier_id', $supplier->id)
-                ->whereIn('status', [DropshipStatuses::PENDING])
-                ->count(),
+        return [
+            'processed_count' => $processedCount,
+            'total_overdue' => $overdueOrders->count(),
+            'supplier_alerts' => $supplierAlerts
         ];
-
-        $supplier->increment('consecutive_failures');
-        $supplier->update(['last_failed_sync' => now()]);
-
-        event(new SupplierIntegrationFailed($supplier, $integrationData));
-
-        Log::error('Supplier integration failed with email notification', [
-            'supplier_id' => $supplier->id,
-            'error' => $exception->getMessage(),
-            'context' => $context
-        ]);
     }
 
-    public function checkSupplierPerformance(Supplier $supplier): void
+    public function validateDropshipOrderData(array $data): array
     {
-        $performanceData = $this->calculateSupplierPerformance($supplier);
+        $errors = [];
 
-        $alerts = [];
-
-        if ($performanceData['success_rate'] < 90) {
-            $alerts[] = 'Success rate below 90%';
+        // Validate order exists and can be dropshipped
+        $order = Order::find($data['order_id']);
+        if (!$order) {
+            $errors[] = 'Order not found';
+        } elseif ($order->hasActiveShipment()) {
+            $errors[] = 'Order already has active shipment';
         }
 
-        if ($performanceData['avg_fulfillment_time'] > 5) {
-            $alerts[] = 'Average fulfillment time over 5 days';
+        // Validate supplier
+        $supplier = Supplier::find($data['supplier_id']);
+        if (!$supplier) {
+            $errors[] = 'Supplier not found';
+        } elseif (!$supplier->isActive()) {
+            $errors[] = 'Supplier is not active';
         }
 
-        if ($performanceData['failed_orders'] > 10) {
-            $alerts[] = 'High number of failed orders';
+        // Validate financial calculations
+        $calculatedProfit = ($data['total_retail'] - $data['total_cost']) * 100;
+        if ($calculatedProfit < 0) {
+            $errors[] = 'Negative profit margin detected';
         }
 
-        if (!empty($alerts)) {
-            $performanceData['metric'] = implode(', ', $alerts);
-            $performanceData['recommendations'] = $this->getPerformanceRecommendations($performanceData);
-            $performanceData['action_required'] = $performanceData['success_rate'] < 80;
-
-            event(new SupplierPerformanceAlert($supplier, $performanceData));
-
-            Log::warning('Supplier performance alert triggered', [
-                'supplier_id' => $supplier->id,
-                'alerts' => $alerts,
-                'performance' => $performanceData
-            ]);
+        // Validate items
+        if (empty($data['items'])) {
+            $errors[] = 'No items provided';
+        } else {
+            foreach ($data['items'] as $index => $item) {
+                if (($item['retail_price'] - $item['supplier_price']) < 0) {
+                    $errors[] = "Item {$index}: Negative profit margin";
+                }
+            }
         }
+
+        return $errors;
     }
 
-    private function calculateSupplierPerformance(Supplier $supplier): array
+    public function generateSupplierPerformanceReport(int $supplierId, int $days = 30): array
     {
+        $supplier = Supplier::findOrFail($supplierId);
+
         $orders = $supplier->dropshipOrders()
-            ->where('created_at', '>=', now()->subMonth())
+            ->where('created_at', '>=', now()->subDays($days))
             ->get();
 
         $totalOrders = $orders->count();
-        $successfulOrders = $orders->where('status', DropshipStatuses::DELIVERED)->count();
+        $successfulOrders = $orders->whereIn('status', [DropshipStatuses::DELIVERED])->count();
         $failedOrders = $orders->whereIn('status', [
             DropshipStatuses::REJECTED_BY_SUPPLIER,
             DropshipStatuses::CANCELLED
@@ -691,61 +620,102 @@ class DropshipOrderService
             ->whereNotNull('shipped_by_supplier_at')
             ->whereNotNull('sent_to_supplier_at')
             ->avg(function ($order) {
-                return $order->sent_to_supplier_at->diffInDays($order->shipped_by_supplier_at);
+                return $order->sent_to_supplier_at->diffInHours($order->shipped_by_supplier_at);
             });
 
+        $profitabilityData = $this->calculateSupplierProfitability($supplier, $days);
+
         return [
-            'success_rate' => $totalOrders > 0 ? round(($successfulOrders / $totalOrders) * 100, 2) : 0,
-            'avg_fulfillment_time' => round($avgFulfillmentTime ?? 0, 1),
-            'orders_this_month' => $totalOrders,
-            'failed_orders' => $failedOrders,
-            'complaints' => 0,
-            'current_value' => $totalOrders > 0 ? round(($successfulOrders / $totalOrders) * 100, 2) : 0,
-            'threshold' => 90,
-            'detected_at' => now()->toISOString(),
-            'recent_issues' => $this->getRecentIssues($supplier),
+            'supplier' => [
+                'id' => $supplier->id,
+                'name' => $supplier->name,
+                'integration_type' => $supplier->integration_type,
+            ],
+            'period' => [
+                'days' => $days,
+                'from' => now()->subDays($days)->format('Y-m-d'),
+                'to' => now()->format('Y-m-d'),
+            ],
+            'performance' => [
+                'total_orders' => $totalOrders,
+                'successful_orders' => $successfulOrders,
+                'failed_orders' => $failedOrders,
+                'success_rate' => $totalOrders > 0 ? round(($successfulOrders / $totalOrders) * 100, 2) : 0,
+                'avg_fulfillment_hours' => round($avgFulfillmentTime ?? 0, 1),
+            ],
+            'profitability' => $profitabilityData,
+            'issues' => $this->getSupplierIssues($supplier, $days),
         ];
     }
 
-    private function getPerformanceRecommendations(array $performanceData): array
+    protected function calculateSupplierProfitability(Supplier $supplier, int $days): array
     {
-        $recommendations = [];
+        $orders = $supplier->dropshipOrders()
+            ->where('created_at', '>=', now()->subDays($days))
+            ->get();
 
-        if ($performanceData['success_rate'] < 90) {
-            $recommendations[] = 'Review order processing workflow with supplier';
-            $recommendations[] = 'Implement quality control measures';
-        }
+        $totalCost = $orders->sum('total_cost');
+        $totalRetail = $orders->sum('total_retail');
+        $totalProfit = $orders->sum('profit_margin');
 
-        if ($performanceData['avg_fulfillment_time'] > 5) {
-            $recommendations[] = 'Discuss faster fulfillment options';
-            $recommendations[] = 'Consider backup suppliers for urgent orders';
-        }
-
-        if ($performanceData['failed_orders'] > 10) {
-            $recommendations[] = 'Analyze root causes of order failures';
-            $recommendations[] = 'Implement pre-order inventory verification';
-        }
-
-        return $recommendations;
+        return [
+            'total_cost' => $totalCost,
+            'total_cost_formatted' => '£' . number_format($totalCost / 100, 2),
+            'total_retail' => $totalRetail,
+            'total_retail_formatted' => '£' . number_format($totalRetail / 100, 2),
+            'total_profit' => $totalProfit,
+            'total_profit_formatted' => '£' . number_format($totalProfit / 100, 2),
+            'profit_margin_percentage' => $totalRetail > 0 ? round(($totalProfit / $totalRetail) * 100, 2) : 0,
+        ];
     }
 
-    private function getRecentIssues(Supplier $supplier): array
+    protected function getSupplierIssues(Supplier $supplier, int $days): array
     {
-        return $supplier->dropshipOrders()
-            ->whereIn('status', [
-                DropshipStatuses::REJECTED_BY_SUPPLIER,
-                DropshipStatuses::CANCELLED
-            ])
-            ->where('updated_at', '>=', now()->subWeek())
-            ->limit(5)
-            ->get()
-            ->map(function ($order) {
-                return [
-                    'type' => ucfirst(str_replace('_', ' ', $order->status)),
-                    'description' => "Order #{$order->order_id} - {$order->notes}",
-                    'date' => $order->updated_at->format('M j, Y'),
-                ];
-            })
-            ->toArray();
+        $issues = [];
+
+        // Check for high failure rate
+        $orders = $supplier->dropshipOrders()
+            ->where('created_at', '>=', now()->subDays($days))
+            ->get();
+
+        $failureRate = $orders->count() > 0
+            ? ($orders->whereIn('status', [DropshipStatuses::REJECTED_BY_SUPPLIER, DropshipStatuses::CANCELLED])->count() / $orders->count()) * 100
+            : 0;
+
+        if ($failureRate > 10) {
+            $issues[] = [
+                'type' => 'high_failure_rate',
+                'description' => "Failure rate of {$failureRate}% exceeds 10% threshold",
+                'severity' => $failureRate > 25 ? 'high' : 'medium'
+            ];
+        }
+
+        // Check for slow fulfillment
+        $avgFulfillmentTime = $orders
+            ->whereNotNull('shipped_by_supplier_at')
+            ->whereNotNull('sent_to_supplier_at')
+            ->avg(function ($order) {
+                return $order->sent_to_supplier_at->diffInHours($order->shipped_by_supplier_at);
+            });
+
+        if ($avgFulfillmentTime && $avgFulfillmentTime > 120) { // More than 5 days
+            $issues[] = [
+                'type' => 'slow_fulfillment',
+                'description' => "Average fulfillment time of " . round($avgFulfillmentTime / 24, 1) . " days exceeds 5 day threshold",
+                'severity' => $avgFulfillmentTime > 240 ? 'high' : 'medium'
+            ];
+        }
+
+        // Check for integration issues
+        $integration = $supplier->getActiveIntegration();
+        if ($integration && !$integration->isHealthy()) {
+            $issues[] = [
+                'type' => 'integration_issues',
+                'description' => "Integration health score: " . $integration->getHealthScore(),
+                'severity' => $integration->getHealthScore() < 50 ? 'high' : 'medium'
+            ];
+        }
+
+        return $issues;
     }
 }

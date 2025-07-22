@@ -7,12 +7,20 @@ use App\Models\ShippingAddress;
 use App\Requests\V1\StoreShippingAddressRequest;
 use App\Requests\V1\UpdateShippingAddressRequest;
 use App\Resources\V1\ShippingAddressResource;
+use App\Services\V1\Shipping\ShippingAddressService;
 use App\Traits\V1\ApiResponses;
 use Illuminate\Http\Request;
 
 class ShippingAddressController extends Controller
 {
     use ApiResponses;
+
+    protected ShippingAddressService $shippingAddressService;
+
+    public function __construct(ShippingAddressService $shippingAddressService)
+    {
+        $this->shippingAddressService = $shippingAddressService;
+    }
 
     /**
      * Retrieve user's shipping addresses
@@ -81,17 +89,17 @@ class ShippingAddressController extends Controller
      */
     public function index(Request $request)
     {
-        $user = $request->user();
+        try {
+            $result = $this->shippingAddressService->getUserShippingAddresses($request->user());
 
-        $addresses = ShippingAddress::where('user_id', $user->id)
-            ->orderBy('is_default', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->get();
+            return ShippingAddressResource::collection($result['addresses'])->additional([
+                'message' => $result['message'],
+                'status' => 200
+            ]);
 
-        return ShippingAddressResource::collection($addresses)->additional([
-            'message' => 'Shipping addresses retrieved successfully.',
-            'status' => 200
-        ]);
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage(), 500);
+        }
     }
 
     /**
@@ -156,23 +164,20 @@ class ShippingAddressController extends Controller
      */
     public function store(StoreShippingAddressRequest $request)
     {
-        $user = $request->user();
-        $data = $request->validated();
+        try {
+            $address = $this->shippingAddressService->createShippingAddress(
+                $request->validated(),
+                $request->user()
+            );
 
-        $data['user_id'] = $user->id;
+            return $this->ok(
+                'Shipping address created successfully.',
+                new ShippingAddressResource($address)
+            );
 
-        if ($data['is_default'] ?? false) {
-            ShippingAddress::where('user_id', $user->id)
-                ->where('type', $data['type'])
-                ->update(['is_default' => false]);
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage(), 500);
         }
-
-        $address = ShippingAddress::create($data);
-
-        return $this->ok(
-            'Shipping address created successfully.',
-            new ShippingAddressResource($address)
-        );
     }
 
     /**
@@ -228,16 +233,21 @@ class ShippingAddressController extends Controller
      */
     public function show(Request $request, ShippingAddress $shippingAddress)
     {
-        $user = $request->user();
+        try {
+            $address = $this->shippingAddressService->getShippingAddress($shippingAddress, $request->user());
 
-        if ($shippingAddress->user_id !== $user->id) {
-            return $this->error('You can only view your own shipping addresses.', 403);
+            return $this->ok(
+                'Shipping address retrieved successfully.',
+                new ShippingAddressResource($address)
+            );
+
+        } catch (\Exception $e) {
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
+
+            return $this->error($e->getMessage(), $statusCode);
         }
-
-        return $this->ok(
-            'Shipping address retrieved successfully.',
-            new ShippingAddressResource($shippingAddress)
-        );
     }
 
     /**
@@ -307,27 +317,25 @@ class ShippingAddressController extends Controller
      */
     public function update(UpdateShippingAddressRequest $request, ShippingAddress $shippingAddress)
     {
-        $user = $request->user();
+        try {
+            $address = $this->shippingAddressService->updateShippingAddress(
+                $shippingAddress,
+                $request->validated(),
+                $request->user()
+            );
 
-        if ($shippingAddress->user_id !== $user->id) {
-            return $this->error('You can only update your own shipping addresses.', 403);
+            return $this->ok(
+                'Shipping address updated successfully.',
+                new ShippingAddressResource($address)
+            );
+
+        } catch (\Exception $e) {
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
+
+            return $this->error($e->getMessage(), $statusCode);
         }
-
-        $data = $request->validated();
-
-        if ($data['is_default'] ?? false) {
-            ShippingAddress::where('user_id', $user->id)
-                ->where('type', $data['type'])
-                ->where('id', '!=', $shippingAddress->id)
-                ->update(['is_default' => false]);
-        }
-
-        $shippingAddress->update($data);
-
-        return $this->ok(
-            'Shipping address updated successfully.',
-            new ShippingAddressResource($shippingAddress)
-        );
     }
 
     /**
@@ -360,19 +368,18 @@ class ShippingAddressController extends Controller
      */
     public function destroy(Request $request, ShippingAddress $shippingAddress)
     {
-        $user = $request->user();
+        try {
+            $this->shippingAddressService->deleteShippingAddress($shippingAddress, $request->user());
 
-        if ($shippingAddress->user_id !== $user->id) {
-            return $this->error('You can only delete your own shipping addresses.', 403);
+            return $this->ok('Shipping address deleted successfully.');
+
+        } catch (\Exception $e) {
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
+
+            return $this->error($e->getMessage(), $statusCode);
         }
-
-        if ($shippingAddress->is_default) {
-            return $this->error('Cannot delete default shipping address. Please set another address as default first.', 400);
-        }
-
-        $shippingAddress->delete();
-
-        return $this->ok('Shipping address deleted successfully.');
     }
 
     /**
@@ -421,18 +428,21 @@ class ShippingAddressController extends Controller
      */
     public function setDefault(Request $request, ShippingAddress $shippingAddress)
     {
-        $user = $request->user();
+        try {
+            $address = $this->shippingAddressService->setAddressAsDefault($shippingAddress, $request->user());
 
-        if ($shippingAddress->user_id !== $user->id) {
-            return $this->error('You can only modify your own shipping addresses.', 403);
+            return $this->ok(
+                'Default shipping address updated successfully.',
+                new ShippingAddressResource($address)
+            );
+
+        } catch (\Exception $e) {
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
+
+            return $this->error($e->getMessage(), $statusCode);
         }
-
-        $shippingAddress->setAsDefault();
-
-        return $this->ok(
-            'Default shipping address updated successfully.',
-            new ShippingAddressResource($shippingAddress->fresh())
-        );
     }
 
     /**
@@ -530,32 +540,31 @@ class ShippingAddressController extends Controller
      */
     public function validate(Request $request, ShippingAddress $shippingAddress)
     {
-        $user = $request->user();
-
-        if ($shippingAddress->user_id !== $user->id) {
-            return $this->error('You can only validate your own shipping addresses.', 403);
-        }
-
         try {
-            $shippingService = app(\App\Services\V1\Shipping\ShippingService::class);
-            $validationResult = $shippingService->validateAddress($shippingAddress);
+            $result = $this->shippingAddressService->validateShippingAddress($shippingAddress, $request->user());
 
-            if ($validationResult['valid']) {
-                $shippingAddress->markAsValidated($validationResult);
-
-                return $this->ok(
-                    'Address validated successfully.',
-                    [
-                        'address' => new ShippingAddressResource($shippingAddress->fresh()),
-                        'validation' => $validationResult
-                    ]
-                );
-            }
-
-            return $this->error('Address validation failed.', 422, $validationResult);
+            return $this->ok(
+                $result['message'],
+                [
+                    'address' => new ShippingAddressResource($result['address']),
+                    'validation' => $result['validation']
+                ]
+            );
 
         } catch (\Exception $e) {
-            return $this->error('Address validation service unavailable.', 503);
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
+
+            if ($statusCode === 422) {
+                // Handle validation failure with validation result data
+                $validationResult = json_decode($e->getMessage(), true);
+                if (is_array($validationResult)) {
+                    return $this->error($validationResult['message'] ?? 'Address validation failed.', 422, $validationResult);
+                }
+            }
+
+            return $this->error($e->getMessage(), $statusCode);
         }
     }
 }

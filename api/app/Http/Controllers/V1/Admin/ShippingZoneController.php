@@ -8,12 +8,20 @@ use App\Models\ShippingMethod;
 use App\Requests\V1\StoreShippingZoneRequest;
 use App\Requests\V1\UpdateShippingZoneRequest;
 use App\Resources\V1\ShippingZoneResource;
+use App\Services\V1\Shipping\ShippingZoneService;
 use App\Traits\V1\ApiResponses;
 use Illuminate\Http\Request;
 
 class ShippingZoneController extends Controller
 {
     use ApiResponses;
+
+    protected ShippingZoneService $shippingZoneService;
+
+    public function __construct(ShippingZoneService $shippingZoneService)
+    {
+        $this->shippingZoneService = $shippingZoneService;
+    }
 
     /**
      * Retrieve paginated list of shipping zones
@@ -68,21 +76,6 @@ class ShippingZoneController extends Controller
      *         ],
      *         "created_at": "2025-01-01T00:00:00.000000Z",
      *         "updated_at": "2025-01-10T14:30:00.000000Z"
-     *       },
-     *       {
-     *         "id": 2,
-     *         "name": "European Union",
-     *         "description": "EU member countries",
-     *         "countries": ["AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE"],
-     *         "country_names": ["Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands", "Poland", "Portugal", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden"],
-     *         "postcodes": null,
-     *         "excluded_postcodes": null,
-     *         "is_active": true,
-     *         "sort_order": 3,
-     *         "methods_count": 1,
-     *         "rates_count": 6,
-     *         "created_at": "2025-01-01T00:00:00.000000Z",
-     *         "updated_at": "2025-01-01T00:00:00.000000Z"
      *       }
      *     ],
      *     "current_page": 1,
@@ -98,48 +91,21 @@ class ShippingZoneController extends Controller
      */
     public function index(Request $request)
     {
-        $user = $request->user();
+        try {
+            $result = $this->shippingZoneService->getShippingZones($request, $request->user());
 
-        if (!$user->hasPermission('view_shipping_zones')) {
-            return $this->error('You do not have the required permissions.', 403);
+            return ShippingZoneResource::collection($result['zones'])->additional([
+                'message' => $result['message'],
+                'status' => 200
+            ]);
+
+        } catch (\Exception $e) {
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
+
+            return $this->error($e->getMessage(), $statusCode);
         }
-
-        $query = ShippingZone::query();
-
-        // Apply name filter with partial matching
-        if ($request->has('name')) {
-            $query->where('name', 'like', '%' . $request->input('name') . '%');
-        }
-
-        // Apply country filter - searches within countries JSON array
-        if ($request->has('country')) {
-            $query->whereJsonContains('countries', strtoupper($request->input('country')));
-        }
-
-        // Apply active status filter
-        if ($request->has('is_active')) {
-            $query->where('is_active', $request->boolean('is_active'));
-        }
-
-        // Include associated shipping methods if requested
-        if ($request->boolean('with_methods')) {
-            $query->with(['methods' => function ($q) {
-                $q->where('is_active', true)->orderBy('sort_order');
-            }]);
-        }
-
-        // Include counts if requested
-        if ($request->boolean('with_counts')) {
-            $query->withCount(['methods', 'rates']);
-        }
-
-        $perPage = min($request->input('per_page', 15), 100);
-        $zones = $query->ordered()->paginate($perPage);
-
-        return ShippingZoneResource::collection($zones)->additional([
-            'message' => 'Shipping zones retrieved successfully.',
-            'status' => 200
-        ]);
     }
 
     /**
@@ -198,20 +164,24 @@ class ShippingZoneController extends Controller
      */
     public function store(StoreShippingZoneRequest $request)
     {
-        $user = $request->user();
+        try {
+            $zone = $this->shippingZoneService->createShippingZone(
+                $request->validated(),
+                $request->user()
+            );
 
-        if (!$user->hasPermission('create_shipping_zones')) {
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->ok(
+                'Shipping zone created successfully.',
+                new ShippingZoneResource($zone)
+            );
+
+        } catch (\Exception $e) {
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
+
+            return $this->error($e->getMessage(), $statusCode);
         }
-
-        $data = $request->validated();
-
-        $zone = ShippingZone::create($data);
-
-        return $this->ok(
-            'Shipping zone created successfully.',
-            new ShippingZoneResource($zone)
-        );
     }
 
     /**
@@ -271,27 +241,21 @@ class ShippingZoneController extends Controller
      */
     public function show(Request $request, ShippingZone $shippingZone)
     {
-        $user = $request->user();
+        try {
+            $zone = $this->shippingZoneService->getShippingZone($shippingZone, $request, $request->user());
 
-        if (!$user->hasPermission('view_shipping_zones')) {
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->ok(
+                'Shipping zone retrieved successfully.',
+                new ShippingZoneResource($zone)
+            );
+
+        } catch (\Exception $e) {
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
+
+            return $this->error($e->getMessage(), $statusCode);
         }
-
-        // Load counts for methods and rates
-        $shippingZone->loadCount(['methods', 'rates']);
-
-        // Include associated methods if requested
-        if ($request->boolean('with_methods')) {
-            $shippingZone->load(['methods' => function ($query) {
-                $query->orderBy('shipping_zones_methods.sort_order')
-                    ->orderBy('name');
-            }]);
-        }
-
-        return $this->ok(
-            'Shipping zone retrieved successfully.',
-            new ShippingZoneResource($shippingZone)
-        );
     }
 
     /**
@@ -353,20 +317,25 @@ class ShippingZoneController extends Controller
      */
     public function update(UpdateShippingZoneRequest $request, ShippingZone $shippingZone)
     {
-        $user = $request->user();
+        try {
+            $zone = $this->shippingZoneService->updateShippingZone(
+                $shippingZone,
+                $request->validated(),
+                $request->user()
+            );
 
-        if (!$user->hasPermission('edit_shipping_zones')) {
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->ok(
+                'Shipping zone updated successfully.',
+                new ShippingZoneResource($zone)
+            );
+
+        } catch (\Exception $e) {
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
+
+            return $this->error($e->getMessage(), $statusCode);
         }
-
-        $data = $request->validated();
-
-        $shippingZone->update($data);
-
-        return $this->ok(
-            'Shipping zone updated successfully.',
-            new ShippingZoneResource($shippingZone)
-        );
     }
 
     /**
@@ -399,25 +368,18 @@ class ShippingZoneController extends Controller
      */
     public function destroy(Request $request, ShippingZone $shippingZone)
     {
-        $user = $request->user();
+        try {
+            $this->shippingZoneService->deleteShippingZone($shippingZone, $request->user());
 
-        if (!$user->hasPermission('delete_shipping_zones')) {
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->ok('Shipping zone deleted successfully.');
+
+        } catch (\Exception $e) {
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
+
+            return $this->error($e->getMessage(), $statusCode);
         }
-
-        // Check if zone has associated rates
-        if ($shippingZone->rates()->exists()) {
-            return $this->error('Cannot delete shipping zone that has associated rates.', 400);
-        }
-
-        // Remove method associations if they exist
-        if ($shippingZone->methods()->exists()) {
-            $shippingZone->methods()->detach();
-        }
-
-        $shippingZone->delete();
-
-        return $this->ok('Shipping zone deleted successfully.');
     }
 
     /**
@@ -452,18 +414,21 @@ class ShippingZoneController extends Controller
      */
     public function activate(Request $request, ShippingZone $shippingZone)
     {
-        $user = $request->user();
+        try {
+            $zone = $this->shippingZoneService->activateShippingZone($shippingZone, $request->user());
 
-        if (!$user->hasPermission('edit_shipping_zones')) {
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->ok(
+                'Shipping zone activated successfully.',
+                new ShippingZoneResource($zone)
+            );
+
+        } catch (\Exception $e) {
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
+
+            return $this->error($e->getMessage(), $statusCode);
         }
-
-        $shippingZone->update(['is_active' => true]);
-
-        return $this->ok(
-            'Shipping zone activated successfully.',
-            new ShippingZoneResource($shippingZone)
-        );
     }
 
     /**
@@ -498,18 +463,21 @@ class ShippingZoneController extends Controller
      */
     public function deactivate(Request $request, ShippingZone $shippingZone)
     {
-        $user = $request->user();
+        try {
+            $zone = $this->shippingZoneService->deactivateShippingZone($shippingZone, $request->user());
 
-        if (!$user->hasPermission('edit_shipping_zones')) {
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->ok(
+                'Shipping zone deactivated successfully.',
+                new ShippingZoneResource($zone)
+            );
+
+        } catch (\Exception $e) {
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
+
+            return $this->error($e->getMessage(), $statusCode);
         }
-
-        $shippingZone->update(['is_active' => false]);
-
-        return $this->ok(
-            'Shipping zone deactivated successfully.',
-            new ShippingZoneResource($shippingZone)
-        );
     }
 
     /**
@@ -544,25 +512,26 @@ class ShippingZoneController extends Controller
      */
     public function reorder(Request $request)
     {
-        $user = $request->user();
-
-        if (!$user->hasPermission('edit_shipping_zones')) {
-            return $this->error('You do not have the required permissions.', 403);
-        }
-
         $request->validate([
             'zones' => ['required', 'array'],
             'zones.*' => ['integer', 'exists:shipping_zones,id'],
         ]);
 
-        $zoneIds = $request->input('zones');
+        try {
+            $this->shippingZoneService->reorderShippingZones(
+                $request->input('zones'),
+                $request->user()
+            );
 
-        // Update sort_order for each zone based on its position in the array
-        foreach ($zoneIds as $index => $zoneId) {
-            ShippingZone::where('id', $zoneId)->update(['sort_order' => $index]);
+            return $this->ok('Shipping zones reordered successfully.');
+
+        } catch (\Exception $e) {
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
+
+            return $this->error($e->getMessage(), $statusCode);
         }
-
-        return $this->ok('Shipping zones reordered successfully.');
     }
 
     /**
@@ -603,32 +572,28 @@ class ShippingZoneController extends Controller
      */
     public function attachMethod(Request $request, ShippingZone $shippingZone)
     {
-        $user = $request->user();
-
-        if (!$user->hasPermission('edit_shipping_zones')) {
-            return $this->error('You do not have the required permissions.', 403);
-        }
-
         $request->validate([
             'method_id' => ['required', 'integer', 'exists:shipping_methods,id'],
             'is_active' => ['nullable', 'boolean'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
         ]);
 
-        $methodId = $request->input('method_id');
+        try {
+            $this->shippingZoneService->attachMethodToZone(
+                $shippingZone,
+                $request->only(['method_id', 'is_active', 'sort_order']),
+                $request->user()
+            );
 
-        // Check if method is already attached to this zone
-        if ($shippingZone->methods()->where('shipping_method_id', $methodId)->exists()) {
-            return $this->error('Shipping method is already attached to this zone.', 400);
+            return $this->ok('Shipping method attached to zone successfully.');
+
+        } catch (\Exception $e) {
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
+
+            return $this->error($e->getMessage(), $statusCode);
         }
-
-        // Attach method with pivot data
-        $shippingZone->methods()->attach($methodId, [
-            'is_active' => $request->boolean('is_active', true),
-            'sort_order' => $request->input('sort_order', 0),
-        ]);
-
-        return $this->ok('Shipping method attached to zone successfully.');
     }
 
     /**
@@ -658,21 +623,22 @@ class ShippingZoneController extends Controller
      */
     public function detachMethod(Request $request, ShippingZone $shippingZone, ShippingMethod $shippingMethod)
     {
-        $user = $request->user();
+        try {
+            $this->shippingZoneService->detachMethodFromZone(
+                $shippingZone,
+                $shippingMethod,
+                $request->user()
+            );
 
-        if (!$user->hasPermission('edit_shipping_zones')) {
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->ok('Shipping method detached from zone successfully.');
+
+        } catch (\Exception $e) {
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
+
+            return $this->error($e->getMessage(), $statusCode);
         }
-
-        // Check if method is attached to this zone
-        if (!$shippingZone->methods()->where('shipping_method_id', $shippingMethod->id)->exists()) {
-            return $this->error('Shipping method is not attached to this zone.', 404);
-        }
-
-        // Detach method
-        $shippingZone->methods()->detach($shippingMethod->id);
-
-        return $this->ok('Shipping method detached from zone successfully.');
     }
 
     /**
@@ -712,36 +678,27 @@ class ShippingZoneController extends Controller
      */
     public function updateMethodSettings(Request $request, ShippingZone $shippingZone, ShippingMethod $shippingMethod)
     {
-        $user = $request->user();
-
-        if (!$user->hasPermission('edit_shipping_zones')) {
-            return $this->error('You do not have the required permissions.', 403);
-        }
-
         $request->validate([
             'is_active' => ['nullable', 'boolean'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
         ]);
 
-        // Check if method is attached to this zone
-        $pivot = $shippingZone->methods()->where('shipping_method_id', $shippingMethod->id)->first();
+        try {
+            $this->shippingZoneService->updateMethodSettings(
+                $shippingZone,
+                $shippingMethod,
+                $request->only(['is_active', 'sort_order']),
+                $request->user()
+            );
 
-        if (!$pivot) {
-            return $this->error('Shipping method is not attached to this zone.', 404);
+            return $this->ok('Shipping method settings updated successfully.');
+
+        } catch (\Exception $e) {
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
+
+            return $this->error($e->getMessage(), $statusCode);
         }
-
-        // Build update data
-        $updateData = [];
-        if ($request->has('is_active')) {
-            $updateData['is_active'] = $request->boolean('is_active');
-        }
-        if ($request->has('sort_order')) {
-            $updateData['sort_order'] = $request->input('sort_order');
-        }
-
-        // Update pivot settings
-        $shippingZone->methods()->updateExistingPivot($shippingMethod->id, $updateData);
-
-        return $this->ok('Shipping method settings updated successfully.');
     }
 }

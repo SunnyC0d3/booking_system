@@ -5,21 +5,27 @@ namespace App\Http\Controllers\V1\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\DropshipOrder;
 use App\Models\Order;
-use App\Models\Supplier;
+use App\Services\V1\Dropshipping\DropshipOrderService;
 use App\Requests\V1\IndexDropshipOrderRequest;
 use App\Requests\V1\StoreDropshipOrderRequest;
 use App\Requests\V1\UpdateDropshipOrderRequest;
 use App\Resources\V1\DropshipOrderResource;
 use App\Traits\V1\ApiResponses;
-use App\Constants\DropshipStatuses;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Exception;
 
 class DropshipOrderController extends Controller
 {
     use ApiResponses;
+
+    protected DropshipOrderService $dropshipService;
+
+    public function __construct(DropshipOrderService $dropshipService)
+    {
+        $this->dropshipService = $dropshipService;
+    }
 
     /**
      * Retrieve paginated list of dropship orders
@@ -126,7 +132,7 @@ class DropshipOrderController extends Controller
      *   ]
      * }
      */
-    public function index(IndexDropshipOrderRequest $request)
+    public function index(IndexDropshipOrderRequest $request): JsonResponse
     {
         $user = $request->user();
 
@@ -149,35 +155,7 @@ class DropshipOrderController extends Controller
                 'ip_address' => $request->ip()
             ]);
 
-            $dropshipOrders = DropshipOrder::query()
-                ->with(['order.user', 'supplier', 'dropshipOrderItems.supplierProduct'])
-                ->when(!empty($data['supplier_id']), fn($query) => $query->where('supplier_id', $data['supplier_id']))
-                ->when(!empty($data['status']), fn($query) => $query->where('status', $data['status']))
-                ->when(!empty($data['order_id']), fn($query) => $query->where('order_id', $data['order_id']))
-                ->when(!empty($data['search']), function($query) use ($data) {
-                    $query->where(function($q) use ($data) {
-                        $q->where('supplier_order_id', 'like', '%' . $data['search'] . '%')
-                            ->orWhere('tracking_number', 'like', '%' . $data['search'] . '%')
-                            ->orWhereHas('order.user', function($userQuery) use ($data) {
-                                $userQuery->where('name', 'like', '%' . $data['search'] . '%')
-                                    ->orWhere('email', 'like', '%' . $data['search'] . '%');
-                            });
-                    });
-                })
-                ->when(!empty($data['date_from']), fn($query) => $query->where('created_at', '>=', $data['date_from']))
-                ->when(!empty($data['date_to']), fn($query) => $query->where('created_at', '<=', $data['date_to']))
-                ->when(isset($data['overdue']), function($query) use ($data) {
-                    if ($data['overdue']) {
-                        $query->overdue();
-                    }
-                })
-                ->when(isset($data['needs_retry']), function($query) use ($data) {
-                    if ($data['needs_retry']) {
-                        $query->needsRetry();
-                    }
-                })
-                ->latest()
-                ->paginate($data['per_page'] ?? 15);
+            $dropshipOrders = $this->dropshipService->getFilteredOrders($data);
 
             Log::info('Dropship orders retrieved successfully', [
                 'user_id' => $user->id,
@@ -302,7 +280,7 @@ class DropshipOrderController extends Controller
      *   "message": "Failed to create dropship order: Supplier is not active."
      * }
      */
-    public function store(StoreDropshipOrderRequest $request)
+    public function store(StoreDropshipOrderRequest $request): JsonResponse
     {
         $user = $request->user();
 
@@ -327,51 +305,16 @@ class DropshipOrderController extends Controller
                 'ip_address' => $request->ip()
             ]);
 
-            $dropshipOrder = DB::transaction(function () use ($data, $user) {
-                $order = Order::findOrFail($data['order_id']);
-                $supplier = Supplier::findOrFail($data['supplier_id']);
+            $dropshipOrder = $this->dropshipService->createDropshipOrder($data);
 
-                if (!$supplier->isActive()) {
-                    throw new Exception('Supplier is not active.');
-                }
-
-                $dropshipOrder = DropshipOrder::create([
-                    'order_id' => $order->id,
-                    'supplier_id' => $supplier->id,
-                    'status' => DropshipStatuses::PENDING,
-                    'total_cost' => $data['total_cost'],
-                    'total_retail' => $data['total_retail'],
-                    'profit_margin' => $data['total_retail'] - $data['total_cost'],
-                    'shipping_address' => $data['shipping_address'],
-                    'notes' => $data['notes'] ?? null,
-                    'auto_retry_enabled' => $data['auto_retry_enabled'] ?? true,
-                ]);
-
-                foreach ($data['items'] as $itemData) {
-                    $dropshipOrder->dropshipOrderItems()->create([
-                        'order_item_id' => $itemData['order_item_id'],
-                        'supplier_product_id' => $itemData['supplier_product_id'],
-                        'supplier_sku' => $itemData['supplier_sku'],
-                        'quantity' => $itemData['quantity'],
-                        'supplier_price' => $itemData['supplier_price'],
-                        'retail_price' => $itemData['retail_price'],
-                        'profit_per_item' => $itemData['retail_price'] - $itemData['supplier_price'],
-                        'product_details' => $itemData['product_details'] ?? null,
-                        'status' => DropshipStatuses::PENDING,
-                    ]);
-                }
-
-                Log::info('Dropship order created successfully', [
-                    'user_id' => $user->id,
-                    'dropship_order_id' => $dropshipOrder->id,
-                    'order_id' => $order->id,
-                    'supplier_id' => $supplier->id,
-                    'total_cost' => $dropshipOrder->getTotalCostFormatted(),
-                    'items_count' => count($data['items'])
-                ]);
-
-                return $dropshipOrder;
-            });
+            Log::info('Dropship order created successfully', [
+                'user_id' => $user->id,
+                'dropship_order_id' => $dropshipOrder->id,
+                'order_id' => $dropshipOrder->order_id,
+                'supplier_id' => $dropshipOrder->supplier_id,
+                'total_cost' => $dropshipOrder->getTotalCostFormatted(),
+                'items_count' => $dropshipOrder->dropshipOrderItems->count()
+            ]);
 
             return $this->ok(
                 'Dropship order created successfully.',
@@ -484,7 +427,7 @@ class DropshipOrderController extends Controller
      *   "message": "No query results for model [App\\Models\\DropshipOrder] 999"
      * }
      */
-    public function show(Request $request, DropshipOrder $dropshipOrder)
+    public function show(Request $request, DropshipOrder $dropshipOrder): JsonResponse
     {
         $user = $request->user();
 
@@ -582,7 +525,7 @@ class DropshipOrderController extends Controller
      *   ]
      * }
      */
-    public function update(UpdateDropshipOrderRequest $request, DropshipOrder $dropshipOrder)
+    public function update(UpdateDropshipOrderRequest $request, DropshipOrder $dropshipOrder): JsonResponse
     {
         $user = $request->user();
 
@@ -606,22 +549,7 @@ class DropshipOrderController extends Controller
                 'ip_address' => $request->ip()
             ]);
 
-            $updatedOrder = DB::transaction(function () use ($dropshipOrder, $data, $user) {
-                $originalStatus = $dropshipOrder->status;
-
-                $dropshipOrder->update($data);
-
-                if (isset($data['status']) && $originalStatus !== $data['status']) {
-                    Log::info('Dropship order status changed', [
-                        'user_id' => $user->id,
-                        'dropship_order_id' => $dropshipOrder->id,
-                        'old_status' => $originalStatus,
-                        'new_status' => $data['status']
-                    ]);
-                }
-
-                return $dropshipOrder;
-            });
+            $updatedOrder = $this->dropshipService->updateDropshipOrder($dropshipOrder, $data);
 
             Log::info('Dropship order updated successfully', [
                 'user_id' => $user->id,
@@ -673,7 +601,7 @@ class DropshipOrderController extends Controller
      *   "message": "No query results for model [App\\Models\\DropshipOrder] 999"
      * }
      */
-    public function destroy(Request $request, DropshipOrder $dropshipOrder)
+    public function destroy(Request $request, DropshipOrder $dropshipOrder): JsonResponse
     {
         $user = $request->user();
 
@@ -695,26 +623,14 @@ class DropshipOrderController extends Controller
                 'ip_address' => $request->ip()
             ]);
 
-            if (!in_array($dropshipOrder->status, [DropshipStatuses::PENDING, DropshipStatuses::CANCELLED])) {
-                Log::warning('Cannot delete dropship order - invalid status', [
-                    'user_id' => $user->id,
-                    'dropship_order_id' => $dropshipOrder->id,
-                    'status' => $dropshipOrder->status
-                ]);
-                return $this->error('Cannot delete dropship order that has been sent to supplier.', 400);
-            }
+            $this->dropshipService->deleteDropshipOrder($dropshipOrder);
 
-            DB::transaction(function () use ($dropshipOrder, $user) {
-                $dropshipOrder->dropshipOrderItems()->delete();
-                $dropshipOrder->delete();
-
-                Log::info('Dropship order deleted successfully', [
-                    'user_id' => $user->id,
-                    'dropship_order_id' => $dropshipOrder->id,
-                    'order_id' => $dropshipOrder->order_id,
-                    'supplier_id' => $dropshipOrder->supplier_id
-                ]);
-            });
+            Log::info('Dropship order deleted successfully', [
+                'user_id' => $user->id,
+                'dropship_order_id' => $dropshipOrder->id,
+                'order_id' => $dropshipOrder->order_id,
+                'supplier_id' => $dropshipOrder->supplier_id
+            ]);
 
             return $this->ok('Dropship order deleted successfully.');
         } catch (Exception $e) {
@@ -766,7 +682,7 @@ class DropshipOrderController extends Controller
      *   "message": "Supplier is not active."
      * }
      */
-    public function sendToSupplier(Request $request, DropshipOrder $dropshipOrder)
+    public function sendToSupplier(Request $request, DropshipOrder $dropshipOrder): JsonResponse
     {
         $user = $request->user();
 
@@ -789,40 +705,18 @@ class DropshipOrderController extends Controller
                 'ip_address' => $request->ip()
             ]);
 
-            if (!$dropshipOrder->isPending()) {
-                Log::warning('Cannot send dropship order - not in pending status', [
-                    'user_id' => $user->id,
-                    'dropship_order_id' => $dropshipOrder->id,
-                    'status' => $dropshipOrder->status
-                ]);
-                return $this->error('Dropship order has already been sent to supplier.', 400);
+            $success = $this->dropshipService->sendToSupplier($dropshipOrder);
+
+            if (!$success) {
+                return $this->error('Failed to send dropship order to supplier.', 500);
             }
 
-            $supplier = $dropshipOrder->supplier;
-            if (!$supplier->isActive()) {
-                Log::warning('Cannot send dropship order - supplier not active', [
-                    'user_id' => $user->id,
-                    'dropship_order_id' => $dropshipOrder->id,
-                    'supplier_id' => $supplier->id,
-                    'supplier_status' => $supplier->status
-                ]);
-                return $this->error('Supplier is not active.', 400);
-            }
-
-            DB::transaction(function () use ($dropshipOrder, $supplier, $user) {
-                $dropshipOrder->markAsSentToSupplier([
-                    'sent_at' => now(),
-                    'integration_type' => $supplier->integration_type,
-                    'sent_by_user_id' => $user->id,
-                ]);
-
-                Log::info('Dropship order sent to supplier successfully', [
-                    'user_id' => $user->id,
-                    'dropship_order_id' => $dropshipOrder->id,
-                    'supplier_id' => $supplier->id,
-                    'integration_type' => $supplier->integration_type
-                ]);
-            });
+            Log::info('Dropship order sent to supplier successfully', [
+                'user_id' => $user->id,
+                'dropship_order_id' => $dropshipOrder->id,
+                'supplier_id' => $dropshipOrder->supplier_id,
+                'integration_type' => $dropshipOrder->supplier->integration_type
+            ]);
 
             return $this->ok(
                 'Dropship order sent to supplier successfully.',
@@ -876,7 +770,7 @@ class DropshipOrderController extends Controller
      *   ]
      * }
      */
-    public function markAsConfirmed(Request $request, DropshipOrder $dropshipOrder)
+    public function markAsConfirmed(Request $request, DropshipOrder $dropshipOrder): JsonResponse
     {
         $user = $request->user();
 
@@ -906,7 +800,8 @@ class DropshipOrderController extends Controller
                 'ip_address' => $request->ip()
             ]);
 
-            $dropshipOrder->markAsConfirmed(
+            $this->dropshipService->markAsConfirmedWithEmail(
+                $dropshipOrder,
                 $data['supplier_order_id'],
                 $data['supplier_response'] ?? []
             );
@@ -974,7 +869,7 @@ class DropshipOrderController extends Controller
      *   ]
      * }
      */
-    public function markAsShipped(Request $request, DropshipOrder $dropshipOrder)
+    public function markAsShipped(Request $request, DropshipOrder $dropshipOrder): JsonResponse
     {
         $user = $request->user();
 
@@ -1005,10 +900,15 @@ class DropshipOrderController extends Controller
                 'ip_address' => $request->ip()
             ]);
 
-            $dropshipOrder->markAsShipped(
+            $estimatedDelivery = isset($data['estimated_delivery'])
+                ? \Carbon\Carbon::parse($data['estimated_delivery'])
+                : null;
+
+            $this->dropshipService->markAsShippedWithEmail(
+                $dropshipOrder,
                 $data['tracking_number'],
                 $data['carrier'] ?? null,
-                isset($data['estimated_delivery']) ? \Carbon\Carbon::parse($data['estimated_delivery']) : null
+                $estimatedDelivery
             );
 
             Log::info('Dropship order marked as shipped', [
@@ -1061,7 +961,7 @@ class DropshipOrderController extends Controller
      *   "message": "No query results for model [App\\Models\\DropshipOrder] 999"
      * }
      */
-    public function markAsDelivered(Request $request, DropshipOrder $dropshipOrder)
+    public function markAsDelivered(Request $request, DropshipOrder $dropshipOrder): JsonResponse
     {
         $user = $request->user();
 
@@ -1083,6 +983,7 @@ class DropshipOrderController extends Controller
             ]);
 
             $dropshipOrder->markAsDelivered();
+            $this->dropshipService->updateOrderFromDropshipStatus($dropshipOrder);
 
             Log::info('Dropship order marked as delivered', [
                 'user_id' => $user->id,
@@ -1135,7 +1036,7 @@ class DropshipOrderController extends Controller
      *   "message": "Cannot cancel delivered dropship order."
      * }
      */
-    public function cancel(Request $request, DropshipOrder $dropshipOrder)
+    public function cancel(Request $request, DropshipOrder $dropshipOrder): JsonResponse
     {
         $user = $request->user();
 
@@ -1164,16 +1065,7 @@ class DropshipOrderController extends Controller
                 'ip_address' => $request->ip()
             ]);
 
-            if ($dropshipOrder->isDelivered()) {
-                Log::warning('Cannot cancel delivered dropship order', [
-                    'user_id' => $user->id,
-                    'dropship_order_id' => $dropshipOrder->id,
-                    'status' => $dropshipOrder->status
-                ]);
-                return $this->error('Cannot cancel delivered dropship order.', 400);
-            }
-
-            $dropshipOrder->markAsCancelled($reason);
+            $this->dropshipService->cancelDropshipOrder($dropshipOrder, $reason);
 
             Log::info('Dropship order cancelled', [
                 'user_id' => $user->id,
@@ -1225,7 +1117,7 @@ class DropshipOrderController extends Controller
      *   "message": "Dropship order cannot be retried."
      * }
      */
-    public function retry(Request $request, DropshipOrder $dropshipOrder)
+    public function retry(Request $request, DropshipOrder $dropshipOrder): JsonResponse
     {
         $user = $request->user();
 
@@ -1247,7 +1139,9 @@ class DropshipOrderController extends Controller
                 'ip_address' => $request->ip()
             ]);
 
-            if (!$dropshipOrder->canRetry()) {
+            $success = $this->dropshipService->retryFailedOrderWithEmail($dropshipOrder);
+
+            if (!$success) {
                 Log::warning('Cannot retry dropship order', [
                     'user_id' => $user->id,
                     'dropship_order_id' => $dropshipOrder->id,
@@ -1256,9 +1150,6 @@ class DropshipOrderController extends Controller
                 ]);
                 return $this->error('Dropship order cannot be retried.', 400);
             }
-
-            $dropshipOrder->incrementRetryCount();
-            $dropshipOrder->updateStatus(DropshipStatuses::PENDING);
 
             Log::info('Dropship order retry initiated', [
                 'user_id' => $user->id,
@@ -1314,7 +1205,7 @@ class DropshipOrderController extends Controller
      *   ]
      * }
      */
-    public function bulkUpdateStatus(Request $request)
+    public function bulkUpdateStatus(Request $request): JsonResponse
     {
         $user = $request->user();
 
@@ -1330,7 +1221,7 @@ class DropshipOrderController extends Controller
         $request->validate([
             'dropship_order_ids' => 'required|array|min:1',
             'dropship_order_ids.*' => 'exists:dropship_orders,id',
-            'status' => ['required', 'string', \Illuminate\Validation\Rule::in(DropshipStatuses::all())],
+            'status' => 'required|string',
             'notes' => 'nullable|string|max:1000'
         ]);
 
@@ -1347,26 +1238,15 @@ class DropshipOrderController extends Controller
                 'ip_address' => $request->ip()
             ]);
 
-            $updated = DB::transaction(function () use ($orderIds, $status, $notes, $user) {
-                $orders = DropshipOrder::whereIn('id', $orderIds)->get();
-
-                foreach ($orders as $order) {
-                    $order->updateStatus($status, ['notes' => $notes]);
-                }
-
-                return $orders->count();
-            });
+            $result = $this->dropshipService->bulkUpdateStatus($orderIds, $status, $notes);
 
             Log::info('Bulk dropship order status update completed', [
                 'user_id' => $user->id,
-                'orders_updated' => $updated,
+                'orders_updated' => $result['updated_count'],
                 'new_status' => $status
             ]);
 
-            return $this->ok("Successfully updated status for {$updated} dropship orders.", [
-                'updated_count' => $updated,
-                'new_status' => $status
-            ]);
+            return $this->ok("Successfully updated status for {$result['updated_count']} dropship orders.", $result);
         } catch (Exception $e) {
             Log::error('Failed to bulk update dropship order status', [
                 'user_id' => $user->id,
@@ -1432,7 +1312,7 @@ class DropshipOrderController extends Controller
      *   "message": "You do not have the required permissions."
      * }
      */
-    public function getStats(Request $request)
+    public function getStats(Request $request): JsonResponse
     {
         $user = $request->user();
 
@@ -1451,44 +1331,7 @@ class DropshipOrderController extends Controller
                 'ip_address' => $request->ip()
             ]);
 
-            $stats = [
-                'totals' => [
-                    'all_orders' => DropshipOrder::count(),
-                    'pending' => DropshipOrder::pending()->count(),
-                    'active' => DropshipOrder::active()->count(),
-                    'completed' => DropshipOrder::completed()->count(),
-                    'overdue' => DropshipOrder::overdue()->count(),
-                ],
-                'by_status' => DropshipOrder::selectRaw('status, count(*) as count')
-                    ->groupBy('status')
-                    ->pluck('count', 'status')
-                    ->toArray(),
-                'by_supplier' => DropshipOrder::with('supplier:id,name')
-                    ->selectRaw('supplier_id, count(*) as count')
-                    ->groupBy('supplier_id')
-                    ->get()
-                    ->map(function($item) {
-                        return [
-                            'supplier_name' => $item->supplier->name ?? 'Unknown',
-                            'count' => $item->count
-                        ];
-                    }),
-                'recent_activity' => DropshipOrder::with(['order.user', 'supplier'])
-                    ->latest()
-                    ->limit(10)
-                    ->get()
-                    ->map(function($order) {
-                        return [
-                            'id' => $order->id,
-                            'order_id' => $order->order_id,
-                            'supplier_name' => $order->supplier->name,
-                            'customer_name' => $order->order->user->name ?? 'Guest',
-                            'status' => $order->status,
-                            'total_cost' => $order->getTotalCostFormatted(),
-                            'created_at' => $order->created_at,
-                        ];
-                    }),
-            ];
+            $stats = $this->dropshipService->getOrderStatistics();
 
             Log::info('Dropship order statistics retrieved successfully', [
                 'user_id' => $user->id,
@@ -1504,6 +1347,108 @@ class DropshipOrderController extends Controller
                 'ip_address' => $request->ip()
             ]);
             return $this->error('Failed to retrieve stats.', 500);
+        }
+    }
+
+    /**
+     * Create dropship orders from existing order
+     *
+     * Automatically create dropship orders from an existing order by analyzing the order items
+     * and creating dropship orders for items that have supplier mappings. This is useful for
+     * converting regular orders to dropship fulfillment.
+     *
+     * @group Dropship Order Management
+     * @authenticated
+     *
+     * @urlParam order integer required The ID of the order to create dropship orders from. Example: 123
+     *
+     * @response 200 scenario="Dropship orders created successfully" {
+     *   "message": "Dropship orders created from order successfully.",
+     *   "data": {
+     *     "order_id": 123,
+     *     "dropship_orders_created": 2,
+     *     "total_value": 4598,
+     *     "dropship_orders": [
+     *       {
+     *         "id": 49,
+     *         "supplier_id": 5,
+     *         "supplier_name": "Global Suppliers Ltd",
+     *         "total_cost": 1599,
+     *         "total_retail": 2999,
+     *         "profit_margin": 1400,
+     *         "items_count": 2
+     *       }
+     *     ]
+     *   }
+     * }
+     *
+     * @response 403 scenario="Insufficient permissions" {
+     *   "message": "You do not have the required permissions."
+     * }
+     *
+     * @response 400 scenario="No dropship items found" {
+     *   "message": "No items in this order can be dropshipped."
+     * }
+     */
+    public function createFromOrder(Request $request, Order $order): JsonResponse
+    {
+        $user = $request->user();
+
+        if (!$user->hasPermission('create_dropship_orders')) {
+            Log::warning('Unauthorized access attempt to create dropship orders from order', [
+                'user_id' => $user->id,
+                'order_id' => $order->id,
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->userAgent()
+            ]);
+            return $this->error('You do not have the required permissions.', 403);
+        }
+
+        try {
+            Log::info('Creating dropship orders from order', [
+                'user_id' => $user->id,
+                'order_id' => $order->id,
+                'ip_address' => $request->ip()
+            ]);
+
+            $dropshipOrders = $this->dropshipService->createDropshipOrdersFromOrder($order);
+
+            if (empty($dropshipOrders)) {
+                return $this->error('No items in this order can be dropshipped.', 400);
+            }
+
+            $responseData = [
+                'order_id' => $order->id,
+                'dropship_orders_created' => count($dropshipOrders),
+                'total_value' => array_sum(array_column($dropshipOrders, 'total_retail')),
+                'dropship_orders' => collect($dropshipOrders)->map(function ($dropshipOrder) {
+                    return [
+                        'id' => $dropshipOrder->id,
+                        'supplier_id' => $dropshipOrder->supplier_id,
+                        'supplier_name' => $dropshipOrder->supplier->name,
+                        'total_cost' => $dropshipOrder->total_cost,
+                        'total_retail' => $dropshipOrder->total_retail,
+                        'profit_margin' => $dropshipOrder->profit_margin,
+                        'items_count' => $dropshipOrder->dropshipOrderItems->count(),
+                    ];
+                })->toArray(),
+            ];
+
+            Log::info('Dropship orders created from order successfully', [
+                'user_id' => $user->id,
+                'order_id' => $order->id,
+                'dropship_orders_created' => count($dropshipOrders)
+            ]);
+
+            return $this->ok('Dropship orders created from order successfully.', $responseData);
+        } catch (Exception $e) {
+            Log::error('Failed to create dropship orders from order', [
+                'user_id' => $user->id,
+                'order_id' => $order->id,
+                'error' => $e->getMessage(),
+                'ip_address' => $request->ip()
+            ]);
+            return $this->error('Failed to create dropship orders from order.', 500);
         }
     }
 }

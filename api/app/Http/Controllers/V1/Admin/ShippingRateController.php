@@ -4,17 +4,23 @@ namespace App\Http\Controllers\V1\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ShippingRate;
-use App\Models\ShippingMethod;
-use App\Models\ShippingZone;
 use App\Requests\V1\StoreShippingRateRequest;
 use App\Requests\V1\UpdateShippingRateRequest;
 use App\Resources\V1\ShippingRateResource;
+use App\Services\V1\Shipping\ShippingRateService;
 use App\Traits\V1\ApiResponses;
 use Illuminate\Http\Request;
 
 class ShippingRateController extends Controller
 {
     use ApiResponses;
+
+    protected ShippingRateService $shippingRateService;
+
+    public function __construct(ShippingRateService $shippingRateService)
+    {
+        $this->shippingRateService = $shippingRateService;
+    }
 
     /**
      * Retrieve paginated list of shipping rates
@@ -66,34 +72,6 @@ class ShippingRateController extends Controller
      *       },
      *       "created_at": "2025-01-10T09:00:00.000000Z",
      *       "updated_at": "2025-01-14T14:30:00.000000Z"
-     *     },
-     *     {
-     *       "id": 2,
-     *       "shipping_method_id": 1,
-     *       "shipping_zone_id": 1,
-     *       "min_weight": 2000,
-     *       "max_weight": 5000,
-     *       "min_total": 0,
-     *       "max_total": 5000,
-     *       "rate": 799,
-     *       "rate_formatted": "£7.99",
-     *       "free_threshold": 10000,
-     *       "free_threshold_formatted": "£100.00",
-     *       "is_active": true,
-     *       "shipping_method": {
-     *         "id": 1,
-     *         "name": "Standard Delivery",
-     *         "carrier": "Royal Mail",
-     *         "service_code": "tracked-48"
-     *       },
-     *       "shipping_zone": {
-     *         "id": 1,
-     *         "name": "UK Mainland",
-     *         "countries": ["GB"],
-     *         "is_active": true
-     *       },
-     *       "created_at": "2025-01-10T09:15:00.000000Z",
-     *       "updated_at": "2025-01-14T14:30:00.000000Z"
      *     }
      *   ],
      *   "current_page": 1,
@@ -110,53 +88,21 @@ class ShippingRateController extends Controller
      */
     public function index(Request $request)
     {
-        $user = $request->user();
+        try {
+            $result = $this->shippingRateService->getShippingRates($request, $request->user());
 
-        if (!$user->hasPermission('view_shipping_rates')) {
-            return $this->error('You do not have the required permissions.', 403);
+            return ShippingRateResource::collection($result['rates'])->additional([
+                'message' => $result['message'],
+                'status' => 200
+            ]);
+
+        } catch (\Exception $e) {
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
+
+            return $this->error($e->getMessage(), $statusCode);
         }
-
-        $query = ShippingRate::query();
-
-        if ($request->has('shipping_method_id')) {
-            $query->where('shipping_method_id', $request->input('shipping_method_id'));
-        }
-
-        if ($request->has('shipping_zone_id')) {
-            $query->where('shipping_zone_id', $request->input('shipping_zone_id'));
-        }
-
-        if ($request->has('is_active')) {
-            $query->where('is_active', $request->boolean('is_active'));
-        }
-
-        if ($request->has('min_rate') || $request->has('max_rate')) {
-            $minRate = $request->has('min_rate') ? (int) round($request->input('min_rate') * 100) : 0;
-            $maxRate = $request->has('max_rate') ? (int) round($request->input('max_rate') * 100) : PHP_INT_MAX;
-            $query->whereBetween('rate', [$minRate, $maxRate]);
-        }
-
-        if ($request->has('weight_range')) {
-            $weight = (float) $request->input('weight_range');
-            $query->forWeight($weight);
-        }
-
-        if ($request->has('total_range')) {
-            $total = (int) round($request->input('total_range') * 100);
-            $query->forTotal($total);
-        }
-
-        if ($request->boolean('with_relationships')) {
-            $query->with(['shippingMethod', 'shippingZone']);
-        }
-
-        $perPage = min($request->input('per_page', 15), 100);
-        $rates = $query->active()->paginate($perPage);
-
-        return ShippingRateResource::collection($rates)->additional([
-            'message' => 'Shipping rates retrieved successfully.',
-            'status' => 200
-        ]);
     }
 
     /**
@@ -227,24 +173,24 @@ class ShippingRateController extends Controller
      */
     public function store(StoreShippingRateRequest $request)
     {
-        $user = $request->user();
+        try {
+            $rate = $this->shippingRateService->createShippingRate(
+                $request->validated(),
+                $request->user()
+            );
 
-        if (!$user->hasPermission('create_shipping_rates')) {
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->ok(
+                'Shipping rate created successfully.',
+                new ShippingRateResource($rate)
+            );
+
+        } catch (\Exception $e) {
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
+
+            return $this->error($e->getMessage(), $statusCode);
         }
-
-        $data = $request->validated();
-
-        $rate = ShippingRate::create($data);
-
-        if ($request->boolean('with_relationships')) {
-            $rate->load(['shippingMethod', 'shippingZone']);
-        }
-
-        return $this->ok(
-            'Shipping rate created successfully.',
-            new ShippingRateResource($rate)
-        );
     }
 
     /**
@@ -304,20 +250,21 @@ class ShippingRateController extends Controller
      */
     public function show(Request $request, ShippingRate $shippingRate)
     {
-        $user = $request->user();
+        try {
+            $rate = $this->shippingRateService->getShippingRate($shippingRate, $request, $request->user());
 
-        if (!$user->hasPermission('view_shipping_rates')) {
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->ok(
+                'Shipping rate retrieved successfully.',
+                new ShippingRateResource($rate)
+            );
+
+        } catch (\Exception $e) {
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
+
+            return $this->error($e->getMessage(), $statusCode);
         }
-
-        if ($request->boolean('with_relationships')) {
-            $shippingRate->load(['shippingMethod', 'shippingZone']);
-        }
-
-        return $this->ok(
-            'Shipping rate retrieved successfully.',
-            new ShippingRateResource($shippingRate)
-        );
     }
 
     /**
@@ -358,16 +305,6 @@ class ShippingRateController extends Controller
      *     "free_threshold": 12500,
      *     "free_threshold_formatted": "£125.00",
      *     "is_active": true,
-     *     "shipping_method": {
-     *       "id": 1,
-     *       "name": "Standard Delivery",
-     *       "carrier": "Royal Mail"
-     *     },
-     *     "shipping_zone": {
-     *       "id": 1,
-     *       "name": "UK Mainland",
-     *       "countries": ["GB"]
-     *     },
      *     "updated_at": "2025-01-15T11:45:00.000000Z"
      *   }
      * }
@@ -390,24 +327,25 @@ class ShippingRateController extends Controller
      */
     public function update(UpdateShippingRateRequest $request, ShippingRate $shippingRate)
     {
-        $user = $request->user();
+        try {
+            $rate = $this->shippingRateService->updateShippingRate(
+                $shippingRate,
+                $request->validated(),
+                $request->user()
+            );
 
-        if (!$user->hasPermission('edit_shipping_rates')) {
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->ok(
+                'Shipping rate updated successfully.',
+                new ShippingRateResource($rate)
+            );
+
+        } catch (\Exception $e) {
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
+
+            return $this->error($e->getMessage(), $statusCode);
         }
-
-        $data = $request->validated();
-
-        $shippingRate->update($data);
-
-        if ($request->boolean('with_relationships')) {
-            $shippingRate->load(['shippingMethod', 'shippingZone']);
-        }
-
-        return $this->ok(
-            'Shipping rate updated successfully.',
-            new ShippingRateResource($shippingRate)
-        );
     }
 
     /**
@@ -436,15 +374,18 @@ class ShippingRateController extends Controller
      */
     public function destroy(Request $request, ShippingRate $shippingRate)
     {
-        $user = $request->user();
+        try {
+            $this->shippingRateService->deleteShippingRate($shippingRate, $request->user());
 
-        if (!$user->hasPermission('delete_shipping_rates')) {
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->ok('Shipping rate deleted successfully.');
+
+        } catch (\Exception $e) {
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
+
+            return $this->error($e->getMessage(), $statusCode);
         }
-
-        $shippingRate->delete();
-
-        return $this->ok('Shipping rate deleted successfully.');
     }
 
     /**
@@ -482,18 +423,21 @@ class ShippingRateController extends Controller
      */
     public function activate(Request $request, ShippingRate $shippingRate)
     {
-        $user = $request->user();
+        try {
+            $rate = $this->shippingRateService->activateShippingRate($shippingRate, $request->user());
 
-        if (!$user->hasPermission('edit_shipping_rates')) {
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->ok(
+                'Shipping rate activated successfully.',
+                new ShippingRateResource($rate)
+            );
+
+        } catch (\Exception $e) {
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
+
+            return $this->error($e->getMessage(), $statusCode);
         }
-
-        $shippingRate->update(['is_active' => true]);
-
-        return $this->ok(
-            'Shipping rate activated successfully.',
-            new ShippingRateResource($shippingRate)
-        );
     }
 
     /**
@@ -531,18 +475,21 @@ class ShippingRateController extends Controller
      */
     public function deactivate(Request $request, ShippingRate $shippingRate)
     {
-        $user = $request->user();
+        try {
+            $rate = $this->shippingRateService->deactivateShippingRate($shippingRate, $request->user());
 
-        if (!$user->hasPermission('edit_shipping_rates')) {
-            return $this->error('You do not have the required permissions.', 403);
+            return $this->ok(
+                'Shipping rate deactivated successfully.',
+                new ShippingRateResource($rate)
+            );
+
+        } catch (\Exception $e) {
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
+
+            return $this->error($e->getMessage(), $statusCode);
         }
-
-        $shippingRate->update(['is_active' => false]);
-
-        return $this->ok(
-            'Shipping rate deactivated successfully.',
-            new ShippingRateResource($shippingRate)
-        );
     }
 
     /**
@@ -587,12 +534,6 @@ class ShippingRateController extends Controller
      */
     public function bulkCreate(Request $request)
     {
-        $user = $request->user();
-
-        if (!$user->hasPermission('create_shipping_rates')) {
-            return $this->error('You do not have the required permissions.', 403);
-        }
-
         $request->validate([
             'rates' => ['required', 'array', 'min:1', 'max:50'],
             'rates.*.shipping_method_id' => ['required', 'integer', 'exists:shipping_methods,id'],
@@ -606,42 +547,24 @@ class ShippingRateController extends Controller
             'rates.*.is_active' => ['nullable', 'boolean'],
         ]);
 
-        $ratesToCreate = [];
-        $errors = [];
+        try {
+            $result = $this->shippingRateService->bulkCreateShippingRates(
+                $request->input('rates'),
+                $request->user()
+            );
 
-        foreach ($request->input('rates') as $index => $rateData) {
-            $rateData['min_total'] = (int) round($rateData['min_total'] * 100);
-            $rateData['max_total'] = isset($rateData['max_total']) ? (int) round($rateData['max_total'] * 100) : null;
-            $rateData['rate'] = (int) round($rateData['rate'] * 100);
-            $rateData['free_threshold'] = isset($rateData['free_threshold']) ? (int) round($rateData['free_threshold'] * 100) : null;
-            $rateData['is_active'] = $rateData['is_active'] ?? true;
-            $rateData['created_at'] = now();
-            $rateData['updated_at'] = now();
+            return $this->ok(
+                $result['message'],
+                ['created_count' => $result['created_count']]
+            );
 
-            $existingRate = ShippingRate::where('shipping_method_id', $rateData['shipping_method_id'])
-                ->where('shipping_zone_id', $rateData['shipping_zone_id'])
-                ->forWeight($rateData['min_weight'])
-                ->forTotal($rateData['min_total'])
-                ->exists();
+        } catch (\Exception $e) {
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
 
-            if ($existingRate) {
-                $errors[] = "Rate {$index}: Overlapping rate already exists for this method/zone combination.";
-                continue;
-            }
-
-            $ratesToCreate[] = $rateData;
+            return $this->error($e->getMessage(), $statusCode);
         }
-
-        if (!empty($errors)) {
-            return $this->error('Some rates could not be created due to conflicts.', 422, $errors);
-        }
-
-        ShippingRate::insert($ratesToCreate);
-
-        return $this->ok(
-            count($ratesToCreate) . ' shipping rates created successfully.',
-            ['created_count' => count($ratesToCreate)]
-        );
     }
 
     /**
@@ -686,12 +609,6 @@ class ShippingRateController extends Controller
      */
     public function bulkUpdate(Request $request)
     {
-        $user = $request->user();
-
-        if (!$user->hasPermission('edit_shipping_rates')) {
-            return $this->error('You do not have the required permissions.', 403);
-        }
-
         $request->validate([
             'rate_ids' => ['required', 'array', 'min:1'],
             'rate_ids.*' => ['integer', 'exists:shipping_rates,id'],
@@ -701,34 +618,25 @@ class ShippingRateController extends Controller
             'updates.is_active' => ['nullable', 'boolean'],
         ]);
 
-        $updates = [];
-        $updatesData = $request->input('updates');
+        try {
+            $result = $this->shippingRateService->bulkUpdateShippingRates(
+                $request->input('rate_ids'),
+                $request->input('updates'),
+                $request->user()
+            );
 
-        if (isset($updatesData['rate'])) {
-            $updates['rate'] = (int) round($updatesData['rate'] * 100);
+            return $this->ok(
+                $result['message'],
+                ['updated_count' => $result['updated_count']]
+            );
+
+        } catch (\Exception $e) {
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
+
+            return $this->error($e->getMessage(), $statusCode);
         }
-
-        if (isset($updatesData['free_threshold'])) {
-            $updates['free_threshold'] = $updatesData['free_threshold'] ? (int) round($updatesData['free_threshold'] * 100) : null;
-        }
-
-        if (isset($updatesData['is_active'])) {
-            $updates['is_active'] = $updatesData['is_active'];
-        }
-
-        if (empty($updates)) {
-            return $this->error('No valid updates provided.', 422);
-        }
-
-        $updates['updated_at'] = now();
-
-        $updatedCount = ShippingRate::whereIn('id', $request->input('rate_ids'))
-            ->update($updates);
-
-        return $this->ok(
-            "{$updatedCount} shipping rates updated successfully.",
-            ['updated_count' => $updatedCount]
-        );
     }
 
     /**
@@ -761,17 +669,6 @@ class ShippingRateController extends Controller
      *         "rate_formatted": "£5.99",
      *         "is_active": true,
      *         "created_at": "2025-01-15T14:20:00.000000Z"
-     *       },
-     *       {
-     *         "id": 50,
-     *         "shipping_method_id": 1,
-     *         "shipping_zone_id": 3,
-     *         "min_weight": 0,
-     *         "max_weight": 2000,
-     *         "rate": 599,
-     *         "rate_formatted": "£5.99",
-     *         "is_active": true,
-     *         "created_at": "2025-01-15T14:20:00.000000Z"
      *       }
      *     ]
      *   }
@@ -794,46 +691,33 @@ class ShippingRateController extends Controller
      */
     public function duplicate(Request $request, ShippingRate $shippingRate)
     {
-        $user = $request->user();
-
-        if (!$user->hasPermission('create_shipping_rates')) {
-            return $this->error('You do not have the required permissions.', 403);
-        }
-
         $request->validate([
             'shipping_zone_ids' => ['required', 'array', 'min:1'],
             'shipping_zone_ids.*' => ['integer', 'exists:shipping_zones,id'],
         ]);
 
-        $zoneIds = $request->input('shipping_zone_ids');
-        $duplicatedRates = [];
+        try {
+            $result = $this->shippingRateService->duplicateShippingRate(
+                $shippingRate,
+                $request->input('shipping_zone_ids'),
+                $request->user()
+            );
 
-        foreach ($zoneIds as $zoneId) {
-            if ($zoneId == $shippingRate->shipping_zone_id) {
-                continue;
-            }
+            return $this->ok(
+                $result['message'],
+                [
+                    'duplicated_count' => $result['duplicated_count'],
+                    'rates' => ShippingRateResource::collection($result['rates'])
+                ]
+            );
 
-            $existingRate = ShippingRate::where('shipping_method_id', $shippingRate->shipping_method_id)
-                ->where('shipping_zone_id', $zoneId)
-                ->forWeight($shippingRate->min_weight)
-                ->forTotal($shippingRate->min_total)
-                ->exists();
+        } catch (\Exception $e) {
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
 
-            if (!$existingRate) {
-                $newRate = $shippingRate->replicate();
-                $newRate->shipping_zone_id = $zoneId;
-                $newRate->save();
-                $duplicatedRates[] = $newRate;
-            }
+            return $this->error($e->getMessage(), $statusCode);
         }
-
-        return $this->ok(
-            count($duplicatedRates) . ' shipping rates duplicated successfully.',
-            [
-                'duplicated_count' => count($duplicatedRates),
-                'rates' => ShippingRateResource::collection($duplicatedRates)
-            ]
-        );
     }
 
     /**
@@ -899,12 +783,6 @@ class ShippingRateController extends Controller
      */
     public function calculate(Request $request)
     {
-        $user = $request->user();
-
-        if (!$user->hasPermission('view_shipping_rates')) {
-            return $this->error('You do not have the required permissions.', 403);
-        }
-
         $request->validate([
             'shipping_method_id' => ['required', 'integer', 'exists:shipping_methods,id'],
             'shipping_zone_id' => ['required', 'integer', 'exists:shipping_zones,id'],
@@ -912,36 +790,26 @@ class ShippingRateController extends Controller
             'total' => ['required', 'numeric', 'min:0'],
         ]);
 
-        $methodId = $request->input('shipping_method_id');
-        $zoneId = $request->input('shipping_zone_id');
-        $weight = $request->input('weight');
-        $total = (int) round($request->input('total') * 100);
+        try {
+            $result = $this->shippingRateService->calculateShippingCost(
+                $request->only(['shipping_method_id', 'shipping_zone_id', 'weight', 'total']),
+                $request->user()
+            );
 
-        $method = ShippingMethod::findOrFail($methodId);
-        $zone = ShippingZone::findOrFail($zoneId);
-
-        $rate = $method->getRateForZone($zone, $weight * 1000, $total);
-
-        if (!$rate) {
-            return $this->error('No shipping rate found for the specified criteria.', 404);
-        }
-
-        $cost = $rate->calculateShippingCost($total);
-
-        return $this->ok(
-            'Shipping cost calculated successfully.',
-            [
-                'rate' => new ShippingRateResource($rate),
-                'calculation' => [
-                    'weight' => $weight,
-                    'total' => $total,
-                    'total_formatted' => '£' . number_format($total / 100, 2),
-                    'shipping_cost' => $cost,
-                    'shipping_cost_formatted' => '£' . number_format($cost / 100, 2),
-                    'is_free' => $cost === 0,
-                    'free_threshold_met' => $rate->free_threshold && $total >= $rate->free_threshold,
+            return $this->ok(
+                $result['message'],
+                [
+                    'rate' => new ShippingRateResource($result['rate']),
+                    'calculation' => $result['calculation']
                 ]
-            ]
-        );
+            );
+
+        } catch (\Exception $e) {
+            $statusCode = is_numeric($e->getCode()) && $e->getCode() >= 400 && $e->getCode() < 600
+                ? $e->getCode()
+                : 500;
+
+            return $this->error($e->getMessage(), $statusCode);
+        }
     }
 }

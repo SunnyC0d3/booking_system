@@ -5,7 +5,6 @@ namespace App\Http\Controllers\V1\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ProductSupplierMapping;
 use App\Models\Product;
-use App\Models\Supplier;
 use App\Models\User;
 use App\Requests\V1\IndexProductSupplierMappingRequest;
 use App\Requests\V1\StoreProductSupplierMappingRequest;

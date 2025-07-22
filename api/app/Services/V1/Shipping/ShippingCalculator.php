@@ -4,12 +4,9 @@ namespace App\Services\V1\Shipping;
 
 use App\Models\Cart;
 use App\Models\Order;
-use App\Models\Product;
 use App\Models\ShippingAddress;
 use App\Models\ShippingZone;
 use App\Models\ShippingMethod;
-use App\Models\ShippingRate;
-use App\Constants\FulfillmentStatuses;
 use App\Constants\ShippingClasses;
 use Illuminate\Support\Collection;
 
