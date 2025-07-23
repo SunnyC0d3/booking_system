@@ -10,7 +10,6 @@ use App\Requests\V1\StoreSupplierIntegrationRequest;
 use App\Requests\V1\UpdateSupplierIntegrationRequest;
 use App\Resources\V1\SupplierIntegrationResource;
 use App\Traits\V1\ApiResponses;
-use App\Constants\SupplierIntegrationTypes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;

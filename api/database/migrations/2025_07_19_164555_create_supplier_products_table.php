@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('supplier_product_id')->nullable();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->unsignedBigInteger('supplier_price');
-            $table->unsignedBigInteger('retail_price')->nullable();
+            $table->bigInteger('supplier_price');
+            $table->bigInteger('retail_price')->nullable();
             $table->integer('stock_quantity')->default(0);
             $table->decimal('weight', 8, 2)->default(0);
             $table->decimal('length', 8, 2)->default(0);

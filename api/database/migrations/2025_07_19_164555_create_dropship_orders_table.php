@@ -14,9 +14,9 @@ return new class extends Migration
             $table->foreignId('supplier_id')->constrained()->restrictOnDelete();
             $table->string('supplier_order_id')->nullable();
             $table->string('status')->default('pending');
-            $table->unsignedBigInteger('total_cost');
-            $table->unsignedBigInteger('total_retail');
-            $table->unsignedBigInteger('profit_margin');
+            $table->bigInteger('total_cost');
+            $table->bigInteger('total_retail');
+            $table->bigInteger('profit_margin');
             $table->json('shipping_address');
             $table->string('tracking_number')->nullable();
             $table->string('carrier')->nullable();

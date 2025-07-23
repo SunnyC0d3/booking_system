@@ -15,9 +15,9 @@ return new class extends Migration
             $table->foreignId('supplier_product_id')->constrained()->restrictOnDelete();
             $table->string('supplier_sku');
             $table->integer('quantity');
-            $table->unsignedBigInteger('supplier_price');
-            $table->unsignedBigInteger('retail_price');
-            $table->unsignedBigInteger('profit_per_item');
+            $table->bigInteger('supplier_price');
+            $table->bigInteger('retail_price');
+            $table->bigInteger('profit_per_item');
             $table->json('product_details')->nullable();
             $table->json('supplier_item_data')->nullable();
             $table->string('status')->default('pending');

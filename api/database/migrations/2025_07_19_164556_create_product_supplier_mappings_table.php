@@ -17,7 +17,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->integer('priority_order')->default(1);
             $table->decimal('markup_percentage', 5, 2)->default(0.00);
-            $table->unsignedBigInteger('fixed_markup')->default(0);
+            $table->bigInteger('fixed_markup')->default(0);
             $table->string('markup_type')->default('percentage');
             $table->integer('minimum_stock_threshold')->default(1);
             $table->boolean('auto_update_price')->default(true);

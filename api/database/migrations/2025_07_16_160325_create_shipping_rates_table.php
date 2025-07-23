@@ -14,10 +14,10 @@ return new class extends Migration
             $table->foreignId('shipping_zone_id')->constrained()->cascadeOnDelete();
             $table->decimal('min_weight', 8, 2)->default(0);
             $table->decimal('max_weight', 8, 2)->nullable();
-            $table->unsignedBigInteger('min_total')->default(0);
-            $table->unsignedBigInteger('max_total')->nullable();
-            $table->unsignedBigInteger('rate')->default(0);
-            $table->unsignedBigInteger('free_threshold')->nullable();
+            $table->bigInteger('min_total')->default(0);
+            $table->bigInteger('max_total')->nullable();
+            $table->bigInteger('rate')->default(0);
+            $table->bigInteger('free_threshold')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 

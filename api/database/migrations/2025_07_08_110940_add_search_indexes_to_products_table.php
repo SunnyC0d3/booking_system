@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement('CREATE FULLTEXT INDEX idx_products_fulltext ON products(name, description)');
+        DB::statement("CREATE INDEX idx_products_fulltext ON products USING gin(to_tsvector('english', name || ' ' || COALESCE(description, '')))");
 
         Schema::table('products', function (Blueprint $table) {
             $table->index(['product_status_id', 'price'], 'idx_products_status_price');
@@ -56,7 +56,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement('DROP INDEX idx_products_fulltext ON products');
+        DB::statement('DROP INDEX IF EXISTS idx_products_fulltext');
 
         Schema::table('products', function (Blueprint $table) {
             $table->dropIndex('idx_products_status_price');

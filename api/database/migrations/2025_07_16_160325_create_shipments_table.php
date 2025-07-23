@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('carrier');
             $table->string('service_name')->nullable();
             $table->string('status')->default('pending');
-            $table->unsignedBigInteger('shipping_cost')->default(0);
+            $table->bigInteger('shipping_cost')->default(0);
             $table->string('label_url')->nullable();
             $table->string('tracking_url')->nullable();
             $table->timestamp('shipped_at')->nullable();

@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::table('orders', function (Blueprint $table) {
             $table->foreignId('shipping_method_id')->nullable()->after('status_id')->constrained()->nullOnDelete();
             $table->foreignId('shipping_address_id')->nullable()->after('shipping_method_id')->constrained()->nullOnDelete();
-            $table->unsignedBigInteger('shipping_cost')->default(0)->after('total_amount');
+            $table->bigInteger('shipping_cost')->default(0)->after('total_amount');
             $table->string('tracking_number')->nullable()->after('shipping_cost');
             $table->timestamp('shipped_at')->nullable()->after('tracking_number');
             $table->string('fulfillment_status')->default('unfulfilled')->after('shipped_at');

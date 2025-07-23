@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('primary_supplier_id')->nullable()->after('is_dropship')->constrained('suppliers')->nullOnDelete();
             $table->string('dropship_sync_status')->default('synced')->after('primary_supplier_id');
             $table->timestamp('last_supplier_sync')->nullable()->after('dropship_sync_status');
-            $table->unsignedBigInteger('supplier_cost')->nullable()->after('last_supplier_sync');
+            $table->bigInteger('supplier_cost')->nullable()->after('last_supplier_sync');
             $table->decimal('profit_margin_percentage', 5, 2)->nullable()->after('supplier_cost');
             $table->integer('supplier_processing_days')->default(1)->after('profit_margin_percentage');
             $table->boolean('auto_fulfill_dropship')->default(true)->after('supplier_processing_days');

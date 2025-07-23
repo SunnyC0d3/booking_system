@@ -17,55 +17,55 @@ return new class extends Migration
 
         try {
             Schema::table('orders', function (Blueprint $table) {
-                $table->unsignedBigInteger('total_amount')->nullable()->change();
+                $table->bigInteger('total_amount')->nullable()->change();
             });
 
             Schema::table('order_items', function (Blueprint $table) {
-                $table->unsignedBigInteger('price')->nullable()->change();
+                $table->bigInteger('price')->nullable()->change();
             });
 
             Schema::table('payments', function (Blueprint $table) {
-                $table->unsignedBigInteger('amount')->nullable()->change();
+                $table->bigInteger('amount')->nullable()->change();
             });
 
             Schema::table('order_refunds', function (Blueprint $table) {
-                $table->unsignedBigInteger('amount')->nullable()->change();
+                $table->bigInteger('amount')->nullable()->change();
             });
 
             Schema::table('products', function (Blueprint $table) {
-                $table->unsignedBigInteger('price')->nullable()->change();
+                $table->bigInteger('price')->nullable()->change();
             });
 
             DB::transaction(function () {
                 DB::statement('
                     UPDATE orders
-                    SET total_amount = CAST(ROUND(total_amount * 100) AS UNSIGNED),
-                        converted_to_pennies = 1
+                    SET total_amount = ROUND(total_amount * 100)::BIGINT,
+                        converted_to_pennies = true
                     WHERE total_amount IS NOT NULL
-                    AND converted_to_pennies = 0
+                    AND converted_to_pennies = false
                 ');
 
                 DB::statement('
                     UPDATE order_items
-                    SET price = CAST(ROUND(price * 100) AS UNSIGNED)
+                    SET price = ROUND(price * 100)::BIGINT
                     WHERE price IS NOT NULL
                 ');
 
                 DB::statement('
                     UPDATE payments
-                    SET amount = CAST(ROUND(amount * 100) AS UNSIGNED)
+                    SET amount = ROUND(amount * 100)::BIGINT
                     WHERE amount IS NOT NULL
                 ');
 
                 DB::statement('
                     UPDATE order_refunds
-                    SET amount = CAST(ROUND(amount * 100) AS UNSIGNED)
+                    SET amount = ROUND(amount * 100)::BIGINT
                     WHERE amount IS NOT NULL
                 ');
 
                 DB::statement('
                     UPDATE products
-                    SET price = CAST(ROUND(price * 100) AS UNSIGNED)
+                    SET price = ROUND(price * 100)::BIGINT
                     WHERE price IS NOT NULL
                 ');
             });
@@ -90,31 +90,31 @@ return new class extends Migration
 
                     DB::statement('
                         UPDATE orders
-                        SET total_amount = ROUND(total_amount / 100, 2)
+                        SET total_amount = ROUND(total_amount::NUMERIC / 100, 2)
                         WHERE total_amount IS NOT NULL
                     ');
 
                     DB::statement('
                         UPDATE order_items
-                        SET price = ROUND(price / 100, 2)
+                        SET price = ROUND(price::NUMERIC / 100, 2)
                         WHERE price IS NOT NULL
                     ');
 
                     DB::statement('
                         UPDATE payments
-                        SET amount = ROUND(amount / 100, 2)
+                        SET amount = ROUND(amount::NUMERIC / 100, 2)
                         WHERE amount IS NOT NULL
                     ');
 
                     DB::statement('
                         UPDATE order_refunds
-                        SET amount = ROUND(amount / 100, 2)
+                        SET amount = ROUND(amount::NUMERIC / 100, 2)
                         WHERE amount IS NOT NULL
                     ');
 
                     DB::statement('
                         UPDATE products
-                        SET price = ROUND(price / 100, 2)
+                        SET price = ROUND(price::NUMERIC / 100, 2)
                         WHERE price IS NOT NULL
                     ');
                 } else {
