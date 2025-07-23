@@ -164,10 +164,18 @@ A comprehensive Laravel-based e-commerce API with advanced security features, mu
    DB_USERNAME=root
    DB_PASSWORD=
 
+   # Laravel Passport (for auth)
+   PASSPORT_PERSONAL_ACCESS_CLIENT_ID=
+   PASSPORT_PERSONAL_ACCESS_CLIENT_SECRET=
+   
    # Stripe (for payments)
-   STRIPE_PUBLIC_KEY=pk_test_...
-   STRIPE_SECRET_KEY=sk_test_...
-   STRIPE_WEBHOOK_SECRET_KEY=whsec_...
+   STRIPE_SECRET_KEY=
+   STRIPE_PUBLIC_KEY=
+   STRIPE_WEBHOOK_SECRET_KEY=
+   
+   # Shippo (for shipping integration)
+   SHIPPO_API_KEY=
+   SHIPPO_ENVIRONMENT=
 
    # Mail configuration
    MAIL_MAILER=smtp
