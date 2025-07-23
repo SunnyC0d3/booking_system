@@ -1173,7 +1173,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: July 21, 2025</li>
+        <li>Last updated: July 23, 2025</li>
     </ul>
 </div>
 
@@ -6603,7 +6603,7 @@ and managing their marketplace presence. Supports secure logo upload with compre
     --form "user_id=45"\
     --form "name=TechCraft Solutions Ltd"\
     --form "description=Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud services, and digital transformation consulting."\
-    --form "logo=@/tmp/php61xGQh" </code></pre></div>
+    --form "logo=@/tmp/phpwu4fBN" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -6656,7 +6656,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'logo',
-                'contents' =&gt; fopen('/tmp/php61xGQh', 'r')
+                'contents' =&gt; fopen('/tmp/phpwu4fBN', 'r')
             ],
         ],
     ]
@@ -6674,7 +6674,7 @@ files = {
   'user_id': (None, '45'),
   'name': (None, 'TechCraft Solutions Ltd'),
   'description': (None, 'Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud services, and digital transformation consulting.'),
-  'logo': open('/tmp/php61xGQh', 'rb')}
+  'logo': open('/tmp/phpwu4fBN', 'rb')}
 payload = {
     "user_id": 45,
     "name": "TechCraft Solutions Ltd",
@@ -6943,7 +6943,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional Business logo file. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Recommended dimensions: 200x200px minimum. Example: <code>/tmp/php61xGQh</code></p>
+<p>optional Business logo file. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Recommended dimensions: 200x200px minimum. Example: <code>/tmp/phpwu4fBN</code></p>
         </div>
         </form>
 
@@ -6972,7 +6972,7 @@ replacement with comprehensive validation.</p>
     --form "user_id=67"\
     --form "name=TechCraft Solutions International Ltd"\
     --form "description=Global leader in innovative technology solutions. We specialize in enterprise software development, cloud migration services, AI integration, and digital transformation consulting with over 15 years of proven industry experience."\
-    --form "logo=@/tmp/php0L1HWN" </code></pre></div>
+    --form "logo=@/tmp/phpzjQiux" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -7025,7 +7025,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'logo',
-                'contents' =&gt; fopen('/tmp/php0L1HWN', 'r')
+                'contents' =&gt; fopen('/tmp/phpzjQiux', 'r')
             ],
         ],
     ]
@@ -7043,7 +7043,7 @@ files = {
   'user_id': (None, '67'),
   'name': (None, 'TechCraft Solutions International Ltd'),
   'description': (None, 'Global leader in innovative technology solutions. We specialize in enterprise software development, cloud migration services, AI integration, and digital transformation consulting with over 15 years of proven industry experience.'),
-  'logo': open('/tmp/php0L1HWN', 'rb')}
+  'logo': open('/tmp/phpzjQiux', 'rb')}
 payload = {
     "user_id": 67,
     "name": "TechCraft Solutions International Ltd",
@@ -7359,7 +7359,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional New logo file to replace existing one. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will completely replace the current logo. Example: <code>/tmp/php0L1HWN</code></p>
+<p>optional New logo file to replace existing one. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will completely replace the current logo. Example: <code>/tmp/phpzjQiux</code></p>
         </div>
         </form>
 
@@ -7658,7 +7658,7 @@ categories, tags, vendor details, relevance scoring, and faceted search results.
         \"brand\": \"k\",
         \"brands\": \"9,31\",
         \"tags\": \"9,31\",
-        \"tag_logic\": \"AND\",
+        \"tag_logic\": \"OR\",
         \"attributes\": \"_JK:AI\",
         \"color\": \"k\",
         \"colors\": \"dLJnIk\",
@@ -7673,13 +7673,13 @@ categories, tags, vendor details, relevance scoring, and faceted search results.
     \"page\": 4,
     \"per_page\": 9,
     \"sort\": \"y8p,Bm,-dp,-Zm,-GH\",
-    \"diversify\": false,
-    \"explain\": true,
-    \"facets\": true,
+    \"diversify\": true,
+    \"explain\": false,
+    \"facets\": false,
     \"highlight\": true,
     \"personalize\": false,
-    \"typo_tolerance\": true,
-    \"exact_match\": true,
+    \"typo_tolerance\": false,
+    \"exact_match\": false,
     \"boost_new_products\": true,
     \"boost_in_stock\": false
 }"
@@ -7738,7 +7738,7 @@ let body = {
         "brand": "k",
         "brands": "9,31",
         "tags": "9,31",
-        "tag_logic": "AND",
+        "tag_logic": "OR",
         "attributes": "_JK:AI",
         "color": "k",
         "colors": "dLJnIk",
@@ -7753,13 +7753,13 @@ let body = {
     "page": 4,
     "per_page": 9,
     "sort": "y8p,Bm,-dp,-Zm,-GH",
-    "diversify": false,
-    "explain": true,
-    "facets": true,
+    "diversify": true,
+    "explain": false,
+    "facets": false,
     "highlight": true,
     "personalize": false,
-    "typo_tolerance": true,
-    "exact_match": true,
+    "typo_tolerance": false,
+    "exact_match": false,
     "boost_new_products": true,
     "boost_in_stock": false
 };
@@ -7820,7 +7820,7 @@ $response = $client-&gt;get(
                 'brand' =&gt; 'k',
                 'brands' =&gt; '9,31',
                 'tags' =&gt; '9,31',
-                'tag_logic' =&gt; 'AND',
+                'tag_logic' =&gt; 'OR',
                 'attributes' =&gt; '_JK:AI',
                 'color' =&gt; 'k',
                 'colors' =&gt; 'dLJnIk',
@@ -7835,13 +7835,13 @@ $response = $client-&gt;get(
             'page' =&gt; 4,
             'per_page' =&gt; 9,
             'sort' =&gt; 'y8p,Bm,-dp,-Zm,-GH',
-            'diversify' =&gt; false,
-            'explain' =&gt; true,
-            'facets' =&gt; true,
+            'diversify' =&gt; true,
+            'explain' =&gt; false,
+            'facets' =&gt; false,
             'highlight' =&gt; true,
             'personalize' =&gt; false,
-            'typo_tolerance' =&gt; true,
-            'exact_match' =&gt; true,
+            'typo_tolerance' =&gt; false,
+            'exact_match' =&gt; false,
             'boost_new_products' =&gt; true,
             'boost_in_stock' =&gt; false,
         ],
@@ -7871,7 +7871,7 @@ payload = {
         "brand": "k",
         "brands": "9,31",
         "tags": "9,31",
-        "tag_logic": "AND",
+        "tag_logic": "OR",
         "attributes": "_JK:AI",
         "color": "k",
         "colors": "dLJnIk",
@@ -7886,13 +7886,13 @@ payload = {
     "page": 4,
     "per_page": 9,
     "sort": "y8p,Bm,-dp,-Zm,-GH",
-    "diversify": false,
-    "explain": true,
-    "facets": true,
+    "diversify": true,
+    "explain": false,
+    "facets": false,
     "highlight": true,
     "personalize": false,
-    "typo_tolerance": true,
-    "exact_match": true,
+    "typo_tolerance": false,
+    "exact_match": false,
     "boost_new_products": true,
     "boost_in_stock": false
 }
@@ -8442,10 +8442,10 @@ Must be one of:
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="filter.tag_logic"                data-endpoint="GETapi-admin-products"
-               value="AND"
+               value="OR"
                data-component="body">
     <br>
-<p>Example: <code>AND</code></p>
+<p>Example: <code>OR</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>AND</code></li> <li><code>OR</code></li></ul>
                     </div>
@@ -8613,7 +8613,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>explain</code></b>&nbsp;&nbsp;
@@ -8634,7 +8634,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>facets</code></b>&nbsp;&nbsp;
@@ -8655,7 +8655,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>highlight</code></b>&nbsp;&nbsp;
@@ -8718,7 +8718,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>exact_match</code></b>&nbsp;&nbsp;
@@ -8739,7 +8739,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>boost_new_products</code></b>&nbsp;&nbsp;
@@ -9008,7 +9008,7 @@ Supports secure file uploads and automatic search keyword generation for optimal
     --form "product_tags[]=3"\
     --form "product_variants[]=architecto"\
     --form "low_stock_threshold=5"\
-    --form "media[featured_image]=@/tmp/phpjLeeDO"     --form "media[gallery][]=@/tmp/phpoUiHL2" </code></pre></div>
+    --form "media[featured_image]=@/tmp/phpSO05lM"     --form "media[gallery][]=@/tmp/phpUR641t" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -9092,11 +9092,11 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'media[featured_image]',
-                'contents' =&gt; fopen('/tmp/phpjLeeDO', 'r')
+                'contents' =&gt; fopen('/tmp/phpSO05lM', 'r')
             ],
             [
                 'name' =&gt; 'media[gallery][]',
-                'contents' =&gt; fopen('/tmp/phpoUiHL2', 'r')
+                'contents' =&gt; fopen('/tmp/phpUR641t', 'r')
             ],
         ],
     ]
@@ -9120,7 +9120,7 @@ files = {
   'product_tags[]': (None, '3'),
   'product_variants[]': (None, 'architecto'),
   'low_stock_threshold': (None, '5'),
-  'media[featured_image]': open('/tmp/phpjLeeDO', 'rb')  'media[gallery][]': open('/tmp/phpoUiHL2', 'rb')}
+  'media[featured_image]': open('/tmp/phpSO05lM', 'rb')  'media[gallery][]': open('/tmp/phpUR641t', 'rb')}
 payload = {
     "name": "\"Premium Wireless Earbuds Pro\"",
     "description": "\"High-quality wireless earbuds with advanced noise cancellation and 30-hour battery life.\"",
@@ -9451,7 +9451,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional Featured product image. Max 5MB, dimensions 100x100 to 4000x4000px. Example: <code>/tmp/phpjLeeDO</code></p>
+<p>optional Featured product image. Max 5MB, dimensions 100x100 to 4000x4000px. Example: <code>/tmp/phpSO05lM</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>gallery</code></b>&nbsp;&nbsp;
@@ -9511,7 +9511,7 @@ for optimal findability.</p>
     --form "product_tags[]=3"\
     --form "product_variants[]=architecto"\
     --form "low_stock_threshold=8"\
-    --form "media[featured_image]=@/tmp/phpKclgDO"     --form "media[gallery][]=@/tmp/phpbv1cmv" </code></pre></div>
+    --form "media[featured_image]=@/tmp/phpQfXPHp"     --form "media[gallery][]=@/tmp/phpDRx7lA" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -9595,11 +9595,11 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'media[featured_image]',
-                'contents' =&gt; fopen('/tmp/phpKclgDO', 'r')
+                'contents' =&gt; fopen('/tmp/phpQfXPHp', 'r')
             ],
             [
                 'name' =&gt; 'media[gallery][]',
-                'contents' =&gt; fopen('/tmp/phpbv1cmv', 'r')
+                'contents' =&gt; fopen('/tmp/phpDRx7lA', 'r')
             ],
         ],
     ]
@@ -9623,7 +9623,7 @@ files = {
   'product_tags[]': (None, '3'),
   'product_variants[]': (None, 'architecto'),
   'low_stock_threshold': (None, '8'),
-  'media[featured_image]': open('/tmp/phpKclgDO', 'rb')  'media[gallery][]': open('/tmp/phpbv1cmv', 'rb')}
+  'media[featured_image]': open('/tmp/phpQfXPHp', 'rb')  'media[gallery][]': open('/tmp/phpDRx7lA', 'rb')}
 payload = {
     "name": "\"Premium Wireless Earbuds Pro Max\"",
     "description": "\"Enhanced wireless earbuds with improved noise cancellation and extended battery life.\"",
@@ -9978,7 +9978,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional New featured image (replaces existing). Example: <code>/tmp/phpKclgDO</code></p>
+<p>optional New featured image (replaces existing). Example: <code>/tmp/phpQfXPHp</code></p>
                     </div>
                                                                 <div style="margin-left: 14px; clear: unset;">
                         <b style="line-height: 2;"><code>gallery</code></b>&nbsp;&nbsp;
@@ -14609,8 +14609,8 @@ and detailed analytics for administrative oversight.</p>
         2
     ],
     \"verified_only\": true,
-    \"with_media\": false,
-    \"sort_by\": \"rating_low\",
+    \"with_media\": true,
+    \"sort_by\": \"newest\",
     \"per_page\": 1,
     \"page\": 66
 }"
@@ -14650,8 +14650,8 @@ let body = {
         2
     ],
     "verified_only": true,
-    "with_media": false,
-    "sort_by": "rating_low",
+    "with_media": true,
+    "sort_by": "newest",
     "per_page": 1,
     "page": 66
 };
@@ -14693,8 +14693,8 @@ $response = $client-&gt;get(
                 2,
             ],
             'verified_only' =&gt; true,
-            'with_media' =&gt; false,
-            'sort_by' =&gt; 'rating_low',
+            'with_media' =&gt; true,
+            'sort_by' =&gt; 'newest',
             'per_page' =&gt; 1,
             'page' =&gt; 66,
         ],
@@ -14715,8 +14715,8 @@ payload = {
         2
     ],
     "verified_only": true,
-    "with_media": false,
-    "sort_by": "rating_low",
+    "with_media": true,
+    "sort_by": "newest",
     "per_page": 1,
     "page": 66
 }
@@ -15091,7 +15091,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>sort_by</code></b>&nbsp;&nbsp;
@@ -15099,10 +15099,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="sort_by"                data-endpoint="GETapi-admin-reviews"
-               value="rating_low"
+               value="newest"
                data-component="body">
     <br>
-<p>Example: <code>rating_low</code></p>
+<p>Example: <code>newest</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>newest</code></li> <li><code>oldest</code></li> <li><code>rating_high</code></li> <li><code>rating_low</code></li> <li><code>helpful</code></li></ul>
         </div>
@@ -20780,23 +20780,23 @@ special conditions like overdue or retry-needed orders. Essential for dropshippi
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"status\": \"on_hold\",
+    \"status\": \"rejected_by_supplier\",
     \"search\": \"b\",
-    \"date_from\": \"2025-07-21T08:45:17\",
-    \"date_to\": \"2051-08-14\",
-    \"overdue\": true,
-    \"needs_retry\": true,
-    \"has_tracking\": false,
+    \"date_from\": \"2025-07-23T09:48:28\",
+    \"date_to\": \"2051-08-16\",
+    \"overdue\": false,
+    \"needs_retry\": false,
+    \"has_tracking\": true,
     \"min_total\": 39,
     \"max_total\": 84,
     \"carrier\": \"z\",
     \"page\": 27,
     \"per_page\": 15,
-    \"sort_by\": \"id\",
-    \"sort_direction\": \"desc\",
-    \"include_items\": true,
-    \"include_supplier\": true,
-    \"include_order\": true
+    \"sort_by\": \"profit_margin\",
+    \"sort_direction\": \"asc\",
+    \"include_items\": false,
+    \"include_supplier\": false,
+    \"include_order\": false
 }"
 </code></pre></div>
 
@@ -20828,23 +20828,23 @@ const headers = {
 };
 
 let body = {
-    "status": "on_hold",
+    "status": "rejected_by_supplier",
     "search": "b",
-    "date_from": "2025-07-21T08:45:17",
-    "date_to": "2051-08-14",
-    "overdue": true,
-    "needs_retry": true,
-    "has_tracking": false,
+    "date_from": "2025-07-23T09:48:28",
+    "date_to": "2051-08-16",
+    "overdue": false,
+    "needs_retry": false,
+    "has_tracking": true,
     "min_total": 39,
     "max_total": 84,
     "carrier": "z",
     "page": 27,
     "per_page": 15,
-    "sort_by": "id",
-    "sort_direction": "desc",
-    "include_items": true,
-    "include_supplier": true,
-    "include_order": true
+    "sort_by": "profit_margin",
+    "sort_direction": "asc",
+    "include_items": false,
+    "include_supplier": false,
+    "include_order": false
 };
 
 fetch(url, {
@@ -20878,23 +20878,23 @@ $response = $client-&gt;get(
             'per_page' =&gt; '25',
         ],
         'json' =&gt; [
-            'status' =&gt; 'on_hold',
+            'status' =&gt; 'rejected_by_supplier',
             'search' =&gt; 'b',
-            'date_from' =&gt; '2025-07-21T08:45:17',
-            'date_to' =&gt; '2051-08-14',
-            'overdue' =&gt; true,
-            'needs_retry' =&gt; true,
-            'has_tracking' =&gt; false,
+            'date_from' =&gt; '2025-07-23T09:48:28',
+            'date_to' =&gt; '2051-08-16',
+            'overdue' =&gt; false,
+            'needs_retry' =&gt; false,
+            'has_tracking' =&gt; true,
             'min_total' =&gt; 39,
             'max_total' =&gt; 84,
             'carrier' =&gt; 'z',
             'page' =&gt; 27,
             'per_page' =&gt; 15,
-            'sort_by' =&gt; 'id',
-            'sort_direction' =&gt; 'desc',
-            'include_items' =&gt; true,
-            'include_supplier' =&gt; true,
-            'include_order' =&gt; true,
+            'sort_by' =&gt; 'profit_margin',
+            'sort_direction' =&gt; 'asc',
+            'include_items' =&gt; false,
+            'include_supplier' =&gt; false,
+            'include_order' =&gt; false,
         ],
     ]
 );
@@ -20908,23 +20908,23 @@ import json
 
 url = 'http://marketplace.com/api/admin/dropship-orders'
 payload = {
-    "status": "on_hold",
+    "status": "rejected_by_supplier",
     "search": "b",
-    "date_from": "2025-07-21T08:45:17",
-    "date_to": "2051-08-14",
-    "overdue": true,
-    "needs_retry": true,
-    "has_tracking": false,
+    "date_from": "2025-07-23T09:48:28",
+    "date_to": "2051-08-16",
+    "overdue": false,
+    "needs_retry": false,
+    "has_tracking": true,
     "min_total": 39,
     "max_total": 84,
     "carrier": "z",
     "page": 27,
     "per_page": 15,
-    "sort_by": "id",
-    "sort_direction": "desc",
-    "include_items": true,
-    "include_supplier": true,
-    "include_order": true
+    "sort_by": "profit_margin",
+    "sort_direction": "asc",
+    "include_items": false,
+    "include_supplier": false,
+    "include_order": false
 }
 params = {
   'supplier_id': '5',
@@ -21279,10 +21279,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="GETapi-admin-dropship-orders"
-               value="on_hold"
+               value="rejected_by_supplier"
                data-component="body">
     <br>
-<p>Example: <code>on_hold</code></p>
+<p>Example: <code>rejected_by_supplier</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>pending</code></li> <li><code>sent_to_supplier</code></li> <li><code>confirmed_by_supplier</code></li> <li><code>processing</code></li> <li><code>shipped_by_supplier</code></li> <li><code>delivered</code></li> <li><code>cancelled</code></li> <li><code>rejected_by_supplier</code></li> <li><code>refunded</code></li> <li><code>on_hold</code></li> <li><code>Out for Delivery</code></li></ul>
         </div>
@@ -21314,10 +21314,10 @@ Must be one of:
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="date_from"                data-endpoint="GETapi-admin-dropship-orders"
-               value="2025-07-21T08:45:17"
+               value="2025-07-23T09:48:28"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-07-21T08:45:17</code></p>
+<p>Must be a valid date. Example: <code>2025-07-23T09:48:28</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>date_to</code></b>&nbsp;&nbsp;
@@ -21325,10 +21325,10 @@ Must be one of:
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="date_to"                data-endpoint="GETapi-admin-dropship-orders"
-               value="2051-08-14"
+               value="2051-08-16"
                data-component="body">
     <br>
-<p>Must be a valid date. Must be a date after or equal to <code>date_from</code>. Example: <code>2051-08-14</code></p>
+<p>Must be a valid date. Must be a date after or equal to <code>date_from</code>. Example: <code>2051-08-16</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>overdue</code></b>&nbsp;&nbsp;
@@ -21349,7 +21349,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>needs_retry</code></b>&nbsp;&nbsp;
@@ -21370,7 +21370,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>has_tracking</code></b>&nbsp;&nbsp;
@@ -21391,7 +21391,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>min_total</code></b>&nbsp;&nbsp;
@@ -21454,10 +21454,10 @@ Must be one of:
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="sort_by"                data-endpoint="GETapi-admin-dropship-orders"
-               value="id"
+               value="profit_margin"
                data-component="body">
     <br>
-<p>Example: <code>id</code></p>
+<p>Example: <code>profit_margin</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>id</code></li> <li><code>created_at</code></li> <li><code>updated_at</code></li> <li><code>total_cost</code></li> <li><code>total_retail</code></li> <li><code>profit_margin</code></li> <li><code>estimated_delivery</code></li></ul>
         </div>
@@ -21467,10 +21467,10 @@ Must be one of:
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="sort_direction"                data-endpoint="GETapi-admin-dropship-orders"
-               value="desc"
+               value="asc"
                data-component="body">
     <br>
-<p>Example: <code>desc</code></p>
+<p>Example: <code>asc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
         </div>
@@ -21493,7 +21493,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>include_supplier</code></b>&nbsp;&nbsp;
@@ -21514,7 +21514,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>include_order</code></b>&nbsp;&nbsp;
@@ -21535,7 +21535,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
         </form>
 
@@ -30795,13 +30795,13 @@ product information optimized for customer browsing and purchasing decisions.</p
         \"category\": \"9,31\",
         \"categories\": \"9,31\",
         \"quantity\": \"64\",
-        \"availability\": \"low_stock\",
+        \"availability\": \"out_of_stock\",
         \"vendors\": \"9,31\",
         \"vendor\": \"i\",
         \"brand\": \"k\",
         \"brands\": \"9,31\",
         \"tags\": \"9,31\",
-        \"tag_logic\": \"OR\",
+        \"tag_logic\": \"AND\",
         \"attributes\": \"_JK:AI\",
         \"color\": \"k\",
         \"colors\": \"dLJnIk\",
@@ -30819,12 +30819,12 @@ product information optimized for customer browsing and purchasing decisions.</p
     \"diversify\": true,
     \"explain\": true,
     \"facets\": true,
-    \"highlight\": true,
-    \"personalize\": true,
-    \"typo_tolerance\": true,
+    \"highlight\": false,
+    \"personalize\": false,
+    \"typo_tolerance\": false,
     \"exact_match\": false,
-    \"boost_new_products\": true,
-    \"boost_in_stock\": true
+    \"boost_new_products\": false,
+    \"boost_in_stock\": false
 }"
 </code></pre></div>
 
@@ -30870,13 +30870,13 @@ let body = {
         "category": "9,31",
         "categories": "9,31",
         "quantity": "64",
-        "availability": "low_stock",
+        "availability": "out_of_stock",
         "vendors": "9,31",
         "vendor": "i",
         "brand": "k",
         "brands": "9,31",
         "tags": "9,31",
-        "tag_logic": "OR",
+        "tag_logic": "AND",
         "attributes": "_JK:AI",
         "color": "k",
         "colors": "dLJnIk",
@@ -30894,12 +30894,12 @@ let body = {
     "diversify": true,
     "explain": true,
     "facets": true,
-    "highlight": true,
-    "personalize": true,
-    "typo_tolerance": true,
+    "highlight": false,
+    "personalize": false,
+    "typo_tolerance": false,
     "exact_match": false,
-    "boost_new_products": true,
-    "boost_in_stock": true
+    "boost_new_products": false,
+    "boost_in_stock": false
 };
 
 fetch(url, {
@@ -30947,13 +30947,13 @@ $response = $client-&gt;get(
                 'category' =&gt; '9,31',
                 'categories' =&gt; '9,31',
                 'quantity' =&gt; '64',
-                'availability' =&gt; 'low_stock',
+                'availability' =&gt; 'out_of_stock',
                 'vendors' =&gt; '9,31',
                 'vendor' =&gt; 'i',
                 'brand' =&gt; 'k',
                 'brands' =&gt; '9,31',
                 'tags' =&gt; '9,31',
-                'tag_logic' =&gt; 'OR',
+                'tag_logic' =&gt; 'AND',
                 'attributes' =&gt; '_JK:AI',
                 'color' =&gt; 'k',
                 'colors' =&gt; 'dLJnIk',
@@ -30971,12 +30971,12 @@ $response = $client-&gt;get(
             'diversify' =&gt; true,
             'explain' =&gt; true,
             'facets' =&gt; true,
-            'highlight' =&gt; true,
-            'personalize' =&gt; true,
-            'typo_tolerance' =&gt; true,
+            'highlight' =&gt; false,
+            'personalize' =&gt; false,
+            'typo_tolerance' =&gt; false,
             'exact_match' =&gt; false,
-            'boost_new_products' =&gt; true,
-            'boost_in_stock' =&gt; true,
+            'boost_new_products' =&gt; false,
+            'boost_in_stock' =&gt; false,
         ],
     ]
 );
@@ -30998,13 +30998,13 @@ payload = {
         "category": "9,31",
         "categories": "9,31",
         "quantity": "64",
-        "availability": "low_stock",
+        "availability": "out_of_stock",
         "vendors": "9,31",
         "vendor": "i",
         "brand": "k",
         "brands": "9,31",
         "tags": "9,31",
-        "tag_logic": "OR",
+        "tag_logic": "AND",
         "attributes": "_JK:AI",
         "color": "k",
         "colors": "dLJnIk",
@@ -31022,12 +31022,12 @@ payload = {
     "diversify": true,
     "explain": true,
     "facets": true,
-    "highlight": true,
-    "personalize": true,
-    "typo_tolerance": true,
+    "highlight": false,
+    "personalize": false,
+    "typo_tolerance": false,
     "exact_match": false,
-    "boost_new_products": true,
-    "boost_in_stock": true
+    "boost_new_products": false,
+    "boost_in_stock": false
 }
 params = {
   'filter[0]': 'architecto',
@@ -31443,10 +31443,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="filter.availability"                data-endpoint="GETapi-products"
-               value="low_stock"
+               value="out_of_stock"
                data-component="body">
     <br>
-<p>Example: <code>low_stock</code></p>
+<p>Example: <code>out_of_stock</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>in_stock</code></li> <li><code>out_of_stock</code></li> <li><code>low_stock</code></li> <li><code>available</code></li></ul>
                     </div>
@@ -31511,10 +31511,10 @@ Must be one of:
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="filter.tag_logic"                data-endpoint="GETapi-products"
-               value="OR"
+               value="AND"
                data-component="body">
     <br>
-<p>Example: <code>OR</code></p>
+<p>Example: <code>AND</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>AND</code></li> <li><code>OR</code></li></ul>
                     </div>
@@ -31745,7 +31745,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>personalize</code></b>&nbsp;&nbsp;
@@ -31766,7 +31766,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>typo_tolerance</code></b>&nbsp;&nbsp;
@@ -31787,7 +31787,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>exact_match</code></b>&nbsp;&nbsp;
@@ -31829,7 +31829,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>boost_in_stock</code></b>&nbsp;&nbsp;
@@ -31850,7 +31850,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
         </form>
 
@@ -33410,7 +33410,7 @@ Essential for product detail pages and review browsing functionality.</p>
     ],
     \"verified_only\": true,
     \"with_media\": true,
-    \"sort_by\": \"helpful\",
+    \"sort_by\": \"oldest\",
     \"per_page\": 1,
     \"page\": 66
 }"
@@ -33446,7 +33446,7 @@ let body = {
     ],
     "verified_only": true,
     "with_media": true,
-    "sort_by": "helpful",
+    "sort_by": "oldest",
     "per_page": 1,
     "page": 66
 };
@@ -33484,7 +33484,7 @@ $response = $client-&gt;get(
             ],
             'verified_only' =&gt; true,
             'with_media' =&gt; true,
-            'sort_by' =&gt; 'helpful',
+            'sort_by' =&gt; 'oldest',
             'per_page' =&gt; 1,
             'page' =&gt; 66,
         ],
@@ -33506,7 +33506,7 @@ payload = {
     ],
     "verified_only": true,
     "with_media": true,
-    "sort_by": "helpful",
+    "sort_by": "oldest",
     "per_page": 1,
     "page": 66
 }
@@ -33859,10 +33859,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="sort_by"                data-endpoint="GETapi-products--product_id--reviews"
-               value="helpful"
+               value="oldest"
                data-component="body">
     <br>
-<p>Example: <code>helpful</code></p>
+<p>Example: <code>oldest</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>newest</code></li> <li><code>oldest</code></li> <li><code>rating_high</code></li> <li><code>rating_low</code></li> <li><code>helpful</code></li></ul>
         </div>
@@ -34123,7 +34123,7 @@ with the review for enhanced credibility.</p>
     --form "rating=5"\
     --form "title="Excellent sound quality!""\
     --form "content="These earbuds exceeded my expectations...""\
-    --form "media[]=@/tmp/phpwnEen1" </code></pre></div>
+    --form "media[]=@/tmp/phpKAZLIN" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -34186,7 +34186,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'media[]',
-                'contents' =&gt; fopen('/tmp/phpwnEen1', 'r')
+                'contents' =&gt; fopen('/tmp/phpKAZLIN', 'r')
             ],
         ],
     ]
@@ -34206,7 +34206,7 @@ files = {
   'rating': (None, '5'),
   'title': (None, '"Excellent sound quality!"'),
   'content': (None, '"These earbuds exceeded my expectations..."'),
-  'media[]': open('/tmp/phpwnEen1', 'rb')}
+  'media[]': open('/tmp/phpKAZLIN', 'rb')}
 payload = {
     "product_id": 15,
     "order_item_id": 234,
@@ -34441,7 +34441,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>Photo or video file (jpg, jpeg, png, gif, mp4, mov, avi). Example: <code>/tmp/phpL8g6Gt</code></p>
+<p>Photo or video file (jpg, jpeg, png, gif, mp4, mov, avi). Example: <code>/tmp/phpHIFZ5i</code></p>
                     </div>
                                     </details>
         </div>
@@ -34472,7 +34472,7 @@ You can modify the rating, title, content, and add/remove media attachments.</p>
     --form "title="Good sound quality""\
     --form "content="Updated thoughts on these earbuds...""\
     --form "remove_media[]=67"\
-    --form "media[]=@/tmp/php2JbZuh" </code></pre></div>
+    --form "media[]=@/tmp/phpoQwY43" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -34530,7 +34530,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'media[]',
-                'contents' =&gt; fopen('/tmp/php2JbZuh', 'r')
+                'contents' =&gt; fopen('/tmp/phpoQwY43', 'r')
             ],
         ],
     ]
@@ -34549,7 +34549,7 @@ files = {
   'title': (None, '"Good sound quality"'),
   'content': (None, '"Updated thoughts on these earbuds..."'),
   'remove_media[]': (None, '67'),
-  'media[]': open('/tmp/php2JbZuh', 'rb')}
+  'media[]': open('/tmp/phpoQwY43', 'rb')}
 payload = {
     "rating": 4,
     "title": "\"Good sound quality\"",
@@ -35504,27 +35504,27 @@ and search queries. Essential for dropshipping management and monitoring.</p>
     --header "Accept: application/json" \
     --data "{
     \"is_primary\": true,
-    \"is_active\": true,
+    \"is_active\": false,
     \"markup_type\": \"percentage\",
     \"search\": \"b\",
-    \"auto_update_price\": false,
-    \"auto_update_stock\": false,
+    \"auto_update_price\": true,
+    \"auto_update_stock\": true,
     \"auto_update_description\": false,
-    \"health_status\": \"healthy\",
+    \"health_status\": \"supplier_inactive\",
     \"min_markup\": 39,
     \"max_markup\": 84,
-    \"last_price_update_from\": \"2025-07-21T08:45:17\",
-    \"last_price_update_to\": \"2051-08-14\",
-    \"last_stock_update_from\": \"2025-07-21T08:45:17\",
-    \"last_stock_update_to\": \"2051-08-14\",
+    \"last_price_update_from\": \"2025-07-23T09:48:28\",
+    \"last_price_update_to\": \"2051-08-16\",
+    \"last_stock_update_from\": \"2025-07-23T09:48:28\",
+    \"last_stock_update_to\": \"2051-08-16\",
     \"priority_order\": 22,
     \"page\": 67,
     \"per_page\": 16,
-    \"sort_by\": \"priority_order\",
-    \"sort_direction\": \"asc\",
+    \"sort_by\": \"created_at\",
+    \"sort_direction\": \"desc\",
     \"include_product\": false,
     \"include_supplier\": true,
-    \"include_supplier_product\": true
+    \"include_supplier_product\": false
 }"
 </code></pre></div>
 
@@ -35558,27 +35558,27 @@ const headers = {
 
 let body = {
     "is_primary": true,
-    "is_active": true,
+    "is_active": false,
     "markup_type": "percentage",
     "search": "b",
-    "auto_update_price": false,
-    "auto_update_stock": false,
+    "auto_update_price": true,
+    "auto_update_stock": true,
     "auto_update_description": false,
-    "health_status": "healthy",
+    "health_status": "supplier_inactive",
     "min_markup": 39,
     "max_markup": 84,
-    "last_price_update_from": "2025-07-21T08:45:17",
-    "last_price_update_to": "2051-08-14",
-    "last_stock_update_from": "2025-07-21T08:45:17",
-    "last_stock_update_to": "2051-08-14",
+    "last_price_update_from": "2025-07-23T09:48:28",
+    "last_price_update_to": "2051-08-16",
+    "last_stock_update_from": "2025-07-23T09:48:28",
+    "last_stock_update_to": "2051-08-16",
     "priority_order": 22,
     "page": 67,
     "per_page": 16,
-    "sort_by": "priority_order",
-    "sort_direction": "asc",
+    "sort_by": "created_at",
+    "sort_direction": "desc",
     "include_product": false,
     "include_supplier": true,
-    "include_supplier_product": true
+    "include_supplier_product": false
 };
 
 fetch(url, {
@@ -35614,27 +35614,27 @@ $response = $client-&gt;get(
         ],
         'json' =&gt; [
             'is_primary' =&gt; true,
-            'is_active' =&gt; true,
+            'is_active' =&gt; false,
             'markup_type' =&gt; 'percentage',
             'search' =&gt; 'b',
-            'auto_update_price' =&gt; false,
-            'auto_update_stock' =&gt; false,
+            'auto_update_price' =&gt; true,
+            'auto_update_stock' =&gt; true,
             'auto_update_description' =&gt; false,
-            'health_status' =&gt; 'healthy',
+            'health_status' =&gt; 'supplier_inactive',
             'min_markup' =&gt; 39,
             'max_markup' =&gt; 84,
-            'last_price_update_from' =&gt; '2025-07-21T08:45:17',
-            'last_price_update_to' =&gt; '2051-08-14',
-            'last_stock_update_from' =&gt; '2025-07-21T08:45:17',
-            'last_stock_update_to' =&gt; '2051-08-14',
+            'last_price_update_from' =&gt; '2025-07-23T09:48:28',
+            'last_price_update_to' =&gt; '2051-08-16',
+            'last_stock_update_from' =&gt; '2025-07-23T09:48:28',
+            'last_stock_update_to' =&gt; '2051-08-16',
             'priority_order' =&gt; 22,
             'page' =&gt; 67,
             'per_page' =&gt; 16,
-            'sort_by' =&gt; 'priority_order',
-            'sort_direction' =&gt; 'asc',
+            'sort_by' =&gt; 'created_at',
+            'sort_direction' =&gt; 'desc',
             'include_product' =&gt; false,
             'include_supplier' =&gt; true,
-            'include_supplier_product' =&gt; true,
+            'include_supplier_product' =&gt; false,
         ],
     ]
 );
@@ -35649,27 +35649,27 @@ import json
 url = 'http://marketplace.com/api/admin/product-supplier-mappings'
 payload = {
     "is_primary": true,
-    "is_active": true,
+    "is_active": false,
     "markup_type": "percentage",
     "search": "b",
-    "auto_update_price": false,
-    "auto_update_stock": false,
+    "auto_update_price": true,
+    "auto_update_stock": true,
     "auto_update_description": false,
-    "health_status": "healthy",
+    "health_status": "supplier_inactive",
     "min_markup": 39,
     "max_markup": 84,
-    "last_price_update_from": "2025-07-21T08:45:17",
-    "last_price_update_to": "2051-08-14",
-    "last_stock_update_from": "2025-07-21T08:45:17",
-    "last_stock_update_to": "2051-08-14",
+    "last_price_update_from": "2025-07-23T09:48:28",
+    "last_price_update_to": "2051-08-16",
+    "last_stock_update_from": "2025-07-23T09:48:28",
+    "last_stock_update_to": "2051-08-16",
     "priority_order": 22,
     "page": 67,
     "per_page": 16,
-    "sort_by": "priority_order",
-    "sort_direction": "asc",
+    "sort_by": "created_at",
+    "sort_direction": "desc",
     "include_product": false,
     "include_supplier": true,
-    "include_supplier_product": true
+    "include_supplier_product": false
 }
 params = {
   'product_id': '123',
@@ -36085,7 +36085,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>markup_type</code></b>&nbsp;&nbsp;
@@ -36130,7 +36130,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>auto_update_stock</code></b>&nbsp;&nbsp;
@@ -36151,7 +36151,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>auto_update_description</code></b>&nbsp;&nbsp;
@@ -36180,10 +36180,10 @@ Must be one of:
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="health_status"                data-endpoint="GETapi-admin-product-supplier-mappings"
-               value="healthy"
+               value="supplier_inactive"
                data-component="body">
     <br>
-<p>Example: <code>healthy</code></p>
+<p>Example: <code>supplier_inactive</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>healthy</code></li> <li><code>inactive</code></li> <li><code>supplier_inactive</code></li></ul>
         </div>
@@ -36215,10 +36215,10 @@ Must be one of:
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="last_price_update_from"                data-endpoint="GETapi-admin-product-supplier-mappings"
-               value="2025-07-21T08:45:17"
+               value="2025-07-23T09:48:28"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-07-21T08:45:17</code></p>
+<p>Must be a valid date. Example: <code>2025-07-23T09:48:28</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>last_price_update_to</code></b>&nbsp;&nbsp;
@@ -36226,10 +36226,10 @@ Must be one of:
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="last_price_update_to"                data-endpoint="GETapi-admin-product-supplier-mappings"
-               value="2051-08-14"
+               value="2051-08-16"
                data-component="body">
     <br>
-<p>Must be a valid date. Must be a date after or equal to <code>last_price_update_from</code>. Example: <code>2051-08-14</code></p>
+<p>Must be a valid date. Must be a date after or equal to <code>last_price_update_from</code>. Example: <code>2051-08-16</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>last_stock_update_from</code></b>&nbsp;&nbsp;
@@ -36237,10 +36237,10 @@ Must be one of:
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="last_stock_update_from"                data-endpoint="GETapi-admin-product-supplier-mappings"
-               value="2025-07-21T08:45:17"
+               value="2025-07-23T09:48:28"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-07-21T08:45:17</code></p>
+<p>Must be a valid date. Example: <code>2025-07-23T09:48:28</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>last_stock_update_to</code></b>&nbsp;&nbsp;
@@ -36248,10 +36248,10 @@ Must be one of:
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="last_stock_update_to"                data-endpoint="GETapi-admin-product-supplier-mappings"
-               value="2051-08-14"
+               value="2051-08-16"
                data-component="body">
     <br>
-<p>Must be a valid date. Must be a date after or equal to <code>last_stock_update_from</code>. Example: <code>2051-08-14</code></p>
+<p>Must be a valid date. Must be a date after or equal to <code>last_stock_update_from</code>. Example: <code>2051-08-16</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>priority_order</code></b>&nbsp;&nbsp;
@@ -36292,10 +36292,10 @@ Must be one of:
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="sort_by"                data-endpoint="GETapi-admin-product-supplier-mappings"
-               value="priority_order"
+               value="created_at"
                data-component="body">
     <br>
-<p>Example: <code>priority_order</code></p>
+<p>Example: <code>created_at</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>priority_order</code></li> <li><code>markup_percentage</code></li> <li><code>fixed_markup</code></li> <li><code>last_price_update</code></li> <li><code>last_stock_update</code></li> <li><code>created_at</code></li></ul>
         </div>
@@ -36305,10 +36305,10 @@ Must be one of:
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="sort_direction"                data-endpoint="GETapi-admin-product-supplier-mappings"
-               value="asc"
+               value="desc"
                data-component="body">
     <br>
-<p>Example: <code>asc</code></p>
+<p>Example: <code>desc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
         </div>
@@ -36373,7 +36373,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
         </form>
 
@@ -53863,36 +53863,6 @@ response.json()</code></pre></div>
             },
             &quot;created_at&quot;: &quot;2025-01-10T09:00:00.000000Z&quot;,
             &quot;updated_at&quot;: &quot;2025-01-14T14:30:00.000000Z&quot;
-        },
-        {
-            &quot;id&quot;: 2,
-            &quot;shipping_method_id&quot;: 1,
-            &quot;shipping_zone_id&quot;: 1,
-            &quot;min_weight&quot;: 2000,
-            &quot;max_weight&quot;: 5000,
-            &quot;min_total&quot;: 0,
-            &quot;max_total&quot;: 5000,
-            &quot;rate&quot;: 799,
-            &quot;rate_formatted&quot;: &quot;&pound;7.99&quot;,
-            &quot;free_threshold&quot;: 10000,
-            &quot;free_threshold_formatted&quot;: &quot;&pound;100.00&quot;,
-            &quot;is_active&quot;: true,
-            &quot;shipping_method&quot;: {
-                &quot;id&quot;: 1,
-                &quot;name&quot;: &quot;Standard Delivery&quot;,
-                &quot;carrier&quot;: &quot;Royal Mail&quot;,
-                &quot;service_code&quot;: &quot;tracked-48&quot;
-            },
-            &quot;shipping_zone&quot;: {
-                &quot;id&quot;: 1,
-                &quot;name&quot;: &quot;UK Mainland&quot;,
-                &quot;countries&quot;: [
-                    &quot;GB&quot;
-                ],
-                &quot;is_active&quot;: true
-            },
-            &quot;created_at&quot;: &quot;2025-01-10T09:15:00.000000Z&quot;,
-            &quot;updated_at&quot;: &quot;2025-01-14T14:30:00.000000Z&quot;
         }
     ],
     &quot;current_page&quot;: 1,
@@ -54946,18 +54916,6 @@ response.json()</code></pre></div>
         &quot;free_threshold&quot;: 12500,
         &quot;free_threshold_formatted&quot;: &quot;&pound;125.00&quot;,
         &quot;is_active&quot;: true,
-        &quot;shipping_method&quot;: {
-            &quot;id&quot;: 1,
-            &quot;name&quot;: &quot;Standard Delivery&quot;,
-            &quot;carrier&quot;: &quot;Royal Mail&quot;
-        },
-        &quot;shipping_zone&quot;: {
-            &quot;id&quot;: 1,
-            &quot;name&quot;: &quot;UK Mainland&quot;,
-            &quot;countries&quot;: [
-                &quot;GB&quot;
-            ]
-        },
         &quot;updated_at&quot;: &quot;2025-01-15T11:45:00.000000Z&quot;
     }
 }</code>
@@ -56286,7 +56244,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
                     </div>
                                                                 <div style=" margin-left: 14px; clear: unset;">
         <details>
@@ -56865,17 +56823,6 @@ response.json()</code></pre></div>
                 &quot;id&quot;: 49,
                 &quot;shipping_method_id&quot;: 1,
                 &quot;shipping_zone_id&quot;: 2,
-                &quot;min_weight&quot;: 0,
-                &quot;max_weight&quot;: 2000,
-                &quot;rate&quot;: 599,
-                &quot;rate_formatted&quot;: &quot;&pound;5.99&quot;,
-                &quot;is_active&quot;: true,
-                &quot;created_at&quot;: &quot;2025-01-15T14:20:00.000000Z&quot;
-            },
-            {
-                &quot;id&quot;: 50,
-                &quot;shipping_method_id&quot;: 1,
-                &quot;shipping_zone_id&quot;: 3,
                 &quot;min_weight&quot;: 0,
                 &quot;max_weight&quot;: 2000,
                 &quot;rate&quot;: 599,
@@ -57496,77 +57443,6 @@ response.json()</code></pre></div>
                 ],
                 &quot;created_at&quot;: &quot;2025-01-01T00:00:00.000000Z&quot;,
                 &quot;updated_at&quot;: &quot;2025-01-10T14:30:00.000000Z&quot;
-            },
-            {
-                &quot;id&quot;: 2,
-                &quot;name&quot;: &quot;European Union&quot;,
-                &quot;description&quot;: &quot;EU member countries&quot;,
-                &quot;countries&quot;: [
-                    &quot;AT&quot;,
-                    &quot;BE&quot;,
-                    &quot;BG&quot;,
-                    &quot;HR&quot;,
-                    &quot;CY&quot;,
-                    &quot;CZ&quot;,
-                    &quot;DK&quot;,
-                    &quot;EE&quot;,
-                    &quot;FI&quot;,
-                    &quot;FR&quot;,
-                    &quot;DE&quot;,
-                    &quot;GR&quot;,
-                    &quot;HU&quot;,
-                    &quot;IE&quot;,
-                    &quot;IT&quot;,
-                    &quot;LV&quot;,
-                    &quot;LT&quot;,
-                    &quot;LU&quot;,
-                    &quot;MT&quot;,
-                    &quot;NL&quot;,
-                    &quot;PL&quot;,
-                    &quot;PT&quot;,
-                    &quot;RO&quot;,
-                    &quot;SK&quot;,
-                    &quot;SI&quot;,
-                    &quot;ES&quot;,
-                    &quot;SE&quot;
-                ],
-                &quot;country_names&quot;: [
-                    &quot;Austria&quot;,
-                    &quot;Belgium&quot;,
-                    &quot;Bulgaria&quot;,
-                    &quot;Croatia&quot;,
-                    &quot;Cyprus&quot;,
-                    &quot;Czech Republic&quot;,
-                    &quot;Denmark&quot;,
-                    &quot;Estonia&quot;,
-                    &quot;Finland&quot;,
-                    &quot;France&quot;,
-                    &quot;Germany&quot;,
-                    &quot;Greece&quot;,
-                    &quot;Hungary&quot;,
-                    &quot;Ireland&quot;,
-                    &quot;Italy&quot;,
-                    &quot;Latvia&quot;,
-                    &quot;Lithuania&quot;,
-                    &quot;Luxembourg&quot;,
-                    &quot;Malta&quot;,
-                    &quot;Netherlands&quot;,
-                    &quot;Poland&quot;,
-                    &quot;Portugal&quot;,
-                    &quot;Romania&quot;,
-                    &quot;Slovakia&quot;,
-                    &quot;Slovenia&quot;,
-                    &quot;Spain&quot;,
-                    &quot;Sweden&quot;
-                ],
-                &quot;postcodes&quot;: null,
-                &quot;excluded_postcodes&quot;: null,
-                &quot;is_active&quot;: true,
-                &quot;sort_order&quot;: 3,
-                &quot;methods_count&quot;: 1,
-                &quot;rates_count&quot;: 6,
-                &quot;created_at&quot;: &quot;2025-01-01T00:00:00.000000Z&quot;,
-                &quot;updated_at&quot;: &quot;2025-01-01T00:00:00.000000Z&quot;
             }
         ],
         &quot;current_page&quot;: 1,
@@ -62168,7 +62044,20 @@ by supplier, integration type, status, and health status. Includes integration p
     --get "http://marketplace.com/api/admin/supplier-integrations?supplier_id=1&amp;integration_type=api&amp;is_active=1&amp;status=active&amp;search=GlobalTech&amp;healthy=1&amp;page=1&amp;per_page=20" \
     --header "Authorization: Bearer {YOUR_AUTH_TOKEN}" \
     --header "Content-Type: application/json" \
-    --header "Accept: application/json"</code></pre></div>
+    --header "Accept: application/json" \
+    --data "{
+    \"supplier_id\": 16,
+    \"integration_type\": \"manual\",
+    \"is_active\": true,
+    \"status\": \"active\",
+    \"search\": \"n\",
+    \"healthy\": true,
+    \"page\": 67,
+    \"per_page\": 16,
+    \"sort_by\": \"consecutive_failures\",
+    \"sort_direction\": \"asc\"
+}"
+</code></pre></div>
 
 
 <div class="javascript-example">
@@ -62195,9 +62084,23 @@ const headers = {
     "Accept": "application/json",
 };
 
+let body = {
+    "supplier_id": 16,
+    "integration_type": "manual",
+    "is_active": true,
+    "status": "active",
+    "search": "n",
+    "healthy": true,
+    "page": 67,
+    "per_page": 16,
+    "sort_by": "consecutive_failures",
+    "sort_direction": "asc"
+};
+
 fetch(url, {
     method: "GET",
     headers,
+    body: JSON.stringify(body),
 }).then(response =&gt; response.json());</code></pre></div>
 
 
@@ -62222,6 +62125,18 @@ $response = $client-&gt;get(
             'page' =&gt; '1',
             'per_page' =&gt; '20',
         ],
+        'json' =&gt; [
+            'supplier_id' =&gt; 16,
+            'integration_type' =&gt; 'manual',
+            'is_active' =&gt; true,
+            'status' =&gt; 'active',
+            'search' =&gt; 'n',
+            'healthy' =&gt; true,
+            'page' =&gt; 67,
+            'per_page' =&gt; 16,
+            'sort_by' =&gt; 'consecutive_failures',
+            'sort_direction' =&gt; 'asc',
+        ],
     ]
 );
 $body = $response-&gt;getBody();
@@ -62233,6 +62148,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 import json
 
 url = 'http://marketplace.com/api/admin/supplier-integrations'
+payload = {
+    "supplier_id": 16,
+    "integration_type": "manual",
+    "is_active": true,
+    "status": "active",
+    "search": "n",
+    "healthy": true,
+    "page": 67,
+    "per_page": 16,
+    "sort_by": "consecutive_failures",
+    "sort_direction": "asc"
+}
 params = {
   'supplier_id': '1',
   'integration_type': 'api',
@@ -62249,7 +62176,7 @@ headers = {
   'Accept': 'application/json'
 }
 
-response = requests.request('GET', url, headers=headers, params=params)
+response = requests.request('GET', url, headers=headers, json=payload, params=params)
 response.json()</code></pre></div>
 
 </span>
@@ -62535,7 +62462,146 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>optional Number of integrations per page (max 50). Default: 15. Example: <code>20</code></p>
             </div>
-                </form>
+                        <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>supplier_id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="supplier_id"                data-endpoint="GETapi-admin-supplier-integrations"
+               value="16"
+               data-component="body">
+    <br>
+<p>The <code>id</code> of an existing record in the suppliers table. Example: <code>16</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>integration_type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="integration_type"                data-endpoint="GETapi-admin-supplier-integrations"
+               value="manual"
+               data-component="body">
+    <br>
+<p>Example: <code>manual</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>api</code></li> <li><code>email</code></li> <li><code>webhook</code></li> <li><code>ftp</code></li> <li><code>csv_upload</code></li> <li><code>manual</code></li></ul>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>is_active</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="GETapi-admin-supplier-integrations" style="display: none">
+            <input type="radio" name="is_active"
+                   value="true"
+                   data-endpoint="GETapi-admin-supplier-integrations"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-admin-supplier-integrations" style="display: none">
+            <input type="radio" name="is_active"
+                   value="false"
+                   data-endpoint="GETapi-admin-supplier-integrations"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>true</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>status</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="status"                data-endpoint="GETapi-admin-supplier-integrations"
+               value="active"
+               data-component="body">
+    <br>
+<p>Example: <code>active</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li> <li><code>error</code></li> <li><code>maintenance</code></li> <li><code>failed</code></li> <li><code>disabled</code></li></ul>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>search</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="search"                data-endpoint="GETapi-admin-supplier-integrations"
+               value="n"
+               data-component="body">
+    <br>
+<p>Must not be greater than 255 characters. Example: <code>n</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>healthy</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+                <label data-endpoint="GETapi-admin-supplier-integrations" style="display: none">
+            <input type="radio" name="healthy"
+                   value="true"
+                   data-endpoint="GETapi-admin-supplier-integrations"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-admin-supplier-integrations" style="display: none">
+            <input type="radio" name="healthy"
+                   value="false"
+                   data-endpoint="GETapi-admin-supplier-integrations"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Example: <code>true</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="page"                data-endpoint="GETapi-admin-supplier-integrations"
+               value="67"
+               data-component="body">
+    <br>
+<p>Must be at least 1. Example: <code>67</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="per_page"                data-endpoint="GETapi-admin-supplier-integrations"
+               value="16"
+               data-component="body">
+    <br>
+<p>Must be at least 1. Must not be greater than 50. Example: <code>16</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>sort_by</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="sort_by"                data-endpoint="GETapi-admin-supplier-integrations"
+               value="consecutive_failures"
+               data-component="body">
+    <br>
+<p>Example: <code>consecutive_failures</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>name</code></li> <li><code>created_at</code></li> <li><code>last_successful_sync</code></li> <li><code>status</code></li> <li><code>supplier_name</code></li> <li><code>consecutive_failures</code></li></ul>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>sort_direction</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="sort_direction"                data-endpoint="GETapi-admin-supplier-integrations"
+               value="asc"
+               data-component="body">
+    <br>
+<p>Example: <code>asc</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
+        </div>
+        </form>
 
                     <h2 id="supplier-integrations-POSTapi-admin-supplier-integrations">Create a new supplier integration</h2>
 
@@ -62564,11 +62630,21 @@ automatically deactivate existing ones for the same supplier.</p>
     \"is_active\": true,
     \"configuration\": {
         \"api_endpoint\": \"https:\\/\\/api.example.com\\/v1\",
-        \"rate_limit\": 100
+        \"rate_limit\": 100,
+        \"timeout\": 7,
+        \"format\": \"xml\",
+        \"webhook_url\": \"http:\\/\\/www.okuneva.com\\/fugiat-sunt-nihil-accusantium-harum-mollitia.html\",
+        \"email_address\": \"mya96@example.com\",
+        \"ftp_host\": \"k\",
+        \"ftp_port\": 8
     },
     \"authentication\": {
         \"type\": \"api_key\",
-        \"api_key\": \"your-api-key\"
+        \"api_key\": \"your-api-key\",
+        \"api_secret\": \"n\",
+        \"webhook_secret\": \"g\",
+        \"ftp_username\": \"z\",
+        \"ftp_password\": \"m\"
     },
     \"sync_frequency_minutes\": 30,
     \"auto_retry_enabled\": true,
@@ -62599,11 +62675,21 @@ let body = {
     "is_active": true,
     "configuration": {
         "api_endpoint": "https:\/\/api.example.com\/v1",
-        "rate_limit": 100
+        "rate_limit": 100,
+        "timeout": 7,
+        "format": "xml",
+        "webhook_url": "http:\/\/www.okuneva.com\/fugiat-sunt-nihil-accusantium-harum-mollitia.html",
+        "email_address": "mya96@example.com",
+        "ftp_host": "k",
+        "ftp_port": 8
     },
     "authentication": {
         "type": "api_key",
-        "api_key": "your-api-key"
+        "api_key": "your-api-key",
+        "api_secret": "n",
+        "webhook_secret": "g",
+        "ftp_username": "z",
+        "ftp_password": "m"
     },
     "sync_frequency_minutes": 30,
     "auto_retry_enabled": true,
@@ -62640,10 +62726,20 @@ $response = $client-&gt;post(
             'configuration' =&gt; [
                 'api_endpoint' =&gt; 'https://api.example.com/v1',
                 'rate_limit' =&gt; 100,
+                'timeout' =&gt; 7,
+                'format' =&gt; 'xml',
+                'webhook_url' =&gt; 'http://www.okuneva.com/fugiat-sunt-nihil-accusantium-harum-mollitia.html',
+                'email_address' =&gt; 'mya96@example.com',
+                'ftp_host' =&gt; 'k',
+                'ftp_port' =&gt; 8,
             ],
             'authentication' =&gt; [
                 'type' =&gt; 'api_key',
                 'api_key' =&gt; 'your-api-key',
+                'api_secret' =&gt; 'n',
+                'webhook_secret' =&gt; 'g',
+                'ftp_username' =&gt; 'z',
+                'ftp_password' =&gt; 'm',
             ],
             'sync_frequency_minutes' =&gt; 30,
             'auto_retry_enabled' =&gt; true,
@@ -62671,11 +62767,21 @@ payload = {
     "is_active": true,
     "configuration": {
         "api_endpoint": "https:\/\/api.example.com\/v1",
-        "rate_limit": 100
+        "rate_limit": 100,
+        "timeout": 7,
+        "format": "xml",
+        "webhook_url": "http:\/\/www.okuneva.com\/fugiat-sunt-nihil-accusantium-harum-mollitia.html",
+        "email_address": "mya96@example.com",
+        "ftp_host": "k",
+        "ftp_port": 8
     },
     "authentication": {
         "type": "api_key",
-        "api_key": "your-api-key"
+        "api_key": "your-api-key",
+        "api_secret": "n",
+        "webhook_secret": "g",
+        "ftp_username": "z",
+        "ftp_password": "m"
     },
     "sync_frequency_minutes": 30,
     "auto_retry_enabled": true,
@@ -62913,26 +63019,171 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>optional Whether this integration is active. Default: true. Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>configuration</code></b>&nbsp;&nbsp;
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b style="line-height: 2;"><code>configuration</code></b>&nbsp;&nbsp;
 <small>object</small>&nbsp;
  &nbsp;
+<br>
+<p>Integration-specific configuration parameters.</p>
+            </summary>
+                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>api_endpoint</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
                 <input type="text" style="display: none"
-                              name="configuration"                data-endpoint="POSTapi-admin-supplier-integrations"
-               value=""
+                              name="configuration.api_endpoint"                data-endpoint="POSTapi-admin-supplier-integrations"
+               value="b"
                data-component="body">
     <br>
-<p>Integration-specific configuration parameters.</p>
+<p>This field is required when <code>integration_type</code> is <code>api</code>.  Must be a valid URL. Must not be greater than 500 characters. Example: <code>b</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>rate_limit</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="configuration.rate_limit"                data-endpoint="POSTapi-admin-supplier-integrations"
+               value="22"
+               data-component="body">
+    <br>
+<p>Must be at least 1. Must not be greater than 10000. Example: <code>22</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>timeout</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="configuration.timeout"                data-endpoint="POSTapi-admin-supplier-integrations"
+               value="7"
+               data-component="body">
+    <br>
+<p>Must be at least 5. Must not be greater than 300. Example: <code>7</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>format</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="configuration.format"                data-endpoint="POSTapi-admin-supplier-integrations"
+               value="xml"
+               data-component="body">
+    <br>
+<p>Example: <code>xml</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>json</code></li> <li><code>xml</code></li> <li><code>csv</code></li></ul>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>webhook_url</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="configuration.webhook_url"                data-endpoint="POSTapi-admin-supplier-integrations"
+               value="http://www.okuneva.com/fugiat-sunt-nihil-accusantium-harum-mollitia.html"
+               data-component="body">
+    <br>
+<p>This field is required when <code>integration_type</code> is <code>webhook</code>.  Must be a valid URL. Must not be greater than 500 characters. Example: <code>http://www.okuneva.com/fugiat-sunt-nihil-accusantium-harum-mollitia.html</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>email_address</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="configuration.email_address"                data-endpoint="POSTapi-admin-supplier-integrations"
+               value="mya96@example.com"
+               data-component="body">
+    <br>
+<p>This field is required when <code>integration_type</code> is <code>email</code>.  Must be a valid email address. Must not be greater than 255 characters. Example: <code>mya96@example.com</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>ftp_host</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="configuration.ftp_host"                data-endpoint="POSTapi-admin-supplier-integrations"
+               value="k"
+               data-component="body">
+    <br>
+<p>This field is required when <code>integration_type</code> is <code>ftp</code>. Must not be greater than 255 characters. Example: <code>k</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>ftp_port</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="configuration.ftp_port"                data-endpoint="POSTapi-admin-supplier-integrations"
+               value="8"
+               data-component="body">
+    <br>
+<p>Must be at least 1. Must not be greater than 65535. Example: <code>8</code></p>
+                    </div>
+                                    </details>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>authentication</code></b>&nbsp;&nbsp;
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b style="line-height: 2;"><code>authentication</code></b>&nbsp;&nbsp;
 <small>object</small>&nbsp;
  &nbsp;
+<br>
+<p>Authentication credentials and settings.</p>
+            </summary>
+                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>api_key</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
                 <input type="text" style="display: none"
-                              name="authentication"                data-endpoint="POSTapi-admin-supplier-integrations"
-               value=""
+                              name="authentication.api_key"                data-endpoint="POSTapi-admin-supplier-integrations"
+               value="b"
                data-component="body">
     <br>
-<p>Authentication credentials and settings.</p>
+<p>Must not be greater than 500 characters. Example: <code>b</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>api_secret</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="authentication.api_secret"                data-endpoint="POSTapi-admin-supplier-integrations"
+               value="n"
+               data-component="body">
+    <br>
+<p>Must not be greater than 500 characters. Example: <code>n</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>webhook_secret</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="authentication.webhook_secret"                data-endpoint="POSTapi-admin-supplier-integrations"
+               value="g"
+               data-component="body">
+    <br>
+<p>Must not be greater than 500 characters. Example: <code>g</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>ftp_username</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="authentication.ftp_username"                data-endpoint="POSTapi-admin-supplier-integrations"
+               value="z"
+               data-component="body">
+    <br>
+<p>Must not be greater than 255 characters. Example: <code>z</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>ftp_password</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="authentication.ftp_password"                data-endpoint="POSTapi-admin-supplier-integrations"
+               value="m"
+               data-component="body">
+    <br>
+<p>Must not be greater than 255 characters. Example: <code>m</code></p>
+                    </div>
+                                    </details>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>sync_frequency_minutes</code></b>&nbsp;&nbsp;
@@ -63267,11 +63518,23 @@ Activating an integration will automatically deactivate other integrations for t
     \"name\": \"Updated GlobalTech API\",
     \"is_active\": true,
     \"configuration\": {
-        \"api_endpoint\": \"https:\\/\\/api.example.com\\/v2\"
+        \"api_endpoint\": \"https:\\/\\/api.example.com\\/v2\",
+        \"rate_limit\": 7,
+        \"timeout\": 16,
+        \"format\": \"xml\",
+        \"webhook_url\": \"http:\\/\\/rempel.com\\/sunt-nihil-accusantium-harum-mollitia\",
+        \"email_address\": \"mya96@example.com\",
+        \"ftp_host\": \"k\",
+        \"ftp_port\": 8
     },
     \"authentication\": {
         \"type\": \"bearer\",
-        \"token\": \"new-token\"
+        \"token\": \"new-token\",
+        \"api_key\": \"m\",
+        \"api_secret\": \"y\",
+        \"webhook_secret\": \"u\",
+        \"ftp_username\": \"w\",
+        \"ftp_password\": \"p\"
     },
     \"sync_frequency_minutes\": 30,
     \"auto_retry_enabled\": false,
@@ -63279,7 +63542,8 @@ Activating an integration will automatically deactivate other integrations for t
     \"webhook_events\": [
         \"order.shipped\",
         \"stock.updated\"
-    ]
+    ],
+    \"status\": \"active\"
 }"
 </code></pre></div>
 
@@ -63300,11 +63564,23 @@ let body = {
     "name": "Updated GlobalTech API",
     "is_active": true,
     "configuration": {
-        "api_endpoint": "https:\/\/api.example.com\/v2"
+        "api_endpoint": "https:\/\/api.example.com\/v2",
+        "rate_limit": 7,
+        "timeout": 16,
+        "format": "xml",
+        "webhook_url": "http:\/\/rempel.com\/sunt-nihil-accusantium-harum-mollitia",
+        "email_address": "mya96@example.com",
+        "ftp_host": "k",
+        "ftp_port": 8
     },
     "authentication": {
         "type": "bearer",
-        "token": "new-token"
+        "token": "new-token",
+        "api_key": "m",
+        "api_secret": "y",
+        "webhook_secret": "u",
+        "ftp_username": "w",
+        "ftp_password": "p"
     },
     "sync_frequency_minutes": 30,
     "auto_retry_enabled": false,
@@ -63312,7 +63588,8 @@ let body = {
     "webhook_events": [
         "order.shipped",
         "stock.updated"
-    ]
+    ],
+    "status": "active"
 };
 
 fetch(url, {
@@ -63339,10 +63616,22 @@ $response = $client-&gt;put(
             'is_active' =&gt; true,
             'configuration' =&gt; [
                 'api_endpoint' =&gt; 'https://api.example.com/v2',
+                'rate_limit' =&gt; 7,
+                'timeout' =&gt; 16,
+                'format' =&gt; 'xml',
+                'webhook_url' =&gt; 'http://rempel.com/sunt-nihil-accusantium-harum-mollitia',
+                'email_address' =&gt; 'mya96@example.com',
+                'ftp_host' =&gt; 'k',
+                'ftp_port' =&gt; 8,
             ],
             'authentication' =&gt; [
                 'type' =&gt; 'bearer',
                 'token' =&gt; 'new-token',
+                'api_key' =&gt; 'm',
+                'api_secret' =&gt; 'y',
+                'webhook_secret' =&gt; 'u',
+                'ftp_username' =&gt; 'w',
+                'ftp_password' =&gt; 'p',
             ],
             'sync_frequency_minutes' =&gt; 30,
             'auto_retry_enabled' =&gt; false,
@@ -63351,6 +63640,7 @@ $response = $client-&gt;put(
                 'order.shipped',
                 'stock.updated',
             ],
+            'status' =&gt; 'active',
         ],
     ]
 );
@@ -63368,11 +63658,23 @@ payload = {
     "name": "Updated GlobalTech API",
     "is_active": true,
     "configuration": {
-        "api_endpoint": "https:\/\/api.example.com\/v2"
+        "api_endpoint": "https:\/\/api.example.com\/v2",
+        "rate_limit": 7,
+        "timeout": 16,
+        "format": "xml",
+        "webhook_url": "http:\/\/rempel.com\/sunt-nihil-accusantium-harum-mollitia",
+        "email_address": "mya96@example.com",
+        "ftp_host": "k",
+        "ftp_port": 8
     },
     "authentication": {
         "type": "bearer",
-        "token": "new-token"
+        "token": "new-token",
+        "api_key": "m",
+        "api_secret": "y",
+        "webhook_secret": "u",
+        "ftp_username": "w",
+        "ftp_password": "p"
     },
     "sync_frequency_minutes": 30,
     "auto_retry_enabled": false,
@@ -63380,7 +63682,8 @@ payload = {
     "webhook_events": [
         "order.shipped",
         "stock.updated"
-    ]
+    ],
+    "status": "active"
 }
 headers = {
   'Authorization': 'Bearer {YOUR_AUTH_TOKEN}',
@@ -63606,26 +63909,171 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>optional Whether this integration is active. Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>configuration</code></b>&nbsp;&nbsp;
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b style="line-height: 2;"><code>configuration</code></b>&nbsp;&nbsp;
 <small>object</small>&nbsp;
 <i>optional</i> &nbsp;
+<br>
+<p>optional Integration-specific configuration parameters.</p>
+            </summary>
+                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>api_endpoint</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
                 <input type="text" style="display: none"
-                              name="configuration"                data-endpoint="PUTapi-admin-supplier-integrations--supplierIntegration_id-"
-               value=""
+                              name="configuration.api_endpoint"                data-endpoint="PUTapi-admin-supplier-integrations--supplierIntegration_id-"
+               value="n"
                data-component="body">
     <br>
-<p>optional Integration-specific configuration parameters.</p>
+<p>This field is required when <code>integration_type</code> is <code>api</code>.  Must be a valid URL. Must not be greater than 500 characters. Example: <code>n</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>rate_limit</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="configuration.rate_limit"                data-endpoint="PUTapi-admin-supplier-integrations--supplierIntegration_id-"
+               value="7"
+               data-component="body">
+    <br>
+<p>Must be at least 1. Must not be greater than 10000. Example: <code>7</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>timeout</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="configuration.timeout"                data-endpoint="PUTapi-admin-supplier-integrations--supplierIntegration_id-"
+               value="16"
+               data-component="body">
+    <br>
+<p>Must be at least 5. Must not be greater than 300. Example: <code>16</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>format</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="configuration.format"                data-endpoint="PUTapi-admin-supplier-integrations--supplierIntegration_id-"
+               value="xml"
+               data-component="body">
+    <br>
+<p>Example: <code>xml</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>json</code></li> <li><code>xml</code></li> <li><code>csv</code></li></ul>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>webhook_url</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="configuration.webhook_url"                data-endpoint="PUTapi-admin-supplier-integrations--supplierIntegration_id-"
+               value="http://rempel.com/sunt-nihil-accusantium-harum-mollitia"
+               data-component="body">
+    <br>
+<p>This field is required when <code>integration_type</code> is <code>webhook</code>.  Must be a valid URL. Must not be greater than 500 characters. Example: <code>http://rempel.com/sunt-nihil-accusantium-harum-mollitia</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>email_address</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="configuration.email_address"                data-endpoint="PUTapi-admin-supplier-integrations--supplierIntegration_id-"
+               value="mya96@example.com"
+               data-component="body">
+    <br>
+<p>This field is required when <code>integration_type</code> is <code>email</code>.  Must be a valid email address. Must not be greater than 255 characters. Example: <code>mya96@example.com</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>ftp_host</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="configuration.ftp_host"                data-endpoint="PUTapi-admin-supplier-integrations--supplierIntegration_id-"
+               value="k"
+               data-component="body">
+    <br>
+<p>This field is required when <code>integration_type</code> is <code>ftp</code>. Must not be greater than 255 characters. Example: <code>k</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>ftp_port</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="configuration.ftp_port"                data-endpoint="PUTapi-admin-supplier-integrations--supplierIntegration_id-"
+               value="8"
+               data-component="body">
+    <br>
+<p>Must be at least 1. Must not be greater than 65535. Example: <code>8</code></p>
+                    </div>
+                                    </details>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>authentication</code></b>&nbsp;&nbsp;
+        <details>
+            <summary style="padding-bottom: 10px;">
+                <b style="line-height: 2;"><code>authentication</code></b>&nbsp;&nbsp;
 <small>object</small>&nbsp;
 <i>optional</i> &nbsp;
+<br>
+<p>optional Authentication credentials and settings.</p>
+            </summary>
+                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>api_key</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
                 <input type="text" style="display: none"
-                              name="authentication"                data-endpoint="PUTapi-admin-supplier-integrations--supplierIntegration_id-"
-               value=""
+                              name="authentication.api_key"                data-endpoint="PUTapi-admin-supplier-integrations--supplierIntegration_id-"
+               value="m"
                data-component="body">
     <br>
-<p>optional Authentication credentials and settings.</p>
+<p>Must not be greater than 500 characters. Example: <code>m</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>api_secret</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="authentication.api_secret"                data-endpoint="PUTapi-admin-supplier-integrations--supplierIntegration_id-"
+               value="y"
+               data-component="body">
+    <br>
+<p>Must not be greater than 500 characters. Example: <code>y</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>webhook_secret</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="authentication.webhook_secret"                data-endpoint="PUTapi-admin-supplier-integrations--supplierIntegration_id-"
+               value="u"
+               data-component="body">
+    <br>
+<p>Must not be greater than 500 characters. Example: <code>u</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>ftp_username</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="authentication.ftp_username"                data-endpoint="PUTapi-admin-supplier-integrations--supplierIntegration_id-"
+               value="w"
+               data-component="body">
+    <br>
+<p>Must not be greater than 255 characters. Example: <code>w</code></p>
+                    </div>
+                                                                <div style="margin-left: 14px; clear: unset;">
+                        <b style="line-height: 2;"><code>ftp_password</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="authentication.ftp_password"                data-endpoint="PUTapi-admin-supplier-integrations--supplierIntegration_id-"
+               value="p"
+               data-component="body">
+    <br>
+<p>Must not be greater than 255 characters. Example: <code>p</code></p>
+                    </div>
+                                    </details>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>sync_frequency_minutes</code></b>&nbsp;&nbsp;
@@ -63682,6 +64130,19 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="body">
     <br>
 <p>optional Webhook events to subscribe to.</p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>status</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="status"                data-endpoint="PUTapi-admin-supplier-integrations--supplierIntegration_id-"
+               value="active"
+               data-component="body">
+    <br>
+<p>Example: <code>active</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li> <li><code>error</code></li> <li><code>maintenance</code></li> <li><code>failed</code></li> <li><code>disabled</code></li></ul>
         </div>
         </form>
 
@@ -65345,17 +65806,17 @@ integration type, country, and search terms. Includes supplier counts and perfor
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"status\": \"inactive\",
-    \"integration_type\": \"ftp\",
+    \"status\": \"pending_approval\",
+    \"integration_type\": \"csv_upload\",
     \"search\": \"b\",
     \"country\": \"ng\",
     \"auto_fulfill\": true,
-    \"stock_sync_enabled\": true,
-    \"price_sync_enabled\": true,
+    \"stock_sync_enabled\": false,
+    \"price_sync_enabled\": false,
     \"page\": 66,
     \"per_page\": 17,
-    \"sort_by\": \"processing_time_days\",
-    \"sort_direction\": \"desc\"
+    \"sort_by\": \"name\",
+    \"sort_direction\": \"asc\"
 }"
 </code></pre></div>
 
@@ -65383,17 +65844,17 @@ const headers = {
 };
 
 let body = {
-    "status": "inactive",
-    "integration_type": "ftp",
+    "status": "pending_approval",
+    "integration_type": "csv_upload",
     "search": "b",
     "country": "ng",
     "auto_fulfill": true,
-    "stock_sync_enabled": true,
-    "price_sync_enabled": true,
+    "stock_sync_enabled": false,
+    "price_sync_enabled": false,
     "page": 66,
     "per_page": 17,
-    "sort_by": "processing_time_days",
-    "sort_direction": "desc"
+    "sort_by": "name",
+    "sort_direction": "asc"
 };
 
 fetch(url, {
@@ -65423,17 +65884,17 @@ $response = $client-&gt;get(
             'per_page' =&gt; '20',
         ],
         'json' =&gt; [
-            'status' =&gt; 'inactive',
-            'integration_type' =&gt; 'ftp',
+            'status' =&gt; 'pending_approval',
+            'integration_type' =&gt; 'csv_upload',
             'search' =&gt; 'b',
             'country' =&gt; 'ng',
             'auto_fulfill' =&gt; true,
-            'stock_sync_enabled' =&gt; true,
-            'price_sync_enabled' =&gt; true,
+            'stock_sync_enabled' =&gt; false,
+            'price_sync_enabled' =&gt; false,
             'page' =&gt; 66,
             'per_page' =&gt; 17,
-            'sort_by' =&gt; 'processing_time_days',
-            'sort_direction' =&gt; 'desc',
+            'sort_by' =&gt; 'name',
+            'sort_direction' =&gt; 'asc',
         ],
     ]
 );
@@ -65447,17 +65908,17 @@ import json
 
 url = 'http://marketplace.com/api/admin/suppliers'
 payload = {
-    "status": "inactive",
-    "integration_type": "ftp",
+    "status": "pending_approval",
+    "integration_type": "csv_upload",
     "search": "b",
     "country": "ng",
     "auto_fulfill": true,
-    "stock_sync_enabled": true,
-    "price_sync_enabled": true,
+    "stock_sync_enabled": false,
+    "price_sync_enabled": false,
     "page": 66,
     "per_page": 17,
-    "sort_by": "processing_time_days",
-    "sort_direction": "desc"
+    "sort_by": "name",
+    "sort_direction": "asc"
 }
 params = {
   'status': 'active',
@@ -65723,10 +66184,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="GETapi-admin-suppliers"
-               value="inactive"
+               value="pending_approval"
                data-component="body">
     <br>
-<p>Example: <code>inactive</code></p>
+<p>Example: <code>pending_approval</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>active</code></li> <li><code>inactive</code></li> <li><code>pending_approval</code></li> <li><code>suspended</code></li> <li><code>terminated</code></li></ul>
         </div>
@@ -65736,10 +66197,10 @@ Must be one of:
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="integration_type"                data-endpoint="GETapi-admin-suppliers"
-               value="ftp"
+               value="csv_upload"
                data-component="body">
     <br>
-<p>Example: <code>ftp</code></p>
+<p>Example: <code>csv_upload</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>api</code></li> <li><code>email</code></li> <li><code>webhook</code></li> <li><code>ftp</code></li> <li><code>csv_upload</code></li> <li><code>manual</code></li></ul>
         </div>
@@ -65805,7 +66266,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>price_sync_enabled</code></b>&nbsp;&nbsp;
@@ -65826,7 +66287,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>true</code></p>
+<p>Example: <code>false</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>page</code></b>&nbsp;&nbsp;
@@ -65856,10 +66317,10 @@ Must be one of:
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="sort_by"                data-endpoint="GETapi-admin-suppliers"
-               value="processing_time_days"
+               value="name"
                data-component="body">
     <br>
-<p>Example: <code>processing_time_days</code></p>
+<p>Example: <code>name</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>name</code></li> <li><code>created_at</code></li> <li><code>last_sync_at</code></li> <li><code>processing_time_days</code></li></ul>
         </div>
@@ -65869,10 +66330,10 @@ Must be one of:
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="sort_direction"                data-endpoint="GETapi-admin-suppliers"
-               value="desc"
+               value="asc"
                data-component="body">
     <br>
-<p>Example: <code>desc</code></p>
+<p>Example: <code>asc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
         </div>
@@ -67976,22 +68437,22 @@ sync information and mapping details.</p>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"sync_status\": \"out_of_sync\",
+    \"sync_status\": \"supplier_discontinued\",
     \"is_active\": true,
-    \"is_mapped\": false,
+    \"is_mapped\": true,
     \"search\": \"b\",
-    \"stock_status\": \"in_stock\",
+    \"stock_status\": \"low_stock\",
     \"category\": \"n\",
     \"min_price\": 84,
     \"max_price\": 12,
     \"min_stock\": 77,
     \"max_stock\": 8,
-    \"last_synced_from\": \"2025-07-21T08:45:17\",
-    \"last_synced_to\": \"2051-08-14\",
+    \"last_synced_from\": \"2025-07-23T09:48:28\",
+    \"last_synced_to\": \"2051-08-16\",
     \"page\": 22,
     \"per_page\": 7,
-    \"sort_by\": \"created_at\",
-    \"sort_direction\": \"desc\",
+    \"sort_by\": \"name\",
+    \"sort_direction\": \"asc\",
     \"include_images\": true,
     \"include_attributes\": true
 }"
@@ -68023,22 +68484,22 @@ const headers = {
 };
 
 let body = {
-    "sync_status": "out_of_sync",
+    "sync_status": "supplier_discontinued",
     "is_active": true,
-    "is_mapped": false,
+    "is_mapped": true,
     "search": "b",
-    "stock_status": "in_stock",
+    "stock_status": "low_stock",
     "category": "n",
     "min_price": 84,
     "max_price": 12,
     "min_stock": 77,
     "max_stock": 8,
-    "last_synced_from": "2025-07-21T08:45:17",
-    "last_synced_to": "2051-08-14",
+    "last_synced_from": "2025-07-23T09:48:28",
+    "last_synced_to": "2051-08-16",
     "page": 22,
     "per_page": 7,
-    "sort_by": "created_at",
-    "sort_direction": "desc",
+    "sort_by": "name",
+    "sort_direction": "asc",
     "include_images": true,
     "include_attributes": true
 };
@@ -68072,22 +68533,22 @@ $response = $client-&gt;get(
             'per_page' =&gt; '20',
         ],
         'json' =&gt; [
-            'sync_status' =&gt; 'out_of_sync',
+            'sync_status' =&gt; 'supplier_discontinued',
             'is_active' =&gt; true,
-            'is_mapped' =&gt; false,
+            'is_mapped' =&gt; true,
             'search' =&gt; 'b',
-            'stock_status' =&gt; 'in_stock',
+            'stock_status' =&gt; 'low_stock',
             'category' =&gt; 'n',
             'min_price' =&gt; 84,
             'max_price' =&gt; 12,
             'min_stock' =&gt; 77,
             'max_stock' =&gt; 8,
-            'last_synced_from' =&gt; '2025-07-21T08:45:17',
-            'last_synced_to' =&gt; '2051-08-14',
+            'last_synced_from' =&gt; '2025-07-23T09:48:28',
+            'last_synced_to' =&gt; '2051-08-16',
             'page' =&gt; 22,
             'per_page' =&gt; 7,
-            'sort_by' =&gt; 'created_at',
-            'sort_direction' =&gt; 'desc',
+            'sort_by' =&gt; 'name',
+            'sort_direction' =&gt; 'asc',
             'include_images' =&gt; true,
             'include_attributes' =&gt; true,
         ],
@@ -68103,22 +68564,22 @@ import json
 
 url = 'http://marketplace.com/api/admin/supplier-products'
 payload = {
-    "sync_status": "out_of_sync",
+    "sync_status": "supplier_discontinued",
     "is_active": true,
-    "is_mapped": false,
+    "is_mapped": true,
     "search": "b",
-    "stock_status": "in_stock",
+    "stock_status": "low_stock",
     "category": "n",
     "min_price": 84,
     "max_price": 12,
     "min_stock": 77,
     "max_stock": 8,
-    "last_synced_from": "2025-07-21T08:45:17",
-    "last_synced_to": "2051-08-14",
+    "last_synced_from": "2025-07-23T09:48:28",
+    "last_synced_to": "2051-08-16",
     "page": 22,
     "per_page": 7,
-    "sort_by": "created_at",
-    "sort_direction": "desc",
+    "sort_by": "name",
+    "sort_direction": "asc",
     "include_images": true,
     "include_attributes": true
 }
@@ -68457,10 +68918,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="sync_status"                data-endpoint="GETapi-admin-supplier-products"
-               value="out_of_sync"
+               value="supplier_discontinued"
                data-component="body">
     <br>
-<p>Example: <code>out_of_sync</code></p>
+<p>Example: <code>supplier_discontinued</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>synced</code></li> <li><code>pending_sync</code></li> <li><code>sync_failed</code></li> <li><code>out_of_sync</code></li> <li><code>supplier_discontinued</code></li></ul>
         </div>
@@ -68504,7 +68965,7 @@ Must be one of:
             <code>false</code>
         </label>
     <br>
-<p>Example: <code>false</code></p>
+<p>Example: <code>true</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>search</code></b>&nbsp;&nbsp;
@@ -68523,10 +68984,10 @@ Must be one of:
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="stock_status"                data-endpoint="GETapi-admin-supplier-products"
-               value="in_stock"
+               value="low_stock"
                data-component="body">
     <br>
-<p>Example: <code>in_stock</code></p>
+<p>Example: <code>low_stock</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>in_stock</code></li> <li><code>out_of_stock</code></li> <li><code>low_stock</code></li></ul>
         </div>
@@ -68591,10 +69052,10 @@ Must be one of:
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="last_synced_from"                data-endpoint="GETapi-admin-supplier-products"
-               value="2025-07-21T08:45:17"
+               value="2025-07-23T09:48:28"
                data-component="body">
     <br>
-<p>Must be a valid date. Example: <code>2025-07-21T08:45:17</code></p>
+<p>Must be a valid date. Example: <code>2025-07-23T09:48:28</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>last_synced_to</code></b>&nbsp;&nbsp;
@@ -68602,10 +69063,10 @@ Must be one of:
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="last_synced_to"                data-endpoint="GETapi-admin-supplier-products"
-               value="2051-08-14"
+               value="2051-08-16"
                data-component="body">
     <br>
-<p>Must be a valid date. Must be a date after or equal to <code>last_synced_from</code>. Example: <code>2051-08-14</code></p>
+<p>Must be a valid date. Must be a date after or equal to <code>last_synced_from</code>. Example: <code>2051-08-16</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>page</code></b>&nbsp;&nbsp;
@@ -68635,10 +69096,10 @@ Must be one of:
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="sort_by"                data-endpoint="GETapi-admin-supplier-products"
-               value="created_at"
+               value="name"
                data-component="body">
     <br>
-<p>Example: <code>created_at</code></p>
+<p>Example: <code>name</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>name</code></li> <li><code>supplier_sku</code></li> <li><code>supplier_price</code></li> <li><code>retail_price</code></li> <li><code>stock_quantity</code></li> <li><code>last_synced_at</code></li> <li><code>created_at</code></li></ul>
         </div>
@@ -68648,10 +69109,10 @@ Must be one of:
 <i>optional</i> &nbsp;
                 <input type="text" style="display: none"
                               name="sort_direction"                data-endpoint="GETapi-admin-supplier-products"
-               value="desc"
+               value="asc"
                data-component="body">
     <br>
-<p>Example: <code>desc</code></p>
+<p>Example: <code>asc</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>asc</code></li> <li><code>desc</code></li></ul>
         </div>
@@ -76660,7 +77121,7 @@ fields will be updated, others remain unchanged. Logo uploads are processed secu
     --form "user_id=45"\
     --form "name=TechCraft Solutions Ltd"\
     --form "description=Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud migration services, and digital transformation consulting with over 10 years of industry experience."\
-    --form "logo=@/tmp/phpOw18Xy" </code></pre></div>
+    --form "logo=@/tmp/phpsnQGPw" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -76713,7 +77174,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'logo',
-                'contents' =&gt; fopen('/tmp/phpOw18Xy', 'r')
+                'contents' =&gt; fopen('/tmp/phpsnQGPw', 'r')
             ],
         ],
     ]
@@ -76731,7 +77192,7 @@ files = {
   'user_id': (None, '45'),
   'name': (None, 'TechCraft Solutions Ltd'),
   'description': (None, 'Leading provider of innovative technology solutions for modern businesses. We specialize in custom software development, cloud migration services, and digital transformation consulting with over 10 years of industry experience.'),
-  'logo': open('/tmp/phpOw18Xy', 'rb')}
+  'logo': open('/tmp/phpsnQGPw', 'rb')}
 payload = {
     "user_id": 45,
     "name": "TechCraft Solutions Ltd",
@@ -77043,7 +77504,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="body">
     <br>
-<p>optional New logo file for the vendor. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will replace existing logo if provided. Example: <code>/tmp/phpOw18Xy</code></p>
+<p>optional New logo file for the vendor. Must be an image (JPG, JPEG, PNG) with maximum size of 2MB. Will replace existing logo if provided. Example: <code>/tmp/phpsnQGPw</code></p>
         </div>
         </form>
 

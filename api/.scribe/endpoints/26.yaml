@@ -150,7 +150,7 @@ endpoints:
         name: status
         description: ''
         required: false
-        example: on_hold
+        example: rejected_by_supplier
         type: string
         enumValues:
           - pending
@@ -191,7 +191,7 @@ endpoints:
         name: date_from
         description: 'Must be a valid date.'
         required: false
-        example: '2025-07-21T08:45:17'
+        example: '2025-07-23T09:48:28'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -201,7 +201,7 @@ endpoints:
         name: date_to
         description: 'Must be a valid date. Must be a date after or equal to <code>date_from</code>.'
         required: false
-        example: '2051-08-14'
+        example: '2051-08-16'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -211,7 +211,7 @@ endpoints:
         name: overdue
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -221,7 +221,7 @@ endpoints:
         name: needs_retry
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -231,7 +231,7 @@ endpoints:
         name: has_tracking
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -291,7 +291,7 @@ endpoints:
         name: sort_by
         description: ''
         required: false
-        example: id
+        example: profit_margin
         type: string
         enumValues:
           - id
@@ -308,7 +308,7 @@ endpoints:
         name: sort_direction
         description: ''
         required: false
-        example: desc
+        example: asc
         type: string
         enumValues:
           - asc
@@ -320,7 +320,7 @@ endpoints:
         name: include_items
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -330,7 +330,7 @@ endpoints:
         name: include_supplier
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -340,30 +340,30 @@ endpoints:
         name: include_order
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      status: on_hold
+      status: rejected_by_supplier
       search: b
-      date_from: '2025-07-21T08:45:17'
-      date_to: '2051-08-14'
-      overdue: true
-      needs_retry: true
-      has_tracking: false
+      date_from: '2025-07-23T09:48:28'
+      date_to: '2051-08-16'
+      overdue: false
+      needs_retry: false
+      has_tracking: true
       min_total: 39
       max_total: 84
       carrier: z
       page: 27
       per_page: 15
-      sort_by: id
-      sort_direction: desc
-      include_items: true
-      include_supplier: true
-      include_order: true
+      sort_by: profit_margin
+      sort_direction: asc
+      include_items: false
+      include_supplier: false
+      include_order: false
     fileParameters: []
     responses:
       -

@@ -183,7 +183,7 @@ endpoints:
         name: is_active
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -215,7 +215,7 @@ endpoints:
         name: auto_update_price
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -225,7 +225,7 @@ endpoints:
         name: auto_update_stock
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -245,7 +245,7 @@ endpoints:
         name: health_status
         description: ''
         required: false
-        example: healthy
+        example: supplier_inactive
         type: string
         enumValues:
           - healthy
@@ -278,7 +278,7 @@ endpoints:
         name: last_price_update_from
         description: 'Must be a valid date.'
         required: false
-        example: '2025-07-21T08:45:17'
+        example: '2025-07-23T09:48:28'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -288,7 +288,7 @@ endpoints:
         name: last_price_update_to
         description: 'Must be a valid date. Must be a date after or equal to <code>last_price_update_from</code>.'
         required: false
-        example: '2051-08-14'
+        example: '2051-08-16'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -298,7 +298,7 @@ endpoints:
         name: last_stock_update_from
         description: 'Must be a valid date.'
         required: false
-        example: '2025-07-21T08:45:17'
+        example: '2025-07-23T09:48:28'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -308,7 +308,7 @@ endpoints:
         name: last_stock_update_to
         description: 'Must be a valid date. Must be a date after or equal to <code>last_stock_update_from</code>.'
         required: false
-        example: '2051-08-14'
+        example: '2051-08-16'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -348,7 +348,7 @@ endpoints:
         name: sort_by
         description: ''
         required: false
-        example: priority_order
+        example: created_at
         type: string
         enumValues:
           - priority_order
@@ -364,7 +364,7 @@ endpoints:
         name: sort_direction
         description: ''
         required: false
-        example: asc
+        example: desc
         type: string
         enumValues:
           - asc
@@ -396,7 +396,7 @@ endpoints:
         name: include_supplier_product
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -404,27 +404,27 @@ endpoints:
         custom: []
     cleanBodyParameters:
       is_primary: true
-      is_active: true
+      is_active: false
       markup_type: percentage
       search: b
-      auto_update_price: false
-      auto_update_stock: false
+      auto_update_price: true
+      auto_update_stock: true
       auto_update_description: false
-      health_status: healthy
+      health_status: supplier_inactive
       min_markup: 39
       max_markup: 84
-      last_price_update_from: '2025-07-21T08:45:17'
-      last_price_update_to: '2051-08-14'
-      last_stock_update_from: '2025-07-21T08:45:17'
-      last_stock_update_to: '2051-08-14'
+      last_price_update_from: '2025-07-23T09:48:28'
+      last_price_update_to: '2051-08-16'
+      last_stock_update_from: '2025-07-23T09:48:28'
+      last_stock_update_to: '2051-08-16'
       priority_order: 22
       page: 67
       per_page: 16
-      sort_by: priority_order
-      sort_direction: asc
+      sort_by: created_at
+      sort_direction: desc
       include_product: false
       include_supplier: true
-      include_supplier_product: true
+      include_supplier_product: false
     fileParameters: []
     responses:
       -

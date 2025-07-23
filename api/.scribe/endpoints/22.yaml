@@ -95,7 +95,7 @@ endpoints:
         name: status
         description: ''
         required: false
-        example: inactive
+        example: pending_approval
         type: string
         enumValues:
           - active
@@ -110,7 +110,7 @@ endpoints:
         name: integration_type
         description: ''
         required: false
-        example: ftp
+        example: csv_upload
         type: string
         enumValues:
           - api
@@ -156,7 +156,7 @@ endpoints:
         name: stock_sync_enabled
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -166,7 +166,7 @@ endpoints:
         name: price_sync_enabled
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -196,7 +196,7 @@ endpoints:
         name: sort_by
         description: ''
         required: false
-        example: processing_time_days
+        example: name
         type: string
         enumValues:
           - name
@@ -210,7 +210,7 @@ endpoints:
         name: sort_direction
         description: ''
         required: false
-        example: desc
+        example: asc
         type: string
         enumValues:
           - asc
@@ -219,17 +219,17 @@ endpoints:
         nullable: false
         custom: []
     cleanBodyParameters:
-      status: inactive
-      integration_type: ftp
+      status: pending_approval
+      integration_type: csv_upload
       search: b
       country: ng
       auto_fulfill: true
-      stock_sync_enabled: true
-      price_sync_enabled: true
+      stock_sync_enabled: false
+      price_sync_enabled: false
       page: 66
       per_page: 17
-      sort_by: processing_time_days
-      sort_direction: desc
+      sort_by: name
+      sort_direction: asc
     fileParameters: []
     responses:
       -

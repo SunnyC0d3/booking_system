@@ -130,7 +130,7 @@ endpoints:
         name: sync_status
         description: ''
         required: false
-        example: out_of_sync
+        example: supplier_discontinued
         type: string
         enumValues:
           - synced
@@ -155,7 +155,7 @@ endpoints:
         name: is_mapped
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -175,7 +175,7 @@ endpoints:
         name: stock_status
         description: ''
         required: false
-        example: in_stock
+        example: low_stock
         type: string
         enumValues:
           - in_stock
@@ -238,7 +238,7 @@ endpoints:
         name: last_synced_from
         description: 'Must be a valid date.'
         required: false
-        example: '2025-07-21T08:45:17'
+        example: '2025-07-23T09:48:28'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -248,7 +248,7 @@ endpoints:
         name: last_synced_to
         description: 'Must be a valid date. Must be a date after or equal to <code>last_synced_from</code>.'
         required: false
-        example: '2051-08-14'
+        example: '2051-08-16'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -278,7 +278,7 @@ endpoints:
         name: sort_by
         description: ''
         required: false
-        example: created_at
+        example: name
         type: string
         enumValues:
           - name
@@ -295,7 +295,7 @@ endpoints:
         name: sort_direction
         description: ''
         required: false
-        example: desc
+        example: asc
         type: string
         enumValues:
           - asc
@@ -324,22 +324,22 @@ endpoints:
         nullable: false
         custom: []
     cleanBodyParameters:
-      sync_status: out_of_sync
+      sync_status: supplier_discontinued
       is_active: true
-      is_mapped: false
+      is_mapped: true
       search: b
-      stock_status: in_stock
+      stock_status: low_stock
       category: 'n'
       min_price: 84
       max_price: 12
       min_stock: 77
       max_stock: 8
-      last_synced_from: '2025-07-21T08:45:17'
-      last_synced_to: '2051-08-14'
+      last_synced_from: '2025-07-23T09:48:28'
+      last_synced_to: '2051-08-16'
       page: 22
       per_page: 7
-      sort_by: created_at
-      sort_direction: desc
+      sort_by: name
+      sort_direction: asc
       include_images: true
       include_attributes: true
     fileParameters: []

@@ -571,7 +571,7 @@ endpoints:
         name: with_media
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -581,7 +581,7 @@ endpoints:
         name: sort_by
         description: ''
         required: false
-        example: rating_low
+        example: newest
         type: string
         enumValues:
           - newest
@@ -617,8 +617,8 @@ endpoints:
       rating:
         - 2
       verified_only: true
-      with_media: false
-      sort_by: rating_low
+      with_media: true
+      sort_by: newest
       per_page: 1
       page: 66
     fileParameters: []

@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "E-Commerce API Documentation",
-        "_postman_id": "2b4b2566-5122-4053-8626-736fa436bcd9",
+        "_postman_id": "410013ad-2b35-48d2-8f13-3b832a31ebf2",
         "description": "Comprehensive API for managing products, orders, payments, users, vendors, and more in an e-commerce platform.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json",
         "version": "1.0.0"
@@ -1598,7 +1598,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"b\",\"search\":\"n\",\"price\":\"9,3.1)\",\"priceRanges\":\"-1.42)-3268)\",\"category\":\"9,31\",\"categories\":\"9,31\",\"quantity\":\"64\",\"availability\":\"low_stock\",\"vendors\":\"9,31\",\"vendor\":\"i\",\"brand\":\"k\",\"brands\":\"9,31\",\"tags\":\"9,31\",\"tag_logic\":\"AND\",\"attributes\":\"_JK:AI\",\"color\":\"k\",\"colors\":\"dLJnIk\",\"size\":\"h\",\"sizes\":\"DDz1Ys\",\"material\":\"h\",\"status\":\"w\",\"created_at\":\"2559-31-42\",\"updated_at\":\"2559-31-42\",\"include\":\"uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv\"},\"page\":4,\"per_page\":9,\"sort\":\"y8p,Bm,-dp,-Zm,-GH\",\"diversify\":false,\"explain\":true,\"facets\":true,\"highlight\":true,\"personalize\":false,\"typo_tolerance\":true,\"exact_match\":true,\"boost_new_products\":true,\"boost_in_stock\":false}"
+                            "raw": "{\"filter\":{\"name\":\"b\",\"search\":\"n\",\"price\":\"9,3.1)\",\"priceRanges\":\"-1.42)-3268)\",\"category\":\"9,31\",\"categories\":\"9,31\",\"quantity\":\"64\",\"availability\":\"low_stock\",\"vendors\":\"9,31\",\"vendor\":\"i\",\"brand\":\"k\",\"brands\":\"9,31\",\"tags\":\"9,31\",\"tag_logic\":\"OR\",\"attributes\":\"_JK:AI\",\"color\":\"k\",\"colors\":\"dLJnIk\",\"size\":\"h\",\"sizes\":\"DDz1Ys\",\"material\":\"h\",\"status\":\"w\",\"created_at\":\"2559-31-42\",\"updated_at\":\"2559-31-42\",\"include\":\"uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv\"},\"page\":4,\"per_page\":9,\"sort\":\"y8p,Bm,-dp,-Zm,-GH\",\"diversify\":true,\"explain\":false,\"facets\":false,\"highlight\":true,\"personalize\":false,\"typo_tolerance\":false,\"exact_match\":false,\"boost_new_products\":true,\"boost_in_stock\":false}"
                         },
                         "description": "Get a comprehensive paginated list of all products in the system with advanced filtering capabilities.\nThis endpoint provides administrators with complete product information including variants, media,\ncategories, tags, vendor details, relevance scoring, and faceted search results."
                     },
@@ -3015,7 +3015,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"product_id\":16,\"rating\":[2],\"verified_only\":true,\"with_media\":false,\"sort_by\":\"rating_low\",\"per_page\":1,\"page\":66}"
+                            "raw": "{\"product_id\":16,\"rating\":[2],\"verified_only\":true,\"with_media\":true,\"sort_by\":\"newest\",\"per_page\":1,\"page\":66}"
                         },
                         "description": "Retrieve all reviews in the system with advanced admin filtering and sorting.\nProvides comprehensive review management including pending approvals, reported reviews,\nand detailed analytics for administrative oversight."
                     },
@@ -4331,7 +4331,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"status\":\"on_hold\",\"search\":\"b\",\"date_from\":\"2025-07-21T08:45:17\",\"date_to\":\"2051-08-14\",\"overdue\":true,\"needs_retry\":true,\"has_tracking\":false,\"min_total\":39,\"max_total\":84,\"carrier\":\"z\",\"page\":27,\"per_page\":15,\"sort_by\":\"id\",\"sort_direction\":\"desc\",\"include_items\":true,\"include_supplier\":true,\"include_order\":true}"
+                            "raw": "{\"status\":\"rejected_by_supplier\",\"search\":\"b\",\"date_from\":\"2025-07-23T09:48:28\",\"date_to\":\"2051-08-16\",\"overdue\":false,\"needs_retry\":false,\"has_tracking\":true,\"min_total\":39,\"max_total\":84,\"carrier\":\"z\",\"page\":27,\"per_page\":15,\"sort_by\":\"profit_margin\",\"sort_direction\":\"asc\",\"include_items\":false,\"include_supplier\":false,\"include_order\":false}"
                         },
                         "description": "Get a paginated list of all dropship orders in the system with comprehensive filtering options.\nThis endpoint supports filtering by supplier, status, order ID, search terms, date ranges, and\nspecial conditions like overdue or retry-needed orders. Essential for dropshipping management."
                     },
@@ -6540,7 +6540,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"filter\":{\"name\":\"b\",\"search\":\"n\",\"price\":\"9,3.1)\",\"priceRanges\":\"-1.42)-3268)\",\"category\":\"9,31\",\"categories\":\"9,31\",\"quantity\":\"64\",\"availability\":\"low_stock\",\"vendors\":\"9,31\",\"vendor\":\"i\",\"brand\":\"k\",\"brands\":\"9,31\",\"tags\":\"9,31\",\"tag_logic\":\"OR\",\"attributes\":\"_JK:AI\",\"color\":\"k\",\"colors\":\"dLJnIk\",\"size\":\"h\",\"sizes\":\"DDz1Ys\",\"material\":\"h\",\"status\":\"w\",\"created_at\":\"2559-31-42\",\"updated_at\":\"2559-31-42\",\"include\":\"uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv\"},\"page\":4,\"per_page\":9,\"sort\":\"y8p,Bm,-dp,-Zm,-GH\",\"diversify\":true,\"explain\":true,\"facets\":true,\"highlight\":true,\"personalize\":true,\"typo_tolerance\":true,\"exact_match\":false,\"boost_new_products\":true,\"boost_in_stock\":true}"
+                            "raw": "{\"filter\":{\"name\":\"b\",\"search\":\"n\",\"price\":\"9,3.1)\",\"priceRanges\":\"-1.42)-3268)\",\"category\":\"9,31\",\"categories\":\"9,31\",\"quantity\":\"64\",\"availability\":\"out_of_stock\",\"vendors\":\"9,31\",\"vendor\":\"i\",\"brand\":\"k\",\"brands\":\"9,31\",\"tags\":\"9,31\",\"tag_logic\":\"AND\",\"attributes\":\"_JK:AI\",\"color\":\"k\",\"colors\":\"dLJnIk\",\"size\":\"h\",\"sizes\":\"DDz1Ys\",\"material\":\"h\",\"status\":\"w\",\"created_at\":\"2559-31-42\",\"updated_at\":\"2559-31-42\",\"include\":\"uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv\"},\"page\":4,\"per_page\":9,\"sort\":\"y8p,Bm,-dp,-Zm,-GH\",\"diversify\":true,\"explain\":true,\"facets\":true,\"highlight\":false,\"personalize\":false,\"typo_tolerance\":false,\"exact_match\":false,\"boost_new_products\":false,\"boost_in_stock\":false}"
                         },
                         "description": "Get a paginated and filtered list of active products with advanced search capabilities.\nThis endpoint supports intelligent search with relevance scoring, faceted filtering,\nresult diversification, and personalized recommendations. Includes comprehensive\nproduct information optimized for customer browsing and purchasing decisions.",
                         "auth": {
@@ -7102,7 +7102,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"product_id\":16,\"rating\":[2],\"verified_only\":true,\"with_media\":true,\"sort_by\":\"helpful\",\"per_page\":1,\"page\":66}"
+                            "raw": "{\"product_id\":16,\"rating\":[2],\"verified_only\":true,\"with_media\":true,\"sort_by\":\"oldest\",\"per_page\":1,\"page\":66}"
                         },
                         "description": "Retrieve all approved reviews for a product with advanced filtering capabilities.\nSupports filtering by rating, verified purchases, media presence, and various sorting options.\nEssential for product detail pages and review browsing functionality.",
                         "auth": {
@@ -7634,7 +7634,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"is_primary\":true,\"is_active\":true,\"markup_type\":\"percentage\",\"search\":\"b\",\"auto_update_price\":false,\"auto_update_stock\":false,\"auto_update_description\":false,\"health_status\":\"healthy\",\"min_markup\":39,\"max_markup\":84,\"last_price_update_from\":\"2025-07-21T08:45:17\",\"last_price_update_to\":\"2051-08-14\",\"last_stock_update_from\":\"2025-07-21T08:45:17\",\"last_stock_update_to\":\"2051-08-14\",\"priority_order\":22,\"page\":67,\"per_page\":16,\"sort_by\":\"priority_order\",\"sort_direction\":\"asc\",\"include_product\":false,\"include_supplier\":true,\"include_supplier_product\":true}"
+                            "raw": "{\"is_primary\":true,\"is_active\":false,\"markup_type\":\"percentage\",\"search\":\"b\",\"auto_update_price\":true,\"auto_update_stock\":true,\"auto_update_description\":false,\"health_status\":\"supplier_inactive\",\"min_markup\":39,\"max_markup\":84,\"last_price_update_from\":\"2025-07-23T09:48:28\",\"last_price_update_to\":\"2051-08-16\",\"last_stock_update_from\":\"2025-07-23T09:48:28\",\"last_stock_update_to\":\"2051-08-16\",\"priority_order\":22,\"page\":67,\"per_page\":16,\"sort_by\":\"created_at\",\"sort_direction\":\"desc\",\"include_product\":false,\"include_supplier\":true,\"include_supplier_product\":false}"
                         },
                         "description": "Get a paginated list of all product supplier mappings with comprehensive filtering options.\nThis endpoint supports filtering by product, supplier, status, mapping type, health status,\nand search queries. Essential for dropshipping management and monitoring."
                     },
@@ -11409,7 +11409,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"shipping_method_id\": 1,\n      \"shipping_zone_id\": 1,\n      \"min_weight\": 0,\n      \"max_weight\": 2000,\n      \"min_total\": 0,\n      \"max_total\": 5000,\n      \"rate\": 599,\n      \"rate_formatted\": \"\u00a35.99\",\n      \"free_threshold\": 10000,\n      \"free_threshold_formatted\": \"\u00a3100.00\",\n      \"is_active\": true,\n      \"shipping_method\": {\n        \"id\": 1,\n        \"name\": \"Standard Delivery\",\n        \"carrier\": \"Royal Mail\",\n        \"service_code\": \"tracked-48\"\n      },\n      \"shipping_zone\": {\n        \"id\": 1,\n        \"name\": \"UK Mainland\",\n        \"countries\": [\"GB\"],\n        \"is_active\": true\n      },\n      \"created_at\": \"2025-01-10T09:00:00.000000Z\",\n      \"updated_at\": \"2025-01-14T14:30:00.000000Z\"\n    },\n    {\n      \"id\": 2,\n      \"shipping_method_id\": 1,\n      \"shipping_zone_id\": 1,\n      \"min_weight\": 2000,\n      \"max_weight\": 5000,\n      \"min_total\": 0,\n      \"max_total\": 5000,\n      \"rate\": 799,\n      \"rate_formatted\": \"\u00a37.99\",\n      \"free_threshold\": 10000,\n      \"free_threshold_formatted\": \"\u00a3100.00\",\n      \"is_active\": true,\n      \"shipping_method\": {\n        \"id\": 1,\n        \"name\": \"Standard Delivery\",\n        \"carrier\": \"Royal Mail\",\n        \"service_code\": \"tracked-48\"\n      },\n      \"shipping_zone\": {\n        \"id\": 1,\n        \"name\": \"UK Mainland\",\n        \"countries\": [\"GB\"],\n        \"is_active\": true\n      },\n      \"created_at\": \"2025-01-10T09:15:00.000000Z\",\n      \"updated_at\": \"2025-01-14T14:30:00.000000Z\"\n    }\n  ],\n  \"current_page\": 1,\n  \"per_page\": 15,\n  \"total\": 47,\n  \"last_page\": 4,\n  \"message\": \"Shipping rates retrieved successfully.\",\n  \"status\": 200\n}",
+                            "body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"shipping_method_id\": 1,\n      \"shipping_zone_id\": 1,\n      \"min_weight\": 0,\n      \"max_weight\": 2000,\n      \"min_total\": 0,\n      \"max_total\": 5000,\n      \"rate\": 599,\n      \"rate_formatted\": \"\u00a35.99\",\n      \"free_threshold\": 10000,\n      \"free_threshold_formatted\": \"\u00a3100.00\",\n      \"is_active\": true,\n      \"shipping_method\": {\n        \"id\": 1,\n        \"name\": \"Standard Delivery\",\n        \"carrier\": \"Royal Mail\",\n        \"service_code\": \"tracked-48\"\n      },\n      \"shipping_zone\": {\n        \"id\": 1,\n        \"name\": \"UK Mainland\",\n        \"countries\": [\"GB\"],\n        \"is_active\": true\n      },\n      \"created_at\": \"2025-01-10T09:00:00.000000Z\",\n      \"updated_at\": \"2025-01-14T14:30:00.000000Z\"\n    }\n  ],\n  \"current_page\": 1,\n  \"per_page\": 15,\n  \"total\": 47,\n  \"last_page\": 4,\n  \"message\": \"Shipping rates retrieved successfully.\",\n  \"status\": 200\n}",
                             "name": "Success with shipping rates"
                         },
                         {
@@ -11576,7 +11576,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"message\": \"Shipping rate updated successfully.\",\n  \"data\": {\n    \"id\": 1,\n    \"shipping_method_id\": 1,\n    \"shipping_zone_id\": 1,\n    \"min_weight\": 0,\n    \"max_weight\": 2500,\n    \"min_total\": 0,\n    \"max_total\": 7500,\n    \"rate\": 699,\n    \"rate_formatted\": \"\u00a36.99\",\n    \"free_threshold\": 12500,\n    \"free_threshold_formatted\": \"\u00a3125.00\",\n    \"is_active\": true,\n    \"shipping_method\": {\n      \"id\": 1,\n      \"name\": \"Standard Delivery\",\n      \"carrier\": \"Royal Mail\"\n    },\n    \"shipping_zone\": {\n      \"id\": 1,\n      \"name\": \"UK Mainland\",\n      \"countries\": [\"GB\"]\n    },\n    \"updated_at\": \"2025-01-15T11:45:00.000000Z\"\n  }\n}",
+                            "body": "{\n  \"message\": \"Shipping rate updated successfully.\",\n  \"data\": {\n    \"id\": 1,\n    \"shipping_method_id\": 1,\n    \"shipping_zone_id\": 1,\n    \"min_weight\": 0,\n    \"max_weight\": 2500,\n    \"min_total\": 0,\n    \"max_total\": 7500,\n    \"rate\": 699,\n    \"rate_formatted\": \"\u00a36.99\",\n    \"free_threshold\": 12500,\n    \"free_threshold_formatted\": \"\u00a3125.00\",\n    \"is_active\": true,\n    \"updated_at\": \"2025-01-15T11:45:00.000000Z\"\n  }\n}",
                             "name": "Shipping rate updated successfully"
                         },
                         {
@@ -11917,7 +11917,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"message\": \"3 shipping rates duplicated successfully.\",\n  \"data\": {\n    \"duplicated_count\": 3,\n    \"rates\": [\n      {\n        \"id\": 49,\n        \"shipping_method_id\": 1,\n        \"shipping_zone_id\": 2,\n        \"min_weight\": 0,\n        \"max_weight\": 2000,\n        \"rate\": 599,\n        \"rate_formatted\": \"\u00a35.99\",\n        \"is_active\": true,\n        \"created_at\": \"2025-01-15T14:20:00.000000Z\"\n      },\n      {\n        \"id\": 50,\n        \"shipping_method_id\": 1,\n        \"shipping_zone_id\": 3,\n        \"min_weight\": 0,\n        \"max_weight\": 2000,\n        \"rate\": 599,\n        \"rate_formatted\": \"\u00a35.99\",\n        \"is_active\": true,\n        \"created_at\": \"2025-01-15T14:20:00.000000Z\"\n      }\n    ]\n  }\n}",
+                            "body": "{\n  \"message\": \"3 shipping rates duplicated successfully.\",\n  \"data\": {\n    \"duplicated_count\": 3,\n    \"rates\": [\n      {\n        \"id\": 49,\n        \"shipping_method_id\": 1,\n        \"shipping_zone_id\": 2,\n        \"min_weight\": 0,\n        \"max_weight\": 2000,\n        \"rate\": 599,\n        \"rate_formatted\": \"\u00a35.99\",\n        \"is_active\": true,\n        \"created_at\": \"2025-01-15T14:20:00.000000Z\"\n      }\n    ]\n  }\n}",
                             "name": "Shipping rates duplicated successfully"
                         },
                         {
@@ -12069,7 +12069,7 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"message\": \"Shipping zones retrieved successfully.\",\n  \"status\": 200,\n  \"data\": {\n    \"data\": [\n      {\n        \"id\": 1,\n        \"name\": \"United Kingdom\",\n        \"description\": \"Mainland UK delivery zone\",\n        \"countries\": [\"GB\"],\n        \"country_names\": [\"United Kingdom\"],\n        \"postcodes\": null,\n        \"excluded_postcodes\": [\"BT\", \"GY\", \"JE\", \"IM\"],\n        \"is_active\": true,\n        \"sort_order\": 1,\n        \"methods_count\": 4,\n        \"rates_count\": 12,\n        \"available_methods\": [\n          {\n            \"id\": 1,\n            \"name\": \"Standard Delivery\",\n            \"carrier\": \"Royal Mail\",\n            \"is_active\": true,\n            \"sort_order\": 0\n          },\n          {\n            \"id\": 2,\n            \"name\": \"Express Delivery\",\n            \"carrier\": \"DPD\",\n            \"is_active\": true,\n            \"sort_order\": 1\n          }\n        ],\n        \"created_at\": \"2025-01-01T00:00:00.000000Z\",\n        \"updated_at\": \"2025-01-10T14:30:00.000000Z\"\n      },\n      {\n        \"id\": 2,\n        \"name\": \"European Union\",\n        \"description\": \"EU member countries\",\n        \"countries\": [\"AT\", \"BE\", \"BG\", \"HR\", \"CY\", \"CZ\", \"DK\", \"EE\", \"FI\", \"FR\", \"DE\", \"GR\", \"HU\", \"IE\", \"IT\", \"LV\", \"LT\", \"LU\", \"MT\", \"NL\", \"PL\", \"PT\", \"RO\", \"SK\", \"SI\", \"ES\", \"SE\"],\n        \"country_names\": [\"Austria\", \"Belgium\", \"Bulgaria\", \"Croatia\", \"Cyprus\", \"Czech Republic\", \"Denmark\", \"Estonia\", \"Finland\", \"France\", \"Germany\", \"Greece\", \"Hungary\", \"Ireland\", \"Italy\", \"Latvia\", \"Lithuania\", \"Luxembourg\", \"Malta\", \"Netherlands\", \"Poland\", \"Portugal\", \"Romania\", \"Slovakia\", \"Slovenia\", \"Spain\", \"Sweden\"],\n        \"postcodes\": null,\n        \"excluded_postcodes\": null,\n        \"is_active\": true,\n        \"sort_order\": 3,\n        \"methods_count\": 1,\n        \"rates_count\": 6,\n        \"created_at\": \"2025-01-01T00:00:00.000000Z\",\n        \"updated_at\": \"2025-01-01T00:00:00.000000Z\"\n      }\n    ],\n    \"current_page\": 1,\n    \"per_page\": 15,\n    \"total\": 8,\n    \"last_page\": 1\n  }\n}",
+                            "body": "{\n  \"message\": \"Shipping zones retrieved successfully.\",\n  \"status\": 200,\n  \"data\": {\n    \"data\": [\n      {\n        \"id\": 1,\n        \"name\": \"United Kingdom\",\n        \"description\": \"Mainland UK delivery zone\",\n        \"countries\": [\"GB\"],\n        \"country_names\": [\"United Kingdom\"],\n        \"postcodes\": null,\n        \"excluded_postcodes\": [\"BT\", \"GY\", \"JE\", \"IM\"],\n        \"is_active\": true,\n        \"sort_order\": 1,\n        \"methods_count\": 4,\n        \"rates_count\": 12,\n        \"available_methods\": [\n          {\n            \"id\": 1,\n            \"name\": \"Standard Delivery\",\n            \"carrier\": \"Royal Mail\",\n            \"is_active\": true,\n            \"sort_order\": 0\n          },\n          {\n            \"id\": 2,\n            \"name\": \"Express Delivery\",\n            \"carrier\": \"DPD\",\n            \"is_active\": true,\n            \"sort_order\": 1\n          }\n        ],\n        \"created_at\": \"2025-01-01T00:00:00.000000Z\",\n        \"updated_at\": \"2025-01-10T14:30:00.000000Z\"\n      }\n    ],\n    \"current_page\": 1,\n    \"per_page\": 15,\n    \"total\": 8,\n    \"last_page\": 1\n  }\n}",
                             "name": "Success with shipping zones"
                         },
                         {
@@ -13099,7 +13099,10 @@
                                 "value": "application\/json"
                             }
                         ],
-                        "body": null,
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"supplier_id\":16,\"integration_type\":\"manual\",\"is_active\":true,\"status\":\"active\",\"search\":\"n\",\"healthy\":true,\"page\":67,\"per_page\":16,\"sort_by\":\"consecutive_failures\",\"sort_direction\":\"asc\"}"
+                        },
                         "description": "Get a paginated list of all supplier integrations in the system. This endpoint supports filtering\nby supplier, integration type, status, and health status. Includes integration performance metrics."
                     },
                     "response": [
@@ -13151,7 +13154,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"supplier_id\":1,\"integration_type\":\"api\",\"name\":\"GlobalTech API v2\",\"is_active\":true,\"configuration\":{\"api_endpoint\":\"https:\\\/\\\/api.example.com\\\/v1\",\"rate_limit\":100},\"authentication\":{\"type\":\"api_key\",\"api_key\":\"your-api-key\"},\"sync_frequency_minutes\":30,\"auto_retry_enabled\":true,\"max_retry_attempts\":5,\"webhook_events\":[\"order.created\",\"stock.updated\"]}"
+                            "raw": "{\"supplier_id\":1,\"integration_type\":\"api\",\"name\":\"GlobalTech API v2\",\"is_active\":true,\"configuration\":{\"api_endpoint\":\"https:\\\/\\\/api.example.com\\\/v1\",\"rate_limit\":100,\"timeout\":7,\"format\":\"xml\",\"webhook_url\":\"http:\\\/\\\/www.okuneva.com\\\/fugiat-sunt-nihil-accusantium-harum-mollitia.html\",\"email_address\":\"mya96@example.com\",\"ftp_host\":\"k\",\"ftp_port\":8},\"authentication\":{\"type\":\"api_key\",\"api_key\":\"your-api-key\",\"api_secret\":\"n\",\"webhook_secret\":\"g\",\"ftp_username\":\"z\",\"ftp_password\":\"m\"},\"sync_frequency_minutes\":30,\"auto_retry_enabled\":true,\"max_retry_attempts\":5,\"webhook_events\":[\"order.created\",\"stock.updated\"]}"
                         },
                         "description": "Create a new integration for a supplier with specified configuration and authentication settings.\nOnly one integration per supplier can be active at a time. Creating an active integration will\nautomatically deactivate existing ones for the same supplier."
                     },
@@ -13282,7 +13285,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"integration_type\":\"webhook\",\"name\":\"Updated GlobalTech API\",\"is_active\":true,\"configuration\":{\"api_endpoint\":\"https:\\\/\\\/api.example.com\\\/v2\"},\"authentication\":{\"type\":\"bearer\",\"token\":\"new-token\"},\"sync_frequency_minutes\":30,\"auto_retry_enabled\":false,\"max_retry_attempts\":5,\"webhook_events\":[\"order.shipped\",\"stock.updated\"]}"
+                            "raw": "{\"integration_type\":\"webhook\",\"name\":\"Updated GlobalTech API\",\"is_active\":true,\"configuration\":{\"api_endpoint\":\"https:\\\/\\\/api.example.com\\\/v2\",\"rate_limit\":7,\"timeout\":16,\"format\":\"xml\",\"webhook_url\":\"http:\\\/\\\/rempel.com\\\/sunt-nihil-accusantium-harum-mollitia\",\"email_address\":\"mya96@example.com\",\"ftp_host\":\"k\",\"ftp_port\":8},\"authentication\":{\"type\":\"bearer\",\"token\":\"new-token\",\"api_key\":\"m\",\"api_secret\":\"y\",\"webhook_secret\":\"u\",\"ftp_username\":\"w\",\"ftp_password\":\"p\"},\"sync_frequency_minutes\":30,\"auto_retry_enabled\":false,\"max_retry_attempts\":5,\"webhook_events\":[\"order.shipped\",\"stock.updated\"],\"status\":\"active\"}"
                         },
                         "description": "Update integration configuration, authentication settings, and operational parameters.\nActivating an integration will automatically deactivate other integrations for the same supplier."
                     },
@@ -13862,7 +13865,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"status\":\"inactive\",\"integration_type\":\"ftp\",\"search\":\"b\",\"country\":\"ng\",\"auto_fulfill\":true,\"stock_sync_enabled\":true,\"price_sync_enabled\":true,\"page\":66,\"per_page\":17,\"sort_by\":\"processing_time_days\",\"sort_direction\":\"desc\"}"
+                            "raw": "{\"status\":\"pending_approval\",\"integration_type\":\"csv_upload\",\"search\":\"b\",\"country\":\"ng\",\"auto_fulfill\":true,\"stock_sync_enabled\":false,\"price_sync_enabled\":false,\"page\":66,\"per_page\":17,\"sort_by\":\"name\",\"sort_direction\":\"asc\"}"
                         },
                         "description": "Get a paginated list of all suppliers in the system. This endpoint supports filtering by status,\nintegration type, country, and search terms. Includes supplier counts and performance metrics."
                     },
@@ -14431,7 +14434,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\"sync_status\":\"out_of_sync\",\"is_active\":true,\"is_mapped\":false,\"search\":\"b\",\"stock_status\":\"in_stock\",\"category\":\"n\",\"min_price\":84,\"max_price\":12,\"min_stock\":77,\"max_stock\":8,\"last_synced_from\":\"2025-07-21T08:45:17\",\"last_synced_to\":\"2051-08-14\",\"page\":22,\"per_page\":7,\"sort_by\":\"created_at\",\"sort_direction\":\"desc\",\"include_images\":true,\"include_attributes\":true}"
+                            "raw": "{\"sync_status\":\"supplier_discontinued\",\"is_active\":true,\"is_mapped\":true,\"search\":\"b\",\"stock_status\":\"low_stock\",\"category\":\"n\",\"min_price\":84,\"max_price\":12,\"min_stock\":77,\"max_stock\":8,\"last_synced_from\":\"2025-07-23T09:48:28\",\"last_synced_to\":\"2051-08-16\",\"page\":22,\"per_page\":7,\"sort_by\":\"name\",\"sort_direction\":\"asc\",\"include_images\":true,\"include_attributes\":true}"
                         },
                         "description": "Get a paginated list of all supplier products in the system. This endpoint supports filtering\nby supplier, sync status, active status, mapping status, and stock levels. Includes product\nsync information and mapping details."
                     },

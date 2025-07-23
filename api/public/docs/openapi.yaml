@@ -5226,7 +5226,7 @@ paths:
                     tag_logic:
                       type: string
                       description: ''
-                      example: AND
+                      example: OR
                       nullable: false
                       enum:
                         - AND
@@ -5299,17 +5299,17 @@ paths:
                 diversify:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                   nullable: false
                 explain:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                   nullable: false
                 facets:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                   nullable: false
                 highlight:
                   type: boolean
@@ -5324,12 +5324,12 @@ paths:
                 typo_tolerance:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                   nullable: false
                 exact_match:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                   nullable: false
                 boost_new_products:
                   type: boolean
@@ -8858,12 +8858,12 @@ paths:
                 with_media:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                   nullable: false
                 sort_by:
                   type: string
                   description: ''
-                  example: rating_low
+                  example: newest
                   nullable: false
                   enum:
                     - newest
@@ -12686,7 +12686,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: on_hold
+                  example: rejected_by_supplier
                   nullable: false
                   enum:
                     - pending
@@ -12713,27 +12713,27 @@ paths:
                 date_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-07-21T08:45:17'
+                  example: '2025-07-23T09:48:28'
                   nullable: false
                 date_to:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>date_from</code>.'
-                  example: '2051-08-14'
+                  example: '2051-08-16'
                   nullable: false
                 overdue:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                   nullable: false
                 needs_retry:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                   nullable: false
                 has_tracking:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                   nullable: false
                 min_total:
                   type: number
@@ -12763,7 +12763,7 @@ paths:
                 sort_by:
                   type: string
                   description: ''
-                  example: id
+                  example: profit_margin
                   nullable: false
                   enum:
                     - id
@@ -12776,7 +12776,7 @@ paths:
                 sort_direction:
                   type: string
                   description: ''
-                  example: desc
+                  example: asc
                   nullable: false
                   enum:
                     - asc
@@ -12784,17 +12784,17 @@ paths:
                 include_items:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                   nullable: false
                 include_supplier:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                   nullable: false
                 include_order:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                   nullable: false
     post:
       summary: 'Create a new dropship order'
@@ -17866,7 +17866,7 @@ paths:
                     availability:
                       type: string
                       description: ''
-                      example: low_stock
+                      example: out_of_stock
                       nullable: false
                       enum:
                         - in_stock
@@ -17901,7 +17901,7 @@ paths:
                     tag_logic:
                       type: string
                       description: ''
-                      example: OR
+                      example: AND
                       nullable: false
                       enum:
                         - AND
@@ -17989,17 +17989,17 @@ paths:
                 highlight:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                   nullable: false
                 personalize:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                   nullable: false
                 typo_tolerance:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                   nullable: false
                 exact_match:
                   type: boolean
@@ -18009,12 +18009,12 @@ paths:
                 boost_new_products:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                   nullable: false
                 boost_in_stock:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                   nullable: false
       security: []
   '/api/products/{id}':
@@ -19277,7 +19277,7 @@ paths:
                 sort_by:
                   type: string
                   description: ''
-                  example: helpful
+                  example: oldest
                   nullable: false
                   enum:
                     - newest
@@ -20434,7 +20434,7 @@ paths:
                 is_active:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                   nullable: false
                 markup_type:
                   type: string
@@ -20452,12 +20452,12 @@ paths:
                 auto_update_price:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                   nullable: false
                 auto_update_stock:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                   nullable: false
                 auto_update_description:
                   type: boolean
@@ -20467,7 +20467,7 @@ paths:
                 health_status:
                   type: string
                   description: ''
-                  example: healthy
+                  example: supplier_inactive
                   nullable: false
                   enum:
                     - healthy
@@ -20486,22 +20486,22 @@ paths:
                 last_price_update_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-07-21T08:45:17'
+                  example: '2025-07-23T09:48:28'
                   nullable: false
                 last_price_update_to:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>last_price_update_from</code>.'
-                  example: '2051-08-14'
+                  example: '2051-08-16'
                   nullable: false
                 last_stock_update_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-07-21T08:45:17'
+                  example: '2025-07-23T09:48:28'
                   nullable: false
                 last_stock_update_to:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>last_stock_update_from</code>.'
-                  example: '2051-08-14'
+                  example: '2051-08-16'
                   nullable: false
                 priority_order:
                   type: integer
@@ -20521,7 +20521,7 @@ paths:
                 sort_by:
                   type: string
                   description: ''
-                  example: priority_order
+                  example: created_at
                   nullable: false
                   enum:
                     - priority_order
@@ -20533,7 +20533,7 @@ paths:
                 sort_direction:
                   type: string
                   description: ''
-                  example: asc
+                  example: desc
                   nullable: false
                   enum:
                     - asc
@@ -20551,7 +20551,7 @@ paths:
                 include_supplier_product:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                   nullable: false
     post:
       summary: 'Create a new product supplier mapping'
@@ -31267,32 +31267,6 @@ paths:
                         is_active: true
                       created_at: '2025-01-10T09:00:00.000000Z'
                       updated_at: '2025-01-14T14:30:00.000000Z'
-                    -
-                      id: 2
-                      shipping_method_id: 1
-                      shipping_zone_id: 1
-                      min_weight: 2000
-                      max_weight: 5000
-                      min_total: 0
-                      max_total: 5000
-                      rate: 799
-                      rate_formatted: £7.99
-                      free_threshold: 10000
-                      free_threshold_formatted: £100.00
-                      is_active: true
-                      shipping_method:
-                        id: 1
-                        name: 'Standard Delivery'
-                        carrier: 'Royal Mail'
-                        service_code: tracked-48
-                      shipping_zone:
-                        id: 1
-                        name: 'UK Mainland'
-                        countries:
-                          - GB
-                        is_active: true
-                      created_at: '2025-01-10T09:15:00.000000Z'
-                      updated_at: '2025-01-14T14:30:00.000000Z'
                   current_page: 1
                   per_page: 15
                   total: 47
@@ -31328,32 +31302,6 @@ paths:
                             - GB
                           is_active: true
                         created_at: '2025-01-10T09:00:00.000000Z'
-                        updated_at: '2025-01-14T14:30:00.000000Z'
-                      -
-                        id: 2
-                        shipping_method_id: 1
-                        shipping_zone_id: 1
-                        min_weight: 2000
-                        max_weight: 5000
-                        min_total: 0
-                        max_total: 5000
-                        rate: 799
-                        rate_formatted: £7.99
-                        free_threshold: 10000
-                        free_threshold_formatted: £100.00
-                        is_active: true
-                        shipping_method:
-                          id: 1
-                          name: 'Standard Delivery'
-                          carrier: 'Royal Mail'
-                          service_code: tracked-48
-                        shipping_zone:
-                          id: 1
-                          name: 'UK Mainland'
-                          countries:
-                            - GB
-                          is_active: true
-                        created_at: '2025-01-10T09:15:00.000000Z'
                         updated_at: '2025-01-14T14:30:00.000000Z'
                     items:
                       type: object
@@ -31889,15 +31837,6 @@ paths:
                     free_threshold: 12500
                     free_threshold_formatted: £125.00
                     is_active: true
-                    shipping_method:
-                      id: 1
-                      name: 'Standard Delivery'
-                      carrier: 'Royal Mail'
-                    shipping_zone:
-                      id: 1
-                      name: 'UK Mainland'
-                      countries:
-                        - GB
                     updated_at: '2025-01-15T11:45:00.000000Z'
                 properties:
                   message:
@@ -31942,33 +31881,6 @@ paths:
                       is_active:
                         type: boolean
                         example: true
-                      shipping_method:
-                        type: object
-                        properties:
-                          id:
-                            type: integer
-                            example: 1
-                          name:
-                            type: string
-                            example: 'Standard Delivery'
-                          carrier:
-                            type: string
-                            example: 'Royal Mail'
-                      shipping_zone:
-                        type: object
-                        properties:
-                          id:
-                            type: integer
-                            example: 1
-                          name:
-                            type: string
-                            example: 'UK Mainland'
-                          countries:
-                            type: array
-                            example:
-                              - GB
-                            items:
-                              type: string
                       updated_at:
                         type: string
                         example: '2025-01-15T11:45:00.000000Z'
@@ -32564,16 +32476,6 @@ paths:
                         rate_formatted: £5.99
                         is_active: true
                         created_at: '2025-01-15T14:20:00.000000Z'
-                      -
-                        id: 50
-                        shipping_method_id: 1
-                        shipping_zone_id: 3
-                        min_weight: 0
-                        max_weight: 2000
-                        rate: 599
-                        rate_formatted: £5.99
-                        is_active: true
-                        created_at: '2025-01-15T14:20:00.000000Z'
                 properties:
                   message:
                     type: string
@@ -32591,16 +32493,6 @@ paths:
                             id: 49
                             shipping_method_id: 1
                             shipping_zone_id: 2
-                            min_weight: 0
-                            max_weight: 2000
-                            rate: 599
-                            rate_formatted: £5.99
-                            is_active: true
-                            created_at: '2025-01-15T14:20:00.000000Z'
-                          -
-                            id: 50
-                            shipping_method_id: 1
-                            shipping_zone_id: 3
                             min_weight: 0
                             max_weight: 2000
                             rate: 599
@@ -33031,74 +32923,6 @@ paths:
                             sort_order: 1
                         created_at: '2025-01-01T00:00:00.000000Z'
                         updated_at: '2025-01-10T14:30:00.000000Z'
-                      -
-                        id: 2
-                        name: 'European Union'
-                        description: 'EU member countries'
-                        countries:
-                          - AT
-                          - BE
-                          - BG
-                          - HR
-                          - CY
-                          - CZ
-                          - DK
-                          - EE
-                          - FI
-                          - FR
-                          - DE
-                          - GR
-                          - HU
-                          - IE
-                          - IT
-                          - LV
-                          - LT
-                          - LU
-                          - MT
-                          - NL
-                          - PL
-                          - PT
-                          - RO
-                          - SK
-                          - SI
-                          - ES
-                          - SE
-                        country_names:
-                          - Austria
-                          - Belgium
-                          - Bulgaria
-                          - Croatia
-                          - Cyprus
-                          - 'Czech Republic'
-                          - Denmark
-                          - Estonia
-                          - Finland
-                          - France
-                          - Germany
-                          - Greece
-                          - Hungary
-                          - Ireland
-                          - Italy
-                          - Latvia
-                          - Lithuania
-                          - Luxembourg
-                          - Malta
-                          - Netherlands
-                          - Poland
-                          - Portugal
-                          - Romania
-                          - Slovakia
-                          - Slovenia
-                          - Spain
-                          - Sweden
-                        postcodes: null
-                        excluded_postcodes: null
-                        is_active: true
-                        sort_order: 3
-                        methods_count: 1
-                        rates_count: 6
-                        created_at: '2025-01-01T00:00:00.000000Z'
-                        updated_at: '2025-01-01T00:00:00.000000Z'
                     current_page: 1
                     per_page: 15
                     total: 8
@@ -33149,74 +32973,6 @@ paths:
                                 sort_order: 1
                             created_at: '2025-01-01T00:00:00.000000Z'
                             updated_at: '2025-01-10T14:30:00.000000Z'
-                          -
-                            id: 2
-                            name: 'European Union'
-                            description: 'EU member countries'
-                            countries:
-                              - AT
-                              - BE
-                              - BG
-                              - HR
-                              - CY
-                              - CZ
-                              - DK
-                              - EE
-                              - FI
-                              - FR
-                              - DE
-                              - GR
-                              - HU
-                              - IE
-                              - IT
-                              - LV
-                              - LT
-                              - LU
-                              - MT
-                              - NL
-                              - PL
-                              - PT
-                              - RO
-                              - SK
-                              - SI
-                              - ES
-                              - SE
-                            country_names:
-                              - Austria
-                              - Belgium
-                              - Bulgaria
-                              - Croatia
-                              - Cyprus
-                              - 'Czech Republic'
-                              - Denmark
-                              - Estonia
-                              - Finland
-                              - France
-                              - Germany
-                              - Greece
-                              - Hungary
-                              - Ireland
-                              - Italy
-                              - Latvia
-                              - Lithuania
-                              - Luxembourg
-                              - Malta
-                              - Netherlands
-                              - Poland
-                              - Portugal
-                              - Romania
-                              - Slovakia
-                              - Slovenia
-                              - Spain
-                              - Sweden
-                            postcodes: null
-                            excluded_postcodes: null
-                            is_active: true
-                            sort_order: 3
-                            methods_count: 1
-                            rates_count: 6
-                            created_at: '2025-01-01T00:00:00.000000Z'
-                            updated_at: '2025-01-01T00:00:00.000000Z'
                         items:
                           type: object
                           properties:
@@ -36058,6 +35814,87 @@ paths:
                       type: string
       tags:
         - 'Supplier Integrations'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                supplier_id:
+                  type: integer
+                  description: 'The <code>id</code> of an existing record in the suppliers table.'
+                  example: 16
+                  nullable: false
+                integration_type:
+                  type: string
+                  description: ''
+                  example: manual
+                  nullable: false
+                  enum:
+                    - api
+                    - email
+                    - webhook
+                    - ftp
+                    - csv_upload
+                    - manual
+                is_active:
+                  type: boolean
+                  description: ''
+                  example: true
+                  nullable: false
+                status:
+                  type: string
+                  description: ''
+                  example: active
+                  nullable: false
+                  enum:
+                    - active
+                    - inactive
+                    - error
+                    - maintenance
+                    - failed
+                    - disabled
+                search:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: 'n'
+                  nullable: false
+                healthy:
+                  type: boolean
+                  description: ''
+                  example: true
+                  nullable: false
+                page:
+                  type: integer
+                  description: 'Must be at least 1.'
+                  example: 67
+                  nullable: false
+                per_page:
+                  type: integer
+                  description: 'Must be at least 1. Must not be greater than 50.'
+                  example: 16
+                  nullable: false
+                sort_by:
+                  type: string
+                  description: ''
+                  example: consecutive_failures
+                  nullable: false
+                  enum:
+                    - name
+                    - created_at
+                    - last_successful_sync
+                    - status
+                    - supplier_name
+                    - consecutive_failures
+                sort_direction:
+                  type: string
+                  description: ''
+                  example: asc
+                  nullable: false
+                  enum:
+                    - asc
+                    - desc
     post:
       summary: 'Create a new supplier integration'
       operationId: createANewSupplierIntegration
@@ -36268,7 +36105,51 @@ paths:
                     api_endpoint: 'https://api.example.com/v1'
                     rate_limit: 100
                   nullable: false
-                  properties: {  }
+                  properties:
+                    api_endpoint:
+                      type: string
+                      description: 'This field is required when <code>integration_type</code> is <code>api</code>.  Must be a valid URL. Must not be greater than 500 characters.'
+                      example: b
+                      nullable: true
+                    rate_limit:
+                      type: integer
+                      description: 'Must be at least 1. Must not be greater than 10000.'
+                      example: 22
+                      nullable: false
+                    timeout:
+                      type: integer
+                      description: 'Must be at least 5. Must not be greater than 300.'
+                      example: 7
+                      nullable: false
+                    format:
+                      type: string
+                      description: ''
+                      example: xml
+                      nullable: false
+                      enum:
+                        - json
+                        - xml
+                        - csv
+                    webhook_url:
+                      type: string
+                      description: 'This field is required when <code>integration_type</code> is <code>webhook</code>.  Must be a valid URL. Must not be greater than 500 characters.'
+                      example: 'http://www.okuneva.com/fugiat-sunt-nihil-accusantium-harum-mollitia.html'
+                      nullable: true
+                    email_address:
+                      type: string
+                      description: 'This field is required when <code>integration_type</code> is <code>email</code>.  Must be a valid email address. Must not be greater than 255 characters.'
+                      example: mya96@example.com
+                      nullable: true
+                    ftp_host:
+                      type: string
+                      description: 'This field is required when <code>integration_type</code> is <code>ftp</code>. Must not be greater than 255 characters.'
+                      example: k
+                      nullable: true
+                    ftp_port:
+                      type: integer
+                      description: 'Must be at least 1. Must not be greater than 65535.'
+                      example: 8
+                      nullable: false
                 authentication:
                   type: object
                   description: 'Authentication credentials and settings.'
@@ -36276,7 +36157,32 @@ paths:
                     type: api_key
                     api_key: your-api-key
                   nullable: false
-                  properties: {  }
+                  properties:
+                    api_key:
+                      type: string
+                      description: 'Must not be greater than 500 characters.'
+                      example: b
+                      nullable: true
+                    api_secret:
+                      type: string
+                      description: 'Must not be greater than 500 characters.'
+                      example: 'n'
+                      nullable: true
+                    webhook_secret:
+                      type: string
+                      description: 'Must not be greater than 500 characters.'
+                      example: g
+                      nullable: true
+                    ftp_username:
+                      type: string
+                      description: 'Must not be greater than 255 characters.'
+                      example: z
+                      nullable: true
+                    ftp_password:
+                      type: string
+                      description: 'Must not be greater than 255 characters.'
+                      example: m
+                      nullable: true
                 sync_frequency_minutes:
                   type: integer
                   description: 'optional Sync frequency in minutes. Default: 60.'
@@ -36657,7 +36563,51 @@ paths:
                   example:
                     api_endpoint: 'https://api.example.com/v2'
                   nullable: false
-                  properties: {  }
+                  properties:
+                    api_endpoint:
+                      type: string
+                      description: 'This field is required when <code>integration_type</code> is <code>api</code>.  Must be a valid URL. Must not be greater than 500 characters.'
+                      example: 'n'
+                      nullable: true
+                    rate_limit:
+                      type: integer
+                      description: 'Must be at least 1. Must not be greater than 10000.'
+                      example: 7
+                      nullable: false
+                    timeout:
+                      type: integer
+                      description: 'Must be at least 5. Must not be greater than 300.'
+                      example: 16
+                      nullable: false
+                    format:
+                      type: string
+                      description: ''
+                      example: xml
+                      nullable: false
+                      enum:
+                        - json
+                        - xml
+                        - csv
+                    webhook_url:
+                      type: string
+                      description: 'This field is required when <code>integration_type</code> is <code>webhook</code>.  Must be a valid URL. Must not be greater than 500 characters.'
+                      example: 'http://rempel.com/sunt-nihil-accusantium-harum-mollitia'
+                      nullable: true
+                    email_address:
+                      type: string
+                      description: 'This field is required when <code>integration_type</code> is <code>email</code>.  Must be a valid email address. Must not be greater than 255 characters.'
+                      example: mya96@example.com
+                      nullable: true
+                    ftp_host:
+                      type: string
+                      description: 'This field is required when <code>integration_type</code> is <code>ftp</code>. Must not be greater than 255 characters.'
+                      example: k
+                      nullable: true
+                    ftp_port:
+                      type: integer
+                      description: 'Must be at least 1. Must not be greater than 65535.'
+                      example: 8
+                      nullable: false
                 authentication:
                   type: object
                   description: 'optional Authentication credentials and settings.'
@@ -36665,7 +36615,32 @@ paths:
                     type: bearer
                     token: new-token
                   nullable: false
-                  properties: {  }
+                  properties:
+                    api_key:
+                      type: string
+                      description: 'Must not be greater than 500 characters.'
+                      example: m
+                      nullable: true
+                    api_secret:
+                      type: string
+                      description: 'Must not be greater than 500 characters.'
+                      example: 'y'
+                      nullable: true
+                    webhook_secret:
+                      type: string
+                      description: 'Must not be greater than 500 characters.'
+                      example: u
+                      nullable: true
+                    ftp_username:
+                      type: string
+                      description: 'Must not be greater than 255 characters.'
+                      example: w
+                      nullable: true
+                    ftp_password:
+                      type: string
+                      description: 'Must not be greater than 255 characters.'
+                      example: p
+                      nullable: true
                 sync_frequency_minutes:
                   type: integer
                   description: 'optional Sync frequency in minutes.'
@@ -36689,6 +36664,18 @@ paths:
                     - stock.updated
                   items:
                     type: string
+                status:
+                  type: string
+                  description: ''
+                  example: active
+                  nullable: false
+                  enum:
+                    - active
+                    - inactive
+                    - error
+                    - maintenance
+                    - failed
+                    - disabled
     delete:
       summary: 'Delete a supplier integration'
       operationId: deleteASupplierIntegration
@@ -37930,7 +37917,7 @@ paths:
                 status:
                   type: string
                   description: ''
-                  example: inactive
+                  example: pending_approval
                   nullable: false
                   enum:
                     - active
@@ -37941,7 +37928,7 @@ paths:
                 integration_type:
                   type: string
                   description: ''
-                  example: ftp
+                  example: csv_upload
                   nullable: false
                   enum:
                     - api
@@ -37968,12 +37955,12 @@ paths:
                 stock_sync_enabled:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                   nullable: false
                 price_sync_enabled:
                   type: boolean
                   description: ''
-                  example: true
+                  example: false
                   nullable: false
                 page:
                   type: integer
@@ -37988,7 +37975,7 @@ paths:
                 sort_by:
                   type: string
                   description: ''
-                  example: processing_time_days
+                  example: name
                   nullable: false
                   enum:
                     - name
@@ -37998,7 +37985,7 @@ paths:
                 sort_direction:
                   type: string
                   description: ''
-                  example: desc
+                  example: asc
                   nullable: false
                   enum:
                     - asc
@@ -39621,7 +39608,7 @@ paths:
                 sync_status:
                   type: string
                   description: ''
-                  example: out_of_sync
+                  example: supplier_discontinued
                   nullable: false
                   enum:
                     - synced
@@ -39637,7 +39624,7 @@ paths:
                 is_mapped:
                   type: boolean
                   description: ''
-                  example: false
+                  example: true
                   nullable: false
                 search:
                   type: string
@@ -39647,7 +39634,7 @@ paths:
                 stock_status:
                   type: string
                   description: ''
-                  example: in_stock
+                  example: low_stock
                   nullable: false
                   enum:
                     - in_stock
@@ -39681,12 +39668,12 @@ paths:
                 last_synced_from:
                   type: string
                   description: 'Must be a valid date.'
-                  example: '2025-07-21T08:45:17'
+                  example: '2025-07-23T09:48:28'
                   nullable: false
                 last_synced_to:
                   type: string
                   description: 'Must be a valid date. Must be a date after or equal to <code>last_synced_from</code>.'
-                  example: '2051-08-14'
+                  example: '2051-08-16'
                   nullable: false
                 page:
                   type: integer
@@ -39701,7 +39688,7 @@ paths:
                 sort_by:
                   type: string
                   description: ''
-                  example: created_at
+                  example: name
                   nullable: false
                   enum:
                     - name
@@ -39714,7 +39701,7 @@ paths:
                 sort_direction:
                   type: string
                   description: ''
-                  example: desc
+                  example: asc
                   nullable: false
                   enum:
                     - asc

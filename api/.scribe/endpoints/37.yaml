@@ -162,7 +162,7 @@ endpoints:
         name: sort_by
         description: ''
         required: false
-        example: helpful
+        example: oldest
         type: string
         enumValues:
           - newest
@@ -199,7 +199,7 @@ endpoints:
         - 2
       verified_only: true
       with_media: true
-      sort_by: helpful
+      sort_by: oldest
       per_page: 1
       page: 66
     fileParameters: []

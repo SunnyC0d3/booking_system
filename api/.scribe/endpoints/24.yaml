@@ -112,8 +112,138 @@ endpoints:
       healthy: true
       page: 1
       per_page: 20
-    bodyParameters: []
-    cleanBodyParameters: []
+    bodyParameters:
+      supplier_id:
+        name: supplier_id
+        description: 'The <code>id</code> of an existing record in the suppliers table.'
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      integration_type:
+        name: integration_type
+        description: ''
+        required: false
+        example: manual
+        type: string
+        enumValues:
+          - api
+          - email
+          - webhook
+          - ftp
+          - csv_upload
+          - manual
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      is_active:
+        name: is_active
+        description: ''
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      status:
+        name: status
+        description: ''
+        required: false
+        example: active
+        type: string
+        enumValues:
+          - active
+          - inactive
+          - error
+          - maintenance
+          - failed
+          - disabled
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      search:
+        name: search
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: 'n'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      healthy:
+        name: healthy
+        description: ''
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      page:
+        name: page
+        description: 'Must be at least 1.'
+        required: false
+        example: 67
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      per_page:
+        name: per_page
+        description: 'Must be at least 1. Must not be greater than 50.'
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      sort_by:
+        name: sort_by
+        description: ''
+        required: false
+        example: consecutive_failures
+        type: string
+        enumValues:
+          - name
+          - created_at
+          - last_successful_sync
+          - status
+          - supplier_name
+          - consecutive_failures
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      sort_direction:
+        name: sort_direction
+        description: ''
+        required: false
+        example: asc
+        type: string
+        enumValues:
+          - asc
+          - desc
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      supplier_id: 16
+      integration_type: manual
+      is_active: true
+      status: active
+      search: 'n'
+      healthy: true
+      page: 67
+      per_page: 16
+      sort_by: consecutive_failures
+      sort_direction: asc
     fileParameters: []
     responses:
       -
@@ -289,6 +419,89 @@ endpoints:
         exampleWasSpecified: true
         nullable: false
         custom: []
+      configuration.api_endpoint:
+        name: configuration.api_endpoint
+        description: 'This field is required when <code>integration_type</code> is <code>api</code>.  Must be a valid URL. Must not be greater than 500 characters.'
+        required: false
+        example: b
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      configuration.rate_limit:
+        name: configuration.rate_limit
+        description: 'Must be at least 1. Must not be greater than 10000.'
+        required: false
+        example: 22
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      configuration.timeout:
+        name: configuration.timeout
+        description: 'Must be at least 5. Must not be greater than 300.'
+        required: false
+        example: 7
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      configuration.format:
+        name: configuration.format
+        description: ''
+        required: false
+        example: xml
+        type: string
+        enumValues:
+          - json
+          - xml
+          - csv
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      configuration.webhook_url:
+        name: configuration.webhook_url
+        description: 'This field is required when <code>integration_type</code> is <code>webhook</code>.  Must be a valid URL. Must not be greater than 500 characters.'
+        required: false
+        example: 'http://www.okuneva.com/fugiat-sunt-nihil-accusantium-harum-mollitia.html'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      configuration.email_address:
+        name: configuration.email_address
+        description: 'This field is required when <code>integration_type</code> is <code>email</code>.  Must be a valid email address. Must not be greater than 255 characters.'
+        required: false
+        example: mya96@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      configuration.ftp_host:
+        name: configuration.ftp_host
+        description: 'This field is required when <code>integration_type</code> is <code>ftp</code>. Must not be greater than 255 characters.'
+        required: false
+        example: k
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      configuration.ftp_port:
+        name: configuration.ftp_port
+        description: 'Must be at least 1. Must not be greater than 65535.'
+        required: false
+        example: 8
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
       authentication:
         name: authentication
         description: 'Authentication credentials and settings.'
@@ -300,6 +513,56 @@ endpoints:
         enumValues: []
         exampleWasSpecified: true
         nullable: false
+        custom: []
+      authentication.api_key:
+        name: authentication.api_key
+        description: 'Must not be greater than 500 characters.'
+        required: false
+        example: b
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      authentication.api_secret:
+        name: authentication.api_secret
+        description: 'Must not be greater than 500 characters.'
+        required: false
+        example: 'n'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      authentication.webhook_secret:
+        name: authentication.webhook_secret
+        description: 'Must not be greater than 500 characters.'
+        required: false
+        example: g
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      authentication.ftp_username:
+        name: authentication.ftp_username
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: z
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      authentication.ftp_password:
+        name: authentication.ftp_password
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: m
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
         custom: []
       sync_frequency_minutes:
         name: sync_frequency_minutes
@@ -351,9 +614,19 @@ endpoints:
       configuration:
         api_endpoint: 'https://api.example.com/v1'
         rate_limit: 100
+        timeout: 7
+        format: xml
+        webhook_url: 'http://www.okuneva.com/fugiat-sunt-nihil-accusantium-harum-mollitia.html'
+        email_address: mya96@example.com
+        ftp_host: k
+        ftp_port: 8
       authentication:
         type: api_key
         api_key: your-api-key
+        api_secret: 'n'
+        webhook_secret: g
+        ftp_username: z
+        ftp_password: m
       sync_frequency_minutes: 30
       auto_retry_enabled: true
       max_retry_attempts: 5
@@ -662,6 +935,89 @@ endpoints:
         exampleWasSpecified: true
         nullable: false
         custom: []
+      configuration.api_endpoint:
+        name: configuration.api_endpoint
+        description: 'This field is required when <code>integration_type</code> is <code>api</code>.  Must be a valid URL. Must not be greater than 500 characters.'
+        required: false
+        example: 'n'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      configuration.rate_limit:
+        name: configuration.rate_limit
+        description: 'Must be at least 1. Must not be greater than 10000.'
+        required: false
+        example: 7
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      configuration.timeout:
+        name: configuration.timeout
+        description: 'Must be at least 5. Must not be greater than 300.'
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      configuration.format:
+        name: configuration.format
+        description: ''
+        required: false
+        example: xml
+        type: string
+        enumValues:
+          - json
+          - xml
+          - csv
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      configuration.webhook_url:
+        name: configuration.webhook_url
+        description: 'This field is required when <code>integration_type</code> is <code>webhook</code>.  Must be a valid URL. Must not be greater than 500 characters.'
+        required: false
+        example: 'http://rempel.com/sunt-nihil-accusantium-harum-mollitia'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      configuration.email_address:
+        name: configuration.email_address
+        description: 'This field is required when <code>integration_type</code> is <code>email</code>.  Must be a valid email address. Must not be greater than 255 characters.'
+        required: false
+        example: mya96@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      configuration.ftp_host:
+        name: configuration.ftp_host
+        description: 'This field is required when <code>integration_type</code> is <code>ftp</code>. Must not be greater than 255 characters.'
+        required: false
+        example: k
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      configuration.ftp_port:
+        name: configuration.ftp_port
+        description: 'Must be at least 1. Must not be greater than 65535.'
+        required: false
+        example: 8
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
       authentication:
         name: authentication
         description: 'optional Authentication credentials and settings.'
@@ -673,6 +1029,56 @@ endpoints:
         enumValues: []
         exampleWasSpecified: true
         nullable: false
+        custom: []
+      authentication.api_key:
+        name: authentication.api_key
+        description: 'Must not be greater than 500 characters.'
+        required: false
+        example: m
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      authentication.api_secret:
+        name: authentication.api_secret
+        description: 'Must not be greater than 500 characters.'
+        required: false
+        example: 'y'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      authentication.webhook_secret:
+        name: authentication.webhook_secret
+        description: 'Must not be greater than 500 characters.'
+        required: false
+        example: u
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      authentication.ftp_username:
+        name: authentication.ftp_username
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: w
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      authentication.ftp_password:
+        name: authentication.ftp_password
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: p
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
         custom: []
       sync_frequency_minutes:
         name: sync_frequency_minutes
@@ -716,21 +1122,50 @@ endpoints:
         exampleWasSpecified: true
         nullable: false
         custom: []
+      status:
+        name: status
+        description: ''
+        required: false
+        example: active
+        type: string
+        enumValues:
+          - active
+          - inactive
+          - error
+          - maintenance
+          - failed
+          - disabled
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
     cleanBodyParameters:
       integration_type: webhook
       name: 'Updated GlobalTech API'
       is_active: true
       configuration:
         api_endpoint: 'https://api.example.com/v2'
+        rate_limit: 7
+        timeout: 16
+        format: xml
+        webhook_url: 'http://rempel.com/sunt-nihil-accusantium-harum-mollitia'
+        email_address: mya96@example.com
+        ftp_host: k
+        ftp_port: 8
       authentication:
         type: bearer
         token: new-token
+        api_key: m
+        api_secret: 'y'
+        webhook_secret: u
+        ftp_username: w
+        ftp_password: p
       sync_frequency_minutes: 30
       auto_retry_enabled: false
       max_retry_attempts: 5
       webhook_events:
         - order.shipped
         - stock.updated
+      status: active
     fileParameters: []
     responses:
       -

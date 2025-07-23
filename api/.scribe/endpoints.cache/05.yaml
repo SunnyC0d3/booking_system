@@ -409,7 +409,7 @@ endpoints:
         name: filter.tag_logic
         description: ''
         required: false
-        example: AND
+        example: OR
         type: string
         enumValues:
           - AND
@@ -551,7 +551,7 @@ endpoints:
         name: diversify
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -561,7 +561,7 @@ endpoints:
         name: explain
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -571,7 +571,7 @@ endpoints:
         name: facets
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -601,7 +601,7 @@ endpoints:
         name: typo_tolerance
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -611,7 +611,7 @@ endpoints:
         name: exact_match
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -652,7 +652,7 @@ endpoints:
         brand: k
         brands: '9,31'
         tags: '9,31'
-        tag_logic: AND
+        tag_logic: OR
         attributes: '_JK:AI'
         color: k
         colors: dLJnIk
@@ -666,13 +666,13 @@ endpoints:
       page: 4
       per_page: 9
       sort: 'y8p,Bm,-dp,-Zm,-GH'
-      diversify: false
-      explain: true
-      facets: true
+      diversify: true
+      explain: false
+      facets: false
       highlight: true
       personalize: false
-      typo_tolerance: true
-      exact_match: true
+      typo_tolerance: false
+      exact_match: false
       boost_new_products: true
       boost_in_stock: false
     fileParameters: []

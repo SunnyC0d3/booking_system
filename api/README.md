@@ -78,6 +78,36 @@ A comprehensive Laravel-based e-commerce API with advanced security features, mu
 - **Bulk inventory updates**
 - **Inventory overview dashboard**
 
+### ⭐ Review & Rating System
+- **Customer product reviews** with 1-5 star ratings
+- **Verified purchase badges** for authentic reviews
+- **Review helpfulness voting** system
+- **Media attachments** (photos/videos) in reviews
+- **Review moderation** and reporting system
+- **Vendor response system** to customer reviews
+- **Review analytics** and performance metrics
+- **Bulk moderation tools** for administrators
+
+### 🚚 Advanced Shipping System
+- **Multi-zone shipping** with country/postcode targeting
+- **Dynamic shipping rates** based on weight, value, and destination
+- **Multiple shipping methods** per zone (Standard, Express, Overnight)
+- **Real-time shipping calculations** with cart integration
+- **Shipment tracking** with carrier integration
+- **Shipping address management** with validation
+- **Free shipping thresholds** and promotional rates
+- **Bulk shipping operations** for administrators
+
+### 🏢 Dropshipping & Supplier Management
+- **Comprehensive supplier network** with API integrations
+- **Product mapping** between suppliers and marketplace
+- **Automated inventory synchronization** from suppliers
+- **Dropship order fulfillment** with tracking
+- **Supplier performance analytics** and metrics
+- **Profit margin management** with dynamic pricing
+- **Multi-supplier support** per product
+- **Vendor dropshipping dashboard** with read-only access
+
 ## 🏗️ Architecture
 
 ### Tech Stack
@@ -185,6 +215,13 @@ php artisan scribe:generate
 - `POST /api/v1/login` - User login
 - `POST /api/v1/logout` - User logout
 - `POST /api/v1/change-password` - Change password
+- `POST /api/v1/forgot-password` - Request password reset
+- `POST /api/v1/reset-password` - Reset password with token
+- `GET /api/v1/security-info` - Get user security information
+
+#### Email Verification
+- `GET /api/v1/email/verify/{id}/{hash}` - Verify email address
+- `GET /api/v1/email/resend` - Resend verification email
 
 #### Products
 - `GET /api/v1/products` - Browse products with advanced filtering
@@ -193,29 +230,154 @@ php artisan scribe:generate
 #### Cart
 - `GET /api/v1/cart` - View cart
 - `POST /api/v1/cart/items` - Add to cart
-- `PUT /api/v1/cart/items/{id}` - Update cart item
+- `POST /api/v1/cart/items/{id}` - Update cart item
 - `DELETE /api/v1/cart/items/{id}` - Remove from cart
+- `DELETE /api/v1/cart/clear` - Clear entire cart
+- `POST /api/v1/cart/sync-prices` - Sync cart prices with current product prices
 
 #### Orders
 - `GET /api/v1/orders` - User's orders
 - `GET /api/v1/orders/{id}` - Order details
+- `POST /api/v1/orders/from-cart` - Create order from cart
 
 #### Payments
 - `POST /api/v1/payments/{gateway}/create` - Create payment intent
 - `POST /api/v1/payments/{gateway}/verify` - Verify payment
+- `POST /api/v1/payments/stripe/webhook` - Stripe webhook handler
 
 #### Returns
 - `POST /api/v1/returns` - Create return request
 
+#### Reviews & Ratings
+- `GET /api/v1/products/{product}/reviews` - Get product reviews
+- `GET /api/v1/reviews/{review}` - Get specific review
+- `POST /api/v1/reviews` - Create product review
+- `POST /api/v1/reviews/{review}` - Update review
+- `DELETE /api/v1/reviews/{review}` - Delete review
+- `POST /api/v1/reviews/{review}/helpfulness` - Vote on review helpfulness
+- `POST /api/v1/reviews/{review}/report` - Report inappropriate review
+
+#### Review Responses (Vendor)
+- `GET /api/v1/reviews/{review}/responses` - Get vendor responses to review
+- `POST /api/v1/reviews/{review}/responses` - Create vendor response
+- `GET /api/v1/vendor/responses` - Get vendor's responses dashboard
+- `GET /api/v1/vendor/unanswered-reviews` - Get reviews needing vendor response
+
+#### Shipping Addresses
+- `GET /api/v1/shipping-addresses` - Get user's shipping addresses
+- `POST /api/v1/shipping-addresses` - Add new shipping address
+- `PUT /api/v1/shipping-addresses/{id}` - Update shipping address
+- `DELETE /api/v1/shipping-addresses/{id}` - Delete shipping address
+- `PATCH /api/v1/shipping-addresses/{id}/set-default` - Set as default address
+- `POST /api/v1/shipping-addresses/{id}/validate` - Validate address
+
+#### Shipping Calculations
+- `POST /api/v1/shipping/cart/quote` - Get shipping quote for cart
+- `POST /api/v1/shipping/products/quote` - Get shipping quote for products
+- `POST /api/v1/shipping/estimate` - Get quick shipping estimate (public)
+- `POST /api/v1/shipping/cheapest` - Get cheapest shipping option
+- `POST /api/v1/shipping/fastest` - Get fastest shipping option
+- `POST /api/v1/shipping/validate-method` - Validate shipping method
+
+#### Shipment Tracking
+- `GET /api/v1/tracking/{trackingNumber}` - Track shipment (public)
+- `GET /api/v1/tracking/{trackingNumber}/status` - Get shipment status
+- `GET /api/v1/my-shipments` - Get user's shipments
+- `GET /api/v1/my-shipments/{id}` - Get specific shipment
+
+#### Checkout
+- `POST /api/v1/checkout/summary` - Get checkout summary
+- `POST /api/v1/checkout/validate` - Validate checkout data
+
+#### Vendor Dropshipping (Read-Only)
+- `GET /api/v1/vendor/dropshipping/dashboard` - Get dropshipping dashboard
+- `GET /api/v1/vendor/dropshipping/orders` - Get dropship orders
+- `GET /api/v1/vendor/dropshipping/suppliers` - Get available suppliers
+- `GET /api/v1/vendor/dropshipping/supplier-products` - Get supplier products
+- `GET /api/v1/vendor/dropshipping/product-mappings` - Get product mappings
+- `GET /api/v1/vendor/dropshipping/analytics` - Get dropshipping analytics
+- `GET /api/v1/vendor/dropshipping/profit-margins` - Get profit margin analysis
+- `GET /api/v1/vendor/dropshipping/supplier-performance` - Get supplier performance metrics
+
 ### Admin Endpoints
 All admin endpoints require `super_admin` or `admin` role:
 
+#### User & Role Management
 - `GET /api/v1/admin/users` - Manage users
+- `POST /api/v1/admin/users` - Create user
+- `GET /api/v1/admin/roles` - Manage roles (super_admin only)
+- `GET /api/v1/admin/permissions` - Manage permissions (super_admin only)
+- `POST /api/v1/admin/roles/{role}/permissions` - Assign permissions to role
+
+#### Vendor Management
 - `GET /api/v1/admin/vendors` - Manage vendors
+- `POST /api/v1/admin/vendors` - Create vendor
+- `PUT /api/v1/admin/vendors/{id}` - Update vendor
+- `DELETE /api/v1/admin/vendors/{id}` - Delete vendor
+
+#### Product Management
 - `GET /api/v1/admin/products` - Manage products
+- `POST /api/v1/admin/products` - Create product
+- `PUT /api/v1/admin/products/{id}` - Update product
+- `DELETE /api/v1/admin/products/{id}` - Delete product
+- `PATCH /api/v1/admin/products/{id}/restore` - Restore soft-deleted product
+
+#### Product Categories & Attributes
+- `GET /api/v1/admin/product-categories` - Manage categories
+- `GET /api/v1/admin/product-attributes` - Manage attributes
+- `GET /api/v1/admin/product-tags` - Manage tags
+
+#### Order & Payment Management
 - `GET /api/v1/admin/orders` - Manage orders
-- `GET /api/v1/admin/returns` - Manage returns
+- `PUT /api/v1/admin/orders/{id}` - Update order
+- `GET /api/v1/admin/payments` - View all payments
+- `GET /api/v1/admin/payment-methods` - Manage payment methods
+
+#### Returns & Refunds
+- `GET /api/v1/admin/returns` - Manage return requests
+- `POST /api/v1/admin/returns/{id}/{action}` - Review return (approve/reject)
+- `GET /api/v1/admin/refunds` - View all refunds
+- `POST /api/v1/admin/refunds/{gateway}/{id}` - Process refund
+
+#### Inventory Management
 - `GET /api/v1/admin/inventory/overview` - Inventory dashboard
+- `POST /api/v1/admin/inventory/products/{id}/threshold` - Update stock threshold
+- `POST /api/v1/admin/inventory/check` - Manual inventory check
+- `POST /api/v1/admin/inventory/bulk-update-thresholds` - Bulk update thresholds
+
+#### Review Management
+- `GET /api/v1/admin/reviews` - Manage all reviews
+- `GET /api/v1/admin/reviews/reports` - Get reported reviews
+- `GET /api/v1/admin/reviews/analytics` - Review analytics
+- `POST /api/v1/admin/reviews/{id}/moderate` - Moderate review
+- `POST /api/v1/admin/reviews/bulk-moderate` - Bulk moderate reviews
+- `GET /api/v1/admin/review-responses` - Manage vendor responses
+- `POST /api/v1/admin/review-responses/{id}/approve` - Approve vendor response
+
+#### Shipping Management
+- `GET /api/v1/admin/shipping-methods` - Manage shipping methods
+- `POST /api/v1/admin/shipping-methods` - Create shipping method
+- `GET /api/v1/admin/shipping-zones` - Manage shipping zones
+- `POST /api/v1/admin/shipping-zones` - Create shipping zone
+- `GET /api/v1/admin/shipping-rates` - Manage shipping rates
+- `POST /api/v1/admin/shipping-rates/bulk-create` - Bulk create rates
+- `GET /api/v1/admin/shipments` - Manage shipments
+- `POST /api/v1/admin/shipments/{id}/mark-shipped` - Mark shipment as shipped
+- `GET /api/v1/admin/shipments/stats` - Get shipment statistics
+
+#### Supplier & Dropshipping Management
+- `GET /api/v1/admin/suppliers` - Manage suppliers
+- `POST /api/v1/admin/suppliers` - Create supplier
+- `POST /api/v1/admin/suppliers/{id}/test-connection` - Test supplier connection
+- `GET /api/v1/admin/supplier-products` - Manage supplier products
+- `POST /api/v1/admin/supplier-products/suppliers/{id}/sync` - Sync from supplier
+- `GET /api/v1/admin/supplier-integrations` - Manage integrations
+- `POST /api/v1/admin/supplier-integrations/{id}/sync` - Trigger sync
+- `GET /api/v1/admin/product-supplier-mappings` - Manage product mappings
+- `POST /api/v1/admin/product-supplier-mappings/bulk-sync-prices` - Bulk sync prices
+- `GET /api/v1/admin/dropship-orders` - Manage dropship orders
+- `POST /api/v1/admin/dropship-orders/{id}/send-to-supplier` - Send to supplier
+- `GET /api/v1/admin/dropship-orders/stats` - Get dropship statistics
 
 ## 🔐 Authentication
 
@@ -270,24 +432,43 @@ curl -X GET http://localhost:8000/api/v1/orders \
 1. **Browse** products (no auth required)
 2. **Register/Login** to create account
 3. **Add items** to cart
-4. **Checkout** and create order
-5. **Make payment** via Stripe
-6. **Track order** status
-7. **Request returns** if needed
+4. **Calculate shipping** and select method
+5. **Add shipping address** and validate
+6. **Checkout** and create order
+7. **Make payment** via Stripe
+8. **Track shipment** status
+9. **Leave reviews** for purchased products
+10. **Request returns** if needed
 
 ### Vendor Workflow
 1. **Create vendor account** (admin approval may be required)
 2. **Add products** with variants and media
 3. **Manage inventory** and stock levels
-4. **Process orders** for their products
-5. **Handle returns** and customer service
+4. **Set up dropshipping** with suppliers (optional)
+5. **Process orders** for their products
+6. **Respond to customer reviews**
+7. **Handle returns** and customer service
+8. **Monitor dropshipping analytics**
 
 ### Admin Workflow
 1. **Monitor inventory** via dashboard
 2. **Manage users** and role assignments
 3. **Review returns** and process refunds
-4. **Oversee vendor** activities
-5. **Analyze system** security and performance
+4. **Moderate reviews** and handle reports
+5. **Configure shipping** zones and rates
+6. **Manage suppliers** and integrations
+7. **Oversee dropship orders** and fulfillment
+8. **Analyze system** security and performance
+
+### Dropshipping Workflow
+1. **Configure suppliers** with API integrations
+2. **Map supplier products** to marketplace
+3. **Set profit margins** and pricing rules
+4. **Sync inventory** automatically
+5. **Process orders** through suppliers
+6. **Track fulfillment** status
+7. **Monitor supplier performance**
+8. **Analyze profit margins**
 
 ## 🔧 Configuration
 
@@ -300,6 +481,16 @@ Configure in `config/rate-limiting.php`:
 ],
 'api' => [
     'general' => '60,1',        // 60 requests per minute
+],
+'reviews' => [
+    'create' => '5,60',         // 5 reviews per hour
+    'vote' => '10,5',           // 10 votes per 5 minutes
+],
+'shipping' => [
+    'calculations' => '30,1',   // 30 calculations per minute
+],
+'dropshipping' => [
+    'general' => '100,1',       // 100 requests per minute
 ],
 ```
 
@@ -319,6 +510,38 @@ Configure in `config/search.php`:
 - Secure file upload validation
 - Comprehensive security logging
 
+### Review System Configuration
+```php
+'reviews' => [
+    'max_media_files' => 5,
+    'allowed_media_types' => ['image/jpeg', 'image/png', 'video/mp4'],
+    'max_file_size' => 10485760, // 10MB
+    'require_purchase' => true,
+    'auto_approve' => true,
+],
+```
+
+### Shipping Configuration
+```php
+'shipping' => [
+    'default_handling_days' => 1,
+    'max_package_weight' => 50, // kg
+    'free_shipping_threshold' => 5000, // pennies (£50.00)
+    'enable_address_validation' => true,
+],
+```
+
+### Dropshipping Configuration
+```php
+'dropshipping' => [
+    'auto_fulfill_enabled' => true,
+    'default_markup_percentage' => 25.0,
+    'min_profit_margin' => 10.0,
+    'sync_frequency_minutes' => 60,
+    'max_retry_attempts' => 3,
+],
+```
+
 ## 🧪 Testing
 
 ### Running Tests
@@ -328,6 +551,9 @@ php artisan test
 
 # Run specific test suite
 php artisan test --testsuite=Feature
+
+# Run tests with coverage
+php artisan test --coverage
 ```
 
 ### Sample Data
@@ -336,26 +562,40 @@ The seeder creates test data including:
 - 20 regular users
 - 10 vendors with products
 - 100 orders with various statuses
+- Product reviews and ratings
+- Shipping zones and methods
+- Supplier integrations
 - Product categories and tags
 
 ### Test User Accounts
 - **Super Admin:** `test@example.com` / `password`
 - **Regular Users:** Random generated users
 - **Vendors:** Associated with vendor accounts
+- **Test Supplier:** API integration with test data
 
 ## 📁 Project Structure
 
 ```
 api/
 ├── app/
-│   ├── Console/Commands/         # Artisan commands
+│   ├── Console/Commands/        # Artisan commands
 │   ├── Constants/               # Application constants
+│   ├── Events/                  # Events
 │   ├── Filters/V1/              # Query filters
 │   ├── Http/
 │   │   ├── Controllers/V1/      # API controllers
-│   │   ├── Middleware/V1/       # Custom middleware
-│   │   └── Requests/V1/         # Form requests
+│   │   │   ├── Admin/           # Admin controllers
+│   │   │   ├── Auth/            # Authentication controllers
+│   │   │   └── Public/          # Public controllers
+│   │   └── Middleware           # Custom middleware
+│   ├── Jobs/                    # Jobs
+│   ├── Listeners/               # Listeners
+│   ├── Mail/                    # Mail
 │   ├── Models/                  # Eloquent models
+│   ├── Observers/               # Observers
+│   ├── Providers/               # Providers
+│   ├── Requests/V1/             # Requests
+│   ├── Resources/V1/            # JSON Resources
 │   ├── Services/V1/             # Business logic services
 │   └── Traits/V1/               # Reusable traits
 ├── config/                      # Configuration files
@@ -363,7 +603,11 @@ api/
 │   ├── factories/               # Model factories
 │   ├── migrations/              # Database migrations
 │   └── seeders/                 # Database seeders
-└── routes/api/v1/               # API routes
+└── routes/
+    ├── api/v1/
+    │   ├── admin/               # Admin routes
+    │   └── public/              # Public routes
+    └── console.php              # Scheduled commands
 ```
 
 ## 🚨 Security Considerations
@@ -383,6 +627,7 @@ api/
 - **File upload validation** prevents malicious files
 - **SQL injection protection** via Eloquent ORM
 - **XSS protection** through input sanitization
+- **Smart throttling** for review and rating actions
 
 ## 🤝 Contributing
 
@@ -452,6 +697,15 @@ The following commands should run automatically via Laravel's scheduler:
 * * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
 ```
 
+### Scheduled Command Details
+- **`passport:purge`** - Purges expired OAuth tokens (hourly)
+- **`auth:clear-resets`** - Clears expired password reset tokens (every 15 minutes)
+- **`auth:revoke-expired-tokens`** - Revokes expired authentication tokens (every 30 minutes)
+- **`cleanup:expired-carts`** - Removes expired shopping carts (hourly)
+- **`cleanup:empty-carts --days=7`** - Removes empty carts older than 7 days (daily at 2 AM)
+- **`inventory:check`** - Checks inventory levels and sends low stock alerts (hourly)
+- **`orders:process-overdue-shipments`** - Processes overdue shipments (hourly)
+
 ### Manual Maintenance Commands
 
 **Authentication & Tokens:**
@@ -481,6 +735,42 @@ php artisan cleanup:empty-carts --days=7
 php artisan inventory:check
 ```
 
+**Reviews & Ratings:**
+```bash
+# Recalculate product ratings
+php artisan reviews:recalculate-ratings
+
+# Clean up orphaned review media
+php artisan reviews:cleanup-media
+```
+
+**Shipping & Orders:**
+```bash
+# Process overdue shipments
+php artisan orders:process-overdue-shipments
+
+# Update shipping rates from carriers
+php artisan shipping:update-rates
+
+# Sync tracking information
+php artisan shipping:sync-tracking
+```
+
+**Dropshipping & Suppliers:**
+```bash
+# Sync all supplier products
+php artisan suppliers:sync-all
+
+# Check supplier API health
+php artisan suppliers:health-check
+
+# Process pending dropship orders
+php artisan dropshipping:process-orders
+
+# Update profit margins
+php artisan dropshipping:update-margins
+```
+
 ### Performance Optimization
 ```bash
 # Optimize for production
@@ -501,6 +791,43 @@ php artisan optimize:clear
 - [ ] Monitor queue job failures
 - [ ] Check storage disk usage
 - [ ] Verify backup integrity
+- [ ] Monitor review moderation queue
+- [ ] Check shipping rate accuracy
+- [ ] Verify supplier API connections
+- [ ] Monitor dropship order processing
+- [ ] Check profit margin calculations
+- [ ] Review cart abandonment rates
+- [ ] Monitor shipment tracking updates
+
+### Database Maintenance
+```bash
+# Optimize database tables
+php artisan db:optimize
+
+# Check for orphaned records
+php artisan db:check-integrity
+
+# Backup database
+php artisan backup:run
+
+# Restore from backup
+php artisan backup:restore --backup=filename.sql
+```
+
+### File System Maintenance
+```bash
+# Clean up temporary files
+php artisan files:cleanup-temp
+
+# Optimize media files
+php artisan media:optimize
+
+# Generate missing thumbnails
+php artisan media:regenerate
+
+# Clean up orphaned media files
+php artisan media:cleanup-orphaned
+```
 
 ---
 

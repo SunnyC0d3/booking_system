@@ -144,21 +144,6 @@ endpoints:
                   ],
                   "created_at": "2025-01-01T00:00:00.000000Z",
                   "updated_at": "2025-01-10T14:30:00.000000Z"
-                },
-                {
-                  "id": 2,
-                  "name": "European Union",
-                  "description": "EU member countries",
-                  "countries": ["AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE"],
-                  "country_names": ["Austria", "Belgium", "Bulgaria", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland", "Italy", "Latvia", "Lithuania", "Luxembourg", "Malta", "Netherlands", "Poland", "Portugal", "Romania", "Slovakia", "Slovenia", "Spain", "Sweden"],
-                  "postcodes": null,
-                  "excluded_postcodes": null,
-                  "is_active": true,
-                  "sort_order": 3,
-                  "methods_count": 1,
-                  "rates_count": 6,
-                  "created_at": "2025-01-01T00:00:00.000000Z",
-                  "updated_at": "2025-01-01T00:00:00.000000Z"
                 }
               ],
               "current_page": 1,
