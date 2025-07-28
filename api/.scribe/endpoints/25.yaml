@@ -171,7 +171,7 @@ endpoints:
         name: is_primary
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -191,7 +191,7 @@ endpoints:
         name: markup_type
         description: ''
         required: false
-        example: percentage
+        example: fixed
         type: string
         enumValues:
           - percentage
@@ -213,7 +213,7 @@ endpoints:
         name: auto_update_price
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -276,7 +276,7 @@ endpoints:
         name: last_price_update_from
         description: 'Must be a valid date.'
         required: false
-        example: '2025-07-23T09:48:28'
+        example: '2025-07-28T22:20:41'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -286,7 +286,7 @@ endpoints:
         name: last_price_update_to
         description: 'Must be a valid date. Must be a date after or equal to <code>last_price_update_from</code>.'
         required: false
-        example: '2051-08-16'
+        example: '2051-08-21'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -296,7 +296,7 @@ endpoints:
         name: last_stock_update_from
         description: 'Must be a valid date.'
         required: false
-        example: '2025-07-23T09:48:28'
+        example: '2025-07-28T22:20:41'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -306,7 +306,7 @@ endpoints:
         name: last_stock_update_to
         description: 'Must be a valid date. Must be a date after or equal to <code>last_stock_update_from</code>.'
         required: false
-        example: '2051-08-16'
+        example: '2051-08-21'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -346,7 +346,7 @@ endpoints:
         name: sort_by
         description: ''
         required: false
-        example: created_at
+        example: markup_percentage
         type: string
         enumValues:
           - priority_order
@@ -362,7 +362,7 @@ endpoints:
         name: sort_direction
         description: ''
         required: false
-        example: desc
+        example: asc
         type: string
         enumValues:
           - asc
@@ -394,35 +394,35 @@ endpoints:
         name: include_supplier_product
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      is_primary: true
+      is_primary: false
       is_active: false
-      markup_type: percentage
+      markup_type: fixed
       search: b
-      auto_update_price: true
+      auto_update_price: false
       auto_update_stock: true
       auto_update_description: false
       health_status: supplier_inactive
       min_markup: 39
       max_markup: 84
-      last_price_update_from: '2025-07-23T09:48:28'
-      last_price_update_to: '2051-08-16'
-      last_stock_update_from: '2025-07-23T09:48:28'
-      last_stock_update_to: '2051-08-16'
+      last_price_update_from: '2025-07-28T22:20:41'
+      last_price_update_to: '2051-08-21'
+      last_stock_update_from: '2025-07-28T22:20:41'
+      last_stock_update_to: '2051-08-21'
       priority_order: 22
       page: 67
       per_page: 16
-      sort_by: created_at
-      sort_direction: desc
+      sort_by: markup_percentage
+      sort_direction: asc
       include_product: false
       include_supplier: true
-      include_supplier_product: false
+      include_supplier_product: true
     fileParameters: []
     responses:
       -

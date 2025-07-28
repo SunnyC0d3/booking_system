@@ -1,20 +1,20 @@
-name: 'Shipping Calculations'
+name: 'Customer Shipping Addresses'
 description: ''
 endpoints:
   -
     httpMethods:
-      - POST
-    uri: api/shipping/cart/quote
+      - GET
+    uri: api/shipping-addresses
     metadata:
-      groupName: 'Shipping Calculations'
+      groupName: 'Customer Shipping Addresses'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Get shipping quotes for cart contents'
+      title: "Retrieve user's shipping addresses"
       description: |-
-        Calculate shipping costs for the current user's cart contents to a specific address.
-        This endpoint analyzes cart weight, dimensions, and value to provide accurate shipping
-        quotes from all applicable shipping methods. Essential for checkout process.
+        Get all shipping addresses for the authenticated user, ordered by default status
+        and creation date. This endpoint returns the user's address book with default
+        addresses appearing first, essential for checkout and order management.
       authenticated: true
       custom: []
     headers:
@@ -25,139 +25,74 @@ endpoints:
     cleanUrlParameters: []
     queryParameters: []
     cleanQueryParameters: []
-    bodyParameters:
-      shipping_address_id:
-        name: shipping_address_id
-        description: 'The ID of the shipping address to calculate rates for.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      shipping_address_id: 1
+    bodyParameters: []
+    cleanBodyParameters: []
     fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
-            "message": "Shipping quotes retrieved successfully.",
-            "data": {
-              "shipping_methods": [
-                {
-                  "id": 1,
-                  "name": "Standard Delivery",
-                  "carrier": "Royal Mail",
-                  "service_code": "tracked-48",
-                  "description": "Tracked delivery within 2-3 working days",
-                  "estimated_delivery": "2-3 days",
-                  "cost": 599,
-                  "cost_formatted": "£5.99",
-                  "is_free": false,
-                  "free_threshold": 10000,
-                  "free_threshold_formatted": "£100.00",
-                  "supports_tracking": true,
-                  "requires_signature": false,
-                  "estimated_delivery_date": "2025-01-17T17:00:00.000000Z",
-                  "transit_time": "2-3 days"
-                },
-                {
-                  "id": 2,
-                  "name": "Express Delivery",
-                  "carrier": "DPD",
-                  "service_code": "next-day",
-                  "description": "Next working day delivery by 1pm",
-                  "estimated_delivery": "1 day",
-                  "cost": 999,
-                  "cost_formatted": "£9.99",
-                  "is_free": false,
-                  "free_threshold": 15000,
-                  "free_threshold_formatted": "£150.00",
-                  "supports_tracking": true,
-                  "requires_signature": true,
-                  "estimated_delivery_date": "2025-01-16T13:00:00.000000Z",
-                  "transit_time": "1 day"
-                }
-              ],
-              "cart_summary": {
-                "total_weight": 2.5,
-                "total_amount": 4599,
-                "total_amount_formatted": "£45.99",
-                "items_count": 3,
-                "requires_shipping": true
-              },
-              "shipping_address": {
+            "data": [
+              {
                 "id": 1,
+                "user_id": 45,
+                "type": "shipping",
                 "name": "John Smith",
-                "full_address": "123 Main Street, Suite 100, London, SW1A 1AA, United Kingdom",
+                "company": "Acme Corp",
+                "address_line_1": "123 Main Street",
+                "address_line_2": "Suite 100",
+                "city": "London",
+                "state": "Greater London",
+                "postcode": "SW1A 1AA",
                 "country": "GB",
-                "postcode": "SW1A 1AA"
+                "phone": "+44 20 7123 4567",
+                "is_default": true,
+                "is_validated": true,
+                "full_address": "123 Main Street, Suite 100, London, Greater London, SW1A 1AA, United Kingdom",
+                "country_name": "United Kingdom",
+                "validation_status": "validated",
+                "created_at": "2025-01-10T09:00:00.000000Z",
+                "updated_at": "2025-01-14T14:30:00.000000Z"
               },
-              "shipping_restrictions": {
-                "restricted_countries": [],
-                "restricted_postcodes": [],
-                "hazardous_items": false,
-                "oversized_items": false,
-                "restricted_items": []
+              {
+                "id": 2,
+                "user_id": 45,
+                "type": "shipping",
+                "name": "John Smith",
+                "company": null,
+                "address_line_1": "456 Oak Avenue",
+                "address_line_2": null,
+                "city": "Manchester",
+                "state": "Greater Manchester",
+                "postcode": "M1 1AA",
+                "country": "GB",
+                "phone": "+44 161 234 5678",
+                "is_default": false,
+                "is_validated": false,
+                "full_address": "456 Oak Avenue, Manchester, Greater Manchester, M1 1AA, United Kingdom",
+                "country_name": "United Kingdom",
+                "validation_status": "unvalidated",
+                "created_at": "2025-01-12T15:20:00.000000Z",
+                "updated_at": "2025-01-12T15:20:00.000000Z"
               }
-            }
+            ],
+            "message": "Shipping addresses retrieved successfully.",
+            "status": 200
           }
         headers: []
-        description: 'Shipping quotes retrieved successfully'
+        description: 'Success with shipping addresses'
         custom: []
       -
         status: 200
         content: |-
           {
-            "message": "No shipping options available for this address.",
-            "data": {
-              "shipping_methods": [],
-              "cart_requires_shipping": true,
-              "shipping_restrictions": {
-                "restricted_countries": ["US", "CA"],
-                "restricted_postcodes": ["BT1", "BT2"],
-                "hazardous_items": true,
-                "oversized_items": false,
-                "restricted_items": ["lithium_batteries"]
-              }
-            }
+            "data": [],
+            "message": "Shipping addresses retrieved successfully.",
+            "status": 200
           }
         headers: []
-        description: 'No shipping options available'
-        custom: []
-      -
-        status: 400
-        content: |-
-          {
-            "message": "Cart is empty."
-          }
-        headers: []
-        description: 'Cart is empty'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "Shipping address not found."
-          }
-        headers: []
-        description: 'Shipping address not found'
-        custom: []
-      -
-        status: 422
-        content: |-
-          {
-            "errors": [
-              "The shipping address id field is required.",
-              "The shipping address id must be an integer.",
-              "The shipping address id must exist in shipping_addresses table."
-            ]
-          }
-        headers: []
-        description: 'Validation errors'
+        description: 'No addresses found'
         custom: []
     responseFields: []
     auth:
@@ -171,17 +106,17 @@ endpoints:
   -
     httpMethods:
       - POST
-    uri: api/shipping/products/quote
+    uri: api/shipping-addresses
     metadata:
-      groupName: 'Shipping Calculations'
+      groupName: 'Customer Shipping Addresses'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Get shipping quotes for specific products'
+      title: 'Create a new shipping address'
       description: |-
-        Calculate shipping costs for specific products and quantities to a shipping address.
-        This is useful for getting shipping estimates before adding items to cart or for
-        product pages showing shipping costs.
+        Create a new shipping address for the authenticated user. If the address is marked
+        as default, it will automatically unset the default flag from other addresses of
+        the same type. The system supports address validation and formatting.
       authenticated: true
       custom: []
     headers:
@@ -193,199 +128,86 @@ endpoints:
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
-      product_ids:
-        name: product_ids
-        description: 'Array of product IDs to calculate shipping for.'
+      type:
+        name: type
+        description: 'The address type (shipping or billing).'
         required: true
-        example:
-          - 1
-          - 2
-          - 3
-        type: 'string[]'
+        example: shipping
+        type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-      quantities:
-        name: quantities
-        description: 'Array of quantities for each product (must match product_ids).'
+      name:
+        name: name
+        description: 'Full name for the address.'
         required: true
-        example:
-          - 2
-          - 1
-          - 3
-        type: 'string[]'
+        example: 'John Smith'
+        type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-      shipping_address_id:
-        name: shipping_address_id
-        description: 'The ID of the shipping address to calculate rates for.'
+      company:
+        name: company
+        description: 'optional Company name.'
+        required: false
+        example: 'Acme Corp'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      line1:
+        name: line1
+        description: 'Must not be greater than 255 characters.'
         required: true
-        example: 1
-        type: integer
+        example: g
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      line2:
+        name: line2
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: z
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      city:
+        name: city
+        description: 'City name.'
+        required: true
+        example: London
+        type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-      'product_ids.*':
-        name: 'product_ids.*'
-        description: 'Each product ID must be a valid product ID.'
+      county:
+        name: county
+        description: 'Must not be greater than 100 characters.'
+        required: false
+        example: i
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      postcode:
+        name: postcode
+        description: 'Postal code.'
         required: true
-        example: 1
-        type: integer
+        example: 'SW1A 1AA'
+        type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-      'quantities.*':
-        name: 'quantities.*'
-        description: 'Each quantity must be a positive integer.'
-        required: true
-        example: 2
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      product_ids:
-        - 1
-        - 2
-        - 3
-      quantities:
-        - 2
-        - 1
-        - 3
-      shipping_address_id: 1
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Product shipping quotes retrieved successfully.",
-            "data": {
-              "shipping_methods": [
-                {
-                  "id": 1,
-                  "name": "Standard Delivery",
-                  "carrier": "Royal Mail",
-                  "service_code": "tracked-48",
-                  "description": "Tracked delivery within 2-3 working days",
-                  "estimated_delivery": "2-3 days",
-                  "cost": 799,
-                  "cost_formatted": "£7.99",
-                  "is_free": false,
-                  "free_threshold": 10000,
-                  "free_threshold_formatted": "£100.00",
-                  "supports_tracking": true,
-                  "requires_signature": false,
-                  "estimated_delivery_date": "2025-01-17T17:00:00.000000Z",
-                  "transit_time": "2-3 days"
-                }
-              ],
-              "products_summary": {
-                "total_weight": 3.8,
-                "total_weight_formatted": "3.8kg",
-                "total_value": 7999,
-                "total_value_formatted": "£79.99",
-                "products_count": 3,
-                "requires_shipping": true
-              },
-              "shipping_address": {
-                "id": 1,
-                "name": "John Smith",
-                "full_address": "123 Main Street, Suite 100, London, SW1A 1AA, United Kingdom",
-                "country": "GB",
-                "postcode": "SW1A 1AA"
-              }
-            }
-          }
-        headers: []
-        description: 'Product shipping quotes retrieved successfully'
-        custom: []
-      -
-        status: 200
-        content: |-
-          {
-            "message": "No shipping options available for these products.",
-            "data": {
-              "shipping_methods": [],
-              "products_require_shipping": true
-            }
-          }
-        headers: []
-        description: 'No shipping options available'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "One or more products not found."
-          }
-        headers: []
-        description: 'Products not found'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "Shipping address not found."
-          }
-        headers: []
-        description: 'Shipping address not found'
-        custom: []
-      -
-        status: 422
-        content: |-
-          {
-            "errors": [
-              "The product ids field is required.",
-              "The product ids must be an array.",
-              "The quantities field is required.",
-              "The quantities must be an array.",
-              "The shipping address id field is required."
-            ]
-          }
-        headers: []
-        description: 'Validation errors'
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/shipping/estimate
-    metadata:
-      groupName: 'Shipping Calculations'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Get quick shipping estimate'
-      description: |-
-        Get a quick shipping estimate for a specific location, weight, and value without
-        requiring authentication or specific products. This is useful for product pages
-        or marketing materials to show approximate shipping costs.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
       country:
         name: country
         description: 'Two-letter country code (ISO 3166-1 alpha-2).'
@@ -396,127 +218,523 @@ endpoints:
         exampleWasSpecified: true
         nullable: false
         custom: []
+      phone:
+        name: phone
+        description: 'optional Phone number.'
+        required: false
+        example: '+44 20 7123 4567'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      is_default:
+        name: is_default
+        description: 'optional Whether this is the default address for the type. Default: false.'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      address_line_1:
+        name: address_line_1
+        description: 'First line of the address.'
+        required: true
+        example: '123 Main Street'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      address_line_2:
+        name: address_line_2
+        description: 'optional Second line of the address (apartment, suite, etc.).'
+        required: false
+        example: 'Suite 100'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      state:
+        name: state
+        description: 'optional State or county name.'
+        required: false
+        example: 'Greater London'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      special_instructions:
+        name: special_instructions
+        description: 'optional Special delivery instructions.'
+        required: false
+        example: 'Leave at front door'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      type: shipping
+      name: 'John Smith'
+      company: 'Acme Corp'
+      line1: g
+      line2: z
+      city: London
+      county: i
+      postcode: 'SW1A 1AA'
+      country: GB
+      phone: '+44 20 7123 4567'
+      is_default: true
+      address_line_1: '123 Main Street'
+      address_line_2: 'Suite 100'
+      state: 'Greater London'
+      special_instructions: 'Leave at front door'
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Shipping address created successfully.",
+            "data": {
+              "id": 3,
+              "user_id": 45,
+              "type": "shipping",
+              "name": "John Smith",
+              "company": "Acme Corp",
+              "address_line_1": "123 Main Street",
+              "address_line_2": "Suite 100",
+              "city": "London",
+              "state": "Greater London",
+              "postcode": "SW1A 1AA",
+              "country": "GB",
+              "phone": "+44 20 7123 4567",
+              "is_default": true,
+              "is_validated": false,
+              "full_address": "123 Main Street, Suite 100, London, Greater London, SW1A 1AA, United Kingdom",
+              "country_name": "United Kingdom",
+              "validation_status": "unvalidated",
+              "special_instructions": "Leave at front door",
+              "created_at": "2025-01-15T10:30:00.000000Z",
+              "updated_at": "2025-01-15T10:30:00.000000Z"
+            }
+          }
+        headers: []
+        description: 'Shipping address created successfully'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "errors": [
+              "The name field is required.",
+              "The address line 1 field is required.",
+              "The city field is required.",
+              "The postcode field is required.",
+              "The country field is required.",
+              "The country must be a valid ISO 3166-1 alpha-2 country code."
+            ]
+          }
+        headers: []
+        description: 'Validation errors'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/shipping-addresses/{shippingAddress_id}'
+    metadata:
+      groupName: 'Customer Shipping Addresses'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Retrieve a specific shipping address'
+      description: |-
+        Get detailed information about a specific shipping address. Users can only access
+        their own addresses. This endpoint returns complete address information including
+        validation status and formatted address details.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      shippingAddress_id:
+        name: shippingAddress_id
+        description: 'The ID of the shippingAddress.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      shippingAddress:
+        name: shippingAddress
+        description: 'The ID of the shipping address to retrieve.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      shippingAddress_id: 16
+      shippingAddress: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Shipping address retrieved successfully.",
+            "data": {
+              "id": 1,
+              "user_id": 45,
+              "type": "shipping",
+              "name": "John Smith",
+              "company": "Acme Corp",
+              "address_line_1": "123 Main Street",
+              "address_line_2": "Suite 100",
+              "city": "London",
+              "state": "Greater London",
+              "postcode": "SW1A 1AA",
+              "country": "GB",
+              "phone": "+44 20 7123 4567",
+              "is_default": true,
+              "is_validated": true,
+              "full_address": "123 Main Street, Suite 100, London, Greater London, SW1A 1AA, United Kingdom",
+              "country_name": "United Kingdom",
+              "validation_status": "validated",
+              "special_instructions": "Leave at front door",
+              "validation_data": {
+                "validated_at": "2025-01-10T09:15:00.000000Z",
+                "validation_service": "postcode_anywhere",
+                "confidence_score": 0.98
+              },
+              "created_at": "2025-01-10T09:00:00.000000Z",
+              "updated_at": "2025-01-14T14:30:00.000000Z"
+            }
+          }
+        headers: []
+        description: 'Shipping address found'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You can only view your own shipping addresses."
+          }
+        headers: []
+        description: 'Access denied'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\ShippingAddress] 999"
+          }
+        headers: []
+        description: 'Shipping address not found'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PUT
+    uri: 'api/shipping-addresses/{shippingAddress_id}'
+    metadata:
+      groupName: 'Customer Shipping Addresses'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update an existing shipping address'
+      description: |-
+        Update a shipping address for the authenticated user. If the address is marked as
+        default, it will automatically unset the default flag from other addresses of the
+        same type. Users can only update their own addresses.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      shippingAddress_id:
+        name: shippingAddress_id
+        description: 'The ID of the shippingAddress.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      shippingAddress:
+        name: shippingAddress
+        description: 'The ID of the shipping address to update.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      shippingAddress_id: 16
+      shippingAddress: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      type:
+        name: type
+        description: 'optional The address type (shipping or billing).'
+        required: false
+        example: shipping
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      name:
+        name: name
+        description: 'optional Full name for the address.'
+        required: false
+        example: 'John Smith'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      company:
+        name: company
+        description: 'optional Company name.'
+        required: false
+        example: 'Acme Corp'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      line1:
+        name: line1
+        description: 'Must not be greater than 255 characters.'
+        required: true
+        example: g
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      line2:
+        name: line2
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: z
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
+      city:
+        name: city
+        description: 'optional City name.'
+        required: false
+        example: London
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      county:
+        name: county
+        description: 'Must not be greater than 100 characters.'
+        required: false
+        example: i
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        custom: []
       postcode:
         name: postcode
-        description: 'Postal code for the destination.'
-        required: true
+        description: 'optional Postal code.'
+        required: false
         example: 'SW1A 1AA'
         type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-      weight:
-        name: weight
-        description: 'Package weight in kilograms.'
-        required: true
-        example: '2.5'
-        type: numeric
+      country:
+        name: country
+        description: 'optional Two-letter country code (ISO 3166-1 alpha-2).'
+        required: false
+        example: GB
+        type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-      value:
-        name: value
-        description: 'Package value in pounds.'
-        required: true
-        example: '49.99'
-        type: numeric
+      phone:
+        name: phone
+        description: 'optional Phone number.'
+        required: false
+        example: '+44 20 7123 4567'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      is_default:
+        name: is_default
+        description: 'optional Whether this is the default address for the type.'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      address_line_1:
+        name: address_line_1
+        description: 'optional First line of the address.'
+        required: false
+        example: '123 Main Street'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      address_line_2:
+        name: address_line_2
+        description: 'optional Second line of the address.'
+        required: false
+        example: 'Suite 100'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      state:
+        name: state
+        description: 'optional State or county name.'
+        required: false
+        example: 'Greater London'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      special_instructions:
+        name: special_instructions
+        description: 'optional Special delivery instructions.'
+        required: false
+        example: 'Ring doorbell twice'
+        type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
     cleanBodyParameters:
-      country: GB
+      type: shipping
+      name: 'John Smith'
+      company: 'Acme Corp'
+      line1: g
+      line2: z
+      city: London
+      county: i
       postcode: 'SW1A 1AA'
-      weight: '2.5'
-      value: '49.99'
+      country: GB
+      phone: '+44 20 7123 4567'
+      is_default: true
+      address_line_1: '123 Main Street'
+      address_line_2: 'Suite 100'
+      state: 'Greater London'
+      special_instructions: 'Ring doorbell twice'
     fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
-            "message": "Quick shipping estimate retrieved successfully.",
+            "message": "Shipping address updated successfully.",
             "data": {
-              "shipping_methods": [
-                {
-                  "id": 1,
-                  "name": "Standard Delivery",
-                  "carrier": "Royal Mail",
-                  "service_code": "tracked-48",
-                  "description": "Tracked delivery within 2-3 working days",
-                  "estimated_delivery": "2-3 days",
-                  "cost": 599,
-                  "cost_formatted": "£5.99",
-                  "is_free": false,
-                  "free_threshold": 10000,
-                  "free_threshold_formatted": "£100.00",
-                  "supports_tracking": true,
-                  "requires_signature": false,
-                  "estimated_delivery_date": "2025-01-17T17:00:00.000000Z",
-                  "transit_time": "2-3 days"
-                },
-                {
-                  "id": 2,
-                  "name": "Express Delivery",
-                  "carrier": "DPD",
-                  "service_code": "next-day",
-                  "description": "Next working day delivery by 1pm",
-                  "estimated_delivery": "1 day",
-                  "cost": 999,
-                  "cost_formatted": "£9.99",
-                  "is_free": false,
-                  "free_threshold": 15000,
-                  "free_threshold_formatted": "£150.00",
-                  "supports_tracking": true,
-                  "requires_signature": true,
-                  "estimated_delivery_date": "2025-01-16T13:00:00.000000Z",
-                  "transit_time": "1 day"
-                }
-              ],
-              "shipment_details": {
-                "weight": 2.5,
-                "weight_unit": "kg",
-                "value": 4999,
-                "value_formatted": "£49.99"
-              },
-              "location": {
-                "country": "GB",
-                "postcode": "SW1A 1AA"
-              }
+              "id": 1,
+              "user_id": 45,
+              "type": "shipping",
+              "name": "John Smith",
+              "company": "Acme Corp",
+              "address_line_1": "123 Main Street",
+              "address_line_2": "Suite 100",
+              "city": "London",
+              "state": "Greater London",
+              "postcode": "SW1A 1AA",
+              "country": "GB",
+              "phone": "+44 20 7123 4567",
+              "is_default": true,
+              "is_validated": false,
+              "full_address": "123 Main Street, Suite 100, London, Greater London, SW1A 1AA, United Kingdom",
+              "country_name": "United Kingdom",
+              "validation_status": "unvalidated",
+              "special_instructions": "Ring doorbell twice",
+              "updated_at": "2025-01-15T11:45:00.000000Z"
             }
           }
         headers: []
-        description: 'Quick shipping estimate retrieved successfully'
+        description: 'Shipping address updated successfully'
         custom: []
       -
-        status: 200
+        status: 403
         content: |-
           {
-            "message": "No shipping options available for this location.",
-            "data": {
-              "shipping_methods": [],
-              "location": {
-                "country": "GB",
-                "postcode": "SW1A 1AA"
-              }
-            }
+            "message": "You can only update your own shipping addresses."
           }
         headers: []
-        description: 'No shipping options available'
+        description: 'Access denied'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\ShippingAddress] 999"
+          }
+        headers: []
+        description: 'Shipping address not found'
         custom: []
       -
         status: 422
         content: |-
           {
             "errors": [
-              "The country field is required.",
-              "The country must be 2 characters.",
               "The postcode field is required.",
-              "The weight field is required.",
-              "The weight must be a number.",
-              "The value field is required."
+              "The country must be a valid ISO 3166-1 alpha-2 country code."
             ]
           }
         headers: []
@@ -533,32 +751,38 @@ endpoints:
     custom: []
   -
     httpMethods:
-      - POST
-    uri: api/shipping/cheapest
+      - DELETE
+    uri: 'api/shipping-addresses/{shippingAddress_id}'
     metadata:
-      groupName: 'Shipping Calculations'
+      groupName: 'Customer Shipping Addresses'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Get cheapest shipping option'
+      title: 'Delete a shipping address'
       description: |-
-        Find the cheapest shipping option for a specific address and shipment details.
-        This is useful for budget-conscious customers or for displaying the minimum
-        shipping cost on product pages.
+        Delete a shipping address from the user's address book. Default addresses cannot
+        be deleted directly - you must first set another address as default. Users can
+        only delete their own addresses.
       authenticated: true
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      shipping_address_id:
-        name: shipping_address_id
-        description: 'The ID of the shipping address to calculate rates for.'
+    urlParameters:
+      shippingAddress_id:
+        name: shippingAddress_id
+        description: 'The ID of the shippingAddress.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      shippingAddress:
+        name: shippingAddress
+        description: 'The ID of the shipping address to delete.'
         required: true
         example: 1
         type: integer
@@ -566,82 +790,283 @@ endpoints:
         exampleWasSpecified: true
         nullable: false
         custom: []
-      weight:
-        name: weight
-        description: 'optional Package weight in kilograms. Default: 1.0.'
-        required: false
-        example: '1.5'
-        type: numeric
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        custom: []
-      value:
-        name: value
-        description: 'optional Package value in pounds. Default: 50.0.'
-        required: false
-        example: '75.99'
-        type: numeric
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        custom: []
-    cleanBodyParameters:
-      shipping_address_id: 1
-      weight: '1.5'
-      value: '75.99'
+    cleanUrlParameters:
+      shippingAddress_id: 16
+      shippingAddress: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
     fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
-            "message": "Cheapest shipping option retrieved successfully.",
+            "message": "Shipping address deleted successfully."
+          }
+        headers: []
+        description: 'Shipping address deleted successfully'
+        custom: []
+      -
+        status: 400
+        content: |-
+          {
+            "message": "Cannot delete default shipping address. Please set another address as default first."
+          }
+        headers: []
+        description: 'Cannot delete default address'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You can only delete your own shipping addresses."
+          }
+        headers: []
+        description: 'Access denied'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\ShippingAddress] 999"
+          }
+        headers: []
+        description: 'Shipping address not found'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PATCH
+    uri: 'api/shipping-addresses/{shippingAddress_id}/set-default'
+    metadata:
+      groupName: 'Customer Shipping Addresses'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Set address as default'
+      description: |-
+        Set a shipping address as the default address for its type (shipping or billing).
+        This automatically unsets the default flag from other addresses of the same type.
+        Users can only modify their own addresses.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      shippingAddress_id:
+        name: shippingAddress_id
+        description: 'The ID of the shippingAddress.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      shippingAddress:
+        name: shippingAddress
+        description: 'The ID of the shipping address to set as default.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      shippingAddress_id: 16
+      shippingAddress: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Default shipping address updated successfully.",
             "data": {
-              "cheapest_method": {
-                "id": 1,
-                "name": "Standard Delivery",
-                "carrier": "Royal Mail",
-                "service_code": "tracked-48",
-                "description": "Tracked delivery within 2-3 working days",
-                "estimated_delivery": "2-3 days",
-                "cost": 599,
-                "cost_formatted": "£5.99",
-                "is_free": false,
-                "free_threshold": 10000,
-                "free_threshold_formatted": "£100.00",
-                "supports_tracking": true,
-                "requires_signature": false,
-                "estimated_delivery_date": "2025-01-17T17:00:00.000000Z",
-                "transit_time": "2-3 days"
-              },
+              "id": 1,
+              "user_id": 45,
+              "type": "shipping",
+              "name": "John Smith",
+              "company": "Acme Corp",
+              "address_line_1": "123 Main Street",
+              "address_line_2": "Suite 100",
+              "city": "London",
+              "state": "Greater London",
+              "postcode": "SW1A 1AA",
+              "country": "GB",
+              "phone": "+44 20 7123 4567",
+              "is_default": true,
+              "is_validated": true,
+              "full_address": "123 Main Street, Suite 100, London, Greater London, SW1A 1AA, United Kingdom",
+              "country_name": "United Kingdom",
+              "validation_status": "validated",
+              "updated_at": "2025-01-15T12:00:00.000000Z"
+            }
+          }
+        headers: []
+        description: 'Default address updated successfully'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You can only modify your own shipping addresses."
+          }
+        headers: []
+        description: 'Access denied'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\ShippingAddress] 999"
+          }
+        headers: []
+        description: 'Shipping address not found'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: 'api/shipping-addresses/{shippingAddress_id}/validate'
+    metadata:
+      groupName: 'Customer Shipping Addresses'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Validate a shipping address'
+      description: |-
+        Validate a shipping address using external address validation services. This checks
+        if the address exists, is deliverable, and provides standardized formatting. The
+        validation result is stored with the address for future reference.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      shippingAddress_id:
+        name: shippingAddress_id
+        description: 'The ID of the shippingAddress.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      shippingAddress:
+        name: shippingAddress
+        description: 'The ID of the shipping address to validate.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      shippingAddress_id: 16
+      shippingAddress: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Address validated successfully.",
+            "data": {
               "address": {
                 "id": 1,
+                "user_id": 45,
+                "type": "shipping",
+                "name": "John Smith",
+                "company": "Acme Corp",
+                "address_line_1": "123 Main Street",
+                "address_line_2": "Suite 100",
+                "city": "London",
+                "state": "Greater London",
+                "postcode": "SW1A 1AA",
                 "country": "GB",
-                "postcode": "SW1A 1AA"
+                "phone": "+44 20 7123 4567",
+                "is_default": true,
+                "is_validated": true,
+                "full_address": "123 Main Street, Suite 100, London, Greater London, SW1A 1AA, United Kingdom",
+                "country_name": "United Kingdom",
+                "validation_status": "validated",
+                "validation_data": {
+                  "validated_at": "2025-01-15T12:30:00.000000Z",
+                  "validation_service": "postcode_anywhere",
+                  "confidence_score": 0.98
+                },
+                "updated_at": "2025-01-15T12:30:00.000000Z"
+              },
+              "validation": {
+                "valid": true,
+                "confidence_score": 0.98,
+                "validation_service": "postcode_anywhere",
+                "validated_at": "2025-01-15T12:30:00.000000Z",
+                "standardized_address": {
+                  "address_line_1": "123 Main Street",
+                  "address_line_2": "Suite 100",
+                  "city": "London",
+                  "state": "Greater London",
+                  "postcode": "SW1A 1AA",
+                  "country": "GB"
+                },
+                "deliverable": true,
+                "residential": false,
+                "suggestions": []
               }
             }
           }
         headers: []
-        description: 'Cheapest shipping option retrieved successfully'
+        description: 'Address validated successfully'
         custom: []
       -
-        status: 200
+        status: 403
         content: |-
           {
-            "message": "No shipping options available.",
-            "data": {
-              "cheapest_method": null
-            }
+            "message": "You can only validate your own shipping addresses."
           }
         headers: []
-        description: 'No shipping options available'
+        description: 'Access denied'
         custom: []
       -
         status: 404
         content: |-
           {
-            "message": "Shipping address not found."
+            "message": "No query results for model [App\\Models\\ShippingAddress] 999"
           }
         headers: []
         description: 'Shipping address not found'
@@ -650,288 +1075,36 @@ endpoints:
         status: 422
         content: |-
           {
-            "errors": [
-              "The shipping address id field is required.",
-              "The shipping address id must be an integer.",
-              "The weight must be a number.",
-              "The value must be a number."
-            ]
-          }
-        headers: []
-        description: 'Validation errors'
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/shipping/fastest
-    metadata:
-      groupName: 'Shipping Calculations'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Get fastest shipping option'
-      description: |-
-        Find the fastest shipping option for a specific address and shipment details.
-        This is useful for urgent deliveries or when customers prioritize speed over cost.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      shipping_address_id:
-        name: shipping_address_id
-        description: 'The ID of the shipping address to calculate rates for.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      weight:
-        name: weight
-        description: 'optional Package weight in kilograms. Default: 1.0.'
-        required: false
-        example: '1.5'
-        type: numeric
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        custom: []
-      value:
-        name: value
-        description: 'optional Package value in pounds. Default: 50.0.'
-        required: false
-        example: '75.99'
-        type: numeric
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        custom: []
-    cleanBodyParameters:
-      shipping_address_id: 1
-      weight: '1.5'
-      value: '75.99'
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Fastest shipping option retrieved successfully.",
-            "data": {
-              "fastest_method": {
-                "id": 2,
-                "name": "Express Delivery",
-                "carrier": "DPD",
-                "service_code": "next-day",
-                "description": "Next working day delivery by 1pm",
-                "estimated_delivery": "1 day",
-                "cost": 999,
-                "cost_formatted": "£9.99",
-                "is_free": false,
-                "free_threshold": 15000,
-                "free_threshold_formatted": "£150.00",
-                "supports_tracking": true,
-                "requires_signature": true,
-                "estimated_delivery_date": "2025-01-16T13:00:00.000000Z",
-                "transit_time": "1 day"
-              },
-              "address": {
-                "id": 1,
-                "country": "GB",
-                "postcode": "SW1A 1AA"
-              }
+            "message": "Address validation failed.",
+            "errors": {
+              "valid": false,
+              "confidence_score": 0.2,
+              "validation_service": "postcode_anywhere",
+              "validated_at": "2025-01-15T12:30:00.000000Z",
+              "errors": [
+                "Postcode not found",
+                "Street name does not match postcode area"
+              ],
+              "suggestions": [
+                {
+                  "address_line_1": "123 Main Road",
+                  "city": "London",
+                  "postcode": "SW1A 1AA"
+                }
+              ]
             }
           }
         headers: []
-        description: 'Fastest shipping option retrieved successfully'
+        description: 'Address validation failed'
         custom: []
       -
-        status: 200
+        status: 503
         content: |-
           {
-            "message": "No shipping options available.",
-            "data": {
-              "fastest_method": null
-            }
+            "message": "Address validation service unavailable."
           }
         headers: []
-        description: 'No shipping options available'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "Shipping address not found."
-          }
-        headers: []
-        description: 'Shipping address not found'
-        custom: []
-      -
-        status: 422
-        content: |-
-          {
-            "errors": [
-              "The shipping address id field is required.",
-              "The shipping address id must be an integer.",
-              "The weight must be a number.",
-              "The value must be a number."
-            ]
-          }
-        headers: []
-        description: 'Validation errors'
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - POST
-    uri: api/shipping/validate-method
-    metadata:
-      groupName: 'Shipping Calculations'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Validate shipping method for order'
-      description: |-
-        Validate that a specific shipping method is available and calculate the exact cost
-        for a given address, weight, and order total. This is used during checkout to
-        ensure the selected shipping method is still valid and get the final cost.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      shipping_method_id:
-        name: shipping_method_id
-        description: 'The ID of the shipping method to validate.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      shipping_address_id:
-        name: shipping_address_id
-        description: 'The ID of the shipping address.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      weight:
-        name: weight
-        description: 'optional Package weight in kilograms. Default: 0.'
-        required: false
-        example: '2.5'
-        type: numeric
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        custom: []
-      total:
-        name: total
-        description: 'optional Order total in pounds. Default: 0.'
-        required: false
-        example: '89.99'
-        type: numeric
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: true
-        custom: []
-    cleanBodyParameters:
-      shipping_method_id: 1
-      shipping_address_id: 1
-      weight: '2.5'
-      total: '89.99'
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Shipping method validation completed.",
-            "data": {
-              "is_valid": true,
-              "shipping_cost": 599,
-              "shipping_cost_formatted": "£5.99",
-              "method_id": 1,
-              "address_id": 1
-            }
-          }
-        headers: []
-        description: 'Shipping method validation completed'
-        custom: []
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Shipping method validation completed.",
-            "data": {
-              "is_valid": false,
-              "shipping_cost": 0,
-              "shipping_cost_formatted": "£0.00",
-              "method_id": 1,
-              "address_id": 1
-            }
-          }
-        headers: []
-        description: 'Shipping method not valid'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "Shipping address not found."
-          }
-        headers: []
-        description: 'Shipping address not found'
-        custom: []
-      -
-        status: 422
-        content: |-
-          {
-            "errors": [
-              "The shipping method id field is required.",
-              "The shipping method id must exist in shipping_methods table.",
-              "The shipping address id field is required.",
-              "The shipping address id must exist in shipping_addresses table."
-            ]
-          }
-        headers: []
-        description: 'Validation errors'
+        description: 'Validation service unavailable'
         custom: []
     responseFields: []
     auth:

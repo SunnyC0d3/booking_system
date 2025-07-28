@@ -1,332 +1,19 @@
-name: 'Vendor Dropshipping'
+name: 'Public Review Responses'
 description: ''
 endpoints:
   -
     httpMethods:
       - GET
-    uri: api/vendor/dropshipping/dashboard
+    uri: 'api/reviews/{review_id}/responses'
     metadata:
-      groupName: 'Vendor Dropshipping'
+      groupName: 'Public Review Responses'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Get vendor dropshipping dashboard'
+      title: 'Get all responses for a specific review (Public viewing)'
       description: |-
-        Retrieve comprehensive dropshipping dashboard data for the authenticated vendor including
-        overview statistics, recent orders, top suppliers, profit analysis, alerts, and performance metrics.
-        This provides a complete view of the vendor's dropshipping operations.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Dropshipping dashboard retrieved successfully.",
-            "data": {
-              "overview": {
-                "total_orders": 128,
-                "pending_orders": 5,
-                "active_orders": 23,
-                "completed_orders": 95,
-                "total_revenue": 15640,
-                "total_revenue_formatted": "£156.40",
-                "total_profit": 4692,
-                "total_profit_formatted": "£46.92",
-                "average_profit_margin": 30.0
-              },
-              "recent_orders": [
-                {
-                  "id": 15,
-                  "order_id": 98,
-                  "supplier_name": "GlobalTech Distributors",
-                  "customer_name": "John Smith",
-                  "status": "confirmed",
-                  "status_label": "Confirmed",
-                  "total_cost": "£45.00",
-                  "total_retail": "£79.99",
-                  "profit_margin": "£34.99",
-                  "created_at": "2025-01-15T16:20:00.000000Z"
-                }
-              ],
-              "top_suppliers": [
-                {
-                  "id": 1,
-                  "name": "GlobalTech Distributors",
-                  "orders_count": 45,
-                  "status": "active",
-                  "integration_type": "api"
-                }
-              ],
-              "profit_summary": {
-                "this_month_profit": 1250,
-                "this_month_profit_formatted": "£12.50",
-                "last_month_profit": 980,
-                "last_month_profit_formatted": "£9.80",
-                "profit_growth_percentage": 27.55,
-                "this_month_revenue": 4167,
-                "this_month_revenue_formatted": "£41.67"
-              },
-              "alerts": [
-                {
-                  "type": "warning",
-                  "message": "3 dropship orders are overdue",
-                  "action_url": "/vendor/dropshipping/orders?overdue=1"
-                }
-              ],
-              "performance_metrics": {
-                "success_rate": 94.5,
-                "average_fulfillment_time_hours": 36.2,
-                "total_orders_processed": 128,
-                "successful_deliveries": 121
-              }
-            }
-          }
-        headers: []
-        description: 'Dashboard retrieved successfully'
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-            "message": "You do not have the required permissions."
-          }
-        headers: []
-        description: 'Insufficient permissions'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "Vendor profile not found."
-          }
-        headers: []
-        description: 'Vendor profile not found'
-        custom: []
-      -
-        status: 500
-        content: |-
-          {
-            "message": "Failed to retrieve dashboard."
-          }
-        headers: []
-        description: 'Server error'
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - GET
-    uri: api/vendor/dropshipping/orders
-    metadata:
-      groupName: 'Vendor Dropshipping'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Get vendor dropship orders'
-      description: |-
-        Retrieve a paginated list of dropship orders for the authenticated vendor's products.
-        This endpoint supports filtering by status, supplier, and search terms. Only orders
-        containing the vendor's products are included.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters:
-      status:
-        name: status
-        description: 'optional Filter orders by status (pending, confirmed, shipped, delivered, cancelled).'
-        required: false
-        example: confirmed
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      supplier_id:
-        name: supplier_id
-        description: 'optional Filter orders by specific supplier ID.'
-        required: false
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      search:
-        name: search
-        description: 'optional Search orders by supplier order ID or tracking number.'
-        required: false
-        example: GT001
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      page:
-        name: page
-        description: 'optional Page number for pagination. Default: 1.'
-        required: false
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      per_page:
-        name: per_page
-        description: 'optional Number of orders per page (max 50). Default: 15.'
-        required: false
-        example: 20
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanQueryParameters:
-      status: confirmed
-      supplier_id: 1
-      search: GT001
-      page: 1
-      per_page: 20
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Dropship orders retrieved successfully.",
-            "data": {
-              "data": [
-                {
-                  "id": 15,
-                  "order_id": 98,
-                  "supplier_id": 1,
-                  "status": "confirmed",
-                  "supplier_order_id": "GT-2025-001",
-                  "tracking_number": null,
-                  "tracking_url": null,
-                  "total_cost": 4500,
-                  "total_cost_formatted": "£45.00",
-                  "total_retail": 7999,
-                  "total_retail_formatted": "£79.99",
-                  "profit_margin": 3499,
-                  "profit_margin_formatted": "£34.99",
-                  "shipping_address": {
-                    "name": "John Smith",
-                    "line1": "123 Main Street",
-                    "city": "London",
-                    "postcode": "SW1A 1AA",
-                    "country": "GB"
-                  },
-                  "estimated_delivery": "2025-01-18T00:00:00.000000Z",
-                  "sent_to_supplier_at": "2025-01-15T16:25:00.000000Z",
-                  "confirmed_by_supplier_at": "2025-01-15T17:30:00.000000Z",
-                  "shipped_by_supplier_at": null,
-                  "delivered_at": null,
-                  "order": {
-                    "id": 98,
-                    "total_amount": 7999,
-                    "user": {
-                      "id": 5,
-                      "name": "John Smith",
-                      "email": "john@example.com"
-                    }
-                  },
-                  "supplier": {
-                    "id": 1,
-                    "name": "GlobalTech Distributors",
-                    "status": "active"
-                  },
-                  "created_at": "2025-01-15T16:20:00.000000Z",
-                  "updated_at": "2025-01-15T17:30:00.000000Z"
-                }
-              ],
-              "current_page": 1,
-              "per_page": 15,
-              "total": 23,
-              "last_page": 2,
-              "from": 1,
-              "to": 15
-            }
-          }
-        headers: []
-        description: 'Orders retrieved successfully'
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-            "message": "You do not have the required permissions."
-          }
-        headers: []
-        description: 'Insufficient permissions'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "Vendor profile not found."
-          }
-        headers: []
-        description: 'Vendor profile not found'
-        custom: []
-      -
-        status: 500
-        content: |-
-          {
-            "message": "Failed to retrieve dropship orders."
-          }
-        headers: []
-        description: 'Server error'
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - GET
-    uri: 'api/vendor/dropshipping/orders/{dropshipOrder_id}'
-    metadata:
-      groupName: 'Vendor Dropshipping'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Get specific vendor dropship order'
-      description: |-
-        Retrieve detailed information about a specific dropship order for the authenticated vendor.
-        Only orders containing the vendor's products can be accessed. Includes comprehensive
-        order details, items, and fulfillment status.
+        Retrieve all approved vendor responses for a specific review.
+        This endpoint is publicly accessible and does not require authentication.
       authenticated: true
       custom: []
     headers:
@@ -334,336 +21,9 @@ endpoints:
       Content-Type: application/json
       Accept: application/json
     urlParameters:
-      dropshipOrder_id:
-        name: dropshipOrder_id
-        description: 'The ID of the dropshipOrder.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      dropshipOrder:
-        name: dropshipOrder
-        description: 'The ID of the dropship order to retrieve.'
-        required: true
-        example: 15
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      dropshipOrder_id: 1
-      dropshipOrder: 15
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Dropship order retrieved successfully.",
-            "data": {
-              "id": 15,
-              "order_id": 98,
-              "supplier_id": 1,
-              "status": "confirmed",
-              "supplier_order_id": "GT-2025-001",
-              "tracking_number": null,
-              "tracking_url": null,
-              "total_cost": 4500,
-              "total_cost_formatted": "£45.00",
-              "total_retail": 7999,
-              "total_retail_formatted": "£79.99",
-              "profit_margin": 3499,
-              "profit_margin_formatted": "£34.99",
-              "shipping_address": {
-                "name": "John Smith",
-                "line1": "123 Main Street",
-                "line2": "Apt 4B",
-                "city": "London",
-                "county": "Greater London",
-                "postcode": "SW1A 1AA",
-                "country": "GB",
-                "phone": "+44 20 1234 5678"
-              },
-              "notes": "Handle with care",
-              "estimated_delivery": "2025-01-18T00:00:00.000000Z",
-              "sent_to_supplier_at": "2025-01-15T16:25:00.000000Z",
-              "confirmed_by_supplier_at": "2025-01-15T17:30:00.000000Z",
-              "shipped_by_supplier_at": null,
-              "delivered_at": null,
-              "retry_count": 0,
-              "auto_retry_enabled": true,
-              "order": {
-                "id": 98,
-                "total_amount": 7999,
-                "status": "processing",
-                "user": {
-                  "id": 5,
-                  "name": "John Smith",
-                  "email": "john@example.com"
-                }
-              },
-              "supplier": {
-                "id": 1,
-                "name": "GlobalTech Distributors",
-                "status": "active",
-                "integration_type": "api",
-                "processing_time_days": 2
-              },
-              "dropship_order_items": [
-                {
-                  "id": 1,
-                  "order_item_id": 156,
-                  "supplier_product_id": 1,
-                  "supplier_sku": "GT-WH-001",
-                  "quantity": 1,
-                  "supplier_price": 4500,
-                  "retail_price": 7999,
-                  "profit_per_item": 3499,
-                  "product_details": {
-                    "name": "Wireless Bluetooth Headphones Pro",
-                    "description": "Premium noise-cancelling wireless headphones",
-                    "weight": 0.35,
-                    "dimensions": {
-                      "length": 20.0,
-                      "width": 18.0,
-                      "height": 8.0
-                    },
-                    "images": ["headphones-1.jpg", "headphones-2.jpg"],
-                    "attributes": {
-                      "color": "Black",
-                      "connectivity": "Bluetooth 5.0"
-                    }
-                  },
-                  "status": "confirmed",
-                  "supplier_product": {
-                    "id": 1,
-                    "supplier_sku": "GT-WH-001",
-                    "name": "Wireless Bluetooth Headphones Pro",
-                    "stock_quantity": 150
-                  }
-                }
-              ],
-              "created_at": "2025-01-15T16:20:00.000000Z",
-              "updated_at": "2025-01-15T17:30:00.000000Z"
-            }
-          }
-        headers: []
-        description: 'Order found'
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-            "message": "You do not have the required permissions."
-          }
-        headers: []
-        description: 'Insufficient permissions'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "Vendor profile not found."
-          }
-        headers: []
-        description: 'Vendor profile not found'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "Dropship order not found or access denied."
-          }
-        headers: []
-        description: 'Order not found or access denied'
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - GET
-    uri: api/vendor/dropshipping/suppliers
-    metadata:
-      groupName: 'Vendor Dropshipping'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Get vendor suppliers'
-      description: |-
-        Retrieve a paginated list of suppliers that have product mappings with the authenticated
-        vendor's products. This shows suppliers that are actively working with the vendor for
-        dropshipping operations.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters:
-      status:
-        name: status
-        description: 'optional Filter suppliers by status (active, inactive, pending_approval).'
-        required: false
-        example: active
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      search:
-        name: search
-        description: 'optional Search suppliers by name or company name.'
-        required: false
-        example: Tech
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      page:
-        name: page
-        description: 'optional Page number for pagination. Default: 1.'
-        required: false
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      per_page:
-        name: per_page
-        description: 'optional Number of suppliers per page (max 50). Default: 15.'
-        required: false
-        example: 20
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanQueryParameters:
-      status: active
-      search: Tech
-      page: 1
-      per_page: 20
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Suppliers retrieved successfully.",
-            "data": {
-              "data": [
-                {
-                  "id": 1,
-                  "name": "GlobalTech Distributors",
-                  "company_name": "GlobalTech Distributors Ltd",
-                  "email": "orders@globaltech-dist.com",
-                  "phone": "+44 20 7946 0958",
-                  "country": "GB",
-                  "contact_person": "Sarah Williams",
-                  "status": "active",
-                  "integration_type": "api",
-                  "commission_rate": 5.00,
-                  "processing_time_days": 2,
-                  "auto_fulfill": true,
-                  "minimum_order_value": 25.00,
-                  "maximum_order_value": 5000.00,
-                  "supplier_products_count": 12,
-                  "dropship_orders_count": 45,
-                  "created_at": "2025-01-10T08:00:00.000000Z",
-                  "updated_at": "2025-01-15T14:25:00.000000Z"
-                }
-              ],
-              "current_page": 1,
-              "per_page": 15,
-              "total": 3,
-              "last_page": 1,
-              "from": 1,
-              "to": 3
-            }
-          }
-        headers: []
-        description: 'Suppliers retrieved successfully'
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-            "message": "You do not have the required permissions."
-          }
-        headers: []
-        description: 'Insufficient permissions'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "Vendor profile not found."
-          }
-        headers: []
-        description: 'Vendor profile not found'
-        custom: []
-      -
-        status: 500
-        content: |-
-          {
-            "message": "Failed to retrieve suppliers."
-          }
-        headers: []
-        description: 'Server error'
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - GET
-    uri: 'api/vendor/dropshipping/suppliers/{id}'
-    metadata:
-      groupName: 'Vendor Dropshipping'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Get specific vendor supplier'
-      description: |-
-        Retrieve detailed information about a specific supplier that has product mappings with
-        the authenticated vendor's products. Includes supplier products and recent orders.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      id:
-        name: id
-        description: 'The ID of the supplier.'
+      review_id:
+        name: review_id
+        description: 'The ID of the review.'
         required: true
         example: 16
         type: integer
@@ -671,177 +31,26 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         custom: []
-      supplier:
-        name: supplier
-        description: 'The ID of the supplier to retrieve.'
+      review:
+        name: review
+        description: 'The ID of the review.'
         required: true
-        example: 1
+        example: 123
         type: integer
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
     cleanUrlParameters:
-      id: 16
-      supplier: 1
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Supplier retrieved successfully.",
-            "data": {
-              "id": 1,
-              "name": "GlobalTech Distributors",
-              "company_name": "GlobalTech Distributors Ltd",
-              "email": "orders@globaltech-dist.com",
-              "phone": "+44 20 7946 0958",
-              "address": "123 Business Park, London, E14 5AB",
-              "country": "GB",
-              "contact_person": "Sarah Williams",
-              "status": "active",
-              "integration_type": "api",
-              "commission_rate": 5.00,
-              "processing_time_days": 2,
-              "auto_fulfill": true,
-              "stock_sync_enabled": true,
-              "price_sync_enabled": true,
-              "minimum_order_value": 25.00,
-              "maximum_order_value": 5000.00,
-              "supported_countries": ["GB", "IE", "FR", "DE", "NL", "BE"],
-              "supplier_products": [
-                {
-                  "id": 1,
-                  "supplier_sku": "GT-WH-001",
-                  "name": "Wireless Bluetooth Headphones Pro",
-                  "supplier_price": 4500,
-                  "stock_quantity": 150,
-                  "is_active": true,
-                  "product": {
-                    "id": 25,
-                    "name": "Wireless Bluetooth Headphones Pro",
-                    "price": 7999
-                  }
-                }
-              ],
-              "dropship_orders": [
-                {
-                  "id": 15,
-                  "status": "confirmed",
-                  "total_cost": "£45.00",
-                  "created_at": "2025-01-15T16:20:00.000000Z",
-                  "order": {
-                    "id": 98,
-                    "user": {
-                      "name": "John Smith"
-                    }
-                  }
-                }
-              ]
-            }
-          }
-        headers: []
-        description: 'Supplier found'
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-            "message": "You do not have the required permissions."
-          }
-        headers: []
-        description: 'Insufficient permissions'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "Vendor profile not found."
-          }
-        headers: []
-        description: 'Vendor profile not found'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "Supplier not found or access denied."
-          }
-        headers: []
-        description: 'Supplier not found or access denied'
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - GET
-    uri: api/vendor/dropshipping/supplier-products
-    metadata:
-      groupName: 'Vendor Dropshipping'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Get vendor supplier products'
-      description: |-
-        Retrieve a paginated list of supplier products that are mapped to the authenticated
-        vendor's products. This shows the inventory available for dropshipping from suppliers.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
+      review_id: 16
+      review: 123
     queryParameters:
-      supplier_id:
-        name: supplier_id
-        description: 'optional Filter products by specific supplier ID.'
+      per_page:
+        name: per_page
+        description: 'optional Number of responses per page (1-50). Default: 15.'
         required: false
-        example: 1
+        example: 20
         type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      sync_status:
-        name: sync_status
-        description: 'optional Filter by sync status (synced, pending_sync, out_of_sync, sync_error).'
-        required: false
-        example: synced
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      is_active:
-        name: is_active
-        description: 'optional Filter by active status (1 for active, 0 for inactive).'
-        required: false
-        example: true
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      search:
-        name: search
-        description: 'optional Search products by name or supplier SKU.'
-        required: false
-        example: Wireless
-        type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
@@ -850,29 +59,15 @@ endpoints:
         name: page
         description: 'optional Page number for pagination. Default: 1.'
         required: false
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      per_page:
-        name: per_page
-        description: 'optional Number of products per page (max 50). Default: 15.'
-        required: false
-        example: 20
+        example: 2
         type: integer
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
     cleanQueryParameters:
-      supplier_id: 1
-      sync_status: synced
-      is_active: true
-      search: Wireless
-      page: 1
       per_page: 20
+      page: 2
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
@@ -881,226 +76,27 @@ endpoints:
         status: 200
         content: |-
           {
-            "message": "Supplier products retrieved successfully.",
+            "message": "Review responses retrieved successfully.",
             "data": {
               "data": [
                 {
-                  "id": 1,
-                  "supplier_id": 1,
-                  "supplier_sku": "GT-WH-001",
-                  "supplier_product_id": "GT001",
-                  "name": "Wireless Bluetooth Headphones Pro",
-                  "description": "Premium noise-cancelling wireless headphones",
-                  "supplier_price": 4500,
-                  "supplier_price_formatted": "£45.00",
-                  "retail_price": 7999,
-                  "retail_price_formatted": "£79.99",
-                  "stock_quantity": 150,
-                  "sync_status": "synced",
-                  "is_active": true,
-                  "is_mapped": true,
-                  "minimum_order_quantity": 1,
-                  "processing_time_days": 2,
-                  "supplier": {
-                    "id": 1,
-                    "name": "GlobalTech Distributors",
-                    "status": "active"
-                  },
-                  "product": {
-                    "id": 25,
-                    "name": "Wireless Bluetooth Headphones Pro",
-                    "price": 7999
-                  }
-                }
-              ]
-            }
-          }
-        headers: []
-        description: 'Products retrieved successfully'
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-            "message": "You do not have the required permissions."
-          }
-        headers: []
-        description: 'Insufficient permissions'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "Vendor profile not found."
-          }
-        headers: []
-        description: 'Vendor profile not found'
-        custom: []
-      -
-        status: 500
-        content: |-
-          {
-            "message": "Failed to retrieve supplier products."
-          }
-        headers: []
-        description: 'Server error'
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - GET
-    uri: 'api/vendor/dropshipping/supplier-products/{supplierProduct_id}'
-    metadata:
-      groupName: 'Vendor Dropshipping'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Get specific vendor supplier product'
-      description: |-
-        Retrieve detailed information about a specific supplier product that is mapped to one
-        of the authenticated vendor's products. Includes mapping information and recent orders.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      supplierProduct_id:
-        name: supplierProduct_id
-        description: 'The ID of the supplierProduct.'
-        required: true
-        example: 16
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      supplierProduct:
-        name: supplierProduct
-        description: 'The ID of the supplier product to retrieve.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      supplierProduct_id: 16
-      supplierProduct: 1
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Supplier product retrieved successfully.",
-            "data": {
-              "id": 1,
-              "supplier_id": 1,
-              "supplier_sku": "GT-WH-001",
-              "name": "Wireless Bluetooth Headphones Pro",
-              "description": "Premium noise-cancelling wireless headphones with 30-hour battery life",
-              "supplier_price": 4500,
-              "supplier_price_formatted": "£45.00",
-              "retail_price": 7999,
-              "retail_price_formatted": "£79.99",
-              "stock_quantity": 150,
-              "weight": 0.35,
-              "sync_status": "synced",
-              "is_active": true,
-              "is_mapped": true,
-              "minimum_order_quantity": 1,
-              "processing_time_days": 2,
-              "images": ["headphones-1.jpg", "headphones-2.jpg"],
-              "attributes": {
-                "color": "Black",
-                "connectivity": "Bluetooth 5.0"
-              },
-              "supplier": {
-                "id": 1,
-                "name": "GlobalTech Distributors",
-                "status": "active",
-                "integration_type": "api"
-              },
-              "product": {
-                "id": 25,
-                "name": "Wireless Bluetooth Headphones Pro",
-                "price": 7999,
-                "vendor": {
-                  "id": 1,
-                  "name": "Tech Haven"
-                }
-              },
-              "product_mapping": {
-                "id": 1,
-                "is_primary": true,
-                "is_active": true,
-                "markup_percentage": 78.0
-              },
-              "dropship_order_items": [
-                {
-                  "id": 1,
-                  "quantity": 1,
-                  "supplier_price": 4500,
-                  "retail_price": 7999,
-                  "created_at": "2025-01-15T16:20:00.000000Z",
-                  "dropship_order": {
+                  "id": 45,
+                  "vendor": {
                     "id": 15,
-                    "status": "confirmed",
-                    "order": {
-                      "id": 98,
-                      "user": {
-                        "name": "John Smith"
-                      }
-                    }
-                  }
+                    "name": "Tech Haven"
+                  },
+                  "content": "Thank you for your feedback! We're glad you enjoyed our product.",
+                  "created_at": "2025-01-16T14:30:00.000000Z"
                 }
-              ]
+              ],
+              "current_page": 1,
+              "per_page": 15,
+              "total": 2,
+              "last_page": 1
             }
           }
         headers: []
-        description: 'Product found'
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-            "message": "You do not have the required permissions."
-          }
-        headers: []
-        description: 'Insufficient permissions'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "Vendor profile not found."
-          }
-        headers: []
-        description: 'Vendor profile not found'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "Supplier product not found or access denied."
-          }
-        headers: []
-        description: 'Product not found or access denied'
+        description: 'Responses retrieved successfully'
         custom: []
     responseFields: []
     auth:
@@ -1114,194 +110,14 @@ endpoints:
   -
     httpMethods:
       - GET
-    uri: api/vendor/dropshipping/product-mappings
+    uri: 'api/reviews/{review_id}/responses/{response_id}'
     metadata:
-      groupName: 'Vendor Dropshipping'
+      groupName: 'Public Review Responses'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Get vendor product mappings'
-      description: |-
-        Retrieve a paginated list of product-supplier mappings for the authenticated vendor's
-        products. This shows how vendor products are connected to suppliers for dropshipping.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters:
-      supplier_id:
-        name: supplier_id
-        description: 'optional Filter mappings by specific supplier ID.'
-        required: false
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      is_primary:
-        name: is_primary
-        description: 'optional Filter by primary mapping status (1 for primary, 0 for secondary).'
-        required: false
-        example: true
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      is_active:
-        name: is_active
-        description: 'optional Filter by active status (1 for active, 0 for inactive).'
-        required: false
-        example: true
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      search:
-        name: search
-        description: 'optional Search mappings by product name.'
-        required: false
-        example: Headphones
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      page:
-        name: page
-        description: 'optional Page number for pagination. Default: 1.'
-        required: false
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      per_page:
-        name: per_page
-        description: 'optional Number of mappings per page (max 50). Default: 15.'
-        required: false
-        example: 20
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanQueryParameters:
-      supplier_id: 1
-      is_primary: true
-      is_active: true
-      search: Headphones
-      page: 1
-      per_page: 20
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Product supplier mappings retrieved successfully.",
-            "data": {
-              "data": [
-                {
-                  "id": 1,
-                  "product_id": 25,
-                  "supplier_id": 1,
-                  "supplier_product_id": 1,
-                  "is_primary": true,
-                  "is_active": true,
-                  "priority_order": 1,
-                  "markup_percentage": 78.0,
-                  "markup_type": "percentage",
-                  "minimum_stock_threshold": 5,
-                  "auto_update_price": true,
-                  "auto_update_stock": true,
-                  "last_price_update": "2025-01-15T14:30:00.000000Z",
-                  "last_stock_update": "2025-01-15T15:45:00.000000Z",
-                  "product": {
-                    "id": 25,
-                    "name": "Wireless Bluetooth Headphones Pro",
-                    "price": 7999,
-                    "vendor": {
-                      "id": 1,
-                      "name": "Tech Haven"
-                    }
-                  },
-                  "supplier": {
-                    "id": 1,
-                    "name": "GlobalTech Distributors",
-                    "status": "active"
-                  },
-                  "supplier_product": {
-                    "id": 1,
-                    "supplier_sku": "GT-WH-001",
-                    "supplier_price": 4500,
-                    "stock_quantity": 150
-                  }
-                }
-              ]
-            }
-          }
-        headers: []
-        description: 'Mappings retrieved successfully'
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-            "message": "You do not have the required permissions."
-          }
-        headers: []
-        description: 'Insufficient permissions'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "Vendor profile not found."
-          }
-        headers: []
-        description: 'Vendor profile not found'
-        custom: []
-      -
-        status: 500
-        content: |-
-          {
-            "message": "Failed to retrieve product mappings."
-          }
-        headers: []
-        description: 'Server error'
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - GET
-    uri: 'api/vendor/dropshipping/product-mappings/{productSupplierMapping_id}'
-    metadata:
-      groupName: 'Vendor Dropshipping'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Get specific vendor product mapping'
-      description: |-
-        Retrieve detailed information about a specific product-supplier mapping for one of
-        the authenticated vendor's products. Includes configuration and performance data.
+      title: 'Get individual response details (Public viewing)'
+      description: ''
       authenticated: true
       custom: []
     headers:
@@ -1309,9 +125,9 @@ endpoints:
       Content-Type: application/json
       Accept: application/json
     urlParameters:
-      productSupplierMapping_id:
-        name: productSupplierMapping_id
-        description: 'The ID of the productSupplierMapping.'
+      review_id:
+        name: review_id
+        description: 'The ID of the review.'
         required: true
         example: 16
         type: integer
@@ -1319,19 +135,41 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         custom: []
-      productSupplierMapping:
-        name: productSupplierMapping
-        description: 'The ID of the mapping to retrieve.'
+      response_id:
+        name: response_id
+        description: 'The ID of the response.'
         required: true
-        example: 1
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      review:
+        name: review
+        description: 'The ID of the review.'
+        required: true
+        example: 123
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      response:
+        name: response
+        description: 'The ID of the response.'
+        required: true
+        example: 45
         type: integer
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
     cleanUrlParameters:
-      productSupplierMapping_id: 16
-      productSupplierMapping: 1
+      review_id: 16
+      response_id: 16
+      review: 123
+      response: 45
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -1339,390 +177,412 @@ endpoints:
     fileParameters: []
     responses:
       -
-        status: 200
-        content: |-
-          {
-            "message": "Product supplier mapping retrieved successfully.",
-            "data": {
-              "id": 1,
-              "product_id": 25,
-              "supplier_id": 1,
-              "supplier_product_id": 1,
-              "is_primary": true,
-              "is_active": true,
-              "priority_order": 1,
-              "markup_percentage": 78.0,
-              "markup_type": "percentage",
-              "fixed_markup": 0,
-              "minimum_stock_threshold": 5,
-              "auto_update_price": true,
-              "auto_update_stock": true,
-              "auto_update_description": false,
-              "field_mappings": {
-                "name": "product_name",
-                "description": "product_description",
-                "price": "wholesale_price",
-                "stock": "available_quantity"
-              },
-              "last_price_update": "2025-01-15T14:30:00.000000Z",
-              "last_stock_update": "2025-01-15T15:45:00.000000Z",
-              "product": {
-                "id": 25,
-                "name": "Wireless Bluetooth Headphones Pro",
-                "price": 7999,
-                "is_dropship": true,
-                "vendor": {
-                  "id": 1,
-                  "name": "Tech Haven"
-                }
-              },
-              "supplier": {
-                "id": 1,
-                "name": "GlobalTech Distributors",
-                "status": "active",
-                "integration_type": "api"
-              },
-              "supplier_product": {
-                "id": 1,
-                "supplier_sku": "GT-WH-001",
-                "supplier_price": 4500,
-                "stock_quantity": 150,
-                "is_active": true
-              }
-            }
-          }
-        headers: []
-        description: 'Mapping found'
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-            "message": "You do not have the required permissions."
-          }
-        headers: []
-        description: 'Insufficient permissions'
-        custom: []
-      -
         status: 404
         content: |-
           {
-            "message": "Vendor profile not found."
-          }
-        headers: []
-        description: 'Vendor profile not found'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "Product mapping not found or access denied."
-          }
-        headers: []
-        description: 'Mapping not found or access denied'
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - GET
-    uri: api/vendor/dropshipping/analytics
-    metadata:
-      groupName: 'Vendor Dropshipping'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Get vendor dropshipping analytics'
-      description: |-
-        Retrieve comprehensive analytics and performance metrics for the authenticated vendor's
-        dropshipping operations. Includes overview statistics, trends, supplier performance,
-        profit analysis, and fulfillment metrics.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Analytics retrieved successfully.",
-            "data": {
-              "overview": {
-                "total_orders": 128,
-                "pending_orders": 5,
-                "active_orders": 23,
-                "completed_orders": 95,
-                "total_revenue": 15640,
-                "total_revenue_formatted": "£156.40",
-                "total_profit": 4692,
-                "total_profit_formatted": "£46.92",
-                "average_profit_margin": 30.0
-              },
-              "order_trends": {
-                "daily_orders": [],
-                "weekly_orders": [],
-                "monthly_orders": []
-              },
-              "supplier_performance": {
-                "top_suppliers": [],
-                "fulfillment_rates": [],
-                "average_processing_times": []
-              },
-              "profit_analysis": {
-                "profit_by_product": [],
-                "profit_by_supplier": [],
-                "margin_trends": []
-              },
-              "product_performance": {
-                "best_selling_products": [],
-                "most_profitable_products": [],
-                "low_performing_products": []
-              },
-              "fulfillment_metrics": {
-                "average_fulfillment_time": 36.2,
-                "success_rate": 94.5,
-                "on_time_delivery_rate": 89.3
-              }
-            }
-          }
-        headers: []
-        description: 'Analytics retrieved successfully'
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-            "message": "You do not have the required permissions."
-          }
-        headers: []
-        description: 'Insufficient permissions'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "Vendor profile not found."
-          }
-        headers: []
-        description: 'Vendor profile not found'
-        custom: []
-      -
-        status: 500
-        content: |-
-          {
-            "message": "Failed to retrieve analytics."
-          }
-        headers: []
-        description: 'Server error'
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - GET
-    uri: api/vendor/dropshipping/profit-margins
-    metadata:
-      groupName: 'Vendor Dropshipping'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Get vendor profit margins'
-      description: |-
-        Retrieve detailed profit margin analysis for the authenticated vendor's dropshipping
-        operations. Includes profit margins by product, supplier, and time period.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Profit margins retrieved successfully.",
-            "data": {
-              "overall_margin": 30.0,
-              "profit_by_product": [
-                {
-                  "product_id": 25,
-                  "product_name": "Wireless Bluetooth Headphones Pro",
-                  "total_orders": 45,
-                  "total_revenue": 3599,
-                  "total_cost": 2025,
-                  "total_profit": 1574,
-                  "profit_margin": 43.7
-                }
-              ],
-              "profit_by_supplier": [
-                {
-                  "supplier_id": 1,
-                  "supplier_name": "GlobalTech Distributors",
-                  "total_orders": 45,
-                  "total_revenue": 3599,
-                  "total_cost": 2025,
-                  "total_profit": 1574,
-                  "profit_margin": 43.7
-                }
+              "message": "No query results for model [App\\Models\\Review] 16",
+              "exception": "Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException",
+              "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php",
+              "line": 636,
+              "trace": [
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php",
+                      "line": 584,
+                      "function": "prepareException",
+                      "class": "Illuminate\\Foundation\\Exceptions\\Handler",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/nunomaduro/collision/src/Adapters/Laravel/ExceptionHandler.php",
+                      "line": 54,
+                      "function": "render",
+                      "class": "Illuminate\\Foundation\\Exceptions\\Handler",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Pipeline.php",
+                      "line": 51,
+                      "function": "render",
+                      "class": "NunoMaduro\\Collision\\Adapters\\Laravel\\ExceptionHandler",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 214,
+                      "function": "handleException",
+                      "class": "Illuminate\\Routing\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 127,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+                      "line": 807,
+                      "function": "then",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+                      "line": 786,
+                      "function": "runRouteWithinStack",
+                      "class": "Illuminate\\Routing\\Router",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+                      "line": 750,
+                      "function": "runRoute",
+                      "class": "Illuminate\\Routing\\Router",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Routing/Router.php",
+                      "line": 739,
+                      "function": "dispatchToRoute",
+                      "class": "Illuminate\\Routing\\Router",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php",
+                      "line": 201,
+                      "function": "dispatch",
+                      "class": "Illuminate\\Routing\\Router",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 170,
+                      "function": "Illuminate\\Foundation\\Http\\{closure}",
+                      "class": "Illuminate\\Foundation\\Http\\Kernel",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php",
+                      "line": 21,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php",
+                      "line": 31,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php",
+                      "line": 21,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php",
+                      "line": 51,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Middleware\\TrimStrings",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php",
+                      "line": 27,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Http\\Middleware\\ValidatePostSize",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php",
+                      "line": 110,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php",
+                      "line": 49,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Http\\Middleware\\HandleCors",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php",
+                      "line": 58,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Http\\Middleware\\TrustProxies",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php",
+                      "line": 22,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 209,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Middleware\\InvokeDeferredCallbacks",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php",
+                      "line": 127,
+                      "function": "Illuminate\\Pipeline\\{closure}",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php",
+                      "line": 176,
+                      "function": "then",
+                      "class": "Illuminate\\Pipeline\\Pipeline",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php",
+                      "line": 145,
+                      "function": "sendRequestThroughRouter",
+                      "class": "Illuminate\\Foundation\\Http\\Kernel",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
+                      "line": 310,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Http\\Kernel",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
+                      "line": 298,
+                      "function": "callLaravelOrLumenRoute",
+                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
+                      "line": 91,
+                      "function": "makeApiCall",
+                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
+                      "line": 44,
+                      "function": "makeResponseCall",
+                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Strategies/Responses/ResponseCalls.php",
+                      "line": 35,
+                      "function": "makeResponseCallIfConditionsPass",
+                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php",
+                      "line": 237,
+                      "function": "__invoke",
+                      "class": "Knuckles\\Scribe\\Extracting\\Strategies\\Responses\\ResponseCalls",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php",
+                      "line": 163,
+                      "function": "iterateThroughStrategies",
+                      "class": "Knuckles\\Scribe\\Extracting\\Extractor",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Extracting/Extractor.php",
+                      "line": 95,
+                      "function": "fetchResponses",
+                      "class": "Knuckles\\Scribe\\Extracting\\Extractor",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php",
+                      "line": 125,
+                      "function": "processRoute",
+                      "class": "Knuckles\\Scribe\\Extracting\\Extractor",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php",
+                      "line": 72,
+                      "function": "extractEndpointsInfoFromLaravelApp",
+                      "class": "Knuckles\\Scribe\\GroupedEndpoints\\GroupedEndpointsFromApp",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/GroupedEndpoints/GroupedEndpointsFromApp.php",
+                      "line": 50,
+                      "function": "extractEndpointsInfoAndWriteToDisk",
+                      "class": "Knuckles\\Scribe\\GroupedEndpoints\\GroupedEndpointsFromApp",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/knuckleswtf/scribe/src/Commands/GenerateDocumentation.php",
+                      "line": 53,
+                      "function": "get",
+                      "class": "Knuckles\\Scribe\\GroupedEndpoints\\GroupedEndpointsFromApp",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php",
+                      "line": 36,
+                      "function": "handle",
+                      "class": "Knuckles\\Scribe\\Commands\\GenerateDocumentation",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Util.php",
+                      "line": 43,
+                      "function": "Illuminate\\Container\\{closure}",
+                      "class": "Illuminate\\Container\\BoundMethod",
+                      "type": "::"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php",
+                      "line": 95,
+                      "function": "unwrapIfClosure",
+                      "class": "Illuminate\\Container\\Util",
+                      "type": "::"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php",
+                      "line": 35,
+                      "function": "callBoundMethod",
+                      "class": "Illuminate\\Container\\BoundMethod",
+                      "type": "::"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Container/Container.php",
+                      "line": 694,
+                      "function": "call",
+                      "class": "Illuminate\\Container\\BoundMethod",
+                      "type": "::"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php",
+                      "line": 213,
+                      "function": "call",
+                      "class": "Illuminate\\Container\\Container",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/symfony/console/Command/Command.php",
+                      "line": 279,
+                      "function": "execute",
+                      "class": "Illuminate\\Console\\Command",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Console/Command.php",
+                      "line": 182,
+                      "function": "run",
+                      "class": "Symfony\\Component\\Console\\Command\\Command",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/symfony/console/Application.php",
+                      "line": 1094,
+                      "function": "run",
+                      "class": "Illuminate\\Console\\Command",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/symfony/console/Application.php",
+                      "line": 342,
+                      "function": "doRunCommand",
+                      "class": "Symfony\\Component\\Console\\Application",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/symfony/console/Application.php",
+                      "line": 193,
+                      "function": "doRun",
+                      "class": "Symfony\\Component\\Console\\Application",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php",
+                      "line": 198,
+                      "function": "run",
+                      "class": "Symfony\\Component\\Console\\Application",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/vendor/laravel/framework/src/Illuminate/Foundation/Application.php",
+                      "line": 1208,
+                      "function": "handle",
+                      "class": "Illuminate\\Foundation\\Console\\Kernel",
+                      "type": "->"
+                  },
+                  {
+                      "file": "/var/www/ecommerce_api/api/artisan",
+                      "line": 13,
+                      "function": "handleCommand",
+                      "class": "Illuminate\\Foundation\\Application",
+                      "type": "->"
+                  }
               ]
-            }
           }
-        headers: []
-        description: 'Profit margins retrieved successfully'
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-            "message": "You do not have the required permissions."
-          }
-        headers: []
-        description: 'Insufficient permissions'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "Vendor profile not found."
-          }
-        headers: []
-        description: 'Vendor profile not found'
-        custom: []
-      -
-        status: 500
-        content: |-
-          {
-            "message": "Failed to retrieve profit margins."
-          }
-        headers: []
-        description: 'Server error'
-        custom: []
-    responseFields: []
-    auth:
-      - headers
-      - Authorization
-      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - GET
-    uri: api/vendor/dropshipping/supplier-performance
-    metadata:
-      groupName: 'Vendor Dropshipping'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Get vendor supplier performance'
-      description: |-
-        Retrieve comprehensive performance metrics for suppliers working with the authenticated
-        vendor. Includes fulfillment rates, processing times, success rates, and reliability metrics.
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          {
-            "message": "Supplier performance retrieved successfully.",
-            "data": {
-              "suppliers": [
-                {
-                  "supplier_id": 1,
-                  "supplier_name": "GlobalTech Distributors",
-                  "total_orders": 45,
-                  "successful_orders": 43,
-                  "success_rate": 95.6,
-                  "average_processing_time": 2.1,
-                  "average_fulfillment_time": 36.2,
-                  "on_time_delivery_rate": 91.2,
-                  "order_accuracy_rate": 97.8,
-                  "integration_health": "excellent",
-                  "last_order_date": "2025-01-15T16:20:00.000000Z"
-                }
-              ],
-              "performance_summary": {
-                "best_performing_supplier": "GlobalTech Distributors",
-                "average_success_rate": 95.6,
-                "average_fulfillment_time": 36.2,
-                "total_suppliers": 3
-              }
-            }
-          }
-        headers: []
-        description: 'Supplier performance retrieved successfully'
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-            "message": "You do not have the required permissions."
-          }
-        headers: []
-        description: 'Insufficient permissions'
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "message": "Vendor profile not found."
-          }
-        headers: []
-        description: 'Vendor profile not found'
-        custom: []
-      -
-        status: 500
-        content: |-
-          {
-            "message": "Failed to retrieve supplier performance."
-          }
-        headers: []
-        description: 'Server error'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+        description: null
         custom: []
     responseFields: []
     auth:

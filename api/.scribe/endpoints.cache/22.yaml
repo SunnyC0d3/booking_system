@@ -97,7 +97,7 @@ endpoints:
         name: status
         description: ''
         required: false
-        example: pending_approval
+        example: suspended
         type: string
         enumValues:
           - active
@@ -112,7 +112,7 @@ endpoints:
         name: integration_type
         description: ''
         required: false
-        example: csv_upload
+        example: ftp
         type: string
         enumValues:
           - api
@@ -198,7 +198,7 @@ endpoints:
         name: sort_by
         description: ''
         required: false
-        example: name
+        example: processing_time_days
         type: string
         enumValues:
           - name
@@ -221,8 +221,8 @@ endpoints:
         nullable: false
         custom: []
     cleanBodyParameters:
-      status: pending_approval
-      integration_type: csv_upload
+      status: suspended
+      integration_type: ftp
       search: b
       country: ng
       auto_fulfill: true
@@ -230,7 +230,7 @@ endpoints:
       price_sync_enabled: false
       page: 66
       per_page: 17
-      sort_by: name
+      sort_by: processing_time_days
       sort_direction: asc
     fileParameters: []
     responses:

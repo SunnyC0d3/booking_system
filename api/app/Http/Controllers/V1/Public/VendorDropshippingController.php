@@ -20,6 +20,63 @@ use Exception;
 
 class VendorDropshippingController extends Controller
 {
+    use ApiResponses;
+
+    /**
+     * Get comprehensive order trends and analytics
+     *
+     * Analyzes dropshipping order patterns including daily, weekly, and monthly trends.
+     * Calculates growth rates and identifies seasonal patterns to help vendors optimize
+     * their dropshipping strategy and forecast demand.
+     *
+     * @group Vendor Dropshipping Analytics
+     * @authenticated
+     *
+     * @queryParam period string optional Analysis period (30days, 90days, 1year). Example: 30days
+     * @queryParam chart_type string optional Chart data type (daily, weekly, monthly). Example: daily
+     * @queryParam include_growth boolean optional Include growth rate calculations. Example: true
+     * @queryParam seasonal_analysis boolean optional Include seasonal pattern analysis. Example: true
+     *
+     * @response 200 scenario="Order trends retrieved successfully" {
+     *   "data": {
+     *     "daily_orders": [
+     *       {
+     *         "date": "2024-01-20",
+     *         "orders": 15,
+     *         "revenue": 1247.50
+     *       },
+     *       {
+     *         "date": "2024-01-21",
+     *         "orders": 18,
+     *         "revenue": 1456.25
+     *       }
+     *     ],
+     *     "weekly_orders": [
+     *       {
+     *         "week": "W3 2024",
+     *         "orders": 89,
+     *         "revenue": 7234.75
+     *       }
+     *     ],
+     *     "monthly_orders": [
+     *       {
+     *         "month": "Jan 2024",
+     *         "orders": 342,
+     *         "revenue": 28456.80
+     *       }
+     *     ],
+     *     "growth_rate": 12.5,
+     *     "seasonal_patterns": [
+     *       {
+     *         "month": "January",
+     *         "orders": 342
+     *       }
+     *     ]
+     *   },
+     *   "message": "Order trends retrieved successfully.",
+     *   "status": 200
+     * }
+     */
     protected function getOrderTrends($vendorProductIds): array
     {
         $thirtyDaysAgo = now()->subDays(30);
@@ -94,6 +151,52 @@ class VendorDropshippingController extends Controller
         ];
     }
 
+    /**
+     * Get supplier performance analytics and reliability metrics
+     *
+     * Provides comprehensive analysis of supplier performance including success rates,
+     * processing times, and reliability scores. Helps vendors identify top-performing
+     * suppliers and optimize their supplier relationships for better fulfillment rates.
+     *
+     * @group Vendor Dropshipping Analytics
+     * @authenticated
+     *
+     * @queryParam supplier_id integer optional Filter by specific supplier. Example: 15
+     * @queryParam time_period string optional Analysis time period (30days, 90days, 1year). Example: 90days
+     * @queryParam include_reliability boolean optional Include reliability score calculations. Example: true
+     * @queryParam min_orders integer optional Minimum orders threshold for inclusion. Example: 5
+     *
+     * @response 200 scenario="Supplier performance analytics retrieved" {
+     *   "data": {
+     *     "top_suppliers": [
+     *       {
+     *         "supplier_id": 15,
+     *         "total_orders": 124,
+     *         "success_rate": 97.5,
+     *         "avg_processing_time": 18.5
+     *       }
+     *     ],
+     *     "fulfillment_rates": {
+     *       "Global Electronics Ltd": 97.5,
+     *       "TechSource Distribution": 94.2,
+     *       "Gadget Wholesale Co": 89.8
+     *     },
+     *     "average_processing_times": {
+     *       "Global Electronics Ltd": 18.5,
+     *       "TechSource Distribution": 24.3,
+     *       "Gadget Wholesale Co": 32.1
+     *     },
+     *     "reliability_scores": [
+     *       {
+     *         "name": "Global Electronics Ltd",
+     *         "score": 92
+     *       }
+     *     ]
+     *   },
+     *   "message": "Supplier performance analytics retrieved successfully.",
+     *   "status": 200
+     * }
+     */
     protected function getSupplierPerformanceAnalytics($vendorProductIds): array
     {
         $suppliers = DropshipOrder::whereIn('product_id', $vendorProductIds)
@@ -117,6 +220,56 @@ class VendorDropshippingController extends Controller
         ];
     }
 
+    /**
+     * Get comprehensive profit analysis and margin trends
+     *
+     * Analyzes profit margins across products and suppliers, providing insights into
+     * profitability trends and cost breakdowns. Essential for optimizing pricing
+     * strategies and identifying the most profitable products and suppliers.
+     *
+     * @group Vendor Dropshipping Analytics
+     * @authenticated
+     *
+     * @queryParam group_by string optional Group profits by (product, supplier, category). Example: product
+     * @queryParam time_period string optional Analysis period (30days, 90days, 1year). Example: 90days
+     * @queryParam include_trends boolean optional Include profit margin trends over time. Example: true
+     * @queryParam min_margin numeric optional Minimum margin threshold for filtering. Example: 10.00
+     *
+     * @response 200 scenario="Profit analysis retrieved successfully" {
+     *   "data": {
+     *     "profit_by_product": [
+     *       {
+     *         "product_name": "Wireless Gaming Headset Pro",
+     *         "total_profit": 1247.85,
+     *         "orders": 34,
+     *         "avg_margin": 36.70
+     *       }
+     *     ],
+     *     "profit_by_supplier": [
+     *       {
+     *         "supplier_id": 15,
+     *         "total_profit": 3456.92,
+     *         "orders": 89
+     *       }
+     *     ],
+     *     "margin_trends": [
+     *       {
+     *         "date": "2024-01-20",
+     *         "margin": 34.25
+     *       }
+     *     ],
+     *     "cost_breakdown": {
+     *       "total_revenue": 15678.45,
+     *       "total_cost": 9876.23,
+     *       "total_profit": 5802.22,
+     *       "profit_margin_percentage": 37.0,
+     *       "average_order_value": 89.45
+     *     }
+     *   },
+     *   "message": "Profit analysis retrieved successfully.",
+     *   "status": 200
+     * }
+     */
     protected function getProfitAnalysis($vendorProductIds): array
     {
         $profitByProduct = DropshipOrder::whereIn('product_id', $vendorProductIds)
@@ -147,6 +300,54 @@ class VendorDropshippingController extends Controller
         ];
     }
 
+    /**
+     * Get product performance metrics and sales analytics
+     *
+     * Analyzes individual product performance including best-selling items,
+     * most profitable products, and low-performing inventory. Provides insights
+     * for inventory optimization and product portfolio management.
+     *
+     * @group Vendor Dropshipping Analytics
+     * @authenticated
+     *
+     * @queryParam sort_by string optional Sort products by (orders, revenue, profit). Example: orders
+     * @queryParam time_period string optional Analysis period (7days, 30days, 90days). Example: 30days
+     * @queryParam limit integer optional Number of top products to return. Example: 10
+     * @queryParam include_low_performing boolean optional Include low-performing products analysis. Example: true
+     *
+     * @response 200 scenario="Product performance metrics retrieved" {
+     *   "data": {
+     *     "best_selling_products": [
+     *       {
+     *         "product_id": 127,
+     *         "orders": 45,
+     *         "revenue": 2345.67
+     *       }
+     *     ],
+     *     "most_profitable_products": [
+     *       {
+     *         "product_id": 134,
+     *         "profit": 1456.89
+     *       }
+     *     ],
+     *     "low_performing_products": [
+     *       {
+     *         "product_id": 98,
+     *         "orders": 3
+     *       }
+     *     ],
+     *     "inventory_turnover": [
+     *       {
+     *         "product_name": "Bluetooth Speaker Ultra",
+     *         "turnover_rate": 4.2,
+     *         "days_of_inventory": 21.4
+     *       }
+     *     ]
+     *   },
+     *   "message": "Product performance metrics retrieved successfully.",
+     *   "status": 200
+     * }
+     */
     protected function getProductPerformance($vendorProductIds): array
     {
         $thirtyDaysAgo = now()->subDays(30);
@@ -260,7 +461,7 @@ class VendorDropshippingController extends Controller
                 return [
                     'product_name' => $product->name,
                     'turnover_rate' => round($soldQuantity / $avgInventory, 2),
-                    'days_of_inventory' => $soldQuantory > 0 ? round((90 * $avgInventory) / $soldQuantity, 1) : 0
+                    'days_of_inventory' => $soldQuantity > 0 ? round((90 * $avgInventory) / $soldQuantity, 1) : 0
                 ];
             });
     }

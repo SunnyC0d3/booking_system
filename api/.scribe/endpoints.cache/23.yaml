@@ -130,7 +130,7 @@ endpoints:
         name: sync_status
         description: ''
         required: false
-        example: supplier_discontinued
+        example: pending_sync
         type: string
         enumValues:
           - synced
@@ -238,7 +238,7 @@ endpoints:
         name: last_synced_from
         description: 'Must be a valid date.'
         required: false
-        example: '2025-07-23T09:48:28'
+        example: '2025-07-28T22:20:40'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -248,7 +248,7 @@ endpoints:
         name: last_synced_to
         description: 'Must be a valid date. Must be a date after or equal to <code>last_synced_from</code>.'
         required: false
-        example: '2051-08-16'
+        example: '2051-08-21'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -278,7 +278,7 @@ endpoints:
         name: sort_by
         description: ''
         required: false
-        example: name
+        example: supplier_sku
         type: string
         enumValues:
           - name
@@ -317,14 +317,14 @@ endpoints:
         name: include_attributes
         description: ''
         required: false
-        example: true
+        example: false
         type: boolean
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      sync_status: supplier_discontinued
+      sync_status: pending_sync
       is_active: true
       is_mapped: true
       search: b
@@ -334,14 +334,14 @@ endpoints:
       max_price: 12
       min_stock: 77
       max_stock: 8
-      last_synced_from: '2025-07-23T09:48:28'
-      last_synced_to: '2051-08-16'
+      last_synced_from: '2025-07-28T22:20:40'
+      last_synced_to: '2051-08-21'
       page: 22
       per_page: 7
-      sort_by: name
+      sort_by: supplier_sku
       sort_direction: asc
       include_images: true
-      include_attributes: true
+      include_attributes: false
     fileParameters: []
     responses:
       -

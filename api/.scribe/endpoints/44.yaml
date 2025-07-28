@@ -1,52 +1,42 @@
-name: 'Customer Shipment Management'
+name: 'Public Shipping Tracking'
 description: ''
 endpoints:
   -
     httpMethods:
       - GET
-    uri: api/my-shipments
+    uri: 'api/tracking/{trackingNumber}'
     metadata:
-      groupName: 'Customer Shipment Management'
+      groupName: 'Public Shipping Tracking'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: "Get user's shipments"
+      title: 'Track shipment by tracking number'
       description: |-
-        Retrieve all shipments for the authenticated user, ordered by creation date.
-        This endpoint provides a complete list of the user's shipments with basic
-        information and pagination support. Essential for customer account pages.
+        Track a shipment using its tracking number without requiring authentication.
+        This endpoint fetches the latest tracking information from the carrier and
+        returns the current status, delivery information, and tracking history.
+        Public endpoint for customer tracking pages.
       authenticated: true
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters:
-      per_page:
-        name: per_page
-        description: 'optional Number of shipments per page. Default: 15.'
-        required: false
-        example: 10
-        type: integer
+    urlParameters:
+      trackingNumber:
+        name: trackingNumber
+        description: 'The tracking number to look up.'
+        required: true
+        example: AB123456789GB
+        type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-      page:
-        name: page
-        description: 'optional Page number for pagination. Default: 1.'
-        required: false
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanQueryParameters:
-      per_page: 10
-      page: 1
+    cleanUrlParameters:
+      trackingNumber: AB123456789GB
+    queryParameters: []
+    cleanQueryParameters: []
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
@@ -55,94 +45,63 @@ endpoints:
         status: 200
         content: |-
           {
-            "message": "Shipments retrieved successfully.",
+            "message": "Shipment tracking information retrieved successfully.",
             "data": {
-              "shipments": [
+              "tracking_number": "AB123456789GB",
+              "status": "in_transit",
+              "status_label": "In Transit",
+              "carrier": "Royal Mail",
+              "service_name": "Tracked 48",
+              "shipped_at": "2025-01-15T10:00:00.000000Z",
+              "delivered_at": null,
+              "estimated_delivery": "2025-01-17T17:00:00.000000Z",
+              "tracking_url": "https://track.royalmail.com/AB123456789GB",
+              "tracking_history": [
                 {
-                  "id": 1,
-                  "tracking_number": "AB123456789GB",
-                  "carrier": "Royal Mail",
-                  "service_name": "Tracked 48",
-                  "status": "delivered",
-                  "status_label": "Delivered",
-                  "status_color": "green",
-                  "shipping_cost": 599,
-                  "shipping_cost_formatted": "£5.99",
-                  "tracking_url": "https://track.royalmail.com/AB123456789GB",
-                  "shipped_at": "2025-01-15T10:00:00.000000Z",
-                  "delivered_at": "2025-01-17T14:30:00.000000Z",
-                  "estimated_delivery": "2025-01-17T17:00:00.000000Z",
-                  "is_overdue": false,
-                  "order": {
-                    "id": 123,
-                    "total_amount_formatted": "£29.99",
-                    "created_at": "2025-01-14T14:30:00.000000Z"
-                  },
-                  "shipping_method": {
-                    "id": 1,
-                    "name": "Standard Delivery",
-                    "carrier": "Royal Mail",
-                    "estimated_delivery": "2-3 days"
-                  },
-                  "created_at": "2025-01-15T09:45:00.000000Z"
+                  "timestamp": "2025-01-15T10:00:00.000000Z",
+                  "status": "shipped",
+                  "description": "Item dispatched",
+                  "location": "London Mail Centre",
+                  "carrier_status": "DISPATCHED"
                 },
                 {
-                  "id": 2,
-                  "tracking_number": "CD987654321GB",
-                  "carrier": "DPD",
-                  "service_name": "Next Day",
-                  "status": "shipped",
-                  "status_label": "Shipped",
-                  "status_color": "blue",
-                  "shipping_cost": 999,
-                  "shipping_cost_formatted": "£9.99",
-                  "tracking_url": "https://track.dpd.co.uk/CD987654321GB",
-                  "shipped_at": "2025-01-16T11:00:00.000000Z",
-                  "delivered_at": null,
-                  "estimated_delivery": "2025-01-17T13:00:00.000000Z",
-                  "is_overdue": false,
-                  "order": {
-                    "id": 124,
-                    "total_amount_formatted": "£75.50",
-                    "created_at": "2025-01-16T09:20:00.000000Z"
-                  },
-                  "shipping_method": {
-                    "id": 2,
-                    "name": "Express Delivery",
-                    "carrier": "DPD",
-                    "estimated_delivery": "1 day"
-                  },
-                  "created_at": "2025-01-16T10:30:00.000000Z"
+                  "timestamp": "2025-01-16T08:30:00.000000Z",
+                  "status": "in_transit",
+                  "description": "Item in transit",
+                  "location": "Birmingham Mail Centre",
+                  "carrier_status": "IN_TRANSIT"
+                },
+                {
+                  "timestamp": "2025-01-16T14:45:00.000000Z",
+                  "status": "out_for_delivery",
+                  "description": "Out for delivery",
+                  "location": "Manchester Delivery Office",
+                  "carrier_status": "OUT_FOR_DELIVERY"
                 }
               ],
-              "pagination": {
-                "current_page": 1,
-                "per_page": 15,
-                "total": 8,
-                "last_page": 1
-              }
+              "order_id": 123
             }
           }
         headers: []
-        description: 'Shipments retrieved successfully'
+        description: 'Shipment tracking information retrieved successfully'
         custom: []
       -
-        status: 200
+        status: 404
         content: |-
           {
-            "message": "Shipments retrieved successfully.",
-            "data": {
-              "shipments": [],
-              "pagination": {
-                "current_page": 1,
-                "per_page": 15,
-                "total": 0,
-                "last_page": 1
-              }
-            }
+            "message": "Tracking number not found."
           }
         headers: []
-        description: 'No shipments found'
+        description: 'Tracking number not found'
+        custom: []
+      -
+        status: 503
+        content: |-
+          {
+            "message": "Unable to retrieve tracking information at this time."
+          }
+        headers: []
+        description: 'Tracking service unavailable'
         custom: []
     responseFields: []
     auth:
@@ -156,17 +115,17 @@ endpoints:
   -
     httpMethods:
       - GET
-    uri: 'api/my-shipments/{shipment_id}'
+    uri: 'api/tracking/{trackingNumber}/status'
     metadata:
-      groupName: 'Customer Shipment Management'
+      groupName: 'Public Shipping Tracking'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Get specific user shipment'
+      title: 'Get basic shipment status'
       description: |-
-        Retrieve detailed information about a specific shipment belonging to the authenticated
-        user. This endpoint includes complete shipment details, order information, and
-        attempts to fetch the latest tracking information from the carrier.
+        Get basic status information for a shipment by tracking number without fetching
+        full tracking updates from the carrier. This is a faster, lightweight endpoint
+        for checking shipment status without detailed tracking history.
       authenticated: true
       custom: []
     headers:
@@ -174,29 +133,18 @@ endpoints:
       Content-Type: application/json
       Accept: application/json
     urlParameters:
-      shipment_id:
-        name: shipment_id
-        description: 'The ID of the shipment.'
+      trackingNumber:
+        name: trackingNumber
+        description: 'The tracking number to look up.'
         required: true
-        example: 16
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      shipment:
-        name: shipment
-        description: 'The ID of the shipment to retrieve.'
-        required: true
-        example: 1
-        type: integer
+        example: AB123456789GB
+        type: string
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
     cleanUrlParameters:
-      shipment_id: 16
-      shipment: 1
+      trackingNumber: AB123456789GB
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -207,58 +155,30 @@ endpoints:
         status: 200
         content: |-
           {
-            "message": "Shipment retrieved successfully.",
+            "message": "Shipment status retrieved successfully.",
             "data": {
-              "id": 1,
               "tracking_number": "AB123456789GB",
-              "carrier": "Royal Mail",
-              "service_name": "Tracked 48",
-              "status": "delivered",
-              "status_label": "Delivered",
-              "status_color": "green",
-              "shipping_cost": 599,
-              "shipping_cost_formatted": "£5.99",
-              "tracking_url": "https://track.royalmail.com/AB123456789GB",
-              "shipped_at": "2025-01-15T10:00:00.000000Z",
-              "delivered_at": "2025-01-17T14:30:00.000000Z",
+              "status": "shipped",
+              "status_label": "Shipped",
+              "status_color": "blue",
+              "is_delivered": false,
               "estimated_delivery": "2025-01-17T17:00:00.000000Z",
+              "delivered_at": null,
               "days_in_transit": 2,
-              "is_overdue": false,
-              "notes": "Handle with care",
-              "order": {
-                "id": 123,
-                "total_amount_formatted": "£29.99",
-                "created_at": "2025-01-14T14:30:00.000000Z"
-              },
-              "shipping_method": {
-                "name": "Standard Delivery",
-                "carrier": "Royal Mail",
-                "estimated_delivery": "2-3 days"
-              },
-              "created_at": "2025-01-15T09:45:00.000000Z",
-              "updated_at": "2025-01-17T14:30:00.000000Z"
+              "is_overdue": false
             }
           }
         headers: []
-        description: 'Shipment retrieved successfully'
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-            "message": "You can only view your own shipments."
-          }
-        headers: []
-        description: 'Access denied'
+        description: 'Shipment status retrieved successfully'
         custom: []
       -
         status: 404
         content: |-
           {
-            "message": "No query results for model [App\\Models\\Shipment] 999"
+            "message": "Tracking number not found."
           }
         headers: []
-        description: 'Shipment not found'
+        description: 'Tracking number not found'
         custom: []
     responseFields: []
     auth:

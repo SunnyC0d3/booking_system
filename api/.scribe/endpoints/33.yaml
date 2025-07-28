@@ -1,680 +1,31 @@
-name: 'Product Catalog'
+name: 'User Profile'
 description: ''
 endpoints:
   -
     httpMethods:
       - GET
-    uri: api/products
+    uri: 'api/users/{id}'
     metadata:
-      groupName: 'Product Catalog'
+      groupName: 'User Profile'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Search and browse products with advanced features'
+      title: 'Retrieve user profile information'
       description: |-
-        Get a paginated and filtered list of active products with advanced search capabilities.
-        This endpoint supports intelligent search with relevance scoring, faceted filtering,
-        result diversification, and personalized recommendations. Includes comprehensive
-        product information optimized for customer browsing and purchasing decisions.
-      authenticated: false
+        Get detailed profile information for a specific user. Users can view their own complete profile
+        including personal details, address information, security settings, and account status.
+        Other authenticated users can only view basic public profile information for privacy protection.
+        This endpoint is commonly used for profile pages and account management interfaces.
+      authenticated: true
       custom: []
     headers:
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters:
-      filter:
-        name: filter
-        description: 'optional Array of filter parameters to narrow down results.'
-        required: false
-        example:
-          - architecto
-        type: 'string[]'
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      'filter[search]':
-        name: 'filter[search]'
-        description: 'optional Intelligent search with typo tolerance and relevance scoring.'
-        required: false
-        example: 'wireless bluetooth headphones under £50'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      'filter[name]':
-        name: 'filter[name]'
-        description: 'optional Filter products by name (partial match supported).'
-        required: false
-        example: wireless
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      'filter[price]':
-        name: 'filter[price]'
-        description: 'optional Filter by price range in pounds. Single value or comma-separated min,max.'
-        required: false
-        example: '10.00,50.00'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      'filter[priceRanges]':
-        name: 'filter[priceRanges]'
-        description: 'optional Multiple price ranges.'
-        required: false
-        example: '0-25,50-100'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      'filter[category]':
-        name: 'filter[category]'
-        description: 'optional Filter by category ID(s) including child categories.'
-        required: false
-        example: '5,12,18'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      'filter[availability]':
-        name: 'filter[availability]'
-        description: 'optional Filter by stock status. Options: in_stock, available.'
-        required: false
-        example: in_stock
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      'filter[vendors]':
-        name: 'filter[vendors]'
-        description: 'optional Filter by brand/vendor ID(s).'
-        required: false
-        example: '2,5,8'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      'filter[vendor]':
-        name: 'filter[vendor]'
-        description: 'optional Filter by brand name.'
-        required: false
-        example: apple
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      'filter[tags]':
-        name: 'filter[tags]'
-        description: 'optional Filter by tag ID(s).'
-        required: false
-        example: '3,7,12'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      'filter[attributes]':
-        name: 'filter[attributes]'
-        description: 'optional Filter by product attributes. Format: attribute:value.'
-        required: false
-        example: 'color:red,size:large'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      'filter[created_at]':
-        name: 'filter[created_at]'
-        description: 'optional Filter by creation date range.'
-        required: false
-        example: '2025-01-01,2025-01-31'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      'filter[include]':
-        name: 'filter[include]'
-        description: 'optional Include related data. Options: vendor,variants,category,tags,media.'
-        required: false
-        example: 'vendor,variants,category'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      page:
-        name: page
-        description: 'optional Page number for pagination. Default: 1.'
-        required: false
-        example: 2
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      per_page:
-        name: per_page
-        description: 'optional Number of products per page (max 100). Default: 15.'
-        required: false
-        example: 24
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      sort:
-        name: sort
-        description: 'optional Sort products. Available: name, price, created_at, relevance.'
-        required: false
-        example: '-relevance,price'
-        type: string
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      diversify:
-        name: diversify
-        description: 'optional Apply result diversification for better variety. Default: false.'
-        required: false
-        example: true
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanQueryParameters:
-      filter:
-        - architecto
-      'filter[search]': 'wireless bluetooth headphones under £50'
-      'filter[name]': wireless
-      'filter[price]': '10.00,50.00'
-      'filter[priceRanges]': '0-25,50-100'
-      'filter[category]': '5,12,18'
-      'filter[availability]': in_stock
-      'filter[vendors]': '2,5,8'
-      'filter[vendor]': apple
-      'filter[tags]': '3,7,12'
-      'filter[attributes]': 'color:red,size:large'
-      'filter[created_at]': '2025-01-01,2025-01-31'
-      'filter[include]': 'vendor,variants,category'
-      page: 2
-      per_page: 24
-      sort: '-relevance,price'
-      diversify: true
-    bodyParameters:
-      filter:
-        name: filter
-        description: ''
-        required: false
-        example: null
-        type: object
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      filter.name:
-        name: filter.name
-        description: 'Must not be greater than 255 characters.'
-        required: false
-        example: b
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      filter.search:
-        name: filter.search
-        description: 'Must not be greater than 500 characters.'
-        required: false
-        example: 'n'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      filter.price:
-        name: filter.price
-        description: 'Must match the regex /^\d+(\.\d{1,2})?(,\d+(\.\d{1,2})?)*$/.'
-        required: false
-        example: '9,3.1)'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      filter.priceRanges:
-        name: filter.priceRanges
-        description: 'Must match the regex /^(\d+(\.\d{1,2})?-\d+(\.\d{1,2})?)(,\d+(\.\d{1,2})?-\d+(\.\d{1,2})?)*$/.'
-        required: false
-        example: '-1.42)-3268)'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      filter.category:
-        name: filter.category
-        description: 'Must match the regex /^(\d,?)+$/.'
-        required: false
-        example: '9,31'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      filter.categories:
-        name: filter.categories
-        description: 'Must match the regex /^(\d,?)+$/.'
-        required: false
-        example: '9,31'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      filter.quantity:
-        name: filter.quantity
-        description: 'Must match the regex /^\d+(,\d+)?$/.'
-        required: false
-        example: '64'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      filter.availability:
-        name: filter.availability
-        description: ''
-        required: false
-        example: out_of_stock
-        type: string
-        enumValues:
-          - in_stock
-          - out_of_stock
-          - low_stock
-          - available
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      filter.vendors:
-        name: filter.vendors
-        description: 'Must match the regex /^(\d,?)+$/.'
-        required: false
-        example: '9,31'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      filter.vendor:
-        name: filter.vendor
-        description: 'Must not be greater than 255 characters.'
-        required: false
-        example: i
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      filter.brand:
-        name: filter.brand
-        description: 'Must not be greater than 255 characters.'
-        required: false
-        example: k
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      filter.brands:
-        name: filter.brands
-        description: 'Must match the regex /^(\d,?)+$/.'
-        required: false
-        example: '9,31'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      filter.tags:
-        name: filter.tags
-        description: 'Must match the regex /^(\d,?)+$/.'
-        required: false
-        example: '9,31'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      filter.tag_logic:
-        name: filter.tag_logic
-        description: ''
-        required: false
-        example: AND
-        type: string
-        enumValues:
-          - AND
-          - OR
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      filter.attributes:
-        name: filter.attributes
-        description: 'Must match the regex /^([a-zA-Z_]+:[a-zA-Z0-9_\-\s]+)(,[a-zA-Z_]+:[a-zA-Z0-9_\-\s]+)*$/.'
-        required: false
-        example: '_JK:AI'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      filter.color:
-        name: filter.color
-        description: 'Must not be greater than 50 characters.'
-        required: false
-        example: k
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      filter.colors:
-        name: filter.colors
-        description: 'Must match the regex /^([a-zA-Z]+,?)+$/.'
-        required: false
-        example: dLJnIk
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      filter.size:
-        name: filter.size
-        description: 'Must not be greater than 50 characters.'
-        required: false
-        example: h
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      filter.sizes:
-        name: filter.sizes
-        description: 'Must match the regex /^([a-zA-Z0-9]+,?)+$/.'
-        required: false
-        example: DDz1Ys
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      filter.material:
-        name: filter.material
-        description: 'Must not be greater than 100 characters.'
-        required: false
-        example: h
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      filter.status:
-        name: filter.status
-        description: 'Must not be greater than 50 characters.'
-        required: false
-        example: w
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      filter.created_at:
-        name: filter.created_at
-        description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
-        required: false
-        example: '2559-31-42'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      filter.updated_at:
-        name: filter.updated_at
-        description: 'Must match the regex /^\d{4}-\d{2}-\d{2}(,\d{4}-\d{2}-\d{2})?$/.'
-        required: false
-        example: '2559-31-42'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      filter.include:
-        name: filter.include
-        description: 'Must match the regex /^(\w+(,\w+)*)?$/.'
-        required: false
-        example: 'uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      page:
-        name: page
-        description: 'Must be at least 1.'
-        required: false
-        example: 4
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      per_page:
-        name: per_page
-        description: 'Must be at least 1. Must not be greater than 100.'
-        required: false
-        example: 9
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      sort:
-        name: sort
-        description: 'Must match the regex /^(-?[a-zA-Z0-9_]+)(,-?[a-zA-Z0-9_]+)*$/.'
-        required: false
-        example: 'y8p,Bm,-dp,-Zm,-GH'
-        type: string
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      diversify:
-        name: diversify
-        description: ''
-        required: false
-        example: true
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      explain:
-        name: explain
-        description: ''
-        required: false
-        example: true
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      facets:
-        name: facets
-        description: ''
-        required: false
-        example: true
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      highlight:
-        name: highlight
-        description: ''
-        required: false
-        example: false
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      personalize:
-        name: personalize
-        description: ''
-        required: false
-        example: false
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      typo_tolerance:
-        name: typo_tolerance
-        description: ''
-        required: false
-        example: false
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      exact_match:
-        name: exact_match
-        description: ''
-        required: false
-        example: false
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      boost_new_products:
-        name: boost_new_products
-        description: ''
-        required: false
-        example: false
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-      boost_in_stock:
-        name: boost_in_stock
-        description: ''
-        required: false
-        example: false
-        type: boolean
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      filter:
-        name: b
-        search: 'n'
-        price: '9,3.1)'
-        priceRanges: '-1.42)-3268)'
-        category: '9,31'
-        categories: '9,31'
-        quantity: '64'
-        availability: out_of_stock
-        vendors: '9,31'
-        vendor: i
-        brand: k
-        brands: '9,31'
-        tags: '9,31'
-        tag_logic: AND
-        attributes: '_JK:AI'
-        color: k
-        colors: dLJnIk
-        size: h
-        sizes: DDz1Ys
-        material: h
-        status: w
-        created_at: '2559-31-42'
-        updated_at: '2559-31-42'
-        include: 'uw,pw,lvq,wrsitc,pscqld,zsnrwt,ujwv'
-      page: 4
-      per_page: 9
-      sort: 'y8p,Bm,-dp,-Zm,-GH'
-      diversify: true
-      explain: true
-      facets: true
-      highlight: false
-      personalize: false
-      typo_tolerance: false
-      exact_match: false
-      boost_new_products: false
-      boost_in_stock: false
-    fileParameters: []
-    responses:
-      -
-        status: 401
-        content: '{"message":"Unauthenticated."}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          x-content-type-options: nosniff
-          x-frame-options: DENY
-          x-xss-protection: '1; mode=block'
-          content-security-policy: "default-src 'none'; frame-ancestors 'none';"
-          referrer-policy: strict-origin-when-cross-origin
-          permissions-policy: 'camera=(), microphone=(), geolocation=(), payment=()'
-        description: null
-        custom: []
-    responseFields: []
-    auth: []
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - GET
-    uri: 'api/products/{id}'
-    metadata:
-      groupName: 'Product Catalog'
-      groupDescription: ''
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Retrieve detailed product information'
-      description: |-
-        Get comprehensive information about a specific product including all variants, media,
-        category details, vendor information, and customer-relevant data. This endpoint provides
-        complete product data needed for product detail pages, including high-resolution images,
-        pricing for all variants, inventory levels, and related product suggestions.
-      authenticated: false
-      custom: []
-    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
       id:
         name: id
-        description: 'The ID of the product.'
+        description: 'The ID of the user.'
         required: true
         example: 1
         type: integer
@@ -682,11 +33,11 @@ endpoints:
         exampleWasSpecified: false
         nullable: false
         custom: []
-      product:
-        name: product
-        description: 'The ID of the product to retrieve.'
+      user:
+        name: user
+        description: 'The ID of the user whose profile to retrieve.'
         required: true
-        example: 15
+        example: 123
         type: integer
         enumValues: []
         exampleWasSpecified: true
@@ -694,7 +45,7 @@ endpoints:
         custom: []
     cleanUrlParameters:
       id: 1
-      product: 15
+      user: 123
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -702,21 +53,435 @@ endpoints:
     fileParameters: []
     responses:
       -
+        status: 200
+        content: |-
+          {
+            "message": "User details retrieved.",
+            "data": {
+              "id": 123,
+              "name": "Sarah Johnson",
+              "email": "sarah.johnson@example.com",
+              "email_verified_at": "2025-01-10T08:00:00.000000Z",
+              "stripe_customer_id": "cus_1234567890abcdef",
+              "password_changed_at": "2025-01-01T12:00:00.000000Z",
+              "last_login_at": "2025-01-16T09:15:00.000000Z",
+              "last_login_ip": "192.168.1.100",
+              "created_at": "2024-12-15T10:30:00.000000Z",
+              "updated_at": "2025-01-16T09:15:00.000000Z",
+              "deleted_at": null,
+              "user_address": {
+                "id": 45,
+                "address_line1": "123 Oak Street",
+                "address_line2": "Apartment 4B",
+                "city": "London",
+                "state": "England",
+                "country": "United Kingdom",
+                "postal_code": "SW1A 1AA"
+              },
+              "role": {
+                "id": 7,
+                "name": "User"
+              },
+              "vendors": [
+                {
+                  "id": 12,
+                  "name": "Sarah's Boutique",
+                  "description": "Handcrafted jewelry and accessories",
+                  "logo": "https://yourapi.com/storage/vendor-logos/sarahs-boutique.jpg",
+                  "created_at": "2025-01-05T14:20:00.000000Z"
+                }
+              ],
+              "security_info": {
+                "requires_password_change": false,
+                "days_until_password_expiry": 45,
+                "security_score": {
+                  "score": 85,
+                  "level": "good",
+                  "issues": [
+                    "Consider enabling two-factor authentication"
+                  ]
+                },
+                "is_account_locked": false
+              }
+            }
+          }
+        headers: []
+        description: 'Own profile retrieved successfully'
+        custom: []
+      -
+        status: 200
+        content: |-
+          {
+            "message": "User details retrieved.",
+            "data": {
+              "id": 456,
+              "name": "John Smith",
+              "email": "j***@example.com",
+              "email_verified_at": "2025-01-08T12:00:00.000000Z",
+              "created_at": "2024-11-20T16:45:00.000000Z",
+              "updated_at": "2025-01-15T11:30:00.000000Z",
+              "role": {
+                "id": 7,
+                "name": "User"
+              },
+              "vendors": []
+            }
+          }
+        headers: []
+        description: "Other user's public profile"
+        custom: []
+      -
         status: 401
-        content: '{"message":"Unauthenticated."}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          x-content-type-options: nosniff
-          x-frame-options: DENY
-          x-xss-protection: '1; mode=block'
-          content-security-policy: "default-src 'none'; frame-ancestors 'none';"
-          referrer-policy: strict-origin-when-cross-origin
-          permissions-policy: 'camera=(), microphone=(), geolocation=(), payment=()'
-        description: null
+        content: |-
+          {
+            "message": "Unauthenticated."
+          }
+        headers: []
+        description: 'User not authenticated'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\User] 999"
+          }
+        headers: []
+        description: 'User not found'
         custom: []
     responseFields: []
-    auth: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: 'api/users/{id}'
+    metadata:
+      groupName: 'User Profile'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update user profile information'
+      description: |-
+        Update the authenticated user's profile information including personal details and address.
+        Users can only update their own profiles for security reasons. This endpoint supports
+        partial updates - only provided fields will be updated, others remain unchanged.
+        Password updates require the current password for security verification.
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the user.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      user:
+        name: user
+        description: "The ID of the user to update. Must match the authenticated user's ID."
+        required: true
+        example: 123
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+      user: 123
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        name: name
+        description: "optional The user's full name. Will be automatically formatted with proper capitalization."
+        required: false
+        example: 'Sarah Jane Johnson'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      email:
+        name: email
+        description: "optional The user's email address. Must be unique across all users."
+        required: false
+        example: sarah.johnson.new@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      password:
+        name: password
+        description: 'optional New password. Must be at least 8 characters. Requires current password verification via separate endpoint.'
+        required: false
+        example: MyNewSecurePassword123!
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      role_id:
+        name: role_id
+        description: "optional The user's role ID. Only admins can change user roles."
+        required: false
+        example: 7
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      address:
+        name: address
+        description: 'optional Complete address information for shipping and billing.'
+        required: false
+        example: []
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      address.address_line1:
+        name: address.address_line1
+        description: 'Primary address line.'
+        required: true
+        example: '456 Maple Avenue'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      address.city:
+        name: address.city
+        description: 'City name.'
+        required: true
+        example: Manchester
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      address.country:
+        name: address.country
+        description: 'Country name.'
+        required: true
+        example: 'United Kingdom'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      address.postal_code:
+        name: address.postal_code
+        description: 'Postal or ZIP code.'
+        required: true
+        example: 'M1 1AA'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      address.address_line2:
+        name: address.address_line2
+        description: 'optional Secondary address line (apartment, suite, etc.).'
+        required: false
+        example: 'Suite 201'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+      address.state:
+        name: address.state
+        description: 'optional State or region.'
+        required: false
+        example: 'Greater Manchester'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        custom: []
+    cleanBodyParameters:
+      name: 'Sarah Jane Johnson'
+      email: sarah.johnson.new@example.com
+      password: MyNewSecurePassword123!
+      role_id: 7
+      address:
+        address_line1: '456 Maple Avenue'
+        city: Manchester
+        country: 'United Kingdom'
+        postal_code: 'M1 1AA'
+        address_line2: 'Suite 201'
+        state: 'Greater Manchester'
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "User updated successfully.",
+            "data": {
+              "id": 123,
+              "name": "Sarah Jane Johnson",
+              "email": "sarah.johnson.new@example.com",
+              "email_verified_at": "2025-01-10T08:00:00.000000Z",
+              "stripe_customer_id": "cus_1234567890abcdef",
+              "password_changed_at": "2025-01-01T12:00:00.000000Z",
+              "last_login_at": "2025-01-16T09:15:00.000000Z",
+              "last_login_ip": "192.168.1.100",
+              "created_at": "2024-12-15T10:30:00.000000Z",
+              "updated_at": "2025-01-16T15:22:00.000000Z",
+              "deleted_at": null,
+              "user_address": {
+                "id": 45,
+                "address_line1": "456 Maple Avenue",
+                "address_line2": "Suite 201",
+                "city": "Manchester",
+                "state": "Greater Manchester",
+                "country": "United Kingdom",
+                "postal_code": "M1 1AA"
+              },
+              "role": {
+                "id": 7,
+                "name": "User"
+              },
+              "vendors": [
+                {
+                  "id": 12,
+                  "name": "Sarah's Boutique",
+                  "description": "Handcrafted jewelry and accessories",
+                  "logo": "https://yourapi.com/storage/vendor-logos/sarahs-boutique.jpg"
+                }
+              ],
+              "security_info": {
+                "requires_password_change": false,
+                "days_until_password_expiry": 45,
+                "security_score": {
+                  "score": 85,
+                  "level": "good",
+                  "issues": [
+                    "Consider enabling two-factor authentication"
+                  ]
+                },
+                "is_account_locked": false
+              }
+            }
+          }
+        headers: []
+        description: 'Profile updated successfully'
+        custom: []
+      -
+        status: 200
+        content: |-
+          {
+            "message": "User updated successfully.",
+            "data": {
+              "id": 123,
+              "name": "Sarah Johnson",
+              "email": "sarah.johnson@example.com",
+              "user_address": {
+                "id": 67,
+                "address_line1": "789 Pine Street",
+                "address_line2": null,
+                "city": "Edinburgh",
+                "state": "Scotland",
+                "country": "United Kingdom",
+                "postal_code": "EH1 1YZ"
+              }
+            }
+          }
+        headers: []
+        description: 'Address created for first time'
+        custom: []
+      -
+        status: 400
+        content: |-
+          {
+            "message": "Email verification required after email change. Please check your new email for verification link."
+          }
+        headers: []
+        description: 'Email verification required'
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated."
+          }
+        headers: []
+        description: 'User not authenticated'
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You can only update your own profile."
+          }
+        headers: []
+        description: "Cannot update other user's profile"
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "message": "You do not have the required permissions."
+          }
+        headers: []
+        description: 'Insufficient permissions for role change'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\User] 999"
+          }
+        headers: []
+        description: 'User not found'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "errors": [
+              "The email has already been taken.",
+              "The password must be at least 8 characters.",
+              "The address.address_line1 field is required when address is present.",
+              "The address.city field is required when address is present.",
+              "The address.country field is required when address is present.",
+              "The address.postal_code field is required when address is present."
+            ]
+          }
+        headers: []
+        description: 'Validation errors'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
     controller: null
     method: null
     route: null

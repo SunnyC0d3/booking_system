@@ -152,7 +152,7 @@ endpoints:
         name: status
         description: ''
         required: false
-        example: rejected_by_supplier
+        example: 'Out for Delivery'
         type: string
         enumValues:
           - pending
@@ -193,7 +193,7 @@ endpoints:
         name: date_from
         description: 'Must be a valid date.'
         required: false
-        example: '2025-07-23T09:48:28'
+        example: '2025-07-28T22:20:41'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -203,7 +203,7 @@ endpoints:
         name: date_to
         description: 'Must be a valid date. Must be a date after or equal to <code>date_from</code>.'
         required: false
-        example: '2051-08-16'
+        example: '2051-08-21'
         type: string
         enumValues: []
         exampleWasSpecified: false
@@ -223,7 +223,7 @@ endpoints:
         name: needs_retry
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -293,7 +293,7 @@ endpoints:
         name: sort_by
         description: ''
         required: false
-        example: profit_margin
+        example: estimated_delivery
         type: string
         enumValues:
           - id
@@ -332,7 +332,7 @@ endpoints:
         name: include_supplier
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
@@ -342,30 +342,30 @@ endpoints:
         name: include_order
         description: ''
         required: false
-        example: false
+        example: true
         type: boolean
         enumValues: []
         exampleWasSpecified: false
         nullable: false
         custom: []
     cleanBodyParameters:
-      status: rejected_by_supplier
+      status: 'Out for Delivery'
       search: b
-      date_from: '2025-07-23T09:48:28'
-      date_to: '2051-08-16'
+      date_from: '2025-07-28T22:20:41'
+      date_to: '2051-08-21'
       overdue: false
-      needs_retry: false
+      needs_retry: true
       has_tracking: true
       min_total: 39
       max_total: 84
       carrier: z
       page: 27
       per_page: 15
-      sort_by: profit_margin
+      sort_by: estimated_delivery
       sort_direction: asc
       include_items: false
-      include_supplier: false
-      include_order: false
+      include_supplier: true
+      include_order: true
     fileParameters: []
     responses:
       -

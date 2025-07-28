@@ -1,19 +1,20 @@
-name: Checkout
+name: 'Customer Shipment Management'
 description: ''
 endpoints:
   -
     httpMethods:
-      - POST
-    uri: api/checkout/summary
+      - GET
+    uri: api/my-shipments
     metadata:
-      groupName: Checkout
+      groupName: 'Customer Shipment Management'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Get checkout summary with shipping costs'
+      title: "Get user's shipments"
       description: |-
-        Calculate the total checkout cost including shipping for the current cart.
-        This endpoint provides a preview of costs before final order creation.
+        Retrieve all shipments for the authenticated user, ordered by creation date.
+        This endpoint provides a complete list of the user's shipments with basic
+        information and pagination support. Essential for customer account pages.
       authenticated: true
       custom: []
     headers:
@@ -22,72 +23,126 @@ endpoints:
       Accept: application/json
     urlParameters: []
     cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters:
-      shipping_method_id:
-        name: shipping_method_id
-        description: 'The ID of the shipping method.'
-        required: true
+    queryParameters:
+      per_page:
+        name: per_page
+        description: 'optional Number of shipments per page. Default: 15.'
+        required: false
+        example: 10
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      page:
+        name: page
+        description: 'optional Page number for pagination. Default: 1.'
+        required: false
         example: 1
         type: integer
         enumValues: []
         exampleWasSpecified: true
         nullable: false
         custom: []
-      shipping_address_id:
-        name: shipping_address_id
-        description: 'The ID of the shipping address.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      shipping_method_id: 1
-      shipping_address_id: 1
+    cleanQueryParameters:
+      per_page: 10
+      page: 1
+    bodyParameters: []
+    cleanBodyParameters: []
     fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
-            "message": "Checkout summary calculated successfully.",
+            "message": "Shipments retrieved successfully.",
             "data": {
-              "items_total": 4599,
-              "items_total_formatted": "£45.99",
-              "shipping_cost": 599,
-              "shipping_cost_formatted": "£5.99",
-              "total_amount": 5198,
-              "total_amount_formatted": "£51.98",
-              "requires_shipping": true
+              "shipments": [
+                {
+                  "id": 1,
+                  "tracking_number": "AB123456789GB",
+                  "carrier": "Royal Mail",
+                  "service_name": "Tracked 48",
+                  "status": "delivered",
+                  "status_label": "Delivered",
+                  "status_color": "green",
+                  "shipping_cost": 599,
+                  "shipping_cost_formatted": "£5.99",
+                  "tracking_url": "https://track.royalmail.com/AB123456789GB",
+                  "shipped_at": "2025-01-15T10:00:00.000000Z",
+                  "delivered_at": "2025-01-17T14:30:00.000000Z",
+                  "estimated_delivery": "2025-01-17T17:00:00.000000Z",
+                  "is_overdue": false,
+                  "order": {
+                    "id": 123,
+                    "total_amount_formatted": "£29.99",
+                    "created_at": "2025-01-14T14:30:00.000000Z"
+                  },
+                  "shipping_method": {
+                    "id": 1,
+                    "name": "Standard Delivery",
+                    "carrier": "Royal Mail",
+                    "estimated_delivery": "2-3 days"
+                  },
+                  "created_at": "2025-01-15T09:45:00.000000Z"
+                },
+                {
+                  "id": 2,
+                  "tracking_number": "CD987654321GB",
+                  "carrier": "DPD",
+                  "service_name": "Next Day",
+                  "status": "shipped",
+                  "status_label": "Shipped",
+                  "status_color": "blue",
+                  "shipping_cost": 999,
+                  "shipping_cost_formatted": "£9.99",
+                  "tracking_url": "https://track.dpd.co.uk/CD987654321GB",
+                  "shipped_at": "2025-01-16T11:00:00.000000Z",
+                  "delivered_at": null,
+                  "estimated_delivery": "2025-01-17T13:00:00.000000Z",
+                  "is_overdue": false,
+                  "order": {
+                    "id": 124,
+                    "total_amount_formatted": "£75.50",
+                    "created_at": "2025-01-16T09:20:00.000000Z"
+                  },
+                  "shipping_method": {
+                    "id": 2,
+                    "name": "Express Delivery",
+                    "carrier": "DPD",
+                    "estimated_delivery": "1 day"
+                  },
+                  "created_at": "2025-01-16T10:30:00.000000Z"
+                }
+              ],
+              "pagination": {
+                "current_page": 1,
+                "per_page": 15,
+                "total": 8,
+                "last_page": 1
+              }
             }
           }
         headers: []
-        description: 'Checkout summary calculated successfully'
+        description: 'Shipments retrieved successfully'
         custom: []
       -
-        status: 400
+        status: 200
         content: |-
           {
-            "message": "Cart is empty."
+            "message": "Shipments retrieved successfully.",
+            "data": {
+              "shipments": [],
+              "pagination": {
+                "current_page": 1,
+                "per_page": 15,
+                "total": 0,
+                "last_page": 1
+              }
+            }
           }
         headers: []
-        description: 'Cart is empty'
-        custom: []
-      -
-        status: 422
-        content: |-
-          {
-            "errors": [
-              "The shipping method id field is required.",
-              "The shipping address id field is required."
-            ]
-          }
-        headers: []
-        description: 'Validation errors'
+        description: 'No shipments found'
         custom: []
     responseFields: []
     auth:
@@ -100,75 +155,110 @@ endpoints:
     custom: []
   -
     httpMethods:
-      - POST
-    uri: api/checkout/validate
+      - GET
+    uri: 'api/my-shipments/{shipment_id}'
     metadata:
-      groupName: Checkout
+      groupName: 'Customer Shipment Management'
       groupDescription: ''
       subgroup: ''
       subgroupDescription: ''
-      title: 'Validate checkout data'
+      title: 'Get specific user shipment'
       description: |-
-        Validate that the selected shipping method and address are compatible
-        with the current cart contents before proceeding to payment.
+        Retrieve detailed information about a specific shipment belonging to the authenticated
+        user. This endpoint includes complete shipment details, order information, and
+        attempts to fetch the latest tracking information from the carrier.
       authenticated: true
       custom: []
     headers:
       Authorization: 'Bearer {YOUR_AUTH_TOKEN}'
       Content-Type: application/json
       Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
+    urlParameters:
+      shipment_id:
+        name: shipment_id
+        description: 'The ID of the shipment.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      shipment:
+        name: shipment
+        description: 'The ID of the shipment to retrieve.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      shipment_id: 16
+      shipment: 1
     queryParameters: []
     cleanQueryParameters: []
-    bodyParameters:
-      shipping_method_id:
-        name: shipping_method_id
-        description: 'The ID of the shipping method.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-      shipping_address_id:
-        name: shipping_address_id
-        description: 'The ID of the shipping address.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanBodyParameters:
-      shipping_method_id: 1
-      shipping_address_id: 1
+    bodyParameters: []
+    cleanBodyParameters: []
     fileParameters: []
     responses:
       -
         status: 200
         content: |-
           {
-            "message": "Checkout validation successful.",
+            "message": "Shipment retrieved successfully.",
             "data": {
-              "valid": true,
-              "shipping_available": true,
-              "estimated_delivery": "2025-01-20T17:00:00.000000Z"
+              "id": 1,
+              "tracking_number": "AB123456789GB",
+              "carrier": "Royal Mail",
+              "service_name": "Tracked 48",
+              "status": "delivered",
+              "status_label": "Delivered",
+              "status_color": "green",
+              "shipping_cost": 599,
+              "shipping_cost_formatted": "£5.99",
+              "tracking_url": "https://track.royalmail.com/AB123456789GB",
+              "shipped_at": "2025-01-15T10:00:00.000000Z",
+              "delivered_at": "2025-01-17T14:30:00.000000Z",
+              "estimated_delivery": "2025-01-17T17:00:00.000000Z",
+              "days_in_transit": 2,
+              "is_overdue": false,
+              "notes": "Handle with care",
+              "order": {
+                "id": 123,
+                "total_amount_formatted": "£29.99",
+                "created_at": "2025-01-14T14:30:00.000000Z"
+              },
+              "shipping_method": {
+                "name": "Standard Delivery",
+                "carrier": "Royal Mail",
+                "estimated_delivery": "2-3 days"
+              },
+              "created_at": "2025-01-15T09:45:00.000000Z",
+              "updated_at": "2025-01-17T14:30:00.000000Z"
             }
           }
         headers: []
-        description: 'Checkout validation successful'
+        description: 'Shipment retrieved successfully'
         custom: []
       -
-        status: 400
+        status: 403
         content: |-
           {
-            "message": "Selected shipping method is not available for this address."
+            "message": "You can only view your own shipments."
           }
         headers: []
-        description: 'Validation failed'
+        description: 'Access denied'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\Shipment] 999"
+          }
+        headers: []
+        description: 'Shipment not found'
         custom: []
     responseFields: []
     auth:
