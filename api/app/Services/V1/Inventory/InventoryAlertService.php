@@ -103,26 +103,6 @@ class InventoryAlertService
         }
     }
 
-    protected function sendAlert(array $lowStockItems): void
-    {
-        $adminEmails = $this->getAdminEmails();
-
-        foreach ($adminEmails as $email) {
-            try {
-                Mail::raw($this->buildEmailContent($lowStockItems), function ($message) use ($email, $lowStockItems) {
-                    $message->to($email)
-                        ->subject('Low Stock Alert - ' . count($lowStockItems) . ' items need attention')
-                        ->from(config('mail.from.address'), config('mail.from.name'));
-                });
-            } catch (\Exception $e) {
-                Log::error('Failed to send inventory alert email', [
-                    'email' => $email,
-                    'error' => $e->getMessage()
-                ]);
-            }
-        }
-    }
-
     protected function sendSingleItemAlert(array $item): void
     {
         $cacheKey = "inventory_alert_item_{$item['type']}_{$item['id']}";
@@ -150,13 +130,6 @@ class InventoryAlertService
         }
 
         Cache::put($cacheKey, true, now()->addHours(4));
-    }
-
-    protected function getAdminEmails(): array
-    {
-        return User::whereHas('role', function ($query) {
-            $query->whereIn('name', ['super_admin', 'admin']);
-        })->pluck('email')->toArray();
     }
 
     protected function buildEmailContent(array $lowStockItems): string
@@ -226,5 +199,39 @@ class InventoryAlertService
         }
 
         return $outOfStockItems;
+    }
+
+    protected function sendAlert(array $lowStockItems): void
+    {
+        $adminEmails = $this->getAdminEmails();
+
+        foreach ($adminEmails as $email) {
+            try {
+                Mail::to($email)->send(new LowStockAlertMail([
+                    'items' => $lowStockItems,
+                    'total_items' => count($lowStockItems),
+                    'urgent_items' => collect($lowStockItems)->where('current_stock', '<=', 0)->count(),
+                    'generated_at' => now()->format('M j, Y g:i A')
+                ]));
+
+                Log::info('Low stock alert email sent', [
+                    'email' => $email,
+                    'items_count' => count($lowStockItems)
+                ]);
+
+            } catch (\Exception $e) {
+                Log::error('Failed to send inventory alert email', [
+                    'email' => $email,
+                    'error' => $e->getMessage()
+                ]);
+            }
+        }
+    }
+
+    protected function getAdminEmails(): array
+    {
+        return User::whereHas('roles', function ($query) {
+            $query->whereIn('name', ['super admin', 'admin']);
+        })->pluck('email')->toArray();
     }
 }

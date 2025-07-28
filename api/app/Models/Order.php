@@ -94,13 +94,41 @@ class Order extends Model
             return false;
         }
 
-        return in_array($this->status->name, [
-                OrderStatuses::CONFIRMED,
-                OrderStatuses::PROCESSING,
-            ]) && in_array($this->fulfillment_status, [
-                FulfillmentStatuses::UNFULFILLED,
-                FulfillmentStatuses::PARTIALLY_FULFILLED,
-            ]);
+        // Check if order status allows shipping
+        if (!in_array($this->status->name, ['confirmed', 'processing', 'ready_to_ship'])) {
+            return false;
+        }
+
+        // Check if order has been paid (if required)
+        if (!$this->isPaid() && $this->requiresPayment()) {
+            return false;
+        }
+
+        // Check if all items are in stock
+        if (!$this->hasStockForAllItems()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function isPaid(): bool
+    {
+        return $this->payments()
+            ->whereIn('status', ['paid', 'partially_refunded'])
+            ->exists();
+    }
+
+    public function requiresPayment(): bool
+    {
+        return $this->total_amount > 0;
+    }
+
+    public function hasStockForAllItems(): bool
+    {
+        return $this->orderItems->every(function ($item) {
+            return $item->product->hasStock($item->quantity);
+        });
     }
 
     public function getShippingWeight(): float

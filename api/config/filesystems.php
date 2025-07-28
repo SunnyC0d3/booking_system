@@ -57,6 +57,20 @@ return [
             'throw' => false,
         ],
 
+        'private' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private'),
+            'visibility' => 'private',
+            'throw' => false,
+        ],
+
+        'digital_products' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private/digital-products'),
+            'visibility' => 'private',
+            'throw' => false,
+        ],
+
     ],
 
     /*

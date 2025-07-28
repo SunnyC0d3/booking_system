@@ -254,6 +254,41 @@ class PermissionSeeder extends Seeder
             ['name' => 'edit_dropshipping_settings'],
             ['name' => 'manage_default_markups'],
             ['name' => 'configure_automation_rules'],
+
+            ['name' => 'view_digital_products'],
+            ['name' => 'create_digital_products'],
+            ['name' => 'edit_digital_products'],
+            ['name' => 'delete_digital_products'],
+            ['name' => 'manage_digital_products'],
+            ['name' => 'upload_digital_files'],
+            ['name' => 'download_digital_files'],
+
+            // Digital Product Files
+            ['name' => 'view_product_files'],
+            ['name' => 'create_product_files'],
+            ['name' => 'edit_product_files'],
+            ['name' => 'delete_product_files'],
+            ['name' => 'manage_product_files'],
+
+            // Download Access Management
+            ['name' => 'view_download_access'],
+            ['name' => 'create_download_access'],
+            ['name' => 'edit_download_access'],
+            ['name' => 'revoke_download_access'],
+            ['name' => 'manage_download_access'],
+
+            // License Management
+            ['name' => 'view_license_keys'],
+            ['name' => 'create_license_keys'],
+            ['name' => 'edit_license_keys'],
+            ['name' => 'revoke_license_keys'],
+            ['name' => 'validate_license_keys'],
+            ['name' => 'manage_license_keys'],
+
+            // Digital Product Analytics
+            ['name' => 'view_download_analytics'],
+            ['name' => 'view_digital_product_reports'],
+            ['name' => 'export_digital_product_data'],
         ];
 
         $permissionsToInsert = array_map(function ($permission) {

@@ -61,52 +61,6 @@ class Email
         }
     }
 
-    public function sendRefundProcessed(array $refundData, string $customerEmail): bool
-    {
-        try {
-            Mail::to($customerEmail)->send(new RefundProcessedMail($refundData));
-
-            Log::info('Refund processed email sent', [
-                'refund_id' => $refundData['refund']['id'],
-                'amount' => $refundData['refund']['amount'],
-                'customer_email' => $customerEmail
-            ]);
-
-            return true;
-        } catch (\Exception $e) {
-            Log::error('Failed to send refund processed email', [
-                'refund_id' => $refundData['refund']['id'],
-                'customer_email' => $customerEmail,
-                'error' => $e->getMessage()
-            ]);
-
-            return false;
-        }
-    }
-
-    public function sendPaymentStatus(array $paymentData, string $customerEmail): bool
-    {
-        try {
-            Mail::to($customerEmail)->send(new PaymentStatusMail($paymentData));
-
-            Log::info('Payment status email sent', [
-                'payment_id' => $paymentData['payment']['id'],
-                'status' => $paymentData['payment']['status'],
-                'customer_email' => $customerEmail
-            ]);
-
-            return true;
-        } catch (\Exception $e) {
-            Log::error('Failed to send payment status email', [
-                'payment_id' => $paymentData['payment']['id'],
-                'customer_email' => $customerEmail,
-                'error' => $e->getMessage()
-            ]);
-
-            return false;
-        }
-    }
-
     public function sendShippingConfirmation(array $shippingData, string $customerEmail): bool
     {
         try {
@@ -224,30 +178,6 @@ class Email
 
             return false;
         }
-    }
-
-    public function formatShipmentData($shipment): array
-    {
-        $orderData = $this->formatOrderData($shipment->order);
-
-        return array_merge($orderData, [
-            'shipment' => [
-                'id' => $shipment->id,
-                'tracking_number' => $shipment->tracking_number,
-                'tracking_url' => $shipment->tracking_url,
-                'status' => $shipment->status,
-                'created_at' => $shipment->created_at->format('M j, Y g:i A'),
-                'shipped_at' => $shipment->shipped_at?->format('M j, Y g:i A'),
-                'estimated_delivery' => $shipment->estimated_delivery?->format('M j, Y'),
-                'delivered_at' => $shipment->delivered_at?->format('M j, Y g:i A'),
-                'notes' => $shipment->notes,
-                'carrier_data' => $shipment->carrier_data,
-                'label_url' => $shipment->label_url,
-                'issue_description' => $this->getShippingIssueDescription($shipment->status),
-                'recommended_actions' => $this->getRecommendedActions($shipment->status),
-                'priority_level' => $this->getIssuePriority($shipment->status)
-            ]
-        ]);
     }
 
     private function getShippingIssueDescription(string $status): string
@@ -393,28 +323,6 @@ class Email
         ]);
     }
 
-    public function formatShippingData($shipment): array
-    {
-        $orderData = $this->formatOrderData($shipment->order);
-
-        return array_merge($orderData, [
-            'shipment' => [
-                'id' => $shipment->id,
-                'tracking_number' => $shipment->tracking_number,
-                'carrier' => $shipment->carrier,
-                'service_name' => $shipment->service_name,
-                'tracking_url' => $shipment->tracking_url,
-                'shipped_at' => $shipment->shipped_at?->format('M j, Y g:i A') ?? null,
-                'delivered_at' => $shipment->delivered_at?->format('M j, Y g:i A') ?? null,
-                'estimated_delivery' => $shipment->estimated_delivery?->format('M j, Y') ?? null,
-            ],
-            'shipping_address' => $shipment->order->shippingAddress ? [
-                'name' => $shipment->order->shippingAddress->name,
-                'full_address' => $shipment->order->shippingAddress->getFullAddressAttribute(),
-            ] : null
-        ]);
-    }
-
     public function formatDelayData($shipment, string $reason = null, $newEstimatedDelivery = null): array
     {
         $orderData = $this->formatOrderData($shipment->order);
@@ -472,5 +380,91 @@ class Email
     private function formatPrice(int $priceInPennies): string
     {
         return '£' . number_format($priceInPennies / 100, 2);
+    }
+
+    public function sendRefundProcessed(array $refundData, string $customerEmail): bool
+    {
+        try {
+            Mail::to($customerEmail)->send(new RefundProcessedMail($refundData));
+
+            Log::info('Refund processed email sent', [
+                'refund_id' => $refundData['refund']['id'],
+                'amount' => $refundData['refund']['amount'],
+                'customer_email' => $customerEmail
+            ]);
+
+            return true;
+        } catch (\Exception $e) {
+            Log::error('Failed to send refund processed email', [
+                'refund_id' => $refundData['refund']['id'],
+                'customer_email' => $customerEmail,
+                'error' => $e->getMessage()
+            ]);
+
+            return false;
+        }
+    }
+
+    public function sendPaymentStatus(array $paymentData, string $customerEmail): bool
+    {
+        try {
+            Mail::to($customerEmail)->send(new PaymentStatusMail($paymentData));
+
+            Log::info('Payment status email sent', [
+                'payment_id' => $paymentData['payment']['id'],
+                'status' => $paymentData['payment']['status'],
+                'customer_email' => $customerEmail
+            ]);
+
+            return true;
+        } catch (\Exception $e) {
+            Log::error('Failed to send payment status email', [
+                'payment_id' => $paymentData['payment']['id'],
+                'customer_email' => $customerEmail,
+                'error' => $e->getMessage()
+            ]);
+
+            return false;
+        }
+    }
+
+    public function formatShippingData(Shipment $shipment): array
+    {
+        return [
+            'shipment' => [
+                'id' => $shipment->id,
+                'tracking_number' => $shipment->tracking_number,
+                'carrier' => $shipment->carrier,
+                'service_name' => $shipment->service_name,
+                'status' => $shipment->status,
+                'status_label' => $shipment->getStatusLabel(),
+                'shipped_at' => $shipment->shipped_at,
+                'estimated_delivery' => $shipment->estimated_delivery,
+                'tracking_url' => $shipment->getTrackingUrl(),
+            ],
+            'order' => [
+                'id' => $shipment->order->id,
+                'order_number' => $shipment->order->order_number ?? $shipment->order->id,
+                'total_formatted' => $shipment->order->getTotalFormattedAttribute(),
+                'created_at' => $shipment->order->created_at->format('M j, Y g:i A'),
+            ],
+            'customer' => [
+                'name' => $shipment->order->user->name ?? 'Valued Customer',
+                'email' => $shipment->order->user->email ?? '',
+            ],
+            'shipping_address' => $shipment->order->shippingAddress ? [
+                'name' => $shipment->order->shippingAddress->name,
+                'address_line_1' => $shipment->order->shippingAddress->address_line_1,
+                'address_line_2' => $shipment->order->shippingAddress->address_line_2,
+                'city' => $shipment->order->shippingAddress->city,
+                'postcode' => $shipment->order->shippingAddress->postcode,
+                'country' => $shipment->order->shippingAddress->country,
+            ] : null,
+        ];
+    }
+
+    public function formatShipmentData(Shipment $shipment): array
+    {
+        return $this->formatShippingData($shipment);
     }
 }

@@ -36,6 +36,9 @@ class DatabaseSeeder extends Seeder
             ShippingMethodSeeder::class,
             ShippingZoneSeeder::class,
             ShippingRateSeeder::class,
+
+            DigitalProductSeeder::class,
+            ProductFileSeeder::class,
         ]);
     }
 }

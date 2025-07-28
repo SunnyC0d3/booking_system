@@ -45,7 +45,16 @@ class Product extends Model implements HasMedia
         'requires_shipping',
         'is_virtual',
         'handling_time_days',
-        'shipping_restrictions'
+        'shipping_restrictions',
+        'product_type',
+        'requires_license',
+        'auto_deliver',
+        'download_limit',
+        'download_expiry_days',
+        'supported_platforms',
+        'system_requirements',
+        'latest_version',
+        'version_control_enabled',
     ];
 
     protected $casts = [
@@ -61,6 +70,11 @@ class Product extends Model implements HasMedia
         'total_reviews' => 'integer',
         'handling_time_days' => 'integer',
         'low_stock_threshold' => 'integer',
+        'requires_license' => 'boolean',
+        'auto_deliver' => 'boolean',
+        'version_control_enabled' => 'boolean',
+        'supported_platforms' => 'array',
+        'system_requirements' => 'array',
     ];
 
     // Relationships
@@ -452,7 +466,9 @@ class Product extends Model implements HasMedia
     // Shipping methods
     public function requiresShipping(): bool
     {
-        return $this->requires_shipping && !$this->is_virtual;
+        return $this->requires_shipping &&
+            !$this->is_virtual &&
+            in_array($this->product_type, ['physical', 'hybrid']);
     }
 
     public function isVirtual(): bool
@@ -770,5 +786,221 @@ class Product extends Model implements HasMedia
     public function getUrlAttribute(): string
     {
         return route('products.show', $this->getSlugAttribute());
+    }
+
+    public function productFiles(): HasMany
+    {
+        return $this->hasMany(ProductFile::class);
+    }
+
+    public function activeProductFiles(): HasMany
+    {
+        return $this->hasMany(ProductFile::class)->where('is_active', true);
+    }
+
+    public function primaryProductFile(): HasOne
+    {
+        return $this->hasOne(ProductFile::class)->where('is_primary', true);
+    }
+
+    public function downloadAccesses(): HasMany
+    {
+        return $this->hasMany(DownloadAccess::class);
+    }
+
+    public function licenseKeys(): HasMany
+    {
+        return $this->hasMany(LicenseKey::class);
+    }
+
+    public function productUpdates(): HasMany
+    {
+        return $this->hasMany(ProductUpdate::class);
+    }
+
+    public function latestUpdate(): HasOne
+    {
+        return $this->hasOne(ProductUpdate::class)->latest('released_at');
+    }
+
+// Add these scopes to the existing Product model
+    public function scopeDigital(Builder $query): Builder
+    {
+        return $query->whereIn('product_type', ['digital', 'hybrid']);
+    }
+
+    public function scopePhysical(Builder $query): Builder
+    {
+        return $query->whereIn('product_type', ['physical', 'hybrid']);
+    }
+
+    public function scopeDigitalOnly(Builder $query): Builder
+    {
+        return $query->where('product_type', 'digital');
+    }
+
+    public function scopeWithLicense(Builder $query): Builder
+    {
+        return $query->where('requires_license', true);
+    }
+
+    public function scopeAutoDelivery(Builder $query): Builder
+    {
+        return $query->where('auto_deliver', true);
+    }
+
+// Add these methods to the existing Product model
+    public function isDigital(): bool
+    {
+        return in_array($this->product_type, ['digital', 'hybrid']);
+    }
+
+    public function isPhysical(): bool
+    {
+        return in_array($this->product_type, ['physical', 'hybrid']);
+    }
+
+    public function isDigitalOnly(): bool
+    {
+        return $this->product_type === 'digital';
+    }
+
+    public function isHybrid(): bool
+    {
+        return $this->product_type === 'hybrid';
+    }
+
+    public function requiresLicense(): bool
+    {
+        return $this->requires_license;
+    }
+
+    public function hasAutoDelivery(): bool
+    {
+        return $this->auto_deliver;
+    }
+
+    public function hasVersionControl(): bool
+    {
+        return $this->version_control_enabled;
+    }
+
+    public function hasDigitalFiles(): bool
+    {
+        return $this->productFiles()->active()->exists();
+    }
+
+    public function getDigitalFilesCount(): int
+    {
+        return $this->productFiles()->active()->count();
+    }
+
+    public function getTotalDigitalFileSize(): int
+    {
+        return $this->productFiles()->active()->sum('file_size');
+    }
+
+    public function getTotalDigitalFileSizeFormatted(): string
+    {
+        $bytes = $this->getTotalDigitalFileSize();
+        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+
+        for ($i = 0; $bytes > 1024 && $i < count($units) - 1; $i++) {
+            $bytes /= 1024;
+        }
+
+        return round($bytes, 2) . ' ' . $units[$i];
+    }
+
+    public function getSupportedPlatforms(): array
+    {
+        return $this->supported_platforms ?? [];
+    }
+
+    public function getSystemRequirements(): array
+    {
+        return $this->system_requirements ?? [];
+    }
+
+    public function supportsPlatform(string $platform): bool
+    {
+        $platforms = $this->getSupportedPlatforms();
+        return empty($platforms) || in_array($platform, $platforms);
+    }
+
+    public function getLatestVersionAttribute(): ?string
+    {
+        return $this->latest_version ?? $this->productFiles()->active()->max('version') ?? '1.0.0';
+    }
+
+    public function createDownloadAccess(User $user, Order $order, ?ProductFile $file = null): DownloadAccess
+    {
+        return DownloadAccess::create([
+            'user_id' => $user->id,
+            'product_id' => $this->id,
+            'order_id' => $order->id,
+            'product_file_id' => $file?->id,
+            'access_token' => DownloadAccess::generateToken(),
+            'download_limit' => $this->download_limit,
+            'expires_at' => now()->addDays($this->download_expiry_days),
+        ]);
+    }
+
+    public function createLicenseKey(User $user, Order $order, string $type = 'single_use'): LicenseKey
+    {
+        return LicenseKey::create([
+            'product_id' => $this->id,
+            'user_id' => $user->id,
+            'order_id' => $order->id,
+            'license_key' => LicenseKey::generateKey($this->getProductPrefix()),
+            'type' => $type,
+            'activation_limit' => $this->getActivationLimit($type),
+            'expires_at' => $this->getLicenseExpiry($type),
+        ]);
+    }
+
+    private function getProductPrefix(): string
+    {
+        return strtoupper(substr(preg_replace('/[^A-Z]/', '', $this->name), 0, 4)) ?: 'PROD';
+    }
+
+    private function getActivationLimit(string $type): int
+    {
+        return match($type) {
+            'single_use' => 1,
+            'multi_use' => 5,
+            'subscription' => 10,
+            'trial' => 1,
+            default => 1
+        };
+    }
+
+    private function getLicenseExpiry(string $type): ?\Carbon\Carbon
+    {
+        return match($type) {
+            'trial' => now()->addDays(30),
+            'subscription' => now()->addYear(),
+            default => null
+        };
+    }
+
+    public function getProductTypeLabel(): string
+    {
+        return match($this->product_type) {
+            'physical' => 'Physical Product',
+            'digital' => 'Digital Product',
+            'hybrid' => 'Physical + Digital',
+            default => 'Unknown'
+        };
+    }
+
+    public function getProductTypeIcon(): string
+    {
+        return match($this->product_type) {
+            'physical' => '📦',
+            'digital' => '💾',
+            'hybrid' => '📦💾',
+            default => '❓'
+        };
     }
 }

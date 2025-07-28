@@ -28,6 +28,8 @@ class SendDropshipOrderToSupplier implements ShouldQueue
     protected string $integrationType;
     protected array $options;
 
+    public $backoff = [300, 900, 1800]; // 5 min, 15 min, 30 min
+
     public function __construct(DropshipOrder $dropshipOrder, string $integrationType, array $options = [])
     {
         $this->dropshipOrder = $dropshipOrder;
@@ -68,24 +70,6 @@ class SendDropshipOrderToSupplier implements ShouldQueue
         } catch (Exception $e) {
             $this->handleJobException($e);
             throw $e;
-        }
-    }
-
-    public function failed(Exception $exception): void
-    {
-        Log::error('SendDropshipOrderToSupplier job failed permanently', [
-            'dropship_order_id' => $this->dropshipOrder->id,
-            'supplier_id' => $this->dropshipOrder->supplier_id,
-            'integration_type' => $this->integrationType,
-            'error' => $exception->getMessage(),
-            'attempts' => $this->attempts()
-        ]);
-
-        $this->dropshipOrder->markAsRejected('Job failed after maximum attempts: ' . $exception->getMessage());
-
-        $integration = $this->dropshipOrder->supplier->getActiveIntegration();
-        if ($integration) {
-            $integration->recordFailedSync($exception->getMessage());
         }
     }
 
@@ -201,77 +185,6 @@ class SendDropshipOrderToSupplier implements ShouldQueue
                 'success' => false,
                 'error' => 'Webhook delivery failed: ' . $e->getMessage(),
                 'method' => 'webhook'
-            ];
-        }
-    }
-
-    private function sendViaFtp(SupplierIntegration $integration): array
-    {
-        $ftpHost = $integration->getFtpHost();
-        $ftpUsername = $integration->getFtpUsername();
-        $ftpPassword = $integration->getFtpPassword();
-
-        if (!$ftpHost || !$ftpUsername || !$ftpPassword) {
-            throw new Exception('FTP configuration incomplete');
-        }
-
-        $orderData = $this->prepareOrderDataForFtp();
-        $config = $integration->configuration;
-        $uploadDir = $config['upload_directory'] ?? '/orders';
-        $filename = $config['filename_pattern'] ?? 'order_{order_id}_{timestamp}.csv';
-
-        $filename = str_replace(['{order_id}', '{timestamp}'], [
-            $this->dropshipOrder->id,
-            now()->format('YmdHis')
-        ], $filename);
-
-        try {
-            $csvContent = $this->convertToCsv($orderData);
-            $tempFile = tempnam(sys_get_temp_dir(), 'dropship_order_');
-            file_put_contents($tempFile, $csvContent);
-
-            $ftpConnection = ftp_connect($ftpHost, $config['ftp_port'] ?? 21);
-
-            if (!$ftpConnection) {
-                throw new Exception('Could not connect to FTP server');
-            }
-
-            if (!ftp_login($ftpConnection, $ftpUsername, $ftpPassword)) {
-                throw new Exception('FTP login failed');
-            }
-
-            if ($config['passive_mode'] ?? true) {
-                ftp_pasv($ftpConnection, true);
-            }
-
-            $uploadSuccess = ftp_put($ftpConnection, $uploadDir . '/' . $filename, $tempFile, FTP_BINARY);
-            ftp_close($ftpConnection);
-            unlink($tempFile);
-
-            if ($uploadSuccess) {
-                return [
-                    'success' => true,
-                    'file_uploaded' => $filename,
-                    'upload_path' => $uploadDir . '/' . $filename,
-                    'method' => 'ftp'
-                ];
-            } else {
-                return [
-                    'success' => false,
-                    'error' => 'FTP file upload failed',
-                    'method' => 'ftp'
-                ];
-            }
-
-        } catch (Exception $e) {
-            if (isset($tempFile) && file_exists($tempFile)) {
-                unlink($tempFile);
-            }
-
-            return [
-                'success' => false,
-                'error' => 'FTP operation failed: ' . $e->getMessage(),
-                'method' => 'ftp'
             ];
         }
     }
@@ -446,5 +359,154 @@ class SendDropshipOrderToSupplier implements ShouldQueue
     public function backoff(): array
     {
         return [60, 300, 900];
+    }
+
+    private function sendViaFtp(SupplierIntegration $integration): array
+    {
+        $ftpHost = $integration->getFtpHost();
+        $ftpUsername = $integration->getFtpUsername();
+        $ftpPassword = $integration->getFtpPassword();
+        $ftpPort = $integration->getFtpPort() ?? 21;
+
+        if (!$ftpHost || !$ftpUsername || !$ftpPassword) {
+            throw new Exception('FTP configuration incomplete');
+        }
+
+        $orderData = $this->prepareOrderDataForFtp();
+        $config = $integration->configuration;
+        $uploadDir = $config['upload_directory'] ?? '/orders';
+        $filename = $config['filename_pattern'] ?? 'order_{order_id}_{timestamp}.csv';
+
+        // Replace placeholders in filename
+        $filename = str_replace(['{order_id}', '{timestamp}'], [
+            $this->dropshipOrder->id,
+            now()->format('YmdHis')
+        ], $filename);
+
+        try {
+            // Create FTP connection
+            $connection = ftp_connect($ftpHost, $ftpPort);
+            if (!$connection) {
+                throw new Exception("Could not connect to FTP server: {$ftpHost}:{$ftpPort}");
+            }
+
+            // Login to FTP server
+            if (!ftp_login($connection, $ftpUsername, $ftpPassword)) {
+                ftp_close($connection);
+                throw new Exception('FTP login failed');
+            }
+
+            // Set passive mode if configured
+            if ($config['passive_mode'] ?? true) {
+                ftp_pasv($connection, true);
+            }
+
+            // Change to upload directory
+            if (!ftp_chdir($connection, $uploadDir)) {
+                ftp_close($connection);
+                throw new Exception("Could not change to directory: {$uploadDir}");
+            }
+
+            // Create temporary file
+            $tempFile = tempnam(sys_get_temp_dir(), 'dropship_order_');
+            file_put_contents($tempFile, $this->convertToCsv($orderData));
+
+            // Upload file
+            if (!ftp_put($connection, $filename, $tempFile, FTP_BINARY)) {
+                ftp_close($connection);
+                unlink($tempFile);
+                throw new Exception('FTP upload failed');
+            }
+
+            // Cleanup
+            ftp_close($connection);
+            unlink($tempFile);
+
+            return [
+                'success' => true,
+                'filename' => $filename,
+                'upload_path' => $uploadDir . '/' . $filename,
+                'method' => 'ftp'
+            ];
+
+        } catch (Exception $e) {
+            if (isset($connection) && is_resource($connection)) {
+                ftp_close($connection);
+            }
+            if (isset($tempFile) && file_exists($tempFile)) {
+                unlink($tempFile);
+            }
+
+            return [
+                'success' => false,
+                'error' => 'FTP upload failed: ' . $e->getMessage(),
+                'method' => 'ftp'
+            ];
+        }
+    }
+
+    // Enhanced error handling with retry logic
+    public function failed(Throwable $exception): void
+    {
+        Log::error('Dropship order job failed permanently', [
+            'dropship_order_id' => $this->dropshipOrder->id,
+            'attempts' => $this->attempts(),
+            'exception' => $exception->getMessage(),
+            'trace' => $exception->getTraceAsString()
+        ]);
+
+        // Mark order as failed
+        $this->dropshipOrder->updateStatus(DropshipStatuses::FAILED, [
+            'failed_at' => now(),
+            'failure_reason' => $exception->getMessage(),
+            'attempts_made' => $this->attempts()
+        ]);
+
+        // Send failure notification to admins
+        $this->notifyAdminsOfFailure($exception);
+
+        // Record integration failure
+        $integration = $this->dropshipOrder->supplier->getActiveIntegration();
+        if ($integration) {
+            $integration->recordFailedSync($exception->getMessage());
+        }
+    }
+
+    private function notifyAdminsOfFailure(Throwable $exception): void
+    {
+        try {
+            $adminEmails = User::whereHas('roles', function($query) {
+                $query->whereIn('name', ['super admin', 'admin']);
+            })->pluck('email')->toArray();
+
+            $emailData = [
+                'dropship_order' => [
+                    'id' => $this->dropshipOrder->id,
+                    'order_id' => $this->dropshipOrder->order_id,
+                    'supplier_name' => $this->dropshipOrder->supplier->name,
+                    'created_at' => $this->dropshipOrder->created_at->format('M j, Y g:i A'),
+                ],
+                'error' => [
+                    'message' => $exception->getMessage(),
+                    'attempts' => $this->attempts(),
+                    'integration_type' => $this->integrationType,
+                    'occurred_at' => now()->format('M j, Y g:i A'),
+                ],
+                'customer' => [
+                    'name' => $this->dropshipOrder->order->user->name ?? 'Guest',
+                    'email' => $this->dropshipOrder->order->user->email ?? 'N/A',
+                ]
+            ];
+
+            foreach ($adminEmails as $email) {
+                Mail::to($email)->send(new DropshipOrderFailedMail($emailData));
+            }
+
+        } catch (Exception $e) {
+            Log::error('Failed to send dropship failure notification', [
+                'dropship_order_id' => $this->dropshipOrder->id,
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 }

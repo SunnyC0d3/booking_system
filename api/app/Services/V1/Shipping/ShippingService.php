@@ -867,8 +867,9 @@ class ShippingService
 
     protected function getAdminEmails(): array
     {
-        // This should be configured in your environment or database
-        return config('mail.admin_emails', []);
+        return User::whereHas('roles', function($query) {
+            $query->whereIn('name', ['super admin', 'admin']);
+        })->pluck('email')->toArray();
     }
 
     protected function getFromAddress(Order $order): array
@@ -924,5 +925,44 @@ class ShippingService
             'width' => max($maxWidth, 10),
             'height' => max($totalHeight, 5),
         ];
+    }
+
+    // Enhanced error handling for external API failures
+    public function handleShippingApiFailure(Exception $e, Shipment $shipment): void
+    {
+        Log::error('Shipping API failure', [
+            'shipment_id' => $shipment->id,
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+
+        // Send immediate alert to admins
+        $adminEmails = $this->getAdminEmails();
+        $emailData = [
+            'shipment' => [
+                'id' => $shipment->id,
+                'tracking_number' => $shipment->tracking_number,
+                'carrier' => $shipment->carrier,
+                'order_id' => $shipment->order_id
+            ],
+            'error' => [
+                'message' => $e->getMessage(),
+                'type' => 'shipping_api_failure',
+                'severity' => 'high',
+                'occurred_at' => now()->format('M j, Y g:i A')
+            ]
+        ];
+
+        foreach ($adminEmails as $email) {
+            try {
+                Mail::to($email)->send(new ShippingIssueAlertMail($emailData));
+            } catch (Exception $mailException) {
+                Log::error('Failed to send shipping API failure alert', [
+                    'shipment_id' => $shipment->id,
+                    'admin_email' => $email,
+                    'error' => $mailException->getMessage()
+                ]);
+            }
+        }
     }
 }

@@ -113,6 +113,13 @@ class RolePermissionSeeder extends Seeder
                 'view_dropshipping_analytics', 'view_supplier_performance', 'view_profit_margins',
                 'manage_automated_fulfillment', 'configure_sync_settings', 'manage_markup_rules',
                 'view_dropshipping_settings',
+
+                // Digital Products - Management Level
+                'view_digital_products', 'create_digital_products', 'edit_digital_products',
+                'view_product_files', 'create_product_files', 'edit_product_files',
+                'view_download_access', 'manage_download_access',
+                'view_license_keys', 'manage_license_keys',
+                'view_download_analytics', 'view_digital_product_reports',
             ],
 
             'Vendor' => [
@@ -150,6 +157,14 @@ class RolePermissionSeeder extends Seeder
                 'view_dropship_orders',
                 'view_supplier_performance',
                 'view_profit_margins',
+
+                // Digital Products - Vendor Level
+                'view_digital_products', 'create_digital_products', 'edit_digital_products',
+                'manage_digital_products', 'upload_digital_files',
+                'view_product_files', 'create_product_files', 'edit_product_files', 'manage_product_files',
+                'view_download_access', 'create_download_access',
+                'view_license_keys', 'create_license_keys',
+                'view_download_analytics',
             ],
 
             'Customer Service' => [
@@ -220,6 +235,12 @@ class RolePermissionSeeder extends Seeder
                 'view_supplier_products', 'sync_supplier_products', 'map_supplier_products',
                 'view_dropship_orders',
                 'view_dropshipping_analytics',
+
+                // Digital Products - Content Management Level
+                'view_digital_products', 'create_digital_products', 'edit_digital_products',
+                'view_product_files', 'create_product_files', 'edit_product_files',
+                'view_download_access',
+                'view_license_keys',
             ],
 
             'User' => [
@@ -244,6 +265,11 @@ class RolePermissionSeeder extends Seeder
                 // Shipping Management - User Level
                 'view_shipping_addresses', 'create_shipping_addresses', 'edit_shipping_addresses', 'delete_shipping_addresses',
                 'calculate_shipping', 'track_shipments',
+
+                // Digital Products - User Level
+                'download_digital_files',
+                'view_download_access',
+                'view_license_keys',
             ],
 
             'Guest' => [

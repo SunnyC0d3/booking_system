@@ -292,12 +292,36 @@ return [
         'image/png',
         'image/gif',
         'image/webp',
+        'application/pdf',
+        'application/zip',
+        'application/x-zip-compressed',
+        'application/x-rar-compressed',
+        'application/x-7z-compressed',
+        'application/octet-stream',
+        'text/plain',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'audio/mpeg',
+        'audio/wav',
+        'audio/x-wav',
+        'video/mp4',
+        'video/avi',
+        'video/x-msvideo',
     ],
 
     /*
      * Allowed file extensions
      */
-    'allowed_extensions' => ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+    'allowed_extensions' => [
+        'jpg', 'jpeg', 'png', 'gif', 'webp',
+        'pdf', 'zip', 'rar', '7z', 'exe', 'msi', 'dmg', 'pkg',
+        'txt', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx',
+        'mp3', 'wav', 'flac', 'aac', 'ogg',
+        'mp4', 'avi', 'mkv', 'mov', 'wmv',
+        'json', 'xml', 'csv'
+    ],
 
     /*
      * Sanitize file names
