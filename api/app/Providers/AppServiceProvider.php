@@ -76,6 +76,10 @@ class AppServiceProvider extends ServiceProvider
                 $app->make(Email::class)
             );
         });
+
+        $this->publishes([
+            __DIR__ . '/../../config/digital_downloads.php' => config_path('digital_downloads.php'),
+        ], 'digital-downloads');
     }
 
     public function shouldDiscoverEvents(): bool

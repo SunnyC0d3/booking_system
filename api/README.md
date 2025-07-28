@@ -176,6 +176,18 @@ A comprehensive Laravel-based e-commerce API with advanced security features, mu
    # Shippo (for shipping integration)
    SHIPPO_API_KEY=
    SHIPPO_ENVIRONMENT=
+   
+   # Digital Downloads (NEW)
+   DIGITAL_DOWNLOAD_MAX_FILE_SIZE=104857600  # 100MB in bytes
+   DIGITAL_DOWNLOAD_ALLOWED_EXTENSIONS=zip,exe,dmg,pkg,pdf,epub,mp4,mov
+   DIGITAL_DOWNLOAD_DEFAULT_EXPIRY_DAYS=365
+   DIGITAL_DOWNLOAD_DEFAULT_LIMIT=3
+   DIGITAL_DOWNLOAD_STORAGE_DISK=local  # or s3 for production
+
+   # License Management (NEW)
+   LICENSE_KEY_LENGTH=32
+   LICENSE_KEY_FORMAT=XXXX-XXXX-XXXX-XXXX
+   DEFAULT_LICENSE_ACTIVATIONS=1
 
    # Mail configuration
    MAIL_MAILER=smtp
@@ -307,6 +319,25 @@ php artisan scribe:generate
 - `GET /api/v1/vendor/dropshipping/profit-margins` - Get profit margin analysis
 - `GET /api/v1/vendor/dropshipping/supplier-performance` - Get supplier performance metrics
 
+#### Digital Products & Downloads (NEW)
+
+- `GET /api/v1/my-digital-products` - User's digital library
+- `GET /api/v1/my-digital-products/downloads` - Download access management
+- `GET /api/v1/my-digital-products/licenses` - License key management
+- `GET /api/v1/my-digital-products/statistics` - User download statistics
+
+#### Secure Digital Downloads (NEW)
+
+- GET `/api/v1/digital/download/{token}` - Secure file download
+- GET `/api/v1/digital/download/{token}/info` - Download access information
+- POST `/api/v1/digital/download/{token}/progress/{attemptId}` - Update download progress
+
+#### License Validation (NEW)
+
+- POST `/api/v1/license/validate` - Validate license key
+- POST `/api/v1/license/activate` - Activate license
+- POST `/api/v1/license/deactivate` - Deactivate license
+
 ### Admin Endpoints
 All admin endpoints require `super_admin` or `admin` role:
 
@@ -386,6 +417,19 @@ All admin endpoints require `super_admin` or `admin` role:
 - `GET /api/v1/admin/dropship-orders` - Manage dropship orders
 - `POST /api/v1/admin/dropship-orders/{id}/send-to-supplier` - Send to supplier
 - `GET /api/v1/admin/dropship-orders/stats` - Get dropship statistics
+
+#### Digital Product Management (NEW)
+- GET `/api/v1/admin/digital-products` - Manage digital products
+- GET `/api/v1/admin/digital-products/{product}` - Digital product details
+- GET `/api/v1/admin/digital-products/statistics` - Analytics dashboard
+- POST `/api/v1/admin/digital-products/cleanup` - Cleanup expired access
+- GET `/api/v1/admin/digital-library/users/{user}` - User's digital library (admin)
+
+#### Product File Management (NEW)
+- GET `/api/v1/admin/products/{product}/files` - Manage product files
+- POST `/api/v1/admin/products/{product}/files` - Upload product files
+- POST `/api/v1/admin/products/{product}/files/bulk` - Bulk file upload
+- GET `/api/v1/admin/products/{product}/files/{file}/download` - Admin file download
 
 ## 🔐 Authentication
 
@@ -547,6 +591,19 @@ Configure in `config/search.php`:
     'min_profit_margin' => 10.0,
     'sync_frequency_minutes' => 60,
     'max_retry_attempts' => 3,
+],
+```
+
+### Digital Product Configuration
+```php
+'cleanup' => [
+    'expired_access_retention_days' => 30,
+    'failed_attempt_retention_days' => 7,
+],
+'security' => [
+    'enforce_ip_validation' => true,
+    'max_concurrent_downloads' => 2,
+    'download_timeout_minutes' => 60,
 ],
 ```
 

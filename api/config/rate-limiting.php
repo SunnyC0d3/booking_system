@@ -18,11 +18,13 @@ return [
     ],
 
     'api' => [
-        'general' => '60,1',        // 60 requests per minute
+        'general' => '1000,1',      // 1000 requests per minute
         'search' => '30,1',         // 30 searches per minute
         'admin' => '100,1',         // 100 admin requests per minute
         'payments' => '10,1',       // 10 payment requests per minute
-        'uploads' => '5,1',         // 5 file uploads per minute
+        'uploads' => '10,1',        // 10 upload requests per minute
+        'downloads' => '50,1',      // 50 download requests per minute (NEW)
+        'license_validation' => '100,1', // 100 license checks per minute (NEW)
     ],
 
     'guest' => [
@@ -54,7 +56,7 @@ return [
     ],
 
     'reviews' => [
-        'create' => '5,5',          // 5 review creations per 5 minutes
+        'create' => '10,60',        // 10 reviews per hour
         'update' => '10,1',         // 10 review updates per minute
         'vote' => '20,1',           // 20 helpfulness votes per minute
         'report' => '3,5',          // 3 reports per 5 minutes
@@ -69,7 +71,7 @@ return [
     ],
 
     'shipping' => [
-        'attempts' => 50,           // 50 shipping requests per minute
+        'attempts' => '30,1',       // 30 shipping requests per minute
         'decay_minutes' => 1,
         'message' => 'Too many shipping requests. Please wait a moment.',
     ],
@@ -81,8 +83,8 @@ return [
     ],
 
     'checkout' => [
-        'attempts' => 20,           // 20 checkout requests per minute
-        'decay_minutes' => 1,
+        'attempts' => '5,5',        // 5 checkout attempts per 5 minutes
+        'decay_minutes' => 5,
         'message' => 'Too many checkout requests. Please wait a moment.',
     ],
 
@@ -108,6 +110,43 @@ return [
         'attempts' => 40,           // 40 vendor profile requests per minute
         'decay_minutes' => 1,
         'message' => 'Too many vendor requests. Please wait a moment.',
+    ],
+
+    // Digital Downloads & License Management (NEW)
+    'downloads' => [
+        'attempts' => 50,           // 50 download requests per minute
+        'decay_minutes' => 1,
+        'message' => 'Too many download requests. Please wait a moment.',
+    ],
+
+    'license_validation' => [
+        'attempts' => 100,          // 100 license checks per minute
+        'decay_minutes' => 1,
+        'message' => 'Too many license validation requests. Please wait a moment.',
+    ],
+
+    'digital_products' => [
+        'attempts' => 60,           // 60 digital product requests per minute
+        'decay_minutes' => 1,
+        'message' => 'Too many digital product requests. Please wait a moment.',
+    ],
+
+    'download_progress' => [
+        'attempts' => 200,          // 200 progress updates per minute (for active downloads)
+        'decay_minutes' => 1,
+        'message' => 'Too many download progress updates. Please wait a moment.',
+    ],
+
+    'license_activation' => [
+        'attempts' => 20,           // 20 license activations per minute
+        'decay_minutes' => 1,
+        'message' => 'Too many license activation attempts. Please wait a moment.',
+    ],
+
+    'digital_library' => [
+        'attempts' => 40,           // 40 digital library requests per minute
+        'decay_minutes' => 1,
+        'message' => 'Too many digital library requests. Please wait a moment.',
     ],
 
     // Password security
@@ -178,5 +217,12 @@ return [
         'attempts' => 100,          // 100 general client requests per minute
         'decay_minutes' => 1,
         'message' => 'Rate limit exceeded. Please slow down.',
+    ],
+
+    // Dropshipping operations
+    'dropshipping' => [
+        'attempts' => 100,          // 100 dropshipping requests per minute
+        'decay_minutes' => 1,
+        'message' => 'Too many dropshipping requests. Please wait a moment.',
     ],
 ];
