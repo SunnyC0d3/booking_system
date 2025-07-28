@@ -1,4 +1,5 @@
 import { NextConfig } from 'next';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 const nextConfig: NextConfig = {
     /* Basic Configuration */
@@ -6,14 +7,17 @@ const nextConfig: NextConfig = {
     swcMinify: true,
     poweredByHeader: false,
 
-    /* Experimental Features */
+    /* Experimental Features for Performance */
     experimental: {
         optimizePackageImports: [
             'lucide-react',
             '@radix-ui/react-icons',
             'framer-motion',
             'date-fns',
-            'lodash'
+            'lodash',
+            'axios',
+            'zustand',
+            '@tanstack/react-query',
         ],
         turbo: {
             rules: {
@@ -23,17 +27,21 @@ const nextConfig: NextConfig = {
                 },
             },
         },
+        serverComponentsExternalPackages: ['sharp'],
+        optimizeCss: true,
+        gzipSize: true,
+        craCompat: true,
+        esmExternals: true,
+        serverMinification: true,
+        instrumentationHook: true,
     },
 
-    /* Images Configuration */
+    /* Enhanced Images Configuration */
     images: {
-        formats: ['image/webp', 'image/avif'],
+        formats: ['image/avif', 'image/webp'],
         deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
         imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-        domains: [
-            'localhost',
-            '127.0.0.1',
-        ],
+        domains: ['localhost', '127.0.0.1'],
         remotePatterns: [
             {
                 protocol: 'https',
@@ -56,13 +64,16 @@ const nextConfig: NextConfig = {
         ],
         dangerouslyAllowSVG: true,
         contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+        minimumCacheTTL: 86400, // 24 hours
+        disableStaticImages: false,
+        unoptimized: false,
     },
 
-    /* Security Headers */
+    /* Performance Headers */
     async headers() {
         return [
             {
-                source: '/(.*)',
+                source: '/((?!api|_next/static|_next/image|favicon.ico).*)',
                 headers: [
                     // Security Headers
                     {
@@ -89,76 +100,50 @@ const nextConfig: NextConfig = {
                         key: 'Referrer-Policy',
                         value: 'origin-when-cross-origin'
                     },
+                    // Performance Headers
                     {
-                        key: 'Content-Security-Policy',
-                        value: [
-                            "default-src 'self'",
-                            "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://vercel.live https://va.vercel-scripts.com",
-                            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-                            "font-src 'self' https://fonts.gstatic.com",
-                            "img-src 'self' data: https: blob:",
-                            "media-src 'self' https:",
-                            "connect-src 'self' https: wss:",
-                            "worker-src 'self' blob:",
-                            "child-src 'self'",
-                            "object-src 'none'",
-                            "base-uri 'self'",
-                            "form-action 'self'",
-                            "frame-ancestors 'none'",
-                            "upgrade-insecure-requests"
-                        ].join('; ')
-                    },
-                    {
-                        key: 'Permissions-Policy',
-                        value: [
-                            'camera=()',
-                            'microphone=()',
-                            'geolocation=()',
-                            'interest-cohort=()',
-                            'payment=()',
-                            'usb=()',
-                            'serial=()',
-                            'bluetooth=()',
-                            'magnetometer=()',
-                            'accelerometer=()',
-                            'gyroscope=()'
-                        ].join(', ')
-                    }
-                ],
-            },
-            // API Routes CORS
-            {
-                source: '/api/:path*',
-                headers: [
-                    {
-                        key: 'Access-Control-Allow-Origin',
-                        value: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
-                    },
-                    {
-                        key: 'Access-Control-Allow-Methods',
-                        value: 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-                    },
-                    {
-                        key: 'Access-Control-Allow-Headers',
-                        value: 'Content-Type, Authorization, X-Requested-With, Accept, Origin',
-                    },
-                    {
-                        key: 'Access-Control-Allow-Credentials',
-                        value: 'true',
-                    },
-                    {
-                        key: 'Access-Control-Max-Age',
-                        value: '86400',
+                        key: 'X-Preload',
+                        value: 'prefetch'
                     },
                 ],
             },
-            // Static Assets Caching
+            // Static Assets Aggressive Caching
             {
-                source: '/assets/:path*',
+                source: '/_next/static/:path*',
                 headers: [
                     {
                         key: 'Cache-Control',
                         value: 'public, max-age=31536000, immutable',
+                    },
+                ],
+            },
+            // Images Caching
+            {
+                source: '/_next/image/:path*',
+                headers: [
+                    {
+                        key: 'Cache-Control',
+                        value: 'public, max-age=86400, s-maxage=86400',
+                    },
+                ],
+            },
+            // API Response Caching
+            {
+                source: '/api/:path*',
+                headers: [
+                    {
+                        key: 'Cache-Control',
+                        value: 'public, max-age=300, s-maxage=300, stale-while-revalidate=86400',
+                    },
+                ],
+            },
+            // Font Preloading
+            {
+                source: '/',
+                headers: [
+                    {
+                        key: 'Link',
+                        value: '<https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap>; rel=preload; as=style',
                     },
                 ],
             },
@@ -185,7 +170,7 @@ const nextConfig: NextConfig = {
         dirs: ['src'],
     },
 
-    /* Redirects */
+    /* Performance Redirects */
     async redirects() {
         return [
             {
@@ -198,53 +183,143 @@ const nextConfig: NextConfig = {
                 destination: '/products',
                 permanent: true,
             },
+            // Redirect old admin routes
+            {
+                source: '/admin-panel/:path*',
+                destination: '/admin/:path*',
+                permanent: true,
+            },
         ];
     },
 
-    /* Rewrites */
+    /* Performance Rewrites */
     async rewrites() {
         return [
             {
                 source: '/api/proxy/:path*',
                 destination: `${process.env.NEXT_PUBLIC_API_URL}/:path*`,
             },
+            // Static assets optimization
+            {
+                source: '/assets/:path*',
+                destination: '/_next/static/:path*',
+            },
         ];
     },
 
-    /* Webpack Configuration */
+    /* Advanced Webpack Configuration */
     webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-        // SVG Handling
+        // Bundle Analyzer
+        if (process.env.ANALYZE === 'true') {
+            config.plugins.push(
+                new BundleAnalyzerPlugin({
+                    analyzerMode: 'static',
+                    openAnalyzer: false,
+                    reportFilename: `./analyze/${isServer ? 'server' : 'client'}.html`,
+                })
+            );
+        }
+
+        // SVG Handling with Optimization
         config.module.rules.push({
             test: /\.svg$/i,
             issuer: /\.[jt]sx?$/,
-            use: ['@svgr/webpack'],
+            use: [
+                {
+                    loader: '@svgr/webpack',
+                    options: {
+                        svgoConfig: {
+                            plugins: [
+                                {
+                                    name: 'preset-default',
+                                    params: {
+                                        overrides: {
+                                            removeViewBox: false,
+                                        },
+                                    },
+                                },
+                                'removeDimensions',
+                            ],
+                        },
+                    },
+                },
+            ],
         });
 
-        // Bundle Analyzer
-        if (process.env.ANALYZE === 'true') {
-            const { BundleAnalyzerPlugin } = require('@next/bundle-analyzer')({
-                enabled: true,
-            });
-            config.plugins.push(new BundleAnalyzerPlugin());
+        // Optimize imports
+        config.resolve.alias = {
+            ...config.resolve.alias,
+            'lodash': 'lodash-es',
+            'date-fns': 'date-fns/esm',
+        };
+
+        // Optimize chunk splitting
+        if (!dev && !isServer) {
+            config.optimization.splitChunks = {
+                chunks: 'all',
+                cacheGroups: {
+                    vendor: {
+                        test: /[\\/]node_modules[\\/]/,
+                        name: 'vendors',
+                        chunks: 'all',
+                        priority: 10,
+                    },
+                    ui: {
+                        test: /[\\/]src[\\/]components[\\/]ui[\\/]/,
+                        name: 'ui',
+                        chunks: 'all',
+                        priority: 20,
+                    },
+                    common: {
+                        minChunks: 2,
+                        name: 'common',
+                        chunks: 'all',
+                        priority: 5,
+                    },
+                },
+            };
         }
 
-        // Optimize lodash imports
-        config.resolve.alias['lodash'] = 'lodash-es';
+        // Tree shaking optimization
+        config.optimization.usedExports = true;
+        config.optimization.sideEffects = false;
+
+        // Compression plugins
+        if (!dev) {
+            config.plugins.push(
+                new webpack.IgnorePlugin({
+                    resourceRegExp: /^\.\/locale$/,
+                    contextRegExp: /moment$/,
+                })
+            );
+        }
+
+        // Performance optimization
+        config.resolve.fallback = {
+            ...config.resolve.fallback,
+            fs: false,
+            path: false,
+            crypto: false,
+        };
 
         return config;
     },
 
     /* Output Configuration */
     output: 'standalone',
-
-    /* Compression */
+    distDir: '.next',
     compress: true,
+    generateEtags: true,
 
     /* Development Configuration */
     ...(process.env.NODE_ENV === 'development' && {
         devIndicators: {
             buildActivity: true,
             buildActivityPosition: 'bottom-right',
+        },
+        onDemandEntries: {
+            maxInactiveAge: 25 * 1000,
+            pagesBufferLength: 2,
         },
     }),
 
@@ -254,11 +329,33 @@ const nextConfig: NextConfig = {
             removeConsole: {
                 exclude: ['error', 'warn'],
             },
+            reactRemoveProperties: true,
+            styledComponents: true,
         },
         generateBuildId: async () => {
-            return `${process.env.VERCEL_GIT_COMMIT_SHA || 'local'}-${Date.now()}`;
+            return `${process.env.VERCEL_GIT_COMMIT_SHA || process.env.GITHUB_SHA || 'local'}-${Date.now()}`;
+        },
+        // Production-only optimizations
+        swcMinify: true,
+        modularizeImports: {
+            'lucide-react': {
+                transform: 'lucide-react/dist/esm/icons/{{kebabCase member}}',
+            },
+            'date-fns': {
+                transform: 'date-fns/{{member}}',
+            },
         },
     }),
+
+    /* Runtime Configuration */
+    serverRuntimeConfig: {
+        // Only available on the server side
+        mySecret: 'secret',
+    },
+    publicRuntimeConfig: {
+        // Available on both server and client
+        staticFolder: '/static',
+    },
 };
 
 export default nextConfig;
