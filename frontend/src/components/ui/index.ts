@@ -1,4 +1,5 @@
-// frontend/src/components/ui/index.ts
+// Updated frontend/src/components/ui/index.ts
+
 // Core UI Components
 export * from './button';
 export * from './input';
@@ -20,6 +21,30 @@ export * from '../product/detail/ProductDetail';
 export * from '../cart/CartItem';
 export * from '../cart/CartSidebar';
 export * from '../cart/MiniCartIndicator';
+
+// Dashboard Components
+export * from '../dashboard';
+
+// frontend/src/components/dashboard/index.ts
+export * from '../dashboard/UserProfile';
+export * from '../dashboard/OrderHistory';
+export * from '../dashboard/AddressManagement';
+
+// frontend/src/components/dashboard/UserProfile.ts
+export * from '../dashboard/UserProfileCard';
+export * from '../dashboard/PasswordChangeDialog';
+export * from '../dashboard/AccountSecurityCard';
+export * from '../dashboard/PreferencesCard';
+
+// frontend/src/components/dashboard/OrderHistory.ts
+export * from '../dashboard/OrderCard';
+export * from '../dashboard/OrderDetailsDialog';
+export * from '../dashboard/OrderHistoryList';
+
+// frontend/src/components/dashboard/AddressManagement.ts
+export * from '../dashboard/AddressCard';
+export * from '../dashboard/AddressFormDialog';
+export * from '../dashboard/AddressManagement';
 
 // Re-export utilities
 export { cn } from '@/lib/cn';
