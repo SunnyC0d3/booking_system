@@ -4,10 +4,9 @@ namespace App\Requests\V1;
 
 use App\Models\Product;
 use App\Models\OrderItem;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreReviewRequest extends FormRequest
+class StoreReviewRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {

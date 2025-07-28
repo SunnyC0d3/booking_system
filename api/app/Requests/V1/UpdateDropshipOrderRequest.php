@@ -3,10 +3,9 @@
 namespace App\Requests\V1;
 
 use App\Constants\DropshipStatuses;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateDropshipOrderRequest extends FormRequest
+class UpdateDropshipOrderRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {

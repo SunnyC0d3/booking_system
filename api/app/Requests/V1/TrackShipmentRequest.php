@@ -2,9 +2,7 @@
 
 namespace App\Requests\V1;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class TrackShipmentRequest extends FormRequest
+class TrackShipmentRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {

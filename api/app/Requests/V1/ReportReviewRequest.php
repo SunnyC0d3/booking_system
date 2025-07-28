@@ -3,10 +3,9 @@
 namespace App\Requests\V1;
 
 use App\Models\Review;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class ReportReviewRequest extends FormRequest
+class ReportReviewRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {

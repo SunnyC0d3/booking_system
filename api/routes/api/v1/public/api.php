@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\V1\Admin\DigitalProductController;
+use App\Http\Controllers\V1\Public\DownloadController;
+use App\Http\Controllers\V1\Public\LicenseController;
 use Illuminate\Support\Facades\Route;
 
 // Auth Controllers
@@ -318,4 +321,219 @@ Route::prefix('checkout')
     ->group(function () {
         Route::post('/summary', 'getCheckoutSummary')->name('checkout.summary');
         Route::post('/validate', 'validateCheckout')->name('checkout.validate');
+    });
+
+// Customer Digital Library - Authenticated User Access
+
+Route::prefix('my-digital-products')
+    ->middleware(['auth:api', 'emailVerified', 'rate_limit:user'])
+    ->controller(DigitalProductController::class)
+    ->group(function () {
+        Route::get('/', 'userLibrary')->name('my-digital-products.index');
+        Route::get('/downloads', 'userLibrary')->name('my-digital-products.downloads');
+        Route::get('/licenses', 'userLicenses')->name('my-digital-products.licenses');
+        Route::get('/statistics', 'userDigitalStats')->name('my-digital-products.statistics');
+    });
+
+// Secure Digital Downloads - Authenticated User Access
+
+Route::prefix('digital/download')
+    ->middleware(['auth:api', 'emailVerified', 'rate_limit:downloads'])
+    ->controller(DownloadController::class)
+    ->group(function () {
+        Route::get('/{token}', 'download')->name('digital.download');
+        Route::get('/{token}/info', 'info')->name('digital.download.info');
+        Route::post('/{token}/progress/{attemptId}', 'updateProgress')->name('digital.download.progress');
+    });
+
+// Alternative download routes for better UX
+
+Route::prefix('download')
+    ->middleware(['auth:api', 'emailVerified', 'rate_limit:downloads'])
+    ->controller(DownloadController::class)
+    ->group(function () {
+        Route::get('/{token}', 'download')->name('download.file');
+        Route::get('/{token}/info', 'info')->name('download.info');
+        Route::post('/{token}/progress/{attemptId}', 'updateProgress')->name('download.progress');
+    });
+
+// License Key Validation - Unauthenticated (for software applications)
+
+Route::prefix('license')
+    ->middleware(['rate_limit:license_validation'])
+    ->controller(LicenseController::class)
+    ->group(function () {
+        Route::post('/validate', 'validate')->name('license.validate');
+        Route::post('/activate', 'activate')->name('license.activate');
+        Route::post('/deactivate', 'deactivate')->name('license.deactivate');
+        Route::post('/info', 'info')->name('license.info');
+        Route::post('/check-updates', 'checkUpdates')->name('license.check-updates');
+        Route::post('/report-usage', 'reportUsage')->name('license.report-usage');
+    });
+
+// Alternative license routes for different integrations
+
+Route::prefix('api/license')
+    ->middleware(['rate_limit:license_validation'])
+    ->controller(LicenseController::class)
+    ->group(function () {
+        Route::post('/v1/validate', 'validate')->name('api.license.validate');
+        Route::post('/v1/activate', 'activate')->name('api.license.activate');
+        Route::post('/v1/deactivate', 'deactivate')->name('api.license.deactivate');
+        Route::post('/v1/info', 'info')->name('api.license.info');
+        Route::post('/v1/updates', 'checkUpdates')->name('api.license.updates');
+        Route::post('/v1/analytics', 'reportUsage')->name('api.license.analytics');
+    });
+
+// Public Product Information - No authentication required
+Route::prefix('products/{product}/digital-info')
+    ->middleware(['client', 'rate_limit:search'])
+    ->group(function () {
+        Route::get('/', function ($product) {
+            $product = \App\Models\Product::findOrFail($product);
+
+            if (!$product->isDigital()) {
+                abort(404, 'Product does not have digital components');
+            }
+
+            return response()->json([
+                'data' => [
+                    'product_type' => $product->product_type,
+                    'requires_license' => $product->requires_license,
+                    'supported_platforms' => $product->supported_platforms,
+                    'system_requirements' => $product->system_requirements,
+                    'latest_version' => $product->latest_version,
+                    'download_info' => [
+                        'download_limit' => $product->download_limit,
+                        'download_expiry_days' => $product->download_expiry_days,
+                        'auto_delivery' => $product->auto_deliver,
+                    ],
+                ],
+                'message' => 'Digital product information retrieved successfully.',
+                'status' => 200
+            ]);
+        })->name('products.digital-info');
+    });
+
+// Guest Download Information - Limited info without authentication
+Route::prefix('download-info')
+    ->middleware(['rate_limit:guest_info'])
+    ->group(function () {
+        Route::get('/{token}', function ($token) {
+            $downloadAccess = \App\Models\DownloadAccess::where('access_token', $token)->first();
+
+            if (!$downloadAccess) {
+                abort(404, 'Download access not found');
+            }
+
+            return response()->json([
+                'data' => [
+                    'product_name' => $downloadAccess->product->name,
+                    'expires_at' => $downloadAccess->expires_at,
+                    'downloads_remaining' => $downloadAccess->getRemainingDownloads(),
+                    'status' => $downloadAccess->status,
+                    'requires_login' => true,
+                ],
+                'message' => 'Download information retrieved successfully.',
+                'status' => 200
+            ]);
+        })->name('download-info.guest');
+    });
+
+// Digital Product Support Routes - Customer Service
+
+Route::prefix('support/download')
+    ->middleware(['auth:api', 'roles:customer service', 'emailVerified', 'rate_limit:support'])
+    ->group(function () {
+        Route::get('/access/{downloadAccess}', [DownloadController::class, 'info'])->name('support.download.info');
+        Route::post('/access/{downloadAccess}/extend', function ($downloadAccessId) {
+            // Customer service can extend download access
+            $downloadAccess = \App\Models\DownloadAccess::findOrFail($downloadAccessId);
+
+            request()->validate([
+                'additional_days' => 'required|integer|min:1|max:365',
+                'reason' => 'required|string|max:500',
+            ]);
+
+            $downloadAccess->extendExpiry(request('additional_days'));
+
+            \Illuminate\Support\Facades\Log::info('Download access extended by customer service', [
+                'access_id' => $downloadAccess->id,
+                'extended_by' => request()->user()->id,
+                'additional_days' => request('additional_days'),
+                'reason' => request('reason')
+            ]);
+
+            return response()->json([
+                'data' => [
+                    'access_id' => $downloadAccess->id,
+                    'new_expiry' => $downloadAccess->fresh()->expires_at,
+                    'extended_by_days' => request('additional_days'),
+                ],
+                'message' => 'Download access extended successfully.',
+                'status' => 200
+            ]);
+        })->name('support.download.extend');
+    });
+
+// Webhook Routes - For external integrations
+
+Route::prefix('webhooks/digital-products')
+    ->middleware(['rate_limit:webhooks'])
+    ->group(function () {
+        Route::post('/license-validation', function () {
+            // External webhook for license validation
+            request()->validate([
+                'license_key' => 'required|string',
+                'product_id' => 'nullable|integer',
+                'webhook_signature' => 'required|string',
+            ]);
+
+            // Verify webhook signature here
+            // ... signature verification logic
+
+            try {
+                $licenseService = app(\App\Services\V1\DigitalProducts\LicenseKeyService::class);
+                $license = $licenseService->validateLicense(
+                    request('license_key'),
+                    request('product_id')
+                );
+
+                return response()->json([
+                    'valid' => true,
+                    'license_status' => $license->status,
+                    'expires_at' => $license->expires_at,
+                    'activations_remaining' => $license->getRemainingActivations(),
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'valid' => false,
+                    'error' => $e->getMessage(),
+                ], 400);
+            }
+        })->name('webhooks.license-validation');
+
+        Route::post('/download-completed', function () {
+            // Webhook for when downloads are completed
+            request()->validate([
+                'access_token' => 'required|string',
+                'download_size' => 'required|integer',
+                'completion_time' => 'required|date',
+                'webhook_signature' => 'required|string',
+            ]);
+
+            // Process download completion webhook
+            $downloadAccess = \App\Models\DownloadAccess::where('access_token', request('access_token'))->first();
+
+            if ($downloadAccess) {
+                $downloadAccess->recordDownload();
+
+                return response()->json([
+                    'message' => 'Download completion recorded.',
+                    'remaining_downloads' => $downloadAccess->getRemainingDownloads(),
+                ]);
+            }
+
+            return response()->json(['error' => 'Access token not found'], 404);
+        })->name('webhooks.download-completed');
     });

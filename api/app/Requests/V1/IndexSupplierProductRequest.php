@@ -3,10 +3,9 @@
 namespace App\Requests\V1;
 
 use App\Constants\DropshipProductSyncStatuses;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class IndexSupplierProductRequest extends FormRequest
+class IndexSupplierProductRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {

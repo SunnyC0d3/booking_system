@@ -4,10 +4,9 @@ namespace App\Requests\V1;
 
 use App\Constants\SupplierStatuses;
 use App\Constants\SupplierIntegrationTypes;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class IndexSupplierRequest extends FormRequest
+class IndexSupplierRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {

@@ -3,9 +3,8 @@
 namespace App\Requests\V1;
 
 use App\Models\ProductVariant;
-use Illuminate\Foundation\Http\FormRequest;
 
-class AddToCartRequest extends FormRequest
+class AddToCartRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {

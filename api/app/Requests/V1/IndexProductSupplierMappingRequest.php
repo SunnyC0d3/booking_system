@@ -2,9 +2,7 @@
 
 namespace App\Requests\V1;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class IndexProductSupplierMappingRequest extends FormRequest
+class IndexProductSupplierMappingRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {

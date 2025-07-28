@@ -2,10 +2,9 @@
 
 namespace App\Requests\V1;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateProductSupplierMappingRequest extends FormRequest
+class UpdateProductSupplierMappingRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {

@@ -4,9 +4,8 @@ namespace App\Requests\V1;
 
 use App\Models\Review;
 use App\Models\Vendor;
-use Illuminate\Foundation\Http\FormRequest;
 
-class StoreReviewResponseRequest extends FormRequest
+class StoreReviewResponseRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {

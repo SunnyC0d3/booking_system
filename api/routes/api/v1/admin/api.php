@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\V1\Admin\DigitalProductController;
+use App\Http\Controllers\V1\Admin\ProductFileController;
 use Illuminate\Support\Facades\Route;
 
 // Admin Controllers
@@ -419,4 +421,117 @@ Route::prefix('admin/dropship-orders')
         Route::post('/{dropshipOrder}/cancel', 'cancel')->name('admin.dropship-orders.cancel');
         Route::post('/{dropshipOrder}/retry', 'retry')->name('admin.dropship-orders.retry');
         Route::post('/bulk-update-status', 'bulkUpdateStatus')->name('admin.dropship-orders.bulk-status');
+    });
+
+// Digital Products Management - Admin/Vendor Access
+
+Route::prefix('admin/digital-products')
+    ->middleware(['auth:api', 'roles:super admin,admin,vendor', 'emailVerified', 'rate_limit:admin'])
+    ->controller(DigitalProductController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('admin.digital-products.index');
+        Route::get('/{product}', 'show')->name('admin.digital-products.show');
+        Route::get('/statistics', 'statistics')->name('admin.digital-products.statistics');
+        Route::post('/cleanup', 'cleanup')->name('admin.digital-products.cleanup');
+    });
+
+// User Digital Library Management - Admin Access
+
+Route::prefix('admin/digital-library')
+    ->middleware(['auth:api', 'roles:super admin,admin,customer service', 'emailVerified', 'rate_limit:admin'])
+    ->controller(DigitalProductController::class)
+    ->group(function () {
+        Route::get('/users/{user}', 'userLibrary')->name('admin.digital-library.user');
+        Route::get('/search', 'userLibrary')->name('admin.digital-library.search');
+    });
+
+// Product File Management - Admin/Vendor Access
+
+Route::prefix('admin/products/{product}/files')
+    ->middleware(['auth:api', 'roles:super admin,admin,vendor', 'emailVerified', 'rate_limit:admin'])
+    ->controller(ProductFileController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('admin.product-files.index');
+        Route::get('/{file}', 'show')->name('admin.product-files.show');
+        Route::post('/', 'store')->name('admin.product-files.store');
+        Route::post('/bulk', 'bulkStore')->name('admin.product-files.bulk-store');
+        Route::post('/{file}', 'update')->name('admin.product-files.update');
+        Route::delete('/{file}', 'destroy')->name('admin.product-files.destroy');
+        Route::get('/{file}/download', 'download')->name('admin.product-files.download');
+    });
+
+// Download Access Management - Admin Access
+
+Route::prefix('admin/download-access')
+    ->middleware(['auth:api', 'roles:super admin,admin,customer service', 'emailVerified', 'rate_limit:admin'])
+    ->group(function () {
+        Route::get('/', [DigitalProductController::class, 'downloadAccessIndex'])->name('admin.download-access.index');
+        Route::get('/{downloadAccess}', [DigitalProductController::class, 'downloadAccessShow'])->name('admin.download-access.show');
+        Route::post('/{downloadAccess}/extend', [DigitalProductController::class, 'extendDownloadAccess'])->name('admin.download-access.extend');
+        Route::post('/{downloadAccess}/revoke', [DigitalProductController::class, 'revokeDownloadAccess'])->name('admin.download-access.revoke');
+        Route::post('/{downloadAccess}/reset-limit', [DigitalProductController::class, 'resetDownloadLimit'])->name('admin.download-access.reset-limit');
+    });
+
+// License Key Management - Admin Access
+
+Route::prefix('admin/license-keys')
+    ->middleware(['auth:api', 'roles:super admin,admin,customer service', 'emailVerified', 'rate_limit:admin'])
+    ->group(function () {
+        Route::get('/', [DigitalProductController::class, 'licenseKeysIndex'])->name('admin.license-keys.index');
+        Route::get('/{licenseKey}', [DigitalProductController::class, 'licenseKeyShow'])->name('admin.license-keys.show');
+        Route::post('/', [DigitalProductController::class, 'generateLicenseKey'])->name('admin.license-keys.generate');
+        Route::post('/{licenseKey}/revoke', [DigitalProductController::class, 'revokeLicenseKey'])->name('admin.license-keys.revoke');
+        Route::post('/{licenseKey}/extend', [DigitalProductController::class, 'extendLicenseKey'])->name('admin.license-keys.extend');
+        Route::get('/{licenseKey}/analytics', [DigitalProductController::class, 'licenseAnalytics'])->name('admin.license-keys.analytics');
+    });
+
+// Digital Product Analytics - Admin Access
+
+Route::prefix('admin/digital-analytics')
+    ->middleware(['auth:api', 'roles:super admin,admin,vendor', 'emailVerified', 'rate_limit:admin'])
+    ->group(function () {
+        Route::get('/dashboard', [DigitalProductController::class, 'analyticsDashboard'])->name('admin.digital-analytics.dashboard');
+        Route::get('/downloads', [DigitalProductController::class, 'downloadAnalytics'])->name('admin.digital-analytics.downloads');
+        Route::get('/licenses', [DigitalProductController::class, 'licenseAnalytics'])->name('admin.digital-analytics.licenses');
+        Route::get('/revenue', [DigitalProductController::class, 'revenueAnalytics'])->name('admin.digital-analytics.revenue');
+        Route::get('/export', [DigitalProductController::class, 'exportAnalytics'])->name('admin.digital-analytics.export');
+    });
+
+// Vendor-Specific Digital Product Routes
+
+Route::prefix('vendor/digital-products')
+    ->middleware(['auth:api', 'roles:vendor', 'emailVerified', 'rate_limit:vendor'])
+    ->controller(DigitalProductController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('vendor.digital-products.index');
+        Route::get('/{product}', 'show')->name('vendor.digital-products.show');
+        Route::get('/statistics', 'statistics')->name('vendor.digital-products.statistics');
+        Route::get('/{product}/customers', 'productCustomers')->name('vendor.digital-products.customers');
+    });
+
+// Vendor File Management
+
+Route::prefix('vendor/products/{product}/files')
+    ->middleware(['auth:api', 'roles:vendor', 'emailVerified', 'rate_limit:vendor'])
+    ->controller(ProductFileController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('vendor.product-files.index');
+        Route::get('/{file}', 'show')->name('vendor.product-files.show');
+        Route::post('/', 'store')->name('vendor.product-files.store');
+        Route::post('/bulk', 'bulkStore')->name('vendor.product-files.bulk-store');
+        Route::post('/{file}', 'update')->name('vendor.product-files.update');
+        Route::delete('/{file}', 'destroy')->name('vendor.product-files.destroy');
+        Route::get('/{file}/download', 'download')->name('vendor.product-files.download');
+    });
+
+// Customer Service Routes
+
+Route::prefix('support/digital-products')
+    ->middleware(['auth:api', 'roles:customer service', 'emailVerified', 'rate_limit:support'])
+    ->group(function () {
+        Route::get('/user/{user}/library', [DigitalProductController::class, 'userLibrary'])->name('support.user-library');
+        Route::get('/download-access/{downloadAccess}', [DigitalProductController::class, 'downloadAccessShow'])->name('support.download-access.show');
+        Route::post('/download-access/{downloadAccess}/extend', [DigitalProductController::class, 'extendDownloadAccess'])->name('support.download-access.extend');
+        Route::get('/license-keys/{licenseKey}', [DigitalProductController::class, 'licenseKeyShow'])->name('support.license-keys.show');
+        Route::post('/license-keys/{licenseKey}/reset', [DigitalProductController::class, 'resetLicenseKey'])->name('support.license-keys.reset');
     });

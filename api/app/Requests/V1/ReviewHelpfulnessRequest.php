@@ -3,9 +3,8 @@
 namespace App\Requests\V1;
 
 use App\Models\Review;
-use Illuminate\Foundation\Http\FormRequest;
 
-class ReviewHelpfulnessRequest extends FormRequest
+class ReviewHelpfulnessRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {

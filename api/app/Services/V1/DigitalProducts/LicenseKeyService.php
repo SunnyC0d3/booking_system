@@ -6,268 +6,546 @@ use App\Models\LicenseKey;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\Order;
+use App\Models\ProductUpdate;
+use App\Models\DownloadAccess;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
 use Exception;
 
 class LicenseKeyService
 {
+    /**
+     * Generate a new license key for a product
+     */
     public function generateLicense(Product $product, User $user, Order $order, string $type = 'single_use'): LicenseKey
     {
         if (!$product->requiresLicense()) {
-            throw new Exception('Product does not require a license');
+            throw new Exception('This product does not require a license key');
         }
 
-        $licenseKey = LicenseKey::create([
-            'product_id' => $product->id,
-            'user_id' => $user->id,
-            'order_id' => $order->id,
-            'license_key' => LicenseKey::generateKey($this->getProductPrefix($product)),
-            'type' => $type,
-            'status' => 'active',
-            'activation_limit' => $this->getActivationLimit($type, $product),
-            'expires_at' => $this->getLicenseExpiry($type, $product),
-            'metadata' => [
-                'generated_by_purchase' => true,
-                'original_ip' => request()?->ip(),
-                'user_agent' => request()?->userAgent(),
-            ],
-        ]);
+        return DB::transaction(function () use ($product, $user, $order, $type) {
+            $licenseKey = LicenseKey::create([
+                'product_id' => $product->id,
+                'user_id' => $user->id,
+                'order_id' => $order->id,
+                'license_key' => $this->generateLicenseKeyString($product),
+                'type' => $type,
+                'status' => 'active',
+                'activation_limit' => $this->getActivationLimit($product, $type),
+                'expires_at' => $this->getLicenseExpiry($product, $type),
+                'metadata' => [
+                    'generated_at' => now()->toISOString(),
+                    'generator_ip' => request()?->ip(),
+                    'product_version' => $product->latest_version,
+                ],
+            ]);
 
-        Log::info('License key generated', [
-            'license_id' => $licenseKey->id,
-            'product_id' => $product->id,
-            'user_id' => $user->id,
-            'order_id' => $order->id,
-            'type' => $type
-        ]);
+            Log::info('License key generated', [
+                'license_id' => $licenseKey->id,
+                'product_id' => $product->id,
+                'user_id' => $user->id,
+                'order_id' => $order->id,
+                'type' => $type,
+                'expires_at' => $licenseKey->expires_at
+            ]);
 
-        return $licenseKey;
+            return $licenseKey;
+        });
     }
 
-    public function validateLicense(string $licenseKey): LicenseKey
+    /**
+     * Validate a license key
+     */
+    public function validateLicense(string $licenseKey, ?int $productId = null): LicenseKey
     {
-        $license = LicenseKey::where('license_key', $licenseKey)
-            ->with(['product', 'user'])
-            ->first();
+        $license = LicenseKey::where('license_key', $licenseKey)->first();
 
         if (!$license) {
-            throw new Exception('License key not found', 404);
+            throw new Exception('License key not found.', 404);
         }
 
-        if (!$license->isValid()) {
-            $reason = $this->getInvalidReason($license);
-            throw new Exception("License invalid: {$reason}", 403);
+        if ($productId && $license->product_id !== $productId) {
+            throw new Exception('License key is not valid for this product.', 400);
+        }
+
+        if ($license->status !== 'active') {
+            throw new Exception("License key has been {$license->status}.", 400);
+        }
+
+        if ($license->expires_at && $license->expires_at->isPast()) {
+            $license->update(['status' => 'expired']);
+            throw new Exception('License key has expired.', 400);
         }
 
         return $license;
     }
 
-    public function activateLicense(string $licenseKey, array $deviceInfo, Request $request): array
+    /**
+     * Activate a license key on a device
+     */
+    public function activateLicense(
+        string $licenseKey,
+        string $deviceName,
+        string $deviceId,
+        array $deviceInfo = [],
+        ?string $productVersion = null
+    ): array {
+        return DB::transaction(function () use ($licenseKey, $deviceName, $deviceId, $deviceInfo, $productVersion) {
+            $license = $this->validateLicense($licenseKey);
+
+            // Check if already activated on this device
+            $activatedDevices = $license->activated_devices ?? [];
+            foreach ($activatedDevices as $device) {
+                if ($device['device_id'] === $deviceId) {
+                    // Update existing activation
+                    $this->updateDeviceActivation($license, $deviceId, $deviceInfo, $productVersion);
+
+                    Log::info('License re-activated on existing device', [
+                        'license_id' => $license->id,
+                        'device_id' => $deviceId,
+                        'device_name' => $deviceName
+                    ]);
+
+                    return [
+                        'license' => $license->fresh(),
+                        'activation_id' => $device['activation_id'],
+                        'is_new_activation' => false
+                    ];
+                }
+            }
+
+            // Check activation limit
+            if ($license->activations_used >= $license->activation_limit) {
+                throw new Exception('License key activation limit exceeded.', 400);
+            }
+
+            // Create new activation
+            $activationId = 'act_' . Str::random(12);
+            $activation = [
+                'activation_id' => $activationId,
+                'device_id' => $deviceId,
+                'device_name' => $deviceName,
+                'activated_at' => now()->toISOString(),
+                'last_seen' => now()->toISOString(),
+                'product_version' => $productVersion ?? $license->product->latest_version,
+                'device_info' => $deviceInfo,
+                'ip_address' => request()?->ip(),
+                'activation_count' => 1,
+            ];
+
+            $activatedDevices[] = $activation;
+
+            // Update license
+            $license->update([
+                'activated_devices' => $activatedDevices,
+                'activations_used' => $license->activations_used + 1,
+                'first_activated_at' => $license->first_activated_at ?? now(),
+                'last_activated_at' => now(),
+            ]);
+
+            Log::info('License activated on new device', [
+                'license_id' => $license->id,
+                'device_id' => $deviceId,
+                'device_name' => $deviceName,
+                'activations_used' => $license->activations_used,
+                'activations_remaining' => $license->getRemainingActivations()
+            ]);
+
+            return [
+                'license' => $license->fresh(),
+                'activation_id' => $activationId,
+                'is_new_activation' => true
+            ];
+        });
+    }
+
+    /**
+     * Deactivate a license key from a device
+     */
+    public function deactivateLicense(string $licenseKey, string $deviceId, string $reason = 'Manual deactivation'): array
+    {
+        return DB::transaction(function () use ($licenseKey, $deviceId, $reason) {
+            $license = LicenseKey::where('license_key', $licenseKey)->firstOrFail();
+
+            $activatedDevices = $license->activated_devices ?? [];
+            $deviceFound = false;
+
+            foreach ($activatedDevices as $index => $device) {
+                if ($device['device_id'] === $deviceId) {
+                    // Remove device from activated devices
+                    array_splice($activatedDevices, $index, 1);
+                    $deviceFound = true;
+                    break;
+                }
+            }
+
+            if (!$deviceFound) {
+                throw new Exception('License activation not found for this device.', 404);
+            }
+
+            // Update license
+            $license->update([
+                'activated_devices' => $activatedDevices,
+                'activations_used' => max(0, $license->activations_used - 1),
+                'metadata' => array_merge($license->metadata ?? [], [
+                    'last_deactivation' => [
+                        'device_id' => $deviceId,
+                        'reason' => $reason,
+                        'deactivated_at' => now()->toISOString(),
+                        'deactivated_by_ip' => request()?->ip(),
+                    ]
+                ]),
+            ]);
+
+            Log::info('License deactivated from device', [
+                'license_id' => $license->id,
+                'device_id' => $deviceId,
+                'reason' => $reason,
+                'activations_remaining' => $license->getRemainingActivations()
+            ]);
+
+            return [
+                'license' => $license->fresh(),
+                'deactivated_device_id' => $deviceId,
+                'reason' => $reason
+            ];
+        });
+    }
+
+    /**
+     * Get license information
+     */
+    public function getLicenseInfo(string $licenseKey): LicenseKey
+    {
+        $license = LicenseKey::where('license_key', $licenseKey)
+            ->with(['product', 'user', 'order'])
+            ->firstOrFail();
+
+        // Update last checked timestamp
+        $license->update([
+            'metadata' => array_merge($license->metadata ?? [], [
+                'last_checked_at' => now()->toISOString(),
+                'last_check_ip' => request()?->ip(),
+            ])
+        ]);
+
+        return $license;
+    }
+
+    /**
+     * Check for product updates
+     */
+    public function checkProductUpdates(string $licenseKey, string $currentVersion, string $deviceId): array
+    {
+        $license = $this->validateLicense($licenseKey);
+        $product = $license->product;
+
+        // Verify device is activated
+        if (!$this->isDeviceActivated($license, $deviceId)) {
+            throw new Exception('License is not activated on this device.', 403);
+        }
+
+        // Get available updates
+        $updates = ProductUpdate::where('product_id', $product->id)
+            ->where('released_at', '<=', now())
+            ->orderBy('released_at', 'desc')
+            ->get();
+
+        $availableUpdates = [];
+        $hasUpdates = false;
+        $latestVersion = $product->latest_version ?? $currentVersion;
+
+        foreach ($updates as $update) {
+            if (version_compare($update->version, $currentVersion, '>')) {
+                $hasUpdates = true;
+                $availableUpdates[] = [
+                    'version' => $update->version,
+                    'title' => $update->title,
+                    'description' => $update->description,
+                    'changelog' => $update->changelog,
+                    'update_type' => $update->update_type,
+                    'priority' => $update->priority,
+                    'released_at' => $update->released_at,
+                    'download_size' => $update->productFile?->file_size_formatted ?? 'Unknown',
+                    'is_security_update' => $update->is_security_update,
+                    'force_update' => $update->force_update,
+                ];
+
+                if (version_compare($update->version, $latestVersion, '>')) {
+                    $latestVersion = $update->version;
+                }
+            }
+        }
+
+        $result = [
+            'has_updates' => $hasUpdates,
+            'latest_version' => $latestVersion,
+            'current_version' => $currentVersion,
+            'updates' => $availableUpdates,
+        ];
+
+        // Add download access if updates are available
+        if ($hasUpdates) {
+            $downloadAccess = $this->createUpdateDownloadAccess($license, $deviceId);
+            $result['download_access'] = [
+                'has_access' => true,
+                'download_token' => $downloadAccess->access_token,
+                'expires_at' => $downloadAccess->expires_at,
+            ];
+        }
+
+        // Log update check
+        Log::info('Product update check', [
+            'license_id' => $license->id,
+            'product_id' => $product->id,
+            'device_id' => $deviceId,
+            'current_version' => $currentVersion,
+            'has_updates' => $hasUpdates,
+            'latest_version' => $latestVersion
+        ]);
+
+        return $result;
+    }
+
+    /**
+     * Record usage analytics
+     */
+    public function recordUsageAnalytics(string $licenseKey, string $deviceId, array $usageData, string $ipAddress): array
     {
         $license = $this->validateLicense($licenseKey);
 
-        if (!$license->canActivate()) {
-            throw new Exception('License activation limit reached', 403);
+        // Verify device is activated
+        if (!$this->isDeviceActivated($license, $deviceId)) {
+            throw new Exception('License is not activated on this device.', 403);
         }
 
-        $activationData = array_merge($deviceInfo, [
-            'ip_address' => $request->ip(),
-            'user_agent' => $request->userAgent(),
-            'activated_at' => now()->toISOString(),
-        ]);
+        $sessionId = 'sess_' . Str::random(16);
 
-        $success = $license->activate($activationData);
-
-        if (!$success) {
-            throw new Exception('Failed to activate license', 500);
-        }
-
-        Log::info('License activated successfully', [
+        // Store analytics data
+        $analyticsRecord = [
+            'session_id' => $sessionId,
             'license_id' => $license->id,
-            'device_info' => $deviceInfo,
-            'ip' => $request->ip(),
-            'remaining_activations' => $license->remaining_activations
-        ]);
-
-        return [
-            'license_key' => $license->license_key,
-            'product_name' => $license->product->name,
-            'activation_successful' => true,
-            'activations_used' => $license->activations_used,
-            'activations_remaining' => $license->remaining_activations,
-            'expires_at' => $license->expires_at,
-            'activated_at' => now(),
+            'product_id' => $license->product_id,
+            'user_id' => $license->user_id,
+            'device_id' => $deviceId,
+            'recorded_at' => now()->toISOString(),
+            'ip_address' => $ipAddress,
+            'usage_data' => $usageData,
         ];
-    }
 
-    public function deactivateLicense(string $licenseKey, string $deviceId = null): bool
-    {
-        $license = LicenseKey::where('license_key', $licenseKey)->first();
+        // Update device last seen
+        $this->updateDeviceLastSeen($license, $deviceId, $usageData);
 
-        if (!$license) {
-            throw new Exception('License key not found', 404);
-        }
+        // Store in cache for real-time analytics (optional)
+        cache()->put(
+            "license_analytics:{$license->id}:{$sessionId}",
+            $analyticsRecord,
+            now()->addDays(30)
+        );
 
-        $success = $license->deactivate($deviceId);
-
-        Log::info('License deactivated', [
+        Log::info('Usage analytics recorded', [
             'license_id' => $license->id,
             'device_id' => $deviceId,
-            'remaining_activations' => $license->remaining_activations
+            'session_id' => $sessionId,
+            'session_duration' => $usageData['session_duration'] ?? 0,
+            'features_used_count' => count($usageData['features_used'] ?? [])
         ]);
-
-        return $success;
-    }
-
-    public function revokeLicense(LicenseKey $license, string $reason = null): void
-    {
-        $license->revoke($reason);
-
-        Log::warning('License revoked', [
-            'license_id' => $license->id,
-            'reason' => $reason
-        ]);
-    }
-
-    public function extendLicense(LicenseKey $license, int $additionalDays): void
-    {
-        $currentExpiry = $license->expires_at ?? now();
-        $newExpiry = $currentExpiry->addDays($additionalDays);
-
-        $license->update([
-            'expires_at' => $newExpiry,
-            'metadata' => array_merge($license->metadata ?? [], [
-                'extended_at' => now()->toISOString(),
-                'extended_days' => $additionalDays,
-            ]),
-        ]);
-
-        Log::info('License extended', [
-            'license_id' => $license->id,
-            'additional_days' => $additionalDays,
-            'new_expiry' => $newExpiry
-        ]);
-    }
-
-    public function getLicenseInfo(string $licenseKey): array
-    {
-        $license = LicenseKey::where('license_key', $licenseKey)
-            ->with(['product', 'user'])
-            ->first();
-
-        if (!$license) {
-            throw new Exception('License key not found', 404);
-        }
 
         return [
-            'license_key' => $license->license_key,
-            'type' => $license->type,
-            'type_label' => $license->type_label,
-            'status' => $license->status,
-            'status_label' => $license->status_label,
-            'product' => [
-                'id' => $license->product->id,
-                'name' => $license->product->name,
-                'version' => $license->product->latest_version,
-            ],
-            'activation_limit' => $license->activation_limit,
-            'activations_used' => $license->activations_used,
-            'activations_remaining' => $license->remaining_activations,
-            'expires_at' => $license->expires_at,
-            'is_expired' => $license->isExpired(),
-            'is_valid' => $license->isValid(),
-            'can_activate' => $license->canActivate(),
-            'activated_devices' => $license->activated_devices,
-            'created_at' => $license->created_at,
+            'session_id' => $sessionId,
+            'recorded_at' => now(),
         ];
     }
 
+    /**
+     * Revoke a license key
+     */
+    public function revokeLicense(LicenseKey $license, string $reason, ?User $revokedBy = null): LicenseKey
+    {
+        return DB::transaction(function () use ($license, $reason, $revokedBy) {
+            $license->update([
+                'status' => 'revoked',
+                'metadata' => array_merge($license->metadata ?? [], [
+                    'revoked_at' => now()->toISOString(),
+                    'revoked_reason' => $reason,
+                    'revoked_by_user_id' => $revokedBy?->id,
+                    'revoked_by_ip' => request()?->ip(),
+                ]),
+            ]);
+
+            Log::warning('License key revoked', [
+                'license_id' => $license->id,
+                'product_id' => $license->product_id,
+                'user_id' => $license->user_id,
+                'reason' => $reason,
+                'revoked_by' => $revokedBy?->id
+            ]);
+
+            return $license;
+        });
+    }
+
+    /**
+     * Generate a license key string
+     */
+    protected function generateLicenseKeyString(Product $product): string
+    {
+        do {
+            $prefix = $this->getProductPrefix($product);
+            $segments = [
+                $prefix,
+                strtoupper(Str::random(4)),
+                strtoupper(Str::random(4)),
+                strtoupper(Str::random(4)),
+                strtoupper(Str::random(4)),
+            ];
+
+            $licenseKey = implode('-', $segments);
+        } while (LicenseKey::where('license_key', $licenseKey)->exists());
+
+        return $licenseKey;
+    }
+
+    /**
+     * Get product prefix for license key
+     */
     protected function getProductPrefix(Product $product): string
     {
-        $name = strtoupper(preg_replace('/[^A-Z]/', '', $product->name));
-        return substr($name, 0, 4) ?: 'PROD';
+        // Extract uppercase letters from product name
+        $name = preg_replace('/[^A-Z]/', '', strtoupper($product->name));
+
+        if (strlen($name) >= 4) {
+            return substr($name, 0, 4);
+        }
+
+        // Fallback: use first letters of words
+        $words = explode(' ', $product->name);
+        $prefix = '';
+        foreach ($words as $word) {
+            $prefix .= strtoupper(substr($word, 0, 1));
+            if (strlen($prefix) >= 4) break;
+        }
+
+        // Pad with random letters if needed
+        while (strlen($prefix) < 4) {
+            $prefix .= chr(65 + rand(0, 25)); // A-Z
+        }
+
+        return substr($prefix, 0, 4);
     }
 
-    protected function getActivationLimit(string $type, Product $product): int
+    /**
+     * Get activation limit based on product and license type
+     */
+    protected function getActivationLimit(Product $product, string $type): int
     {
-        return match($type) {
+        return match ($type) {
             'single_use' => 1,
-            'multi_use' => 5,
-            'subscription' => 10,
+            'multi_use' => 3,
+            'subscription' => 5,
             'trial' => 1,
-            default => 1
+            default => 1,
         };
     }
 
-    protected function getLicenseExpiry(string $type, Product $product): ?\Carbon\Carbon
+    /**
+     * Get license expiry date
+     */
+    protected function getLicenseExpiry(Product $product, string $type): ?Carbon
     {
-        return match($type) {
-            'trial' => now()->addDays(30),
-            'subscription' => now()->addYear(),
-            default => null
+        return match ($type) {
+            'single_use' => null, // No expiry
+            'multi_use' => null, // No expiry
+            'subscription' => now()->addYear(), // 1 year
+            'trial' => now()->addDays(30), // 30 days
+            default => null,
         };
     }
 
-    protected function getInvalidReason(LicenseKey $license): string
+    /**
+     * Check if device is activated for license
+     */
+    protected function isDeviceActivated(LicenseKey $license, string $deviceId): bool
     {
-        if ($license->status !== 'active') {
-            return "Status is {$license->status}";
+        $activatedDevices = $license->activated_devices ?? [];
+
+        foreach ($activatedDevices as $device) {
+            if ($device['device_id'] === $deviceId) {
+                return true;
+            }
         }
 
-        if ($license->isExpired()) {
-            return 'License has expired';
-        }
-
-        if (!$license->canActivate()) {
-            return 'Activation limit reached';
-        }
-
-        return 'Unknown reason';
+        return false;
     }
 
-    public function getLicenseAnalytics(Product $product = null): array
+    /**
+     * Update device activation info
+     */
+    protected function updateDeviceActivation(LicenseKey $license, string $deviceId, array $deviceInfo, ?string $productVersion): void
     {
-        $query = $product
-            ? LicenseKey::where('product_id', $product->id)
-            : LicenseKey::query();
+        $activatedDevices = $license->activated_devices ?? [];
 
-        $totalLicenses = $query->count();
-        $activeLicenses = $query->where('status', 'active')->count();
-        $expiredLicenses = $query->where('status', 'expired')->count();
-        $revokedLicenses = $query->where('status', 'revoked')->count();
+        foreach ($activatedDevices as $index => $device) {
+            if ($device['device_id'] === $deviceId) {
+                $activatedDevices[$index] = array_merge($device, [
+                    'last_seen' => now()->toISOString(),
+                    'device_info' => array_merge($device['device_info'] ?? [], $deviceInfo),
+                    'product_version' => $productVersion ?? $device['product_version'],
+                    'activation_count' => ($device['activation_count'] ?? 1) + 1,
+                ]);
+                break;
+            }
+        }
 
-        $activationStats = $query->selectRaw('
-            SUM(activations_used) as total_activations,
-            AVG(activations_used) as avg_activations_per_license,
-            SUM(CASE WHEN activations_used >= activation_limit THEN 1 ELSE 0 END) as fully_activated
-        ')->first();
+        $license->update([
+            'activated_devices' => $activatedDevices,
+            'last_activated_at' => now(),
+        ]);
+    }
 
-        $typeDistribution = $query->selectRaw('type, COUNT(*) as count')
-            ->groupBy('type')
-            ->pluck('count', 'type')
-            ->toArray();
+    /**
+     * Update device last seen timestamp
+     */
+    protected function updateDeviceLastSeen(LicenseKey $license, string $deviceId, array $usageData): void
+    {
+        $activatedDevices = $license->activated_devices ?? [];
 
-        return [
-            'licenses' => [
-                'total' => $totalLicenses,
-                'active' => $activeLicenses,
-                'expired' => $expiredLicenses,
-                'revoked' => $revokedLicenses,
+        foreach ($activatedDevices as $index => $device) {
+            if ($device['device_id'] === $deviceId) {
+                $activatedDevices[$index]['last_seen'] = now()->toISOString();
+                $activatedDevices[$index]['last_usage'] = [
+                    'session_duration' => $usageData['session_duration'] ?? 0,
+                    'features_used' => $usageData['features_used'] ?? [],
+                    'performance_metrics' => $usageData['performance_metrics'] ?? [],
+                ];
+                break;
+            }
+        }
+
+        $license->update(['activated_devices' => $activatedDevices]);
+    }
+
+    /**
+     * Create download access for product updates
+     */
+    protected function createUpdateDownloadAccess(LicenseKey $license, string $deviceId): DownloadAccess
+    {
+        return DownloadAccess::create([
+            'user_id' => $license->user_id,
+            'product_id' => $license->product_id,
+            'order_id' => $license->order_id,
+            'access_token' => DownloadAccess::generateToken(),
+            'download_limit' => 3, // Limited downloads for updates
+            'expires_at' => now()->addDays(7), // 7 days to download update
+            'status' => 'active',
+            'metadata' => [
+                'created_for_update' => true,
+                'license_id' => $license->id,
+                'device_id' => $deviceId,
+                'update_check_ip' => request()?->ip(),
             ],
-            'activations' => [
-                'total_activations' => $activationStats->total_activations ?? 0,
-                'average_per_license' => round($activationStats->avg_activations_per_license ?? 0, 2),
-                'fully_activated_licenses' => $activationStats->fully_activated ?? 0,
-                'activation_rate' => $totalLicenses > 0
-                    ? round(($activationStats->fully_activated / $totalLicenses) * 100, 2)
-                    : 0,
-            ],
-            'type_distribution' => $typeDistribution,
-            'recent_activity' => [
-                'new_licenses_30_days' => $query->where('created_at', '>=', now()->subDays(30))->count(),
-                'activations_30_days' => $query->where('first_activated_at', '>=', now()->subDays(30))->count(),
-            ]
-        ];
+        ]);
     }
 }

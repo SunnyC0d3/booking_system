@@ -2,9 +2,7 @@
 
 namespace App\Requests\V1;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class UpdateCartItemRequest extends FormRequest
+class UpdateCartItemRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {

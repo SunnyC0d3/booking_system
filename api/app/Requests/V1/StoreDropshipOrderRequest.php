@@ -2,9 +2,7 @@
 
 namespace App\Requests\V1;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class StoreDropshipOrderRequest extends FormRequest
+class StoreDropshipOrderRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {

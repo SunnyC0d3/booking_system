@@ -36,6 +36,9 @@ class LicenseKey extends Model
         'metadata' => 'array'
     ];
 
+    /**
+     * Relationships
+     */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
@@ -51,129 +54,215 @@ class LicenseKey extends Model
         return $this->belongsTo(Order::class);
     }
 
+    /**
+     * Scopes
+     */
     public function scopeActive($query)
     {
         return $query->where('status', 'active');
     }
 
-    public function scopeNotExpired($query)
+    public function scopeExpired($query)
     {
-        return $query->where(function($q) {
-            $q->whereNull('expires_at')
-                ->orWhere('expires_at', '>', now());
-        });
+        return $query->where('status', 'expired')
+            ->orWhere(function ($q) {
+                $q->where('expires_at', '<', now())
+                    ->where('status', 'active');
+            });
     }
 
-    public function scopeValid($query)
+    public function scopeRevoked($query)
     {
-        return $query->active()->notExpired();
+        return $query->where('status', 'revoked');
     }
 
-    public static function generateKey(string $productPrefix = null): string
+    public function scopeByProduct($query, $productId)
     {
-        $prefix = $productPrefix ?? 'PROD';
-        $segments = [
-            $prefix,
-            strtoupper(Str::random(4)),
-            strtoupper(Str::random(4)),
-            strtoupper(Str::random(4)),
-            strtoupper(Str::random(4))
-        ];
-
-        return implode('-', $segments);
+        return $query->where('product_id', $productId);
     }
 
-    public function isValid(): bool
+    public function scopeByUser($query, $userId)
     {
-        return $this->status === 'active' &&
-            ($this->expires_at === null || $this->expires_at->isFuture()) &&
-            $this->canActivate();
+        return $query->where('user_id', $userId);
     }
 
-    public function isExpired(): bool
-    {
-        return $this->expires_at && $this->expires_at->isPast();
-    }
-
-    public function canActivate(): bool
-    {
-        return $this->activations_used < $this->activation_limit;
-    }
-
-    public function activate(array $deviceInfo = []): bool
-    {
-        if (!$this->canActivate()) {
-            return false;
-        }
-
-        $devices = $this->activated_devices ?? [];
-        $devices[] = array_merge($deviceInfo, [
-            'activated_at' => now()->toISOString(),
-            'ip_address' => request()->ip()
-        ]);
-
-        $this->update([
-            'activations_used' => $this->activations_used + 1,
-            'activated_devices' => $devices,
-            'last_activated_at' => now()
-        ]);
-
-        if ($this->first_activated_at === null) {
-            $this->update(['first_activated_at' => now()]);
-        }
-
-        return true;
-    }
-
-    public function deactivate(string $deviceId = null): bool
-    {
-        if ($deviceId && $this->activated_devices) {
-            $devices = collect($this->activated_devices)
-                ->reject(fn($device) => $device['device_id'] === $deviceId)
-                ->values()
-                ->toArray();
-
-            $this->update([
-                'activated_devices' => $devices,
-                'activations_used' => max(0, $this->activations_used - 1)
-            ]);
-        }
-
-        return true;
-    }
-
-    public function revoke(string $reason = null): void
-    {
-        $this->update([
-            'status' => 'revoked',
-            'notes' => $this->notes . "\nRevoked: " . ($reason ?? 'No reason provided') . ' at ' . now()
-        ]);
-    }
-
-    public function getRemainingActivationsAttribute(): int
-    {
-        return max(0, $this->activation_limit - $this->activations_used);
-    }
-
+    /**
+     * Accessors & Mutators
+     */
     public function getTypeLabelAttribute(): string
     {
-        return match($this->type) {
+        return match ($this->type) {
             'single_use' => 'Single Use',
-            'multi_use' => 'Multi Use',
+            'multi_use' => 'Multi-Device',
             'subscription' => 'Subscription',
             'trial' => 'Trial',
-            default => 'Unknown'
+            default => ucfirst($this->type),
         };
     }
 
     public function getStatusLabelAttribute(): string
     {
-        return match($this->status) {
+        return match ($this->status) {
             'active' => 'Active',
             'expired' => 'Expired',
             'revoked' => 'Revoked',
             'suspended' => 'Suspended',
-            default => 'Unknown'
+            default => ucfirst($this->status),
         };
+    }
+
+    public function getRemainingActivations(): int
+    {
+        return max(0, $this->activation_limit - $this->activations_used);
+    }
+
+    public function getRemainingActivationsAttribute(): int
+    {
+        return $this->getRemainingActivations();
+    }
+
+    public function getActivatedDevices(): array
+    {
+        return $this->activated_devices ?? [];
+    }
+
+    public function getIsExpiredAttribute(): bool
+    {
+        return $this->expires_at && $this->expires_at->isPast();
+    }
+
+    public function getCanActivateAttribute(): bool
+    {
+        return $this->isValid() && $this->getRemainingActivations() > 0;
+    }
+
+    /**
+     * Business Logic Methods
+     */
+    public function isValid(): bool
+    {
+        if ($this->status !== 'active') {
+            return false;
+        }
+
+        if ($this->expires_at && $this->expires_at->isPast()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function canActivate(): bool
+    {
+        return $this->isValid() && $this->getRemainingActivations() > 0;
+    }
+
+    public function isActivatedOnDevice(string $deviceId): bool
+    {
+        $devices = $this->getActivatedDevices();
+
+        foreach ($devices as $device) {
+            if ($device['device_id'] === $deviceId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getDeviceActivation(string $deviceId): ?array
+    {
+        $devices = $this->getActivatedDevices();
+
+        foreach ($devices as $device) {
+            if ($device['device_id'] === $deviceId) {
+                return $device;
+            }
+        }
+
+        return null;
+    }
+
+    public function getActiveDeviceCount(): int
+    {
+        return count($this->getActivatedDevices());
+    }
+
+    public function getDaysUntilExpiry(): ?int
+    {
+        if (!$this->expires_at) {
+            return null;
+        }
+
+        return max(0, now()->diffInDays($this->expires_at, false));
+    }
+
+    public function getExpiryStatus(): string
+    {
+        if (!$this->expires_at) {
+            return 'never';
+        }
+
+        $days = $this->getDaysUntilExpiry();
+
+        if ($days < 0) {
+            return 'expired';
+        } elseif ($days <= 7) {
+            return 'expiring_soon';
+        } elseif ($days <= 30) {
+            return 'expiring_this_month';
+        }
+
+        return 'active';
+    }
+
+    /**
+     * Static Methods
+     */
+    public static function generateKey(string $prefix = 'LIC'): string
+    {
+        do {
+            $segments = [
+                strtoupper($prefix),
+                strtoupper(Str::random(4)),
+                strtoupper(Str::random(4)),
+                strtoupper(Str::random(4)),
+                strtoupper(Str::random(4)),
+            ];
+
+            $key = implode('-', $segments);
+        } while (self::where('license_key', $key)->exists());
+
+        return $key;
+    }
+
+    public static function generateToken(): string
+    {
+        do {
+            $token = strtolower(Str::random(32));
+        } while (self::where('license_key', $token)->exists());
+
+        return $token;
+    }
+
+    /**
+     * Boot method
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($license) {
+            if (!$license->license_key) {
+                $license->license_key = self::generateKey();
+            }
+        });
+
+        static::updating(function ($license) {
+            // Auto-expire if past expiry date
+            if ($license->expires_at && $license->expires_at->isPast() && $license->status === 'active') {
+                $license->status = 'expired';
+            }
+        });
     }
 }

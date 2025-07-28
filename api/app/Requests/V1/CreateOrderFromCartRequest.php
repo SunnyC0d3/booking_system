@@ -2,9 +2,7 @@
 
 namespace App\Requests\V1;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class CreateOrderFromCartRequest extends FormRequest
+class CreateOrderFromCartRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {
