@@ -12,8 +12,14 @@ export { default as ProductCardSkeleton } from './loading/ProductCardSkeleton';
 // Product Components
 export * from '../product/ProductCard';
 export * from '../product/ProductGrid';
+export * from '../product/ProductFilters';
 export * from '../product/search';
 export * from '../product/detail/ProductDetail';
+
+// Cart Components
+export * from '../cart/CartItem';
+export * from '../cart/CartSidebar';
+export * from '../cart/MiniCartIndicator';
 
 // Re-export utilities
 export { cn } from '@/lib/cn';
