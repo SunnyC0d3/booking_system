@@ -3,378 +3,322 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { toast } from 'sonner';
 import { cartApi } from '@/api/cart';
-import { Cart, CartItem, AddToCartRequest, UpdateCartItemRequest } from '@/types/api';
+import { Cart, CartItem, AddToCartRequest } from '@/types/api';
 
-// Cart State Interface
-export interface CartState {
+interface CartState {
     cart: Cart | null;
     isLoading: boolean;
     error: string | null;
-    isOpen: boolean; // For cart sidebar/drawer
-    lastUpdated: number | null;
+    isOpen: boolean; // For cart sidebar
+    optimisticItems: CartItem[]; // For optimistic updates
 }
 
-// Cart Actions Interface
-export interface CartActions {
-    // Cart Management
+interface CartActions {
+    // Cart operations
     fetchCart: () => Promise<void>;
-    addToCart: (data: AddToCartRequest) => Promise<void>;
+    addToCart: (item: AddToCartRequest) => Promise<void>;
     updateCartItem: (cartItemId: number, quantity: number) => Promise<void>;
     removeFromCart: (cartItemId: number) => Promise<void>;
     clearCart: () => Promise<void>;
     syncCartPrices: () => Promise<void>;
 
-    // Quick Actions
-    quickAddToCart: (productId: number, variantId?: number) => Promise<void>;
-    incrementItem: (cartItemId: number) => Promise<void>;
-    decrementItem: (cartItemId: number) => Promise<void>;
+    // Optimistic updates
+    optimisticAddToCart: (item: AddToCartRequest & { product: any }) => void;
+    optimisticUpdateItem: (cartItemId: number, quantity: number) => void;
+    optimisticRemoveItem: (cartItemId: number) => void;
 
-    // UI State
+    // UI state
     openCart: () => void;
     closeCart: () => void;
     toggleCart: () => void;
 
     // Utility
+    getItemCount: () => number;
+    getCartTotal: () => number;
+    isItemInCart: (productId: number, variantId?: number) => boolean;
+    getCartItem: (productId: number, variantId?: number) => CartItem | undefined;
+
+    // State management
     setLoading: (loading: boolean) => void;
     setError: (error: string | null) => void;
-    clearError: () => void;
-    getItemQuantity: (productId: number, variantId?: number) => number;
-    getCartTotal: () => { amount: number; formatted: string };
-    getCartItemCount: () => number;
-    isItemInCart: (productId: number, variantId?: number) => boolean;
+    resetCart: () => void;
 }
 
-// Initial state
 const initialState: CartState = {
     cart: null,
     isLoading: false,
     error: null,
     isOpen: false,
-    lastUpdated: null,
+    optimisticItems: [],
 };
 
-// Create the cart store
 export const useCartStore = create<CartState & CartActions>()(
     persist(
         immer((set, get) => ({
             ...initialState,
 
-            // Fetch cart from API
+            // Cart operations
             fetchCart: async () => {
-                try {
-                    set((state) => {
-                        state.isLoading = true;
-                        state.error = null;
-                    });
+                set((draft) => {
+                    draft.isLoading = true;
+                    draft.error = null;
+                });
 
+                try {
                     const cart = await cartApi.getCart();
-
-                    set((state) => {
-                        state.cart = cart;
-                        state.isLoading = false;
-                        state.lastUpdated = Date.now();
+                    set((draft) => {
+                        draft.cart = cart;
+                        draft.optimisticItems = [];
+                        draft.isLoading = false;
                     });
-
                 } catch (error: any) {
-                    set((state) => {
-                        state.error = error.message || 'Failed to fetch cart';
-                        state.isLoading = false;
+                    set((draft) => {
+                        draft.error = error.message || 'Failed to fetch cart';
+                        draft.isLoading = false;
                     });
-                    console.error('Failed to fetch cart:', error);
                 }
             },
 
-            // Add item to cart
-            addToCart: async (data: AddToCartRequest) => {
+            addToCart: async (item: AddToCartRequest) => {
+                // Optimistic update first
+                get().optimisticAddToCart({ ...item, product: null });
+
                 try {
-                    set((state) => {
-                        state.isLoading = true;
-                        state.error = null;
+                    const cart = await cartApi.addToCart(item);
+                    set((draft) => {
+                        draft.cart = cart;
+                        draft.optimisticItems = [];
+                        draft.error = null;
                     });
 
-                    const cart = await cartApi.addToCart(data);
-
-                    set((state) => {
-                        state.cart = cart;
-                        state.isLoading = false;
-                        state.lastUpdated = Date.now();
-                    });
-
-                    toast.success('Added to cart successfully!');
-
+                    toast.success('Item added to cart!');
                 } catch (error: any) {
-                    set((state) => {
-                        state.error = error.message || 'Failed to add to cart';
-                        state.isLoading = false;
+                    // Revert optimistic update
+                    set((draft) => {
+                        draft.optimisticItems = [];
+                        draft.error = error.message || 'Failed to add item to cart';
                     });
 
-                    toast.error(error.message || 'Failed to add to cart');
-                    throw error;
+                    toast.error(error.message || 'Failed to add item to cart');
                 }
             },
 
-            // Update cart item quantity
             updateCartItem: async (cartItemId: number, quantity: number) => {
+                // Optimistic update
+                get().optimisticUpdateItem(cartItemId, quantity);
+
                 try {
-                    set((state) => {
-                        state.isLoading = true;
-                        state.error = null;
-                    });
-
                     const cart = await cartApi.updateCartItem(cartItemId, { quantity });
-
-                    set((state) => {
-                        state.cart = cart;
-                        state.isLoading = false;
-                        state.lastUpdated = Date.now();
+                    set((draft) => {
+                        draft.cart = cart;
+                        draft.optimisticItems = [];
+                        draft.error = null;
                     });
-
-                    toast.success('Cart updated successfully!');
-
                 } catch (error: any) {
-                    set((state) => {
-                        state.error = error.message || 'Failed to update cart';
-                        state.isLoading = false;
-                    });
-
-                    toast.error(error.message || 'Failed to update cart');
-                    throw error;
+                    // Revert and refetch
+                    await get().fetchCart();
+                    toast.error(error.message || 'Failed to update item');
                 }
             },
 
-            // Remove item from cart
             removeFromCart: async (cartItemId: number) => {
+                // Optimistic update
+                get().optimisticRemoveItem(cartItemId);
+
                 try {
-                    set((state) => {
-                        state.isLoading = true;
-                        state.error = null;
-                    });
-
                     const cart = await cartApi.removeFromCart(cartItemId);
-
-                    set((state) => {
-                        state.cart = cart;
-                        state.isLoading = false;
-                        state.lastUpdated = Date.now();
+                    set((draft) => {
+                        draft.cart = cart;
+                        draft.optimisticItems = [];
+                        draft.error = null;
                     });
 
                     toast.success('Item removed from cart');
-
                 } catch (error: any) {
-                    set((state) => {
-                        state.error = error.message || 'Failed to remove item';
-                        state.isLoading = false;
-                    });
-
+                    // Revert and refetch
+                    await get().fetchCart();
                     toast.error(error.message || 'Failed to remove item');
-                    throw error;
                 }
             },
 
-            // Clear entire cart
             clearCart: async () => {
+                set((draft) => {
+                    draft.isLoading = true;
+                    draft.error = null;
+                });
+
                 try {
-                    set((state) => {
-                        state.isLoading = true;
-                        state.error = null;
-                    });
-
                     const cart = await cartApi.clearCart();
-
-                    set((state) => {
-                        state.cart = cart;
-                        state.isLoading = false;
-                        state.lastUpdated = Date.now();
+                    set((draft) => {
+                        draft.cart = cart;
+                        draft.optimisticItems = [];
+                        draft.isLoading = false;
                     });
 
-                    toast.success('Cart cleared successfully');
-
+                    toast.success('Cart cleared');
                 } catch (error: any) {
-                    set((state) => {
-                        state.error = error.message || 'Failed to clear cart';
-                        state.isLoading = false;
+                    set((draft) => {
+                        draft.error = error.message || 'Failed to clear cart';
+                        draft.isLoading = false;
                     });
 
                     toast.error(error.message || 'Failed to clear cart');
-                    throw error;
                 }
             },
 
-            // Sync cart prices
             syncCartPrices: async () => {
                 try {
-                    set((state) => {
-                        state.isLoading = true;
-                        state.error = null;
-                    });
-
                     const cart = await cartApi.syncCartPrices();
-
-                    set((state) => {
-                        state.cart = cart;
-                        state.isLoading = false;
-                        state.lastUpdated = Date.now();
+                    set((draft) => {
+                        draft.cart = cart;
+                        draft.error = null;
                     });
 
                     toast.success('Cart prices updated');
-
                 } catch (error: any) {
-                    set((state) => {
-                        state.error = error.message || 'Failed to sync prices';
-                        state.isLoading = false;
-                    });
-
                     toast.error(error.message || 'Failed to sync prices');
-                    throw error;
                 }
             },
 
-            // Quick add to cart
-            quickAddToCart: async (productId: number, variantId?: number) => {
-                await get().addToCart({
-                    product_id: productId,
-                    product_variant_id: variantId || null,
-                    quantity: 1,
+            // Optimistic updates
+            optimisticAddToCart: (item) => {
+                set((draft) => {
+                    const optimisticItem: CartItem = {
+                        id: Date.now(), // Temporary ID
+                        cart_id: draft.cart?.id || 0,
+                        product_id: item.product_id,
+                        product_variant_id: item.product_variant_id,
+                        quantity: item.quantity,
+                        unit_price: item.product?.price || 0,
+                        total_price: (item.product?.price || 0) * item.quantity,
+                        product: item.product,
+                        product_variant: null,
+                        created_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString(),
+                    };
+
+                    draft.optimisticItems.push(optimisticItem);
                 });
             },
 
-            // Increment item quantity
-            incrementItem: async (cartItemId: number) => {
-                const { cart } = get();
-                if (!cart) return;
+            optimisticUpdateItem: (cartItemId, quantity) => {
+                set((draft) => {
+                    // Update in actual cart if exists
+                    if (draft.cart?.items) {
+                        const item = draft.cart.items.find(i => i.id === cartItemId);
+                        if (item) {
+                            item.quantity = quantity;
+                            item.total_price = item.unit_price * quantity;
+                        }
+                    }
 
-                const item = cart.items?.find(item => item.id === cartItemId);
-                if (!item) return;
-
-                await get().updateCartItem(cartItemId, item.quantity + 1);
+                    // Update in optimistic items
+                    const optimisticItem = draft.optimisticItems.find(i => i.id === cartItemId);
+                    if (optimisticItem) {
+                        optimisticItem.quantity = quantity;
+                        optimisticItem.total_price = optimisticItem.unit_price * quantity;
+                    }
+                });
             },
 
-            // Decrement item quantity
-            decrementItem: async (cartItemId: number) => {
-                const { cart } = get();
-                if (!cart) return;
+            optimisticRemoveItem: (cartItemId) => {
+                set((draft) => {
+                    // Remove from actual cart
+                    if (draft.cart?.items) {
+                        draft.cart.items = draft.cart.items.filter(i => i.id !== cartItemId);
+                    }
 
-                const item = cart.items?.find(item => item.id === cartItemId);
-                if (!item) return;
-
-                if (item.quantity <= 1) {
-                    await get().removeFromCart(cartItemId);
-                } else {
-                    await get().updateCartItem(cartItemId, item.quantity - 1);
-                }
+                    // Remove from optimistic items
+                    draft.optimisticItems = draft.optimisticItems.filter(i => i.id !== cartItemId);
+                });
             },
 
-            // UI State Management
+            // UI state
             openCart: () => {
-                set((state) => {
-                    state.isOpen = true;
+                set((draft) => {
+                    draft.isOpen = true;
                 });
             },
 
             closeCart: () => {
-                set((state) => {
-                    state.isOpen = false;
+                set((draft) => {
+                    draft.isOpen = false;
                 });
             },
 
             toggleCart: () => {
-                set((state) => {
-                    state.isOpen = !state.isOpen;
+                set((draft) => {
+                    draft.isOpen = !draft.isOpen;
                 });
             },
 
-            // Utility Actions
-            setLoading: (loading: boolean) => {
-                set((state) => {
-                    state.isLoading = loading;
-                });
+            // Utility functions
+            getItemCount: () => {
+                const state = get();
+                const cartItems = state.cart?.items || [];
+                const optimisticItems = state.optimisticItems;
+                const allItems = [...cartItems, ...optimisticItems];
+
+                return allItems.reduce((total, item) => total + item.quantity, 0);
             },
 
-            setError: (error: string | null) => {
-                set((state) => {
-                    state.error = error;
-                });
-            },
-
-            clearError: () => {
-                set((state) => {
-                    state.error = null;
-                });
-            },
-
-            // Get item quantity for a specific product/variant
-            getItemQuantity: (productId: number, variantId?: number) => {
-                const { cart } = get();
-                if (!cart?.items) return 0;
-
-                const item = cart.items.find(item =>
-                    item.product_id === productId &&
-                    item.product_variant_id === (variantId || null)
-                );
-
-                return item?.quantity || 0;
-            },
-
-            // Get cart total
             getCartTotal: () => {
-                const { cart } = get();
-                return {
-                    amount: cart?.total_amount || 0,
-                    formatted: cart?.total_amount_formatted || '£0.00',
-                };
+                const state = get();
+                const cartItems = state.cart?.items || [];
+                const optimisticItems = state.optimisticItems;
+                const allItems = [...cartItems, ...optimisticItems];
+
+                return allItems.reduce((total, item) => total + item.total_price, 0);
             },
 
-            // Get cart item count
-            getCartItemCount: () => {
-                const { cart } = get();
-                return cart?.total_items_count || 0;
-            },
+            isItemInCart: (productId, variantId) => {
+                const state = get();
+                const cartItems = state.cart?.items || [];
+                const optimisticItems = state.optimisticItems;
+                const allItems = [...cartItems, ...optimisticItems];
 
-            // Check if item is in cart
-            isItemInCart: (productId: number, variantId?: number) => {
-                const { cart } = get();
-                if (!cart?.items) return false;
-
-                return cart.items.some(item =>
+                return allItems.some(item =>
                     item.product_id === productId &&
-                    item.product_variant_id === (variantId || null)
+                    item.product_variant_id === variantId
                 );
+            },
+
+            getCartItem: (productId, variantId) => {
+                const state = get();
+                const cartItems = state.cart?.items || [];
+                const optimisticItems = state.optimisticItems;
+                const allItems = [...cartItems, ...optimisticItems];
+
+                return allItems.find(item =>
+                    item.product_id === productId &&
+                    item.product_variant_id === variantId
+                );
+            },
+
+            // State management
+            setLoading: (loading) => {
+                set((draft) => {
+                    draft.isLoading = loading;
+                });
+            },
+
+            setError: (error) => {
+                set((draft) => {
+                    draft.error = error;
+                });
+            },
+
+            resetCart: () => {
+                set(() => initialState);
             },
         })),
         {
             name: 'cart-storage',
             storage: createJSONStorage(() => localStorage),
             partialize: (state) => ({
-                // Only persist minimal cart data and UI state
-                isOpen: state.isOpen,
-                lastUpdated: state.lastUpdated,
-                // Don't persist cart data - always fetch fresh from API
+                cart: state.cart,
+                // Don't persist optimistic items or UI state
             }),
         }
     )
 );
-
-// Export hook for easy usage
-export const useCart = () => {
-    const store = useCartStore();
-
-    // Auto-fetch cart on first usage if not loaded recently
-    React.useEffect(() => {
-        const { cart, lastUpdated, fetchCart } = store;
-        const fiveMinutesAgo = Date.now() - 5 * 60 * 1000;
-
-        if (!cart || !lastUpdated || lastUpdated < fiveMinutesAgo) {
-            fetchCart();
-        }
-    }, []);
-
-    return store;
-};
-
-// Export individual selectors for performance
-export const useCartItems = () => useCartStore(state => state.cart?.items || []);
-export const useCartTotal = () => useCartStore(state => ({
-    amount: state.cart?.total_amount || 0,
-    formatted: state.cart?.total_amount_formatted || '£0.00',
-}));
-export const useCartItemCount = () => useCartStore(state => state.cart?.total_items_count || 0);

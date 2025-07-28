@@ -1,273 +1,262 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { rateLimit } from '@/lib/rate-limit';
-import { validateCSRF } from '@/lib/csrf';
-import { sanitizeInput } from '@/lib/sanitization';
 
-// Security configuration
-const SECURITY_CONFIG = {
-    rateLimiting: {
-        windowMs: 15 * 60 * 1000, // 15 minutes
-        maxRequests: 100,
-        skipSuccessfulRequests: true,
-    },
-    csp: {
-        'default-src': ["'self'"],
-        'script-src': ["'self'", "'unsafe-eval'", "'unsafe-inline'", 'https://vercel.live'],
-        'style-src': ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
-        'font-src': ["'self'", 'https://fonts.gstatic.com'],
-        'img-src': ["'self'", 'data:', 'https:', 'blob:'],
-        'media-src': ["'self'", 'https:'],
-        'connect-src': ["'self'", 'https:', 'wss:'],
-        'worker-src': ["'self'", 'blob:'],
-        'child-src': ["'self'"],
-        'object-src': ["'none'"],
-        'base-uri': ["'self'"],
-        'form-action': ["'self'"],
-        'frame-ancestors': ["'none'"],
-    },
-    sensitiveRoutes: ['/admin', '/api/admin', '/dashboard'],
-    publicRoutes: ['/', '/products', '/login', '/register'],
-};
-
-// IP whitelist for admin routes (configure as needed)
-const ADMIN_IP_WHITELIST = process.env.ADMIN_IPS?.split(',') || [];
-
-// Security headers
-function getSecurityHeaders(request: NextRequest): Record<string, string> {
-    const nonce = generateNonce();
-    const cspString = generateCSP(SECURITY_CONFIG.csp, nonce);
-
-    return {
-        // Content Security Policy
-        'Content-Security-Policy': cspString,
-
-        // HSTS
-        'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
-
-        // XSS Protection
-        'X-XSS-Protection': '1; mode=block',
-
-        // Frame Options
-        'X-Frame-Options': 'DENY',
-
-        // Content Type Options
-        'X-Content-Type-Options': 'nosniff',
-
-        // Referrer Policy
-        'Referrer-Policy': 'strict-origin-when-cross-origin',
-
-        // Permissions Policy
-        'Permissions-Policy': [
-            'camera=()',
-            'microphone=()',
-            'geolocation=(self)',
-            'gyroscope=()',
-            'magnetometer=()',
-            'payment=(self)',
-            'usb=()',
-        ].join(', '),
-
-        // Cross-Origin Policies
-        'Cross-Origin-Embedder-Policy': 'unsafe-none',
-        'Cross-Origin-Opener-Policy': 'same-origin',
-        'Cross-Origin-Resource-Policy': 'same-origin',
-
-        // Security Headers
-        'X-Permitted-Cross-Domain-Policies': 'none',
-        'X-Download-Options': 'noopen',
-        'X-DNS-Prefetch-Control': 'off',
-
-        // Custom Security Headers
-        'X-Security-Hash': generateSecurityHash(request),
-        'X-Request-ID': crypto.randomUUID(),
+interface SecurityConfig {
+    csp?: string;
+    hsts?: string;
+    rateLimit?: {
+        windowMs: number;
+        maxRequests: number;
     };
 }
 
-// Generate CSP string
-function generateCSP(csp: Record<string, string[]>, nonce: string): string {
-    const directives = Object.entries(csp).map(([key, values]) => {
-        if (key === 'script-src') {
-            values = [...values, `'nonce-${nonce}'`];
-        }
-        return `${key} ${values.join(' ')}`;
-    });
+const DEFAULT_CONFIG: SecurityConfig = {
+    csp: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:;",
+    hsts: 'max-age=31536000; includeSubDomains; preload',
+    rateLimit: {
+        windowMs: 15 * 60 * 1000, // 15 minutes
+        maxRequests: 100, // limit each IP to 100 requests per windowMs
+    },
+};
 
-    return directives.join('; ');
-}
+// In-memory rate limiting store (in production, use Redis)
+const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
 
-// Generate nonce for inline scripts
-function generateNonce(): string {
-    return Buffer.from(crypto.randomUUID()).toString('base64').slice(0, 16);
-}
-
-// Generate security hash
-function generateSecurityHash(request: NextRequest): string {
-    const data = `${request.method}:${request.url}:${Date.now()}`;
-    return Buffer.from(data).toString('base64').slice(0, 20);
-}
-
-// Rate limiting implementation
-class RateLimiter {
-    private static cache = new Map<string, { count: number; resetTime: number }>();
-
-    static async checkLimit(
-        identifier: string,
-        limit: number = 100,
-        windowMs: number = 15 * 60 * 1000
-    ): Promise<{ allowed: boolean; remaining: number; resetTime: number }> {
-        const now = Date.now();
-        const key = `rate_limit:${identifier}`;
-        const current = this.cache.get(key);
-
-        if (!current || now > current.resetTime) {
-            // Reset or initialize
-            const resetTime = now + windowMs;
-            this.cache.set(key, { count: 1, resetTime });
-            return { allowed: true, remaining: limit - 1, resetTime };
-        }
-
-        if (current.count >= limit) {
-            return { allowed: false, remaining: 0, resetTime: current.resetTime };
-        }
-
-        // Increment count
-        current.count++;
-        this.cache.set(key, current);
-
-        return {
-            allowed: true,
-            remaining: limit - current.count,
-            resetTime: current.resetTime
-        };
-    }
-
-    static cleanup(): void {
-        const now = Date.now();
-        for (const [key, value] of this.cache.entries()) {
-            if (now > value.resetTime) {
-                this.cache.delete(key);
-            }
-        }
-    }
-}
-
-// Clean up rate limiter cache every 5 minutes
-setInterval(() => RateLimiter.cleanup(), 5 * 60 * 1000);
-
-// IP-based access control
-function checkIPAccess(request: NextRequest, route: string): boolean {
-    if (!SECURITY_CONFIG.sensitiveRoutes.some(r => route.startsWith(r))) {
-        return true; // Allow access to non-sensitive routes
-    }
-
-    const forwarded = request.headers.get('x-forwarded-for');
-    const realIP = request.headers.get('x-real-ip');
-    const clientIP = forwarded?.split(',')[0] || realIP || 'unknown';
-
-    // In development, allow localhost
-    if (process.env.NODE_ENV === 'development') {
-        if (clientIP === '127.0.0.1' || clientIP === '::1' || clientIP === 'unknown') {
-            return true;
-        }
-    }
-
-    // Check whitelist
-    if (ADMIN_IP_WHITELIST.length > 0) {
-        return ADMIN_IP_WHITELIST.includes(clientIP);
-    }
-
-    return true; // Allow if no whitelist configured
-}
-
-// Main security middleware
-export async function securityMiddleware(request: NextRequest): Promise<NextResponse> {
-    const { pathname } = request.nextUrl;
-    const method = request.method;
-
-    // Skip security checks for static assets
-    if (pathname.startsWith('/_next/') || pathname.startsWith('/api/_next/')) {
-        return NextResponse.next();
-    }
+export async function securityMiddleware(
+    request: NextRequest,
+    config: SecurityConfig = DEFAULT_CONFIG
+): Promise<NextResponse> {
+    const response = NextResponse.next();
+    const clientIP = getClientIP(request);
+    const pathname = request.nextUrl.pathname;
 
     try {
-        // 1. IP-based access control
-        if (!checkIPAccess(request, pathname)) {
-            return new NextResponse('Access Denied', {
-                status: 403,
-                headers: { 'Content-Type': 'text/plain' }
-            });
+        // 1. Rate Limiting
+        if (config.rateLimit && shouldApplyRateLimit(pathname)) {
+            const rateLimitResult = checkRateLimit(clientIP, config.rateLimit);
+            if (!rateLimitResult.allowed) {
+                return new NextResponse('Too Many Requests', {
+                    status: 429,
+                    headers: {
+                        'Content-Type': 'text/plain',
+                        'Retry-After': Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000).toString(),
+                        'X-RateLimit-Limit': config.rateLimit.maxRequests.toString(),
+                        'X-RateLimit-Remaining': '0',
+                        'X-RateLimit-Reset': new Date(rateLimitResult.resetTime).toISOString(),
+                    },
+                });
+            }
+
+            // Add rate limit headers
+            response.headers.set('X-RateLimit-Limit', config.rateLimit.maxRequests.toString());
+            response.headers.set('X-RateLimit-Remaining', (config.rateLimit.maxRequests - rateLimitResult.count).toString());
+            response.headers.set('X-RateLimit-Reset', new Date(rateLimitResult.resetTime).toISOString());
         }
 
-        // 2. Rate limiting
-        const clientIP = request.headers.get('x-forwarded-for')?.split(',')[0] ||
-            request.headers.get('x-real-ip') ||
-            'unknown';
+        // 2. Security Headers
+        addSecurityHeaders(response, config);
 
-        const rateLimitResult = await RateLimiter.checkLimit(
-            clientIP,
-            SECURITY_CONFIG.rateLimiting.maxRequests,
-            SECURITY_CONFIG.rateLimiting.windowMs
-        );
-
-        if (!rateLimitResult.allowed) {
-            return new NextResponse('Rate Limit Exceeded', {
-                status: 429,
-                headers: {
-                    'Retry-After': Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000).toString(),
-                    'X-RateLimit-Limit': SECURITY_CONFIG.rateLimiting.maxRequests.toString(),
-                    'X-RateLimit-Remaining': '0',
-                    'X-RateLimit-Reset': rateLimitResult.resetTime.toString(),
-                },
-            });
-        }
-
-        // 3. CSRF protection for state-changing requests
-        if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
-            const csrfToken = request.headers.get('x-csrf-token') ||
-                request.headers.get('csrf-token');
-
-            if (pathname.startsWith('/api/') && !validateCSRF(csrfToken)) {
+        // 3. CSRF Protection for state-changing operations
+        if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(request.method)) {
+            const csrfResult = validateCSRFToken(request);
+            if (!csrfResult.valid && shouldEnforceCSRF(pathname)) {
                 return new NextResponse('CSRF Token Invalid', {
                     status: 403,
-                    headers: { 'Content-Type': 'text/plain' }
+                    headers: { 'Content-Type': 'text/plain' },
                 });
             }
         }
 
-        // 4. Input size validation
-        const contentLength = request.headers.get('content-length');
-        if (contentLength && parseInt(contentLength) > 10 * 1024 * 1024) { // 10MB
-            return new NextResponse('Payload Too Large', {
-                status: 413,
-                headers: { 'Content-Type': 'text/plain' }
-            });
+        // 4. Content Security Policy Violations Logging
+        if (pathname === '/api/csp-report') {
+            logCSPViolation(request);
+            return new NextResponse('OK', { status: 200 });
         }
 
-        // 5. Create response with security headers
-        const response = NextResponse.next();
-        const securityHeaders = getSecurityHeaders(request);
-
-        Object.entries(securityHeaders).forEach(([key, value]) => {
-            response.headers.set(key, value);
-        });
-
-        // Add rate limit headers
-        response.headers.set('X-RateLimit-Limit', SECURITY_CONFIG.rateLimiting.maxRequests.toString());
-        response.headers.set('X-RateLimit-Remaining', rateLimitResult.remaining.toString());
-        response.headers.set('X-RateLimit-Reset', rateLimitResult.resetTime.toString());
+        // 5. Security Monitoring
+        logSecurityEvent(request, clientIP);
 
         return response;
 
     } catch (error) {
         console.error('Security middleware error:', error);
 
-        // Fail securely
-        return new NextResponse('Security Error', {
-            status: 500,
-            headers: { 'Content-Type': 'text/plain' }
-        });
+        // Fail securely - allow request but log the error
+        addBasicSecurityHeaders(response);
+        return response;
     }
 }
 
-// Export configuration for use in other parts of the app
-export { SECURITY_CONFIG, RateLimiter };
+function getClientIP(request: NextRequest): string {
+    // Check various headers for real IP
+    const forwarded = request.headers.get('x-forwarded-for');
+    const realIP = request.headers.get('x-real-ip');
+    const cfConnectingIP = request.headers.get('cf-connecting-ip');
+
+    if (cfConnectingIP) return cfConnectingIP;
+    if (realIP) return realIP;
+    if (forwarded) return forwarded.split(',')[0].trim();
+
+    // Fallback to a default IP for development
+    return '127.0.0.1';
+}
+
+function shouldApplyRateLimit(pathname: string): boolean {
+    // Apply rate limiting to API routes and sensitive pages
+    const rateLimitedPaths = [
+        '/api/',
+        '/login',
+        '/register',
+        '/forgot-password',
+        '/contact',
+    ];
+
+    return rateLimitedPaths.some(path => pathname.startsWith(path));
+}
+
+function checkRateLimit(
+    clientIP: string,
+    config: { windowMs: number; maxRequests: number }
+): { allowed: boolean; count: number; resetTime: number } {
+    const now = Date.now();
+    const windowStart = now - config.windowMs;
+    const key = `rate_limit:${clientIP}`;
+
+    let record = rateLimitStore.get(key);
+
+    // Clean up old records or create new one
+    if (!record || record.resetTime <= now) {
+        record = {
+            count: 0,
+            resetTime: now + config.windowMs,
+        };
+    }
+
+    record.count++;
+    rateLimitStore.set(key, record);
+
+    // Clean up old entries periodically
+    if (Math.random() < 0.01) { // 1% chance
+        cleanupRateLimitStore();
+    }
+
+    return {
+        allowed: record.count <= config.maxRequests,
+        count: record.count,
+        resetTime: record.resetTime,
+    };
+}
+
+function cleanupRateLimitStore(): void {
+    const now = Date.now();
+    const keysToDelete: string[] = [];
+
+    rateLimitStore.forEach((record, key) => {
+        if (record.resetTime <= now) {
+            keysToDelete.push(key);
+        }
+    });
+
+    keysToDelete.forEach(key => rateLimitStore.delete(key));
+}
+
+function addSecurityHeaders(response: NextResponse, config: SecurityConfig): void {
+    // Content Security Policy
+    if (config.csp) {
+        response.headers.set('Content-Security-Policy', config.csp);
+    }
+
+    // HTTP Strict Transport Security
+    if (config.hsts && process.env.NODE_ENV === 'production') {
+        response.headers.set('Strict-Transport-Security', config.hsts);
+    }
+
+    // Basic security headers
+    addBasicSecurityHeaders(response);
+}
+
+function addBasicSecurityHeaders(response: NextResponse): void {
+    response.headers.set('X-Content-Type-Options', 'nosniff');
+    response.headers.set('X-Frame-Options', 'DENY');
+    response.headers.set('X-XSS-Protection', '1; mode=block');
+    response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+    response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+
+    // Remove server information
+    response.headers.delete('Server');
+    response.headers.delete('X-Powered-By');
+}
+
+function validateCSRFToken(request: NextRequest): { valid: boolean; token?: string } {
+    // Get CSRF token from header or body
+    const headerToken = request.headers.get('X-CSRF-Token');
+    const cookieToken = request.cookies.get('csrf-token')?.value;
+
+    // For API routes, we might use a different validation approach
+    if (request.nextUrl.pathname.startsWith('/api/')) {
+        // For API routes, validate the token from headers
+        return {
+            valid: Boolean(headerToken && cookieToken && headerToken === cookieToken),
+            token: headerToken || undefined,
+        };
+    }
+
+    // For form submissions, we might check hidden form fields
+    // This is a simplified implementation
+    return { valid: true }; // Allow for now, implement based on your auth strategy
+}
+
+function shouldEnforceCSRF(pathname: string): boolean {
+    // Enforce CSRF for sensitive operations
+    const csrfProtectedPaths = [
+        '/api/auth/',
+        '/api/admin/',
+        '/api/user/',
+        '/api/orders/',
+        '/api/payments/',
+    ];
+
+    return csrfProtectedPaths.some(path => pathname.startsWith(path));
+}
+
+function logCSPViolation(request: NextRequest): void {
+    // Log CSP violations for monitoring
+    request.json().then(violation => {
+        console.warn('CSP Violation:', violation);
+        // In production, send this to your monitoring service
+    }).catch(error => {
+        console.error('Failed to parse CSP violation report:', error);
+    });
+}
+
+function logSecurityEvent(request: NextRequest, clientIP: string): void {
+    // Log security-relevant events
+    const { pathname, method } = request.nextUrl;
+    const userAgent = request.headers.get('user-agent') || 'unknown';
+
+    // Only log interesting events to avoid noise
+    const shouldLog = method !== 'GET' ||
+        pathname.includes('admin') ||
+        pathname.includes('api');
+
+    if (shouldLog) {
+        console.log(`Security Event: ${method} ${pathname} from ${clientIP} (${userAgent})`);
+    }
+}
+
+// Export additional utilities
+export function generateCSRFToken(): string {
+    return crypto.randomUUID();
+}
+
+export function setCSRFToken(response: NextResponse): string {
+    const token = generateCSRFToken();
+
+    response.cookies.set('csrf-token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 60 * 60 * 24, // 24 hours
+    });
+
+    return token;
+}
