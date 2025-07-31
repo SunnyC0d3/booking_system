@@ -1,7 +1,6 @@
 'use client'
 
 import * as React from 'react';
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -31,14 +30,8 @@ import { MainLayout } from '@/components/layout';
 import { RouteGuard } from '@/components/auth/RouteGuard';
 import { useWishlistStore } from '@/stores/wishlistStore';
 import { useCartStore } from '@/stores/cartStore';
-import { ProductGrid } from '@/components/product/ProductGrid';
 import { cn } from '@/lib/cn';
 import { toast } from 'sonner';
-
-export const metadata: Metadata = {
-    title: 'My Wishlist | Creative Business',
-    description: 'Save and manage your favorite products for future purchase.',
-};
 
 // Empty state component
 const EmptyWishlist = () => (

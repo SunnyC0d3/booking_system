@@ -1,7 +1,6 @@
 'use client'
 
 import * as React from 'react';
-import { Metadata } from 'next';
 import Link from 'next/link';
 import {
     ShoppingBag,
@@ -30,11 +29,6 @@ import { ProductGrid } from '@/components/product/ProductGrid';
 import { useProductStore } from '@/stores/productStore';
 import { RouteGuard } from '@/components/auth/RouteGuard';
 import { cn } from '@/lib/cn';
-
-export const metadata: Metadata = {
-    title: 'Shopping Cart | Creative Business',
-    description: 'Review your items and proceed to checkout for your creative projects.',
-};
 
 function CartPage() {
     const {

@@ -1,4 +1,5 @@
-// frontend/src/app/(admin)/admin/orders/page.tsx
+'use client'
+
 import * as React from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
@@ -296,7 +297,7 @@ const formatDate = (dateString: string) => {
     });
 };
 
-export default function OrdersManagementPage() {
+function OrdersManagementPage() {
     const [orders, setOrders] = React.useState(mockOrders);
     const [searchQuery, setSearchQuery] = React.useState('');
     const [statusFilter, setStatusFilter] = React.useState('all');
@@ -713,3 +714,5 @@ export default function OrdersManagementPage() {
         </RouteGuard>
     );
 }
+
+export default OrdersManagementPage;

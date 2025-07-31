@@ -1,7 +1,6 @@
 'use client'
 
 import * as React from 'react';
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -38,11 +37,6 @@ import { useCartStore } from '@/stores/cartStore';
 import { useWishlistStore } from '@/stores/wishlistStore';
 import { cn } from '@/lib/cn';
 import { toast } from 'sonner';
-
-export const metadata: Metadata = {
-    title: 'Compare Products | Creative Business',
-    description: 'Compare products side by side to make the best choice for your needs.',
-};
 
 // Empty state component
 const EmptyCompare = () => (

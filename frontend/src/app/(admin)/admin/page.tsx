@@ -1,7 +1,6 @@
 'use client'
 
 import * as React from 'react';
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
@@ -37,11 +36,6 @@ import {
 } from '@/components/ui';
 import { AdminLayout, QuickStats } from '@/components/layout/AdminLayout';
 import { RouteGuard } from '@/components/auth/RouteGuard';
-
-export const metadata: Metadata = {
-    title: 'Admin Dashboard | Creative Business',
-    description: 'Administrative dashboard for managing your creative business.',
-};
 
 // Mock data - replace with real API calls
 const dashboardStats = [
@@ -231,7 +225,7 @@ const getTrendIcon = (trend: string) => {
     }
 };
 
-export default function AdminDashboardPage() {
+function AdminDashboardPage() {
     return (
         <RouteGuard requireAuth requiredRoles={['admin', 'super admin']}>
             <AdminLayout
@@ -472,3 +466,5 @@ export default function AdminDashboardPage() {
         </RouteGuard>
     );
 }
+
+export default AdminDashboardPage;

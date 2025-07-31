@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 // Performance monitoring utilities
 export class PerformanceMonitor {
