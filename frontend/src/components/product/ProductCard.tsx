@@ -12,7 +12,8 @@ import {
     Zap,
 } from 'lucide-react';
 import { Button, Card, CardContent } from '@/components/ui';
-import { useWishlist, useCompare } from '@/stores/productStore';
+import { useWishlistStore } from '@/stores/wishlistStore';
+import { useCompareStore } from '@/stores/productStore';
 import { Product, ProductCardProps } from '@/types/product';
 import { cn } from '@/lib/cn';
 

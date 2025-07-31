@@ -77,23 +77,6 @@ export const metadata: Metadata = {
     manifest: '/site.webmanifest',
 };
 
-// Create query client
-const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            staleTime: 60 * 1000, // 1 minute
-            gcTime: 10 * 60 * 1000, // 10 minutes
-            retry: (failureCount, error: any) => {
-                // Don't retry on 4xx errors
-                if (error?.status >= 400 && error?.status < 500) {
-                    return false;
-                }
-                return failureCount < 3;
-            },
-        },
-    },
-});
-
 export default function RootLayout({
                                        children,
                                    }: {
@@ -108,8 +91,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
         >
-            <QueryProvider client={queryClient}>
-                {/* Main App Content */}
+            <QueryProvider>
                 <div className="relative min-h-screen bg-background">
                     {children}
                 </div>
