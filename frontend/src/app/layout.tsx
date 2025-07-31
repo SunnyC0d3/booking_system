@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Toaster } from 'sonner';
 import { ThemeProvider } from 'next-themes';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryProvider } from '@/components/providers/QueryProvider';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import '@/styles/global.css';
 
@@ -108,13 +108,11 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
         >
-            <QueryClientProvider client={queryClient}>
+            <QueryProvider client={queryClient}>
                 {/* Main App Content */}
                 <div className="relative min-h-screen bg-background">
                     {children}
                 </div>
-
-                {/* Toast Notifications */}
                 <Toaster
                     position="top-right"
                     expand={true}
@@ -129,12 +127,7 @@ export default function RootLayout({
                         },
                     }}
                 />
-
-                {/* React Query DevTools (only in development) */}
-                {process.env.NODE_ENV === 'development' && (
-                    <ReactQueryDevtools initialIsOpen={false} />
-                )}
-            </QueryClientProvider>
+            </QueryProvider>
         </ThemeProvider>
         </body>
         </html>

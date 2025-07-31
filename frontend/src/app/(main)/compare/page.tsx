@@ -1,4 +1,5 @@
-// frontend/src/app/(main)/compare/page.tsx
+'use client'
+
 import * as React from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
