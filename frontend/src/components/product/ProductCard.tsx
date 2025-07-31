@@ -1,3 +1,5 @@
+'use client'
+
 import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -29,15 +31,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                                                             onCompareToggle,
                                                             className,
                                                         }) => {
-    const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
-    const { addToCompare, removeFromCompare, isInCompare, canAddToCompare } = useCompare();
+    const { addToWishlist, removeFromWishlist, isItemInWishlist } = useWishlistStore();
+    const { addToCompare, removeFromCompare, compareItems } = useCompareStore();
 
     const [imageLoaded, setImageLoaded] = React.useState(false);
     const [imageError, setImageError] = React.useState(false);
     const [isHovered, setIsHovered] = React.useState(false);
 
-    const inWishlist = isInWishlist(product.id);
-    const inCompare = isInCompare(product.id);
+    const isInWishlist = (productId: number) => isItemInWishlist(productId);
+    const isInCompare = (productId: number) => compareItems.some(item => item.id === productId);
+    const canAddToCompare = compareItems.length < 4;
 
     const hasDiscount = product.compare_price && product.compare_price > product.price;
     const discountPercentage = hasDiscount

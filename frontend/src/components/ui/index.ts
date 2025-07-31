@@ -20,11 +20,5 @@ export * from './dropdown-menu';
 // Loading Components
 export { default as ProductCardSkeleton } from './loading/ProductCardSkeleton';
 
-// Dashboard Components
-export * from '../dashboard';
-export * from '../dashboard/UserProfile';
-export * from '../dashboard/OrderHistory';
-export * from '../dashboard/AddressManagement';
-
 // Re-export utilities
 export { cn } from '@/lib/cn';

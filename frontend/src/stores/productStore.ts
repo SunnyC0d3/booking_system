@@ -35,6 +35,18 @@ interface ProductActions {
     resetState: () => void;
 }
 
+interface CompareState {
+    compareItems: Product[];
+    isOpen: boolean;
+}
+
+interface CompareActions {
+    addToCompare: (product: Product) => void;
+    removeFromCompare: (productId: number) => void;
+    clearCompare: () => void;
+    toggleComparePanel: () => void;
+}
+
 const initialState: ProductState = {
     products: [],
     currentProduct: null,
@@ -54,6 +66,40 @@ const initialState: ProductState = {
     page: 1,
     limit: 20,
 };
+
+export const useCompareStore = create<CompareState & CompareActions>()(
+    immer((set, get) => ({
+        compareItems: [],
+        isOpen: false,
+
+        addToCompare: (product) => {
+            set((draft) => {
+                // Maximum 4 items for comparison
+                if (draft.compareItems.length < 4 && !draft.compareItems.find(p => p.id === product.id)) {
+                    draft.compareItems.push(product);
+                }
+            });
+        },
+
+        removeFromCompare: (productId) => {
+            set((draft) => {
+                draft.compareItems = draft.compareItems.filter(p => p.id !== productId);
+            });
+        },
+
+        clearCompare: () => {
+            set((draft) => {
+                draft.compareItems = [];
+            });
+        },
+
+        toggleComparePanel: () => {
+            set((draft) => {
+                draft.isOpen = !draft.isOpen;
+            });
+        },
+    }))
+);
 
 export const useProductStore = create<ProductState & ProductActions>()(
     immer((set, get) => ({
