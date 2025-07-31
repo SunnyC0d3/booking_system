@@ -322,3 +322,7 @@ export const useCartStore = create<CartState & CartActions>()(
         }
     )
 );
+
+export const useCartItems = () => useCartStore((state) => state.cart?.items || []);
+export const useCartTotal = () => useCartStore((state) => state.getCartTotal());
+export const useCartItemCount = () => useCartStore((state) => state.getItemCount());

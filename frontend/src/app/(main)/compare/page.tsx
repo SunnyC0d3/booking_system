@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    ArrowsUpDown,
+    ArrowUpDown,
     X,
     Star,
     ShoppingCart,
@@ -53,7 +53,7 @@ const EmptyCompare = () => (
     >
         <div className="max-w-md mx-auto">
             <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                <ArrowsUpDown className="h-12 w-12 text-primary" />
+                <ArrowUpDown className="h-12 w-12 text-primary" />
             </div>
             <h2 className="text-2xl font-bold text-foreground mb-4">
                 No Products to Compare
@@ -469,7 +469,7 @@ export default function ComparePage() {
                             <Card>
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-2">
-                                        <ArrowsUpDown className="h-5 w-5 text-primary" />
+                                        <ArrowUpDown className="h-5 w-5 text-primary" />
                                         Detailed Comparison
                                     </CardTitle>
                                 </CardHeader>

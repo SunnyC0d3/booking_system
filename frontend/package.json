@@ -9,51 +9,38 @@
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "type-check": "tsc --noEmit",
-
     "analyze": "cross-env ANALYZE=true next build",
     "analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
     "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build",
     "analyze:deps": "npm ls --depth=0",
-
     "perf:lighthouse": "lhci autorun",
     "perf:bundle-size": "npm run build && bundlesize",
     "perf:speed-measure": "smp -- next build",
     "perf:audit": "npm audit --audit-level moderate",
-
     "build:profile": "next build --profile",
     "build:debug": "cross-env NODE_OPTIONS='--inspect' next build",
     "build:production": "npm run lint && npm run type-check && npm run build",
-
     "security:audit": "npm audit --audit-level high",
     "security:check": "npm run security:audit && npm run lint",
     "security:update": "npm update && npm audit fix",
-
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:e2e": "cypress run",
     "test:e2e:open": "cypress open",
-
     "preload-check": "node scripts/check-preloads.js",
     "image-optimize": "node scripts/optimize-images.js",
     "cache-warmup": "node scripts/cache-warmup.js",
     "health-check": "node scripts/health-check.js",
-
     "clean": "rimraf .next out dist coverage",
     "clean:cache": "rimraf .next/cache",
     "clean:all": "npm run clean && rimraf node_modules package-lock.json",
-
     "setup": "npm install && npm run build",
     "deploy:build": "npm run clean && npm run build:production",
     "deploy:preview": "npm run build && npm run start"
   },
-
   "dependencies": {
-    "next": "^14.0.4",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "typescript": "^5.3.3",
-
+    "@hookform/resolvers": "^3.3.2",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-checkbox": "^1.0.4",
@@ -65,69 +52,67 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-toast": "^1.1.5",
-
-    "framer-motion": "^10.16.16",
-    "lucide-react": "^0.294.0",
+    "@tanstack/react-query": "^5.17.0",
+    "axios": "^1.6.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
-    "tailwind-merge": "^2.1.0",
-
-    "axios": "^1.6.2",
-    "zustand": "^4.4.7",
-    "@tanstack/react-query": "^5.17.0",
-    "zod": "^3.22.4",
-    "react-hook-form": "^7.48.2",
-    "@hookform/resolvers": "^3.3.2",
-
-    "sonner": "^1.3.1",
     "date-fns": "^2.30.0",
-    "lodash-es": "^4.17.21",
+    "framer-motion": "^10.16.16",
+    "immer": "^10.1.1",
     "isomorphic-dompurify": "^2.6.0",
-    "lru-cache": "^10.1.0"
+    "lodash-es": "^4.17.21",
+    "lru-cache": "^10.1.0",
+    "lucide-react": "^0.294.0",
+    "next": "^14.0.4",
+    "next-themes": "^0.4.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.61.1",
+    "sonner": "^1.3.1",
+    "tailwind-merge": "^2.1.0",
+    "typescript": "^5.3.3",
+    "zod": "^3.22.4",
+    "zustand": "^4.4.7"
   },
-
   "devDependencies": {
+    "@cypress/webpack-preprocessor": "^6.0.1",
+    "@lhci/cli": "^0.15.1",
+    "@next/bundle-analyzer": "^14.0.4",
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/postcss": "^4.1.11",
+    "@tailwindcss/typography": "^0.5.16",
+    "@tanstack/react-query-devtools": "^5.83.1",
+    "@testing-library/jest-dom": "^6.1.5",
+    "@testing-library/react": "^14.1.2",
+    "@testing-library/user-event": "^14.5.1",
+    "@types/lodash-es": "^4.17.12",
     "@types/node": "^20.10.5",
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.18",
-    "@types/lodash-es": "^4.17.12",
-
-    "tailwindcss": "^3.4.0",
-    "postcss": "^8.4.32",
-    "autoprefixer": "^10.4.16",
-
-    "eslint": "^8.56.0",
-    "eslint-config-next": "^14.0.4",
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "@typescript-eslint/parser": "^6.15.0",
-
-    "prettier": "^3.1.1",
-    "prettier-plugin-tailwindcss": "^0.5.9",
-
-    "@next/bundle-analyzer": "^14.0.4",
-    "webpack-bundle-analyzer": "^4.10.1",
-    "speed-measure-webpack-plugin": "^1.5.0",
+    "autoprefixer": "^10.4.16",
     "bundlesize": "^0.18.1",
-
-    "@lighthouse-ci/cli": "^0.12.0",
+    "critters": "^0.0.20",
     "cross-env": "^7.0.3",
-    "rimraf": "^5.0.5",
-
+    "cypress": "^13.6.2",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "^14.0.4",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
-    "@testing-library/react": "^14.1.2",
-    "@testing-library/jest-dom": "^6.1.5",
-    "@testing-library/user-event": "^14.5.1",
-
-    "cypress": "^13.6.2",
-    "@cypress/webpack-preprocessor": "^6.0.1"
+    "postcss": "^8.4.32",
+    "prettier": "^3.1.1",
+    "prettier-plugin-tailwindcss": "^0.5.9",
+    "rimraf": "^5.0.5",
+    "speed-measure-webpack-plugin": "^1.5.0",
+    "tailwindcss": "^3.4.0",
+    "webpack-bundle-analyzer": "^4.10.1"
   },
-
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=8.0.0"
   },
-
   "bundlesize": [
     {
       "path": ".next/static/js/*.js",
@@ -140,11 +125,12 @@
       "compression": "gzip"
     }
   ],
-
   "lighthouse": {
     "ci": {
       "collect": {
-        "url": ["http://localhost:3000"],
+        "url": [
+          "http://localhost:3000"
+        ],
         "numberOfRuns": 3,
         "settings": {
           "chromeFlags": "--no-sandbox --disable-dev-shm-usage"
@@ -152,11 +138,36 @@
       },
       "assert": {
         "assertions": {
-          "categories:performance": ["warn", {"minScore": 0.9}],
-          "categories:accessibility": ["error", {"minScore": 0.9}],
-          "categories:best-practices": ["warn", {"minScore": 0.9}],
-          "categories:seo": ["warn", {"minScore": 0.9}],
-          "categories:pwa": ["warn", {"minScore": 0.8}]
+          "categories:performance": [
+            "warn",
+            {
+              "minScore": 0.9
+            }
+          ],
+          "categories:accessibility": [
+            "error",
+            {
+              "minScore": 0.9
+            }
+          ],
+          "categories:best-practices": [
+            "warn",
+            {
+              "minScore": 0.9
+            }
+          ],
+          "categories:seo": [
+            "warn",
+            {
+              "minScore": 0.9
+            }
+          ],
+          "categories:pwa": [
+            "warn",
+            {
+              "minScore": 0.8
+            }
+          ]
         }
       },
       "upload": {
@@ -165,11 +176,15 @@
       }
     }
   },
-
   "jest": {
     "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": ["<rootDir>/jest.setup.js"],
-    "testPathIgnorePatterns": ["<rootDir>/.next/", "<rootDir>/node_modules/"],
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest.setup.js"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/.next/",
+      "<rootDir>/node_modules/"
+    ],
     "moduleNameMapping": {
       "^@/(.*)$": "<rootDir>/src/$1"
     },
@@ -188,7 +203,6 @@
       }
     }
   },
-
   "browserslist": {
     "production": [
       ">0.2%",

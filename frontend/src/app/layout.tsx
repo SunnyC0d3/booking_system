@@ -4,7 +4,7 @@ import { Toaster } from 'sonner';
 import { ThemeProvider } from 'next-themes';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import '@/styles/globals.css';
+import '@/styles/global.css';
 
 const inter = Inter({
     subsets: ['latin'],

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 import ProductDetail from '@/components/product/detail/ProductDetail';
 import { ProductGrid } from '@/components/product/ProductGrid';
 import { DashboardLayout } from '@/components/layout';
@@ -9,12 +10,11 @@ import { useProductStore } from '@/stores/productStore';
 import { Product } from '@/types/product';
 
 interface ProductPageProps {
-    params: Promise<{ slug: string }>;
+    params: Promise<{ id: string }>;
 }
 
-// Generate metadata for SEO
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
-    const { slug } = await params;
+    const { id } = await params;
 
     // In a real app, you'd fetch this from your API
     // For now, we'll use default metadata
@@ -25,13 +25,13 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 }
 
 async function ProductPage({ params }: ProductPageProps) {
-    const { slug } = await params;
+    const { id } = await params;
 
     return (
         <DashboardLayout showBreadcrumbs>
             <div className="space-y-12">
                 <Suspense fallback={<ProductDetailSkeleton />}>
-                    <ProductDetailContainer slug={slug} />
+                    <ProductDetailContainer id={id} />
                 </Suspense>
 
                 <Suspense fallback={<RelatedProductsSkeleton />}>
@@ -42,12 +42,12 @@ async function ProductPage({ params }: ProductPageProps) {
     );
 }
 
-function ProductDetailContainer({ slug }: { slug: string }) {
+function ProductDetailContainer({ id }: { id: string }) {
     const { currentProduct, fetchProduct, isLoading, error } = useProductStore();
 
     React.useEffect(() => {
-        fetchProduct(slug);
-    }, [fetchProduct, slug]);
+        fetchProduct(id);
+    }, [fetchProduct, id]);
 
     if (isLoading) {
         return <ProductDetailSkeleton />;
@@ -141,6 +141,19 @@ function RelatedProductsSkeleton() {
                 </div>
             </CardContent>
         </Card>
+    );
+}
+
+function ProductCardSkeleton() {
+    return (
+        <div className="space-y-3">
+            <div className="aspect-square bg-muted rounded-lg loading-shimmer" />
+            <div className="space-y-2">
+                <div className="h-4 bg-muted rounded loading-shimmer" />
+                <div className="h-4 bg-muted rounded w-3/4 loading-shimmer" />
+                <div className="h-5 bg-muted rounded w-1/2 loading-shimmer" />
+            </div>
+        </div>
     );
 }
 

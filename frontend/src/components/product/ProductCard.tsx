@@ -7,7 +7,7 @@ import {
     ShoppingCart,
     Eye,
     Star,
-    ArrowsUpDown,
+    ArrowUpDown,
     Badge,
     Zap,
 } from 'lucide-react';
@@ -231,7 +231,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                                                     inCompare && 'text-blue-500 hover:text-blue-600'
                                                 )}
                                             >
-                                                <ArrowsUpDown className="h-4 w-4" />
+                                                <ArrowUpDown className="h-4 w-4" />
                                             </Button>
                                         )}
 
@@ -354,7 +354,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                                             : 'bg-white/90 hover:bg-white'
                                     )}
                                 >
-                                    <ArrowsUpDown className="h-4 w-4" />
+                                    <ArrowUpDown className="h-4 w-4" />
                                 </Button>
                             )}
 

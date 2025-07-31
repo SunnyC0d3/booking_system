@@ -408,6 +408,14 @@ export interface ProductFilters {
     include?: string;
 }
 
+export type ProductSort =
+    | 'created_at'
+    | 'price_asc'
+    | 'price_desc'
+    | 'name_asc'
+    | 'name_desc'
+    | 'featured';
+
 export interface SearchResponse<T> {
     data: T[];
     meta: {
@@ -443,4 +451,28 @@ export interface TimestampedEntity {
     created_at: string;
     updated_at: string;
     deleted_at?: string | null;
+}
+
+export interface Wishlist {
+    id: number;
+    user_id: number;
+    items: WishlistItem[];
+    created_at: string;
+    updated_at: string;
+}
+
+export interface WishlistItem {
+    id: number;
+    wishlist_id: number;
+    product_id: number;
+    product_variant_id: number | null;
+    product: Product;
+    product_variant: ProductVariant | null;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface AddToWishlistRequest {
+    product_id: number;
+    product_variant_id?: number | null;
 }
