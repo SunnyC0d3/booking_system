@@ -1,5 +1,6 @@
+'use client'
+
 import * as React from 'react';
-import { Metadata } from 'next';
 import { motion } from 'framer-motion';
 import {
     Shield,
@@ -16,11 +17,6 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, Button } from '@/components/ui';
 import { MainLayout } from '@/components/layout';
 import Link from 'next/link';
-
-export const metadata: Metadata = {
-    title: 'Privacy Policy | Creative Business',
-    description: 'Learn how Creative Business protects your privacy and handles your personal information.',
-};
 
 const privacyData = {
     lastUpdated: 'January 15, 2025',

@@ -1,91 +1,166 @@
-import { useState, useEffect, useCallback } from 'react';
-import { DownloadAttempt } from '@/types/digital-products';
+'use client'
 
-interface UseDownloadProgressReturn {
-    progress: number;
-    status: 'idle' | 'downloading' | 'completed' | 'error' | 'cancelled';
+import { useState, useEffect, useCallback } from 'react';
+import {
+    DigitalProduct,
+    DownloadAccess,
+    LicenseKey,
+    DigitalProductStatistics,
+    DigitalLibraryResponse
+} from '@/types/digital-products';
+
+interface UseDigitalProductsReturn {
+    digitalProducts: DigitalProduct[];
+    downloadAccesses: DownloadAccess[];
+    licenseKeys: LicenseKey[];
+    statistics: DigitalProductStatistics | null;
+    loading: boolean;
     error: string | null;
-    startDownload: (token: string) => Promise<void>;
-    cancelDownload: () => void;
-    retryDownload: () => void;
+    refreshLibrary: () => Promise<void>;
+    downloadFile: (token: string, fileId?: number) => Promise<void>;
+    validateLicense: (licenseKey: string, productId?: number) => Promise<boolean>;
 }
 
-export const useDownloadProgress = (): UseDownloadProgressReturn => {
-    const [progress, setProgress] = useState(0);
-    const [status, setStatus] = useState<'idle' | 'downloading' | 'completed' | 'error' | 'cancelled'>('idle');
+export const useDigitalProducts = (): UseDigitalProductsReturn => {
+    const [digitalProducts, setDigitalProducts] = useState<DigitalProduct[]>([]);
+    const [downloadAccesses, setDownloadAccesses] = useState<DownloadAccess[]>([]);
+    const [licenseKeys, setLicenseKeys] = useState<LicenseKey[]>([]);
+    const [statistics, setStatistics] = useState<DigitalProductStatistics | null>(null);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [currentToken, setCurrentToken] = useState<string | null>(null);
-    const [attemptId, setAttemptId] = useState<string | null>(null);
 
-    const updateProgress = useCallback(async (token: string, attemptId: string, progressValue: number) => {
+    const getAuthToken = () => {
+        if (typeof window !== 'undefined') {
+            return localStorage.getItem('auth_token');
+        }
+        return null;
+    };
+
+    const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
+        const token = getAuthToken();
+        const response = await fetch(`/api/v1${endpoint}`, {
+            ...options,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                ...options.headers,
+            },
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({ message: 'Network error' }));
+            throw new Error(errorData.message || `HTTP ${response.status}`);
+        }
+
+        return response.json();
+    };
+
+    const fetchDigitalLibrary = useCallback(async () => {
         try {
-            await fetch(`/api/v1/digital/download/${token}/progress/${attemptId}`, {
+            setLoading(true);
+            setError(null);
+
+            // Fetch user's digital library
+            const libraryResponse: DigitalLibraryResponse = await apiRequest('/my-digital-products');
+
+            setDownloadAccesses(libraryResponse.data.download_accesses || []);
+            setLicenseKeys(libraryResponse.data.license_keys || []);
+            setStatistics(libraryResponse.data.statistics || null);
+
+            // Extract unique products from download accesses
+            const products = libraryResponse.data.download_accesses
+                .map(access => access.product)
+                .filter((product, index, self) =>
+                    index === self.findIndex(p => p.id === product.id)
+                );
+            setDigitalProducts(products);
+
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to load digital library');
+            console.error('Digital library fetch error:', err);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    const refreshLibrary = useCallback(async () => {
+        await fetchDigitalLibrary();
+    }, [fetchDigitalLibrary]);
+
+    const downloadFile = useCallback(async (token: string, fileId?: number) => {
+        try {
+            const url = `/api/v1/digital/download/${token}${fileId ? `?file_id=${fileId}` : ''}`;
+            const response = await fetch(url, {
+                headers: {
+                    'Authorization': `Bearer ${getAuthToken()}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Download failed');
+            }
+
+            const blob = await response.blob();
+            const downloadUrl = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = downloadUrl;
+
+            // Get filename from response headers
+            const contentDisposition = response.headers.get('Content-Disposition');
+            const filename = contentDisposition
+                ?.split('filename=')[1]
+                ?.replace(/"/g, '') || 'download';
+
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(downloadUrl);
+            document.body.removeChild(a);
+
+            // Refresh library to update download counts
+            await refreshLibrary();
+
+        } catch (err) {
+            console.error('Download error:', err);
+            throw err;
+        }
+    }, [refreshLibrary]);
+
+    const validateLicense = useCallback(async (licenseKey: string, productId?: number): Promise<boolean> => {
+        try {
+            const response = await fetch('/api/v1/license/validate', {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    progress: progressValue,
-                    status: progressValue >= 100 ? 'completed' : 'in_progress'
+                    license_key: licenseKey,
+                    product_id: productId
                 })
             });
+
+            const data = await response.json();
+            return data.data?.valid || false;
+
         } catch (err) {
-            console.error('Failed to update progress:', err);
+            console.error('License validation error:', err);
+            return false;
         }
     }, []);
 
-    const startDownload = useCallback(async (token: string) => {
-        setCurrentToken(token);
-        setAttemptId(Date.now().toString());
-        setStatus('downloading');
-        setProgress(0);
-        setError(null);
-    }, []);
-
-    const cancelDownload = useCallback(() => {
-        setStatus('cancelled');
-        setProgress(0);
-        setCurrentToken(null);
-        setAttemptId(null);
-    }, []);
-
-    const retryDownload = useCallback(() => {
-        if (currentToken) {
-            startDownload(currentToken);
-        }
-    }, [currentToken, startDownload]);
-
-    // Simulate download progress (in real implementation, this would be based on actual download events)
     useEffect(() => {
-        if (status !== 'downloading' || !currentToken || !attemptId) return;
-
-        const interval = setInterval(() => {
-            setProgress(prev => {
-                const newProgress = Math.min(prev + Math.random() * 10, 100);
-
-                if (currentToken && attemptId) {
-                    updateProgress(currentToken, attemptId, newProgress);
-                }
-
-                if (newProgress >= 100) {
-                    setStatus('completed');
-                    clearInterval(interval);
-                }
-
-                return newProgress;
-            });
-        }, 500);
-
-        return () => clearInterval(interval);
-    }, [status, currentToken, attemptId, updateProgress]);
+        fetchDigitalLibrary();
+    }, [fetchDigitalLibrary]);
 
     return {
-        progress,
-        status,
+        digitalProducts,
+        downloadAccesses,
+        licenseKeys,
+        statistics,
+        loading,
         error,
-        startDownload,
-        cancelDownload,
-        retryDownload
+        refreshLibrary,
+        downloadFile,
+        validateLicense
     };
 };

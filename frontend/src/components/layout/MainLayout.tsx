@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import { motion } from 'framer-motion';
 import Header from './Header';
@@ -59,8 +61,8 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
                                                     )}
                                                     aria-current={item.current ? 'page' : undefined}
                                                 >
-                          {item.label}
-                        </span>
+                                                    {item.label}
+                                                </span>
                                             )}
                                         </li>
                                         {index < breadcrumbItems.length - 1 && (
@@ -126,7 +128,6 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
 };
 
 // Specialized layout components for different sections
-
 export const DashboardLayout: React.FC<{
     children: React.ReactNode;
     title?: string;
@@ -196,27 +197,22 @@ export const CheckoutLayout: React.FC<{
         className="bg-muted/30"
     >
         <div className="container mx-auto px-4 py-8">
-            {/* Checkout Progress */}
             {currentStep && totalSteps && (
-                <div className="mb-8">
-                    <div className="flex items-center justify-center space-x-4">
-                        {Array.from({ length: totalSteps }, (_, i) => (
-                            <div
-                                key={i}
-                                className={cn(
-                                    'flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium',
-                                    i + 1 <= currentStep
-                                        ? 'bg-primary text-primary-foreground'
-                                        : 'bg-muted text-muted-foreground'
-                                )}
-                            >
-                                {i + 1}
-                            </div>
-                        ))}
+                <div className="max-w-2xl mx-auto mb-8">
+                    <div className="flex items-center justify-between text-sm text-muted-foreground mb-2">
+                        <span>Step {currentStep} of {totalSteps}</span>
+                        <span>{Math.round((currentStep / totalSteps) * 100)}% Complete</span>
+                    </div>
+                    <div className="w-full bg-muted rounded-full h-2">
+                        <motion.div
+                            className="bg-primary h-2 rounded-full"
+                            initial={{ width: 0 }}
+                            animate={{ width: `${(currentStep / totalSteps) * 100}%` }}
+                            transition={{ duration: 0.5 }}
+                        />
                     </div>
                 </div>
             )}
-
             <div className="max-w-4xl mx-auto">
                 {children}
             </div>

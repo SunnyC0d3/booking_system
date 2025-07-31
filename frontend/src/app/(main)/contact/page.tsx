@@ -1,208 +1,267 @@
-// frontend/src/app/(main)/contact/page.tsx
+'use client'
+
 import * as React from 'react';
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import {
-    Mail,
-    Phone,
-    MapPin,
-    Clock,
-    MessageCircle,
-    Send,
-    CheckCircle,
-    AlertCircle,
-    Facebook,
-    Twitter,
-    Instagram,
-    Linkedin,
+    Heart,
+    Users,
+    Award,
+    Lightbulb,
+    Palette,
+    ArrowRight,
 } from 'lucide-react';
-import {
-    Button,
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-    Input,
-    Badge,
-} from '@/components/ui';
+import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 import { MainLayout } from '@/components/layout';
-import { useNotificationStore } from '@/stores/notificationStore';
 
-export const metadata: Metadata = {
-    title: 'Contact Us | Creative Business',
-    description: 'Get in touch with our creative team. We\'re here to help bring your design vision to life with professional printing services.',
-};
-
-// Contact form validation schema
-const contactSchema = z.object({
-    name: z.string().min(2, 'Name must be at least 2 characters'),
-    email: z.string().email('Please enter a valid email address'),
-    phone: z.string().optional(),
-    subject: z.string().min(3, 'Subject must be at least 3 characters'),
-    service: z.string().optional(),
-    message: z.string().min(10, 'Message must be at least 10 characters'),
-    budget: z.string().optional(),
-    timeline: z.string().optional(),
-});
-
-type ContactFormData = z.infer<typeof contactSchema>;
-
-// Contact information
-const contactInfo = [
+// Team member data
+const teamMembers = [
     {
-        icon: Mail,
-        title: 'Email Us',
-        primary: 'hello@creativebusiness.com',
-        secondary: 'For general inquiries',
-        action: 'mailto:hello@creativebusiness.com',
-        actionText: 'Send Email',
+        name: 'Sarah Johnson',
+        role: 'Founder & Creative Director',
+        image: '/images/team/sarah.jpg',
+        bio: 'With over 15 years in graphic design and a passion for beautiful print work, Sarah founded Creative Business to help others bring their visions to life.',
     },
     {
-        icon: Phone,
-        title: 'Call Us',
-        primary: '+44 20 7123 4567',
-        secondary: 'Mon-Fri, 9AM-6PM GMT',
-        action: 'tel:+442071234567',
-        actionText: 'Call Now',
+        name: 'Michael Chen',
+        role: 'Production Manager',
+        image: '/images/team/michael.jpg',
+        bio: 'Michael ensures every order meets our high quality standards. His attention to detail and process optimization keeps our production running smoothly.',
     },
     {
-        icon: MapPin,
-        title: 'Visit Us',
-        primary: '123 Creative Street',
-        secondary: 'London, UK EC1A 1AA',
-        action: 'https://maps.google.com/?q=123+Creative+Street+London',
-        actionText: 'Get Directions',
+        name: 'Emma Rodriguez',
+        role: 'Customer Experience Lead',
+        image: '/images/team/emma.jpg',
+        bio: 'Emma works directly with clients to understand their needs and guide them through the design process, ensuring exceptional results every time.',
+    },
+];
+
+// Company values
+const values = [
+    {
+        icon: Palette,
+        title: 'Creative Excellence',
+        description: 'We believe every project deserves thoughtful design and meticulous attention to detail.',
     },
     {
+        icon: Users,
+        title: 'Personal Service',
+        description: 'Each client receives personalized attention and support throughout their creative journey.',
+    },
+    {
+        icon: Award,
+        title: 'Quality Craftsmanship',
+        description: 'We use premium materials and proven techniques to ensure lasting, beautiful results.',
+    },
+    {
+        icon: Lightbulb,
+        title: 'Innovation',
+        description: 'We stay current with design trends and printing technology to offer the best solutions.',
+    },
+];
+
+// Company stats
+const stats = [
+    { number: '10,000+', label: 'Happy Customers' },
+    { number: '50,000+', label: 'Orders Completed' },
+    { number: '15+', label: 'Years Experience' },
+    { number: '24/7', label: 'Customer Support' },
+];
+
+// Process steps
+const processSteps = [
+    {
+        step: '01',
+        title: 'Consultation',
+        description: 'We discuss your vision, requirements, and timeline to understand your project goals.',
         icon: MessageCircle,
-        title: 'Live Chat',
-        primary: 'Chat with our team',
-        secondary: 'Available during business hours',
-        action: '#',
-        actionText: 'Start Chat',
+    },
+    {
+        step: '02',
+        title: 'Design',
+        description: 'Our creative team develops custom designs based on your specifications and brand.',
+        icon: Palette,
+    },
+    {
+        step: '03',
+        title: 'Review',
+        description: 'We present the designs for your feedback and make revisions until it\'s perfect.',
+        icon: Eye,
+    },
+    {
+        step: '04',
+        title: 'Production',
+        description: 'Your approved designs are carefully printed using premium materials and techniques.',
+        icon: Settings,
+    },
+    {
+        step: '05',
+        title: 'Delivery',
+        description: 'We package and ship your order with care, ensuring safe arrival at your doorstep.',
+        icon: Package,
     },
 ];
 
-// Business hours
-const businessHours = [
-    { day: 'Monday - Friday', hours: '9:00 AM - 6:00 PM' },
-    { day: 'Saturday', hours: '10:00 AM - 4:00 PM' },
-    { day: 'Sunday', hours: 'Closed' },
-];
-
-// Service options for form
-const serviceOptions = [
-    'Custom Labels',
-    'Wedding Invitations',
-    'Gift Tags',
-    'Stickers & Decals',
-    'Greeting Cards',
-    'Packaging Inserts',
-    'Flower Stands',
-    'Rush Orders',
-    'Design Consultation',
-    'Corporate Solutions',
-    'Other',
-];
-
-// FAQ items
-const faqs = [
-    {
-        question: 'What\'s your typical turnaround time?',
-        answer: 'Standard orders typically take 5-7 business days. Rush orders can be completed in 24-48 hours for an additional fee.',
-    },
-    {
-        question: 'Do you offer design services?',
-        answer: 'Yes! Our design team can create custom designs or work with your existing artwork. Design consultation is included with most orders.',
-    },
-    {
-        question: 'What file formats do you accept?',
-        answer: 'We accept most common formats including PDF, AI, EPS, PNG, and JPG. High-resolution files (300 DPI) work best for printing.',
-    },
-    {
-        question: 'Do you ship internationally?',
-        answer: 'Yes, we ship worldwide. International shipping rates and times vary by location. Contact us for specific quotes.',
-    },
-];
-
-export default function ContactPage() {
-    const [isSubmitting, setIsSubmitting] = React.useState(false);
-    const [isSubmitted, setIsSubmitted] = React.useState(false);
-    const { addNotification } = useNotificationStore();
-
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        reset,
-    } = useForm<ContactFormData>({
-        resolver: zodResolver(contactSchema),
-    });
-
-    const onSubmit = async (data: ContactFormData) => {
-        setIsSubmitting(true);
-
-        try {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 2000));
-
-            // In real implementation, make API call to backend
-            console.log('Contact form data:', data);
-
-            setIsSubmitted(true);
-            reset();
-            addNotification({
-                type: 'success',
-                title: 'Message Sent!',
-                message: 'Thank you for contacting us. We\'ll get back to you within 24 hours.',
-            });
-        } catch (error) {
-            addNotification({
-                type: 'error',
-                title: 'Error',
-                message: 'Failed to send message. Please try again.',
-            });
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
+export default function AboutPage() {
     return (
         <MainLayout>
             {/* Hero Section */}
-            <section className="relative py-20 lg:py-32 bg-gradient-creative">
+            <section className="relative py-20 lg:py-32 bg-gradient-creative overflow-hidden">
                 <div className="container mx-auto px-4">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                        className="text-center max-w-3xl mx-auto"
-                    >
-                        <h1 className="text-4xl lg:text-6xl font-bold text-foreground mb-6">
-                            Let's Create Something{' '}
-                            <span className="text-gradient">Amazing Together</span>
-                        </h1>
-                        <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-                            Ready to bring your creative vision to life? Get in touch with our team
-                            and let's discuss your next project.
-                        </p>
-                        <Badge variant="secondary" className="text-lg px-4 py-2">
-                            <Clock className="mr-2 h-4 w-4" />
-                            We typically respond within 2 hours
-                        </Badge>
-                    </motion.div>
+                    <div className="grid lg:grid-cols-2 gap-12 items-center">
+                        <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.6 }}
+                        >
+                            <h1 className="text-4xl lg:text-6xl font-bold text-foreground mb-6">
+                                Creating Beautiful
+                                <span className="text-primary block">Memories Together</span>
+                            </h1>
+                            <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+                                We're passionate about helping you create stunning printed materials
+                                that capture your special moments and express your unique style.
+                                From wedding invitations to custom labels, every project tells a story.
+                            </p>
+                            <div className="flex flex-col sm:flex-row gap-4">
+                                <Button size="lg" asChild>
+                                    <Link href="/contact">
+                                        Get Started Today
+                                        <ArrowRight className="ml-2 h-4 w-4" />
+                                    </Link>
+                                </Button>
+                                <Button variant="outline" size="lg" asChild>
+                                    <Link href="/services">Our Services</Link>
+                                </Button>
+                            </div>
+                        </motion.div>
+
+                        <motion.div
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.6, delay: 0.2 }}
+                            className="relative"
+                        >
+                            <div className="relative rounded-2xl overflow-hidden">
+                                <img
+                                    src="/images/about/creative-workspace.jpg"
+                                    alt="Creative workspace with design materials"
+                                    className="w-full h-[500px] object-cover"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                            </div>
+                        </motion.div>
+                    </div>
                 </div>
             </section>
 
-            {/* Contact Methods */}
+            {/* Stats Section */}
             <section className="py-20 bg-background">
                 <div className="container mx-auto px-4">
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-                        {contactInfo.map((info, index) => (
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+                        {stats.map((stat, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, delay: index * 0.1 }}
+                                viewport={{ once: true }}
+                                className="text-center"
+                            >
+                                <div className="text-3xl lg:text-4xl font-bold text-primary mb-2">
+                                    {stat.number}
+                                </div>
+                                <div className="text-sm font-medium text-muted-foreground">
+                                    {stat.label}
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Our Story */}
+            <section className="py-20 bg-muted/30">
+                <div className="container mx-auto px-4">
+                    <div className="max-w-4xl mx-auto">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6 }}
+                            viewport={{ once: true }}
+                            className="text-center mb-16"
+                        >
+                            <h2 className="text-3xl lg:text-4xl font-bold mb-6">Our Story</h2>
+                            <p className="text-xl text-muted-foreground leading-relaxed">
+                                Founded with a vision to make beautiful, professional printing accessible to everyone,
+                                Creative Business has been helping customers bring their ideas to life since 2010.
+                            </p>
+                        </motion.div>
+
+                        <div className="grid lg:grid-cols-2 gap-12 items-center">
+                            <motion.div
+                                initial={{ opacity: 0, x: -20 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.6 }}
+                                viewport={{ once: true }}
+                            >
+                                <div className="space-y-6">
+                                    <p className="text-muted-foreground leading-relaxed">
+                                        What started as a small family business with a simple goal - to provide
+                                        beautiful, affordable custom printing - has grown into a trusted partner
+                                        for thousands of customers celebrating life's special moments.
+                                    </p>
+                                    <p className="text-muted-foreground leading-relaxed">
+                                        From our humble beginnings in a small London workshop to our modern
+                                        facility equipped with state-of-the-art printing technology, we've
+                                        never lost sight of what matters most: creating products that make
+                                        our customers smile.
+                                    </p>
+                                    <p className="text-muted-foreground leading-relaxed">
+                                        Today, we're proud to serve customers worldwide while maintaining
+                                        the personal touch and attention to quality that has been our
+                                        foundation from day one.
+                                    </p>
+                                </div>
+                            </motion.div>
+
+                            <motion.div
+                                initial={{ opacity: 0, x: 20 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.6, delay: 0.2 }}
+                                viewport={{ once: true }}
+                            >
+                                <div className="relative rounded-2xl overflow-hidden">
+                                    <img
+                                        src="/images/about/founder-story.jpg"
+                                        alt="Creative Business founder working on designs"
+                                        className="w-full h-[400px] object-cover"
+                                    />
+                                </div>
+                            </motion.div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Values Section */}
+            <section className="py-20 bg-background">
+                <div className="container mx-auto px-4">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        viewport={{ once: true }}
+                        className="text-center mb-16"
+                    >
+                        <h2 className="text-3xl lg:text-4xl font-bold mb-6">Our Values</h2>
+                        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                            These core principles guide everything we do and every interaction we have with our customers.
+                        </p>
+                    </motion.div>
+
+                    <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-8">
+                        {values.map((value, index) => (
                             <motion.div
                                 key={index}
                                 initial={{ opacity: 0, y: 20 }}
@@ -210,319 +269,110 @@ export default function ContactPage() {
                                 transition={{ duration: 0.5, delay: index * 0.1 }}
                                 viewport={{ once: true }}
                             >
-                                <Card className="text-center hover:shadow-lg transition-shadow h-full">
+                                <Card className="h-full text-center hover:shadow-lg transition-all duration-300">
                                     <CardHeader>
-                                        <div className="mx-auto w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                                            <info.icon className="h-6 w-6 text-primary" />
+                                        <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                            <value.icon className="h-8 w-8 text-primary" />
                                         </div>
-                                        <CardTitle className="text-lg">{info.title}</CardTitle>
+                                        <CardTitle className="text-xl">{value.title}</CardTitle>
                                     </CardHeader>
-                                    <CardContent className="space-y-4">
-                                        <div>
-                                            <p className="font-medium text-foreground">{info.primary}</p>
-                                            <p className="text-sm text-muted-foreground">{info.secondary}</p>
-                                        </div>
-                                        <Button variant="outline" size="sm" asChild className="w-full">
-                                            <Link href={info.action}>{info.actionText}</Link>
-                                        </Button>
+                                    <CardContent>
+                                        <p className="text-muted-foreground leading-relaxed">
+                                            {value.description}
+                                        </p>
                                     </CardContent>
                                 </Card>
                             </motion.div>
                         ))}
                     </div>
-
-                    {/* Main Contact Form */}
-                    <div className="grid lg:grid-cols-2 gap-12">
-                        {/* Contact Form */}
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.6 }}
-                            viewport={{ once: true }}
-                        >
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle className="text-2xl flex items-center gap-2">
-                                        <MessageCircle className="h-6 w-6 text-primary" />
-                                        Send us a Message
-                                    </CardTitle>
-                                    <p className="text-muted-foreground">
-                                        Fill out the form below and we'll get back to you as soon as possible.
-                                    </p>
-                                </CardHeader>
-                                <CardContent>
-                                    {isSubmitted ? (
-                                        <div className="text-center py-8">
-                                            <CheckCircle className="h-16 w-16 text-success mx-auto mb-4" />
-                                            <h3 className="text-xl font-bold mb-2">Thank You!</h3>
-                                            <p className="text-muted-foreground">
-                                                Your message has been sent successfully. We'll be in touch soon!
-                                            </p>
-                                        </div>
-                                    ) : (
-                                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                                            {/* Name and Email */}
-                                            <div className="grid md:grid-cols-2 gap-4">
-                                                <Input
-                                                    {...register('name')}
-                                                    label="Full Name"
-                                                    placeholder="Your full name"
-                                                    error={errors.name?.message}
-                                                    required
-                                                />
-                                                <Input
-                                                    {...register('email')}
-                                                    type="email"
-                                                    label="Email Address"
-                                                    placeholder="your@email.com"
-                                                    error={errors.email?.message}
-                                                    required
-                                                />
-                                            </div>
-
-                                            {/* Phone and Service */}
-                                            <div className="grid md:grid-cols-2 gap-4">
-                                                <Input
-                                                    {...register('phone')}
-                                                    type="tel"
-                                                    label="Phone Number (Optional)"
-                                                    placeholder="+44 20 1234 5678"
-                                                    error={errors.phone?.message}
-                                                />
-                                                <div>
-                                                    <label className="block text-sm font-medium mb-2">
-                                                        Service Interested In
-                                                    </label>
-                                                    <select
-                                                        {...register('service')}
-                                                        className="w-full px-3 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                                                    >
-                                                        <option value="">Select a service</option>
-                                                        {serviceOptions.map((service) => (
-                                                            <option key={service} value={service}>
-                                                                {service}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                    {errors.service && (
-                                                        <p className="text-sm text-destructive mt-1">
-                                                            {errors.service.message}
-                                                        </p>
-                                                    )}
-                                                </div>
-                                            </div>
-
-                                            {/* Subject */}
-                                            <Input
-                                                {...register('subject')}
-                                                label="Subject"
-                                                placeholder="What's your project about?"
-                                                error={errors.subject?.message}
-                                                required
-                                            />
-
-                                            {/* Budget and Timeline */}
-                                            <div className="grid md:grid-cols-2 gap-4">
-                                                <div>
-                                                    <label className="block text-sm font-medium mb-2">
-                                                        Budget Range (Optional)
-                                                    </label>
-                                                    <select
-                                                        {...register('budget')}
-                                                        className="w-full px-3 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                                                    >
-                                                        <option value="">Select budget range</option>
-                                                        <option value="under-100">Under £100</option>
-                                                        <option value="100-500">£100 - £500</option>
-                                                        <option value="500-1000">£500 - £1,000</option>
-                                                        <option value="1000-5000">£1,000 - £5,000</option>
-                                                        <option value="5000-plus">£5,000+</option>
-                                                    </select>
-                                                </div>
-                                                <div>
-                                                    <label className="block text-sm font-medium mb-2">
-                                                        Timeline (Optional)
-                                                    </label>
-                                                    <select
-                                                        {...register('timeline')}
-                                                        className="w-full px-3 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                                                    >
-                                                        <option value="">Select timeline</option>
-                                                        <option value="asap">ASAP (Rush)</option>
-                                                        <option value="1-week">Within 1 week</option>
-                                                        <option value="2-weeks">Within 2 weeks</option>
-                                                        <option value="1-month">Within 1 month</option>
-                                                        <option value="flexible">Flexible</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            {/* Message */}
-                                            <div>
-                                                <label className="block text-sm font-medium mb-2">
-                                                    Message *
-                                                </label>
-                                                <textarea
-                                                    {...register('message')}
-                                                    rows={5}
-                                                    className="w-full px-3 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-                                                    placeholder="Tell us about your project, requirements, or any questions you have..."
-                                                />
-                                                {errors.message && (
-                                                    <p className="text-sm text-destructive mt-1">
-                                                        {errors.message.message}
-                                                    </p>
-                                                )}
-                                            </div>
-
-                                            {/* Submit Button */}
-                                            <Button
-                                                type="submit"
-                                                size="lg"
-                                                disabled={isSubmitting}
-                                                className="w-full"
-                                            >
-                                                {isSubmitting ? (
-                                                    <>
-                                                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                                                        Sending...
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <Send className="mr-2 h-4 w-4" />
-                                                        Send Message
-                                                    </>
-                                                )}
-                                            </Button>
-                                        </form>
-                                    )}
-                                </CardContent>
-                            </Card>
-                        </motion.div>
-
-                        {/* Contact Information & Business Hours */}
-                        <motion.div
-                            initial={{ opacity: 0, x: 20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.6, delay: 0.2 }}
-                            viewport={{ once: true }}
-                            className="space-y-8"
-                        >
-                            {/* Business Hours */}
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle className="flex items-center gap-2">
-                                        <Clock className="h-5 w-5 text-primary" />
-                                        Business Hours
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="space-y-3">
-                                        {businessHours.map((hour, index) => (
-                                            <div key={index} className="flex justify-between">
-                                                <span className="text-muted-foreground">{hour.day}</span>
-                                                <span className="font-medium">{hour.hours}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <div className="mt-4 p-3 bg-primary/5 rounded-lg">
-                                        <p className="text-sm text-primary">
-                                            <AlertCircle className="h-4 w-4 inline mr-1" />
-                                            Rush orders and urgent inquiries are handled outside business hours.
-                                        </p>
-                                    </div>
-                                </CardContent>
-                            </Card>
-
-                            {/* Social Media */}
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>Follow Us</CardTitle>
-                                    <p className="text-muted-foreground">
-                                        Stay connected for design inspiration and updates.
-                                    </p>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="flex gap-4">
-                                        {[
-                                            { icon: Facebook, href: '#', label: 'Facebook' },
-                                            { icon: Instagram, href: '#', label: 'Instagram' },
-                                            { icon: Twitter, href: '#', label: 'Twitter' },
-                                            { icon: Linkedin, href: '#', label: 'LinkedIn' },
-                                        ].map((social) => (
-                                            <Button
-                                                key={social.label}
-                                                variant="outline"
-                                                size="sm"
-                                                asChild
-                                                className="flex-1"
-                                            >
-                                                <Link href={social.href}>
-                                                    <social.icon className="h-4 w-4" />
-                                                </Link>
-                                            </Button>
-                                        ))}
-                                    </div>
-                                </CardContent>
-                            </Card>
-
-                            {/* Quick FAQ */}
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>Quick FAQ</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="space-y-4">
-                                        {faqs.map((faq, index) => (
-                                            <div key={index}>
-                                                <h4 className="font-medium text-sm mb-1">{faq.question}</h4>
-                                                <p className="text-xs text-muted-foreground">{faq.answer}</p>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </motion.div>
-                    </div>
                 </div>
             </section>
 
-            {/* Map Section */}
-            <section className="py-20 bg-muted/20">
+            {/* Team Section */}
+            <section className="py-20 bg-muted/30">
                 <div className="container mx-auto px-4">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
                         viewport={{ once: true }}
-                        className="text-center mb-12"
+                        className="text-center mb-16"
                     >
-                        <h2 className="text-3xl lg:text-4xl font-bold mb-4">Visit Our Studio</h2>
+                        <h2 className="text-3xl lg:text-4xl font-bold mb-6">Meet Our Team</h2>
                         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                            Located in the heart of London, our creative studio is open for
-                            consultations and project visits.
+                            The passionate people behind Creative Business who make your projects possible.
                         </p>
                     </motion.div>
 
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {teamMembers.map((member, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, delay: index * 0.1 }}
+                                viewport={{ once: true }}
+                            >
+                                <Card className="text-center hover:shadow-lg transition-all duration-300">
+                                    <CardContent className="p-6">
+                                        <div className="relative w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden">
+                                            <img
+                                                src={member.image}
+                                                alt={member.name}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </div>
+                                        <h3 className="text-xl font-bold mb-2">{member.name}</h3>
+                                        <p className="text-primary font-medium mb-4">{member.role}</p>
+                                        <p className="text-muted-foreground text-sm leading-relaxed">
+                                            {member.bio}
+                                        </p>
+                                    </CardContent>
+                                </Card>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Call to Action */}
+            <section className="py-20 bg-primary text-primary-foreground">
+                <div className="container mx-auto px-4">
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
                         viewport={{ once: true }}
-                        className="rounded-2xl overflow-hidden shadow-lg"
+                        className="text-center max-w-3xl mx-auto"
                     >
-                        {/* Placeholder for Google Maps - replace with actual map integration */}
-                        <div className="bg-muted h-96 flex items-center justify-center">
-                            <div className="text-center">
-                                <MapPin className="h-12 w-12 text-primary mx-auto mb-4" />
-                                <p className="text-lg font-medium">Interactive Map</p>
-                                <p className="text-muted-foreground">123 Creative Street, London, UK</p>
-                                <Button className="mt-4" asChild>
-                                    <Link href="https://maps.google.com/?q=123+Creative+Street+London">
-                                        Get Directions
-                                    </Link>
-                                </Button>
-                            </div>
+                        <Heart className="h-16 w-16 mx-auto mb-6 text-primary-foreground/80" />
+                        <h2 className="text-3xl lg:text-4xl font-bold mb-6">
+                            Ready to Create Something Beautiful?
+                        </h2>
+                        <p className="text-xl mb-8 text-primary-foreground/90 leading-relaxed">
+                            Let's work together to bring your creative vision to life with professional printing
+                            that exceeds your expectations.
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                            <Button
+                                size="lg"
+                                variant="secondary"
+                                asChild
+                                className="bg-white text-primary hover:bg-white/90"
+                            >
+                                <Link href="/contact">
+                                    Start Your Project
+                                    <ArrowRight className="ml-2 h-4 w-4" />
+                                </Link>
+                            </Button>
+                            <Button
+                                size="lg"
+                                variant="outline"
+                                asChild
+                                className="border-white text-white hover:bg-white hover:text-primary"
+                            >
+                                <Link href="/products">View Our Work</Link>
+                            </Button>
                         </div>
                     </motion.div>
                 </div>

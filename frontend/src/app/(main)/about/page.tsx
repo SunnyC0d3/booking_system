@@ -1,5 +1,6 @@
+'use client'
+
 import * as React from 'react';
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
@@ -16,11 +17,6 @@ import {
 } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 import { MainLayout } from '@/components/layout';
-
-export const metadata: Metadata = {
-    title: 'About Us | Creative Business',
-    description: 'Learn about our passion for creating beautiful labels, invitations, and custom printing solutions that bring your creative vision to life.',
-};
 
 // Team member data
 const teamMembers = [

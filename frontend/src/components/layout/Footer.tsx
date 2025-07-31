@@ -1,3 +1,5 @@
+'use client'
+
 import * as React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -113,69 +115,94 @@ export const Footer: React.FC<FooterProps> = ({ className }) => {
 
     return (
         <footer className={cn('bg-background border-t', className)}>
-            {/* Main Footer Content */}
-            <div className="container mx-auto px-4 py-12">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
-                    {/* Brand & Newsletter */}
-                    <div className="lg:col-span-2 space-y-6">
-                        {/* Logo */}
-                        <Link href="/" className="flex items-center gap-3 group">
-                            <div className="relative">
-                                <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center group-hover:shadow-glow transition-all duration-300">
-                                    <Palette className="h-6 w-6 text-primary-foreground" />
-                                </div>
-                                <div className="absolute -top-1 -right-1 w-5 h-5 bg-cream-400 rounded-full flex items-center justify-center">
-                                    <Heart className="h-3 w-3 text-white" />
-                                </div>
-                            </div>
-                            <div>
-                                <h2 className="font-bold text-xl text-foreground group-hover:text-primary transition-colors">
-                                    Creative Business
-                                </h2>
-                                <p className="text-sm text-muted-foreground -mt-1">
-                                    Professional Printing Services
-                                </p>
-                            </div>
-                        </Link>
-
-                        <p className="text-muted-foreground text-sm leading-relaxed">
-                            Transform your creative vision into reality with our premium labels,
-                            invitations, stickers, and custom printing services. Quality and
-                            creativity in every project.
+            {/* Newsletter Section */}
+            <div className="border-b">
+                <div className="container mx-auto px-4 py-12">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        viewport={{ once: true }}
+                        className="max-w-2xl mx-auto text-center"
+                    >
+                        <h3 className="text-2xl font-bold mb-4">Stay Creative with Us</h3>
+                        <p className="text-muted-foreground mb-6">
+                            Get design inspiration, exclusive offers, and be the first to know about new products.
                         </p>
+                        <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                            <Input
+                                type="email"
+                                placeholder="Enter your email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                                className="flex-1"
+                            />
+                            <Button type="submit" disabled={isSubscribing}>
+                                {isSubscribing ? (
+                                    'Subscribing...'
+                                ) : (
+                                    <>
+                                        Subscribe
+                                        <ArrowRight className="ml-2 h-4 w-4" />
+                                    </>
+                                )}
+                            </Button>
+                        </form>
+                    </motion.div>
+                </div>
+            </div>
 
-                        {/* Newsletter Signup */}
-                        <div className="space-y-3">
-                            <h3 className="font-semibold text-foreground">Stay Updated</h3>
-                            <p className="text-sm text-muted-foreground">
-                                Get the latest designs, offers, and creative inspiration.
-                            </p>
-                            <form onSubmit={handleNewsletterSubmit} className="flex gap-2">
-                                <Input
-                                    type="email"
-                                    placeholder="Enter your email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className="flex-1"
-                                    required
-                                />
+            {/* Main Footer Content */}
+            <div className="container mx-auto px-4 py-16">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+                    {/* Brand */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        viewport={{ once: true }}
+                        className="col-span-2 md:col-span-1 lg:col-span-2"
+                    >
+                        <Link href="/" className="flex items-center gap-2 mb-4">
+                            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                                <Palette className="h-5 w-5 text-primary-foreground" />
+                            </div>
+                            <span className="text-xl font-bold">Creative Business</span>
+                        </Link>
+                        <p className="text-muted-foreground mb-6 leading-relaxed">
+                            Creating beautiful, professional printing solutions for life's special moments.
+                            From custom labels to wedding invitations, we bring your vision to life.
+                        </p>
+                        <div className="flex gap-3">
+                            {socialLinks.map((social, index) => (
                                 <Button
-                                    type="submit"
-                                    loading={isSubscribing}
-                                    className="shrink-0"
+                                    key={index}
+                                    variant="outline"
+                                    size="sm"
+                                    asChild
+                                    className={`${social.color} transition-colors`}
                                 >
-                                    <ArrowRight className="h-4 w-4" />
+                                    <Link href={social.href} target="_blank" rel="noopener noreferrer">
+                                        <social.icon className="h-4 w-4" />
+                                        <span className="sr-only">{social.name}</span>
+                                    </Link>
                                 </Button>
-                            </form>
+                            ))}
                         </div>
-                    </div>
+                    </motion.div>
 
                     {/* Products */}
-                    <div className="space-y-4">
-                        <h3 className="font-semibold text-foreground">Products</h3>
-                        <ul className="space-y-2">
-                            {footerLinks.products.map((link) => (
-                                <li key={link.href}>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.1 }}
+                        viewport={{ once: true }}
+                    >
+                        <h4 className="font-semibold mb-4">Products</h4>
+                        <ul className="space-y-3">
+                            {footerLinks.products.map((link, index) => (
+                                <li key={index}>
                                     <Link
                                         href={link.href}
                                         className="text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -185,14 +212,19 @@ export const Footer: React.FC<FooterProps> = ({ className }) => {
                                 </li>
                             ))}
                         </ul>
-                    </div>
+                    </motion.div>
 
                     {/* Services */}
-                    <div className="space-y-4">
-                        <h3 className="font-semibold text-foreground">Services</h3>
-                        <ul className="space-y-2">
-                            {footerLinks.services.map((link) => (
-                                <li key={link.href}>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
+                        viewport={{ once: true }}
+                    >
+                        <h4 className="font-semibold mb-4">Services</h4>
+                        <ul className="space-y-3">
+                            {footerLinks.services.map((link, index) => (
+                                <li key={index}>
                                     <Link
                                         href={link.href}
                                         className="text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -202,14 +234,19 @@ export const Footer: React.FC<FooterProps> = ({ className }) => {
                                 </li>
                             ))}
                         </ul>
-                    </div>
+                    </motion.div>
 
                     {/* Company */}
-                    <div className="space-y-4">
-                        <h3 className="font-semibold text-foreground">Company</h3>
-                        <ul className="space-y-2">
-                            {footerLinks.company.map((link) => (
-                                <li key={link.href}>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.3 }}
+                        viewport={{ once: true }}
+                    >
+                        <h4 className="font-semibold mb-4">Company</h4>
+                        <ul className="space-y-3">
+                            {footerLinks.company.map((link, index) => (
+                                <li key={index}>
                                     <Link
                                         href={link.href}
                                         className="text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -219,14 +256,19 @@ export const Footer: React.FC<FooterProps> = ({ className }) => {
                                 </li>
                             ))}
                         </ul>
-                    </div>
+                    </motion.div>
 
                     {/* Support */}
-                    <div className="space-y-4">
-                        <h3 className="font-semibold text-foreground">Support</h3>
-                        <ul className="space-y-2">
-                            {footerLinks.support.map((link) => (
-                                <li key={link.href}>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.4 }}
+                        viewport={{ once: true }}
+                    >
+                        <h4 className="font-semibold mb-4">Support</h4>
+                        <ul className="space-y-3">
+                            {footerLinks.support.map((link, index) => (
+                                <li key={index}>
                                     <Link
                                         href={link.href}
                                         className="text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -236,94 +278,71 @@ export const Footer: React.FC<FooterProps> = ({ className }) => {
                                 </li>
                             ))}
                         </ul>
-                    </div>
-                </div>
+                    </motion.div>
 
-                {/* Contact Info & Social */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12 pt-8 border-t">
-                    {/* Contact Information */}
-                    <div className="space-y-4">
-                        <h3 className="font-semibold text-foreground">Get in Touch</h3>
-                        <div className="space-y-3">
-                            <div className="flex items-center gap-3 text-sm">
-                                <Mail className="h-4 w-4 text-primary" />
-                                <span className="text-muted-foreground">
-                  hello@creativebusiness.com
-                </span>
-                            </div>
-                            <div className="flex items-center gap-3 text-sm">
-                                <Phone className="h-4 w-4 text-primary" />
-                                <span className="text-muted-foreground">
-                  +1 (555) 123-4567
-                </span>
-                            </div>
-                            <div className="flex items-center gap-3 text-sm">
-                                <MapPin className="h-4 w-4 text-primary" />
-                                <span className="text-muted-foreground">
-                  123 Creative Street, Design City, DC 12345
-                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Social Links */}
-                    <div className="space-y-4">
-                        <h3 className="font-semibold text-foreground">Follow Us</h3>
-                        <div className="flex gap-4">
-                            {socialLinks.map((social) => {
-                                const Icon = social.icon;
-                                return (
-                                    <motion.a
-                                        key={social.name}
-                                        href={social.href}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        whileHover={{ scale: 1.1 }}
-                                        whileTap={{ scale: 0.95 }}
-                                        className={cn(
-                                            'w-10 h-10 rounded-lg bg-muted flex items-center justify-center text-muted-foreground transition-colors',
-                                            social.color
-                                        )}
+                    {/* Legal */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.5 }}
+                        viewport={{ once: true }}
+                    >
+                        <h4 className="font-semibold mb-4">Legal</h4>
+                        <ul className="space-y-3">
+                            {footerLinks.legal.map((link, index) => (
+                                <li key={index}>
+                                    <Link
+                                        href={link.href}
+                                        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                                     >
-                                        <Icon className="h-5 w-5" />
-                                        <span className="sr-only">{social.name}</span>
-                                    </motion.a>
-                                );
-                            })}
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                            Join our community for daily inspiration and exclusive offers!
-                        </p>
-                    </div>
+                                        {link.label}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </motion.div>
                 </div>
             </div>
 
             {/* Bottom Bar */}
             <div className="border-t bg-muted/30">
                 <div className="container mx-auto px-4 py-6">
-                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                        <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
-                            {footerLinks.legal.map((link, index) => (
-                                <React.Fragment key={link.href}>
-                                    <Link
-                                        href={link.href}
-                                        className="hover:text-foreground transition-colors"
-                                    >
-                                        {link.label}
-                                    </Link>
-                                    {index < footerLinks.legal.length - 1 && (
-                                        <span className="hidden sm:inline">•</span>
-                                    )}
-                                </React.Fragment>
-                            ))}
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        transition={{ duration: 0.5 }}
+                        viewport={{ once: true }}
+                        className="flex flex-col md:flex-row justify-between items-center gap-4"
+                    >
+                        <div className="flex items-center gap-6 text-sm text-muted-foreground">
+                            <p>© 2025 Creative Business. All rights reserved.</p>
+                            <div className="flex items-center gap-2">
+                                <Heart className="h-4 w-4 text-red-500" />
+                                <span>Made in London</span>
+                            </div>
                         </div>
 
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <span>© 2024 Creative Business. Made with</span>
-                            <Heart className="h-4 w-4 text-primary" />
-                            <span>for creators.</span>
+                        <div className="flex items-center gap-6">
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                <Mail className="h-4 w-4" />
+                                <Link
+                                    href="mailto:hello@creativebusiness.com"
+                                    className="hover:text-foreground transition-colors"
+                                >
+                                    hello@creativebusiness.com
+                                </Link>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                <Phone className="h-4 w-4" />
+                                <Link
+                                    href="tel:+441234567890"
+                                    className="hover:text-foreground transition-colors"
+                                >
+                                    +44 123 456 7890
+                                </Link>
+                            </div>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
         </footer>
