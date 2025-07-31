@@ -257,12 +257,14 @@ const CompareProductCard: React.FC<CompareProductCardProps> = ({
 };
 
 export default function ComparePage() {
-    const { items, removeFromCompare, clearCompare, canAddToCompare } = useCompareStore();
+    const { compareItems, removeFromCompare, clearCompare } = useCompareStore();
     const { addToCart } = useCartStore();
-    const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlistStore();
-
+    const { addToWishlist, removeFromWishlist, isItemInWishlist } = useWishlistStore();
     const [showClearDialog, setShowClearDialog] = React.useState(false);
     const [isClearing, setIsClearing] = React.useState(false);
+
+    const isInWishlist = (productId: number) => isItemInWishlist(productId);
+    const canAddToCompare = compareItems.length < 4;
 
     const handleRemoveFromCompare = async (productId: number) => {
         await removeFromCompare(productId);
