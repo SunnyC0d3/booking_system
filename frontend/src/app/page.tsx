@@ -1,5 +1,6 @@
+'use client'
+
 import * as React from 'react';
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
@@ -15,12 +16,6 @@ import {
 import { MainLayout } from '@/components/layout';
 import { Button, Card, CardContent } from '@/components/ui';
 
-export const metadata: Metadata = {
-  title: 'Creative Business | Professional Labels, Invitations & Custom Printing',
-  description: 'Transform your creative vision with our premium labels, invitations, stickers, and custom printing services. Quality craftsmanship for every occasion.',
-};
-
-// Sample product categories
 const productCategories = [
   {
     title: 'Custom Labels',
