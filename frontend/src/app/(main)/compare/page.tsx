@@ -59,8 +59,10 @@ const EmptyCompare = () => (
             </p>
             <Button size="lg" asChild>
                 <Link href="/products">
-                    <Package className="mr-2 h-4 w-4" />
-                    Browse Products
+                    <span className="flex items-center">
+                        <Package className="mr-2 h-4 w-4" />
+                        Browse Products
+                    </span>
                 </Link>
             </Button>
         </div>

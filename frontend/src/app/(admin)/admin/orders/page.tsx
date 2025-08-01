@@ -1,8 +1,6 @@
 'use client'
 
 import * as React from 'react';
-import { Metadata } from 'next';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
     ShoppingCart,
@@ -65,11 +63,6 @@ import {
 import { AdminLayout, QuickStats } from '@/components/layout/AdminLayout';
 import { RouteGuard } from '@/components/auth/RouteGuard';
 import { cn } from '@/lib/cn';
-
-export const metadata: Metadata = {
-    title: 'Order Management | Admin Dashboard',
-    description: 'Manage orders, track shipments, and process payments.',
-};
 
 // Mock order data - replace with real API
 const mockOrders = [

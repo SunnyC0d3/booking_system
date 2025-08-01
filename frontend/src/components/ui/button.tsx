@@ -72,11 +72,23 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref
     ) => {
         const Comp = asChild ? Slot : 'button';
-
         const isDisabled = disabled || loading;
 
+        if (asChild) {
+            return (
+                <Slot
+                    ref={ref}
+                    className={cn(buttonVariants({ variant, size, className }))}
+                    disabled={isDisabled}
+                    {...props}
+                >
+                    {children}
+                </Slot>
+            );
+        }
+
         return (
-            <Comp
+            <button
                 className={cn(
                     buttonVariants({ variant, size, className }),
                     loading && 'relative'
@@ -90,13 +102,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                         <Loader2 className="h-4 w-4 animate-spin" />
                     </div>
                 )}
-
                 <div className={cn('flex items-center gap-2', loading && 'invisible')}>
                     {leftIcon && !loading && leftIcon}
                     {loading && loadingText ? loadingText : children}
                     {rightIcon && !loading && rightIcon}
                 </div>
-            </Comp>
+            </button>
         );
     }
 );
