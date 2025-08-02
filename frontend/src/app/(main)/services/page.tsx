@@ -288,12 +288,18 @@ export default function ServicesPage() {
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <Button size="lg" asChild>
                                 <Link href="/contact">
-                                    Start Your Project
-                                    <ArrowRight className="ml-2 h-4 w-4" />
+                                    <span className="flex items-center">
+                                        Start Your Project
+                                        <ArrowRight className="ml-2 h-4 w-4" />
+                                    </span>
                                 </Link>
                             </Button>
                             <Button variant="outline" size="lg" asChild>
-                                <Link href="#services">View Services</Link>
+                                <Link href="#services">
+                                    <span className="flex items-center">
+                                        View Services
+                                    </span>
+                                </Link>
                             </Button>
                         </div>
                     </motion.div>
@@ -370,8 +376,10 @@ export default function ServicesPage() {
 
                                         <Button asChild className="w-full group-hover:bg-primary/90 transition-colors">
                                             <Link href={service.href}>
-                                                Learn More
-                                                <ArrowRight className="ml-2 h-4 w-4" />
+                                                <span className="flex items-center">
+                                                    Learn More
+                                                    <ArrowRight className="ml-2 h-4 w-4" />
+                                                </span>
                                             </Link>
                                         </Button>
                                     </CardContent>

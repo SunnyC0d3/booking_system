@@ -324,8 +324,10 @@ function AdminDashboardPage() {
                                     <div className="mt-6 text-center">
                                         <Button variant="outline" asChild>
                                             <Link href="/admin/analytics/products">
-                                                View All Products
-                                                <ArrowRight className="ml-2 h-4 w-4" />
+                                                <span className="flex items-center">
+                                                    View All Products
+                                                    <ArrowRight className="ml-2 h-4 w-4" />
+                                                </span>
                                             </Link>
                                         </Button>
                                     </div>
@@ -345,8 +347,10 @@ function AdminDashboardPage() {
                                         </CardTitle>
                                         <Button variant="ghost" size="sm" asChild>
                                             <Link href="/admin/orders">
-                                                View All
-                                                <ArrowRight className="ml-2 h-4 w-4" />
+                                                <span className="flex items-center">
+                                                    View All
+                                                    <ArrowRight className="ml-2 h-4 w-4" />
+                                                </span>
                                             </Link>
                                         </Button>
                                     </div>
@@ -435,26 +439,34 @@ function AdminDashboardPage() {
                                 <CardContent className="space-y-3">
                                     <Button className="w-full justify-start" asChild>
                                         <Link href="/admin/products/new">
-                                            <Package className="mr-2 h-4 w-4" />
-                                            Add New Product
+                                            <span className="flex items-center">
+                                                <Package className="mr-2 h-4 w-4" />
+                                                Add New Product
+                                            </span>
                                         </Link>
                                     </Button>
                                     <Button variant="outline" className="w-full justify-start" asChild>
                                         <Link href="/admin/orders?status=pending">
-                                            <ShoppingCart className="mr-2 h-4 w-4" />
-                                            Process Orders
+                                            <span className="flex items-center">
+                                                <ShoppingCart className="mr-2 h-4 w-4" />
+                                                Process Orders
+                                            </span>
                                         </Link>
                                     </Button>
                                     <Button variant="outline" className="w-full justify-start" asChild>
                                         <Link href="/admin/users">
-                                            <Users className="mr-2 h-4 w-4" />
-                                            Manage Users
+                                            <span className="flex items-center">
+                                                <Users className="mr-2 h-4 w-4" />
+                                                Manage Users
+                                            </span>
                                         </Link>
                                     </Button>
                                     <Button variant="outline" className="w-full justify-start" asChild>
                                         <Link href="/admin/analytics">
-                                            <BarChart3 className="mr-2 h-4 w-4" />
-                                            View Reports
+                                            <span className="flex items-center">
+                                                <BarChart3 className="mr-2 h-4 w-4" />
+                                                View Reports
+                                            </span>
                                         </Link>
                                     </Button>
                                 </CardContent>

@@ -126,12 +126,18 @@ export default function AboutPage() {
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <Button size="lg" asChild>
                                     <Link href="/contact">
-                                        Get Started Today
-                                        <ArrowRight className="ml-2 h-4 w-4" />
+                                        <span className="flex items-center">
+                                            Get Started Today
+                                            <ArrowRight className="ml-2 h-4 w-4" />
+                                        </span>
                                     </Link>
                                 </Button>
                                 <Button variant="outline" size="lg" asChild>
-                                    <Link href="/services">Our Services</Link>
+                                    <Link href="/services">
+                                        <span className="flex items-center">
+                                            Our Services
+                                        </span>
+                                    </Link>
                                 </Button>
                             </div>
                         </motion.div>
@@ -361,8 +367,10 @@ export default function AboutPage() {
                                 className="bg-white text-primary hover:bg-white/90"
                             >
                                 <Link href="/contact">
-                                    Start Your Project
-                                    <ArrowRight className="ml-2 h-4 w-4" />
+                                    <span className="flex items-center">
+                                        Start Your Project
+                                        <ArrowRight className="ml-2 h-4 w-4" />
+                                    </span>
                                 </Link>
                             </Button>
                             <Button
@@ -371,7 +379,11 @@ export default function AboutPage() {
                                 asChild
                                 className="border-white text-white hover:bg-white hover:text-primary"
                             >
-                                <Link href="/products">View Our Work</Link>
+                                <Link href="/products">
+                                    <span className="flex items-center">
+                                        View Our Work
+                                    </span>
+                                </Link>
                             </Button>
                         </div>
                     </motion.div>

@@ -177,8 +177,14 @@ export const Footer: React.FC<FooterProps> = ({className}) => {
                         </p>
                         <div className="flex gap-3">
                             {socialLinks.map((social, index) => (
-                                <Button asChild>
-                                    <Link href={social.href}>
+                                <Button
+                                    key={index}
+                                    variant="outline"
+                                    size="sm"
+                                    asChild
+                                    className={`${social.color} transition-colors`}
+                                >
+                                    <Link href={social.href} target="_blank" rel="noopener noreferrer">
                                         <span className="flex items-center">
                                             <social.icon className="h-4 w-4"/>
                                             <span className="sr-only">{social.name}</span>

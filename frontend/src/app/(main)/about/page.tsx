@@ -108,12 +108,18 @@ export default function AboutPage() {
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <Button size="lg" asChild>
                                     <Link href="/contact">
-                                        Get Started Today
-                                        <ArrowRight className="ml-2 h-4 w-4" />
+                                        <span className="flex items-center">
+                                            Get Started Today
+                                            <ArrowRight className="ml-2 h-4 w-4" />
+                                        </span>
                                     </Link>
                                 </Button>
                                 <Button variant="outline" size="lg" asChild>
-                                    <Link href="/services">Our Services</Link>
+                                    <Link href="/services">
+                                        <span className="flex items-center">
+                                            Our Services
+                                        </span>
+                                    </Link>
                                 </Button>
                             </div>
                         </motion.div>
@@ -328,8 +334,10 @@ export default function AboutPage() {
 
                             <Button size="lg" asChild>
                                 <Link href="/services">
-                                    Explore Our Services
-                                    <ArrowRight className="ml-2 h-4 w-4" />
+                                    <span className="flex items-center">
+                                        Explore Our Services
+                                        <ArrowRight className="ml-2 h-4 w-4" />
+                                    </span>
                                 </Link>
                             </Button>
                         </motion.div>
@@ -371,14 +379,18 @@ export default function AboutPage() {
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <Button size="lg" asChild>
                                 <Link href="/contact">
-                                    <Mail className="mr-2 h-4 w-4" />
-                                    Get In Touch
+                                    <span className="flex items-center">
+                                        <Mail className="mr-2 h-4 w-4" />
+                                        Get In Touch
+                                    </span>
                                 </Link>
                             </Button>
                             <Button variant="outline" size="lg" asChild>
                                 <Link href="tel:+1555123456">
-                                    <Phone className="mr-2 h-4 w-4" />
-                                    Call Us Today
+                                    <span className="flex items-center">
+                                        <Phone className="mr-2 h-4 w-4" />
+                                        Call Us Today
+                                    </span>
                                 </Link>
                             </Button>
                         </div>
