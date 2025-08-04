@@ -16,6 +16,9 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
                     }
                     return failureCount < 3;
                 },
+                refetchOnWindowFocus: false,
+                refetchOnMount: false,
+                refetchOnReconnect: false,
             },
         },
     }));

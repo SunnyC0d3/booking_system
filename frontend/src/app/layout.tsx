@@ -90,6 +90,7 @@ export default function RootLayout({
             defaultTheme="light"
             enableSystem
             disableTransitionOnChange
+            suppressHydrationWarning
         >
             <QueryProvider>
                 <div className="relative min-h-screen bg-background">
