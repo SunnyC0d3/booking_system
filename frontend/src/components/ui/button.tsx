@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Slot } from '@radix-ui/react-slot';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/cn';
 
@@ -70,17 +69,16 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             ...restProps
         } = props;
 
-        // Handle asChild case - use Slot for composition
-        if (asChild) {
-            return (
-                <Slot
-                    ref={ref}
-                    className={getButtonClasses(variant, size, className)}
-                    {...restProps}
-                >
-                    {children}
-                </Slot>
-            );
+        // 🚨 NO MORE SLOT! Handle asChild by cloning child element
+        if (asChild && React.isValidElement(children)) {
+            return React.cloneElement(children, {
+                ...restProps,
+                className: cn(
+                    getButtonClasses(variant, size, className),
+                    children.props.className
+                ),
+                ref,
+            } as any);
         }
 
         // Regular button case
