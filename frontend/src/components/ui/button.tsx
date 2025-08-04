@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react';
+import Link from 'next/link';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/cn';
 
@@ -48,20 +49,25 @@ const getButtonClasses = (
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: keyof typeof variantClasses;
     size?: keyof typeof sizeClasses;
-    asChild?: boolean;
     loading?: boolean;
     loadingText?: string;
     leftIcon?: React.ReactNode;
     rightIcon?: React.ReactNode;
+    // Smart link props - if provided, renders as link
+    href?: string;
+    target?: string;
+    rel?: string;
+    replace?: boolean;
+    scroll?: boolean;
+    prefetch?: boolean;
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
     (props, ref) => {
         const {
             className,
             variant = 'default',
             size = 'default',
-            asChild = false,
             loading = false,
             loadingText,
             leftIcon,
@@ -69,31 +75,21 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             children,
             disabled,
             onClick,
+            href,
+            target,
+            rel,
+            replace,
+            scroll,
+            prefetch,
             ...restProps
         } = props;
 
         const isDisabled = disabled || loading;
+        const buttonClasses = getButtonClasses(variant, size, className);
 
-        // 🔧 COMPLETELY REMOVE asChild functionality temporarily
-        // This eliminates ALL Slot-related issues
-        if (asChild) {
-            // For now, just render as a regular button
-            // Users will need to update their Link usage
-            console.warn('asChild prop is temporarily disabled to fix React errors');
-        }
-
-        // Always render as a regular button - NO MORE SLOT ISSUES
-        return (
-            <button
-                ref={ref}
-                className={cn(
-                    getButtonClasses(variant, size, className),
-                    loading && 'relative'
-                )}
-                disabled={isDisabled}
-                onClick={onClick}
-                {...restProps}
-            >
+        // Content to render inside button/link
+        const content = (
+            <>
                 {loading && (
                     <div className="absolute inset-0 flex items-center justify-center">
                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -105,6 +101,56 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                     {loading && loadingText ? loadingText : children}
                     {rightIcon && !loading && rightIcon}
                 </div>
+            </>
+        );
+
+        // If href is provided, render as link
+        if (href) {
+            // Determine if it's an external link
+            const isExternal = href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:');
+
+            if (isExternal) {
+                // External link - use regular <a> tag
+                return (
+                    <a
+                        ref={ref as React.ForwardedRef<HTMLAnchorElement>}
+                        href={href}
+                        target={target}
+                        rel={rel}
+                        className={cn(buttonClasses, loading && 'relative', 'no-underline')}
+                        {...restProps}
+                    >
+                        {content}
+                    </a>
+                );
+            } else {
+                // Internal link - use Next.js Link
+                return (
+                    <Link
+                        href={href}
+                        replace={replace}
+                        scroll={scroll}
+                        prefetch={prefetch}
+                        ref={ref as React.ForwardedRef<HTMLAnchorElement>}
+                        className={cn(buttonClasses, loading && 'relative', 'no-underline')}
+                        {...restProps}
+                    >
+                        {content}
+                    </Link>
+                );
+            }
+        }
+
+        // Default button rendering
+        return (
+            <button
+                ref={ref as React.ForwardedRef<HTMLButtonElement>}
+                className={cn(buttonClasses, loading && 'relative')}
+                disabled={isDisabled}
+                onClick={onClick}
+                {...restProps}
+            >
+                {content}
             </button>
         );
     }

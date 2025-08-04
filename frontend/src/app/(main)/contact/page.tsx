@@ -360,29 +360,15 @@ export default function AboutPage() {
                             that exceeds your expectations.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <Button
-                                size="lg"
-                                variant="secondary"
-                                asChild
-                                className="bg-white text-primary hover:bg-white/90"
-                            >
+                            <Button size="lg" variant="secondary" asChild>
                                 <Link href="/contact">
-                                    <span className="flex items-center">
-                                        Start Your Project
-                                        <ArrowRight className="ml-2 h-4 w-4" />
-                                    </span>
+                                    Start Your Project
+                                    <ArrowRight className="ml-2 h-4 w-4" />
                                 </Link>
                             </Button>
-                            <Button
-                                size="lg"
-                                variant="outline"
-                                asChild
-                                className="border-white text-white hover:bg-white hover:text-primary"
-                            >
+                            <Button size="lg" variant="outline" asChild>
                                 <Link href="/products">
-                                    <span className="flex items-center">
-                                        View Our Work
-                                    </span>
+                                    View Our Work
                                 </Link>
                             </Button>
                         </div>
