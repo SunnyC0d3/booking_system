@@ -5,27 +5,19 @@ import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/cn';
 
 const buttonVariants = cva(
-    // Base styles
     'inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
     {
         variants: {
             variant: {
-                default:
-                    'bg-primary text-primary-foreground hover:bg-primary/90 shadow-soft hover:shadow-soft-lg',
-                destructive:
-                    'bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-soft hover:shadow-soft-lg',
-                outline:
-                    'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
-                secondary:
-                    'bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border',
+                default: 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-soft hover:shadow-soft-lg',
+                destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-soft hover:shadow-soft-lg',
+                outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
+                secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border',
                 ghost: 'hover:bg-accent hover:text-accent-foreground',
                 link: 'text-primary underline-offset-4 hover:underline',
-                success:
-                    'bg-success text-success-foreground hover:bg-success/90 shadow-soft hover:shadow-soft-lg',
-                warning:
-                    'bg-warning text-warning-foreground hover:bg-warning/90 shadow-soft hover:shadow-soft-lg',
-                gradient:
-                    'bg-gradient-to-r from-primary to-lavender-500 text-white hover:from-primary/90 hover:to-lavender-500/90 shadow-soft hover:shadow-glow',
+                success: 'bg-success text-success-foreground hover:bg-success/90 shadow-soft hover:shadow-soft-lg',
+                warning: 'bg-warning text-warning-foreground hover:bg-warning/90 shadow-soft hover:shadow-soft-lg',
+                gradient: 'bg-gradient-to-r from-primary to-lavender-500 text-white hover:from-primary/90 hover:to-lavender-500/90 shadow-soft hover:shadow-glow',
             },
             size: {
                 default: 'h-10 px-4 py-2',
@@ -71,15 +63,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         },
         ref
     ) => {
-        const Comp = asChild ? Slot : 'button';
-        const isDisabled = disabled || loading;
-
         if (asChild) {
-            if (React.Children.count(children) !== 1) {
-                console.warn('Button with asChild prop must have exactly one child element');
-                return null;
-            }
-
             return (
                 <Slot
                     ref={ref}
@@ -90,6 +74,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                 </Slot>
             );
         }
+
+        const isDisabled = disabled || loading;
 
         return (
             <button
