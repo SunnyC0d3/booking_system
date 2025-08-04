@@ -1,59 +1,45 @@
 'use client'
 
 import * as React from 'react';
-import Link from 'next/link';
+import { cva, type VariantProps } from 'class-variance-authority';
 import { Loader2 } from 'lucide-react';
+import Link from 'next/link';
 import { cn } from '@/lib/cn';
 
-// Base button classes
-const baseClasses = 'inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50';
+const buttonVariants = cva(
+    "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+    {
+        variants: {
+            variant: {
+                default: "bg-primary text-primary-foreground hover:bg-primary/90",
+                destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+                outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+                secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+                ghost: "hover:bg-accent hover:text-accent-foreground",
+                link: "text-primary underline-offset-4 hover:underline",
+            },
+            size: {
+                default: "h-10 px-4 py-2",
+                sm: "h-9 rounded-md px-3",
+                lg: "h-11 rounded-md px-8",
+                icon: "h-10 w-10",
+            },
+        },
+        defaultVariants: {
+            variant: "default",
+            size: "default",
+        },
+    }
+);
 
-// Variant classes
-const variantClasses = {
-    default: 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-soft hover:shadow-soft-lg',
-    destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-soft hover:shadow-soft-lg',
-    outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
-    secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border',
-    ghost: 'hover:bg-accent hover:text-accent-foreground',
-    link: 'text-primary underline-offset-4 hover:underline',
-    success: 'bg-success text-success-foreground hover:bg-success/90 shadow-soft hover:shadow-soft-lg',
-    warning: 'bg-warning text-warning-foreground hover:bg-warning/90 shadow-soft hover:shadow-soft-lg',
-    gradient: 'bg-gradient-to-r from-primary to-lavender-500 text-white hover:from-primary/90 hover:to-lavender-500/90 shadow-soft hover:shadow-glow',
-} as const;
-
-// Size classes
-const sizeClasses = {
-    default: 'h-10 px-4 py-2',
-    sm: 'h-9 rounded-md px-3 text-xs',
-    lg: 'h-11 rounded-lg px-8',
-    xl: 'h-12 rounded-lg px-10 text-base',
-    icon: 'h-10 w-10',
-    'icon-sm': 'h-9 w-9',
-    'icon-lg': 'h-11 w-11',
-} as const;
-
-// Helper function to get button classes
-const getButtonClasses = (
-    variant: keyof typeof variantClasses = 'default',
-    size: keyof typeof sizeClasses = 'default',
-    className?: string
-) => {
-    return cn(
-        baseClasses,
-        variantClasses[variant],
-        sizeClasses[size],
-        className
-    );
-};
-
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: keyof typeof variantClasses;
-    size?: keyof typeof sizeClasses;
+export interface ButtonProps
+    extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+        VariantProps<typeof buttonVariants> {
     loading?: boolean;
     loadingText?: string;
     leftIcon?: React.ReactNode;
     rightIcon?: React.ReactNode;
-    // Smart link props - if provided, renders as link
+    // Link props - will render as Next.js Link instead of button
     href?: string;
     target?: string;
     rel?: string;
@@ -62,30 +48,27 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     prefetch?: boolean;
 }
 
-const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
-    (props, ref) => {
-        const {
-            className,
-            variant = 'default',
-            size = 'default',
-            loading = false,
-            loadingText,
-            leftIcon,
-            rightIcon,
-            children,
-            disabled,
-            onClick,
-            href,
-            target,
-            rel,
-            replace,
-            scroll,
-            prefetch,
-            ...restProps
-        } = props;
-
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+    ({
+         className,
+         variant,
+         size,
+         loading = false,
+         loadingText,
+         leftIcon,
+         rightIcon,
+         children,
+         disabled,
+         href,
+         target,
+         rel,
+         replace,
+         scroll,
+         prefetch,
+         ...props
+     }, ref) => {
         const isDisabled = disabled || loading;
-        const buttonClasses = getButtonClasses(variant, size, className);
+        const baseClassName = cn(buttonVariants({ variant, size, className }), loading && 'relative');
 
         // Content to render inside button/link
         const content = (
@@ -95,7 +78,6 @@ const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonPro
                         <Loader2 className="h-4 w-4 animate-spin" />
                     </div>
                 )}
-
                 <div className={cn('flex items-center gap-2', loading && 'invisible')}>
                     {leftIcon && !loading && leftIcon}
                     {loading && loadingText ? loadingText : children}
@@ -106,34 +88,27 @@ const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonPro
 
         // If href is provided, render as link
         if (href) {
-            // Determine if it's an external link
             const isExternal = href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:');
 
             if (isExternal) {
-                // External link - use regular <a> tag
                 return (
                     <a
-                        ref={ref as React.ForwardedRef<HTMLAnchorElement>}
                         href={href}
                         target={target}
                         rel={rel}
-                        className={cn(buttonClasses, loading && 'relative', 'no-underline')}
-                        {...restProps}
+                        className={cn(baseClassName, 'no-underline')}
                     >
                         {content}
                     </a>
                 );
             } else {
-                // Internal link - use Next.js Link
                 return (
                     <Link
                         href={href}
                         replace={replace}
                         scroll={scroll}
                         prefetch={prefetch}
-                        ref={ref as React.ForwardedRef<HTMLAnchorElement>}
-                        className={cn(buttonClasses, loading && 'relative', 'no-underline')}
-                        {...restProps}
+                        className={cn(baseClassName, 'no-underline')}
                     >
                         {content}
                     </Link>
@@ -144,11 +119,10 @@ const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonPro
         // Default button rendering
         return (
             <button
-                ref={ref as React.ForwardedRef<HTMLButtonElement>}
-                className={cn(buttonClasses, loading && 'relative')}
+                className={baseClassName}
+                ref={ref}
                 disabled={isDisabled}
-                onClick={onClick}
-                {...restProps}
+                {...props}
             >
                 {content}
             </button>
@@ -156,7 +130,7 @@ const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonPro
     }
 );
 
-Button.displayName = 'Button';
+Button.displayName = "Button";
 
-export { Button };
+export { Button, buttonVariants };
 export type { ButtonProps };
