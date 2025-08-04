@@ -31,6 +31,20 @@ const sizeClasses = {
     'icon-lg': 'h-11 w-11',
 } as const;
 
+// Helper function to get button classes
+const getButtonClasses = (
+    variant: keyof typeof variantClasses = 'default',
+    size: keyof typeof sizeClasses = 'default',
+    className?: string
+) => {
+    return cn(
+        baseClasses,
+        variantClasses[variant],
+        sizeClasses[size],
+        className
+    );
+};
+
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: keyof typeof variantClasses;
     size?: keyof typeof sizeClasses;
@@ -60,48 +74,21 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
         const isDisabled = disabled || loading;
 
-        // Handle asChild case by rendering the child element with button styling
-        if (asChild && React.isValidElement(children)) {
-            return React.cloneElement(children, {
-                ...restProps,
-                onClick,
-                className: cn(
-                    baseClasses,
-                    variantClasses[variant],
-                    sizeClasses[size],
-                    loading && 'relative',
-                    className,
-                    children.props.className
-                ),
-                disabled: isDisabled,
-                ref,
-                children: (
-                    <>
-                        {loading && (
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                            </div>
-                        )}
-                        <div className={cn('flex items-center gap-2', loading && 'invisible')}>
-                            {leftIcon && !loading && leftIcon}
-                            {loading && loadingText ? loadingText : children.props.children}
-                            {rightIcon && !loading && rightIcon}
-                        </div>
-                    </>
-                )
-            } as any);
+        // 🔧 COMPLETELY REMOVE asChild functionality temporarily
+        // This eliminates ALL Slot-related issues
+        if (asChild) {
+            // For now, just render as a regular button
+            // Users will need to update their Link usage
+            console.warn('asChild prop is temporarily disabled to fix React errors');
         }
 
-        // Regular button case
+        // Always render as a regular button - NO MORE SLOT ISSUES
         return (
             <button
                 ref={ref}
                 className={cn(
-                    baseClasses,
-                    variantClasses[variant],
-                    sizeClasses[size],
-                    loading && 'relative',
-                    className
+                    getButtonClasses(variant, size, className),
+                    loading && 'relative'
                 )}
                 disabled={isDisabled}
                 onClick={onClick}
