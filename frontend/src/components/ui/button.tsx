@@ -75,11 +75,15 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         const isDisabled = disabled || loading;
 
         if (asChild) {
+            if (React.Children.count(children) !== 1) {
+                console.warn('Button with asChild prop must have exactly one child element');
+                return null;
+            }
+
             return (
                 <Slot
                     ref={ref}
                     className={cn(buttonVariants({ variant, size, className }))}
-                    disabled={isDisabled}
                     {...props}
                 >
                     {children}
