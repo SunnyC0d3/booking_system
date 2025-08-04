@@ -190,7 +190,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({
                 {/* Write Review Button */}
                 {isAuthenticated && (
                     <Dialog open={showReviewForm} onOpenChange={setShowReviewForm}>
-                        <DialogTrigger asChild>
+                        <DialogTrigger>
                             <Button>
                                 <MessageSquare className="mr-2 h-4 w-4" />
                                 Write Review
@@ -665,7 +665,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
                                 id="image-upload"
                             />
                             <label htmlFor="image-upload">
-                                <Button type="button" variant="outline" size="sm" asChild>
+                                <Button type="button" variant="outline" size="sm">
                                     <span>Choose Files</span>
                                 </Button>
                             </label>

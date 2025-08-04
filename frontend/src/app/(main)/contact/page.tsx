@@ -124,7 +124,7 @@ export default function AboutPage() {
                                 From wedding invitations to custom labels, every project tells a story.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4">
-                                <Button size="lg" asChild>
+                                <Button size="lg">
                                     <Link href="/contact">
                                         <span className="flex items-center">
                                             Get Started Today
@@ -132,7 +132,7 @@ export default function AboutPage() {
                                         </span>
                                     </Link>
                                 </Button>
-                                <Button variant="outline" size="lg" asChild>
+                                <Button variant="outline" size="lg">
                                     <Link href="/services">
                                         <span className="flex items-center">
                                             Our Services
@@ -360,13 +360,13 @@ export default function AboutPage() {
                             that exceeds your expectations.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <Button size="lg" variant="secondary" asChild>
+                            <Button size="lg" variant="secondary">
                                 <Link href="/contact">
                                     Start Your Project
                                     <ArrowRight className="ml-2 h-4 w-4" />
                                 </Link>
                             </Button>
-                            <Button size="lg" variant="outline" asChild>
+                            <Button size="lg" variant="outline">
                                 <Link href="/products">
                                     View Our Work
                                 </Link>

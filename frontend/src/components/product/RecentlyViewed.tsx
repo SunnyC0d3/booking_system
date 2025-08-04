@@ -231,7 +231,7 @@ export const RecentlyViewed: React.FC<RecentlyViewedProps> = ({
             {/* View All Link */}
             {recentlyViewed.length > maxItems && (
                 <div className="text-center">
-                    <Button variant="outline" asChild>
+                    <Button variant="outline">
                         <Link href="/account/recently-viewed">
                             View All Recently Viewed
                             <ArrowRight className="ml-2 h-4 w-4" />
@@ -373,7 +373,7 @@ const RecentlyViewedItem: React.FC<RecentlyViewedItemProps> = ({
                             <Button
                                 variant="secondary"
                                 size="icon"
-                                asChild
+                               
                                 className="w-8 h-8 bg-white/90 hover:bg-white"
                             >
                                 <Link href={`/products/${product.slug}`}>
@@ -472,7 +472,7 @@ export const RecentlyViewedBanner: React.FC<{ className?: string }> = ({ classNa
                             </p>
                         </div>
                     </div>
-                    <Button asChild>
+                    <Button>
                         <Link href="/account/recently-viewed">
                             View All
                             <ArrowRight className="ml-2 h-4 w-4" />

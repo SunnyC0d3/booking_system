@@ -105,7 +105,7 @@ export const DigitalProductCard: React.FC<DigitalProductCardProps> = ({
                         </Button>
 
                         <Dialog open={showDetails} onOpenChange={setShowDetails}>
-                            <DialogTrigger asChild>
+                            <DialogTrigger>
                                 <Button variant="outline" size="sm">
                                     <FileText className="h-4 w-4 mr-2" />
                                     Details

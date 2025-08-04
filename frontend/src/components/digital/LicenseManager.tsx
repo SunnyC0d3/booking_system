@@ -251,7 +251,7 @@ const LicenseKeyCard: React.FC<LicenseKeyCardProps> = ({
                             </Button>
 
                             <Dialog>
-                                <DialogTrigger asChild>
+                                <DialogTrigger>
                                     <Button size="sm" variant="outline">
                                         <Settings className="h-4 w-4 mr-2" />
                                         Manage

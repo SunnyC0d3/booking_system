@@ -487,7 +487,7 @@ interface MobileFiltersDialogProps {
 export const MobileFiltersDialog: React.FC<MobileFiltersDialogProps> = (props) => {
     return (
         <Dialog>
-            <DialogTrigger asChild>
+            <DialogTrigger>
                 <Button variant="outline" size="sm">
                     <Filter className="h-4 w-4 mr-2" />
                     Filters

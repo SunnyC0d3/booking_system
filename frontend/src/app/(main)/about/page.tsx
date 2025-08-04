@@ -106,7 +106,7 @@ export default function AboutPage() {
                                 bring their creative visions to life through premium printing and design services.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4">
-                                <Button size="lg" asChild>
+                                <Button size="lg">
                                     <Link href="/contact">
                                         <span className="flex items-center">
                                             Get Started Today
@@ -114,7 +114,7 @@ export default function AboutPage() {
                                         </span>
                                     </Link>
                                 </Button>
-                                <Button variant="outline" size="lg" asChild>
+                                <Button variant="outline" size="lg">
                                     <Link href="/services">
                                         <span className="flex items-center">
                                             Our Services
@@ -332,7 +332,7 @@ export default function AboutPage() {
                                 ))}
                             </div>
 
-                            <Button size="lg" asChild>
+                            <Button size="lg">
                                 <Link href="/services">
                                     <span className="flex items-center">
                                         Explore Our Services
@@ -377,13 +377,13 @@ export default function AboutPage() {
                             to discuss your next project.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <Button size="lg" asChild>
+                            <Button size="lg">
                                 <Link href="/contact">
                                     <Mail className="mr-2 h-4 w-4" />
                                     Get In Touch
                                 </Link>
                             </Button>
-                            <Button variant="outline" size="lg" asChild>
+                            <Button variant="outline" size="lg">
                                 <Link href="tel:+1555123456">
                                     <span className="flex items-center">
                                         <Phone className="mr-2 h-4 w-4" />

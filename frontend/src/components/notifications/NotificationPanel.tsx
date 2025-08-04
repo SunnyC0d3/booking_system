@@ -361,7 +361,7 @@ export const NotificationTrigger: React.FC<{ className?: string }> = ({ classNam
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>
+            <DialogTrigger>
                 <Button
                     variant="ghost"
                     size="icon"

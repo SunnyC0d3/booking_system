@@ -439,7 +439,7 @@ export default function SearchPage() {
                         {/* Mobile Filter Toggle */}
                         <div className="lg:hidden mb-4">
                             <Dialog open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
-                                <DialogTrigger asChild>
+                                <DialogTrigger>
                                     <Button variant="outline" className="w-full">
                                         <SlidersHorizontal className="mr-2 h-4 w-4" />
                                         Filters
@@ -640,7 +640,7 @@ export default function SearchPage() {
                                         <Button onClick={clearAllFilters}>
                                             Clear All Filters
                                         </Button>
-                                        <Button variant="outline" asChild>
+                                        <Button variant="outline">
                                             <a href="/products">Browse All Products</a>
                                         </Button>
                                     </div>

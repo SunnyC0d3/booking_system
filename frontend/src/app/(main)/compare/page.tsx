@@ -57,11 +57,9 @@ const EmptyCompare = () => (
                 Start comparing products by clicking the compare icon on product cards.
                 You can compare up to 4 products at once to find the perfect match.
             </p>
-            <Button size="lg" asChild>
-                <Link href="/products">
-                    <Package className="mr-2 h-4 w-4" />
-                    Browse Products
-                </Link>
+            <Button size="lg" href="/products">
+                <Package className="mr-2 h-4 w-4" />
+                Browse Products
             </Button>
         </div>
     </motion.div>
@@ -83,19 +81,21 @@ const AttributeRow: React.FC<AttributeRowProps> = ({ label, values, isHighlight 
             <td key={index} className="p-4 text-center">
                 {typeof value === 'boolean' ? (
                     value ? (
-                        <Check className="h-5 w-5 text-success mx-auto" />
+                        <Check className="h-4 w-4 text-green-600 mx-auto" />
                     ) : (
-                        <Minus className="h-5 w-5 text-muted-foreground mx-auto" />
+                        <X className="h-4 w-4 text-red-600 mx-auto" />
                     )
+                ) : typeof value === 'number' ? (
+                    <span className="font-medium">{value}</span>
                 ) : (
-                    <span className={cn(isHighlight && 'font-semibold')}>{value}</span>
+                    value
                 )}
             </td>
         ))}
     </tr>
 );
 
-// Product comparison card
+// Compare product card component
 interface CompareProductCardProps {
     product: any;
     onRemove: (productId: number) => void;
@@ -110,239 +110,177 @@ const CompareProductCard: React.FC<CompareProductCardProps> = ({
                                                                    onAddToCart,
                                                                    onToggleWishlist,
                                                                    isInWishlist,
-                                                               }) => {
-    const hasDiscount = product.compare_price && product.compare_price > product.price;
-    const discountPercentage = hasDiscount
-        ? Math.round(((product.compare_price - product.price) / product.compare_price) * 100)
-        : 0;
-
-    const isOutOfStock = !product.is_in_stock;
-
-    return (
-        <div className="relative">
-            {/* Remove Button */}
-            <Button
-                variant="secondary"
-                size="icon"
-                onClick={() => onRemove(product.id)}
-                className="absolute -top-2 -right-2 w-8 h-8 rounded-full z-10 bg-white shadow-md hover:bg-gray-50"
-            >
-                <X className="h-4 w-4" />
-            </Button>
-
-            <Card className="overflow-hidden">
-                <div className="relative">
-                    {/* Product Image */}
-                    <div className="aspect-square bg-muted relative overflow-hidden">
-                        {product.featured_image ? (
-                            <img
-                                src={product.featured_image}
-                                alt={product.name}
-                                className="w-full h-full object-cover"
-                            />
-                        ) : (
-                            <div className="w-full h-full flex items-center justify-center">
-                                <Package className="h-16 w-16 text-muted-foreground" />
-                            </div>
-                        )}
-
-                        {/* Badges */}
-                        <div className="absolute top-3 left-3 flex flex-col gap-2">
-                            {hasDiscount && (
-                                <Badge className="bg-red-500 text-white">
-                                    -{discountPercentage}%
-                                </Badge>
-                            )}
-                            {isOutOfStock && (
-                                <Badge variant="secondary" className="bg-gray-500 text-white">
-                                    Out of Stock
-                                </Badge>
-                            )}
-                            {product.is_featured && (
-                                <Badge className="bg-primary text-primary-foreground">
-                                    Featured
-                                </Badge>
-                            )}
+                                                               }) => (
+    <Card className="h-fit">
+        <CardContent className="p-6">
+            <div className="relative mb-4">
+                <div className="aspect-square bg-muted rounded-lg mb-4 relative overflow-hidden">
+                    {product.images?.[0] ? (
+                        <img
+                            src={product.images[0].url}
+                            alt={product.name}
+                            className="w-full h-full object-cover"
+                        />
+                    ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                            <Package className="h-12 w-12 text-muted-foreground" />
                         </div>
-                    </div>
-
-                    {/* Product Info */}
-                    <CardContent className="p-4">
-                        <div className="space-y-4">
-                            {/* Title and Category */}
-                            <div className="text-center">
-                                <h3 className="font-semibold text-foreground line-clamp-2 hover:text-primary transition-colors">
-                                    <Link href={`/products/${product.slug}`}>
-                                        {product.name}
-                                    </Link>
-                                </h3>
-                                {product.category && (
-                                    <p className="text-sm text-muted-foreground mt-1">
-                                        {product.category.name}
-                                    </p>
-                                )}
-                            </div>
-
-                            {/* Rating */}
-                            {product.reviews_count > 0 && (
-                                <div className="flex items-center justify-center gap-2">
-                                    <div className="flex items-center gap-1">
-                                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                                        <span className="text-sm font-medium">
-                                            {product.reviews_average.toFixed(1)}
-                                        </span>
-                                    </div>
-                                    <span className="text-sm text-muted-foreground">
-                                        ({product.reviews_count})
-                                    </span>
-                                </div>
-                            )}
-
-                            {/* Price */}
-                            <div className="text-center">
-                                <div className="text-2xl font-bold text-primary">
-                                    {product.price_formatted}
-                                </div>
-                                {hasDiscount && (
-                                    <div className="text-sm text-muted-foreground line-through">
-                                        {product.compare_price_formatted}
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Actions */}
-                            <div className="space-y-2">
-                                <Button
-                                    onClick={() => onAddToCart(product)}
-                                    disabled={isOutOfStock}
-                                    className="w-full"
-                                >
-                                    <ShoppingCart className="mr-2 h-4 w-4" />
-                                    {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
-                                </Button>
-
-                                <div className="flex gap-2">
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={() => onToggleWishlist(product)}
-                                        className={cn(
-                                            'flex-1',
-                                            isInWishlist && 'text-red-500 border-red-500'
-                                        )}
-                                    >
-                                        <Heart className={cn('mr-2 h-4 w-4', isInWishlist && 'fill-current')} />
-                                        {isInWishlist ? 'In Wishlist' : 'Save'}
-                                    </Button>
-                                    <Button variant="outline" size="sm" asChild className="flex-1">
-                                        <Link href={`/products/${product.slug}`}>
-                                            <Eye className="mr-2 h-4 w-4" />
-                                            View
-                                        </Link>
-                                    </Button>
-                                </div>
-                            </div>
-                        </div>
-                    </CardContent>
+                    )}
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => onRemove(product.id)}
+                        className="absolute top-2 right-2 bg-background/80 hover:bg-background"
+                    >
+                        <X className="h-4 w-4" />
+                    </Button>
                 </div>
-            </Card>
-        </div>
-    );
-};
 
-export default function ComparePage() {
-    const { compareItems, removeFromCompare, clearCompare } = useCompareStore();
+                <div className="space-y-2">
+                    <h3 className="font-semibold text-lg leading-tight">{product.name}</h3>
+                    <div className="flex items-center gap-2">
+                        <div className="flex items-center">
+                            {[...Array(5)].map((_, i) => (
+                                <Star
+                                    key={i}
+                                    className={cn(
+                                        'h-4 w-4',
+                                        i < Math.floor(product.average_rating || 0)
+                                            ? 'fill-yellow-400 text-yellow-400'
+                                            : 'text-muted-foreground'
+                                    )}
+                                />
+                            ))}
+                        </div>
+                        <span className="text-sm text-muted-foreground">
+                            ({product.review_count || 0})
+                        </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <span className="text-2xl font-bold text-primary">
+                            £{product.price}
+                        </span>
+                        {product.original_price && product.original_price > product.price && (
+                            <span className="text-muted-foreground line-through">
+                                £{product.original_price}
+                            </span>
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex gap-2">
+                <Button
+                    onClick={() => onAddToCart(product)}
+                    className="flex-1"
+                    size="sm"
+                >
+                    <ShoppingCart className="mr-2 h-4 w-4" />
+                    Add to Cart
+                </Button>
+                <Button
+                    variant={isInWishlist ? "default" : "outline"}
+                    size="icon"
+                    onClick={() => onToggleWishlist(product)}
+                    className={cn(isInWishlist && 'text-red-500')}
+                >
+                    <Heart className={cn('h-4 w-4', isInWishlist && 'fill-current')} />
+                </Button>
+                <Button variant="outline" size="icon" href={`/products/${product.id}`}>
+                    <Eye className="h-4 w-4" />
+                </Button>
+            </div>
+        </CardContent>
+    </Card>
+);
+
+function ComparePage() {
+    const { items, removeFromCompare, clearCompare } = useCompareStore();
     const { addToCart } = useCartStore();
-    const { addToWishlist, removeFromWishlist, isItemInWishlist } = useWishlistStore();
+    const { items: wishlistItems, addToWishlist, removeFromWishlist } = useWishlistStore();
     const [showClearDialog, setShowClearDialog] = React.useState(false);
-    const [isClearing, setIsClearing] = React.useState(false);
 
-    const isInWishlist = (productId: number) => isItemInWishlist(productId);
-    const canAddToCompare = compareItems.length < 4;
-
-    const handleRemoveFromCompare = async (productId: number) => {
-        await removeFromCompare(productId);
+    const isInWishlist = (productId: number) => {
+        return wishlistItems.some(item => item.id === productId);
     };
 
-    const handleAddToCart = async (product: any) => {
-        try {
-            await addToCart({
-                product_id: product.id,
-                quantity: 1,
-            });
-            toast.success(`${product.name} added to cart!`);
-        } catch (error) {
-            toast.error('Failed to add to cart');
-        }
+    const handleRemoveFromCompare = (productId: number) => {
+        removeFromCompare(productId);
+        toast.success('Product removed from comparison');
     };
 
-    const handleToggleWishlist = async (product: any) => {
-        try {
-            if (isInWishlist(product.id)) {
-                await removeFromWishlist(product.id);
-            } else {
-                await addToWishlist(product);
-            }
-        } catch (error) {
-            toast.error('Failed to update wishlist');
-        }
+    const handleAddToCart = (product: any) => {
+        addToCart({
+            product_id: product.id,
+            quantity: 1,
+            variant_id: product.variants?.[0]?.id,
+        });
+        toast.success(`${product.name} added to cart`);
     };
 
-    const handleClearAll = async () => {
-        setIsClearing(true);
-        try {
-            await clearCompare();
-            setShowClearDialog(false);
-            toast.success('Comparison cleared');
-        } catch (error) {
-            toast.error('Failed to clear comparison');
-        } finally {
-            setIsClearing(false);
+    const handleToggleWishlist = (product: any) => {
+        if (isInWishlist(product.id)) {
+            removeFromWishlist(product.id);
+            toast.success(`${product.name} removed from wishlist`);
+        } else {
+            addToWishlist(product);
+            toast.success(`${product.name} added to wishlist`);
         }
     };
 
     const handleShare = async () => {
-        try {
-            await navigator.share({
-                title: 'Product Comparison',
-                text: 'Check out this product comparison',
-                url: window.location.href,
-            });
-        } catch (error) {
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: 'Product Comparison',
+                    text: `Compare ${items.length} products`,
+                    url: window.location.href,
+                });
+            } catch (error) {
+                // User cancelled sharing
+            }
+        } else {
+            // Fallback: copy to clipboard
             navigator.clipboard.writeText(window.location.href);
-            toast.success('Comparison URL copied to clipboard');
+            toast.success('Comparison link copied to clipboard');
         }
+    };
+
+    const handleClearAll = () => {
+        clearCompare();
+        setShowClearDialog(false);
+        toast.success('All products removed from comparison');
     };
 
     // Generate comparison attributes
     const getComparisonAttributes = () => {
         if (items.length === 0) return [];
 
-        const attributes = [
-            {
-                label: 'Price',
-                values: items.map(item => item.price_formatted),
-                isHighlight: true,
-            },
-            {
-                label: 'Rating',
-                values: items.map(item =>
-                    item.reviews_count > 0
-                        ? `${item.reviews_average.toFixed(1)} (${item.reviews_count} reviews)`
-                        : 'No reviews'
-                ),
-            },
-            {
-                label: 'Availability',
-                values: items.map(item => item.is_in_stock),
-            },
-            {
-                label: 'Category',
-                values: items.map(item => item.category?.name || 'Uncategorized'),
-            },
-        ];
+        const attributes: AttributeRowProps[] = [];
 
-        // Add variant attributes if available
+        // Basic attributes
+        attributes.push({
+            label: 'Price',
+            values: items.map(item => `£${item.price}`),
+            isHighlight: true,
+        });
+
+        attributes.push({
+            label: 'Rating',
+            values: items.map(item => (
+                <div className="flex items-center gap-1">
+                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    <span>{(item.average_rating || 0).toFixed(1)}</span>
+                </div>
+            )),
+        });
+
+        attributes.push({
+            label: 'Reviews',
+            values: items.map(item => item.review_count || 0),
+        });
+
+        // Check if any items have colors
         const hasColors = items.some(item => item.variants?.some((v: any) => v.attribute_name === 'Color'));
         if (hasColors) {
             attributes.push({
@@ -454,121 +392,110 @@ export default function ComparePage() {
                                         </motion.div>
                                     ))}
                                 </AnimatePresence>
-                        </div>
+                            </motion.div>
 
-                    {/* Comparison Table */}
-                    {items.length > 1 && attributes.length > 0 && (
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: 0.4 }}
-                        >
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle className="flex items-center gap-2">
-                                        <ArrowUpDown className="h-5 w-5 text-primary" />
-                                        Detailed Comparison
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent className="p-0">
-                                    <div className="overflow-x-auto">
-                                        <table className="w-full">
-                                            <thead>
-                                            <tr className="border-b bg-muted/50">
-                                                <th className="p-4 text-left font-medium text-muted-foreground">
-                                                    Specification
-                                                </th>
-                                                {items.map((product) => (
-                                                    <th key={product.id} className="p-4 text-center min-w-[200px]">
-                                                        <div className="text-sm font-medium text-foreground line-clamp-2">
-                                                            {product.name}
-                                                        </div>
-                                                    </th>
-                                                ))}
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            {attributes.map((attr, index) => (
-                                                <AttributeRow
-                                                    key={index}
-                                                    label={attr.label}
-                                                    values={attr.values}
-                                                    isHighlight={attr.isHighlight}
-                                                />
-                                            ))}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </motion.div>
-                    )}
+                            {/* Comparison Table */}
+                            {items.length > 1 && attributes.length > 0 && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.6, delay: 0.4 }}
+                                >
+                                    <Card>
+                                        <CardHeader>
+                                            <CardTitle className="flex items-center gap-2">
+                                                <ArrowUpDown className="h-5 w-5" />
+                                                Detailed Comparison
+                                            </CardTitle>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <div className="overflow-x-auto">
+                                                <table className="w-full">
+                                                    <thead>
+                                                    <tr className="border-b">
+                                                        <th className="p-4 text-left font-medium text-muted-foreground bg-muted/30">
+                                                            Feature
+                                                        </th>
+                                                        {items.map((product) => (
+                                                            <th key={product.id} className="p-4 text-center font-medium">
+                                                                {product.name}
+                                                            </th>
+                                                        ))}
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {attributes.map((attr, index) => (
+                                                        <AttributeRow
+                                                            key={index}
+                                                            label={attr.label}
+                                                            values={attr.values}
+                                                            isHighlight={attr.isHighlight}
+                                                        />
+                                                    ))}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                </motion.div>
+                            )}
 
-                    {/* Add More Products CTA */}
-                    {canAddToCompare() && (
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: 0.6 }}
-                            className="text-center"
-                        >
-                            <Card className="bg-muted/20 border-dashed">
-                                <CardContent className="p-8">
-                                    <div className="max-w-md mx-auto">
-                                        <Plus className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                                        <h3 className="text-lg font-semibold text-foreground mb-2">
-                                            Add More Products
-                                        </h3>
-                                        <p className="text-muted-foreground mb-6">
-                                            You can compare up to 4 products at once. Add more items to get
-                                            a comprehensive comparison.
-                                        </p>
-                                        <Button asChild>
-                                            <Link href="/products">
-                                                Browse Products
-                                                <ArrowRight className="ml-2 h-4 w-4" />
-                                            </Link>
+                            {/* Call to Action */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.6, delay: 0.6 }}
+                                className="text-center"
+                            >
+                                <Card className="p-8">
+                                    <h3 className="text-xl font-semibold mb-4">Ready to decide?</h3>
+                                    <p className="text-muted-foreground mb-6">
+                                        Add your favorite products to cart or continue browsing for more options.
+                                    </p>
+                                    <div className="flex gap-4 justify-center">
+                                        <Button href="/products" variant="outline">
+                                            <Package className="mr-2 h-4 w-4" />
+                                            Browse More Products
+                                        </Button>
+                                        <Button href="/cart">
+                                            <ShoppingCart className="mr-2 h-4 w-4" />
+                                            View Cart
                                         </Button>
                                     </div>
-                                </CardContent>
-                            </Card>
-                        </motion.div>
-                    )}
-                </div>
-                )}
-
-                {/* Clear Confirmation Dialog */}
-                <Dialog open={showClearDialog} onOpenChange={setShowClearDialog}>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle>Clear Comparison</DialogTitle>
-                            <DialogDescription>
-                                Are you sure you want to remove all products from comparison?
-                                This action cannot be undone.
-                            </DialogDescription>
-                        </DialogHeader>
-                        <div className="flex gap-3 mt-6">
-                            <Button
-                                variant="destructive"
-                                onClick={handleClearAll}
-                                disabled={isClearing}
-                                className="flex-1"
-                            >
-                                {isClearing ? 'Clearing...' : 'Clear All'}
-                            </Button>
-                            <Button
-                                variant="outline"
-                                onClick={() => setShowClearDialog(false)}
-                                disabled={isClearing}
-                                className="flex-1"
-                            >
-                                Cancel
-                            </Button>
+                                </Card>
+                            </motion.div>
                         </div>
-                    </DialogContent>
-                </Dialog>
-            </div>
-        </MainLayout>
-</RouteGuard>
-);
+                    )}
+
+                    {/* Clear All Dialog */}
+                    <Dialog open={showClearDialog} onOpenChange={setShowClearDialog}>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Clear All Products?</DialogTitle>
+                                <DialogDescription>
+                                    This will remove all products from your comparison. This action cannot be undone.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <div className="flex gap-3 justify-end">
+                                <Button
+                                    variant="outline"
+                                    onClick={() => setShowClearDialog(false)}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    variant="destructive"
+                                    onClick={handleClearAll}
+                                >
+                                    Clear All
+                                </Button>
+                            </div>
+                        </DialogContent>
+                    </Dialog>
+                </div>
+            </MainLayout>
+        </RouteGuard>
+    );
 }
+
+export default ComparePage;

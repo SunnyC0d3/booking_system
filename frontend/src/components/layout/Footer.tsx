@@ -181,7 +181,7 @@ export const Footer: React.FC<FooterProps> = ({className}) => {
                                     key={index}
                                     variant="outline"
                                     size="sm"
-                                    asChild
+                                   
                                     className={`${social.color} transition-colors`}
                                 >
                                     <Link href={social.href} target="_blank" rel="noopener noreferrer">

@@ -369,13 +369,13 @@ export default function PrivacyPage() {
                             className="mt-8 text-center"
                         >
                             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                                <Button asChild>
+                                <Button>
                                     <Link href="/contact">
                                         <Mail className="mr-2 h-4 w-4" />
                                         Contact Privacy Team
                                     </Link>
                                 </Button>
-                                <Button variant="outline" asChild>
+                                <Button variant="outline">
                                     <Link href="/terms">
                                         Terms of Service
                                     </Link>

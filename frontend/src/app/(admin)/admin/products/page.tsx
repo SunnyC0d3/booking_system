@@ -1,5 +1,6 @@
+'use client'
+
 import * as React from 'react';
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
@@ -60,10 +61,6 @@ import { AdminLayout, QuickStats } from '@/components/layout/AdminLayout';
 import { RouteGuard } from '@/components/auth/RouteGuard';
 import { cn } from '@/lib/cn';
 
-export const metadata: Metadata = {
-    title: 'User Management | Admin Dashboard',
-    description: 'Manage customers, staff, and user accounts.',
-};
 
 // Mock user data - replace with real API
 const mockUsers = [
@@ -271,7 +268,7 @@ export default function UsersManagementPage() {
                             Export
                         </Button>
                         <Dialog open={showUserDialog} onOpenChange={setShowUserDialog}>
-                            <DialogTrigger asChild>
+                            <DialogTrigger>
                                 <Button size="sm">
                                     <Plus className="mr-2 h-4 w-4" />
                                     Add User
@@ -472,7 +469,7 @@ export default function UsersManagementPage() {
                                                 </TableCell>
                                                 <TableCell>
                                                     <DropdownMenu>
-                                                        <DropdownMenuTrigger asChild>
+                                                        <DropdownMenuTrigger>
                                                             <Button variant="ghost" size="icon">
                                                                 <MoreHorizontal className="h-4 w-4" />
                                                             </Button>

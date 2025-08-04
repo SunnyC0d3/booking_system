@@ -282,7 +282,7 @@ export const PasswordChangeDialog: React.FC = () => {
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>
+            <DialogTrigger>
                 <Button variant="outline" className="w-full">
                     <Key className="h-4 w-4 mr-2" />
                     Change Password

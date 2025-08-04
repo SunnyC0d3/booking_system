@@ -171,7 +171,7 @@ export const DigitalLibrary: React.FC<DigitalLibraryProps> = ({
                                 <p className="text-muted-foreground mb-4">
                                     You haven't purchased any digital products yet.
                                 </p>
-                                <Button asChild>
+                                <Button>
                                     <Link href="/products?type=digital">
                                         Browse Digital Products
                                     </Link>

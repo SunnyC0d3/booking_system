@@ -53,13 +53,13 @@ const EmptyWishlist = () => (
                 on items you love. It's a great way to save items for later!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" asChild>
+                <Button size="lg">
                     <Link href="/products">
                         <ShoppingBag className="mr-2 h-4 w-4" />
                         Browse Products
                     </Link>
                 </Button>
-                <Button variant="outline" size="lg" asChild>
+                <Button variant="outline" size="lg">
                     <Link href="/collections">
                         <Eye className="mr-2 h-4 w-4" />
                         View Collections
@@ -182,7 +182,7 @@ const WishlistItem: React.FC<WishlistItemProps> = ({
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                        asChild
+                                       
                                         className="bg-white/90 hover:bg-white"
                                     >
                                         <Link href={`/products/${product.slug}`}>

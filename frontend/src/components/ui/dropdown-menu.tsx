@@ -2,13 +2,13 @@
 
 import * as React from 'react';
 import { cn } from '@/lib/cn';
-import { Check, ChevronRight, Circle } from 'lucide-react';
+import { Check, ChevronRight } from 'lucide-react';
 
 // Dropdown Context
 interface DropdownContextType {
     open: boolean;
-    setOpen: (open: boolean) => void;
     onClose: () => void;
+    onOpenChange: (open: boolean) => void;
 }
 
 const DropdownContext = React.createContext<DropdownContextType | null>(null);
@@ -21,77 +21,93 @@ const useDropdown = () => {
     return context;
 };
 
-// Dropdown Menu Root
+// Dropdown Root
 interface DropdownMenuProps {
-    children: React.ReactNode;
     open?: boolean;
     defaultOpen?: boolean;
     onOpenChange?: (open: boolean) => void;
+    children: React.ReactNode;
 }
 
 export const DropdownMenu: React.FC<DropdownMenuProps> = ({
-                                                              children,
                                                               open: controlledOpen,
                                                               defaultOpen = false,
                                                               onOpenChange,
+                                                              children,
                                                           }) => {
     const [internalOpen, setInternalOpen] = React.useState(defaultOpen);
 
     const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
 
-    const setOpen = React.useCallback((newOpen: boolean) => {
+    const handleOpenChange = React.useCallback((newOpen: boolean) => {
         if (controlledOpen === undefined) {
             setInternalOpen(newOpen);
         }
         onOpenChange?.(newOpen);
     }, [controlledOpen, onOpenChange]);
 
-    const onClose = React.useCallback(() => {
-        setOpen(false);
-    }, [setOpen]);
+    const handleClose = React.useCallback(() => {
+        handleOpenChange(false);
+    }, [handleOpenChange]);
+
+    React.useEffect(() => {
+        const handleEscape = (e: KeyboardEvent) => {
+            if (e.key === 'Escape' && open) {
+                handleClose();
+            }
+        };
+
+        const handleClickOutside = (e: MouseEvent) => {
+            // Close dropdown when clicking outside
+            if (open && !(e.target as Element)?.closest('[data-dropdown-content]')) {
+                handleClose();
+            }
+        };
+
+        if (open) {
+            document.addEventListener('keydown', handleEscape);
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('keydown', handleEscape);
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [open, handleClose]);
 
     const contextValue = React.useMemo(() => ({
         open,
-        setOpen,
-        onClose,
-    }), [open, setOpen, onClose]);
+        onClose: handleClose,
+        onOpenChange: handleOpenChange,
+    }), [open, handleClose, handleOpenChange]);
 
     return (
         <DropdownContext.Provider value={contextValue}>
-            <div className="relative inline-block text-left">
+            <div className="relative">
                 {children}
             </div>
         </DropdownContext.Provider>
     );
 };
 
-// Dropdown Trigger
+// Dropdown Trigger - SIMPLIFIED, NO ASCHILD
 interface DropdownMenuTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    asChild?: boolean;
+    children: React.ReactNode;
 }
 
 export const DropdownMenuTrigger: React.FC<DropdownMenuTriggerProps> = ({
                                                                             children,
-                                                                            asChild,
                                                                             onClick,
                                                                             ...props
                                                                         }) => {
-    const { open, setOpen } = useDropdown();
+    const { onOpenChange, open } = useDropdown();
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-        setOpen(!open);
+        onOpenChange(!open);
         onClick?.(e);
     };
 
-    if (asChild && React.isValidElement(children)) {
-        return React.cloneElement(children, {
-            onClick: (e: React.MouseEvent) => {
-                handleClick(e as React.MouseEvent<HTMLButtonElement>);
-                children.props.onClick?.(e);
-            },
-        });
-    }
-
+    // Simply render the children directly without logic
     return (
         <button onClick={handleClick} {...props}>
             {children}
@@ -123,75 +139,49 @@ export const DropdownMenuContent: React.FC<DropdownMenuContentProps> = ({
                                                                             children,
                                                                             ...props
                                                                         }) => {
-    const { open, onClose } = useDropdown();
-    const contentRef = React.useRef<HTMLDivElement>(null);
-
-    React.useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (contentRef.current && !contentRef.current.contains(event.target as Node)) {
-                onClose();
-            }
-        };
-
-        const handleEscape = (event: KeyboardEvent) => {
-            if (event.key === 'Escape') {
-                onClose();
-            }
-        };
-
-        if (open) {
-            document.addEventListener('mousedown', handleClickOutside);
-            document.addEventListener('keydown', handleEscape);
-        }
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-            document.removeEventListener('keydown', handleEscape);
-        };
-    }, [open, onClose]);
+    const { open } = useDropdown();
 
     if (!open) return null;
 
-    const alignmentClasses = {
-        start: 'left-0',
-        center: 'left-1/2 transform -translate-x-1/2',
-        end: 'right-0',
-    };
-
-    const sideClasses = {
-        top: 'bottom-full mb-1',
-        right: 'left-full top-0 ml-1',
-        bottom: 'top-full mt-1',
-        left: 'right-full top-0 mr-1',
-    };
-
     return (
-        <div
-            ref={contentRef}
-            className={cn(
-                "absolute z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95",
-                sideClasses[side],
-                alignmentClasses[align],
-                className
-            )}
-            style={{ marginTop: side === 'bottom' ? sideOffset : undefined }}
-            {...props}
-        >
-            {children}
-        </div>
+        <DropdownMenuPortal>
+            <div
+                data-dropdown-content
+                className={cn(
+                    "absolute z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+                    // Position based on side prop
+                    side === 'bottom' && 'top-full',
+                    side === 'top' && 'bottom-full',
+                    side === 'left' && 'right-full top-0',
+                    side === 'right' && 'left-full top-0',
+                    // Alignment
+                    align === 'start' && 'left-0',
+                    align === 'center' && 'left-1/2 -translate-x-1/2',
+                    align === 'end' && 'right-0',
+                    className
+                )}
+                style={{
+                    marginTop: side === 'bottom' ? sideOffset : undefined,
+                    marginBottom: side === 'top' ? sideOffset : undefined,
+                    marginLeft: side === 'right' ? sideOffset : undefined,
+                    marginRight: side === 'left' ? sideOffset : undefined
+                }}
+                {...props}
+            >
+                {children}
+            </div>
+        </DropdownMenuPortal>
     );
 };
 
-// Dropdown Item
+// Dropdown Item - SIMPLIFIED, NO ASCHILD
 interface DropdownMenuItemProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     inset?: boolean;
-    asChild?: boolean;
 }
 
 export const DropdownMenuItem: React.FC<DropdownMenuItemProps> = ({
                                                                       className,
                                                                       inset,
-                                                                      asChild,
                                                                       onClick,
                                                                       children,
                                                                       ...props
@@ -202,15 +192,6 @@ export const DropdownMenuItem: React.FC<DropdownMenuItemProps> = ({
         onClick?.(e);
         onClose();
     };
-
-    if (asChild && React.isValidElement(children)) {
-        return React.cloneElement(children, {
-            onClick: (e: React.MouseEvent) => {
-                handleClick(e as React.MouseEvent<HTMLButtonElement>);
-                children.props.onClick?.(e);
-            },
-        });
-    }
 
     return (
         <button
@@ -255,9 +236,9 @@ export const DropdownMenuCheckboxItem: React.FC<DropdownMenuCheckboxItemProps> =
             onClick={handleClick}
             {...props}
         >
-      <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-        {checked && <Check className="h-4 w-4" />}
-      </span>
+            <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+                {checked && <Check className="h-4 w-4" />}
+            </span>
             {children}
         </button>
     );
@@ -267,38 +248,27 @@ export const DropdownMenuCheckboxItem: React.FC<DropdownMenuCheckboxItemProps> =
 interface DropdownMenuRadioItemProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     value: string;
     checked?: boolean;
-    onSelect?: (value: string) => void;
 }
 
 export const DropdownMenuRadioItem: React.FC<DropdownMenuRadioItemProps> = ({
                                                                                 className,
                                                                                 children,
-                                                                                value,
                                                                                 checked = false,
-                                                                                onSelect,
-                                                                                onClick,
                                                                                 ...props
                                                                             }) => {
-    const { onClose } = useDropdown();
-
-    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-        onSelect?.(value);
-        onClick?.(e);
-        onClose();
-    };
-
     return (
         <button
             className={cn(
                 "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50",
                 className
             )}
-            onClick={handleClick}
             {...props}
         >
-      <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-        {checked && <Circle className="h-2 w-2 fill-current" />}
-      </span>
+            <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+                {checked && (
+                    <div className="h-2 w-2 rounded-full bg-current" />
+                )}
+            </span>
             {children}
         </button>
     );
@@ -352,71 +322,20 @@ export const DropdownMenuShortcut: React.FC<DropdownMenuShortcutProps> = ({
     );
 };
 
-// Dropdown Group
-interface DropdownMenuGroupProps extends React.HTMLAttributes<HTMLDivElement> {}
-
-export const DropdownMenuGroup: React.FC<DropdownMenuGroupProps> = ({
-                                                                        children,
-                                                                        ...props
-                                                                    }) => (
-    <div {...props}>
-        {children}
-    </div>
+// Sub menu components (simplified)
+export const DropdownMenuSub: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+    <div>{children}</div>
 );
 
-// Dropdown Sub (simplified)
-interface DropdownMenuSubProps {
-    children: React.ReactNode;
-    open?: boolean;
-    defaultOpen?: boolean;
-    onOpenChange?: (open: boolean) => void;
-}
-
-export const DropdownMenuSub: React.FC<DropdownMenuSubProps> = ({ children }) => {
-    return <>{children}</>;
-};
-
-// Dropdown Radio Group
-interface DropdownMenuRadioGroupProps extends React.HTMLAttributes<HTMLDivElement> {
-    value?: string;
-    onValueChange?: (value: string) => void;
-}
-
-export const DropdownMenuRadioGroup: React.FC<DropdownMenuRadioGroupProps> = ({
-                                                                                  children,
-                                                                                  value,
-                                                                                  onValueChange,
-                                                                                  ...props
-                                                                              }) => {
-    return (
-        <div {...props}>
-            {React.Children.map(children, (child) => {
-                if (React.isValidElement(child) && child.type === DropdownMenuRadioItem) {
-                    return React.cloneElement(child, {
-                        checked: child.props.value === value,
-                        onSelect: onValueChange,
-                    });
-                }
-                return child;
-            })}
-        </div>
-    );
-};
-
-// Dropdown Sub Trigger
-interface DropdownMenuSubTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    inset?: boolean;
-}
-
-export const DropdownMenuSubTrigger: React.FC<DropdownMenuSubTriggerProps> = ({
-                                                                                  className,
-                                                                                  inset,
-                                                                                  children,
-                                                                                  ...props
-                                                                              }) => (
+export const DropdownMenuSubTrigger: React.FC<DropdownMenuItemProps> = ({
+                                                                            className,
+                                                                            inset,
+                                                                            children,
+                                                                            ...props
+                                                                        }) => (
     <button
         className={cn(
-            "flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent focus:bg-accent",
+            "flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent",
             inset && "pl-8",
             className
         )}
@@ -427,18 +346,13 @@ export const DropdownMenuSubTrigger: React.FC<DropdownMenuSubTriggerProps> = ({
     </button>
 );
 
-// Dropdown Sub Content
-interface DropdownMenuSubContentProps extends React.HTMLAttributes<HTMLDivElement> {}
+export const DropdownMenuSubContent = DropdownMenuContent;
 
-export const DropdownMenuSubContent: React.FC<DropdownMenuSubContentProps> = ({
-                                                                                  className,
-                                                                                  ...props
-                                                                              }) => (
-    <div
-        className={cn(
-            "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-lg animate-in fade-in-0 zoom-in-95",
-            className
-        )}
-        {...props}
-    />
+// Radio Group (simplified)
+export const DropdownMenuRadioGroup: React.FC<{
+    children: React.ReactNode;
+    value?: string;
+    onValueChange?: (value: string) => void;
+}> = ({ children }) => (
+    <div>{children}</div>
 );

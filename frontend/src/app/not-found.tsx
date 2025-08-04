@@ -163,7 +163,7 @@ export default function NotFoundPage() {
                                                 <p className="text-sm text-muted-foreground mb-4">
                                                     {page.description}
                                                 </p>
-                                                <Button asChild variant="outline" size="sm" className="w-full">
+                                                <Button variant="outline" size="sm" className="w-full">
                                                     <Link href={page.href}>Visit Page</Link>
                                                 </Button>
                                             </CardContent>
@@ -181,7 +181,7 @@ export default function NotFoundPage() {
                             className="mb-12"
                         >
                             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                                <Button size="lg" asChild>
+                                <Button size="lg">
                                     <Link href="/">
                                         <Home className="mr-2 h-4 w-4" />
                                         Go Home
@@ -191,7 +191,7 @@ export default function NotFoundPage() {
                                     <ArrowLeft className="mr-2 h-4 w-4" />
                                     Go Back
                                 </Button>
-                                <Button variant="outline" size="lg" asChild>
+                                <Button variant="outline" size="lg">
                                     <Link href="/contact">
                                         <Mail className="mr-2 h-4 w-4" />
                                         Contact Support

@@ -286,7 +286,7 @@ export default function ServicesPage() {
                             printing and design services that combine creativity with quality craftsmanship.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <Button size="lg" asChild>
+                            <Button size="lg">
                                 <Link href="/contact">
                                     <span className="flex items-center">
                                         Start Your Project
@@ -294,7 +294,7 @@ export default function ServicesPage() {
                                     </span>
                                 </Link>
                             </Button>
-                            <Button variant="outline" size="lg" asChild>
+                            <Button variant="outline" size="lg">
                                 <Link href="#services">
                                     <span className="flex items-center">
                                         View Services
@@ -374,7 +374,7 @@ export default function ServicesPage() {
                                             ))}
                                         </div>
 
-                                        <Button asChild className="w-full group-hover:bg-primary/90 transition-colors">
+                                        <Button className="w-full group-hover:bg-primary/90 transition-colors">
                                             <Link href={service.href}>
                                                 <span className="flex items-center">
                                                     Learn More
@@ -432,7 +432,7 @@ export default function ServicesPage() {
                                                 </div>
                                             ))}
                                         </div>
-                                        <Button variant="outline" size="sm" asChild className="w-full">
+                                        <Button variant="outline" size="sm" className="w-full">
                                             <Link href={service.href}>Learn More</Link>
                                         </Button>
                                     </CardContent>
@@ -559,7 +559,7 @@ export default function ServicesPage() {
                                         <Button
                                             className={`w-full ${pkg.popular ? 'bg-primary hover:bg-primary/90' : ''}`}
                                             variant={pkg.popular ? 'default' : 'outline'}
-                                            asChild
+                                           
                                         >
                                             <Link href="/contact">
                                                 Get Started
@@ -592,13 +592,13 @@ export default function ServicesPage() {
                             with our professional services.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <Button size="lg" asChild>
+                            <Button size="lg">
                                 <Link href="/contact">
                                     <MessageCircle className="mr-2 h-4 w-4" />
                                     Start Discussion
                                 </Link>
                             </Button>
-                            <Button variant="outline" size="lg" asChild>
+                            <Button variant="outline" size="lg">
                                 <Link href="tel:+1555123456">
                                     <Phone className="mr-2 h-4 w-4" />
                                     Call for Quote

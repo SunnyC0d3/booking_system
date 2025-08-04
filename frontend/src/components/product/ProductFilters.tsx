@@ -639,7 +639,7 @@ export const MobileFiltersDialog: React.FC<MobileFiltersDialogProps> = ({
                                                                         }) => {
     return (
         <Dialog>
-            <DialogTrigger asChild>
+            <DialogTrigger>
                 {children || (
                     <Button variant="outline" size="sm">
                         <Filter className="h-4 w-4 mr-2" />

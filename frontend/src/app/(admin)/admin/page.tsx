@@ -322,7 +322,7 @@ function AdminDashboardPage() {
                                         ))}
                                     </div>
                                     <div className="mt-6 text-center">
-                                        <Button variant="outline" asChild>
+                                        <Button variant="outline">
                                             <Link href="/admin/analytics/products">
                                                 <span className="flex items-center">
                                                     View All Products
@@ -345,7 +345,7 @@ function AdminDashboardPage() {
                                             <ShoppingCart className="h-5 w-5 text-primary" />
                                             Recent Orders
                                         </CardTitle>
-                                        <Button variant="ghost" size="sm" asChild>
+                                        <Button variant="ghost" size="sm">
                                             <Link href="/admin/orders">
                                                 <span className="flex items-center">
                                                     View All
@@ -437,7 +437,7 @@ function AdminDashboardPage() {
                                     <CardTitle>Quick Actions</CardTitle>
                                 </CardHeader>
                                 <CardContent className="space-y-3">
-                                    <Button className="w-full justify-start" asChild>
+                                    <Button className="w-full justify-start">
                                         <Link href="/admin/products/new">
                                             <span className="flex items-center">
                                                 <Package className="mr-2 h-4 w-4" />
@@ -445,7 +445,7 @@ function AdminDashboardPage() {
                                             </span>
                                         </Link>
                                     </Button>
-                                    <Button variant="outline" className="w-full justify-start" asChild>
+                                    <Button variant="outline" className="w-full justify-start">
                                         <Link href="/admin/orders?status=pending">
                                             <span className="flex items-center">
                                                 <ShoppingCart className="mr-2 h-4 w-4" />
@@ -453,7 +453,7 @@ function AdminDashboardPage() {
                                             </span>
                                         </Link>
                                     </Button>
-                                    <Button variant="outline" className="w-full justify-start" asChild>
+                                    <Button variant="outline" className="w-full justify-start">
                                         <Link href="/admin/users">
                                             <span className="flex items-center">
                                                 <Users className="mr-2 h-4 w-4" />
@@ -461,7 +461,7 @@ function AdminDashboardPage() {
                                             </span>
                                         </Link>
                                     </Button>
-                                    <Button variant="outline" className="w-full justify-start" asChild>
+                                    <Button variant="outline" className="w-full justify-start">
                                         <Link href="/admin/analytics">
                                             <span className="flex items-center">
                                                 <BarChart3 className="mr-2 h-4 w-4" />
