@@ -29,6 +29,8 @@ import { ProductGrid } from '@/components/product/ProductGrid';
 import { useProductStore } from '@/stores/productStore';
 import { RouteGuard } from '@/components/auth/RouteGuard';
 import { cn } from '@/lib/cn';
+import type { Product as ApiProduct } from '@/types/api';
+import type { Product as ProductType } from '@/types/product';
 
 function CartPage() {
     const {
@@ -48,7 +50,7 @@ function CartPage() {
 
     // Fetch related/recommended products
     React.useEffect(() => {
-        fetchProducts({ featured: true, per_page: 4 });
+        fetchProducts({ per_page: 4 });
     }, [fetchProducts]);
 
     const handleClearCart = async () => {
@@ -68,17 +70,135 @@ function CartPage() {
         }
     };
 
+    // Fix: Handle cart total properly based on store implementation
+    const totalAmount = typeof total === 'number' ? total : 0;
+    const totalFormatted = typeof total === 'number'
+        ? `£${(total / 100).toFixed(2)}`
+        : '£0.00';
+
     const hasItems = items.length > 0;
     const hasIssues = items.some(item => !item.is_available || item.has_price_changed);
     const shippingThreshold = 5000; // £50 in pennies
-    const needsForFreeShipping = Math.max(0, shippingThreshold - total.amount);
+    const needsForFreeShipping = Math.max(0, shippingThreshold - totalAmount);
+
+    // Transform API products to match ProductGrid expected type
+    const transformedProducts: ProductType[] = relatedProducts.map((product: ApiProduct): ProductType => {
+        const transformCategory = (apiCategory: typeof product.category) => {
+            if (!apiCategory) return undefined;
+
+            return {
+                id: apiCategory.id,
+                name: apiCategory.name,
+                slug: `category-${apiCategory.id}`,
+                description: '',
+                products_count: 0,
+                sort_order: 0,
+                is_featured: false,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+                ...(apiCategory.parent_id && { parent_id: apiCategory.parent_id }),
+                ...(apiCategory.parent && {
+                    parent: {
+                        id: apiCategory.parent.id,
+                        name: apiCategory.parent.name,
+                        slug: `category-${apiCategory.parent.id}`,
+                        description: '',
+                        products_count: 0,
+                        sort_order: 0,
+                        is_featured: false,
+                        created_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString(),
+                        ...(apiCategory.parent.parent_id && { parent_id: apiCategory.parent.parent_id }),
+                    }
+                }),
+            };
+        };
+
+        const baseProduct: ProductType = {
+            id: product.id,
+            name: product.name,
+            slug: `product-${product.id}`,
+            description: product.description || '',
+            sku: `SKU-${product.id}`,
+            price: product.price,
+            price_formatted: product.price_formatted,
+            track_inventory: true,
+            allow_backorder: false,
+            status: 'active' as const,
+            visibility: 'public' as const,
+            featured: false,
+            gallery: (product.gallery || []).map(media => ({
+                id: media.id,
+                url: media.url,
+                ...(media.alt_text && { alt_text: media.alt_text }),
+                sort_order: 0,
+                is_featured: false,
+            })),
+            categories: product.category ? [transformCategory(product.category)!] : [],
+            tags: (product.tags || []).map(tag => ({
+                id: tag.id,
+                name: tag.name,
+                slug: `tag-${tag.id}`,
+                description: '',
+                products_count: tag.products_count || 0,
+            })),
+            variants: (product.variants || []).map(variant => ({
+                id: variant.id,
+                product_id: product.id,
+                name: variant.product_attribute?.name || 'Default',
+                value: variant.value,
+                price_adjustment: variant.additional_price || 0,
+                price_adjustment_type: 'fixed' as const,
+                sku: '',
+                sort_order: 0,
+                is_default: false,
+                attribute: {
+                    id: variant.product_attribute?.id || 0,
+                    name: variant.product_attribute?.name || 'Default',
+                    slug: `attribute-${variant.product_attribute?.id || 0}`,
+                    type: 'dropdown' as const,
+                    values: [],
+                    is_required: false,
+                    is_filterable: false,
+                    sort_order: 0,
+                },
+                ...(variant.quantity && { inventory_quantity: variant.quantity }),
+            })),
+            attributes: [],
+            reviews_count: 0,
+            reviews_average: 0,
+            created_at: product.created_at,
+            updated_at: product.updated_at,
+        };
+
+        // Add optional properties only if they exist
+        if (product.description) {
+            baseProduct.short_description = product.description;
+        }
+
+        if (product.featured_image) {
+            baseProduct.featured_image = product.featured_image;
+        }
+
+        if (product.quantity) {
+            baseProduct.inventory_quantity = product.quantity;
+        }
+
+        if (product.category) {
+            const transformedCategory = transformCategory(product.category);
+            if (transformedCategory) {
+                baseProduct.category = transformedCategory;
+            }
+        }
+
+        return baseProduct;
+    });
 
     return (
         <RouteGuard requireAuth>
             <DashboardLayout
                 title="Shopping Cart"
                 description="Review your items and proceed to checkout"
-                showBreadcrumbs
             >
                 <div className="space-y-8">
                     {/* Back to Shopping */}
@@ -198,14 +318,14 @@ function CartPage() {
                                         {/* Subtotal */}
                                         <div className="flex items-center justify-between">
                                             <span>Subtotal ({itemCount} items)</span>
-                                            <span className="font-medium">{total.formatted}</span>
+                                            <span className="font-medium">{totalFormatted}</span>
                                         </div>
 
                                         {/* Shipping */}
                                         <div className="flex items-center justify-between">
                                             <span>Shipping</span>
                                             <span className="font-medium">
-                                                {total.amount >= shippingThreshold ? (
+                                                {totalAmount >= shippingThreshold ? (
                                                     <span className="text-success">Free</span>
                                                 ) : (
                                                     'Calculated at checkout'
@@ -225,7 +345,7 @@ function CartPage() {
                                                     <div
                                                         className="h-full bg-primary transition-all duration-300"
                                                         style={{
-                                                            width: `${Math.min(100, (total.amount / shippingThreshold) * 100)}%`
+                                                            width: `${Math.min(100, (totalAmount / shippingThreshold) * 100)}%`
                                                         }}
                                                     />
                                                 </div>
@@ -235,7 +355,7 @@ function CartPage() {
                                         <div className="border-t pt-4">
                                             <div className="flex items-center justify-between text-lg font-bold">
                                                 <span>Total</span>
-                                                <span className="text-primary">{total.formatted}</span>
+                                                <span className="text-primary">{totalFormatted}</span>
                                             </div>
                                         </div>
 
@@ -281,14 +401,14 @@ function CartPage() {
                     )}
 
                     {/* Recommended Products */}
-                    {hasItems && relatedProducts.length > 0 && (
+                    {hasItems && transformedProducts.length > 0 && (
                         <Card>
                             <CardHeader>
                                 <CardTitle>You Might Also Like</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <ProductGrid
-                                    products={relatedProducts}
+                                    products={transformedProducts}
                                     columns={{ sm: 1, md: 2, lg: 3, xl: 4 }}
                                     showFilters={false}
                                     showSort={false}

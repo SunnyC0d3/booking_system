@@ -54,7 +54,10 @@ class TokenManager {
 
         try {
             // Check if token is expired (basic JWT parsing)
-            const payload = JSON.parse(atob(token.split('.')[1]));
+            const parts = token.split('.');
+            if (parts.length !== 3 || !parts[1]) return false;
+
+            const payload = JSON.parse(atob(parts[1]));
             const currentTime = Date.now() / 1000;
             return payload.exp > currentTime;
         } catch {
@@ -73,9 +76,11 @@ apiClient.interceptors.request.use(
         }
 
         // Add CSRF token if available
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-        if (csrfToken) {
-            config.headers['X-CSRF-TOKEN'] = csrfToken;
+        if (typeof document !== 'undefined') {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            if (csrfToken) {
+                config.headers['X-CSRF-TOKEN'] = csrfToken;
+            }
         }
 
         // Add request timestamp

@@ -1,12 +1,47 @@
 import { api } from './client';
-import {
+import type {
     User,
-    UpdateUserRequest,
-    ChangePasswordRequest,
-    Address,
-    UserPreferences,
-    ApiResponse
+    ChangePasswordRequest
 } from '@/types/api';
+
+interface UpdateUserRequest {
+    first_name?: string;
+    last_name?: string;
+    email?: string;
+    phone?: string;
+}
+
+interface Address {
+    id: number;
+    user_id: number;
+    type: 'billing' | 'shipping';
+    first_name: string;
+    last_name: string;
+    company?: string;
+    address_line_1: string;
+    address_line_2?: string;
+    city: string;
+    state: string;
+    postal_code: string;
+    country: string;
+    is_default: boolean;
+    created_at: string;
+    updated_at: string;
+}
+
+interface UserPreferences {
+    id: number;
+    user_id: number;
+    email_notifications: boolean;
+    sms_notifications: boolean;
+    marketing_emails: boolean;
+    currency: string;
+    language: string;
+    timezone: string;
+    theme: 'light' | 'dark' | 'auto';
+    created_at: string;
+    updated_at: string;
+}
 
 /**
  * Users API Client

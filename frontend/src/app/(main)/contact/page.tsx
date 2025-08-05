@@ -1,7 +1,6 @@
 'use client'
 
 import * as React from 'react';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
     Heart,
@@ -10,6 +9,10 @@ import {
     Lightbulb,
     Palette,
     ArrowRight,
+    MessageCircle,
+    Eye,
+    Settings,
+    Package,
 } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 import { MainLayout } from '@/components/layout';
@@ -124,20 +127,12 @@ export default function AboutPage() {
                                 From wedding invitations to custom labels, every project tells a story.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4">
-                                <Button size="lg">
-                                    <Link href="/contact">
-                                        <span className="flex items-center">
-                                            Get Started Today
-                                            <ArrowRight className="ml-2 h-4 w-4" />
-                                        </span>
-                                    </Link>
+                                <Button size="lg" href="/contact">
+                                    Get Started Today
+                                    <ArrowRight className="ml-2 h-4 w-4" />
                                 </Button>
-                                <Button variant="outline" size="lg">
-                                    <Link href="/services">
-                                        <span className="flex items-center">
-                                            Our Services
-                                        </span>
-                                    </Link>
+                                <Button variant="outline" size="lg" href="/services">
+                                    Our Services
                                 </Button>
                             </div>
                         </motion.div>
@@ -341,6 +336,49 @@ export default function AboutPage() {
                 </div>
             </section>
 
+            {/* Process Section - Now using the processSteps */}
+            <section className="py-20 bg-background">
+                <div className="container mx-auto px-4">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        viewport={{ once: true }}
+                        className="text-center mb-16"
+                    >
+                        <h2 className="text-3xl lg:text-4xl font-bold mb-6">Our Process</h2>
+                        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                            From initial consultation to final delivery, we guide you through every step of bringing your vision to life.
+                        </p>
+                    </motion.div>
+
+                    <div className="grid md:grid-cols-2 xl:grid-cols-5 gap-8">
+                        {processSteps.map((step, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, delay: index * 0.1 }}
+                                viewport={{ once: true }}
+                            >
+                                <Card className="h-full text-center hover:shadow-lg transition-all duration-300">
+                                    <CardContent className="p-6">
+                                        <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                            <step.icon className="h-8 w-8 text-primary" />
+                                        </div>
+                                        <div className="text-sm font-bold text-primary mb-2">{step.step}</div>
+                                        <h3 className="text-lg font-bold mb-3">{step.title}</h3>
+                                        <p className="text-muted-foreground text-sm leading-relaxed">
+                                            {step.description}
+                                        </p>
+                                    </CardContent>
+                                </Card>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
             {/* Call to Action */}
             <section className="py-20 bg-primary text-primary-foreground">
                 <div className="container mx-auto px-4">
@@ -360,16 +398,12 @@ export default function AboutPage() {
                             that exceeds your expectations.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <Button size="lg" variant="secondary">
-                                <Link href="/contact">
-                                    Start Your Project
-                                    <ArrowRight className="ml-2 h-4 w-4" />
-                                </Link>
+                            <Button size="lg" variant="secondary" href="/contact">
+                                Start Your Project
+                                <ArrowRight className="ml-2 h-4 w-4" />
                             </Button>
-                            <Button size="lg" variant="outline">
-                                <Link href="/products">
-                                    View Our Work
-                                </Link>
+                            <Button size="lg" variant="outline" href="/products">
+                                View Our Work
                             </Button>
                         </div>
                     </motion.div>

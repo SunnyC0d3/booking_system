@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { securityMiddleware } from '@/middleware/security';
 
 // Route configuration
-const config = {
+const routeConfig = {
     // Protected routes requiring authentication
     protectedRoutes: [
         '/dashboard',
@@ -102,11 +102,11 @@ async function handleAuthentication(request: NextRequest): Promise<NextResponse 
     const isAdmin = isAuthenticated && await checkAdminRole(token);
 
     // Check if route requires authentication
-    const requiresAuth = config.protectedRoutes.some(route =>
+    const requiresAuth = routeConfig.protectedRoutes.some(route =>
         pathname.startsWith(route)
     );
 
-    const requiresAdmin = config.adminRoutes.some(route =>
+    const requiresAdmin = routeConfig.adminRoutes.some(route =>
         pathname.startsWith(route)
     );
 
@@ -160,8 +160,6 @@ async function handleRouteSpecific(request: NextRequest): Promise<NextResponse |
 
 // API routes handler
 async function handleApiRoutes(request: NextRequest): Promise<NextResponse | null> {
-    const { pathname } = request.nextUrl;
-
     // Add API-specific headers
     const response = NextResponse.next();
 
@@ -185,7 +183,7 @@ async function handleApiRoutes(request: NextRequest): Promise<NextResponse | nul
 }
 
 // Admin routes handler
-async function handleAdminRoutes(request: NextRequest): Promise<NextResponse | null> {
+async function handleAdminRoutes(_request: NextRequest): Promise<NextResponse | null> {
     // Add admin-specific security headers
     const response = NextResponse.next();
 
@@ -242,11 +240,17 @@ function getAuthToken(request: NextRequest): string | null {
 
 async function validateToken(token: string): Promise<boolean> {
     try {
+        // Validate JWT token structure first
+        const parts = token.split('.');
+        if (parts.length !== 3 || !parts[1]) {
+            return false;
+        }
+
         // For JWT tokens, verify signature and check expiration
-        const payload = JSON.parse(atob(token.split('.')[1]));
+        const payload = JSON.parse(atob(parts[1]));
         const currentTime = Date.now() / 1000;
 
-        return payload.exp > currentTime;
+        return payload.exp && payload.exp > currentTime;
     } catch {
         return false;
     }
@@ -254,7 +258,13 @@ async function validateToken(token: string): Promise<boolean> {
 
 async function checkAdminRole(token: string): Promise<boolean> {
     try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
+        // Validate JWT token structure first
+        const parts = token.split('.');
+        if (parts.length !== 3 || !parts[1]) {
+            return false;
+        }
+
+        const payload = JSON.parse(atob(parts[1]));
         return payload.role === 'admin' || payload.roles?.includes('admin');
     } catch {
         return false;
@@ -262,18 +272,8 @@ async function checkAdminRole(token: string): Promise<boolean> {
 }
 
 // Export middleware config
-export const middlewareConfig = {
+export const config = {
     matcher: [
-        /*
-         * Match all request paths except for the ones starting with:
-         * - api (API routes)
-         * - _next/static (static files)
-         * - _next/image (image optimization files)
-         * - favicon.ico (favicon file)
-         */
-        '/((?!api|_next/static|_next/image|favicon.ico).*)',
+        '/((?!api|_next/static|_next/image|favicon.ico|public).*)',
     ],
 };
-
-// Re-export the config as the default export for Next.js
-export { middlewareConfig as config };

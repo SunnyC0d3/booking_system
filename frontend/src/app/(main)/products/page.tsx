@@ -21,7 +21,6 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
         <DashboardLayout
             title="Products"
             description="Discover our creative collection of labels, invitations, and custom designs"
-            showBreadcrumbs
         >
             <Suspense fallback={<ProductsPageSkeleton />}>
                 <ProductsClient initialSearchParams={params} />

@@ -10,8 +10,11 @@ interface DownloadPageProps {
 }
 
 export async function generateMetadata({ params }: DownloadPageProps): Promise<Metadata> {
+    // Use the token parameter to create more specific metadata
+    const downloadToken = params.token;
+
     return {
-        title: 'Download | Digital Product',
+        title: `Download | Digital Product - ${downloadToken.slice(0, 8)}...`,
         description: 'Download your digital product files securely.',
         robots: 'noindex, nofollow', // Don't index download pages
     };

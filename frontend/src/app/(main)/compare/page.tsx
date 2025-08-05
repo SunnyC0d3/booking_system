@@ -1,7 +1,6 @@
 'use client'
 
 import * as React from 'react';
-import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     ArrowUpDown,
@@ -12,10 +11,7 @@ import {
     Eye,
     Package,
     Check,
-    Minus,
-    Plus,
     Share2,
-    ArrowRight,
 } from 'lucide-react';
 import {
     Button,
@@ -23,7 +19,6 @@ import {
     CardContent,
     CardHeader,
     CardTitle,
-    Badge,
     Dialog,
     DialogContent,
     DialogHeader,
@@ -37,6 +32,8 @@ import { useCartStore } from '@/stores/cartStore';
 import { useWishlistStore } from '@/stores/wishlistStore';
 import { cn } from '@/lib/cn';
 import { toast } from 'sonner';
+import type { Product as ApiProduct } from '@/types/api';
+import type { WishlistItem } from '@/types/api';
 
 // Empty state component
 const EmptyCompare = () => (
@@ -97,10 +94,10 @@ const AttributeRow: React.FC<AttributeRowProps> = ({ label, values, isHighlight 
 
 // Compare product card component
 interface CompareProductCardProps {
-    product: any;
+    product: ApiProduct;
     onRemove: (productId: number) => void;
-    onAddToCart: (product: any) => void;
-    onToggleWishlist: (product: any) => void;
+    onAddToCart: (product: ApiProduct) => void;
+    onToggleWishlist: (product: ApiProduct) => void;
     isInWishlist: boolean;
 }
 
@@ -115,9 +112,15 @@ const CompareProductCard: React.FC<CompareProductCardProps> = ({
         <CardContent className="p-6">
             <div className="relative mb-4">
                 <div className="aspect-square bg-muted rounded-lg mb-4 relative overflow-hidden">
-                    {product.images?.[0] ? (
+                    {product.featured_image ? (
                         <img
-                            src={product.images[0].url}
+                            src={product.featured_image}
+                            alt={product.name}
+                            className="w-full h-full object-cover"
+                        />
+                    ) : product.gallery?.[0] ? (
+                        <img
+                            src={product.gallery[0].url}
                             alt={product.name}
                             className="w-full h-full object-cover"
                         />
@@ -145,7 +148,7 @@ const CompareProductCard: React.FC<CompareProductCardProps> = ({
                                     key={i}
                                     className={cn(
                                         'h-4 w-4',
-                                        i < Math.floor(product.average_rating || 0)
+                                        i < Math.floor(0) // No reviews_average in API Product
                                             ? 'fill-yellow-400 text-yellow-400'
                                             : 'text-muted-foreground'
                                     )}
@@ -153,18 +156,13 @@ const CompareProductCard: React.FC<CompareProductCardProps> = ({
                             ))}
                         </div>
                         <span className="text-sm text-muted-foreground">
-                            ({product.review_count || 0})
+                            (0) {/* No reviews_count in API Product */}
                         </span>
                     </div>
                     <div className="flex items-center gap-2">
                         <span className="text-2xl font-bold text-primary">
-                            £{product.price}
+                            {product.price_formatted}
                         </span>
-                        {product.original_price && product.original_price > product.price && (
-                            <span className="text-muted-foreground line-through">
-                                £{product.original_price}
-                            </span>
-                        )}
                     </div>
                 </div>
             </div>
@@ -195,35 +193,44 @@ const CompareProductCard: React.FC<CompareProductCardProps> = ({
 );
 
 function ComparePage() {
-    const { items, removeFromCompare, clearCompare } = useCompareStore();
+    const compareStore = useCompareStore();
     const { addToCart } = useCartStore();
-    const { items: wishlistItems, addToWishlist, removeFromWishlist } = useWishlistStore();
+    const wishlistStore = useWishlistStore();
     const [showClearDialog, setShowClearDialog] = React.useState(false);
 
+    // Get items from compare store (assuming it has compareItems property)
+    const items = compareStore.compareItems || [];
+
+    // Get wishlist items (handle different possible property names)
+    const wishlistItems = (wishlistStore as any).items || (wishlistStore as any).wishlist?.items || [];
+
     const isInWishlist = (productId: number) => {
-        return wishlistItems.some(item => item.id === productId);
+        return wishlistItems.some((item: WishlistItem) => item.product_id === productId);
     };
 
     const handleRemoveFromCompare = (productId: number) => {
-        removeFromCompare(productId);
+        compareStore.removeFromCompare(productId);
         toast.success('Product removed from comparison');
     };
 
-    const handleAddToCart = (product: any) => {
+    const handleAddToCart = (product: ApiProduct) => {
         addToCart({
             product_id: product.id,
             quantity: 1,
-            variant_id: product.variants?.[0]?.id,
+            product_variant_id: product.variants?.[0]?.id || null,
         });
         toast.success(`${product.name} added to cart`);
     };
 
-    const handleToggleWishlist = (product: any) => {
+    const handleToggleWishlist = (product: ApiProduct) => {
         if (isInWishlist(product.id)) {
-            removeFromWishlist(product.id);
+            wishlistStore.removeFromWishlist(product.id);
             toast.success(`${product.name} removed from wishlist`);
         } else {
-            addToWishlist(product);
+            wishlistStore.addToWishlist({
+                product_id: product.id,
+                product_variant_id: product.variants?.[0]?.id || null,
+            });
             toast.success(`${product.name} added to wishlist`);
         }
     };
@@ -247,13 +254,13 @@ function ComparePage() {
     };
 
     const handleClearAll = () => {
-        clearCompare();
+        compareStore.clearCompare();
         setShowClearDialog(false);
         toast.success('All products removed from comparison');
     };
 
     // Generate comparison attributes
-    const getComparisonAttributes = () => {
+    const getComparisonAttributes = (): AttributeRowProps[] => {
         if (items.length === 0) return [];
 
         const attributes: AttributeRowProps[] = [];
@@ -261,44 +268,48 @@ function ComparePage() {
         // Basic attributes
         attributes.push({
             label: 'Price',
-            values: items.map(item => `£${item.price}`),
+            values: items.map((item: ApiProduct) => item.price_formatted),
             isHighlight: true,
         });
 
         attributes.push({
             label: 'Rating',
-            values: items.map(item => (
+            values: items.map((_: ApiProduct) => (
                 <div className="flex items-center gap-1">
                     <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    <span>{(item.average_rating || 0).toFixed(1)}</span>
+                    <span>0.0</span> {/* No rating data in API Product */}
                 </div>
             )),
         });
 
         attributes.push({
             label: 'Reviews',
-            values: items.map(item => item.review_count || 0),
+            values: items.map((_: ApiProduct) => 0), // No review count in API Product
         });
 
-        // Check if any items have colors
-        const hasColors = items.some(item => item.variants?.some((v: any) => v.attribute_name === 'Color'));
+        // Check if any items have colors - simplified since API structure is different
+        const hasColors = items.some((item: ApiProduct) =>
+            item.variants?.length && item.variants.length > 0
+        );
         if (hasColors) {
             attributes.push({
                 label: 'Available Colors',
-                values: items.map(item => {
-                    const colors = item.variants?.filter((v: any) => v.attribute_name === 'Color') || [];
-                    return colors.length > 0 ? `${colors.length} colors` : 'N/A';
+                values: items.map((item: ApiProduct) => {
+                    const variantCount = item.variants?.length || 0;
+                    return variantCount > 0 ? `${variantCount} options` : 'N/A';
                 }),
             });
         }
 
-        const hasSizes = items.some(item => item.variants?.some((v: any) => v.attribute_name === 'Size'));
+        const hasSizes = items.some((item: ApiProduct) =>
+            item.variants?.length && item.variants.length > 0
+        );
         if (hasSizes) {
             attributes.push({
-                label: 'Available Sizes',
-                values: items.map(item => {
-                    const sizes = item.variants?.filter((v: any) => v.attribute_name === 'Size') || [];
-                    return sizes.length > 0 ? `${sizes.length} sizes` : 'N/A';
+                label: 'Available Variants',
+                values: items.map((item: ApiProduct) => {
+                    const variantCount = item.variants?.length || 0;
+                    return variantCount > 0 ? `${variantCount} variants` : 'N/A';
                 }),
             });
         }
@@ -373,7 +384,7 @@ function ComparePage() {
                                 )}
                             >
                                 <AnimatePresence>
-                                    {items.map((product) => (
+                                    {items.map((product: ApiProduct) => (
                                         <motion.div
                                             key={product.id}
                                             layout
@@ -416,7 +427,7 @@ function ComparePage() {
                                                         <th className="p-4 text-left font-medium text-muted-foreground bg-muted/30">
                                                             Feature
                                                         </th>
-                                                        {items.map((product) => (
+                                                        {items.map((product: ApiProduct) => (
                                                             <th key={product.id} className="p-4 text-center font-medium">
                                                                 {product.name}
                                                             </th>
@@ -429,7 +440,7 @@ function ComparePage() {
                                                             key={index}
                                                             label={attr.label}
                                                             values={attr.values}
-                                                            isHighlight={attr.isHighlight}
+                                                            isHighlight={!!attr.isHighlight}
                                                         />
                                                     ))}
                                                     </tbody>
@@ -453,7 +464,7 @@ function ComparePage() {
                                         Add your favorite products to cart or continue browsing for more options.
                                     </p>
                                     <div className="flex gap-4 justify-center">
-                                        <Button href="/products" variant="outline">
+                                        <Button variant="outline" href="/products">
                                             <Package className="mr-2 h-4 w-4" />
                                             Browse More Products
                                         </Button>

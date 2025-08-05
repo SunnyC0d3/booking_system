@@ -1,5 +1,6 @@
+'use client'
+
 import * as React from 'react';
-import { Metadata } from 'next';
 import { DashboardLayout } from '@/components/layout';
 import { RouteGuard } from '@/components/auth/RouteGuard';
 import {
@@ -8,11 +9,6 @@ import {
     PreferencesCard
 } from '@/components/dashboard/UserProfile';
 import { useAuth } from '@/stores/authStore';
-
-export const metadata: Metadata = {
-    title: 'Profile | Creative Business',
-    description: 'Manage your profile information and account settings.',
-};
 
 function ProfilePage() {
     const { user } = useAuth();
@@ -26,7 +22,6 @@ function ProfilePage() {
             <DashboardLayout
                 title="Profile Settings"
                 description="Manage your personal information and account preferences"
-                showBreadcrumbs
             >
                 <div className="space-y-8">
                     {/* Profile Information */}

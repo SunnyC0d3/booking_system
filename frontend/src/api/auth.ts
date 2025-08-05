@@ -1,3 +1,21 @@
+import { api } from './client';
+import type {
+    LoginRequest,
+    RegisterRequest,
+    AuthResponse,
+    RefreshTokenResponse,
+    ForgotPasswordRequest,
+    ResetPasswordRequest,
+    PasswordResetResponse,
+    ChangePasswordRequest,
+    VerifyEmailRequest,
+    User,
+    UserPreferences,
+    SecurityEvent,
+    SessionInfo,
+    ApiResponse
+} from '@/types/auth';
+
 /**
  * Authentication API functions
  */

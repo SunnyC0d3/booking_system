@@ -4,12 +4,10 @@ import * as React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
-    Heart,
     Users,
     Award,
     Lightbulb,
     Palette,
-    Star,
     ArrowRight,
     Check,
     Mail,

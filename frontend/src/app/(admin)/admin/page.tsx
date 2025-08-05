@@ -10,7 +10,6 @@ import {
     DollarSign,
     TrendingUp,
     TrendingDown,
-    Eye,
     Clock,
     Star,
     AlertTriangle,
@@ -18,7 +17,6 @@ import {
     ArrowRight,
     Calendar,
     BarChart3,
-    PieChart,
     Activity,
 } from 'lucide-react';
 import {
@@ -27,14 +25,12 @@ import {
     CardContent,
     CardHeader,
     CardTitle,
-    Progress,
     Badge,
     Tabs,
-    TabsContent,
     TabsList,
     TabsTrigger,
 } from '@/components/ui';
-import { AdminLayout, QuickStats } from '@/components/layout/AdminLayout';
+import { MainLayout } from '@/components/layout';
 import { RouteGuard } from '@/components/auth/RouteGuard';
 
 // Mock data - replace with real API calls
@@ -42,34 +38,30 @@ const dashboardStats = [
     {
         title: 'Total Revenue',
         value: '£24,580',
-        change: '+12% from last month',
-        trend: 'up' as const,
+        change: { value: 12, type: 'increase' as const, period: 'from last month' },
         icon: DollarSign,
-        color: 'bg-green-500',
+        color: 'green' as const,
     },
     {
         title: 'Total Orders',
         value: '1,234',
-        change: '+8% from last month',
-        trend: 'up' as const,
+        change: { value: 8, type: 'increase' as const, period: 'from last month' },
         icon: ShoppingCart,
-        color: 'bg-blue-500',
+        color: 'blue' as const,
     },
     {
         title: 'Total Customers',
         value: '892',
-        change: '+15% from last month',
-        trend: 'up' as const,
+        change: { value: 15, type: 'increase' as const, period: 'from last month' },
         icon: Users,
-        color: 'bg-purple-500',
+        color: 'purple' as const,
     },
     {
         title: 'Products',
         value: '567',
-        change: '+5 new this week',
-        trend: 'up' as const,
+        change: { value: 5, type: 'increase' as const, period: 'new this week' },
         icon: Package,
-        color: 'bg-orange-500',
+        color: 'orange' as const,
     },
 ];
 
@@ -225,25 +217,53 @@ const getTrendIcon = (trend: string) => {
     }
 };
 
+// QuickStats component
+const QuickStats = ({ stats }: { stats: typeof dashboardStats }) => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {stats.map((stat, index) => (
+            <Card key={index}>
+                <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-sm font-medium text-gray-600">{stat.title}</p>
+                            <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+                            <p className="text-xs text-gray-500 mt-1">
+                                +{stat.change.value}% {stat.change.period}
+                            </p>
+                        </div>
+                        {stat.icon && (
+                            <div className={`p-3 rounded-full bg-${stat.color}-100`}>
+                                <stat.icon className={`h-6 w-6 text-${stat.color}-600`} />
+                            </div>
+                        )}
+                    </div>
+                </CardContent>
+            </Card>
+        ))}
+    </div>
+);
+
 function AdminDashboardPage() {
     return (
         <RouteGuard requireAuth requiredRoles={['admin', 'super admin']}>
-            <AdminLayout
-                title="Dashboard"
-                description="Welcome back! Here's what's happening with your business today."
-                actions={
-                    <div className="flex items-center gap-2">
-                        <Button variant="outline" size="sm">
-                            <Calendar className="mr-2 h-4 w-4" />
-                            Last 30 days
-                        </Button>
-                        <Button size="sm">
-                            Export Report
-                        </Button>
+            <MainLayout>
+                <div className="container mx-auto p-6 space-y-8">
+                    <div className="flex justify-between items-center">
+                        <div>
+                            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+                            <p className="text-gray-600">Welcome back! Here's what's happening with your business today.</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Button variant="outline" size="sm">
+                                <Calendar className="mr-2 h-4 w-4" />
+                                Last 30 days
+                            </Button>
+                            <Button size="sm">
+                                Export Report
+                            </Button>
+                        </div>
                     </div>
-                }
-            >
-                <div className="space-y-8">
+
                     {/* Quick Stats */}
                     <QuickStats stats={dashboardStats} />
 
@@ -474,7 +494,7 @@ function AdminDashboardPage() {
                         </div>
                     </div>
                 </div>
-            </AdminLayout>
+            </MainLayout>
         </RouteGuard>
     );
 }

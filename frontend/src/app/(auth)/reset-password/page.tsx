@@ -1,21 +1,17 @@
+'use client'
+
 import * as React from 'react';
-import { Metadata } from 'next';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Lock, CheckCircle, Eye, EyeOff } from 'lucide-react';
+import { Lock, Eye, EyeOff } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input } from '@/components/ui';
 import { AuthLayout } from '@/components/layout';
 import { useAuth } from '@/stores/authStore';
 import { cn } from '@/lib/cn';
 import { toast } from 'sonner';
-
-export const metadata: Metadata = {
-    title: 'Reset Password | Creative Business',
-    description: 'Create a new password for your account.',
-};
 
 const resetPasswordSchema = z.object({
     password: z
@@ -35,7 +31,7 @@ type ResetPasswordForm = z.infer<typeof resetPasswordSchema>;
 function ResetPasswordPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { resetPassword, isLoading } = useAuth();
+    const { resetPassword } = useAuth();
     const [showPassword, setShowPassword] = React.useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
 
@@ -92,10 +88,7 @@ function ResetPasswordPage() {
     const strengthColors = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-blue-500', 'bg-green-500'];
 
     return (
-        <AuthLayout
-            title="Reset Your Password"
-            description="Enter your new password below"
-        >
+        <AuthLayout title="Reset Your Password">
             <Card className="w-full max-w-md mx-auto">
                 <CardHeader className="text-center">
                     <motion.div

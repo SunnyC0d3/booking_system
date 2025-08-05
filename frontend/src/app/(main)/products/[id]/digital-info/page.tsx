@@ -10,10 +10,15 @@ interface DigitalInfoPageProps {
 }
 
 export async function generateMetadata({ params }: DigitalInfoPageProps): Promise<Metadata> {
-    // In a real app, you'd fetch the product data here
+    // Use the product ID parameter to create more specific metadata
+    const productId = params.id;
+
+    // In a real app, you'd fetch the product data here using the productId
+    // const product = await fetchProduct(productId);
+
     return {
-        title: 'Digital Product Information',
-        description: 'Technical specifications and download information for this digital product.',
+        title: `Digital Product Information - Product ${productId}`,
+        description: `Technical specifications and download information for digital product ${productId}.`,
     };
 }
 

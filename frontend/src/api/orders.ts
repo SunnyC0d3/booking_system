@@ -1,12 +1,27 @@
 import { api } from './client';
-import {
-    Order,
-    OrderItem,
-    CreateOrderRequest,
-    UpdateOrderRequest,
-    ApiResponse,
-    PaginatedResponse
-} from '@/types/api';
+import type { Order } from '@/types/api';
+
+interface CreateOrderRequest {
+    shipping_address_id?: number;
+    billing_address_id?: number;
+    payment_method_id?: number;
+    notes?: string;
+}
+
+interface UpdateOrderRequest {
+    status?: string;
+    notes?: string;
+}
+
+interface PaginatedResponse<T> {
+    data: T[];
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+    from: number;
+    to: number;
+}
 
 export interface OrderListResponse extends PaginatedResponse<Order> {}
 

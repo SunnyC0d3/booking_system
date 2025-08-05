@@ -5,23 +5,17 @@ import { motion } from 'framer-motion';
 import {
     ShoppingCart,
     Search,
-    Filter,
     Download,
     Eye,
     Edit,
     Truck,
-    CheckCircle,
     Clock,
-    AlertTriangle,
     Package,
     CreditCard,
     User,
-    Calendar,
     MoreHorizontal,
     RefreshCw,
     Mail,
-    Phone,
-    MapPin,
     FileText,
 } from 'lucide-react';
 import {
@@ -42,7 +36,6 @@ import {
     DialogContent,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
     Select,
     SelectContent,
     SelectItem,
@@ -60,7 +53,7 @@ import {
     TabsList,
     TabsTrigger,
 } from '@/components/ui';
-import { AdminLayout, QuickStats } from '@/components/layout/AdminLayout';
+import { MainLayout } from '@/components/layout';
 import { RouteGuard } from '@/components/auth/RouteGuard';
 import { cn } from '@/lib/cn';
 
@@ -121,121 +114,36 @@ const mockOrders = [
         tracking_number: 'TRK-123456789',
         notes: '',
     },
-    {
-        id: 'ORD-003',
-        customer: {
-            id: 3,
-            name: 'Emily Rodriguez',
-            email: 'emily@example.com',
-            phone: '+44 20 7123 4569',
-            avatar: '',
-        },
-        status: 'completed',
-        payment_status: 'paid',
-        total: 32.75,
-        items_count: 1,
-        shipping_address: {
-            line1: '789 Oak Avenue',
-            city: 'Birmingham',
-            postcode: 'B1 1AA',
-            country: 'UK',
-        },
-        created_at: '2025-01-26T16:45:00Z',
-        updated_at: '2025-01-27T10:20:00Z',
-        products: [
-            { name: 'Birthday Gift Tags', quantity: 25, price: 32.75 },
-        ],
-        tracking_number: 'TRK-987654321',
-        notes: '',
-    },
-    {
-        id: 'ORD-004',
-        customer: {
-            id: 4,
-            name: 'David Wilson',
-            email: 'david@example.com',
-            phone: '+44 20 7123 4570',
-            avatar: '',
-        },
-        status: 'pending',
-        payment_status: 'pending',
-        total: 45.20,
-        items_count: 1,
-        shipping_address: {
-            line1: '321 High Street',
-            city: 'Liverpool',
-            postcode: 'L1 1AA',
-            country: 'UK',
-        },
-        created_at: '2025-01-28T08:15:00Z',
-        updated_at: '2025-01-28T08:15:00Z',
-        products: [
-            { name: 'Thank You Stickers', quantity: 100, price: 45.20 },
-        ],
-        tracking_number: null,
-        notes: 'Payment pending - follow up required',
-    },
-    {
-        id: 'ORD-005',
-        customer: {
-            id: 5,
-            name: 'Lisa Thompson',
-            email: 'lisa@example.com',
-            phone: '+44 20 7123 4571',
-            avatar: '',
-        },
-        status: 'cancelled',
-        payment_status: 'refunded',
-        total: 156.80,
-        items_count: 3,
-        shipping_address: {
-            line1: '654 Garden Road',
-            city: 'Edinburgh',
-            postcode: 'EH1 1AA',
-            country: 'UK',
-        },
-        created_at: '2025-01-25T12:00:00Z',
-        updated_at: '2025-01-26T14:30:00Z',
-        products: [
-            { name: 'Corporate Greeting Cards', quantity: 100, price: 156.80 },
-        ],
-        tracking_number: null,
-        notes: 'Customer requested cancellation - refund processed',
-    },
 ];
 
 const orderStats = [
     {
         title: 'Total Orders',
         value: '1,234',
-        change: '+8% from last month',
-        trend: 'up' as const,
+        change: { value: 8, type: 'increase' as const, period: 'from last month' },
         icon: ShoppingCart,
-        color: 'bg-blue-500',
+        color: 'blue' as const,
     },
     {
         title: 'Pending Orders',
         value: '47',
-        change: '+12 since yesterday',
-        trend: 'up' as const,
+        change: { value: 12, type: 'increase' as const, period: 'since yesterday' },
         icon: Clock,
-        color: 'bg-orange-500',
+        color: 'orange' as const,
     },
     {
         title: 'Revenue Today',
         value: '£2,456',
-        change: '+15% vs yesterday',
-        trend: 'up' as const,
+        change: { value: 15, type: 'increase' as const, period: 'vs yesterday' },
         icon: CreditCard,
-        color: 'bg-green-500',
+        color: 'green' as const,
     },
     {
         title: 'Avg Order Value',
         value: '£89.50',
-        change: '+3% from last week',
-        trend: 'up' as const,
+        change: { value: 3, type: 'increase' as const, period: 'from last week' },
         icon: Package,
-        color: 'bg-purple-500',
+        color: 'purple' as const,
     },
 ];
 
@@ -290,8 +198,34 @@ const formatDate = (dateString: string) => {
     });
 };
 
+// QuickStats component
+const QuickStats = ({ stats }: { stats: typeof orderStats }) => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {stats.map((stat, index) => (
+            <Card key={index}>
+                <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-sm font-medium text-gray-600">{stat.title}</p>
+                            <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+                            <p className="text-xs text-gray-500 mt-1">
+                                +{stat.change.value}% {stat.change.period}
+                            </p>
+                        </div>
+                        {stat.icon && (
+                            <div className={`p-3 rounded-full bg-${stat.color}-100`}>
+                                <stat.icon className={`h-6 w-6 text-${stat.color}-600`} />
+                            </div>
+                        )}
+                    </div>
+                </CardContent>
+            </Card>
+        ))}
+    </div>
+);
+
 function OrdersManagementPage() {
-    const [orders, setOrders] = React.useState(mockOrders);
+    const [orders] = React.useState(mockOrders);
     const [searchQuery, setSearchQuery] = React.useState('');
     const [statusFilter, setStatusFilter] = React.useState('all');
     const [paymentFilter, setPaymentFilter] = React.useState('all');
@@ -328,13 +262,11 @@ function OrdersManagementPage() {
 
     const handleBulkAction = (action: string) => {
         console.log(`Bulk ${action} for orders:`, selectedOrders);
-        // Implement bulk actions
         setSelectedOrders([]);
     };
 
     const handleOrderAction = (orderId: string, action: string) => {
         console.log(`${action} order:`, orderId);
-        // Implement individual order actions
     };
 
     const handleViewOrder = (order: any) => {
@@ -344,23 +276,25 @@ function OrdersManagementPage() {
 
     return (
         <RouteGuard requireAuth requiredRoles={['admin', 'super admin']}>
-            <AdminLayout
-                title="Order Management"
-                description="Manage orders, track shipments, and process payments."
-                actions={
-                    <div className="flex items-center gap-2">
-                        <Button variant="outline" size="sm">
-                            <Download className="mr-2 h-4 w-4" />
-                            Export
-                        </Button>
-                        <Button variant="outline" size="sm">
-                            <RefreshCw className="mr-2 h-4 w-4" />
-                            Refresh
-                        </Button>
+            <MainLayout>
+                <div className="container mx-auto p-6 space-y-8">
+                    <div className="flex justify-between items-center">
+                        <div>
+                            <h1 className="text-3xl font-bold text-gray-900">Order Management</h1>
+                            <p className="text-gray-600">Manage orders, track shipments, and process payments.</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Button variant="outline" size="sm">
+                                <Download className="mr-2 h-4 w-4" />
+                                Export
+                            </Button>
+                            <Button variant="outline" size="sm">
+                                <RefreshCw className="mr-2 h-4 w-4" />
+                                Refresh
+                            </Button>
+                        </div>
                     </div>
-                }
-            >
-                <div className="space-y-8">
+
                     {/* Stats */}
                     <QuickStats stats={orderStats} />
 
@@ -374,7 +308,6 @@ function OrdersManagementPage() {
                                 </CardTitle>
 
                                 <div className="flex flex-col sm:flex-row gap-4">
-                                    {/* Search */}
                                     <div className="relative">
                                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                                         <Input
@@ -385,7 +318,6 @@ function OrdersManagementPage() {
                                         />
                                     </div>
 
-                                    {/* Status Filter */}
                                     <Select value={statusFilter} onValueChange={setStatusFilter}>
                                         <SelectTrigger className="w-full sm:w-40">
                                             <SelectValue placeholder="All Status" />
@@ -400,7 +332,6 @@ function OrdersManagementPage() {
                                         </SelectContent>
                                     </Select>
 
-                                    {/* Payment Filter */}
                                     <Select value={paymentFilter} onValueChange={setPaymentFilter}>
                                         <SelectTrigger className="w-full sm:w-40">
                                             <SelectValue placeholder="All Payments" />
@@ -458,7 +389,6 @@ function OrdersManagementPage() {
                         </CardHeader>
 
                         <CardContent className="p-0">
-                            {/* Orders Table */}
                             <div className="overflow-x-auto">
                                 <Table>
                                     <TableHeader>
@@ -703,7 +633,7 @@ function OrdersManagementPage() {
                         </DialogContent>
                     </Dialog>
                 </div>
-            </AdminLayout>
+            </MainLayout>
         </RouteGuard>
     );
 }

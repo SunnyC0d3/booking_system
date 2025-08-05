@@ -1,7 +1,6 @@
 import { api } from './client';
-import {
+import type {
     Cart,
-    CartItem,
     AddToCartRequest,
     UpdateCartItemRequest
 } from '@/types/api';

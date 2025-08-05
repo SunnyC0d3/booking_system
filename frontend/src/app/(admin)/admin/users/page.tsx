@@ -1,26 +1,21 @@
 'use client'
 
 import * as React from 'react';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
     Users,
     Search,
-    Filter,
     Download,
     Plus,
     Edit,
     Trash2,
-    Mail,
-    Phone,
-    Calendar,
-    Shield,
     User,
     MoreHorizontal,
     Eye,
     Ban,
     UserCheck,
     Crown,
+    Package,
 } from 'lucide-react';
 import {
     Button,
@@ -57,9 +52,8 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui';
-import { AdminLayout, QuickStats } from '@/components/layout/AdminLayout';
+import { MainLayout } from '@/components/layout';
 import { RouteGuard } from '@/components/auth/RouteGuard';
-import { cn } from '@/lib/cn';
 
 // Mock user data - replace with real API
 const mockUsers = [
@@ -139,34 +133,30 @@ const userStats = [
     {
         title: 'Total Users',
         value: '1,234',
-        change: '+12% from last month',
-        trend: 'up' as const,
+        change: { value: 12, type: 'increase' as const, period: 'from last month' },
         icon: Users,
-        color: 'bg-blue-500',
+        color: 'blue' as const,
     },
     {
         title: 'Active Users',
         value: '1,156',
-        change: '+8% from last month',
-        trend: 'up' as const,
+        change: { value: 8, type: 'increase' as const, period: 'from last month' },
         icon: UserCheck,
-        color: 'bg-green-500',
+        color: 'green' as const,
     },
     {
         title: 'New This Month',
         value: '89',
-        change: '+23% from last month',
-        trend: 'up' as const,
+        change: { value: 23, type: 'increase' as const, period: 'from last month' },
         icon: Plus,
-        color: 'bg-purple-500',
+        color: 'purple' as const,
     },
     {
         title: 'Admin Users',
         value: '12',
-        change: '+2 from last month',
-        trend: 'up' as const,
+        change: { value: 2, type: 'increase' as const, period: 'from last month' },
         icon: Crown,
-        color: 'bg-orange-500',
+        color: 'orange' as const,
     },
 ];
 
@@ -210,8 +200,34 @@ const formatLastLogin = (dateString: string) => {
     return date.toLocaleDateString();
 };
 
+// QuickStats component
+const QuickStats = ({ stats }: { stats: typeof userStats }) => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {stats.map((stat, index) => (
+            <Card key={index}>
+                <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-sm font-medium text-gray-600">{stat.title}</p>
+                            <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+                            <p className="text-xs text-gray-500 mt-1">
+                                +{stat.change.value}% {stat.change.period}
+                            </p>
+                        </div>
+                        {stat.icon && (
+                            <div className={`p-3 rounded-full bg-${stat.color}-100`}>
+                                <stat.icon className={`h-6 w-6 text-${stat.color}-600`} />
+                            </div>
+                        )}
+                    </div>
+                </CardContent>
+            </Card>
+        ))}
+    </div>
+);
+
 export default function UsersManagementPage() {
-    const [users, setUsers] = React.useState(mockUsers);
+    const [users] = React.useState(mockUsers);
     const [searchQuery, setSearchQuery] = React.useState('');
     const [roleFilter, setRoleFilter] = React.useState('all');
     const [statusFilter, setStatusFilter] = React.useState('all');
@@ -246,48 +262,48 @@ export default function UsersManagementPage() {
 
     const handleBulkAction = (action: string) => {
         console.log(`Bulk ${action} for users:`, selectedUsers);
-        // Implement bulk actions
         setSelectedUsers([]);
     };
 
     const handleUserAction = (userId: number, action: string) => {
         console.log(`${action} user:`, userId);
-        // Implement individual user actions
     };
 
     return (
         <RouteGuard requireAuth requiredRoles={['admin', 'super admin']}>
-            <AdminLayout
-                title="User Management"
-                description="Manage customers, staff, and user accounts across your platform."
-                actions={
-                    <div className="flex items-center gap-2">
-                        <Button variant="outline" size="sm">
-                            <Download className="mr-2 h-4 w-4" />
-                            Export
-                        </Button>
-                        <Dialog open={showUserDialog} onOpenChange={setShowUserDialog}>
-                            <DialogTrigger>
-                                <Button size="sm">
-                                    <Plus className="mr-2 h-4 w-4" />
-                                    Add User
-                                </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-w-2xl">
-                                <DialogHeader>
-                                    <DialogTitle>Add New User</DialogTitle>
-                                </DialogHeader>
-                                <div className="py-4">
-                                    <p className="text-muted-foreground">
-                                        User creation form would go here...
-                                    </p>
-                                </div>
-                            </DialogContent>
-                        </Dialog>
+            <MainLayout>
+                <div className="container mx-auto p-6 space-y-8">
+                    <div className="flex justify-between items-center">
+                        <div>
+                            <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
+                            <p className="text-gray-600">Manage customers, staff, and user accounts across your platform.</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Button variant="outline" size="sm">
+                                <Download className="mr-2 h-4 w-4" />
+                                Export
+                            </Button>
+                            <Dialog open={showUserDialog} onOpenChange={setShowUserDialog}>
+                                <DialogTrigger>
+                                    <Button size="sm">
+                                        <Plus className="mr-2 h-4 w-4" />
+                                        Add User
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-2xl">
+                                    <DialogHeader>
+                                        <DialogTitle>Add New User</DialogTitle>
+                                    </DialogHeader>
+                                    <div className="py-4">
+                                        <p className="text-muted-foreground">
+                                            User creation form would go here...
+                                        </p>
+                                    </div>
+                                </DialogContent>
+                            </Dialog>
+                        </div>
                     </div>
-                }
-            >
-                <div className="space-y-8">
+
                     {/* Stats */}
                     <QuickStats stats={userStats} />
 
@@ -549,7 +565,7 @@ export default function UsersManagementPage() {
                         </div>
                     )}
                 </div>
-            </AdminLayout>
+            </MainLayout>
         </RouteGuard>
     );
 }

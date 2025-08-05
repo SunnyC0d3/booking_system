@@ -1,19 +1,16 @@
+'use client'
+
 import * as React from 'react';
-import { Metadata } from 'next';
 import Link from 'next/link';
 import {
     Package,
     ShoppingCart,
     Heart,
     User,
-    TrendingUp,
     Clock,
     Star,
-    Plus,
     ArrowRight,
     MapPin,
-    CreditCard,
-    Bell,
 } from 'lucide-react';
 import { DashboardLayout } from '@/components/layout';
 import { Card, CardHeader, CardTitle, CardContent, Button } from '@/components/ui';
@@ -21,11 +18,6 @@ import { RouteGuard } from '@/components/auth/RouteGuard';
 import { useAuth } from '@/stores/authStore';
 import { useCartItemCount } from '@/stores/cartStore';
 import { cn } from '@/lib/cn';
-
-export const metadata: Metadata = {
-    title: 'Dashboard | Creative Business',
-    description: 'Manage your orders, track shipments, and access your creative projects.',
-};
 
 // Enhanced stats with real data integration
 function DashboardOverview() {
@@ -136,7 +128,6 @@ function DashboardOverview() {
         <DashboardLayout
             title={`Welcome back, ${user?.name?.split(' ')[0] || 'there'}!`}
             description="Here's what's happening with your creative projects."
-            showBreadcrumbs
         >
             <div className="space-y-8">
                 {/* Stats Grid */}

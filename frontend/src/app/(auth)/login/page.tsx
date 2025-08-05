@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Metadata } from 'next';
-import { redirect } from 'next/navigation';
 import AuthLayout from '@/components/layout/AuthLayout';
 import LoginForm from '@/components/forms/auth/LoginForm';
 

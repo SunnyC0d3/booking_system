@@ -1,11 +1,19 @@
 import { api } from './client';
-import {
+import type {
     Product,
     ProductFilters,
-    ProductSort,
-    ApiResponse,
-    PaginatedResponse
+    ProductSort
 } from '@/types/api';
+
+interface PaginatedResponse<T> {
+    data: T[];
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+    from: number;
+    to: number;
+}
 
 export interface ProductListResponse extends PaginatedResponse<Product> {}
 
@@ -55,7 +63,7 @@ export class ProductsApi {
     // Get featured products
     async getFeaturedProducts(limit = 12): Promise<Product[]> {
         const response = await this.getProducts({
-            filters: { featured: true },
+            filters: { featured: true } as Partial<ProductFilters>,
             limit
         });
         return response.data;
@@ -68,7 +76,7 @@ export class ProductsApi {
         limit?: number;
     }): Promise<ProductListResponse> {
         return this.getProducts({
-            filters: { category: categoryId },
+            filters: { category: String(categoryId) } as Partial<ProductFilters>,
             ...params
         });
     }
