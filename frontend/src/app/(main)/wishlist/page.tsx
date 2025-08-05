@@ -8,7 +8,6 @@ import {
     ShoppingCart,
     Trash2,
     Share2,
-    ArrowRight,
     X,
     Star,
     Eye,
@@ -72,7 +71,7 @@ const EmptyWishlist = () => (
 
 // Wishlist item component
 interface WishlistItemProps {
-    product: any;
+    product: any; // Use any since the product from API may have different structure
     onRemove: (productId: number) => void;
     onAddToCart: (product: any) => void;
     index: number;
@@ -88,7 +87,7 @@ const WishlistItem: React.FC<WishlistItemProps> = ({
     const [showRemoveDialog, setShowRemoveDialog] = React.useState(false);
 
     const hasDiscount = product.compare_price && product.compare_price > product.price;
-    const discountPercentage = hasDiscount
+    const discountPercentage = hasDiscount && product.compare_price
         ? Math.round(((product.compare_price - product.price) / product.compare_price) * 100)
         : 0;
 
@@ -182,7 +181,6 @@ const WishlistItem: React.FC<WishlistItemProps> = ({
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                       
                                         className="bg-white/90 hover:bg-white"
                                     >
                                         <Link href={`/products/${product.slug}`}>
@@ -211,7 +209,7 @@ const WishlistItem: React.FC<WishlistItemProps> = ({
                                 </div>
 
                                 {/* Rating */}
-                                {product.reviews_count > 0 && (
+                                {product.reviews_count && product.reviews_count > 0 && (
                                     <div className="flex items-center gap-2">
                                         <div className="flex items-center gap-1">
                                             {[...Array(5)].map((_, i) => (
@@ -219,7 +217,7 @@ const WishlistItem: React.FC<WishlistItemProps> = ({
                                                     key={i}
                                                     className={cn(
                                                         'h-4 w-4',
-                                                        i < Math.floor(product.reviews_average)
+                                                        i < Math.floor(product.reviews_average || 0)
                                                             ? 'fill-yellow-400 text-yellow-400'
                                                             : 'text-muted-foreground'
                                                     )}
@@ -247,12 +245,12 @@ const WishlistItem: React.FC<WishlistItemProps> = ({
 
                                     {/* Date Added */}
                                     <span className="text-xs text-muted-foreground">
-                                        Added {new Date(product.added_to_wishlist_at || product.created_at).toLocaleDateString()}
+                                        Added {new Date(product.added_to_wishlist_at || product.created_at || Date.now()).toLocaleDateString()}
                                     </span>
                                 </div>
 
                                 {/* Stock Status */}
-                                {!isOutOfStock && product.quantity <= 10 && (
+                                {!isOutOfStock && product.quantity && product.quantity <= 10 && (
                                     <p className="text-sm text-orange-600">
                                         Only {product.quantity} left in stock
                                     </p>
@@ -298,12 +296,16 @@ const WishlistItem: React.FC<WishlistItemProps> = ({
 
 export default function WishlistPage() {
     const {
-        items,
+        wishlist,
         isLoading,
         removeFromWishlist,
         fetchWishlist,
-        clearWishlist
+        clearWishlist,
+        optimisticItems
     } = useWishlistStore();
+
+    // Combine actual wishlist items with optimistic items
+    const items = [...(wishlist?.items || []), ...optimisticItems];
 
     const { addToCart } = useCartStore();
     const [showClearDialog, setShowClearDialog] = React.useState(false);
@@ -331,7 +333,7 @@ export default function WishlistPage() {
     };
 
     const handleAddAllToCart = async () => {
-        const availableItems = items.filter(item => item.is_in_stock);
+        const availableItems = items.filter((item) => item.product?.is_in_stock);
 
         if (availableItems.length === 0) {
             toast.error('No available items to add to cart');
@@ -341,7 +343,7 @@ export default function WishlistPage() {
         try {
             for (const item of availableItems) {
                 await addToCart({
-                    product_id: item.id,
+                    product_id: item.product_id,
                     quantity: 1,
                 });
             }
@@ -378,8 +380,8 @@ export default function WishlistPage() {
         }
     };
 
-    const availableItems = items.filter(item => item.is_in_stock);
-    const unavailableItems = items.filter(item => !item.is_in_stock);
+    const availableItems = items.filter((item) => item.product?.is_in_stock);
+    const unavailableItems = items.filter((item) => !item.product?.is_in_stock);
 
     return (
         <RouteGuard requireAuth>
@@ -463,11 +465,11 @@ export default function WishlistPage() {
                                 layout
                                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
                             >
-                                {items.map((product, index) => (
+                                {items.map((wishlistItem, index: number) => (
                                     <WishlistItem
-                                        key={product.id}
-                                        product={product}
-                                        onRemove={handleRemoveFromWishlist}
+                                        key={wishlistItem.id}
+                                        product={wishlistItem.product}
+                                        onRemove={() => handleRemoveFromWishlist(wishlistItem.id)}
                                         onAddToCart={handleAddToCart}
                                         index={index}
                                     />
@@ -517,7 +519,7 @@ export default function WishlistPage() {
                                                     style: 'currency',
                                                     currency: 'GBP',
                                                 }).format(
-                                                    availableItems.reduce((total, item) => total + item.price, 0) / 100
+                                                    availableItems.reduce((total: number, item) => total + (item.product?.price || 0), 0) / 100
                                                 )}
                                             </div>
                                             <div className="text-sm text-muted-foreground">

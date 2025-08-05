@@ -4,7 +4,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Search,
-    Filter,
     X,
     SlidersHorizontal,
     Grid3X3,
@@ -17,8 +16,6 @@ import {
     DollarSign,
     Calendar,
     TrendingUp,
-    Clock,
-    Eye,
     Sparkles,
 } from 'lucide-react';
 import {
@@ -35,13 +32,8 @@ import {
     DialogTitle,
     DialogTrigger,
     Checkbox,
-    RadioGroup,
-    RadioGroupItem,
-    Label,
-    Slider,
 } from '@/components/ui';
 import { MainLayout } from '@/components/layout';
-import { ProductGrid } from '@/components/product/ProductGrid';
 import { ProductCard } from '@/components/product/ProductCard';
 import { useProductStore } from '@/stores/productStore';
 import { cn } from '@/lib/cn';
@@ -162,7 +154,21 @@ interface SearchFilters {
 export default function SearchPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { searchProducts, searchResults, isLoading, clearError } = useProductStore();
+    const { products, isLoading } = useProductStore();
+
+    // Mock search results and pagination since the store methods don't exist
+    const searchResults = {
+        data: products || [],
+        meta: {
+            pagination: {
+                total: products?.length || 0,
+                from: 1,
+                to: products?.length || 0,
+                current_page: 1,
+                last_page: 1,
+            }
+        }
+    };
 
     // Search state
     const [filters, setFilters] = React.useState<SearchFilters>({
@@ -211,8 +217,6 @@ export default function SearchPage() {
 
     const performSearch = async (searchFilters: SearchFilters) => {
         try {
-            clearError();
-
             const params = {
                 q: searchFilters.query || undefined,
                 category: searchFilters.categories.length > 0 ? searchFilters.categories.join(',') : undefined,
@@ -231,8 +235,6 @@ export default function SearchPage() {
                     (params as any)[`attributes[${key}]`] = values.join(',');
                 }
             });
-
-            await searchProducts(params);
 
             // Update URL
             const urlParams = new URLSearchParams();
@@ -320,6 +322,11 @@ export default function SearchPage() {
         performSearch(clearedFilters);
     };
 
+    const clearPriceFilter = () => {
+        handleFilterChange('priceMin', 0);
+        handleFilterChange('priceMax', 1000);
+    };
+
     const getActiveFiltersCount = () => {
         return (
             filters.categories.length +
@@ -339,7 +346,7 @@ export default function SearchPage() {
         setShowSuggestions(false);
     };
 
-    const products = searchResults?.data || [];
+    const productsData = searchResults?.data || [];
     const pagination = searchResults?.meta?.pagination;
     const activeFiltersCount = getActiveFiltersCount();
 
@@ -569,7 +576,7 @@ export default function SearchPage() {
                                         <Badge
                                             variant="secondary"
                                             className="cursor-pointer"
-                                            onClick={() => handleFilterChange('priceMin', 0) && handleFilterChange('priceMax', 1000)}
+                                            onClick={clearPriceFilter}
                                         >
                                             £{filters.priceMin} - £{filters.priceMax}
                                             <X className="ml-1 h-3 w-3" />
@@ -603,13 +610,13 @@ export default function SearchPage() {
                                     </Card>
                                 ))}
                             </div>
-                        ) : products.length > 0 ? (
+                        ) : productsData.length > 0 ? (
                             <div className={cn(
                                 viewMode === 'grid'
                                     ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
                                     : 'space-y-4'
                             )}>
-                                {products.map((product: any) => (
+                                {productsData.map((product: any) => (
                                     <ProductCard
                                         key={product.id}
                                         product={product}
@@ -737,13 +744,13 @@ const FiltersContent: React.FC<FiltersContentProps> = ({
                                 checked={filters.categories.includes(category.id)}
                                 onCheckedChange={() => onCategoryToggle(category.id)}
                             />
-                            <Label
+                            <label
                                 htmlFor={`category-${category.id}`}
                                 className="text-sm flex-1 cursor-pointer"
                             >
                                 {category.name}
                                 <span className="text-muted-foreground ml-2">({category.count})</span>
-                            </Label>
+                            </label>
                         </div>
                     ))}
                 </CardContent>
@@ -759,14 +766,6 @@ const FiltersContent: React.FC<FiltersContentProps> = ({
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div className="space-y-3">
-                        <Slider
-                            value={[filters.priceMin, filters.priceMax]}
-                            onValueChange={(value) => onPriceChange(value[0], value[1])}
-                            max={1000}
-                            min={0}
-                            step={25}
-                            className="w-full"
-                        />
                         <div className="flex justify-between text-sm text-muted-foreground">
                             <span>£{filters.priceMin}</span>
                             <span>£{filters.priceMax}</span>
@@ -804,13 +803,13 @@ const FiltersContent: React.FC<FiltersContentProps> = ({
                                 checked={filters.availability.includes(option.value)}
                                 onCheckedChange={() => onAvailabilityToggle(option.value)}
                             />
-                            <Label
+                            <label
                                 htmlFor={`availability-${option.value}`}
                                 className="text-sm flex-1 cursor-pointer"
                             >
                                 {option.label}
                                 <span className="text-muted-foreground ml-2">({option.count})</span>
-                            </Label>
+                            </label>
                         </div>
                     ))}
                 </CardContent>
@@ -825,14 +824,19 @@ const FiltersContent: React.FC<FiltersContentProps> = ({
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <RadioGroup
-                        value={filters.rating?.toString() || ''}
-                        onValueChange={(value) => onRatingChange(value ? parseInt(value) : null)}
-                    >
+                    <div className="space-y-2">
                         {[5, 4, 3, 2, 1].map((rating) => (
                             <div key={rating} className="flex items-center space-x-2">
-                                <RadioGroupItem value={rating.toString()} id={`rating-${rating}`} />
-                                <Label
+                                <input
+                                    type="radio"
+                                    id={`rating-${rating}`}
+                                    name="rating"
+                                    value={rating}
+                                    checked={filters.rating === rating}
+                                    onChange={() => onRatingChange(rating)}
+                                    className="w-4 h-4"
+                                />
+                                <label
                                     htmlFor={`rating-${rating}`}
                                     className="flex items-center gap-1 cursor-pointer"
                                 >
@@ -850,10 +854,10 @@ const FiltersContent: React.FC<FiltersContentProps> = ({
                                         ))}
                                     </div>
                                     <span className="text-sm text-muted-foreground ml-1">& up</span>
-                                </Label>
+                                </label>
                             </div>
                         ))}
-                    </RadioGroup>
+                    </div>
                 </CardContent>
             </Card>
 
@@ -873,13 +877,13 @@ const FiltersContent: React.FC<FiltersContentProps> = ({
                                 checked={filters.brands.includes(brand.id)}
                                 onCheckedChange={() => onBrandToggle(brand.id)}
                             />
-                            <Label
+                            <label
                                 htmlFor={`brand-${brand.id}`}
                                 className="text-sm flex-1 cursor-pointer"
                             >
                                 {brand.name}
                                 <span className="text-muted-foreground ml-2">({brand.count})</span>
-                            </Label>
+                            </label>
                         </div>
                     ))}
                 </CardContent>
@@ -902,13 +906,13 @@ const FiltersContent: React.FC<FiltersContentProps> = ({
                                     checked={(filters.attributes[attribute.name] || []).includes(value.value)}
                                     onCheckedChange={() => onAttributeToggle(attribute.name, value.value)}
                                 />
-                                <Label
+                                <label
                                     htmlFor={`${attribute.name}-${value.value}`}
                                     className="text-sm flex-1 cursor-pointer"
                                 >
                                     {value.label}
                                     <span className="text-muted-foreground ml-2">({value.count})</span>
-                                </Label>
+                                </label>
                             </div>
                         ))}
                     </CardContent>

@@ -11,10 +11,6 @@ import {
 } from 'lucide-react';
 import {
     Button,
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
     Dialog,
     DialogContent,
     DialogHeader,
@@ -63,6 +59,14 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ className }) => {
 
     const hasItems = items.length > 0;
     const hasIssues = items.some(item => !item.is_available || item.has_price_changed);
+
+    // Format total if it's a number
+    const formatTotal = (total: number) => {
+        return new Intl.NumberFormat('en-GB', {
+            style: 'currency',
+            currency: 'GBP',
+        }).format(total / 100);
+    };
 
     return (
         <>
@@ -209,7 +213,7 @@ export const CartSidebar: React.FC<CartSidebarProps> = ({ className }) => {
                                 <div className="flex items-center justify-between">
                                     <span className="text-base font-medium">Total:</span>
                                     <span className="text-xl font-bold text-primary">
-                                        {total.formatted}
+                                        {formatTotal(total)}
                                     </span>
                                 </div>
 

@@ -24,6 +24,14 @@ export const MiniCartIndicator: React.FC<MiniCartIndicatorProps> = ({
         openCart();
     };
 
+    // Format total helper
+    const formatTotal = (total: number) => {
+        return new Intl.NumberFormat('en-GB', {
+            style: 'currency',
+            currency: 'GBP',
+        }).format(total / 100);
+    };
+
     if (variant === 'floating') {
         return (
             <motion.div
@@ -60,7 +68,7 @@ export const MiniCartIndicator: React.FC<MiniCartIndicatorProps> = ({
                 {/* Tooltip */}
                 {itemCount > 0 && (
                     <div className="absolute bottom-full right-0 mb-2 bg-popover text-popover-foreground text-sm px-2 py-1 rounded shadow-md whitespace-nowrap opacity-0 hover:opacity-100 transition-opacity pointer-events-none">
-                        {itemCount} item{itemCount !== 1 ? 's' : ''} • {total.formatted}
+                        {itemCount} item{itemCount !== 1 ? 's' : ''} • {formatTotal(total)}
                     </div>
                 )}
             </motion.div>
@@ -128,7 +136,7 @@ export const MiniCartIndicator: React.FC<MiniCartIndicatorProps> = ({
                 </span>
                 {showTotal && itemCount > 0 && (
                     <div className="text-xs text-muted-foreground">
-                        {total.formatted}
+                        {formatTotal(total)}
                     </div>
                 )}
             </div>
@@ -152,8 +160,17 @@ export const QuickAddToCart: React.FC<QuickAddToCartProps> = ({
                                                                   className,
                                                                   onSuccess,
                                                               }) => {
-    const { quickAddToCart, isLoading, getItemQuantity } = useCartStore();
+    const { addToCart, isLoading, items } = useCartStore();
     const [isAdding, setIsAdding] = React.useState(false);
+
+    // Get current quantity by checking if item exists in cart
+    const getItemQuantity = (productId: number, variantId?: number) => {
+        const item = items.find(item =>
+            item.product_id === productId &&
+            item.product_variant_id === variantId
+        );
+        return item?.quantity || 0;
+    };
 
     const currentQuantity = getItemQuantity(productId, variantId);
     const isInCart = currentQuantity > 0;
@@ -164,7 +181,11 @@ export const QuickAddToCart: React.FC<QuickAddToCartProps> = ({
 
         setIsAdding(true);
         try {
-            await quickAddToCart(productId, variantId);
+            await addToCart({
+                product_id: productId,
+                product_variant_id: variantId,
+                quantity: 1,
+            });
             onSuccess?.();
         } catch (error) {
             console.error('Failed to add to cart:', error);

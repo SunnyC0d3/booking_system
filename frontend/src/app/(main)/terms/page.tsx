@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import {
     FileText,
     Scale,
-    Shield,
     AlertCircle,
     Clock,
     Mail,

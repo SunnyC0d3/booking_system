@@ -6,7 +6,6 @@ import { useEffect, useState, useCallback } from 'react';
 import {
     ProductSearchBar,
     ProductSort,
-    MobileFiltersDialog
 } from '@/components/product/search';
 import { ProductGrid } from '@/components/product/ProductGrid';
 import { Card, CardContent, Button } from '@/components/ui';
@@ -25,7 +24,6 @@ export function ProductsClient({ initialSearchParams }: ProductsClientProps) {
         products,
         isLoading,
         error,
-        filters,
         fetchProducts,
         clearFilters,
         setSort
@@ -251,7 +249,7 @@ export function ProductsClient({ initialSearchParams }: ProductsClientProps) {
                     </Button>
                     <ProductSort
                         onSortChange={handleSortChange}
-                        selected={selectedFilters.sort}
+                        {...(selectedFilters.sort && { selected: selectedFilters.sort })}
                     />
                 </div>
             </div>
@@ -275,7 +273,7 @@ export function ProductsClient({ initialSearchParams }: ProductsClientProps) {
                             <ResultsCount count={products.length} />
                             <ProductSort
                                 onSortChange={handleSortChange}
-                                selected={selectedFilters.sort}
+                                {...(selectedFilters.sort && { selected: selectedFilters.sort })}
                             />
                         </div>
 

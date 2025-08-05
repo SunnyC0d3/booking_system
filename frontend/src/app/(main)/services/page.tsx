@@ -3,7 +3,6 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
-    Palette,
     Tag,
     Heart,
     Sticker,
@@ -13,8 +12,6 @@ import {
     Zap,
     Users,
     Building,
-    Clock,
-    Star,
     ArrowRight,
     Check,
     Phone,

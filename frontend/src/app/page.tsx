@@ -10,7 +10,6 @@ import {
   Truck,
   Palette,
   Heart,
-  Gift,
   Sparkles,
 } from 'lucide-react';
 import { MainLayout } from '@/components/layout';

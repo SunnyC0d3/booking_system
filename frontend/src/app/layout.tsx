@@ -3,7 +3,6 @@ import { Inter } from 'next/font/google';
 import { Toaster } from 'sonner';
 import { ThemeProvider } from 'next-themes';
 import { QueryProvider } from '@/components/providers/QueryProvider';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import '@/styles/global.css';
 
 const inter = Inter({
@@ -90,7 +89,6 @@ export default function RootLayout({
             defaultTheme="light"
             enableSystem
             disableTransitionOnChange
-            suppressHydrationWarning
         >
             <QueryProvider>
                 <div className="relative min-h-screen bg-background">

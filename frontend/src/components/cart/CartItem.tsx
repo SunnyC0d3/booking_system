@@ -34,8 +34,6 @@ export const CartItem: React.FC<CartItemProps> = ({
     const {
         updateCartItem,
         removeFromCart,
-        incrementItem,
-        decrementItem,
         isLoading,
     } = useCartStore();
 
@@ -59,25 +57,13 @@ export const CartItem: React.FC<CartItemProps> = ({
     };
 
     const handleIncrement = async () => {
-        setIsUpdating(true);
-        try {
-            await incrementItem(item.id);
-        } catch (error) {
-            console.error('Failed to increment:', error);
-        } finally {
-            setIsUpdating(false);
-        }
+        const newQuantity = item.quantity + 1;
+        await handleQuantityChange(newQuantity);
     };
 
     const handleDecrement = async () => {
-        setIsUpdating(true);
-        try {
-            await decrementItem(item.id);
-        } catch (error) {
-            console.error('Failed to decrement:', error);
-        } finally {
-            setIsUpdating(false);
-        }
+        const newQuantity = item.quantity - 1;
+        await handleQuantityChange(newQuantity);
     };
 
     const handleRemove = async () => {

@@ -20,7 +20,6 @@ export const RouteGuard: React.FC<RouteGuardProps> = ({
         isAuthenticated,
         isInitialized,
         isLoading,
-        user,
         hasRole,
         hasPermission,
         initialize
