@@ -132,59 +132,82 @@ export const DashboardLayout: React.FC<{
     children: React.ReactNode;
     title?: string;
     description?: string;
-}> = ({ children, title, description }) => (
-    <MainLayout
-        showBreadcrumbs={true}
-        pageTitle={title}
-        pageDescription={description}
-        className="container mx-auto px-4 py-8"
-    >
-        {children}
-    </MainLayout>
-);
+}> = ({ children, title, description }) => {
+    // Create props object conditionally to avoid passing undefined
+    const layoutProps: MainLayoutProps = {
+        children,
+        showBreadcrumbs: true,
+        className: "container mx-auto px-4 py-8"
+    };
+
+    if (title) {
+        layoutProps.pageTitle = title;
+    }
+    if (description) {
+        layoutProps.pageDescription = description;
+    }
+
+    return <MainLayout {...layoutProps} />;
+};
 
 export const ProductLayout: React.FC<{
     children: React.ReactNode;
     title?: string;
     description?: string;
-}> = ({ children, title, description }) => (
-    <MainLayout
-        showBreadcrumbs={true}
-        pageTitle={title}
-        pageDescription={description}
-    >
-        {children}
-    </MainLayout>
-);
+}> = ({ children, title, description }) => {
+    // Create props object conditionally to avoid passing undefined
+    const layoutProps: MainLayoutProps = {
+        children,
+        showBreadcrumbs: true,
+    };
+
+    if (title) {
+        layoutProps.pageTitle = title;
+    }
+    if (description) {
+        layoutProps.pageDescription = description;
+    }
+
+    return <MainLayout {...layoutProps} />;
+};
 
 export const ContentLayout: React.FC<{
     children: React.ReactNode;
     title?: string;
     description?: string;
     maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
-}> = ({ children, title, description, maxWidth = 'lg' }) => (
-    <MainLayout
-        showBreadcrumbs={true}
-        pageTitle={title}
-        pageDescription={description}
-    >
-        <div className="container mx-auto px-4 py-12">
-            <div className={cn(
-                'mx-auto prose prose-gray dark:prose-invert',
-                {
-                    'max-w-sm': maxWidth === 'sm',
-                    'max-w-md': maxWidth === 'md',
-                    'max-w-lg': maxWidth === 'lg',
-                    'max-w-xl': maxWidth === 'xl',
-                    'max-w-2xl': maxWidth === '2xl',
-                    'max-w-none': maxWidth === 'full',
-                }
-            )}>
-                {children}
+}> = ({ children, title, description, maxWidth = 'lg' }) => {
+    // Create props object conditionally to avoid passing undefined
+    const layoutProps: MainLayoutProps = {
+        children: (
+            <div className="container mx-auto px-4 py-12">
+                <div className={cn(
+                    'mx-auto prose prose-gray dark:prose-invert',
+                    {
+                        'max-w-sm': maxWidth === 'sm',
+                        'max-w-md': maxWidth === 'md',
+                        'max-w-lg': maxWidth === 'lg',
+                        'max-w-xl': maxWidth === 'xl',
+                        'max-w-2xl': maxWidth === '2xl',
+                        'max-w-none': maxWidth === 'full',
+                    }
+                )}>
+                    {children}
+                </div>
             </div>
-        </div>
-    </MainLayout>
-);
+        ),
+        showBreadcrumbs: true,
+    };
+
+    if (title) {
+        layoutProps.pageTitle = title;
+    }
+    if (description) {
+        layoutProps.pageDescription = description;
+    }
+
+    return <MainLayout {...layoutProps} />;
+};
 
 export const CheckoutLayout: React.FC<{
     children: React.ReactNode;

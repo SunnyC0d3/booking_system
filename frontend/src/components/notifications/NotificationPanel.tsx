@@ -1,3 +1,5 @@
+'use client'
+
 import * as React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -9,25 +11,23 @@ import {
     CheckCircle,
     XCircle,
     Trash2,
-    MarkAsRead,
     Clock,
 } from 'lucide-react';
 import {
     Button,
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
     Badge,
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-    ScrollArea,
 } from '@/components/ui';
-import { useNotifications, Notification, NotificationType } from '@/stores/notificationStore';
+import { useNotificationStore } from '@/stores/notificationStore';
+import type { Notification } from '@/stores/notificationStore';
 import { cn } from '@/lib/cn';
+
+// Define notification types properly
+type NotificationType = 'success' | 'error' | 'warning' | 'info';
 
 // Notification type configurations
 const notificationConfig = {
@@ -59,7 +59,7 @@ const notificationConfig = {
         iconColor: 'text-blue-600',
         titleColor: 'text-blue-900',
     },
-};
+} as const;
 
 // Individual notification item component
 interface NotificationItemProps {
@@ -80,8 +80,9 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
     const config = notificationConfig[notification.type];
     const Icon = config.icon;
 
-    const formatTime = (timestamp: number) => {
+    const formatTime = (date: Date) => {
         const now = Date.now();
+        const timestamp = date.getTime();
         const diff = now - timestamp;
         const minutes = Math.floor(diff / (1000 * 60));
         const hours = Math.floor(diff / (1000 * 60 * 60));
@@ -92,6 +93,9 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
         if (hours < 24) return `${hours}h ago`;
         return `${days}d ago`;
     };
+
+    // Check if notification is new (less than 5 minutes old)
+    const isNew = (Date.now() - notification.createdAt.getTime()) < 5 * 60 * 1000;
 
     return (
         <motion.div
@@ -104,7 +108,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
                 'relative overflow-hidden rounded-lg border',
                 config.bgColor,
                 config.borderColor,
-                !notification.isRead && 'ring-2 ring-primary/20'
+                isNew && 'ring-2 ring-primary/20'
             )}
         >
             <div className={cn('p-4', compact && 'p-3')}>
@@ -128,12 +132,12 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
                                 )}>
                                     {notification.title}
                                 </h4>
-                                {notification.message && (
+                                {notification.description && (
                                     <p className={cn(
                                         'text-muted-foreground line-clamp-3 mt-1',
                                         compact ? 'text-xs' : 'text-sm'
                                     )}>
-                                        {notification.message}
+                                        {notification.description}
                                     </p>
                                 )}
                             </div>
@@ -141,7 +145,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
                             {/* Actions */}
                             {showActions && (
                                 <div className="flex items-center gap-1 flex-shrink-0">
-                                    {!notification.isRead && (
+                                    {isNew && (
                                         <Button
                                             variant="ghost"
                                             size="icon"
@@ -180,8 +184,8 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
                         {/* Timestamp */}
                         <div className="flex items-center gap-1 mt-2 text-xs text-muted-foreground">
                             <Clock className="h-3 w-3" />
-                            <span>{formatTime(notification.timestamp)}</span>
-                            {!notification.isRead && (
+                            <span>{formatTime(notification.createdAt)}</span>
+                            {isNew && (
                                 <Badge variant="secondary" className="text-xs ml-2">
                                     New
                                 </Badge>
@@ -192,10 +196,22 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
             </div>
 
             {/* Unread indicator */}
-            {!notification.isRead && (
+            {isNew && (
                 <div className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full" />
             )}
         </motion.div>
+    );
+};
+
+// Custom ScrollArea since it's not available in the UI components
+const ScrollArea: React.FC<{
+    className?: string;
+    children: React.ReactNode;
+}> = ({ className, children }) => {
+    return (
+        <div className={cn('overflow-auto', className)}>
+            {children}
+        </div>
     );
 };
 
@@ -211,27 +227,40 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({
                                                                     }) => {
     const {
         notifications,
-        unreadCount,
         removeNotification,
+        clearAllNotifications,
         markAsRead,
-        markAllAsRead,
-        clearAll,
-        clearByType,
-    } = useNotifications();
+    } = useNotificationStore();
 
     const [filterType, setFilterType] = React.useState<NotificationType | 'all'>('all');
 
-    const filteredNotifications = notifications.filter(notification =>
+    const filteredNotifications = notifications.filter((notification: Notification) =>
         filterType === 'all' || notification.type === filterType
     );
 
+    // Calculate unread count (notifications less than 5 minutes old)
+    const unreadCount = notifications.filter((n: Notification) =>
+        (Date.now() - n.createdAt.getTime()) < 5 * 60 * 1000
+    ).length;
+
     const typeOptions: { value: NotificationType | 'all'; label: string; count: number }[] = [
-        { value: 'all', label: 'All', count: notifications.length },
-        { value: 'success', label: 'Success', count: notifications.filter(n => n.type === 'success').length },
-        { value: 'error', label: 'Errors', count: notifications.filter(n => n.type === 'error').length },
-        { value: 'warning', label: 'Warnings', count: notifications.filter(n => n.type === 'warning').length },
-        { value: 'info', label: 'Info', count: notifications.filter(n => n.type === 'info').length },
+        { value: 'all' as const, label: 'All', count: notifications.length },
+        { value: 'success' as const, label: 'Success', count: notifications.filter((n: Notification) => n.type === 'success').length },
+        { value: 'error' as const, label: 'Errors', count: notifications.filter((n: Notification) => n.type === 'error').length },
+        { value: 'warning' as const, label: 'Warnings', count: notifications.filter((n: Notification) => n.type === 'warning').length },
+        { value: 'info' as const, label: 'Info', count: notifications.filter((n: Notification) => n.type === 'info').length },
     ].filter(option => option.count > 0);
+
+    const clearByType = (type: NotificationType) => {
+        // Since we don't have clearByType in store, we'll remove notifications of specific type
+        const notificationsToRemove = notifications.filter((n: Notification) => n.type === type);
+        notificationsToRemove.forEach((n: Notification) => removeNotification(n.id));
+    };
+
+    const markAllAsRead = () => {
+        // Mark all notifications as read
+        notifications.forEach((n: Notification) => markAsRead(n.id));
+    };
 
     return (
         <div className={cn('space-y-4', className)}>
@@ -256,7 +285,7 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({
                             onClick={markAllAsRead}
                             className="text-xs"
                         >
-                            <MarkAsRead className="mr-1 h-3 w-3" />
+                            <Check className="mr-1 h-3 w-3" />
                             Mark All Read
                         </Button>
                     )}
@@ -264,7 +293,7 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({
                         <Button
                             variant="outline"
                             size="sm"
-                            onClick={clearAll}
+                            onClick={clearAllNotifications}
                             className="text-xs"
                         >
                             <Trash2 className="mr-1 h-3 w-3" />
@@ -305,7 +334,7 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({
                     <div className="space-y-3 pr-4">
                         <AnimatePresence mode="popLayout">
                             {filteredNotifications.length > 0 ? (
-                                filteredNotifications.map((notification) => (
+                                filteredNotifications.map((notification: Notification) => (
                                     <NotificationItem
                                         key={notification.id}
                                         notification={notification}
@@ -357,7 +386,13 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({
 
 // Notification bell trigger component
 export const NotificationTrigger: React.FC<{ className?: string }> = ({ className }) => {
-    const { unreadCount, isOpen, setIsOpen } = useNotifications();
+    const { notifications } = useNotificationStore();
+    const [isOpen, setIsOpen] = React.useState(false);
+
+    // Calculate unread count
+    const unreadCount = notifications.filter((n: Notification) =>
+        (Date.now() - n.createdAt.getTime()) < 5 * 60 * 1000
+    ).length;
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -395,13 +430,14 @@ export const NotificationToast: React.FC<{
     onRemove: (id: string) => void;
 }> = ({ notification, onRemove }) => {
     React.useEffect(() => {
-        if (notification.duration > 0) {
+        if (notification.duration && notification.duration > 0) {
             const timer = setTimeout(() => {
                 onRemove(notification.id);
             }, notification.duration);
 
             return () => clearTimeout(timer);
         }
+        return undefined;
     }, [notification.duration, notification.id, onRemove]);
 
     return (
@@ -426,17 +462,17 @@ export const NotificationToast: React.FC<{
 
 // Toast container for displaying auto-dismissing notifications
 export const NotificationToastContainer: React.FC = () => {
-    const { notifications, removeNotification } = useNotifications();
+    const { notifications, removeNotification } = useNotificationStore();
 
-    // Only show recent notifications as toasts (last 5 minutes)
+    // Only show recent notifications as toasts (last 5 minutes) that are not persistent
     const recentNotifications = notifications.filter(
-        n => Date.now() - n.timestamp < 5 * 60 * 1000 && !n.persistent
+        (n: Notification) => Date.now() - n.createdAt.getTime() < 5 * 60 * 1000 && !n.persistent
     ).slice(0, 5);
 
     return (
         <div className="fixed bottom-4 right-4 z-50 space-y-2 max-w-md">
             <AnimatePresence mode="popLayout">
-                {recentNotifications.map((notification) => (
+                {recentNotifications.map((notification: Notification) => (
                     <NotificationToast
                         key={notification.id}
                         notification={notification}

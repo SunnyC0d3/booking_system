@@ -8,7 +8,6 @@ import {
     Heart,
     Mail,
     Phone,
-    MapPin,
     Facebook,
     Twitter,
     Instagram,

@@ -215,10 +215,16 @@ export const useBreadcrumbs = (items?: BreadcrumbItem[]) => {
             // Create a new item with proper type handling
             const newItem: BreadcrumbItem = {
                 label: updates.label !== undefined ? updates.label : currentItem.label,
-                current: updates.current !== undefined ? updates.current : currentItem.current,
             };
 
-            // Only set href if it's provided in updates or exists in current item
+            // Handle current property - only set if it's explicitly boolean
+            if (updates.current !== undefined) {
+                newItem.current = updates.current;
+            } else if (currentItem.current !== undefined) {
+                newItem.current = currentItem.current;
+            }
+
+            // Handle href property - only set if it exists
             if (updates.href !== undefined) {
                 newItem.href = updates.href;
             } else if (currentItem.href !== undefined) {

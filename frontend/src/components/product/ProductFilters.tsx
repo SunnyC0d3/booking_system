@@ -35,9 +35,6 @@ import {
     FilterAttribute,
     FilterAttributeValue,
     FilterTag,
-    FilterAvailability,
-    FilterRating,
-    AttributeType,
 } from '@/types/product';
 import { cn } from '@/lib/cn';
 
@@ -86,10 +83,18 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
             ? [...currentCategories, categoryId.toString()]
             : currentCategories.filter((id) => id !== categoryId.toString());
 
-        onFilterChange?.({
+        // Create a clean filter object
+        const updatedFilters: ProductSearchParams = {
             ...selectedFilters,
-            category: newCategories.length > 0 ? newCategories : undefined,
-        });
+        };
+
+        if (newCategories.length > 0) {
+            updatedFilters.category = newCategories;
+        } else {
+            delete updatedFilters.category;
+        }
+
+        onFilterChange?.(updatedFilters);
     };
 
     const handlePriceRangeChange = (type: 'min' | 'max', value: string) => {
@@ -98,15 +103,23 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
 
         // Debounced update to avoid too many API calls
         const timeoutId = setTimeout(() => {
-            onFilterChange?.({
+            const updatedFilters: ProductSearchParams = {
                 ...selectedFilters,
-                price_min: newPriceRange.min
-                    ? parseFloat(newPriceRange.min)
-                    : undefined,
-                price_max: newPriceRange.max
-                    ? parseFloat(newPriceRange.max)
-                    : undefined,
-            });
+            };
+
+            if (newPriceRange.min) {
+                updatedFilters.price_min = parseFloat(newPriceRange.min);
+            } else {
+                delete updatedFilters.price_min;
+            }
+
+            if (newPriceRange.max) {
+                updatedFilters.price_max = parseFloat(newPriceRange.max);
+            } else {
+                delete updatedFilters.price_max;
+            }
+
+            onFilterChange?.(updatedFilters);
         }, 500);
 
         return () => clearTimeout(timeoutId);
@@ -128,22 +141,27 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
             ? [...currentValues, valueId.toString()]
             : currentValues.filter((id) => id !== valueId.toString());
 
-        const newAttributes = {
+        const newAttributes: Record<string, string | string[]> = {
             ...currentAttributes,
-            [attributeSlug]: newValues.length > 0 ? newValues : undefined,
         };
 
-        // Clean up undefined values
-        Object.keys(newAttributes).forEach((key) => {
-            if (newAttributes[key] === undefined) {
-                delete newAttributes[key];
-            }
-        });
+        if (newValues.length > 0) {
+            newAttributes[attributeSlug] = newValues;
+        } else {
+            delete newAttributes[attributeSlug];
+        }
 
-        onFilterChange?.({
+        const updatedFilters: ProductSearchParams = {
             ...selectedFilters,
-            attributes: Object.keys(newAttributes).length > 0 ? newAttributes : undefined,
-        });
+        };
+
+        if (Object.keys(newAttributes).length > 0) {
+            updatedFilters.attributes = newAttributes;
+        } else {
+            delete updatedFilters.attributes;
+        }
+
+        onFilterChange?.(updatedFilters);
     };
 
     const handleTagChange = (tagSlug: string, checked: boolean) => {
@@ -157,10 +175,17 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
             ? [...currentTags, tagSlug]
             : currentTags.filter((tag) => tag !== tagSlug);
 
-        onFilterChange?.({
+        const updatedFilters: ProductSearchParams = {
             ...selectedFilters,
-            tags: newTags.length > 0 ? newTags : undefined,
-        });
+        };
+
+        if (newTags.length > 0) {
+            updatedFilters.tags = newTags;
+        } else {
+            delete updatedFilters.tags;
+        }
+
+        onFilterChange?.(updatedFilters);
     };
 
     const handleAvailabilityChange = (key: string, checked: boolean) => {
@@ -174,17 +199,31 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
             ? [...currentAvailability, key]
             : currentAvailability.filter((item) => item !== key);
 
-        onFilterChange?.({
+        const updatedFilters: ProductSearchParams = {
             ...selectedFilters,
-            availability: newAvailability.length > 0 ? newAvailability : undefined,
-        });
+        };
+
+        if (newAvailability.length > 0) {
+            updatedFilters.availability = newAvailability;
+        } else {
+            delete updatedFilters.availability;
+        }
+
+        onFilterChange?.(updatedFilters);
     };
 
     const handleRatingChange = (rating: number) => {
-        onFilterChange?.({
+        const updatedFilters: ProductSearchParams = {
             ...selectedFilters,
-            rating: selectedFilters.rating === rating ? undefined : rating,
-        });
+        };
+
+        if (selectedFilters.rating === rating) {
+            delete updatedFilters.rating;
+        } else {
+            updatedFilters.rating = rating;
+        }
+
+        onFilterChange?.(updatedFilters);
     };
 
     const hasActiveFilters = React.useMemo(() => {
@@ -212,7 +251,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
     }, [selectedFilters]);
 
     if (loading) {
-        return <FiltersSkeleton className={className} />;
+        return <FiltersSkeleton className={className || undefined} />;
     }
 
     if (!filters) {
@@ -610,6 +649,25 @@ const TagFilter: React.FC<TagFilterProps> = ({ tag, isSelected, onChange }) => {
 
 // Loading skeleton
 const FiltersSkeleton: React.FC<{ className?: string }> = ({ className }) => {
+    if (!className) {
+        return (
+            <Card>
+                <CardContent className="p-6 space-y-6">
+                    {Array.from({ length: 4 }).map((_, i) => (
+                        <div key={i} className="space-y-3">
+                            <div className="h-4 bg-muted rounded w-24 animate-pulse" />
+                            <div className="space-y-2 ml-6">
+                                {Array.from({ length: 3 }).map((_, j) => (
+                                    <div key={j} className="h-3 bg-muted rounded animate-pulse" />
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </CardContent>
+            </Card>
+        );
+    }
+
     return (
         <Card className={className}>
             <CardContent className="p-6 space-y-6">

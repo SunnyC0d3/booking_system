@@ -16,7 +16,7 @@ import {
 import { Button, Card, CardContent } from '@/components/ui';
 import { useWishlistStore } from '@/stores/wishlistStore';
 import { useCompareStore } from '@/stores/productStore';
-import { Product, ProductCardProps } from '@/types/product';
+import { ProductCardProps } from '@/types/product';
 import { cn } from '@/lib/cn';
 
 export const ProductCard: React.FC<ProductCardProps> = ({
@@ -38,12 +38,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     const [imageError, setImageError] = React.useState(false);
     const [isHovered, setIsHovered] = React.useState(false);
 
-    const isInWishlist = (productId: number) => isItemInWishlist(productId);
-    const isInCompare = (productId: number) => compareItems.some(item => item.id === productId);
+    // Check if product is in wishlist/compare
+    const inWishlist = isItemInWishlist(product.id);
+    const inCompare = compareItems.some(item => item.id === product.id);
     const canAddToCompare = compareItems.length < 4;
 
     const hasDiscount = product.compare_price && product.compare_price > product.price;
-    const discountPercentage = hasDiscount
+    const discountPercentage = hasDiscount && product.compare_price
         ? Math.round(((product.compare_price - product.price) / product.compare_price) * 100)
         : 0;
 
@@ -57,9 +58,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
         try {
             if (inWishlist) {
-                await removeFromWishlist(product.id);
+                // Find the wishlist item to remove
+                const wishlistItems = useWishlistStore.getState().wishlist?.items || [];
+                const wishlistItem = wishlistItems.find(item => item.product_id === product.id);
+                if (wishlistItem) {
+                    await removeFromWishlist(wishlistItem.id);
+                }
             } else {
-                await addToWishlist(product);
+                await addToWishlist({ product_id: product.id });
             }
 
             if (onWishlistToggle) {
@@ -74,15 +80,31 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         e.preventDefault();
         e.stopPropagation();
 
-        if (!canAddToCompare() && !inCompare) {
+        if (!canAddToCompare && !inCompare) {
             return;
         }
 
         try {
             if (inCompare) {
-                await removeFromCompare(product.id);
+                removeFromCompare(product.id);
             } else {
-                await addToCompare(product);
+                // Convert product to API format for compare - cast to avoid type conflicts
+                const compareProduct = {
+                    ...product,
+                    quantity: product.inventory_quantity || 0,
+                    is_in_stock: !isOutOfStock,
+                    is_low_stock: Boolean(isLowStock),
+                    stock_status: isOutOfStock ? 'out_of_stock' as const : isLowStock ? 'low_stock' as const : 'in_stock' as const,
+                    // Ensure gallery compatibility
+                    gallery: product.gallery?.map(img => ({
+                        ...img,
+                        name: img.alt_text || `Image ${img.id}`,
+                        file_name: `image_${img.id}.jpg`,
+                        mime_type: 'image/jpeg',
+                        size: 0, // Default size since it's not available
+                    })) || [],
+                };
+                addToCompare(compareProduct as any); // Type assertion to avoid complex interface conflicts
             }
 
             if (onCompareToggle) {
@@ -138,23 +160,23 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                                     <div className="absolute top-2 left-2 flex flex-col gap-1">
                                         {product.featured && (
                                             <span className="badge badge-default text-xs px-2 py-1">
-                        Featured
-                      </span>
+                                                Featured
+                                            </span>
                                         )}
                                         {hasDiscount && (
                                             <span className="badge bg-red-500 text-white text-xs px-2 py-1">
-                        -{discountPercentage}%
-                      </span>
+                                                -{discountPercentage}%
+                                            </span>
                                         )}
                                         {isLowStock && !isOutOfStock && (
                                             <span className="badge bg-orange-500 text-white text-xs px-2 py-1">
-                        Low Stock
-                      </span>
+                                                Low Stock
+                                            </span>
                                         )}
                                         {isOutOfStock && (
                                             <span className="badge bg-gray-500 text-white text-xs px-2 py-1">
-                        Out of Stock
-                      </span>
+                                                Out of Stock
+                                            </span>
                                         )}
                                     </div>
                                 </div>
@@ -190,21 +212,21 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                                             ))}
                                         </div>
                                         <span className="text-sm text-muted-foreground">
-                      ({product.reviews_count})
-                    </span>
+                                            ({product.reviews_count})
+                                        </span>
                                     </div>
                                 )}
 
                                 <div className="flex items-center justify-between">
                                     {/* Price */}
                                     <div className="flex items-center gap-2">
-                    <span className="text-xl font-bold text-primary">
-                      {product.price_formatted}
-                    </span>
+                                        <span className="text-xl font-bold text-primary">
+                                            {product.price_formatted}
+                                        </span>
                                         {hasDiscount && (
                                             <span className="text-sm text-muted-foreground line-through">
-                        {product.compare_price_formatted}
-                      </span>
+                                                {product.compare_price_formatted}
+                                            </span>
                                         )}
                                     </div>
 
@@ -229,7 +251,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                                                 variant="ghost"
                                                 size="icon"
                                                 onClick={handleCompareToggle}
-                                                disabled={!canAddToCompare() && !inCompare}
+                                                disabled={!canAddToCompare && !inCompare}
                                                 className={cn(
                                                     'relative',
                                                     inCompare && 'text-blue-500 hover:text-blue-600'
@@ -244,8 +266,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                                                 variant="default"
                                                 size="sm"
                                                 onClick={handleQuickAdd}
-                                                leftIcon={<ShoppingCart className="h-4 w-4" />}
                                             >
+                                                <ShoppingCart className="h-4 w-4 mr-2" />
                                                 Add to Cart
                                             </Button>
                                         )}
@@ -303,24 +325,24 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                         <div className="absolute top-3 left-3 flex flex-col gap-2">
                             {product.featured && (
                                 <span className="badge badge-default text-xs px-2 py-1 shadow-sm">
-                  <Zap className="h-3 w-3 mr-1" />
-                  Featured
-                </span>
+                                    <Zap className="h-3 w-3 mr-1" />
+                                    Featured
+                                </span>
                             )}
                             {hasDiscount && (
                                 <span className="badge bg-red-500 text-white text-xs px-2 py-1 shadow-sm">
-                  -{discountPercentage}%
-                </span>
+                                    -{discountPercentage}%
+                                </span>
                             )}
                             {isLowStock && !isOutOfStock && (
                                 <span className="badge bg-orange-500 text-white text-xs px-2 py-1 shadow-sm">
-                  Low Stock
-                </span>
+                                    Low Stock
+                                </span>
                             )}
                             {isOutOfStock && (
                                 <span className="badge bg-gray-500 text-white text-xs px-2 py-1 shadow-sm">
-                  Out of Stock
-                </span>
+                                    Out of Stock
+                                </span>
                             )}
                         </div>
 
@@ -350,7 +372,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                                     variant="secondary"
                                     size="icon"
                                     onClick={handleCompareToggle}
-                                    disabled={!canAddToCompare() && !inCompare}
+                                    disabled={!canAddToCompare && !inCompare}
                                     className={cn(
                                         'w-8 h-8 shadow-sm backdrop-blur-sm',
                                         inCompare
@@ -381,8 +403,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                                     variant="default"
                                     className="w-full shadow-sm"
                                     onClick={handleQuickAdd}
-                                    leftIcon={<ShoppingCart className="h-4 w-4" />}
                                 >
+                                    <ShoppingCart className="h-4 w-4 mr-2" />
                                     Quick Add
                                 </Button>
                             </div>
@@ -394,8 +416,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                         {/* Category */}
                         {product.category && (
                             <span className="text-xs text-muted-foreground uppercase tracking-wide">
-                {product.category.name}
-              </span>
+                                {product.category.name}
+                            </span>
                         )}
 
                         {/* Title */}
@@ -420,20 +442,20 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                                     ))}
                                 </div>
                                 <span className="text-xs text-muted-foreground">
-                  ({product.reviews_count})
-                </span>
+                                    ({product.reviews_count})
+                                </span>
                             </div>
                         )}
 
                         {/* Price */}
                         <div className="flex items-center gap-2">
-              <span className="text-lg font-bold text-primary">
-                {product.price_formatted}
-              </span>
+                            <span className="text-lg font-bold text-primary">
+                                {product.price_formatted}
+                            </span>
                             {hasDiscount && (
                                 <span className="text-sm text-muted-foreground line-through">
-                  {product.compare_price_formatted}
-                </span>
+                                    {product.compare_price_formatted}
+                                </span>
                             )}
                         </div>
                     </CardContent>

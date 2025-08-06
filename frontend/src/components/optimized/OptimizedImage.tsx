@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/cn';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@/components/ui/loading';
 import { AlertCircle, ImageIcon } from 'lucide-react';
 
 interface OptimizedImageProps {
@@ -30,6 +30,10 @@ interface OptimizedImageProps {
 
 // Generate blur placeholder
 function generateBlurDataURL(width: number = 10, height: number = 10): string {
+    if (typeof window === 'undefined') {
+        return 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q==';
+    }
+
     const canvas = document.createElement('canvas');
     canvas.width = width;
     canvas.height = height;
@@ -98,8 +102,9 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
         }
 
         const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
+            (entries) => {
+                const entry = entries[0];
+                if (entry?.isIntersecting) {
                     setIsIntersecting(true);
                     observer.disconnect();
                 }
@@ -294,6 +299,11 @@ export class ImagePreloader {
         }
 
         return new Promise((resolve, reject) => {
+            if (typeof window === 'undefined') {
+                reject(new Error('ImagePreloader can only be used in browser'));
+                return;
+            }
+
             const img = new window.Image();
 
             img.onload = () => {
@@ -324,6 +334,10 @@ export function useProgressiveImage(
     const [blur, setBlur] = React.useState(true);
 
     React.useEffect(() => {
+        if (typeof window === 'undefined') {
+            return;
+        }
+
         const img = new window.Image();
 
         img.onload = () => {

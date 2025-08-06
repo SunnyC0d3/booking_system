@@ -15,8 +15,6 @@ import {
     Package,
     Settings,
     LogOut,
-    Bell,
-    Star,
 } from 'lucide-react';
 import { Button, Input } from '@/components/ui';
 import { useAuth } from '@/stores/authStore';
@@ -26,8 +24,21 @@ interface HeaderProps {
     className?: string;
 }
 
+// Navigation item types
+interface NavigationChild {
+    label: string;
+    href: string;
+    description?: string;
+}
+
+interface NavigationItem {
+    label: string;
+    href: string;
+    children?: NavigationChild[];
+}
+
 // Navigation items
-const navigationItems = [
+const navigationItems: NavigationItem[] = [
     {
         label: 'Products',
         href: '/products',
@@ -225,8 +236,8 @@ export const Header: React.FC<HeaderProps> = ({ className }) => {
                                 <ShoppingCart className="h-5 w-5" />
                                 {/* Cart count badge - TODO: Connect to cart store */}
                                 <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center">
-                  2
-                </span>
+                                    2
+                                </span>
                             </Button>
                         </Link>
 
@@ -247,9 +258,9 @@ export const Header: React.FC<HeaderProps> = ({ className }) => {
                                         />
                                     ) : (
                                         <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                      <span className="text-primary-foreground text-sm font-medium">
-                        {user?.name?.charAt(0).toUpperCase()}
-                      </span>
+                                            <span className="text-primary-foreground text-sm font-medium">
+                                                {user?.name?.charAt(0).toUpperCase()}
+                                            </span>
                                         </div>
                                     )}
                                     {/* Notification dot */}
