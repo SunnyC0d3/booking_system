@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -57,7 +59,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         if (error) {
             clearError();
         }
-    }, [watch('email'), watch('password')]);
+    }, [watch('email'), watch('password'), error, clearError]);
 
     const onSubmit = async (data: LoginFormData) => {
         try {
@@ -118,7 +120,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                         label="Email Address"
                         placeholder="Enter your email"
                         leftIcon={<Mail className="h-4 w-4" />}
-                        error={errors.email?.message}
+                        error={errors.email?.message || ''}
                         required
                         autoComplete="email"
                         autoFocus
@@ -146,7 +148,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                                     )}
                                 </button>
                             }
-                            error={errors.password?.message}
+                            error={errors.password?.message || ''}
                             required
                             autoComplete="current-password"
                         />
@@ -161,8 +163,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                                 className="rounded border-input text-primary focus:ring-primary focus:ring-offset-0"
                             />
                             <span className="text-sm text-muted-foreground">
-                Remember me
-              </span>
+                                Remember me
+                            </span>
                         </label>
 
                         <Link

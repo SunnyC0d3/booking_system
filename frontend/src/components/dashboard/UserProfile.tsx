@@ -8,12 +8,9 @@ import {
     User,
     Mail,
     Phone,
-    MapPin,
     Save,
-    Camera,
     Shield,
     Bell,
-    CreditCard,
     Key,
 } from 'lucide-react';
 import {
@@ -31,15 +28,13 @@ import {
 } from '@/components/ui';
 import { useAuth } from '@/stores/authStore';
 import { User as UserType } from '@/types/auth';
-import { cn } from '@/lib/cn';
 import { toast } from 'sonner';
 
-// Profile update schema
+// Profile update schema - only include fields that exist in User type
 const profileUpdateSchema = z.object({
     name: z.string().min(2, 'Name must be at least 2 characters'),
     email: z.string().email('Please enter a valid email address'),
     phone: z.string().optional(),
-    company: z.string().optional(),
 });
 
 type ProfileUpdateData = z.infer<typeof profileUpdateSchema>;
@@ -81,7 +76,6 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({
             name: user.name || '',
             email: user.email || '',
             phone: user.phone || '',
-            company: user.company || '',
         },
     });
 
@@ -90,7 +84,6 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({
             name: user.name || '',
             email: user.email || '',
             phone: user.phone || '',
-            company: user.company || '',
         });
     }, [user, reset]);
 
@@ -101,7 +94,12 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({
             // await userApi.updateProfile(data);
 
             // For now, just update the user in the auth store
-            updateUser(data);
+            // Convert phone to proper type (null instead of undefined)
+            const updateData = {
+                ...data,
+                phone: data.phone || null,
+            };
+            updateUser(updateData);
 
             setIsEditing(false);
             toast.success('Profile updated successfully');
@@ -145,7 +143,7 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({
                                 label="Full Name"
                                 placeholder="Enter your full name"
                                 leftIcon={<User className="h-4 w-4" />}
-                                error={errors.name?.message}
+                                error={errors.name?.message || ''}
                                 required
                             />
                             <Input
@@ -154,7 +152,7 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({
                                 label="Email Address"
                                 placeholder="Enter your email"
                                 leftIcon={<Mail className="h-4 w-4" />}
-                                error={errors.email?.message}
+                                error={errors.email?.message || ''}
                                 required
                             />
                             <Input
@@ -163,13 +161,7 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({
                                 label="Phone Number"
                                 placeholder="Enter your phone number"
                                 leftIcon={<Phone className="h-4 w-4" />}
-                                error={errors.phone?.message}
-                            />
-                            <Input
-                                {...register('company')}
-                                label="Company (Optional)"
-                                placeholder="Enter your company name"
-                                error={errors.company?.message}
+                                error={errors.phone?.message || ''}
                             />
                         </div>
 
@@ -227,10 +219,10 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({
                             </div>
                             <div>
                                 <label className="text-sm font-medium text-muted-foreground">
-                                    Company
+                                    Date of Birth
                                 </label>
                                 <p className="text-foreground font-medium">
-                                    {user.company || 'Not provided'}
+                                    {user.date_of_birth ? new Date(user.date_of_birth).toLocaleDateString() : 'Not provided'}
                                 </p>
                             </div>
                         </div>
@@ -238,9 +230,7 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({
                         <div className="pt-4 border-t">
                             <div className="text-sm text-muted-foreground">
                                 <p>Member since: {new Date(user.created_at).toLocaleDateString()}</p>
-                                {user.last_login_at && (
-                                    <p>Last login: {new Date(user.last_login_at).toLocaleDateString()}</p>
-                                )}
+                                <p>User Role: {user.role?.name || 'User'}</p>
                             </div>
                         </div>
                     </div>
@@ -264,7 +254,7 @@ export const PasswordChangeDialog: React.FC = () => {
         resolver: zodResolver(passwordChangeSchema),
     });
 
-    const onSubmit = async (data: PasswordChangeData) => {
+    const onSubmit = async () => {
         setIsLoading(true);
         try {
             // Here you would call your API to change password
@@ -298,7 +288,7 @@ export const PasswordChangeDialog: React.FC = () => {
                         type="password"
                         label="Current Password"
                         placeholder="Enter your current password"
-                        error={errors.current_password?.message}
+                        error={errors.current_password?.message || ''}
                         required
                     />
                     <Input
@@ -306,7 +296,7 @@ export const PasswordChangeDialog: React.FC = () => {
                         type="password"
                         label="New Password"
                         placeholder="Enter your new password"
-                        error={errors.password?.message}
+                        error={errors.password?.message || ''}
                         required
                     />
                     <Input
@@ -314,7 +304,7 @@ export const PasswordChangeDialog: React.FC = () => {
                         type="password"
                         label="Confirm New Password"
                         placeholder="Confirm your new password"
-                        error={errors.password_confirmation?.message}
+                        error={errors.password_confirmation?.message || ''}
                         required
                     />
 
@@ -360,10 +350,7 @@ export const AccountSecurityCard: React.FC<{ className?: string }> = ({ classNam
                         <div>
                             <p className="font-medium">Password</p>
                             <p className="text-sm text-muted-foreground">
-                                Last changed {user?.password_changed_at
-                                ? new Date(user.password_changed_at).toLocaleDateString()
-                                : 'never'
-                            }
+                                Manage your account password
                             </p>
                         </div>
                         <PasswordChangeDialog />
@@ -394,6 +381,17 @@ export const AccountSecurityCard: React.FC<{ className?: string }> = ({ classNam
                             </Button>
                         )}
                     </div>
+
+                    {user?.security_score && (
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="font-medium">Security Score</p>
+                                <p className="text-sm text-muted-foreground">
+                                    {user.security_score.strength} ({user.security_score.score}/100)
+                                </p>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </CardContent>
         </Card>
@@ -402,6 +400,9 @@ export const AccountSecurityCard: React.FC<{ className?: string }> = ({ classNam
 
 // Preferences Card Component
 export const PreferencesCard: React.FC<{ className?: string }> = ({ className }) => {
+    const { user } = useAuth();
+    const preferences = user?.preferences;
+
     return (
         <Card className={className}>
             <CardHeader>
@@ -421,7 +422,7 @@ export const PreferencesCard: React.FC<{ className?: string }> = ({ className })
                         </div>
                         <input
                             type="checkbox"
-                            defaultChecked
+                            defaultChecked={preferences?.notifications?.email ?? true}
                             className="rounded border-input text-primary focus:ring-primary"
                         />
                     </div>
@@ -435,22 +436,36 @@ export const PreferencesCard: React.FC<{ className?: string }> = ({ className })
                         </div>
                         <input
                             type="checkbox"
+                            defaultChecked={preferences?.notifications?.sms ?? false}
                             className="rounded border-input text-primary focus:ring-primary"
                         />
                     </div>
 
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="font-medium">Marketing Communications</p>
+                            <p className="font-medium">Push Notifications</p>
                             <p className="text-sm text-muted-foreground">
-                                New products and special offers
+                                App notifications
                             </p>
                         </div>
                         <input
                             type="checkbox"
-                            defaultChecked
+                            defaultChecked={preferences?.notifications?.push ?? true}
                             className="rounded border-input text-primary focus:ring-primary"
                         />
+                    </div>
+
+                    <div className="pt-3 border-t">
+                        <div className="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <p className="font-medium text-muted-foreground">Theme</p>
+                                <p className="capitalize">{preferences?.theme || 'System'}</p>
+                            </div>
+                            <div>
+                                <p className="font-medium text-muted-foreground">Language</p>
+                                <p className="uppercase">{preferences?.language || 'EN'}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </CardContent>

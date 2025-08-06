@@ -1,15 +1,12 @@
+'use client';
+
 import * as React from 'react';
-import { useState } from 'react';
-import { motion } from 'framer-motion';
 import {
     Key,
     Copy,
     Eye,
     EyeOff,
     Shield,
-    Calendar,
-    Monitor,
-    AlertTriangle,
     CheckCircle,
     RefreshCw,
     Settings
@@ -17,8 +14,6 @@ import {
 import {
     Card,
     CardContent,
-    CardHeader,
-    CardTitle,
     Button,
     Badge,
     Dialog,
@@ -27,11 +22,8 @@ import {
     DialogTitle,
     DialogTrigger,
     Input,
-    Tabs,
-    TabsContent,
-    TabsList,
-    TabsTrigger
 } from '@/components/ui';
+import { LicenseManagementDialog } from './LicenseManagementDialog';
 import { cn } from '@/lib/cn';
 
 interface LicenseManagerProps {
@@ -43,8 +35,8 @@ export const LicenseManager: React.FC<LicenseManagerProps> = ({
                                                                   licenseKeys,
                                                                   className
                                                               }) => {
-    const [showKeys, setShowKeys] = useState<{ [key: string]: boolean }>({});
-    const [validatingKey, setValidatingKey] = useState<string | null>(null);
+    const [showKeys, setShowKeys] = React.useState<{ [key: string]: boolean }>({});
+    const [validatingKey, setValidatingKey] = React.useState<string | null>(null);
 
     const toggleKeyVisibility = (keyId: string) => {
         setShowKeys(prev => ({
@@ -124,7 +116,7 @@ export const LicenseManager: React.FC<LicenseManagerProps> = ({
     );
 };
 
-// frontend/src/components/digital/LicenseKeyCard.tsx
+// License Key Card Component
 interface LicenseKeyCardProps {
     licenseKey: any;
     showKey: boolean;

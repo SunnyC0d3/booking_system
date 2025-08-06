@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import { motion } from 'framer-motion';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
@@ -92,6 +94,3 @@ export const QuickStats: React.FC<QuickStatsProps> = ({ stats, className }) => {
         </div>
     );
 };
-
-// Export the QuickStats component from AdminLayout
-export { QuickStats } from './AdminLayout';

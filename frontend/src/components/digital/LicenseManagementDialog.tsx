@@ -1,4 +1,40 @@
-const LicenseManagementDialog: React.FC<{ licenseKey: any }> = ({ licenseKey }) => {
+'use client';
+
+import * as React from 'react';
+import { Monitor } from 'lucide-react';
+import {
+    Card,
+    CardContent,
+    Tabs,
+    TabsContent,
+    TabsList,
+    TabsTrigger,
+} from '@/components/ui';
+
+interface LicenseKey {
+    id: number;
+    key: string;
+    product: {
+        id: number;
+        name: string;
+        latest_version: string;
+    };
+    status: string;
+    created_at: string;
+    activations?: Array<{
+        id: number;
+        device_name?: string;
+        activated_at: string;
+    }>;
+    validation_count?: number;
+    last_used_at?: string;
+}
+
+interface LicenseManagementDialogProps {
+    licenseKey: LicenseKey;
+}
+
+export const LicenseManagementDialog: React.FC<LicenseManagementDialogProps> = ({ licenseKey }) => {
     return (
         <Tabs defaultValue="details" className="w-full">
             <TabsList className="grid w-full grid-cols-3">
@@ -23,7 +59,7 @@ const LicenseManagementDialog: React.FC<{ licenseKey: any }> = ({ licenseKey }) 
                     </div>
                     <div>
                         <label className="text-sm font-medium">Status</label>
-                        <p className="text-sm">{licenseKey.status}</p>
+                        <p className="text-sm capitalize">{licenseKey.status}</p>
                     </div>
                 </div>
             </TabsContent>
@@ -31,15 +67,17 @@ const LicenseManagementDialog: React.FC<{ licenseKey: any }> = ({ licenseKey }) 
             <TabsContent value="activations" className="space-y-4">
                 <div className="space-y-2">
                     <h4 className="font-medium">Active Devices</h4>
-                    {licenseKey.activations?.length > 0 ? (
+                    {licenseKey.activations && licenseKey.activations.length > 0 ? (
                         <div className="space-y-2">
-                            {licenseKey.activations.map((activation: any, index: number) => (
-                                <Card key={index}>
+                            {licenseKey.activations.map((activation, index) => (
+                                <Card key={activation.id || index}>
                                     <CardContent className="p-3">
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-2">
                                                 <Monitor className="h-4 w-4" />
-                                                <span className="text-sm">{activation.device_name || `Device ${index + 1}`}</span>
+                                                <span className="text-sm">
+                                                    {activation.device_name || `Device ${index + 1}`}
+                                                </span>
                                             </div>
                                             <div className="text-xs text-muted-foreground">
                                                 {new Date(activation.activated_at).toLocaleDateString()}
@@ -81,4 +119,4 @@ const LicenseManagementDialog: React.FC<{ licenseKey: any }> = ({ licenseKey }) 
     );
 };
 
-export default LicenseManager;
+export default LicenseManagementDialog;

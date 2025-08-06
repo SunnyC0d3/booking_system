@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, Plus } from 'lucide-react';
@@ -160,19 +162,12 @@ export const QuickAddToCart: React.FC<QuickAddToCartProps> = ({
                                                                   className,
                                                                   onSuccess,
                                                               }) => {
-    const { addToCart, isLoading, items } = useCartStore();
+    const { addToCart, isLoading, getCartItem } = useCartStore();
     const [isAdding, setIsAdding] = React.useState(false);
 
-    // Get current quantity by checking if item exists in cart
-    const getItemQuantity = (productId: number, variantId?: number) => {
-        const item = items.find(item =>
-            item.product_id === productId &&
-            item.product_variant_id === variantId
-        );
-        return item?.quantity || 0;
-    };
-
-    const currentQuantity = getItemQuantity(productId, variantId);
+    // Get current cart item
+    const cartItem = getCartItem(productId, variantId);
+    const currentQuantity = cartItem?.quantity || 0;
     const isInCart = currentQuantity > 0;
 
     const handleQuickAdd = async (e: React.MouseEvent) => {
@@ -183,7 +178,7 @@ export const QuickAddToCart: React.FC<QuickAddToCartProps> = ({
         try {
             await addToCart({
                 product_id: productId,
-                product_variant_id: variantId,
+                product_variant_id: variantId || null, // Convert undefined to null
                 quantity: 1,
             });
             onSuccess?.();

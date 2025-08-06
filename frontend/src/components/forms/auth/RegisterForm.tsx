@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -87,7 +89,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         if (error) {
             clearError();
         }
-    }, [watch('email'), watch('password')]);
+    }, [watch('email'), watch('password'), error, clearError]);
 
     const onSubmit = async (data: RegisterFormData) => {
         try {
@@ -166,7 +168,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
                         label="Full Name"
                         placeholder="Enter your full name"
                         leftIcon={<User className="h-4 w-4" />}
-                        error={errors.name?.message}
+                        error={errors.name?.message || ''}
                         required
                         autoComplete="name"
                         autoFocus
@@ -179,7 +181,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
                         label="Email Address"
                         placeholder="Enter your email"
                         leftIcon={<Mail className="h-4 w-4" />}
-                        error={errors.email?.message}
+                        error={errors.email?.message || ''}
                         required
                         autoComplete="email"
                     />
@@ -192,7 +194,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
                             label="Password"
                             placeholder="Create a strong password"
                             leftIcon={<Lock className="h-4 w-4" />}
-                            error={errors.password?.message}
+                            error={errors.password?.message || ''}
                             required
                             autoComplete="new-password"
                         />
@@ -259,7 +261,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
                         label="Confirm Password"
                         placeholder="Confirm your password"
                         leftIcon={<Lock className="h-4 w-4" />}
-                        error={errors.password_confirmation?.message}
+                        error={errors.password_confirmation?.message || ''}
                         required
                         autoComplete="new-password"
                     />
@@ -273,15 +275,15 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
                                 className="rounded border-input text-primary focus:ring-primary focus:ring-offset-0 mt-1"
                             />
                             <span className="text-sm text-muted-foreground leading-relaxed">
-                I agree to the{' '}
+                                I agree to the{' '}
                                 <Link href="/terms" className="text-primary hover:text-primary/80">
-                  Terms of Service
-                </Link>{' '}
+                                    Terms of Service
+                                </Link>{' '}
                                 and{' '}
                                 <Link href="/privacy" className="text-primary hover:text-primary/80">
-                  Privacy Policy
-                </Link>
-              </span>
+                                    Privacy Policy
+                                </Link>
+                            </span>
                         </label>
                         {errors.terms_accepted && (
                             <p className="text-sm text-error">{errors.terms_accepted.message}</p>
@@ -294,8 +296,8 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
                                 className="rounded border-input text-primary focus:ring-primary focus:ring-offset-0 mt-1"
                             />
                             <span className="text-sm text-muted-foreground leading-relaxed">
-                I'd like to receive marketing emails about new products and promotions
-              </span>
+                                I'd like to receive marketing emails about new products and promotions
+                            </span>
                         </label>
                     </div>
 

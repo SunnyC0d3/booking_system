@@ -76,11 +76,17 @@ const generateBreadcrumbsFromPath = (pathname: string): BreadcrumbItem[] => {
                 .join(' ');
         }
 
-        breadcrumbs.push({
+        const breadcrumbItem: BreadcrumbItem = {
             label,
-            href: isLast ? undefined : href,
             current: isLast,
-        });
+        };
+
+        // Only add href if not the last item
+        if (!isLast) {
+            breadcrumbItem.href = href;
+        }
+
+        breadcrumbs.push(breadcrumbItem);
     });
 
     return breadcrumbs;
@@ -152,8 +158,8 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
                                         )}
                                         aria-current={item.current ? 'page' : undefined}
                                     >
-                    {item.label}
-                  </span>
+                                        {item.label}
+                                    </span>
                                 )}
                             </li>
 
@@ -201,9 +207,27 @@ export const useBreadcrumbs = (items?: BreadcrumbItem[]) => {
         return [...breadcrumbs, item];
     };
 
-    const updateBreadcrumb = (index: number, item: Partial<BreadcrumbItem>) => {
+    const updateBreadcrumb = (index: number, updates: Partial<BreadcrumbItem>) => {
         const updated = [...breadcrumbs];
-        updated[index] = { ...updated[index], ...item };
+        const currentItem = updated[index];
+
+        if (currentItem) {
+            // Create a new item with proper type handling
+            const newItem: BreadcrumbItem = {
+                label: updates.label !== undefined ? updates.label : currentItem.label,
+                current: updates.current !== undefined ? updates.current : currentItem.current,
+            };
+
+            // Only set href if it's provided in updates or exists in current item
+            if (updates.href !== undefined) {
+                newItem.href = updates.href;
+            } else if (currentItem.href !== undefined) {
+                newItem.href = currentItem.href;
+            }
+
+            updated[index] = newItem;
+        }
+
         return updated;
     };
 

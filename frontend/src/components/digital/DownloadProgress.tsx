@@ -1,7 +1,6 @@
 'use client'
 
 import * as React from 'react';
-import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import {
     Download,
@@ -14,7 +13,6 @@ import {
     Card,
     CardContent,
     Button,
-    Progress
 } from '@/components/ui';
 import { cn } from '@/lib/cn';
 
@@ -25,25 +23,40 @@ interface DownloadProgressProps {
     className?: string;
 }
 
+// Simple Progress component since it's not available in UI
+const Progress: React.FC<{
+    value: number;
+    className?: string;
+}> = ({ value, className }) => {
+    return (
+        <div className={cn('w-full bg-muted rounded-full h-2', className)}>
+            <div
+                className="bg-primary h-full rounded-full transition-all duration-300 ease-out"
+                style={{ width: `${Math.max(0, Math.min(100, value))}%` }}
+            />
+        </div>
+    );
+};
+
 export const DownloadProgress: React.FC<DownloadProgressProps> = ({
                                                                       token,
                                                                       onComplete,
                                                                       onError,
                                                                       className
                                                                   }) => {
-    const [progress, setProgress] = useState(0);
-    const [status, setStatus] = useState<'downloading' | 'completed' | 'error' | 'cancelled'>('downloading');
-    const [error, setError] = useState<string | null>(null);
-    const [attemptId, setAttemptId] = useState<string | null>(null);
-    const [downloadInfo, setDownloadInfo] = useState<any>(null);
+    const [progress, setProgress] = React.useState(0);
+    const [status, setStatus] = React.useState<'downloading' | 'completed' | 'error' | 'cancelled'>('downloading');
+    const [error, setError] = React.useState<string | null>(null);
+    const [attemptId, setAttemptId] = React.useState<string | null>(null);
+    const [downloadInfo, setDownloadInfo] = React.useState<any>(null);
 
     // Generate attempt ID when component mounts
-    useEffect(() => {
+    React.useEffect(() => {
         setAttemptId(Date.now().toString());
     }, []);
 
     // Fetch download info
-    const fetchDownloadInfo = useCallback(async () => {
+    const fetchDownloadInfo = React.useCallback(async () => {
         try {
             const response = await fetch(`/api/v1/digital/download/${token}/info`, {
                 headers: {
@@ -61,7 +74,7 @@ export const DownloadProgress: React.FC<DownloadProgressProps> = ({
     }, [token]);
 
     // Update progress on server
-    const updateProgress = useCallback(async (progressValue: number) => {
+    const updateProgress = React.useCallback(async (progressValue: number) => {
         if (!attemptId) return;
 
         try {
@@ -82,7 +95,7 @@ export const DownloadProgress: React.FC<DownloadProgressProps> = ({
     }, [token, attemptId, status]);
 
     // Simulate download progress (in real implementation, this would be based on actual download)
-    useEffect(() => {
+    React.useEffect(() => {
         if (status !== 'downloading') return;
 
         fetchDownloadInfo();
@@ -113,6 +126,9 @@ export const DownloadProgress: React.FC<DownloadProgressProps> = ({
     };
 
     const handleRetry = () => {
+        if (error && onError) {
+            onError(error);
+        }
         setStatus('downloading');
         setProgress(0);
         setError(null);

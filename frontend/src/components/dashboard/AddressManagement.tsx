@@ -25,7 +25,6 @@ import {
     DialogContent,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from '@/components/ui';
 import { ShippingAddress } from '@/types/api';
 import { cn } from '@/lib/cn';
@@ -245,7 +244,6 @@ export const AddressFormDialog: React.FC<AddressFormDialogProps> = ({
         handleSubmit,
         formState: { errors },
         reset,
-        watch,
     } = useForm<AddressFormData>({
         resolver: zodResolver(addressSchema),
         defaultValues: {
@@ -351,14 +349,14 @@ export const AddressFormDialog: React.FC<AddressFormDialogProps> = ({
                             {...register('name')}
                             label="Full Name"
                             placeholder="Enter full name"
-                            error={errors.name?.message}
+                            error={errors.name?.message || ''}
                             required
                         />
                         <Input
                             {...register('company')}
                             label="Company (Optional)"
                             placeholder="Enter company name"
-                            error={errors.company?.message}
+                            error={errors.company?.message || ''}
                         />
                     </div>
 
@@ -367,14 +365,14 @@ export const AddressFormDialog: React.FC<AddressFormDialogProps> = ({
                         {...register('line1')}
                         label="Address Line 1"
                         placeholder="Street address, P.O. box, company name"
-                        error={errors.line1?.message}
+                        error={errors.line1?.message || ''}
                         required
                     />
                     <Input
                         {...register('line2')}
                         label="Address Line 2 (Optional)"
                         placeholder="Apartment, suite, unit, building, floor, etc."
-                        error={errors.line2?.message}
+                        error={errors.line2?.message || ''}
                     />
 
                     {/* City, County, Postcode */}
@@ -383,20 +381,20 @@ export const AddressFormDialog: React.FC<AddressFormDialogProps> = ({
                             {...register('city')}
                             label="City"
                             placeholder="Enter city"
-                            error={errors.city?.message}
+                            error={errors.city?.message || ''}
                             required
                         />
                         <Input
                             {...register('county')}
                             label="County/State"
                             placeholder="Enter county"
-                            error={errors.county?.message}
+                            error={errors.county?.message || ''}
                         />
                         <Input
                             {...register('postcode')}
                             label="Postcode"
                             placeholder="Enter postcode"
-                            error={errors.postcode?.message}
+                            error={errors.postcode?.message || ''}
                             required
                         />
                     </div>
@@ -431,7 +429,7 @@ export const AddressFormDialog: React.FC<AddressFormDialogProps> = ({
                             type="tel"
                             label="Phone Number (Optional)"
                             placeholder="Enter phone number"
-                            error={errors.phone?.message}
+                            error={errors.phone?.message || ''}
                         />
                     </div>
 
@@ -514,7 +512,15 @@ export const AddressManagement: React.FC<AddressManagementProps> = ({ className 
             // Update existing address
             setAddresses(prev => prev.map(addr =>
                 addr.id === selectedAddress.id
-                    ? { ...addr, ...data, updated_at: new Date().toISOString() }
+                    ? {
+                        ...addr,
+                        ...data,
+                        company: data.company || null,  // Convert empty string to null
+                        line2: data.line2 || null,      // Convert empty string to null
+                        county: data.county || null,    // Convert empty string to null
+                        phone: data.phone || null,      // Convert empty string to null
+                        updated_at: new Date().toISOString()
+                    }
                     : addr
             ));
         } else {
@@ -522,6 +528,10 @@ export const AddressManagement: React.FC<AddressManagementProps> = ({ className 
             const newAddress: ShippingAddress = {
                 id: Math.max(...addresses.map(a => a.id)) + 1,
                 ...data,
+                company: data.company || null,  // Convert empty string to null
+                line2: data.line2 || null,      // Convert empty string to null
+                county: data.county || null,    // Convert empty string to null
+                phone: data.phone || null,      // Convert empty string to null
                 type_label: data.type === 'both' ? 'Shipping & Billing' :
                     data.type === 'shipping' ? 'Shipping Only' : 'Billing Only',
                 country_name: 'United Kingdom', // You'd get this from country code

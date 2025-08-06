@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -12,23 +14,19 @@ import {
     Download,
     RotateCcw,
     Star,
-    Filter,
     Search,
 } from 'lucide-react';
 import {
     Button,
     Card,
     CardContent,
-    CardHeader,
-    CardTitle,
     Input,
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from '@/components/ui';
-import { Order, OrderItem } from '@/types/api';
+import { Order } from '@/types/api';
 import { cn } from '@/lib/cn';
 import { toast } from 'sonner';
 
@@ -133,7 +131,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({
 
                     {/* Order Items Preview */}
                     <div className="space-y-3 mb-4">
-                        {order.order_items?.slice(0, 3).map((item, index) => (
+                        {order.order_items?.slice(0, 3).map((item) => (
                             <div key={item.id} className="flex items-center gap-3">
                                 <div className="relative w-12 h-12 bg-muted rounded-lg overflow-hidden">
                                     {item.product?.featured_image ? (
@@ -275,10 +273,7 @@ export const OrderDetailsDialog: React.FC<OrderDetailsDialogProps> = ({
                         <div>
                             <label className="text-sm font-medium text-muted-foreground">Payment Status</label>
                             <p className="text-foreground font-medium">
-                                {order.payments && order.payments.length > 0
-                                    ? order.payments[0].status
-                                    : 'Pending'
-                                }
+                                {order.payments?.[0]?.status || 'Pending'}
                             </p>
                         </div>
                     </div>

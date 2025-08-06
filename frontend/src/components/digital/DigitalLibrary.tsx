@@ -1,18 +1,13 @@
+'use client';
+
 import * as React from 'react';
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import {
     Download,
-    FileText,
     Key,
-    Calendar,
     AlertCircle,
-    CheckCircle,
     Clock,
     Package,
-    Monitor,
-    Shield,
     RefreshCw
 } from 'lucide-react';
 import {
@@ -21,18 +16,12 @@ import {
     CardHeader,
     CardTitle,
     Button,
-    Badge,
     Tabs,
     TabsContent,
     TabsList,
     TabsTrigger,
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger
 } from '@/components/ui';
-import { DownloadProgress } from './DownloadProgress';
+import { DigitalProductCard } from './DigitalProductCard';
 import { LicenseManager } from './LicenseManager';
 import { useDigitalProducts } from '@/hooks/useDigitalProducts';
 import { cn } from '@/lib/cn';
@@ -47,7 +36,6 @@ export const DigitalLibrary: React.FC<DigitalLibraryProps> = ({
                                                                   showStats = true
                                                               }) => {
     const {
-        digitalProducts,
         downloadAccesses,
         licenseKeys,
         statistics,
@@ -56,7 +44,7 @@ export const DigitalLibrary: React.FC<DigitalLibraryProps> = ({
         refreshLibrary
     } = useDigitalProducts();
 
-    const [activeTab, setActiveTab] = useState('downloads');
+    const [activeTab, setActiveTab] = React.useState('downloads');
 
     if (loading) {
         return (

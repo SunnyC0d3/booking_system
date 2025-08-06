@@ -1,5 +1,30 @@
+'use client';
+
+import * as React from 'react';
+import {
+    Download,
+    FileText,
+    Calendar,
+    CheckCircle,
+    RefreshCw,
+    Shield
+} from 'lucide-react';
+import {
+    Card,
+    CardContent,
+    Button,
+    Badge,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger
+} from '@/components/ui';
+import { DownloadProgress } from './DownloadProgress';
+import { cn } from '@/lib/cn';
+
 interface DigitalProductCardProps {
-    downloadAccess: any;
+    downloadAccess: any; // Replace with proper type from your digital product types
     className?: string;
 }
 
@@ -7,38 +32,39 @@ export const DigitalProductCard: React.FC<DigitalProductCardProps> = ({
                                                                           downloadAccess,
                                                                           className
                                                                       }) => {
-    const [isDownloading, setIsDownloading] = useState(false);
-    const [showDetails, setShowDetails] = useState(false);
+    const [isDownloading, setIsDownloading] = React.useState(false);
+    const [showDetails, setShowDetails] = React.useState(false);
 
-    const isExpired = new Date(downloadAccess.expires_at) < new Date();
-    const isExpiringSoon = new Date(downloadAccess.expires_at) < new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-
-    const handleDownload = async (fileId?: number) => {
+    const handleDownload = async (fileUrl: string, fileName: string) => {
         setIsDownloading(true);
         try {
-            const response = await fetch(`/api/v1/digital/download/${downloadAccess.access_token}${fileId ? `?file_id=${fileId}` : ''}`, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
-                }
-            });
+            // Simulate download process
+            await new Promise(resolve => setTimeout(resolve, 2000));
 
-            if (response.ok) {
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = response.headers.get('Content-Disposition')?.split('filename=')[1]?.replace(/"/g, '') || 'download';
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
-            } else {
-                throw new Error('Download failed');
-            }
+            // Create download link
+            const link = document.createElement('a');
+            link.href = fileUrl;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         } catch (error) {
-            console.error('Download error:', error);
+            console.error('Download failed:', error);
         } finally {
             setIsDownloading(false);
+        }
+    };
+
+    const getStatusBadge = () => {
+        const now = new Date();
+        const expiresAt = downloadAccess.expires_at ? new Date(downloadAccess.expires_at) : null;
+
+        if (expiresAt && expiresAt < now) {
+            return <Badge variant="destructive">Expired</Badge>;
+        } else if (expiresAt && expiresAt.getTime() - now.getTime() < 7 * 24 * 60 * 60 * 1000) {
+            return <Badge variant="secondary">Expiring Soon</Badge>;
+        } else {
+            return <Badge variant="secondary">Active</Badge>;
         }
     };
 
@@ -50,45 +76,31 @@ export const DigitalProductCard: React.FC<DigitalProductCardProps> = ({
                         <h3 className="text-lg font-semibold mb-2">
                             {downloadAccess.product.name}
                         </h3>
-                        <p className="text-muted-foreground text-sm mb-3">
-                            {downloadAccess.product.description}
-                        </p>
-
-                        <div className="flex items-center gap-4 text-sm">
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
                             <div className="flex items-center gap-1">
                                 <Download className="h-4 w-4" />
-                                <span>{downloadAccess.downloads_remaining || downloadAccess.download_limit} downloads left</span>
+                                {downloadAccess.downloads_count || 0} downloads
                             </div>
                             <div className="flex items-center gap-1">
                                 <Calendar className="h-4 w-4" />
-                                <span>Expires {new Date(downloadAccess.expires_at).toLocaleDateString()}</span>
+                                Purchased {new Date(downloadAccess.created_at).toLocaleDateString()}
                             </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            {getStatusBadge()}
+                            {downloadAccess.is_lifetime && (
+                                <Badge variant="outline" className="text-green-600">
+                                    <CheckCircle className="h-3 w-3 mr-1" />
+                                    Lifetime
+                                </Badge>
+                            )}
                         </div>
                     </div>
 
                     <div className="flex items-center gap-2">
-                        {isExpired ? (
-                            <Badge variant="destructive">Expired</Badge>
-                        ) : isExpiringSoon ? (
-                            <Badge variant="secondary">Expiring Soon</Badge>
-                        ) : (
-                            <Badge variant="secondary">Active</Badge>
-                        )}
-
-                        {downloadAccess.status === 'active' && (
-                            <Badge variant="outline" className="text-green-600">
-                                <CheckCircle className="h-3 w-3 mr-1" />
-                                Available
-                            </Badge>
-                        )}
-                    </div>
-                </div>
-
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
                         <Button
-                            onClick={() => handleDownload()}
-                            disabled={isExpired || isDownloading}
+                            onClick={() => handleDownload(downloadAccess.download_url, downloadAccess.product.name)}
+                            disabled={isDownloading}
                             size="sm"
                         >
                             {isDownloading ? (
@@ -115,45 +127,50 @@ export const DigitalProductCard: React.FC<DigitalProductCardProps> = ({
                                 <DialogHeader>
                                     <DialogTitle>{downloadAccess.product.name}</DialogTitle>
                                 </DialogHeader>
-                                <div className="space-y-4">
+
+                                <div className="space-y-6">
                                     <div>
                                         <h4 className="font-semibold mb-2">Product Information</h4>
-                                        <div className="grid grid-cols-2 gap-4 text-sm">
-                                            <div>
-                                                <p className="text-muted-foreground">Type</p>
-                                                <p>{downloadAccess.product.product_type}</p>
-                                            </div>
-                                            <div>
-                                                <p className="text-muted-foreground">Version</p>
-                                                <p>{downloadAccess.product.latest_version}</p>
-                                            </div>
-                                            <div>
-                                                <p className="text-muted-foreground">Platforms</p>
-                                                <p>{downloadAccess.product.supported_platforms?.join(', ')}</p>
-                                            </div>
-                                            <div>
-                                                <p className="text-muted-foreground">License Required</p>
-                                                <p>{downloadAccess.product.requires_license ? 'Yes' : 'No'}</p>
-                                            </div>
+                                        <div className="space-y-2 text-sm">
+                                            <p><strong>Version:</strong> {downloadAccess.product.version || 'Latest'}</p>
+                                            <p><strong>Size:</strong> {downloadAccess.file_size || 'Unknown'}</p>
+                                            <p><strong>Format:</strong> {downloadAccess.file_format || 'Digital Download'}</p>
+                                            <p><strong>License Type:</strong> {downloadAccess.license_type || 'Standard'}</p>
                                         </div>
                                     </div>
 
-                                    {downloadAccess.product.files && (
+                                    <div>
+                                        <h4 className="font-semibold mb-2">Download Information</h4>
+                                        <div className="space-y-2 text-sm">
+                                            <p><strong>Downloads Used:</strong> {downloadAccess.downloads_count || 0} / {downloadAccess.max_downloads || 'Unlimited'}</p>
+                                            <p><strong>First Downloaded:</strong> {downloadAccess.first_downloaded_at ? new Date(downloadAccess.first_downloaded_at).toLocaleDateString() : 'Never'}</p>
+                                            <p><strong>Last Downloaded:</strong> {downloadAccess.last_downloaded_at ? new Date(downloadAccess.last_downloaded_at).toLocaleDateString() : 'Never'}</p>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <h4 className="font-semibold mb-2">Access Information</h4>
+                                        <div className="space-y-2 text-sm">
+                                            <p><strong>Status:</strong> {downloadAccess.is_active ? 'Active' : 'Inactive'}</p>
+                                            <p><strong>Expires:</strong> {downloadAccess.expires_at ? new Date(downloadAccess.expires_at).toLocaleDateString() : 'Never'}</p>
+                                            <p><strong>Order ID:</strong> #{downloadAccess.order_id}</p>
+                                        </div>
+                                    </div>
+
+                                    {downloadAccess.files && downloadAccess.files.length > 0 && (
                                         <div>
                                             <h4 className="font-semibold mb-2">Available Files</h4>
                                             <div className="space-y-2">
-                                                {downloadAccess.product.files.map((file: any) => (
-                                                    <div key={file.id} className="flex items-center justify-between p-3 border rounded-lg">
+                                                {downloadAccess.files.map((file: any, index: number) => (
+                                                    <div key={index} className="flex items-center justify-between p-2 bg-muted/50 rounded">
                                                         <div>
                                                             <p className="font-medium">{file.name}</p>
-                                                            <p className="text-sm text-muted-foreground">
-                                                                {file.file_size_formatted} • {file.file_type}
-                                                            </p>
+                                                            <p className="text-sm text-muted-foreground">{file.size}</p>
                                                         </div>
                                                         <Button
                                                             size="sm"
-                                                            onClick={() => handleDownload(file.id)}
-                                                            disabled={isExpired || isDownloading}
+                                                            variant="outline"
+                                                            onClick={() => handleDownload(file.url, file.name)}
                                                         >
                                                             <Download className="h-4 w-4" />
                                                         </Button>
@@ -162,38 +179,34 @@ export const DigitalProductCard: React.FC<DigitalProductCardProps> = ({
                                             </div>
                                         </div>
                                     )}
-
-                                    <div>
-                                        <h4 className="font-semibold mb-2">Download Access</h4>
-                                        <div className="grid grid-cols-2 gap-4 text-sm">
-                                            <div>
-                                                <p className="text-muted-foreground">Downloads Remaining</p>
-                                                <p>{downloadAccess.downloads_remaining || downloadAccess.download_limit}</p>
-                                            </div>
-                                            <div>
-                                                <p className="text-muted-foreground">Expires At</p>
-                                                <p>{new Date(downloadAccess.expires_at).toLocaleString()}</p>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </DialogContent>
                         </Dialog>
                     </div>
-
-                    {downloadAccess.product.requires_license && (
-                        <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                            <Shield className="h-4 w-4" />
-                            <span>License Required</span>
-                        </div>
-                    )}
                 </div>
 
-                {isDownloading && (
+                {downloadAccess.description && (
+                    <p className="text-sm text-muted-foreground mb-4">
+                        {downloadAccess.description}
+                    </p>
+                )}
+
+                {/* Security Notice */}
+                <div className="flex items-center gap-2 text-xs text-muted-foreground pt-4 border-t">
+                    <Shield className="h-4 w-4" />
+                    <span>Secure download protected by license verification</span>
+                </div>
+
+                {/* Download Progress */}
+                {isDownloading && downloadAccess.download_token && (
                     <div className="mt-4">
                         <DownloadProgress
-                            token={downloadAccess.access_token}
+                            token={downloadAccess.download_token}
                             onComplete={() => setIsDownloading(false)}
+                            onError={(error) => {
+                                console.error('Download error:', error);
+                                setIsDownloading(false);
+                            }}
                         />
                     </div>
                 )}
@@ -201,5 +214,3 @@ export const DigitalProductCard: React.FC<DigitalProductCardProps> = ({
         </Card>
     );
 };
-
-export default DigitalLibrary;

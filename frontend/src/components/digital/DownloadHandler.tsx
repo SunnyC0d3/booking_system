@@ -1,13 +1,11 @@
 'use client'
 
 import * as React from 'react';
-import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
     Download,
     AlertTriangle,
-    CheckCircle,
     Clock,
     FileText,
     Shield,
@@ -21,12 +19,9 @@ import {
     CardTitle,
     Button,
     Badge,
-    Alert,
-    AlertDescription
 } from '@/components/ui';
 import { DownloadProgress } from './DownloadProgress';
 import { MainLayout } from '@/components/layout';
-import { cn } from '@/lib/cn';
 
 interface DownloadHandlerProps {
     token: string;
@@ -53,15 +48,36 @@ interface DownloadInfo {
     };
 }
 
+// Simple Alert component since it's not exported from UI
+const Alert: React.FC<{
+    children: React.ReactNode;
+    variant?: 'default' | 'destructive' | 'warning';
+    className?: string;
+}> = ({ children, variant = 'default', className = '' }) => {
+    const baseClasses = 'flex items-start gap-2 p-4 rounded-lg border';
+    const variantClasses = {
+        default: 'bg-blue-50 border-blue-200 text-blue-800',
+        destructive: 'bg-red-50 border-red-200 text-red-800',
+        warning: 'bg-yellow-50 border-yellow-200 text-yellow-800',
+    };
+
+    return (
+        <div className={`${baseClasses} ${variantClasses[variant]} ${className}`}>
+            <AlertTriangle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+            <div className="text-sm">{children}</div>
+        </div>
+    );
+};
+
 export const DownloadHandler: React.FC<DownloadHandlerProps> = ({ token }) => {
     const router = useRouter();
-    const [downloadInfo, setDownloadInfo] = useState<DownloadInfo | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [isDownloading, setIsDownloading] = useState(false);
-    const [requiresAuth, setRequiresAuth] = useState(false);
+    const [downloadInfo, setDownloadInfo] = React.useState<DownloadInfo | null>(null);
+    const [loading, setLoading] = React.useState(true);
+    const [error, setError] = React.useState<string | null>(null);
+    const [isDownloading, setIsDownloading] = React.useState(false);
+    const [requiresAuth, setRequiresAuth] = React.useState(false);
 
-    useEffect(() => {
+    React.useEffect(() => {
         fetchDownloadInfo();
     }, [token]);
 
@@ -227,11 +243,8 @@ export const DownloadHandler: React.FC<DownloadHandlerProps> = ({ token }) => {
                                     </div>
                                 )}
 
-                                <Alert>
-                                    <AlertTriangle className="h-4 w-4" />
-                                    <AlertDescription>
-                                        You need to be logged in to download this file. Please sign in to continue.
-                                    </AlertDescription>
+                                <Alert variant="warning">
+                                    You need to be logged in to download this file. Please sign in to continue.
                                 </Alert>
 
                                 <div className="flex gap-2">
@@ -318,23 +331,17 @@ export const DownloadHandler: React.FC<DownloadHandlerProps> = ({ token }) => {
                             {/* Download Actions */}
                             <div className="space-y-4">
                                 {isExpired && (
-                                    <Alert>
-                                        <AlertTriangle className="h-4 w-4" />
-                                        <AlertDescription>
-                                            This download link has expired. Please contact support if you need assistance.
-                                        </AlertDescription>
+                                    <Alert variant="destructive">
+                                        This download link has expired. Please contact support if you need assistance.
                                     </Alert>
                                 )}
 
                                 {!canDownload && !isExpired && (
-                                    <Alert>
-                                        <AlertTriangle className="h-4 w-4" />
-                                        <AlertDescription>
-                                            {downloadInfo?.access.downloads_remaining === 0
-                                                ? 'You have used all available downloads for this product.'
-                                                : 'This download is not currently available.'
-                                            }
-                                        </AlertDescription>
+                                    <Alert variant="warning">
+                                        {downloadInfo?.access.downloads_remaining === 0
+                                            ? 'You have used all available downloads for this product.'
+                                            : 'This download is not currently available.'
+                                        }
                                     </Alert>
                                 )}
 

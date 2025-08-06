@@ -1,11 +1,9 @@
 'use client'
 
 import * as React from 'react';
-import { useState, useEffect } from 'react';
 import { MainLayout } from '@/components/layout';
 import {
     Monitor,
-    HardDrive,
     Cpu,
     Download,
     Shield,
@@ -19,7 +17,6 @@ import {
     CardHeader,
     CardTitle,
     Badge,
-    Button
 } from '@/components/ui';
 
 interface DigitalProductInfoProps {
@@ -40,11 +37,11 @@ interface ProductDigitalInfo {
 }
 
 export const DigitalProductInfo: React.FC<DigitalProductInfoProps> = ({ productId }) => {
-    const [productInfo, setProductInfo] = useState<ProductDigitalInfo | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const [productInfo, setProductInfo] = React.useState<ProductDigitalInfo | null>(null);
+    const [loading, setLoading] = React.useState(true);
+    const [error, setError] = React.useState<string | null>(null);
 
-    useEffect(() => {
+    React.useEffect(() => {
         fetchProductDigitalInfo();
     }, [productId]);
 
@@ -69,44 +66,61 @@ export const DigitalProductInfo: React.FC<DigitalProductInfoProps> = ({ productI
     if (loading) {
         return (
             <MainLayout>
-                <div className="container mx-auto px-4 py-12">
-                    <div className="max-w-4xl mx-auto">
-                        <div className="animate-pulse space-y-6">
-                            {Array.from({ length: 4 }).map((_, i) => (
-                                <Card key={i}>
-                                    <CardContent className="p-6">
-                                        <div className="space-y-4">
-                                            <div className="h-6 bg-muted rounded w-1/3" />
-                                            <div className="h-4 bg-muted rounded w-full" />
-                                            <div className="h-4 bg-muted rounded w-2/3" />
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            ))}
-                        </div>
+                <div className="container mx-auto px-4 py-8">
+                    <div className="space-y-6">
+                        {Array.from({ length: 3 }).map((_, i) => (
+                            <Card key={i} className="animate-pulse">
+                                <CardHeader>
+                                    <div className="h-6 bg-muted rounded w-1/3" />
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="space-y-3">
+                                        <div className="h-4 bg-muted rounded w-full" />
+                                        <div className="h-4 bg-muted rounded w-2/3" />
+                                        <div className="h-4 bg-muted rounded w-1/2" />
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ))}
                     </div>
                 </div>
             </MainLayout>
         );
     }
 
-    if (error || !productInfo) {
+    if (error) {
         return (
             <MainLayout>
-                <div className="container mx-auto px-4 py-12">
-                    <div className="max-w-2xl mx-auto">
-                        <Card className="border-destructive/20 bg-destructive/5">
-                            <CardContent className="p-8 text-center">
-                                <AlertTriangle className="h-12 w-12 text-destructive mx-auto mb-4" />
-                                <h2 className="text-xl font-semibold text-destructive mb-2">
-                                    Information Not Available
-                                </h2>
-                                <p className="text-muted-foreground">
-                                    {error || 'This product does not have digital components.'}
-                                </p>
-                            </CardContent>
-                        </Card>
-                    </div>
+                <div className="container mx-auto px-4 py-8">
+                    <Card className="border-destructive/20 bg-destructive/5">
+                        <CardContent className="p-6 text-center">
+                            <AlertTriangle className="h-12 w-12 text-destructive mx-auto mb-4" />
+                            <h3 className="text-lg font-semibold text-destructive mb-2">
+                                Error Loading Product Information
+                            </h3>
+                            <p className="text-muted-foreground">{error}</p>
+                        </CardContent>
+                    </Card>
+                </div>
+            </MainLayout>
+        );
+    }
+
+    if (!productInfo) {
+        return (
+            <MainLayout>
+                <div className="container mx-auto px-4 py-8">
+                    <Card>
+                        <CardContent className="p-6 text-center">
+                            <Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                            <h3 className="text-lg font-semibold mb-2">
+                                No Digital Information Available
+                            </h3>
+                            <p className="text-muted-foreground">
+                                This product doesn't have digital information available.
+                            </p>
+                        </CardContent>
+                    </Card>
                 </div>
             </MainLayout>
         );
@@ -114,48 +128,39 @@ export const DigitalProductInfo: React.FC<DigitalProductInfoProps> = ({ productI
 
     return (
         <MainLayout>
-            <div className="container mx-auto px-4 py-12">
-                <div className="max-w-4xl mx-auto space-y-6">
-                    {/* Header */}
-                    <div className="text-center space-y-2">
-                        <h1 className="text-3xl font-bold">Digital Product Information</h1>
-                        <p className="text-muted-foreground">
-                            Technical specifications and download details
-                        </p>
-                    </div>
-
-                    {/* Product Type & Licensing */}
+            <div className="container mx-auto px-4 py-8">
+                <div className="space-y-6">
+                    {/* Product Type & License */}
                     <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Package className="h-5 w-5" />
-                                Product Details
+                                Product Information
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <CardContent>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <p className="text-sm text-muted-foreground">Product Type</p>
-                                    <Badge variant="outline" className="mt-1">
+                                    <h4 className="font-semibold mb-2">Product Type</h4>
+                                    <Badge variant="secondary" className="mb-4">
                                         {productInfo.product_type}
                                     </Badge>
+                                    <p className="text-sm text-muted-foreground">
+                                        Latest Version: {productInfo.latest_version}
+                                    </p>
                                 </div>
                                 <div>
-                                    <p className="text-sm text-muted-foreground">Current Version</p>
-                                    <p className="font-medium">{productInfo.latest_version}</p>
-                                </div>
-                                <div>
-                                    <p className="text-sm text-muted-foreground">License Required</p>
-                                    <div className="flex items-center gap-1 mt-1">
+                                    <h4 className="font-semibold mb-2">License Requirements</h4>
+                                    <div className="flex items-center gap-2">
                                         {productInfo.requires_license ? (
                                             <>
-                                                <Shield className="h-4 w-4 text-amber-600" />
-                                                <span className="text-sm">Yes</span>
+                                                <Shield className="h-4 w-4 text-orange-600" />
+                                                <span className="text-sm">License Required</span>
                                             </>
                                         ) : (
                                             <>
                                                 <CheckCircle className="h-4 w-4 text-green-600" />
-                                                <span className="text-sm">No</span>
+                                                <span className="text-sm">No License Required</span>
                                             </>
                                         )}
                                     </div>
@@ -164,43 +169,38 @@ export const DigitalProductInfo: React.FC<DigitalProductInfoProps> = ({ productI
                         </CardContent>
                     </Card>
 
-                    {/* Supported Platforms */}
+                    {/* System Requirements */}
                     <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Monitor className="h-5 w-5" />
-                                Supported Platforms
+                                System Requirements
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div className="flex flex-wrap gap-2">
-                                {productInfo.supported_platforms.map((platform) => (
-                                    <Badge key={platform} variant="secondary">
-                                        {platform}
-                                    </Badge>
-                                ))}
+                            <div className="space-y-4">
+                                <div>
+                                    <h4 className="font-semibold mb-2">Supported Platforms</h4>
+                                    <div className="flex flex-wrap gap-2">
+                                        {productInfo.supported_platforms.map((platform) => (
+                                            <Badge key={platform} variant="outline">
+                                                {platform}
+                                            </Badge>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 className="font-semibold mb-2 flex items-center gap-2">
+                                        <Cpu className="h-4 w-4" />
+                                        Requirements
+                                    </h4>
+                                    <p className="text-sm text-muted-foreground">
+                                        {productInfo.system_requirements}
+                                    </p>
+                                </div>
                             </div>
                         </CardContent>
                     </Card>
-
-                    {/* System Requirements */}
-                    {productInfo.system_requirements && (
-                        <Card>
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-2">
-                                    <Cpu className="h-5 w-5" />
-                                    System Requirements
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="prose prose-sm max-w-none">
-                                    {productInfo.system_requirements.split('\n').map((line, index) => (
-                                        <p key={index}>{line}</p>
-                                    ))}
-                                </div>
-                            </CardContent>
-                        </Card>
-                    )}
 
                     {/* Download Information */}
                     <Card>
@@ -210,44 +210,54 @@ export const DigitalProductInfo: React.FC<DigitalProductInfoProps> = ({ productI
                                 Download Information
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <CardContent>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div>
-                                    <p className="text-sm text-muted-foreground">Download Limit</p>
-                                    <p className="font-medium">{productInfo.download_info.download_limit} downloads</p>
+                                    <h4 className="font-semibold mb-2">Download Limit</h4>
+                                    <p className="text-2xl font-bold text-primary">
+                                        {productInfo.download_info.download_limit === -1
+                                            ? 'Unlimited'
+                                            : productInfo.download_info.download_limit
+                                        }
+                                    </p>
+                                    <p className="text-sm text-muted-foreground">Downloads allowed</p>
                                 </div>
                                 <div>
-                                    <p className="text-sm text-muted-foreground">Access Duration</p>
-                                    <p className="font-medium">{productInfo.download_info.download_expiry_days} days</p>
+                                    <h4 className="font-semibold mb-2">Access Duration</h4>
+                                    <p className="text-2xl font-bold text-primary">
+                                        {productInfo.download_info.download_expiry_days === -1
+                                            ? 'Lifetime'
+                                            : `${productInfo.download_info.download_expiry_days} days`
+                                        }
+                                    </p>
+                                    <p className="text-sm text-muted-foreground">Access period</p>
                                 </div>
                                 <div>
-                                    <p className="text-sm text-muted-foreground">Auto Delivery</p>
-                                    <div className="flex items-center gap-1">
+                                    <h4 className="font-semibold mb-2">Auto Delivery</h4>
+                                    <div className="flex items-center gap-2">
                                         {productInfo.download_info.auto_delivery ? (
                                             <>
-                                                <CheckCircle className="h-4 w-4 text-green-600" />
-                                                <span className="text-sm">Enabled</span>
+                                                <CheckCircle className="h-6 w-6 text-green-600" />
+                                                <div>
+                                                    <p className="font-semibold">Enabled</p>
+                                                    <p className="text-sm text-muted-foreground">
+                                                        Instant access after purchase
+                                                    </p>
+                                                </div>
                                             </>
                                         ) : (
                                             <>
-                                                <AlertTriangle className="h-4 w-4 text-amber-600" />
-                                                <span className="text-sm">Manual</span>
+                                                <AlertTriangle className="h-6 w-6 text-orange-600" />
+                                                <div>
+                                                    <p className="font-semibold">Manual</p>
+                                                    <p className="text-sm text-muted-foreground">
+                                                        Manual processing required
+                                                    </p>
+                                                </div>
                                             </>
                                         )}
                                     </div>
                                 </div>
-                            </div>
-
-                            <div className="p-4 bg-muted/50 rounded-lg">
-                                <h4 className="font-semibold mb-2">Download Instructions</h4>
-                                <ul className="text-sm space-y-1">
-                                    <li>• Download links are sent via email after purchase</li>
-                                    <li>• Each download link can be used {productInfo.download_info.download_limit} times</li>
-                                    <li>• Links expire after {productInfo.download_info.download_expiry_days} days</li>
-                                    {productInfo.requires_license && (
-                                        <li>• License key will be provided for activation</li>
-                                    )}
-                                </ul>
                             </div>
                         </CardContent>
                     </Card>

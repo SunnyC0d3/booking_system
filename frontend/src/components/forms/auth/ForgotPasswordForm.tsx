@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -44,7 +46,7 @@ export const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
         if (error) {
             clearError();
         }
-    }, [watch('email')]);
+    }, [watch('email'), error, clearError]);
 
     const onSubmit = async (data: ForgotPasswordFormData) => {
         try {
@@ -151,7 +153,7 @@ export const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
                         label="Email Address"
                         placeholder="Enter your email address"
                         leftIcon={<Mail className="h-4 w-4" />}
-                        error={errors.email?.message}
+                        error={errors.email?.message || ''}
                         required
                         autoComplete="email"
                         autoFocus
