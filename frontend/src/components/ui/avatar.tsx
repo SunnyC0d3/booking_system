@@ -38,7 +38,7 @@ interface AvatarImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
 
 export const AvatarImage = React.forwardRef<HTMLImageElement, AvatarImageProps>(
     ({ className, alt, fallback, onError, onLoad, ...props }, ref) => {
-        const [imageLoaded, setImageLoaded] = React.useState(false);
+        const [, setImageLoaded] = React.useState(false);
         const [imageError, setImageError] = React.useState(false);
 
         const handleLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {

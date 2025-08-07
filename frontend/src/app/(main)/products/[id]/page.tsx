@@ -1,14 +1,14 @@
 import * as React from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import ProductDetail from '@/components/product/detail/ProductDetail';
-import { ProductGrid } from '@/components/product/ProductGrid';
 import { DashboardLayout } from '@/components/layout';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui';
+import { Card, CardHeader, CardTitle, CardContent, Badge } from '@/components/ui';
 import { useProductStore } from '@/stores/productStore';
 import type { Product as ApiProduct } from '@/types/api';
-import type { Product as ProductType } from '@/types/product';
 
 interface ProductPageProps {
     params: Promise<{ id: string }>;
@@ -16,9 +16,6 @@ interface ProductPageProps {
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
     const { id } = await params;
-
-    // In a real app, you'd fetch the product data using the id to create specific metadata
-    // const product = await fetchProduct(id);
 
     return {
         title: `Product ${id} | Creative Business`,
@@ -66,101 +63,8 @@ function ProductDetailContainer({ id }: { id: string }) {
         notFound();
     }
 
-    // Transform API product to match ProductDetail expected type
-    const transformedProduct: ProductType = {
-        id: currentProduct.id,
-        name: currentProduct.name,
-        slug: `product-${currentProduct.id}`,
-        description: currentProduct.description || '',
-        sku: `SKU-${currentProduct.id}`,
-        price: currentProduct.price,
-        price_formatted: currentProduct.price_formatted,
-        track_inventory: true,
-        allow_backorder: false,
-        status: 'active' as const,
-        visibility: 'public' as const,
-        featured: false,
-        gallery: (currentProduct.gallery || []).map(media => ({
-            id: media.id,
-            url: media.url,
-            ...(media.alt_text && { alt_text: media.alt_text }),
-            sort_order: 0,
-            is_featured: false,
-        })),
-        categories: currentProduct.category ? [{
-            id: currentProduct.category.id,
-            name: currentProduct.category.name,
-            slug: `category-${currentProduct.category.id}`,
-            description: '',
-            products_count: 0,
-            sort_order: 0,
-            is_featured: false,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-        }] : [],
-        tags: (currentProduct.tags || []).map(tag => ({
-            id: tag.id,
-            name: tag.name,
-            slug: `tag-${tag.id}`,
-            description: '',
-            products_count: tag.products_count || 0,
-        })),
-        variants: (currentProduct.variants || []).map(variant => ({
-            id: variant.id,
-            product_id: currentProduct.id,
-            name: variant.product_attribute?.name || 'Default',
-            value: variant.value,
-            price_adjustment: variant.additional_price || 0,
-            price_adjustment_type: 'fixed' as const,
-            sku: '',
-            sort_order: 0,
-            is_default: false,
-            attribute: {
-                id: variant.product_attribute?.id || 0,
-                name: variant.product_attribute?.name || 'Default',
-                slug: `attribute-${variant.product_attribute?.id || 0}`,
-                type: 'dropdown' as const,
-                values: [],
-                is_required: false,
-                is_filterable: false,
-                sort_order: 0,
-            },
-        })),
-        attributes: [],
-        reviews_count: 0,
-        reviews_average: 0,
-        created_at: currentProduct.created_at,
-        updated_at: currentProduct.updated_at,
-    };
-
-    // Add optional properties only if they exist
-    if (currentProduct.description) {
-        transformedProduct.short_description = currentProduct.description;
-    }
-
-    if (currentProduct.featured_image) {
-        transformedProduct.featured_image = currentProduct.featured_image;
-    }
-
-    if (currentProduct.quantity) {
-        transformedProduct.inventory_quantity = currentProduct.quantity;
-    }
-
-    if (currentProduct.category) {
-        transformedProduct.category = {
-            id: currentProduct.category.id,
-            name: currentProduct.category.name,
-            slug: `category-${currentProduct.category.id}`,
-            description: '',
-            products_count: 0,
-            sort_order: 0,
-            is_featured: false,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-        };
-    }
-
-    return <ProductDetail product={transformedProduct} />;
+    // ProductDetail now expects ApiProduct, so no transformation needed
+    return <ProductDetail product={currentProduct} />;
 }
 
 function RelatedProductsContainer() {
@@ -173,118 +77,87 @@ function RelatedProductsContainer() {
         return null;
     }
 
-    // Transform API products to match ProductGrid expected type
-    const transformedProducts: ProductType[] = relatedProducts.map((product: ApiProduct): ProductType => {
-        const baseProduct: ProductType = {
-            id: product.id,
-            name: product.name,
-            slug: `product-${product.id}`,
-            description: product.description || '',
-            sku: `SKU-${product.id}`,
-            price: product.price,
-            price_formatted: product.price_formatted,
-            track_inventory: true,
-            allow_backorder: false,
-            status: 'active' as const,
-            visibility: 'public' as const,
-            featured: false,
-            gallery: (product.gallery || []).map(media => ({
-                id: media.id,
-                url: media.url,
-                ...(media.alt_text && { alt_text: media.alt_text }),
-                sort_order: 0,
-                is_featured: false,
-            })),
-            categories: product.category ? [{
-                id: product.category.id,
-                name: product.category.name,
-                slug: `category-${product.category.id}`,
-                description: '',
-                products_count: 0,
-                sort_order: 0,
-                is_featured: false,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-            }] : [],
-            tags: (product.tags || []).map(tag => ({
-                id: tag.id,
-                name: tag.name,
-                slug: `tag-${tag.id}`,
-                description: '',
-                products_count: tag.products_count || 0,
-            })),
-            variants: (product.variants || []).map(variant => ({
-                id: variant.id,
-                product_id: product.id,
-                name: variant.product_attribute?.name || 'Default',
-                value: variant.value,
-                price_adjustment: variant.additional_price || 0,
-                price_adjustment_type: 'fixed' as const,
-                sku: '',
-                sort_order: 0,
-                is_default: false,
-                attribute: {
-                    id: variant.product_attribute?.id || 0,
-                    name: variant.product_attribute?.name || 'Default',
-                    slug: `attribute-${variant.product_attribute?.id || 0}`,
-                    type: 'dropdown' as const,
-                    values: [],
-                    is_required: false,
-                    is_filterable: false,
-                    sort_order: 0,
-                },
-            })),
-            attributes: [],
-            reviews_count: 0,
-            reviews_average: 0,
-            created_at: product.created_at,
-            updated_at: product.updated_at,
-        };
-
-        // Add optional properties conditionally
-        if (product.description) {
-            baseProduct.short_description = product.description;
-        }
-
-        if (product.featured_image) {
-            baseProduct.featured_image = product.featured_image;
-        }
-
-        if (product.quantity) {
-            baseProduct.inventory_quantity = product.quantity;
-        }
-
-        if (product.category) {
-            baseProduct.category = {
-                id: product.category.id,
-                name: product.category.name,
-                slug: `category-${product.category.id}`,
-                description: '',
-                products_count: 0,
-                sort_order: 0,
-                is_featured: false,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-            };
-        }
-
-        return baseProduct;
-    });
-
+    // ProductGrid expects ProductType, so we need to transform API products
+    // For now, we'll create a simple grid component that works with API products
     return (
         <Card>
             <CardHeader>
                 <CardTitle>You Might Also Like</CardTitle>
             </CardHeader>
             <CardContent>
-                <ProductGrid
-                    products={transformedProducts}
-                    columns={{ sm: 1, md: 2, lg: 3, xl: 4 }}
-                    showFilters={false}
-                    showSort={false}
-                />
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {relatedProducts.map((product) => (
+                        <RelatedProductCard key={product.id} product={product} />
+                    ))}
+                </div>
             </CardContent>
         </Card>
+    );
+}
+
+// Simple product card component that works with API products
+function RelatedProductCard({ product }: { product: ApiProduct }) {
+    return (
+        <div className="group space-y-3">
+            <div className="relative aspect-square overflow-hidden rounded-lg bg-muted">
+                {product.featured_image ? (
+                    <Image
+                        src={product.featured_image}
+                        alt={product.name}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                ) : (
+                    <div className="flex items-center justify-center w-full h-full">
+                        <span className="text-muted-foreground text-sm">No image</span>
+                    </div>
+                )}
+
+                {/* Stock badge */}
+                {!product.is_in_stock && (
+                    <div className="absolute top-2 left-2">
+                        <Badge variant="secondary" className="bg-red-500 text-white">
+                            Out of Stock
+                        </Badge>
+                    </div>
+                )}
+
+                {product.is_low_stock && product.is_in_stock && (
+                    <div className="absolute top-2 left-2">
+                        <Badge variant="secondary" className="bg-orange-500 text-white">
+                            Low Stock
+                        </Badge>
+                    </div>
+                )}
+            </div>
+
+            <div className="space-y-2">
+                <Link
+                    href={`/products/${product.id}`}
+                    className="font-medium text-foreground group-hover:text-primary transition-colors line-clamp-2"
+                >
+                    {product.name}
+                </Link>
+
+                <div className="flex items-center justify-between">
+                    <span className="font-bold text-primary">
+                        {product.price_formatted}
+                    </span>
+
+                    {product.quantity > 0 && product.quantity <= 10 && (
+                        <span className="text-xs text-muted-foreground">
+                            {product.quantity} left
+                        </span>
+                    )}
+                </div>
+
+                {product.category && (
+                    <span className="text-xs text-muted-foreground">
+                        {product.category.name}
+                    </span>
+                )}
+            </div>
+        </div>
     );
 }
 

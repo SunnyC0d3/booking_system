@@ -5,19 +5,15 @@ import { motion } from 'framer-motion';
 import {
     AlertTriangle,
     RefreshCw,
-    Home,
-    Search,
-    ShoppingCart,
     Wifi,
     Server,
     Lock,
     FileX,
-    Users,
     Package,
     CreditCard,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/cn';
 
 // Error types
@@ -51,9 +47,9 @@ interface ErrorStateProps {
     showIcon?: boolean;
 }
 
-// Error configurations
+// Error configurations - fixed LucideIcon type compatibility
 const errorConfigs: Record<ErrorType, {
-    icon: React.ComponentType<{ className?: string }>;
+    icon: React.ComponentType<any>;
     defaultTitle: string;
     defaultDescription: string;
     color: string;
@@ -145,18 +141,21 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
             icon: 'w-8 h-8 mb-2',
             title: 'text-lg',
             description: 'text-sm',
+            buttonSize: 'sm' as const,
         },
         md: {
             container: 'p-8',
             icon: 'w-12 h-12 mb-4',
             title: 'text-xl',
             description: 'text-base',
+            buttonSize: 'default' as const,
         },
         lg: {
             container: 'p-12',
             icon: 'w-16 h-16 mb-6',
             title: 'text-2xl',
             description: 'text-lg',
+            buttonSize: 'lg' as const,
         },
     };
 
@@ -187,7 +186,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
 
             <div className="flex flex-col sm:flex-row gap-3">
                 {action && (
-                    <Button onClick={action.onClick} size={size}>
+                    <Button onClick={action.onClick} size={classes.buttonSize}>
                         {action.label}
                     </Button>
                 )}
@@ -196,7 +195,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
                     <Button
                         onClick={secondaryAction.onClick}
                         variant="outline"
-                        size={size}
+                        size={classes.buttonSize}
                     >
                         {secondaryAction.label}
                     </Button>
@@ -480,10 +479,10 @@ export const useKeyboardNavigation = (onEscape?: () => void, onEnter?: () => voi
     }, [onEscape, onEnter]);
 };
 
-// Error boundary component
+// Error boundary component - fixed with proper override modifiers and state handling
 interface ErrorBoundaryState {
     hasError: boolean;
-    error?: Error;
+    error: Error | null;
 }
 
 export class ErrorBoundary extends React.Component<
@@ -492,18 +491,18 @@ export class ErrorBoundary extends React.Component<
 > {
     constructor(props: any) {
         super(props);
-        this.state = { hasError: false };
+        this.state = { hasError: false, error: null };
     }
 
     static getDerivedStateFromError(error: Error): ErrorBoundaryState {
         return { hasError: true, error };
     }
 
-    componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    override componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
         console.error('Error boundary caught an error:', error, errorInfo);
     }
 
-    render() {
+    override render() {
         if (this.state.hasError) {
             const FallbackComponent = this.props.fallback;
 
@@ -511,7 +510,7 @@ export class ErrorBoundary extends React.Component<
                 return (
                     <FallbackComponent
                         error={this.state.error}
-                        retry={() => this.setState({ hasError: false, error: undefined })}
+                        retry={() => this.setState({ hasError: false, error: null })}
                     />
                 );
             }

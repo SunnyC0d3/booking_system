@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react';
-import { motion, AnimatePresence, Variants, useInView, useMotionValue, useSpring } from 'framer-motion';
+import { motion, AnimatePresence, useInView, useMotionValue, useSpring } from 'framer-motion';
 import { cn } from '@/lib/cn';
 
 // Animation variants library
@@ -99,13 +99,12 @@ export const animationVariants = {
         },
     },
 
-    // Hover animations
+    // Hover animations (moved transition outside variants)
     hoverLift: {
         initial: { y: 0, boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)" },
         whileHover: {
             y: -4,
             boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-            transition: { duration: 0.2 }
         },
     },
 
@@ -114,10 +113,9 @@ export const animationVariants = {
         whileTap: { scale: 0.98 },
     },
 
-    // Button animations
+    // Button animations (removed transition)
     buttonPress: {
         whileTap: { scale: 0.95 },
-        transition: { duration: 0.1 },
     },
 
     // Card animations
@@ -125,7 +123,6 @@ export const animationVariants = {
         initial: { borderColor: "transparent" },
         whileHover: {
             borderColor: "hsl(var(--primary))",
-            transition: { duration: 0.3 }
         },
     },
 };
@@ -260,13 +257,13 @@ export const AnimatedCounter: React.FC<{
         motionValue.set(value);
     }, [motionValue, value]);
 
-    React.useEffect(
-        () =>
-            springValue.on("change", (latest) => {
-                setDisplayValue(Math.round(latest));
-            }),
-        [springValue]
-    );
+    React.useEffect(() => {
+        const unsubscribe = springValue.on("change", (latest) => {
+            setDisplayValue(Math.round(latest));
+        });
+
+        return unsubscribe;
+    }, [springValue]);
 
     return <span className={className}>{displayValue.toLocaleString()}</span>;
 };
@@ -399,6 +396,7 @@ export const HoverCard: React.FC<{
             variants={animationVariants.hoverLift}
             initial="initial"
             whileHover="whileHover"
+            transition={{ duration: 0.2 }}
         >
             {children}
         </motion.div>
@@ -472,6 +470,8 @@ export const TypingAnimation: React.FC<{
 
             return () => clearTimeout(timeout);
         }
+        // Added return statement for when effect doesn't need cleanup
+        return undefined;
     }, [currentIndex, text, speed]);
 
     return (

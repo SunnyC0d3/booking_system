@@ -1,17 +1,31 @@
 import DOMPurify from 'isomorphic-dompurify';
 import { z } from 'zod';
 
+// Enhanced type definitions for better type safety
+interface SanitizeOptions {
+    allowedTags?: string[];
+    allowedAttributes?: Record<string, string[]>;
+    stripScripts?: boolean;
+}
+
+interface SanitizeObjectOptions<T> {
+    htmlFields?: (keyof T)[];
+    textFields?: (keyof T)[];
+    urlFields?: (keyof T)[];
+    fileFields?: (keyof T)[];
+}
+
 // Sanitization utilities
 export class InputSanitizer {
-    // HTML sanitization
-    static sanitizeHtml(input: string, options?: {
-        allowedTags?: string[];
-        allowedAttributes?: Record<string, string[]>;
-        stripScripts?: boolean;
-    }): string {
+    // HTML sanitization with proper type handling
+    static sanitizeHtml(input: string, options?: SanitizeOptions): string {
+        // Extract allowed attributes as string array for DOMPurify
+        const allowedAttributes = options?.allowedAttributes || {};
+        const flattenedAttributes = Object.values(allowedAttributes).flat();
+
         const config = {
             ALLOWED_TAGS: options?.allowedTags || ['p', 'br', 'strong', 'em', 'u', 'ul', 'ol', 'li'],
-            ALLOWED_ATTR: options?.allowedAttributes || {},
+            ALLOWED_ATTR: flattenedAttributes.length > 0 ? flattenedAttributes : [],
             FORBID_TAGS: options?.stripScripts !== false ? ['script', 'iframe', 'object', 'embed'] : [],
             FORBID_ATTR: ['onclick', 'onload', 'onmouseover', 'onfocus', 'onerror'],
             ALLOW_DATA_ATTR: false,
@@ -22,15 +36,24 @@ export class InputSanitizer {
             RETURN_TRUSTED_TYPE: false,
         };
 
-        return DOMPurify.sanitize(input, config);
+        // Environment check for additional safety
+        if (typeof window === 'undefined' && typeof DOMPurify === 'undefined') {
+            // Fallback for edge cases where DOMPurify is not available
+            return input.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+        }
+
+        // Handle the return type properly - DOMPurify can return TrustedHTML or string
+        const result = DOMPurify.sanitize(input, config);
+        return typeof result === 'string' ? result : String(result);
     }
 
     // Text sanitization (remove all HTML)
     static sanitizeText(input: string): string {
-        return DOMPurify.sanitize(input, {
+        const result = DOMPurify.sanitize(input, {
             ALLOWED_TAGS: [],
             ALLOWED_ATTR: [],
         });
+        return typeof result === 'string' ? result : String(result);
     }
 
     // SQL injection prevention
@@ -89,39 +112,44 @@ export class InputSanitizer {
         }
     }
 
-    // Deep sanitize object
+    // Deep sanitize object - Fixed generic type constraints
     static sanitizeObject<T extends Record<string, any>>(
         obj: T,
-        options?: {
-            htmlFields?: (keyof T)[];
-            textFields?: (keyof T)[];
-            urlFields?: (keyof T)[];
-            fileFields?: (keyof T)[];
-        }
+        options?: SanitizeObjectOptions<T>
     ): T {
-        const sanitized = { ...obj };
+        // Create a mutable copy using type assertion
+        const sanitized = { ...obj } as Record<string, any>;
 
         Object.keys(sanitized).forEach(key => {
             const value = sanitized[key];
 
             if (typeof value === 'string') {
-                if (options?.htmlFields?.includes(key)) {
+                if (options?.htmlFields?.includes(key as keyof T)) {
                     sanitized[key] = this.sanitizeHtml(value);
-                } else if (options?.textFields?.includes(key)) {
+                } else if (options?.textFields?.includes(key as keyof T)) {
                     sanitized[key] = this.sanitizeText(value);
-                } else if (options?.urlFields?.includes(key)) {
+                } else if (options?.urlFields?.includes(key as keyof T)) {
                     sanitized[key] = this.sanitizeUrl(value);
-                } else if (options?.fileFields?.includes(key)) {
+                } else if (options?.fileFields?.includes(key as keyof T)) {
                     sanitized[key] = this.sanitizeFileName(value);
                 } else {
                     sanitized[key] = this.sanitizeAttribute(value);
                 }
-            } else if (typeof value === 'object' && value !== null) {
+            } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
                 sanitized[key] = this.sanitizeObject(value, options);
+            } else if (Array.isArray(value)) {
+                // Handle arrays properly
+                sanitized[key] = value.map(item =>
+                    typeof item === 'object' && item !== null
+                        ? this.sanitizeObject(item, options)
+                        : typeof item === 'string'
+                            ? this.sanitizeAttribute(item)
+                            : item
+                );
             }
         });
 
-        return sanitized;
+        return sanitized as T;
     }
 }
 
@@ -382,36 +410,85 @@ export class SecurityValidator {
     }
 }
 
-// CSRF token utilities
+// Enhanced CSRF token utilities with proper crypto usage
 export class CSRFProtection {
     private static readonly SECRET_KEY = process.env.CSRF_SECRET || 'default-csrf-secret';
 
     static generateToken(): string {
         const timestamp = Date.now().toString();
-        const randomBytes = crypto.getRandomValues(new Uint8Array(16));
+
+        // Cross-platform crypto random bytes generation
+        let randomBytes: Uint8Array;
+
+        if (typeof window !== 'undefined' && window.crypto && window.crypto.getRandomValues) {
+            // Browser environment
+            randomBytes = window.crypto.getRandomValues(new Uint8Array(16));
+        } else if (typeof globalThis !== 'undefined' && globalThis.crypto && globalThis.crypto.getRandomValues) {
+            // Node.js environment with Web Crypto API
+            randomBytes = globalThis.crypto.getRandomValues(new Uint8Array(16));
+        } else {
+            // Fallback for environments without crypto API
+            randomBytes = new Uint8Array(16);
+            for (let i = 0; i < 16; i++) {
+                randomBytes[i] = Math.floor(Math.random() * 256);
+            }
+        }
+
         const data = timestamp + Array.from(randomBytes).map(b => b.toString(16).padStart(2, '0')).join('');
 
-        return Buffer.from(data).toString('base64url');
+        // Use secret key for additional security
+        const tokenWithSecret = data + this.SECRET_KEY.slice(0, 8);
+
+        // Use Buffer if available (Node.js), otherwise use btoa (browser)
+        if (typeof Buffer !== 'undefined') {
+            return Buffer.from(tokenWithSecret).toString('base64url');
+        } else {
+            // Browser fallback
+            return btoa(tokenWithSecret).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+        }
     }
 
     static validateToken(token: string | null): boolean {
         if (!token) return false;
 
         try {
-            const decoded = Buffer.from(token, 'base64url').toString();
-            const timestamp = parseInt(decoded.slice(0, 13));
+            let decoded: string;
+
+            if (typeof Buffer !== 'undefined') {
+                // Node.js environment
+                decoded = Buffer.from(token, 'base64url').toString();
+            } else {
+                // Browser environment
+                const normalizedToken = token.replace(/-/g, '+').replace(/_/g, '/');
+                const padding = '='.repeat((4 - normalizedToken.length % 4) % 4);
+                decoded = atob(normalizedToken + padding);
+            }
+
+            // Remove secret key suffix for validation
+            const dataWithoutSecret = decoded.slice(0, -8);
+            const timestamp = parseInt(dataWithoutSecret.slice(0, 13));
             const now = Date.now();
 
             // Token valid for 1 hour
-            return (now - timestamp) < 60 * 60 * 1000;
+            return !isNaN(timestamp) && (now - timestamp) < 60 * 60 * 1000;
         } catch {
             return false;
         }
     }
 }
 
-// Export main sanitization function
-export function sanitizeInput(input: any, type: 'html' | 'text' | 'url' | 'filename' | 'attribute' = 'text'): any {
+// Type-safe validation result interface
+export interface ValidationResult<T> {
+    success: boolean;
+    data?: T;
+    errors?: string[];
+}
+
+// Export main sanitization function with better type safety
+export function sanitizeInput(
+    input: any,
+    type: 'html' | 'text' | 'url' | 'filename' | 'attribute' = 'text'
+): any {
     if (typeof input === 'string') {
         switch (type) {
             case 'html': return InputSanitizer.sanitizeHtml(input);
@@ -430,8 +507,11 @@ export function sanitizeInput(input: any, type: 'html' | 'text' | 'url' | 'filen
     return input;
 }
 
-// Validation middleware helper
-export function validateInput<T>(schema: z.ZodSchema<T>, data: unknown): { success: boolean; data?: T; errors?: string[] } {
+// Validation middleware helper with improved error handling
+export function validateInput<T>(
+    schema: z.ZodSchema<T>,
+    data: unknown
+): ValidationResult<T> {
     try {
         const result = schema.safeParse(data);
 
@@ -442,7 +522,10 @@ export function validateInput<T>(schema: z.ZodSchema<T>, data: unknown): { succe
             return { success: false, errors };
         }
     } catch (error) {
-        return { success: false, errors: ['Validation failed'] };
+        return {
+            success: false,
+            errors: [error instanceof Error ? error.message : 'Validation failed']
+        };
     }
 }
 

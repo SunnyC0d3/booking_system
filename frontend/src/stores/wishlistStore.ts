@@ -22,7 +22,7 @@ interface WishlistActions {
     moveToCart: (wishlistItemId: number, quantity?: number) => Promise<void>;
 
     // Optimistic updates
-    optimisticAddToWishlist: (item: AddToWishlistRequest & { product: any }) => void;
+    optimisticAddToWishlist: (item: AddToWishlistRequest & { product?: any }) => void;
     optimisticRemoveItem: (wishlistItemId: number) => void;
 
     // UI state
@@ -32,8 +32,8 @@ interface WishlistActions {
 
     // Utility
     getItemCount: () => number;
-    isItemInWishlist: (productId: number, variantId?: number) => boolean;
-    getWishlistItem: (productId: number, variantId?: number) => WishlistItem | undefined;
+    isItemInWishlist: (productId: number, variantId?: number | null) => boolean;
+    getWishlistItem: (productId: number, variantId?: number | null) => WishlistItem | undefined;
 
     // State management
     setLoading: (loading: boolean) => void;
@@ -77,14 +77,17 @@ export const useWishlistStore = create<WishlistState & WishlistActions>()(
             },
 
             addToWishlist: async (item: AddToWishlistRequest) => {
+                // Fixed: Handle null/undefined conversion properly
+                const variantId = item.product_variant_id ?? null;
+
                 // Check if item already exists
-                if (get().isItemInWishlist(item.product_id, item.product_variant_id)) {
+                if (get().isItemInWishlist(item.product_id, variantId)) {
                     toast.info('Item is already in your wishlist');
                     return;
                 }
 
                 // Optimistic update first
-                get().optimisticAddToWishlist({ ...item, product: null });
+                get().optimisticAddToWishlist({ ...item, product: undefined });
 
                 try {
                     const wishlist = await wishlistApi.addToWishlist(item);
@@ -167,13 +170,26 @@ export const useWishlistStore = create<WishlistState & WishlistActions>()(
             // Optimistic updates
             optimisticAddToWishlist: (item) => {
                 set((draft) => {
+                    // Fixed: Properly handle null/undefined for exact optional properties
                     const optimisticItem: WishlistItem = {
                         id: Date.now(), // Temporary ID
                         wishlist_id: draft.wishlist?.id || 0,
                         product_id: item.product_id,
-                        product_variant_id: item.product_variant_id,
-                        product: item.product,
-                        product_variant: null,
+                        product_variant_id: item.product_variant_id ?? null, // Convert undefined to null
+                        product: item.product || {
+                            id: item.product_id,
+                            name: 'Loading...',
+                            description: '',
+                            price: 0,
+                            price_formatted: '£0.00',
+                            quantity: 0,
+                            is_in_stock: true,
+                            is_low_stock: false,
+                            stock_status: 'in_stock',
+                            created_at: new Date().toISOString(),
+                            updated_at: new Date().toISOString(),
+                        },
+                        product_variant: null, // Will be populated by API if needed
                         created_at: new Date().toISOString(),
                         updated_at: new Date().toISOString(),
                     };
@@ -223,7 +239,8 @@ export const useWishlistStore = create<WishlistState & WishlistActions>()(
                 return allItems.length;
             },
 
-            isItemInWishlist: (productId, variantId) => {
+            // Fixed: Handle null/undefined comparison properly
+            isItemInWishlist: (productId, variantId = null) => {
                 const state = get();
                 const wishlistItems = state.wishlist?.items || [];
                 const optimisticItems = state.optimisticItems;
@@ -235,7 +252,7 @@ export const useWishlistStore = create<WishlistState & WishlistActions>()(
                 );
             },
 
-            getWishlistItem: (productId, variantId) => {
+            getWishlistItem: (productId, variantId = null) => {
                 const state = get();
                 const wishlistItems = state.wishlist?.items || [];
                 const optimisticItems = state.optimisticItems;
@@ -274,3 +291,39 @@ export const useWishlistStore = create<WishlistState & WishlistActions>()(
         }
     )
 );
+
+// Enhanced selectors for better component integration
+export const useWishlistItems = () => useWishlistStore((state) => {
+    const wishlistItems = state.wishlist?.items || [];
+    const optimisticItems = state.optimisticItems;
+    return [...wishlistItems, ...optimisticItems];
+});
+
+export const useWishlistSummary = () => useWishlistStore((state) => ({
+    itemCount: state.getItemCount(),
+    isLoading: state.isLoading,
+    error: state.error,
+    isEmpty: state.getItemCount() === 0,
+}));
+
+export const useWishlistUI = () => useWishlistStore((state) => ({
+    isOpen: state.isOpen,
+    openWishlist: state.openWishlist,
+    closeWishlist: state.closeWishlist,
+    toggleWishlist: state.toggleWishlist,
+}));
+
+export const useWishlistActions = () => useWishlistStore((state) => ({
+    addToWishlist: state.addToWishlist,
+    removeFromWishlist: state.removeFromWishlist,
+    clearWishlist: state.clearWishlist,
+    moveToCart: state.moveToCart,
+    fetchWishlist: state.fetchWishlist,
+}));
+
+// Utility hooks
+export const useIsInWishlist = (productId: number, variantId?: number | null) =>
+    useWishlistStore((state) => state.isItemInWishlist(productId, variantId));
+
+export const useWishlistItem = (productId: number, variantId?: number | null) =>
+    useWishlistStore((state) => state.getWishlistItem(productId, variantId));

@@ -102,17 +102,19 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                     </a>
                 );
             } else {
-                return (
-                    <Link
-                        href={href}
-                        replace={replace}
-                        scroll={scroll}
-                        prefetch={prefetch}
-                        className={cn(baseClassName, 'no-underline')}
-                    >
-                        {content}
-                    </Link>
-                );
+                // Create link props object with proper types
+                const linkProps: React.ComponentProps<typeof Link> = {
+                    href,
+                    className: cn(baseClassName, 'no-underline'),
+                    children: content,
+                };
+
+                // Only add optional props if they're not undefined
+                if (replace !== undefined) linkProps.replace = replace;
+                if (scroll !== undefined) linkProps.scroll = scroll;
+                if (prefetch !== undefined) linkProps.prefetch = prefetch;
+
+                return <Link {...linkProps} />;
             }
         }
 
@@ -133,4 +135,3 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = "Button";
 
 export { Button, buttonVariants };
-export type { ButtonProps };

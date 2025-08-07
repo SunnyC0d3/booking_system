@@ -6,13 +6,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
     Search,
     Clock,
-    TrendingUp,
     Package,
     Tag,
     Users,
-    ArrowRight,
     X,
-    History,
 } from 'lucide-react';
 import {
     Input,
@@ -62,7 +59,7 @@ export const SearchAutocomplete: React.FC<SearchAutocompleteProps> = ({
                                                                           debounceMs = 300,
                                                                       }) => {
     const router = useRouter();
-    const { searchProducts } = useProductStore();
+    const { fetchProducts } = useProductStore(); // Use fetchProducts instead of searchProducts
 
     // State
     const [query, setQuery] = React.useState('');
@@ -191,6 +188,8 @@ export const SearchAutocomplete: React.FC<SearchAutocompleteProps> = ({
         if (onSearch) {
             onSearch(searchQuery);
         } else {
+            // Use fetchProducts for actual search
+            fetchProducts({ search: searchQuery });
             router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
         }
     };
@@ -241,7 +240,9 @@ export const SearchAutocomplete: React.FC<SearchAutocompleteProps> = ({
                 if (selectedIndex >= 0) {
                     if (selectedIndex < suggestions.length) {
                         const suggestion = suggestions[selectedIndex];
-                        router.push(suggestion.url);
+                        if (suggestion) {
+                            router.push(suggestion.url);
+                        }
                     } else {
                         const recentIndex = selectedIndex - suggestions.length;
                         const recent = recentSearches[recentIndex];

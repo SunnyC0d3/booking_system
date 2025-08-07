@@ -97,7 +97,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
         onFilterChange?.(updatedFilters);
     };
 
-    const handlePriceRangeChange = (type: 'min' | 'max', value: string) => {
+    const handlePriceRangeChange = React.useCallback((type: 'min' | 'max', value: string) => {
         const newPriceRange = { ...priceRange, [type]: value };
         setPriceRange(newPriceRange);
 
@@ -123,7 +123,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
         }, 500);
 
         return () => clearTimeout(timeoutId);
-    };
+    }, [priceRange, selectedFilters, onFilterChange]);
 
     const handleAttributeChange = (
         attributeSlug: string,
@@ -251,7 +251,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
     }, [selectedFilters]);
 
     if (loading) {
-        return <FiltersSkeleton className={className || undefined} />;
+        return <FiltersSkeleton {...(className && { className })} />;
     }
 
     if (!filters) {
@@ -649,25 +649,6 @@ const TagFilter: React.FC<TagFilterProps> = ({ tag, isSelected, onChange }) => {
 
 // Loading skeleton
 const FiltersSkeleton: React.FC<{ className?: string }> = ({ className }) => {
-    if (!className) {
-        return (
-            <Card>
-                <CardContent className="p-6 space-y-6">
-                    {Array.from({ length: 4 }).map((_, i) => (
-                        <div key={i} className="space-y-3">
-                            <div className="h-4 bg-muted rounded w-24 animate-pulse" />
-                            <div className="space-y-2 ml-6">
-                                {Array.from({ length: 3 }).map((_, j) => (
-                                    <div key={j} className="h-3 bg-muted rounded animate-pulse" />
-                                ))}
-                            </div>
-                        </div>
-                    ))}
-                </CardContent>
-            </Card>
-        );
-    }
-
     return (
         <Card className={className}>
             <CardContent className="p-6 space-y-6">

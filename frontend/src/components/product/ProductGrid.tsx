@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Grid, List, Package } from 'lucide-react';
 import { Button, ProductCardSkeleton } from '@/components/ui';
 import ProductCard from './ProductCard';
-import { Product, ProductGridProps } from '@/types/product';
+import { ProductGridProps } from '@/types/product';
 import { cn } from '@/lib/cn';
 
 export const ProductGrid: React.FC<ProductGridProps> = ({
@@ -16,8 +16,6 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
                                                                 lg: 3,
                                                                 xl: 4,
                                                             },
-                                                            showFilters = false,
-                                                            showSort = false,
                                                             emptyMessage = 'No products found',
                                                             className,
                                                         }) => {

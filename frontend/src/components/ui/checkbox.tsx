@@ -30,7 +30,6 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
          ...props
      }, ref) => {
         const [internalChecked, setInternalChecked] = React.useState(defaultChecked);
-        const inputRef = React.useRef<HTMLInputElement>(null);
 
         // Use controlled or uncontrolled state
         const checked = controlledChecked !== undefined ? controlledChecked : internalChecked;
@@ -46,12 +45,25 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
             onChange?.(event);
         };
 
-        // Set indeterminate state
-        React.useEffect(() => {
-            if (inputRef.current) {
-                inputRef.current.indeterminate = indeterminate;
+        // Combined ref callback that handles both internal ref and forwarded ref
+        const setRefs = React.useCallback((node: HTMLInputElement | null) => {
+            // Handle forwarded ref
+            if (typeof ref === 'function') {
+                ref(node);
+            } else if (ref) {
+                ref.current = node;
             }
-        }, [indeterminate]);
+        }, [ref]);
+
+        // Set indeterminate state using the forwarded ref or a separate effect
+        React.useEffect(() => {
+            const input = typeof ref === 'object' && ref?.current ? ref.current :
+                document.getElementById(inputId) as HTMLInputElement;
+
+            if (input) {
+                input.indeterminate = indeterminate;
+            }
+        }, [indeterminate, ref]);
 
         const inputId = id || React.useId();
 
@@ -59,16 +71,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
             <div className="flex items-start space-x-2">
                 <div className="relative flex items-center">
                     <input
-                        ref={React.useMemo(() => {
-                            return (node: HTMLInputElement) => {
-                                inputRef.current = node;
-                                if (typeof ref === 'function') {
-                                    ref(node);
-                                } else if (ref) {
-                                    ref.current = node;
-                                }
-                            };
-                        }, [ref])}
+                        ref={setRefs}
                         type="checkbox"
                         id={inputId}
                         checked={checked}

@@ -17,6 +17,12 @@ const CACHE_CONFIGS = {
     static: { maxSize: 50, ttl: 60 * 60 * 1000 }, // 1 hour
 } as const;
 
+interface CacheEntry<T> {
+    data: T;
+    timestamp: number;
+    ttl: number;
+}
+
 // Generic cache class
 class Cache<T = any> {
     private cache: LRUCache<string, CacheEntry<T>>;
@@ -36,10 +42,15 @@ class Cache<T = any> {
         const entry: CacheEntry<T> = {
             data: value,
             timestamp: Date.now(),
-            ttl: customTtl || this.cache.ttl,
+            ttl: customTtl || this.cache.ttl || 0,
         };
 
-        this.cache.set(key, entry, { ttl: customTtl });
+        // Only pass ttl option if customTtl is defined
+        if (customTtl !== undefined) {
+            this.cache.set(key, entry, { ttl: customTtl });
+        } else {
+            this.cache.set(key, entry);
+        }
 
         if (process.env.NODE_ENV === 'development') {
             console.log(`Cache [${this.name}] SET: ${key}`);
@@ -96,12 +107,11 @@ class Cache<T = any> {
             ttl: this.cache.ttl,
         };
     }
-}
 
-interface CacheEntry<T> {
-    data: T;
-    timestamp: number;
-    ttl: number;
+    // Get all keys (for invalidation purposes)
+    getKeys(): string[] {
+        return Array.from(this.cache.keys());
+    }
 }
 
 // Cache instances
@@ -265,7 +275,7 @@ export class CacheInvalidator {
 
     static invalidatePattern(cacheType: keyof typeof caches, pattern: string): void {
         const cache = caches[cacheType];
-        const keys = Array.from((cache as any).cache.keys());
+        const keys = cache.getKeys(); // Use our custom getKeys method
 
         keys.forEach(key => {
             if (key.includes(pattern)) {

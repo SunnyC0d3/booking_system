@@ -25,20 +25,20 @@ const sizeClasses = {
 // Helper function to get input classes
 const getInputClasses = (
     variant: keyof typeof variantClasses = 'default',
-    size: keyof typeof sizeClasses = 'default',
+    inputSize: keyof typeof sizeClasses = 'default',
     className?: string
 ) => {
     return cn(
         baseClasses,
         variantClasses[variant],
-        sizeClasses[size],
+        sizeClasses[inputSize],
         className
     );
 };
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
     variant?: keyof typeof variantClasses;
-    size?: keyof typeof sizeClasses;
+    inputSize?: keyof typeof sizeClasses;
     leftIcon?: React.ReactNode;
     rightIcon?: React.ReactNode;
     error?: string;
@@ -53,7 +53,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         const {
             className,
             variant = 'default',
-            size = 'default',
+            inputSize = 'default',
             type,
             leftIcon,
             rightIcon,
@@ -66,7 +66,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         } = props;
 
         const [showPassword, setShowPassword] = React.useState(false);
-        const [isFocused, setIsFocused] = React.useState(false);
         // Add mounted state to prevent hydration mismatch
         const [isMounted, setIsMounted] = React.useState(false);
 
@@ -108,13 +107,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                         id={inputId}
                         type={inputType}
                         className={cn(
-                            getInputClasses(currentVariant, size, className),
+                            getInputClasses(currentVariant, inputSize, className),
                             leftIcon && 'pl-10',
                             hasRightContent && 'pr-10'
                         )}
                         ref={ref}
-                        onFocus={() => setIsFocused(true)}
-                        onBlur={() => setIsFocused(false)}
                         {...restProps}
                     />
 
@@ -173,4 +170,3 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 Input.displayName = 'Input';
 
 export { Input };
-export type { InputProps };

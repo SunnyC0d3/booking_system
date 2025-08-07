@@ -178,9 +178,9 @@ export const SelectValue: React.FC<SelectValueProps> = ({
 };
 SelectValue.displayName = 'SelectValue';
 
-// Select Content (Dropdown)
+// Select Content (Dropdown) - removed unused ref parameter
 export const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps>(
-    ({ children, className, position = 'item-aligned', ...props }, ref) => {
+    ({ children, className, position = 'item-aligned', ...props }, _ref) => {
         const { isOpen, setIsOpen } = useSelectContext();
         const contentRef = React.useRef<HTMLDivElement>(null);
 
@@ -303,7 +303,7 @@ export const SelectScrollDownButton: React.FC<{ className?: string }> = ({ class
 );
 SelectScrollDownButton.displayName = 'SelectScrollDownButton';
 
-// Simple Select Component (for easier use)
+// Simple Select Component (for easier use) - fixed optional types
 export const SimpleSelect: React.FC<SelectProps> = ({
                                                         options,
                                                         value,
@@ -324,38 +324,49 @@ export const SimpleSelect: React.FC<SelectProps> = ({
 
     const selectedOption = options.find(option => option.value === (value || defaultValue));
 
-    return (
-        <Select
-            value={value}
-            defaultValue={defaultValue}
-            onValueChange={handleValueChange}
-            disabled={disabled}
-        >
-            <SelectTrigger className={className} {...props}>
+    // Create props object with proper undefined handling for strict optional types
+    const selectProps: {
+        value?: string;
+        defaultValue?: string;
+        onValueChange?: (value: string) => void;
+        disabled?: boolean;
+        children: React.ReactNode;
+    } = {
+        children: [
+            <SelectTrigger key="trigger" className={className} {...props}>
                 <SelectValue
-                    placeholder={selectedOption?.label || placeholder}
+                    placeholder={selectedOption?.label || placeholder || "Select an option..."}
                 />
-            </SelectTrigger>
-            <SelectContent>
+            </SelectTrigger>,
+            <SelectContent key="content">
                 {options.map((option) => (
                     <SelectItem
                         key={option.value}
                         value={option.value}
-                        disabled={option.disabled}
+                        disabled={option.disabled || false}
                     >
                         {option.label}
                     </SelectItem>
                 ))}
-            </SelectContent>
-            {name && (
+            </SelectContent>,
+            name && (
                 <input
+                    key="hidden-input"
                     type="hidden"
                     name={name}
                     value={value || defaultValue || ''}
                     required={required}
                 />
-            )}
-        </Select>
-    );
+            )
+        ]
+    };
+
+    // Only add props if they're not undefined
+    if (value !== undefined) selectProps.value = value;
+    if (defaultValue !== undefined) selectProps.defaultValue = defaultValue;
+    if (disabled !== undefined) selectProps.disabled = disabled;
+    selectProps.onValueChange = handleValueChange;
+
+    return <Select {...selectProps} />;
 };
 SimpleSelect.displayName = 'SimpleSelect';

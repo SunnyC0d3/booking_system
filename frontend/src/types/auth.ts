@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 // User Types
 export interface User {
     id: number;
@@ -123,7 +125,8 @@ export interface AuthActions {
     login: (credentials: LoginRequest) => Promise<void>;
     register: (data: RegisterRequest) => Promise<void>;
     logout: () => Promise<void>;
-    refreshToken: () => Promise<void>;
+    // Renamed from refreshToken to avoid naming conflict with property
+    refreshAuthToken: () => Promise<void>;
 
     // Password Management
     forgotPassword: (data: ForgotPasswordRequest) => Promise<void>;
@@ -196,12 +199,12 @@ export interface AuthError {
 
 // Route Protection Types
 export interface RouteGuardProps {
-    children: React.ReactNode;
+    children: ReactNode;
     requireAuth?: boolean;
     requireGuest?: boolean;
     requiredRoles?: string[];
     requiredPermissions?: string[];
-    fallback?: React.ReactNode;
+    fallback?: ReactNode;
     redirectTo?: string;
 }
 
@@ -230,8 +233,41 @@ export interface TwoFactorAuth {
     recovery_codes?: string[];
 }
 
-// Authentication Hook Types
-export interface UseAuthReturn extends AuthState, AuthActions {
+// Fixed: Remove duplicate refreshToken declarations
+export interface UseAuthReturn {
+    // State properties from AuthState
+    user: User | null;
+    accessToken: string | null;
+    refreshToken: string | null; // This is the token value property
+    isAuthenticated: boolean;
+    isLoading: boolean;
+    isInitialized: boolean;
+    error: string | null;
+    lastActivity: number | null;
+
+    // Action methods from AuthActions
+    login: (credentials: LoginRequest) => Promise<void>;
+    register: (data: RegisterRequest) => Promise<void>;
+    logout: () => Promise<void>;
+    refreshAuthToken: () => Promise<void>; // This is the method (renamed to avoid conflict)
+    forgotPassword: (data: ForgotPasswordRequest) => Promise<void>;
+    resetPassword: (data: ResetPasswordRequest) => Promise<void>;
+    changePassword: (data: ChangePasswordRequest) => Promise<void>;
+    verifyEmail: (data: VerifyEmailRequest) => Promise<void>;
+    resendVerification: () => Promise<void>;
+    updateUser: (user: Partial<User>) => void;
+    fetchUserProfile: () => Promise<void>;
+    updateUserPreferences: (preferences: Partial<UserPreferences>) => Promise<void>;
+    checkAuth: () => Promise<void>;
+    initialize: () => Promise<void>;
+    updateLastActivity: () => void;
+    setTokens: (accessToken: string, refreshToken?: string) => void;
+    clearTokens: () => void;
+    getStoredTokens: () => { accessToken: string | null; refreshToken: string | null };
+    clearError: () => void;
+    setLoading: (loading: boolean) => void;
+    setError: (error: string | null) => void;
+
     // Computed properties
     hasRole: (role: string) => boolean;
     hasPermission: (permission: string) => boolean;
@@ -262,4 +298,96 @@ export interface ApiError {
     errors?: Record<string, string[]>;
     status?: number;
     code?: string;
+}
+
+// Additional utility types for better type safety
+export type AuthStatus = 'idle' | 'loading' | 'authenticated' | 'unauthenticated' | 'error';
+
+export interface AuthContextType extends UseAuthReturn {
+    status: AuthStatus;
+}
+
+// Token types for better type safety
+export interface TokenPair {
+    accessToken: string;
+    refreshToken: string | null;
+}
+
+export interface DecodedToken {
+    sub: string;
+    exp: number;
+    iat: number;
+    iss: string;
+    aud: string;
+    role?: string;
+    permissions?: string[];
+}
+
+// Enhanced session management
+export interface SessionConfig {
+    timeout: number;
+    refreshThreshold: number;
+    maxInactivityTime: number;
+    warningTime: number;
+}
+
+// OAuth provider types (for future expansion)
+export interface OAuthProvider {
+    name: string;
+    clientId: string;
+    scopes: string[];
+    redirectUri: string;
+}
+
+export interface SocialAuthRequest {
+    provider: string;
+    code: string;
+    state?: string;
+    redirect_uri: string;
+}
+
+// Password strength validation
+export interface PasswordStrength {
+    score: number;
+    strength: 'very-weak' | 'weak' | 'medium' | 'strong' | 'very-strong';
+    feedback: string[];
+    requirements: {
+        minLength: boolean;
+        hasUppercase: boolean;
+        hasLowercase: boolean;
+        hasNumbers: boolean;
+        hasSpecialChars: boolean;
+    };
+}
+
+// Rate limiting types
+export interface RateLimitInfo {
+    limit: number;
+    remaining: number;
+    reset: number;
+    retryAfter?: number;
+}
+
+// Device and session tracking
+export interface DeviceInfo {
+    id: string;
+    name: string;
+    type: 'desktop' | 'mobile' | 'tablet';
+    os: string;
+    browser: string;
+    ip_address: string;
+    location?: string;
+    last_active: string;
+    is_current: boolean;
+}
+
+// Audit log types
+export interface AuditLogEntry {
+    id: string;
+    event: string;
+    user_id: number;
+    ip_address: string;
+    user_agent: string;
+    data?: Record<string, any>;
+    created_at: string;
 }

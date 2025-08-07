@@ -1,3 +1,4 @@
+
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
@@ -55,7 +56,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                     set((state) => {
                         state.user = response.user;
                         state.accessToken = response.access_token;
-                        state.refreshToken = response.refresh_token;
+                        state.refreshToken = response.refresh_token || null;
                         state.isAuthenticated = true;
                         state.isLoading = false;
                         state.error = null;
@@ -93,7 +94,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                     set((state) => {
                         state.user = response.user;
                         state.accessToken = response.access_token;
-                        state.refreshToken = response.refresh_token;
+                        state.refreshToken = response.refresh_token || null;
                         state.isAuthenticated = true;
                         state.isLoading = false;
                         state.error = null;
@@ -146,7 +147,8 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                 }
             },
 
-            refreshToken: async () => {
+            // Renamed from refreshToken to refreshAuthToken to avoid naming conflict
+            refreshAuthToken: async () => {
                 try {
                     const { refreshToken } = get();
 
@@ -534,6 +536,8 @@ export const useAuth = (): UseAuthReturn => {
 
     return {
         ...store,
+        // FIXED: Remove the conflicting refreshToken assignment
+        // The refreshToken property is already included via ...store spread
         hasRole,
         hasPermission,
         hasAnyRole,

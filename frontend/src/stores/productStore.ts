@@ -45,18 +45,20 @@ interface CompareActions {
     removeFromCompare: (productId: number) => void;
     clearCompare: () => void;
     toggleComparePanel: () => void;
+    isInCompare: (productId: number) => boolean;
+    canAddToCompare: () => boolean;
+    getCompareCount: () => number;
 }
 
+// Fixed: Use proper empty object for optional properties instead of null
 const initialState: ProductState = {
     products: [],
     currentProduct: null,
     filters: {
-        category: null,
-        price_min: null,
-        price_max: null,
-        in_stock: null,
-        featured: null,
-        search: null,
+        // Don't set optional string properties to null - leave them undefined
+        // category: undefined, // Don't even include optional properties
+        // search: undefined,   // This satisfies exactOptionalPropertyTypes
+        // Other optional properties are also left undefined by omission
     },
     sort: 'created_at',
     isLoading: false,
@@ -68,6 +70,7 @@ const initialState: ProductState = {
 };
 
 export const useCompareStore = create<CompareState & CompareActions>()(
+    // Fixed: Prefix unused parameter with underscore or add useful functionality
     immer((set, get) => ({
         compareItems: [],
         isOpen: false,
@@ -97,6 +100,22 @@ export const useCompareStore = create<CompareState & CompareActions>()(
             set((draft) => {
                 draft.isOpen = !draft.isOpen;
             });
+        },
+
+        // Enhanced utility functions using get parameter
+        isInCompare: (productId) => {
+            const state = get();
+            return state.compareItems.some(product => product.id === productId);
+        },
+
+        canAddToCompare: () => {
+            const state = get();
+            return state.compareItems.length < 4;
+        },
+
+        getCompareCount: () => {
+            const state = get();
+            return state.compareItems.length;
         },
     }))
 );
@@ -217,7 +236,11 @@ export const useProductStore = create<ProductState & ProductActions>()(
 
         clearFilters: () => {
             set((draft) => {
-                draft.filters = initialState.filters;
+                // Reset to clean initial state without null values
+                draft.filters = {
+                    // Only include properties that have actual values
+                    // Optional properties left undefined
+                };
             });
 
             get().fetchProducts();
@@ -240,3 +263,47 @@ export const useProductStore = create<ProductState & ProductActions>()(
         },
     }))
 );
+
+// Enhanced selectors for better component integration
+export const useProductFilters = () => useProductStore((state) => state.filters);
+export const useProductSort = () => useProductStore((state) => state.sort);
+export const useProductLoading = () => useProductStore((state) => state.isLoading);
+export const useProductError = () => useProductStore((state) => state.error);
+export const useProductPagination = () => useProductStore((state) => ({
+    page: state.page,
+    hasMore: state.hasMore,
+    total: state.total,
+    limit: state.limit,
+}));
+
+// Compare store selectors
+export const useCompareItems = () => useCompareStore((state) => state.compareItems);
+export const useCompareUI = () => useCompareStore((state) => ({
+    isOpen: state.isOpen,
+    count: state.compareItems.length,
+    canAdd: state.compareItems.length < 4,
+}));
+
+// Utility hooks
+export const useIsInCompare = (productId: number) =>
+    useCompareStore((state) => state.isInCompare(productId));
+
+export const useCanAddToCompare = () =>
+    useCompareStore((state) => state.canAddToCompare());
+
+export const useCompareActions = () => useCompareStore((state) => ({
+    addToCompare: state.addToCompare,
+    removeFromCompare: state.removeFromCompare,
+    clearCompare: state.clearCompare,
+    toggleComparePanel: state.toggleComparePanel,
+}));
+
+export const useProductActions = () => useProductStore((state) => ({
+    fetchProducts: state.fetchProducts,
+    loadMoreProducts: state.loadMoreProducts,
+    fetchProduct: state.fetchProduct,
+    setFilters: state.setFilters,
+    setSort: state.setSort,
+    clearFilters: state.clearFilters,
+    resetState: state.resetState,
+}));

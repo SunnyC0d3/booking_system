@@ -1,5 +1,7 @@
 'use client'
 
+import * as React from 'react';
+
 // Performance monitoring utilities
 export class PerformanceMonitor {
     private static metrics = new Map<string, number>();
@@ -45,10 +47,11 @@ export class PerformanceMonitor {
         // Resource timing
         this.observeMetric('resource', (entries) => {
             entries.forEach(entry => {
-                if (entry.initiatorType === 'img' && entry.duration > 1000) {
+                const resourceEntry = entry as PerformanceResourceTiming;
+                if (resourceEntry.initiatorType === 'img' && entry.duration > 1000) {
                     this.logMetric('Slow Image', entry.duration, 'ms', entry.name);
                 }
-                if (entry.initiatorType === 'script' && entry.duration > 500) {
+                if (resourceEntry.initiatorType === 'script' && entry.duration > 500) {
                     this.logMetric('Slow Script', entry.duration, 'ms', entry.name);
                 }
             });
@@ -110,9 +113,9 @@ export class PerformanceMonitor {
         };
     }
 
-    // Component render timing
+    // Component render timing - removed unused target parameter
     static measureComponent(componentName: string) {
-        return (target: any, propertyName: string, descriptor: PropertyDescriptor) => {
+        return (_target: any, propertyName: string, descriptor: PropertyDescriptor) => {
             const method = descriptor.value;
             descriptor.value = function (...args: any[]) {
                 const endTiming = PerformanceMonitor.startTiming(`${componentName}.${propertyName}`);
@@ -198,9 +201,10 @@ export class ErrorTracker {
         // Resource loading errors
         window.addEventListener('error', (event) => {
             if (event.target !== window) {
-                this.captureError(new Error(`Resource failed to load: ${(event.target as any)?.src || 'unknown'}`), {
+                const target = event.target as HTMLElement;
+                this.captureError(new Error(`Resource failed to load: ${(target as any)?.src || 'unknown'}`), {
                     type: 'resource',
-                    element: event.target?.tagName?.toLowerCase(),
+                    element: target?.tagName?.toLowerCase(),
                 });
             }
         }, true);
@@ -283,12 +287,15 @@ export class BundleAnalyzer {
         if (typeof window === 'undefined') return;
 
         const resources = performance.getEntriesByType('resource');
-        const resourceSizes = resources.map(resource => ({
-            name: resource.name,
-            size: (resource as any).transferSize || 0,
-            type: resource.initiatorType,
-            duration: resource.duration,
-        }));
+        const resourceSizes = resources.map(resource => {
+            const resourceTiming = resource as PerformanceResourceTiming;
+            return {
+                name: resource.name,
+                size: resourceTiming.transferSize || 0,
+                type: resourceTiming.initiatorType,
+                duration: resource.duration,
+            };
+        });
 
         const totalSize = resourceSizes.reduce((sum, resource) => sum + resource.size, 0);
 
@@ -348,6 +355,9 @@ export class MemoryMonitor {
         const recent = this.measurements.slice(-10);
         const first = recent[0];
         const last = recent[recent.length - 1];
+
+        // Add null checks for first and last
+        if (!first || !last) return null;
 
         return {
             trend: last.memory.usedJSHeapSize > first.memory.usedJSHeapSize ? 'increasing' : 'decreasing',

@@ -3,7 +3,6 @@
 import * as React from 'react';
 import { cn } from '@/lib/cn';
 import { X } from 'lucide-react';
-import { Button } from './button';
 
 // Dialog Context
 interface DialogContextType {
