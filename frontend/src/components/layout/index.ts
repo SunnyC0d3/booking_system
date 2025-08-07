@@ -1,17 +1,8 @@
-
-// Layout Components
 export { default as Header } from './Header';
 export { default as Footer } from './Footer';
 export { default as AuthLayout } from './AuthLayout';
-export {
-    default as MainLayout,
-    DashboardLayout,
-    ProductLayout,
-    ContentLayout,
-    CheckoutLayout,
-} from './MainLayout';
+export { MainLayout } from './MainLayout';
 
-// Navigation Components
 export {
     default as Breadcrumbs,
     BreadcrumbContainer,

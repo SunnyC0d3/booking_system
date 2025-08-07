@@ -1,246 +1,148 @@
 'use client'
 
 import * as React from 'react';
-import { motion } from 'framer-motion';
-import Header from './Header';
-import Footer from './Footer';
-import { BreadcrumbContainer } from './Breadcrumbs';
+import Link from 'next/link';
 import { cn } from '@/lib/cn';
+import { Menu, X, Home, ShoppingBag, Heart, User } from 'lucide-react';
 
 interface MainLayoutProps {
     children: React.ReactNode;
-    className?: string;
     showBreadcrumbs?: boolean;
-    showFooter?: boolean;
-    breadcrumbItems?: Array<{
-        label: string;
-        href?: string;
-        current?: boolean;
-    }>;
-    pageTitle?: string;
-    pageDescription?: string;
+    className?: string;
 }
 
-export const MainLayout: React.FC<MainLayoutProps> = ({
-                                                          children,
-                                                          className,
-                                                          showBreadcrumbs = true,
-                                                          showFooter = true,
-                                                          breadcrumbItems,
-                                                          pageTitle,
-                                                          pageDescription,
-                                                      }) => {
+export function MainLayout({
+                               children,
+                               showBreadcrumbs = true,
+                               className
+                           }: MainLayoutProps) {
+    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+
+    const navigationItems = [
+        { name: 'Home', href: '/', icon: Home },
+        { name: 'Products', href: '/products', icon: ShoppingBag },
+        { name: 'Wishlist', href: '/wishlist', icon: Heart },
+        { name: 'Account', href: '/account', icon: User },
+    ];
+
     return (
-        <div className="min-h-screen flex flex-col bg-background">
+        <div className={cn('min-h-screen bg-background flex flex-col', className)}>
             {/* Header */}
-            <Header />
+            <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+                <div className="container flex h-16 items-center justify-between px-4">
+                    {/* Logo */}
+                    <Link href="/" className="flex items-center space-x-2">
+                        <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
+                            <span className="text-primary-foreground font-bold text-lg">CB</span>
+                        </div>
+                        <span className="font-bold text-xl hidden sm:inline-block">
+              Creative Business
+            </span>
+                    </Link>
+
+                    {/* Desktop Navigation */}
+                    <nav className="hidden md:flex items-center space-x-6">
+                        {navigationItems.map((item) => (
+                            <Link
+                                key={item.name}
+                                href={item.href}
+                                className="flex items-center space-x-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                            >
+                                <item.icon className="h-4 w-4" />
+                                <span>{item.name}</span>
+                            </Link>
+                        ))}
+                    </nav>
+
+                    {/* Mobile Menu Button */}
+                    <button
+                        className="md:hidden p-2 rounded-md hover:bg-accent"
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        aria-label="Toggle menu"
+                    >
+                        {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                    </button>
+                </div>
+
+                {/* Mobile Navigation */}
+                {isMenuOpen && (
+                    <div className="md:hidden">
+                        <nav className="border-t border-border bg-background px-4 py-4 space-y-3">
+                            {navigationItems.map((item) => (
+                                <Link
+                                    key={item.name}
+                                    href={item.href}
+                                    className="flex items-center space-x-3 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground py-2"
+                                    onClick={() => setIsMenuOpen(false)}
+                                >
+                                    <item.icon className="h-4 w-4" />
+                                    <span>{item.name}</span>
+                                </Link>
+                            ))}
+                        </nav>
+                    </div>
+                )}
+            </header>
 
             {/* Breadcrumbs */}
             {showBreadcrumbs && (
-                <BreadcrumbContainer>
-                    {breadcrumbItems && (
-                        <nav className="flex items-center space-x-1 text-sm">
-                            <ol className="flex items-center space-x-1">
-                                {breadcrumbItems.map((item, index) => (
-                                    <React.Fragment key={item.href || item.label}>
-                                        <li>
-                                            {item.href && !item.current ? (
-                                                <a
-                                                    href={item.href}
-                                                    className="text-muted-foreground hover:text-foreground transition-colors font-medium"
-                                                >
-                                                    {item.label}
-                                                </a>
-                                            ) : (
-                                                <span
-                                                    className={cn(
-                                                        'font-medium',
-                                                        item.current
-                                                            ? 'text-foreground'
-                                                            : 'text-muted-foreground'
-                                                    )}
-                                                    aria-current={item.current ? 'page' : undefined}
-                                                >
-                                                    {item.label}
-                                                </span>
-                                            )}
-                                        </li>
-                                        {index < breadcrumbItems.length - 1 && (
-                                            <li className="flex items-center text-muted-foreground">
-                                                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                                                </svg>
-                                            </li>
-                                        )}
-                                    </React.Fragment>
-                                ))}
-                            </ol>
-                        </nav>
-                    )}
-                </BreadcrumbContainer>
-            )}
-
-            {/* Page Header */}
-            {(pageTitle || pageDescription) && (
-                <div className="border-b bg-muted/30">
-                    <div className="container mx-auto px-4 py-8">
-                        <div className="max-w-4xl">
-                            {pageTitle && (
-                                <motion.h1
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.5 }}
-                                    className="text-3xl lg:text-4xl font-bold text-foreground mb-4"
-                                >
-                                    {pageTitle}
-                                </motion.h1>
-                            )}
-                            {pageDescription && (
-                                <motion.p
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.5, delay: 0.1 }}
-                                    className="text-lg text-muted-foreground leading-relaxed"
-                                >
-                                    {pageDescription}
-                                </motion.p>
-                            )}
+                <nav className="border-b border-border/40 bg-muted/30">
+                    <div className="container px-4 py-3">
+                        <div className="text-sm text-muted-foreground">
+                            <Link href="/" className="hover:text-foreground transition-colors">
+                                Home
+                            </Link>
+                            {/* Add breadcrumb logic here based on current path */}
                         </div>
                     </div>
-                </div>
+                </nav>
             )}
 
-            {/* Main Content */}
-            <main className={cn('flex-1', className)}>
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.2 }}
-                >
-                    {children}
-                </motion.div>
+            {/* Main content */}
+            <main className="flex-1">
+                {children}
             </main>
 
             {/* Footer */}
-            {showFooter && <Footer />}
+            <footer className="border-t border-border bg-background mt-auto">
+                <div className="container px-4 py-8">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                        <div className="col-span-1 md:col-span-2">
+                            <div className="flex items-center space-x-2 mb-4">
+                                <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
+                                    <span className="text-primary-foreground font-bold text-lg">CB</span>
+                                </div>
+                                <span className="font-bold text-xl">Creative Business</span>
+                            </div>
+                            <p className="text-muted-foreground max-w-md">
+                                Professional custom labels, invitations, stickers, and creative printing services for every occasion.
+                            </p>
+                        </div>
+
+                        <div>
+                            <h3 className="font-semibold mb-3">Products</h3>
+                            <ul className="space-y-2 text-sm text-muted-foreground">
+                                <li><Link href="/products/labels" className="hover:text-foreground">Labels</Link></li>
+                                <li><Link href="/products/invitations" className="hover:text-foreground">Invitations</Link></li>
+                                <li><Link href="/products/stickers" className="hover:text-foreground">Stickers</Link></li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h3 className="font-semibold mb-3">Support</h3>
+                            <ul className="space-y-2 text-sm text-muted-foreground">
+                                <li><Link href="/contact" className="hover:text-foreground">Contact</Link></li>
+                                <li><Link href="/help" className="hover:text-foreground">Help Center</Link></li>
+                                <li><Link href="/privacy" className="hover:text-foreground">Privacy Policy</Link></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
+                        © 2025 Creative Business. All rights reserved.
+                    </div>
+                </div>
+            </footer>
         </div>
     );
-};
-
-// Specialized layout components for different sections
-export const DashboardLayout: React.FC<{
-    children: React.ReactNode;
-    title?: string;
-    description?: string;
-}> = ({ children, title, description }) => {
-    // Create props object conditionally to avoid passing undefined
-    const layoutProps: MainLayoutProps = {
-        children,
-        showBreadcrumbs: true,
-        className: "container mx-auto px-4 py-8"
-    };
-
-    if (title) {
-        layoutProps.pageTitle = title;
-    }
-    if (description) {
-        layoutProps.pageDescription = description;
-    }
-
-    return <MainLayout {...layoutProps} />;
-};
-
-export const ProductLayout: React.FC<{
-    children: React.ReactNode;
-    title?: string;
-    description?: string;
-}> = ({ children, title, description }) => {
-    // Create props object conditionally to avoid passing undefined
-    const layoutProps: MainLayoutProps = {
-        children,
-        showBreadcrumbs: true,
-    };
-
-    if (title) {
-        layoutProps.pageTitle = title;
-    }
-    if (description) {
-        layoutProps.pageDescription = description;
-    }
-
-    return <MainLayout {...layoutProps} />;
-};
-
-export const ContentLayout: React.FC<{
-    children: React.ReactNode;
-    title?: string;
-    description?: string;
-    maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
-}> = ({ children, title, description, maxWidth = 'lg' }) => {
-    // Create props object conditionally to avoid passing undefined
-    const layoutProps: MainLayoutProps = {
-        children: (
-            <div className="container mx-auto px-4 py-12">
-                <div className={cn(
-                    'mx-auto prose prose-gray dark:prose-invert',
-                    {
-                        'max-w-sm': maxWidth === 'sm',
-                        'max-w-md': maxWidth === 'md',
-                        'max-w-lg': maxWidth === 'lg',
-                        'max-w-xl': maxWidth === 'xl',
-                        'max-w-2xl': maxWidth === '2xl',
-                        'max-w-none': maxWidth === 'full',
-                    }
-                )}>
-                    {children}
-                </div>
-            </div>
-        ),
-        showBreadcrumbs: true,
-    };
-
-    if (title) {
-        layoutProps.pageTitle = title;
-    }
-    if (description) {
-        layoutProps.pageDescription = description;
-    }
-
-    return <MainLayout {...layoutProps} />;
-};
-
-export const CheckoutLayout: React.FC<{
-    children: React.ReactNode;
-    currentStep?: number;
-    totalSteps?: number;
-}> = ({ children, currentStep, totalSteps }) => (
-    <MainLayout
-        showBreadcrumbs={false}
-        showFooter={false}
-        className="bg-muted/30"
-    >
-        <div className="container mx-auto px-4 py-8">
-            {currentStep && totalSteps && (
-                <div className="max-w-2xl mx-auto mb-8">
-                    <div className="flex items-center justify-between text-sm text-muted-foreground mb-2">
-                        <span>Step {currentStep} of {totalSteps}</span>
-                        <span>{Math.round((currentStep / totalSteps) * 100)}% Complete</span>
-                    </div>
-                    <div className="w-full bg-muted rounded-full h-2">
-                        <motion.div
-                            className="bg-primary h-2 rounded-full"
-                            initial={{ width: 0 }}
-                            animate={{ width: `${(currentStep / totalSteps) * 100}%` }}
-                            transition={{ duration: 0.5 }}
-                        />
-                    </div>
-                </div>
-            )}
-            <div className="max-w-4xl mx-auto">
-                {children}
-            </div>
-        </div>
-    </MainLayout>
-);
-
-export default MainLayout;
+}

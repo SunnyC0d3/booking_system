@@ -1,7 +1,6 @@
 'use client'
 
 import * as React from 'react';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
     Home,
@@ -163,8 +162,14 @@ export default function NotFoundPage() {
                                                 <p className="text-sm text-muted-foreground mb-4">
                                                     {page.description}
                                                 </p>
-                                                <Button variant="outline" size="sm" className="w-full">
-                                                    <Link href={page.href}>Visit Page</Link>
+                                                {/* ✅ FIXED: Use Button's built-in href prop */}
+                                                <Button
+                                                    href={page.href}
+                                                    variant="outline"
+                                                    size="sm"
+                                                    className="w-full"
+                                                >
+                                                    Visit Page
                                                 </Button>
                                             </CardContent>
                                         </Card>
@@ -181,21 +186,29 @@ export default function NotFoundPage() {
                             className="mb-12"
                         >
                             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                                <Button size="lg">
-                                    <Link href="/">
-                                        <Home className="mr-2 h-4 w-4" />
-                                        Go Home
-                                    </Link>
+                                {/* ✅ FIXED: Use Button's built-in href prop */}
+                                <Button
+                                    href="/"
+                                    size="lg"
+                                    leftIcon={<Home className="h-4 w-4" />}
+                                >
+                                    Go Home
                                 </Button>
-                                <Button variant="outline" size="lg" onClick={() => window.history.back()}>
-                                    <ArrowLeft className="mr-2 h-4 w-4" />
+                                <Button
+                                    variant="outline"
+                                    size="lg"
+                                    onClick={() => window.history.back()}
+                                    leftIcon={<ArrowLeft className="h-4 w-4" />}
+                                >
                                     Go Back
                                 </Button>
-                                <Button variant="outline" size="lg">
-                                    <Link href="/contact">
-                                        <Mail className="mr-2 h-4 w-4" />
-                                        Contact Support
-                                    </Link>
+                                <Button
+                                    href="/contact"
+                                    variant="outline"
+                                    size="lg"
+                                    leftIcon={<Mail className="h-4 w-4" />}
+                                >
+                                    Contact Support
                                 </Button>
                             </div>
                         </motion.div>
@@ -212,13 +225,14 @@ export default function NotFoundPage() {
                             </h4>
                             <div className="flex flex-wrap justify-center gap-4">
                                 {helpLinks.map((link, index) => (
-                                    <Link
+                                    <Button
                                         key={index}
                                         href={link.href}
-                                        className="text-primary hover:text-primary/80 transition-colors font-medium"
+                                        variant="link"
+                                        className="text-primary hover:text-primary/80 font-medium"
                                     >
                                         {link.label}
-                                    </Link>
+                                    </Button>
                                 ))}
                             </div>
                         </motion.div>

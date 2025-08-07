@@ -1,7 +1,6 @@
 'use client'
 
 import * as React from 'react';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
   ArrowRight,
@@ -144,16 +143,23 @@ export default function HomePage() {
                     transition={{ duration: 0.6, delay: 0.3 }}
                     className="flex flex-col sm:flex-row gap-4"
                 >
-                  <Link href="/products">
-                    <Button size="lg" className="w-full sm:w-auto" rightIcon={<ArrowRight className="h-4 w-4" />}>
-                      Browse Products
-                    </Button>
-                  </Link>
-                  <Link href="/services/custom-design">
-                    <Button variant="outline" size="lg" className="w-full sm:w-auto">
-                      Custom Design
-                    </Button>
-                  </Link>
+                  {/* ✅ FIXED: Use Button's built-in href prop instead of wrapping with Link */}
+                  <Button
+                      href="/products"
+                      size="lg"
+                      className="w-full sm:w-auto"
+                      rightIcon={<ArrowRight className="h-4 w-4" />}
+                  >
+                    Browse Products
+                  </Button>
+                  <Button
+                      href="/services/custom-design"
+                      variant="outline"
+                      size="lg"
+                      className="w-full sm:w-auto"
+                  >
+                    Custom Design
+                  </Button>
                 </motion.div>
 
                 <motion.div
@@ -214,8 +220,13 @@ export default function HomePage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: index * 0.1 }}
                   >
-                    <Link href={category.href}>
-                      <Card className="h-full card-hover group cursor-pointer">
+                    {/* ✅ FIXED: Use Button instead of Link + Card combination */}
+                    <Button
+                        href={category.href}
+                        variant="ghost"
+                        className="h-auto w-full p-0 group"
+                    >
+                      <Card className="h-full card-hover cursor-pointer w-full">
                         <CardContent className="p-6 text-center space-y-4">
                           <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${category.color} mx-auto flex items-center justify-center text-2xl`}>
                             {category.icon}
@@ -230,7 +241,7 @@ export default function HomePage() {
                           </div>
                         </CardContent>
                       </Card>
-                    </Link>
+                    </Button>
                   </motion.div>
               ))}
             </div>
@@ -344,25 +355,24 @@ export default function HomePage() {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/products">
-                  <Button
-                      variant="secondary"
-                      size="lg"
-                      className="w-full sm:w-auto"
-                      rightIcon={<ArrowRight className="h-4 w-4" />}
-                  >
-                    Start Shopping
-                  </Button>
-                </Link>
-                <Link href="/services/custom-design">
-                  <Button
-                      variant="outline"
-                      size="lg"
-                      className="w-full sm:w-auto bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-                  >
-                    Get Custom Quote
-                  </Button>
-                </Link>
+                {/* ✅ FIXED: Use Button's built-in href prop */}
+                <Button
+                    href="/products"
+                    variant="secondary"
+                    size="lg"
+                    className="w-full sm:w-auto"
+                    rightIcon={<ArrowRight className="h-4 w-4" />}
+                >
+                  Start Shopping
+                </Button>
+                <Button
+                    href="/services/custom-design"
+                    variant="outline"
+                    size="lg"
+                    className="w-full sm:w-auto bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                >
+                  Get Custom Quote
+                </Button>
               </div>
 
               <div className="flex items-center justify-center gap-8 pt-8 text-primary-foreground/80">
