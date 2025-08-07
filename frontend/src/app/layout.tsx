@@ -1,8 +1,9 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import { Toaster } from 'sonner';
-import { ThemeProvider } from 'next-themes';
-import { QueryProvider } from '@/components/providers/QueryProvider';
+import * as React from 'react';
+import type {Metadata} from 'next';
+import {Inter} from 'next/font/google';
+import {Toaster} from 'sonner';
+import {ThemeProvider} from 'next-themes';
+import {QueryProvider} from '@/components/providers/QueryProvider';
 import '@/styles/global.css';
 
 const inter = Inter({
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
     },
     description: 'Professional custom labels, gift tags, invitations, packaging inserts, greeting cards, stickers, and flower stand services for your creative projects.',
     keywords: ['labels', 'invitations', 'stickers', 'gift tags', 'packaging', 'greeting cards', 'flower stands', 'custom printing'],
-    authors: [{ name: 'Creative Business' }],
+    authors: [{name: 'Creative Business'}],
     creator: 'Creative Business',
     publisher: 'Creative Business',
     formatDetection: {
@@ -76,11 +77,7 @@ export const metadata: Metadata = {
     manifest: '/site.webmanifest',
 };
 
-export default function RootLayout({
-                                       children,
-                                   }: {
-    children: React.ReactNode;
-}) {
+export default function RootLayout({children,}: { children: React.ReactNode; }) {
     return (
         <html lang="en" suppressHydrationWarning>
         <body className={`${inter.variable} font-sans antialiased`}>
