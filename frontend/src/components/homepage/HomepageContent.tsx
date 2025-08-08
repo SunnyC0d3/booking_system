@@ -10,7 +10,6 @@ import {FeaturesSection} from './FeaturesSection';
 import {TestimonialsSection} from './TestimonialsSection';
 import {CTASection} from './CTASection';
 
-// Import loading components
 import {HeroSkeleton, CategoriesSkeleton, FeaturesSkeleton} from './skeletons';
 
 interface HomepageContentProps {
@@ -19,11 +18,7 @@ interface HomepageContentProps {
     stats: CompanyStats;
 }
 
-export function HomepageContent({
-                                    categories,
-                                    testimonials,
-                                    stats
-                                }: HomepageContentProps) {
+export function HomepageContent({categories, testimonials, stats}: HomepageContentProps) {
     return (
         <>
             {/* Hero Section */}
@@ -51,10 +46,3 @@ export function HomepageContent({
         </>
     );
 }
-
-// Optional: Create a version with React.lazy for code splitting
-export const LazyHomepageContent = React.lazy(() =>
-    import('./HomepageContent').then(module => ({
-        default: module.HomepageContent
-    }))
-);

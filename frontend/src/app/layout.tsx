@@ -3,6 +3,7 @@ import type {Metadata} from 'next';
 import {Inter} from 'next/font/google';
 import {Toaster} from 'sonner';
 import {ThemeProvider} from 'next-themes';
+import {ErrorBoundary} from '@/components/error/ErrorBoundary';
 import {QueryProvider} from '@/components/providers/QueryProvider';
 import '@/app/globals.css';
 
@@ -81,32 +82,34 @@ export default function RootLayout({children,}: { children: React.ReactNode; }) 
     return (
         <html lang="en" suppressHydrationWarning>
         <body className={`${inter.variable} font-sans antialiased`}>
-        <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem
-            disableTransitionOnChange
-        >
-            <QueryProvider>
-                <div className="relative min-h-screen bg-background">
-                    {children}
-                </div>
-                <Toaster
-                    position="top-right"
-                    expand={true}
-                    richColors
-                    closeButton
-                    toastOptions={{
-                        duration: 4000,
-                        style: {
-                            background: 'hsl(var(--background))',
-                            border: '1px solid hsl(var(--border))',
-                            color: 'hsl(var(--foreground))',
-                        },
-                    }}
-                />
-            </QueryProvider>
-        </ThemeProvider>
+        <ErrorBoundary>
+            <ThemeProvider
+                attribute="class"
+                defaultTheme="light"
+                enableSystem
+                disableTransitionOnChange
+            >
+                <QueryProvider>
+                    <div className="relative min-h-screen bg-background">
+                        {children}
+                    </div>
+                    <Toaster
+                        position="top-right"
+                        expand={true}
+                        richColors
+                        closeButton
+                        toastOptions={{
+                            duration: 4000,
+                            style: {
+                                background: 'hsl(var(--background))',
+                                border: '1px solid hsl(var(--border))',
+                                color: 'hsl(var(--foreground))',
+                            },
+                        }}
+                    />
+                </QueryProvider>
+            </ThemeProvider>
+        </ErrorBoundary>
         </body>
         </html>
     );
