@@ -3,6 +3,7 @@ import type {Metadata} from 'next';
 import {Category, Testimonial, CompanyStats} from '@/types/homepage';
 import {getFeaturedCategories, getTestimonials, getCompanyStats} from '@/lib/data/homepage';
 import {HomepageContent} from '@/components/homepage/HomepageContent';
+import {MainLayout} from "@/components/layout";
 
 // Metadata for SEO
 export const metadata: Metadata = {
@@ -29,10 +30,12 @@ export default async function HomePage() {
     const stats: CompanyStats = await getCompanyStats();
 
     return (
-        <HomepageContent
-            categories={categories}
-            testimonials={testimonials}
-            stats={stats}
-        />
+        <MainLayout showBreadcrumbs={false}>
+            <HomepageContent
+                categories={categories}
+                testimonials={testimonials}
+                stats={stats}
+            />
+        </MainLayout>
     );
 }
