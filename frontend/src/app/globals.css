@@ -1,26 +1,253 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Core Theme Variables */
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+
+    /* Primary Colors - Creative Business Theme */
+    --primary: 330.4 81.2% 60.4%;
+    --primary-foreground: 355.7 100% 97.3%;
+    --primary-50: 355.7 100% 97.3%;
+    --primary-100: 350 100% 88%;
+    --primary-200: 349 89% 78%;
+    --primary-300: 343 81% 69%;
+    --primary-400: 339 82% 62%;
+    --primary-500: 330.4 81.2% 60.4%;
+    --primary-600: 327 73% 50%;
+    --primary-700: 329 78% 39%;
+    --primary-800: 331 74% 30%;
+    --primary-900: 333 71% 25%;
+
+    /* Secondary Colors */
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --secondary-50: 240 4.8% 95.9%;
+    --secondary-100: 240 4.8% 91.8%;
+    --secondary-200: 240 5.9% 81%;
+    --secondary-300: 240 4.9% 68.1%;
+    --secondary-400: 240 5% 46.1%;
+    --secondary-500: 240 3.8% 26.1%;
+    --secondary-600: 240 5.2% 15.9%;
+    --secondary-700: 240 5.3% 11%;
+    --secondary-800: 240 3.7% 15.9%;
+    --secondary-900: 240 5.9% 10%;
+
+    /* UI Component Colors */
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+
+    /* Input & Border Colors */
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 330.4 81.2% 60.4%;
+
+    /* Status Colors */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 142.1 76.2% 36.3%;
+    --success-foreground: 355.7 100% 97.3%;
+    --success-50: 142.1 76.2% 95%;
+    --success-100: 142.1 76.2% 85%;
+    --success-500: 142.1 76.2% 36.3%;
+    --success-600: 142.1 76.2% 30%;
+    --success-700: 142.1 76.2% 25%;
+    --warning: 32.2 95% 44.3%;
+    --warning-foreground: 355.7 100% 97.3%;
+    --warning-50: 32.2 95% 95%;
+    --warning-100: 32.2 95% 85%;
+    --warning-500: 32.2 95% 44.3%;
+    --warning-600: 32.2 95% 35%;
+    --warning-700: 32.2 95% 28%;
+    --error: 0 84.2% 60.2%;
+    --error-foreground: 0 0% 98%;
+    --error-50: 0 84.2% 95%;
+    --error-100: 0 84.2% 85%;
+    --error-500: 0 84.2% 60.2%;
+    --error-600: 0 84.2% 50%;
+    --error-700: 0 84.2% 40%;
+
+    /* Brand Colors for Creative Business */
+    --brand-cream: 45 100% 94%;
+    --brand-sage: 142.1 70% 45%;
+    --brand-lavender: 274.7 95.3% 76.1%;
+
+    /* Design System Values */
+    --radius: 0.75rem;
+    --primary-rgb: 236 72 153; /* RGB values for box-shadow usage */
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 330.4 81.2% 60.4%;
+    --primary-foreground: 355.7 100% 97.3%;
+
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 330.4 81.2% 60.4%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+  }
+
+  /* Base Element Styles */
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Typography Hierarchy - Keep minimal, move complex typography to components */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-semibold tracking-tight text-foreground;
+    text-wrap: balance; /* Modern CSS for better text layout */
+  }
+
+  p {
+    @apply leading-7 text-muted-foreground;
+    text-wrap: pretty; /* Modern CSS for better paragraph wrapping */
+  }
+
+  /* Selection Styles */
+  ::selection {
+    @apply bg-primary/20 text-primary-foreground;
+  }
+
+  ::-moz-selection {
+    @apply bg-primary/20 text-primary-foreground;
+  }
+
+  /* Custom Scrollbar - Minimal and Modern */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-muted rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/30 rounded-full hover:bg-muted-foreground/50;
+  }
+
+  /* Focus Management for Accessibility */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2;
+  }
+
+  /* Reduced Motion Support */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Only essential, reusable component utilities - Keep minimal */
+
+  /* Container System */
+  .container-padding {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-padding {
+    @apply py-12 sm:py-16 lg:py-20;
+  }
+
+  /* Focus Ring Utility */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+
+  /* Loading States - Minimal utilities */
+  .loading-shimmer {
+    @apply relative overflow-hidden bg-muted rounded;
+  }
+
+  .loading-shimmer::after {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-muted-foreground/10 to-transparent;
+    animation: shimmer 1.5s infinite;
+  }
+
+  .loading-pulse {
+    @apply animate-pulse bg-muted rounded;
+  }
+
+  /* Text Utilities - Only essential ones */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}
+
+@layer utilities {
+  /* Minimal utility overrides */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+
+  /* Container utilities */
+  .container-padding {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-padding {
+    @apply py-12 sm:py-16 lg:py-20;
+  }
+
+  /* Animation utilities */
+  .animate-fade-in {
+    @apply animate-fade-in;
+  }
+
+  .hover-lift {
+    @apply transition-transform duration-200 hover:-translate-y-1;
+  }
 }

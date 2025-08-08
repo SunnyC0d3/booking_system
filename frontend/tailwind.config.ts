@@ -1,10 +1,16 @@
-/** @type {import('tailwindcss').Config} */
-const config = {
+import type { Config } from 'tailwindcss';
+
+const config: Config = {
     darkMode: ['class'],
+    // Optimized content paths for better performance and tree-shaking
     content: [
         './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
         './src/components/**/*.{js,ts,jsx,tsx,mdx}',
         './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+        // Include ui components if using shadcn/ui
+        './src/components/ui/**/*.{js,ts,jsx,tsx,mdx}',
+        // Exclude node_modules except for specific component libraries
+        '!./node_modules/**',
     ],
     theme: {
         container: {
@@ -15,6 +21,7 @@ const config = {
             },
         },
         extend: {
+            // Use CSS custom properties for better performance and theme switching
             colors: {
                 border: 'hsl(var(--border))',
                 input: 'hsl(var(--input))',
@@ -22,86 +29,46 @@ const config = {
                 background: 'hsl(var(--background))',
                 foreground: 'hsl(var(--foreground))',
 
-                // Professional Creative Business Palette
+                // Simplified primary color system using CSS variables
                 primary: {
                     DEFAULT: 'hsl(var(--primary))',
                     foreground: 'hsl(var(--primary-foreground))',
-                    50: '#fdf2f8',   // Soft blush
-                    100: '#fce7f3',  // Light rose
-                    200: '#fbcfe8',  // Pale pink
-                    300: '#f9a8d4',  // Rose pink
-                    400: '#f472b6',  // Medium pink
-                    500: '#ec4899',  // Primary rose
-                    600: '#db2777',  // Deep rose
-                    700: '#be185d',  // Rich rose
-                    800: '#9d174d',  // Dark rose
-                    900: '#831843',  // Very dark rose
-                    950: '#500724',  // Almost black rose
+                    // Reduced color palette for better performance
+                    50: 'hsl(var(--primary-50))',
+                    100: 'hsl(var(--primary-100))',
+                    200: 'hsl(var(--primary-200))',
+                    300: 'hsl(var(--primary-300))',
+                    400: 'hsl(var(--primary-400))',
+                    500: 'hsl(var(--primary-500))',
+                    600: 'hsl(var(--primary-600))',
+                    700: 'hsl(var(--primary-700))',
+                    800: 'hsl(var(--primary-800))',
+                    900: 'hsl(var(--primary-900))',
                 },
 
                 secondary: {
                     DEFAULT: 'hsl(var(--secondary))',
                     foreground: 'hsl(var(--secondary-foreground))',
-                    50: '#f8fafc',   // Soft cloud
-                    100: '#f1f5f9',  // Light gray
-                    200: '#e2e8f0',  // Pale gray
-                    300: '#cbd5e1',  // Medium gray
-                    400: '#94a3b8',  // Steel gray
-                    500: '#64748b',  // Slate gray
-                    600: '#475569',  // Dark slate
-                    700: '#334155',  // Charcoal
-                    800: '#1e293b',  // Dark charcoal
-                    900: '#0f172a',  // Almost black
+                    50: 'hsl(var(--secondary-50))',
+                    100: 'hsl(var(--secondary-100))',
+                    200: 'hsl(var(--secondary-200))',
+                    300: 'hsl(var(--secondary-300))',
+                    400: 'hsl(var(--secondary-400))',
+                    500: 'hsl(var(--secondary-500))',
+                    600: 'hsl(var(--secondary-600))',
+                    700: 'hsl(var(--secondary-700))',
+                    800: 'hsl(var(--secondary-800))',
+                    900: 'hsl(var(--secondary-900))',
                 },
 
-                // Warm Creative Accent Colors
-                cream: {
-                    50: '#fffdf7',   // Ivory
-                    100: '#fffbeb',  // Cream
-                    200: '#fef3c7',  // Light cream
-                    300: '#fde68a',  // Warm cream
-                    400: '#facc15',  // Gold cream
-                    500: '#eab308',  // Rich gold
-                    600: '#ca8a04',  // Deep gold
-                    700: '#a16207',  // Bronze
-                    800: '#854d0e',  // Dark bronze
-                    900: '#713f12',  // Deep bronze
-                },
-
-                sage: {
-                    50: '#f0fdf4',   // Soft mint
-                    100: '#dcfce7',  // Light sage
-                    200: '#bbf7d0',  // Pale sage
-                    300: '#86efac',  // Medium sage
-                    400: '#4ade80',  // Bright sage
-                    500: '#22c55e',  // Primary sage
-                    600: '#16a34a',  // Deep sage
-                    700: '#15803d',  // Rich sage
-                    800: '#166534',  // Dark sage
-                    900: '#14532d',  // Very dark sage
-                },
-
-                lavender: {
-                    50: '#faf5ff',   // Soft lavender
-                    100: '#f3e8ff',  // Light lavender
-                    200: '#e9d5ff',  // Pale lavender
-                    300: '#d8b4fe',  // Medium lavender
-                    400: '#c084fc',  // Bright lavender
-                    500: '#a855f7',  // Primary lavender
-                    600: '#9333ea',  // Deep lavender
-                    700: '#7c3aed',  // Rich lavender
-                    800: '#6b21a8',  // Dark lavender
-                    900: '#581c87',  // Very dark lavender
-                },
-
-                // Professional UI Colors
-                muted: {
-                    DEFAULT: 'hsl(var(--muted))',
-                    foreground: 'hsl(var(--muted-foreground))',
-                },
+                // Semantic color system using CSS variables
                 accent: {
                     DEFAULT: 'hsl(var(--accent))',
                     foreground: 'hsl(var(--accent-foreground))',
+                },
+                muted: {
+                    DEFAULT: 'hsl(var(--muted))',
+                    foreground: 'hsl(var(--muted-foreground))',
                 },
                 popover: {
                     DEFAULT: 'hsl(var(--popover))',
@@ -112,37 +79,44 @@ const config = {
                     foreground: 'hsl(var(--card-foreground))',
                 },
 
-                // Status Colors
+                // Status colors using CSS variables for consistency
                 success: {
-                    DEFAULT: '#059669',
-                    50: '#ecfdf5',
-                    100: '#d1fae5',
-                    500: '#059669',
-                    600: '#047857',
-                    700: '#065f46',
-                    foreground: '#ffffff',
+                    DEFAULT: 'hsl(var(--success))',
+                    foreground: 'hsl(var(--success-foreground))',
+                    50: 'hsl(var(--success-50))',
+                    100: 'hsl(var(--success-100))',
+                    500: 'hsl(var(--success-500))',
+                    600: 'hsl(var(--success-600))',
+                    700: 'hsl(var(--success-700))',
                 },
                 warning: {
-                    DEFAULT: '#d97706',
-                    50: '#fffbeb',
-                    100: '#fef3c7',
-                    500: '#d97706',
-                    600: '#b45309',
-                    700: '#92400e',
-                    foreground: '#ffffff',
+                    DEFAULT: 'hsl(var(--warning))',
+                    foreground: 'hsl(var(--warning-foreground))',
+                    50: 'hsl(var(--warning-50))',
+                    100: 'hsl(var(--warning-100))',
+                    500: 'hsl(var(--warning-500))',
+                    600: 'hsl(var(--warning-600))',
+                    700: 'hsl(var(--warning-700))',
                 },
                 error: {
-                    DEFAULT: '#dc2626',
-                    50: '#fef2f2',
-                    100: '#fee2e2',
-                    500: '#dc2626',
-                    600: '#b91c1c',
-                    700: '#991b1b',
-                    foreground: '#ffffff',
+                    DEFAULT: 'hsl(var(--error))',
+                    foreground: 'hsl(var(--error-foreground))',
+                    50: 'hsl(var(--error-50))',
+                    100: 'hsl(var(--error-100))',
+                    500: 'hsl(var(--error-500))',
+                    600: 'hsl(var(--error-600))',
+                    700: 'hsl(var(--error-700))',
                 },
                 destructive: {
                     DEFAULT: 'hsl(var(--destructive))',
                     foreground: 'hsl(var(--destructive-foreground))',
+                },
+
+                // Custom brand colors using CSS variables
+                brand: {
+                    cream: 'hsl(var(--brand-cream))',
+                    sage: 'hsl(var(--brand-sage))',
+                    lavender: 'hsl(var(--brand-lavender))',
                 },
             },
 
@@ -152,9 +126,12 @@ const config = {
                 sm: 'calc(var(--radius) - 4px)',
             },
 
+            // Optimized font stack with system fonts first for better performance
             fontFamily: {
                 sans: [
+                    'var(--font-inter)',
                     'Inter',
+                    'system-ui',
                     '-apple-system',
                     'BlinkMacSystemFont',
                     'Segoe UI',
@@ -164,7 +141,9 @@ const config = {
                     'sans-serif',
                 ],
                 heading: [
+                    'var(--font-inter)',
                     'Inter',
+                    'system-ui',
                     '-apple-system',
                     'BlinkMacSystemFont',
                     'Segoe UI',
@@ -172,43 +151,36 @@ const config = {
                     'sans-serif',
                 ],
                 mono: [
+                    'var(--font-jetbrains-mono)',
                     'JetBrains Mono',
+                    'Menlo',
                     'Monaco',
                     'Cascadia Code',
                     'Segoe UI Mono',
                     'Roboto Mono',
+                    'Consolas',
                     'monospace',
                 ],
             },
 
+            // Optimized typography scale
             fontSize: {
-                xs: ['0.75rem', { lineHeight: '1rem' }],
-                sm: ['0.875rem', { lineHeight: '1.25rem' }],
-                base: ['1rem', { lineHeight: '1.5rem' }],
-                lg: ['1.125rem', { lineHeight: '1.75rem' }],
-                xl: ['1.25rem', { lineHeight: '1.75rem' }],
-                '2xl': ['1.5rem', { lineHeight: '2rem' }],
-                '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
-                '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
-                '5xl': ['3rem', { lineHeight: '1' }],
-                '6xl': ['3.75rem', { lineHeight: '1' }],
-                '7xl': ['4.5rem', { lineHeight: '1' }],
-                '8xl': ['6rem', { lineHeight: '1' }],
-                '9xl': ['8rem', { lineHeight: '1' }],
+                xs: ['0.75rem', { lineHeight: '1rem', letterSpacing: '0.025em' }],
+                sm: ['0.875rem', { lineHeight: '1.25rem', letterSpacing: '0.025em' }],
+                base: ['1rem', { lineHeight: '1.5rem', letterSpacing: 'normal' }],
+                lg: ['1.125rem', { lineHeight: '1.75rem', letterSpacing: '-0.025em' }],
+                xl: ['1.25rem', { lineHeight: '1.75rem', letterSpacing: '-0.025em' }],
+                '2xl': ['1.5rem', { lineHeight: '2rem', letterSpacing: '-0.025em' }],
+                '3xl': ['1.875rem', { lineHeight: '2.25rem', letterSpacing: '-0.05em' }],
+                '4xl': ['2.25rem', { lineHeight: '2.5rem', letterSpacing: '-0.05em' }],
+                '5xl': ['3rem', { lineHeight: '3rem', letterSpacing: '-0.05em' }],
+                '6xl': ['3.75rem', { lineHeight: '3.75rem', letterSpacing: '-0.05em' }],
+                '7xl': ['4.5rem', { lineHeight: '4.5rem', letterSpacing: '-0.05em' }],
+                '8xl': ['6rem', { lineHeight: '6rem', letterSpacing: '-0.05em' }],
+                '9xl': ['8rem', { lineHeight: '8rem', letterSpacing: '-0.05em' }],
             },
 
-            fontWeight: {
-                thin: '100',
-                extralight: '200',
-                light: '300',
-                normal: '400',
-                medium: '500',
-                semibold: '600',
-                bold: '700',
-                extrabold: '800',
-                black: '900',
-            },
-
+            // Extended spacing for modern layouts
             spacing: {
                 '18': '4.5rem',
                 '88': '22rem',
@@ -222,46 +194,52 @@ const config = {
                 '9xl': '96rem',
             },
 
+            // Performance-optimized animations
             animation: {
-                'fade-in': 'fadeIn 0.5s ease-in-out',
-                'fade-out': 'fadeOut 0.5s ease-in-out',
+                'fade-in': 'fadeIn 0.3s ease-out',
+                'fade-out': 'fadeOut 0.2s ease-in',
                 'slide-in': 'slideIn 0.3s ease-out',
-                'slide-out': 'slideOut 0.3s ease-in',
+                'slide-out': 'slideOut 0.2s ease-in',
                 'scale-in': 'scaleIn 0.2s ease-out',
-                'scale-out': 'scaleOut 0.2s ease-in',
-                'bounce-subtle': 'bounceSubtle 0.6s ease-in-out',
-                'shimmer': 'shimmer 2s linear infinite',
-                'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                'scale-out': 'scaleOut 0.15s ease-in',
+                'shimmer': 'shimmer 1.5s linear infinite',
+                'pulse-slow': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                // New animations for better UX
+                'bounce-in': 'bounceIn 0.5s ease-out',
+                'spin-slow': 'spin 3s linear infinite',
+                'ping-slow': 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite',
             },
 
             keyframes: {
                 fadeIn: {
-                    '0%': { opacity: '0' },
-                    '100%': { opacity: '1' },
+                    '0%': { opacity: '0', transform: 'translateY(4px)' },
+                    '100%': { opacity: '1', transform: 'translateY(0)' },
                 },
                 fadeOut: {
-                    '0%': { opacity: '1' },
-                    '100%': { opacity: '0' },
+                    '0%': { opacity: '1', transform: 'translateY(0)' },
+                    '100%': { opacity: '0', transform: 'translateY(-4px)' },
                 },
                 slideIn: {
-                    '0%': { transform: 'translateY(10px)', opacity: '0' },
+                    '0%': { transform: 'translateY(8px)', opacity: '0' },
                     '100%': { transform: 'translateY(0)', opacity: '1' },
                 },
                 slideOut: {
                     '0%': { transform: 'translateY(0)', opacity: '1' },
-                    '100%': { transform: 'translateY(-10px)', opacity: '0' },
+                    '100%': { transform: 'translateY(-8px)', opacity: '0' },
                 },
                 scaleIn: {
-                    '0%': { transform: 'scale(0.95)', opacity: '0' },
+                    '0%': { transform: 'scale(0.96)', opacity: '0' },
                     '100%': { transform: 'scale(1)', opacity: '1' },
                 },
                 scaleOut: {
                     '0%': { transform: 'scale(1)', opacity: '1' },
-                    '100%': { transform: 'scale(0.95)', opacity: '0' },
+                    '100%': { transform: 'scale(0.96)', opacity: '0' },
                 },
-                bounceSubtle: {
-                    '0%, 100%': { transform: 'translateY(0)' },
-                    '50%': { transform: 'translateY(-5px)' },
+                bounceIn: {
+                    '0%': { transform: 'scale(0.3)', opacity: '0' },
+                    '50%': { transform: 'scale(1.05)' },
+                    '70%': { transform: 'scale(0.9)' },
+                    '100%': { transform: 'scale(1)', opacity: '1' },
                 },
                 shimmer: {
                     '0%': { transform: 'translateX(-100%)' },
@@ -269,29 +247,53 @@ const config = {
                 },
             },
 
+            // Modern shadow system
+            boxShadow: {
+                'soft': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+                'soft-lg': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                'glow': '0 0 15px rgba(var(--primary-rgb), 0.15)',
+                'glow-lg': '0 0 25px rgba(var(--primary-rgb), 0.2)',
+                'inner-soft': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
+            },
+
+            // Modern backdrop blur
             backdropBlur: {
                 xs: '2px',
             },
 
-            boxShadow: {
-                'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
-                'soft-lg': '0 10px 30px -5px rgba(0, 0, 0, 0.1), 0 20px 25px -5px rgba(0, 0, 0, 0.04)',
-                'glow': '0 0 20px rgba(236, 72, 153, 0.3)',
-                'glow-lg': '0 0 30px rgba(236, 72, 153, 0.4)',
-            },
-
+            // Enhanced gradient system
             backgroundImage: {
                 'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
                 'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-                'gradient-creative': 'linear-gradient(135deg, #fdf2f8, #f3e8ff, #ecfdf5)',
+                'gradient-creative': 'linear-gradient(135deg, hsl(var(--primary-50)), hsl(var(--accent)), hsl(var(--secondary-50)))',
+                'grid': 'url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 32 32\' width=\'32\' height=\'32\' fill=\'none\' stroke=\'rgb(148 163 184 / 0.05)\'%3e%3cpath d=\'m0 .5h32m-32 32v-32\'/%3e%3c/svg%3e")',
+                'dot': 'radial-gradient(circle, rgb(148 163 184 / 0.05) 1px, transparent 1px)',
+            },
+
+            // Enhanced screen sizes for better responsive design
+            screens: {
+                'xs': '475px',
+                '3xl': '1680px',
+            },
+
+            // Modern transitions
+            transitionDuration: {
+                '400': '400ms',
+                '600': '600ms',
+            },
+            transitionTimingFunction: {
+                'out-expo': 'cubic-bezier(0.19, 1, 0.22, 1)',
+                'in-expo': 'cubic-bezier(0.95, 0.05, 0.795, 0.035)',
             },
         },
     },
     plugins: [
-        require('@tailwindcss/forms'),
+        require('@tailwindcss/forms')({
+            strategy: 'class',
+        }),
         require('@tailwindcss/typography'),
         require('@tailwindcss/aspect-ratio'),
     ],
 };
 
-module.exports = config;
+export default config;
