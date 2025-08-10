@@ -1,5 +1,14 @@
 import { ReactNode } from 'react';
 
+export interface AuthLayoutProps {
+    children: React.ReactNode;
+    title: string;
+    subtitle?: string;
+    showBackButton?: boolean;
+    backHref?: string;
+    className?: string;
+}
+
 // User Types
 export interface User {
     id: number;

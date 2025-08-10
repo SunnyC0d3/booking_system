@@ -1,7 +1,8 @@
 export { default as Header } from './Header';
 export { default as Footer } from './Footer';
-// export { default as AuthLayout } from './AuthLayout';
 export { MainLayout } from './MainLayout';
+
+export { AuthLayout, default as AuthLayoutDefault } from '../auth/AuthLayout';
 
 export {
     default as Breadcrumbs,
