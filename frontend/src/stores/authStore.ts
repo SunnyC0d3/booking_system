@@ -1,4 +1,3 @@
-
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
@@ -63,15 +62,12 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                         state.lastActivity = Date.now();
                     });
 
-                    toast.success(`Welcome back, ${response.user.name}!`);
+                    toast.success('Welcome back!');
                 } catch (error: any) {
                     set((state) => {
                         state.error = error.message || 'Login failed';
                         state.isLoading = false;
                         state.isAuthenticated = false;
-                        state.user = null;
-                        state.accessToken = null;
-                        state.refreshToken = null;
                     });
 
                     toast.error(error.message || 'Login failed');
@@ -101,15 +97,11 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                         state.lastActivity = Date.now();
                     });
 
-                    toast.success(`Welcome to Creative Business, ${response.user.name}!`);
+                    toast.success('Account created successfully!');
                 } catch (error: any) {
                     set((state) => {
                         state.error = error.message || 'Registration failed';
                         state.isLoading = false;
-                        state.isAuthenticated = false;
-                        state.user = null;
-                        state.accessToken = null;
-                        state.refreshToken = null;
                     });
 
                     toast.error(error.message || 'Registration failed');
@@ -123,31 +115,37 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                         state.isLoading = true;
                     });
 
-                    // Call logout API if authenticated
-                    if (get().accessToken) {
-                        await authApi.logout();
+                    // Call logout endpoint if authenticated
+                    if (get().isAuthenticated) {
+                        try {
+                            await authApi.logout();
+                        } catch (error) {
+                            // Don't throw on logout API failure
+                            console.warn('Logout API call failed:', error);
+                        }
                     }
-                } catch (error) {
-                    console.warn('Logout API call failed:', error);
-                } finally {
-                    // Clear everything regardless of API call success
+
+                    // Clear tokens and state
                     api.clearTokens();
 
                     set((state) => {
-                        state.user = null;
-                        state.accessToken = null;
-                        state.refreshToken = null;
-                        state.isAuthenticated = false;
-                        state.isLoading = false;
-                        state.error = null;
-                        state.lastActivity = null;
+                        Object.assign(state, initialState);
+                        state.isInitialized = true; // Keep initialized state
                     });
 
                     toast.success('Logged out successfully');
+                } catch (error: any) {
+                    console.error('Logout error:', error);
+
+                    // Force clear state even on error
+                    api.clearTokens();
+                    set((state) => {
+                        Object.assign(state, initialState);
+                        state.isInitialized = true;
+                    });
                 }
             },
 
-            // Renamed from refreshToken to refreshAuthToken to avoid naming conflict
             refreshAuthToken: async () => {
                 try {
                     const { refreshToken } = get();
@@ -169,8 +167,10 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                         state.lastActivity = Date.now();
                     });
 
-                } catch (error) {
-                    console.error('Token refresh failed:', error);
+                } catch (error: any) {
+                    console.warn('Token refresh failed:', error);
+
+                    // Clear auth state on refresh failure
                     get().logout();
                     throw error;
                 }
@@ -184,20 +184,20 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                         state.error = null;
                     });
 
-                    const response = await authApi.forgotPassword(data);
+                    await authApi.forgotPassword(data);
 
                     set((state) => {
                         state.isLoading = false;
                     });
 
-                    toast.success(response.message || 'Password reset email sent');
+                    toast.success('Password reset email sent!');
                 } catch (error: any) {
                     set((state) => {
-                        state.error = error.message || 'Failed to send password reset email';
+                        state.error = error.message || 'Failed to send reset email';
                         state.isLoading = false;
                     });
 
-                    toast.error(error.message || 'Failed to send password reset email');
+                    toast.error(error.message || 'Failed to send reset email');
                     throw error;
                 }
             },
@@ -211,7 +211,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 
                     const response = await authApi.resetPassword(data);
 
-                    // If auto-login after reset
+                    // If response includes new auth tokens, log the user in
                     if (response.access_token && response.user) {
                         api.setTokens(response.access_token);
 
@@ -227,7 +227,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                         state.isLoading = false;
                     });
 
-                    toast.success('Password reset successful');
+                    toast.success('Password reset successfully!');
                 } catch (error: any) {
                     set((state) => {
                         state.error = error.message || 'Failed to reset password';
@@ -239,6 +239,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                 }
             },
 
+            // FIXED: Change password to match Laravel API field names
             changePassword: async (data: ChangePasswordRequest) => {
                 try {
                     set((state) => {
@@ -246,13 +247,13 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                         state.error = null;
                     });
 
-                    const response = await authApi.changePassword(data);
+                    await authApi.changePassword(data);
 
                     set((state) => {
                         state.isLoading = false;
                     });
 
-                    toast.success(response.message || 'Password changed successfully');
+                    toast.success('Password changed successfully!');
                 } catch (error: any) {
                     set((state) => {
                         state.error = error.message || 'Failed to change password';
@@ -272,29 +273,23 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                         state.error = null;
                     });
 
-                    const response = await authApi.verifyEmail(data);
+                    await authApi.verifyEmail(data);
 
-                    // Update user email verification status
-                    if (get().user) {
-                        set((state) => {
-                            if (state.user) {
-                                state.user.email_verified_at = new Date().toISOString();
-                            }
-                        });
-                    }
+                    // Refresh user profile to get updated verification status
+                    await get().fetchUserProfile();
 
                     set((state) => {
                         state.isLoading = false;
                     });
 
-                    toast.success(response.message || 'Email verified successfully');
+                    toast.success('Email verified successfully!');
                 } catch (error: any) {
                     set((state) => {
-                        state.error = error.message || 'Email verification failed';
+                        state.error = error.message || 'Failed to verify email';
                         state.isLoading = false;
                     });
 
-                    toast.error(error.message || 'Email verification failed');
+                    toast.error(error.message || 'Failed to verify email');
                     throw error;
                 }
             },
@@ -306,13 +301,13 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                         state.error = null;
                     });
 
-                    const response = await authApi.resendVerification();
+                    await authApi.resendVerification();
 
                     set((state) => {
                         state.isLoading = false;
                     });
 
-                    toast.success(response.message || 'Verification email sent');
+                    toast.success('Verification email sent!');
                 } catch (error: any) {
                     set((state) => {
                         state.error = error.message || 'Failed to send verification email';
@@ -536,8 +531,6 @@ export const useAuth = (): UseAuthReturn => {
 
     return {
         ...store,
-        // FIXED: Remove the conflicting refreshToken assignment
-        // The refreshToken property is already included via ...store spread
         hasRole,
         hasPermission,
         hasAnyRole,

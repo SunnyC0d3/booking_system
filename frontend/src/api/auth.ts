@@ -42,7 +42,7 @@ export class AuthApi {
         return response.data;
     }
 
-    // Password management
+    // Password management - FIXED: Match Laravel API field names
     async forgotPassword(data: ForgotPasswordRequest): Promise<{ message: string }> {
         const response = await api.post<{ message: string }>('/auth/forgot-password', data);
         return response.data;
@@ -53,8 +53,13 @@ export class AuthApi {
         return response.data;
     }
 
+    // FIXED: Changed to match Laravel API field names (current_password, new_password, new_password_confirmation)
     async changePassword(data: ChangePasswordRequest): Promise<{ message: string }> {
-        const response = await api.post<{ message: string }>('/auth/change-password', data);
+        const response = await api.post<{ message: string }>('/auth/change-password', {
+            current_password: data.current_password,
+            new_password: data.password,
+            new_password_confirmation: data.password_confirmation,
+        });
         return response.data;
     }
 
@@ -97,11 +102,19 @@ export class AuthApi {
         return response.data;
     }
 
-    // Security
+    // ADDED: Security info endpoint to match Laravel API
     async getSecurityInfo(): Promise<{
-        security_score: any;
-        recent_activity: SecurityEvent[];
-        active_sessions: SessionInfo[];
+        requires_password_change: boolean;
+        days_until_password_expiry: number;
+        security_score: number;
+        is_account_locked: boolean;
+        last_login_at?: string;
+        last_login_ip?: string;
+        failed_login_attempts: number;
+        active_sessions: number;
+        two_factor_enabled: boolean;
+        password_changed_at?: string;
+        recent_activity?: SecurityEvent[];
     }> {
         const response = await api.get('/auth/security-info');
         return response.data;
