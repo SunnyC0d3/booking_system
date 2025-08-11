@@ -3,7 +3,7 @@ import type {Metadata} from 'next';
 import {Category, Testimonial, CompanyStats} from '@/types/homepage';
 import {getFeaturedCategories, getTestimonials, getCompanyStats} from '@/lib/data/homepage';
 import {HomepageContent} from '@/components/homepage/HomepageContent';
-import {MainLayout} from "@/components/layout";
+import {MainLayout} from '@/components/layout/MainLayout';
 
 // Metadata for SEO
 export const metadata: Metadata = {

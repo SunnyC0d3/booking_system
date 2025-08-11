@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Metadata } from 'next';
-import AuthLayout from '@/components/layout/AuthLayout';
+import AuthLayout from '@/components/auth/AuthLayout';
 import LoginForm from '@/components/forms/auth/LoginForm';
 
 export const metadata: Metadata = {

@@ -1,4 +1,3 @@
-// src/components/auth/AuthLayout.tsx
 import { Suspense } from 'react';
 import { AuthHeader } from './AuthHeader';
 import { AuthFooter } from './AuthFooter';

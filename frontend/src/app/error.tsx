@@ -15,7 +15,7 @@ import {
     CheckCircle,
 } from 'lucide-react';
 import { Button, Card, CardContent } from '@/components/ui';
-import { MainLayout } from '@/components/layout';
+import { MainLayout } from '@/components/layout/MainLayout';
 
 interface ErrorPageProps {
     error: Error & { digest?: string };

@@ -16,7 +16,7 @@ import {
     ExternalLink,
 } from 'lucide-react';
 import { Button, Card, CardContent, Input } from '@/components/ui';
-import { MainLayout } from '@/components/layout';
+import { MainLayout } from '@/components/layout/MainLayout';
 
 const popularPages = [
     {
