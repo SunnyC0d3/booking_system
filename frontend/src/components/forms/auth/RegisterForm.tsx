@@ -11,7 +11,6 @@ import { Button, Input, Card, CardHeader, CardTitle, CardContent, CardFooter } f
 import { useAuth } from '@/stores/authStore';
 import { RegisterFormData } from '@/types/auth';
 
-// Password strength checker
 const passwordStrength = {
     minLength: (password: string) => password.length >= 8,
     hasUppercase: (password: string) => /[A-Z]/.test(password),
@@ -20,7 +19,6 @@ const passwordStrength = {
     hasSpecial: (password: string) => /[!@#$%^&*(),.?":{}|<>]/.test(password),
 };
 
-// Validation schema
 const registerSchema = z.object({
     name: z
         .string()
@@ -56,11 +54,7 @@ interface RegisterFormProps {
     onSuccess?: () => void;
 }
 
-export const RegisterForm: React.FC<RegisterFormProps> = ({
-                                                              redirectTo = '/dashboard',
-                                                              showSignInLink = true,
-                                                              onSuccess,
-                                                          }) => {
+export const RegisterForm: React.FC<RegisterFormProps> = ({redirectTo = '/dashboard', showSignInLink = true, onSuccess,}) => {
     const router = useRouter();
     const { register: registerUser, isLoading, error, clearError } = useAuth();
 

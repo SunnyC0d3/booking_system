@@ -16,38 +16,38 @@ import type {
 
 export class AuthApi {
     async login(credentials: LoginRequest): Promise<AuthResponse> {
-        const response = await api.post<AuthResponse>('/login', credentials);
+        const response = await api.post<AuthResponse>('/api/v1/login', credentials);
         return response.data;
     }
 
     async register(data: RegisterRequest): Promise<AuthResponse> {
-        const response = await api.post<AuthResponse>('/register', data);
+        const response = await api.post<AuthResponse>('/api/v1/register', data);
         return response.data;
     }
 
     async logout(): Promise<void> {
-        await api.post('/logout');
+        await api.post('/api/v1/logout');
     }
 
     async refreshToken(refreshToken: string): Promise<RefreshTokenResponse> {
-        const response = await api.post<RefreshTokenResponse>('/refresh', {
+        const response = await api.post<RefreshTokenResponse>('/api/v1/refresh', {
             refresh_token: refreshToken,
         });
         return response.data;
     }
 
     async forgotPassword(data: ForgotPasswordRequest): Promise<{ message: string }> {
-        const response = await api.post<{ message: string }>('/forgot-password', data);
+        const response = await api.post<{ message: string }>('/api/v1/forgot-password', data);
         return response.data;
     }
 
     async resetPassword(data: ResetPasswordRequest): Promise<PasswordResetResponse> {
-        const response = await api.post<PasswordResetResponse>('/reset-password', data);
+        const response = await api.post<PasswordResetResponse>('/api/v1/reset-password', data);
         return response.data;
     }
 
     async changePassword(data: ChangePasswordRequest): Promise<{ message: string }> {
-        const response = await api.post<{ message: string }>('/change-password', {
+        const response = await api.post<{ message: string }>('/api/v1/change-password', {
             current_password: data.current_password,
             new_password: data.password,
             new_password_confirmation: data.password_confirmation,
@@ -63,17 +63,17 @@ export class AuthApi {
     }
 
     async resendVerification(): Promise<{ message: string }> {
-        const response = await api.post<{ message: string }>('/email/verification-notification');
+        const response = await api.post<{ message: string }>('/api/v1/email/verification-notification');
         return response.data;
     }
 
     async getProfile(): Promise<User> {
-        const response = await api.get<User>('/user');
+        const response = await api.get<User>('/api/v1/user');
         return response.data;
     }
 
     async updatePreferences(preferences: Partial<UserPreferences>): Promise<UserPreferences> {
-        const response = await api.patch<UserPreferences>('/user/preferences', preferences);
+        const response = await api.patch<UserPreferences>('/api/v1/user/preferences', preferences);
         return response.data;
     }
 
@@ -90,7 +90,7 @@ export class AuthApi {
         password_changed_at?: string;
         recent_activity?: SecurityEvent[];
     }> {
-        const response = await api.get('/security-info');
+        const response = await api.get('/api/v1/security-info');
         return response.data;
     }
 }

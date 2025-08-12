@@ -6,6 +6,7 @@ import axios, {
 } from 'axios';
 import { toast } from 'sonner';
 import { ApiResponse, ApiError } from '@/types/auth';
+import { clientCredentials } from './clientCredentials';
 
 const API_CONFIG = {
     baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1',
@@ -63,23 +64,35 @@ class TokenManager {
 }
 
 apiClient.interceptors.request.use(
-    (config: InternalAxiosRequestConfig) => {
-        const token = TokenManager.getAccessToken();
+    async (config: InternalAxiosRequestConfig) => {
+        try {
+            const userToken = TokenManager.getAccessToken();
 
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-
-        if (typeof document !== 'undefined') {
-            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-            if (csrfToken) {
-                config.headers['X-CSRF-TOKEN'] = csrfToken;
+            if (userToken) {
+                config.headers.Authorization = `Bearer ${userToken}`;
+            } else {
+                try {
+                    const clientToken = await clientCredentials.getToken();
+                    config.headers.Authorization = `Bearer ${clientToken}`;
+                } catch (clientError) {
+                    console.warn('Client token unavailable:', clientError);
+                }
             }
+
+            if (typeof document !== 'undefined') {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                if (csrfToken) {
+                    config.headers['X-CSRF-TOKEN'] = csrfToken;
+                }
+            }
+
+            config.metadata = { startTime: new Date() };
+
+            return config;
+        } catch (error) {
+            console.error('Request interceptor error:', error);
+            return config;
         }
-
-        config.metadata = { startTime: new Date() };
-
-        return config;
     },
     (error) => {
         return Promise.reject(error);
@@ -102,12 +115,24 @@ apiClient.interceptors.response.use(
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
 
-            try {
-                const refreshToken = TokenManager.getRefreshToken();
-                if (refreshToken) {
-                    const response = await axios.post(
-                        `${API_CONFIG.baseURL}/auth/refresh`,
-                        { refresh_token: refreshToken }
+            const userToken = TokenManager.getAccessToken();
+            const refreshToken = TokenManager.getRefreshToken();
+
+            if (userToken && refreshToken) {
+                try {
+                    const refreshClient = axios.create({
+                        baseURL: API_CONFIG.baseURL,
+                        timeout: API_CONFIG.timeout,
+                    });
+
+                    const response = await refreshClient.post('/auth/refresh',
+                        { refresh_token: refreshToken },
+                        {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            }
+                        }
                     );
 
                     const { access_token, refresh_token: newRefreshToken } = response.data;
@@ -115,13 +140,28 @@ apiClient.interceptors.response.use(
 
                     originalRequest.headers.Authorization = `Bearer ${access_token}`;
                     return apiClient(originalRequest);
+                } catch (refreshError) {
+                    console.error('User token refresh failed:', refreshError);
+                    TokenManager.clearTokens();
                 }
-            } catch (refreshError) {
-                TokenManager.clearTokens();
-                if (typeof window !== 'undefined') {
-                    window.location.href = '/login';
+            }
+
+            try {
+                const clientToken = await clientCredentials.refreshToken();
+                originalRequest.headers.Authorization = `Bearer ${clientToken}`;
+                return apiClient(originalRequest);
+            } catch (clientError) {
+                console.error('Client token refresh failed:', clientError);
+
+                if (originalRequest.url?.includes('/auth/') ||
+                    originalRequest.url?.includes('/user') ||
+                    originalRequest.url?.includes('/my-')) {
+                    if (typeof window !== 'undefined') {
+                        window.location.href = '/login';
+                    }
                 }
-                return Promise.reject(refreshError);
+
+                return Promise.reject(error);
             }
         }
 
@@ -258,6 +298,7 @@ export class ApiClient {
 
     clearTokens(): void {
         TokenManager.clearTokens();
+        clientCredentials.clearToken();
     }
 
     hasValidToken(): boolean {
@@ -267,13 +308,21 @@ export class ApiClient {
     getAccessToken(): string | null {
         return TokenManager.getAccessToken();
     }
+
+    // Client credentials methods
+    async getClientToken(): Promise<string> {
+        return clientCredentials.getToken();
+    }
+
+    async refreshClientToken(): Promise<string> {
+        return clientCredentials.refreshToken();
+    }
 }
 
 export const api = new ApiClient();
-export { TokenManager };
+export { TokenManager, clientCredentials };
 export { apiClient };
 
-// Declare module for axios metadata
 declare module 'axios' {
     interface InternalAxiosRequestConfig {
         metadata?: {

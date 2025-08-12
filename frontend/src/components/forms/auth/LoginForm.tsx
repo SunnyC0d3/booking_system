@@ -1,17 +1,16 @@
 'use client';
 
 import * as React from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import {useForm} from 'react-hook-form';
+import {zodResolver} from '@hookform/resolvers/zod';
+import {z} from 'zod';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
-import { Button, Input, Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui';
-import { useAuth } from '@/stores/authStore';
-import { LoginFormData } from '@/types/auth';
+import {useRouter} from 'next/navigation';
+import {Mail, Lock, Eye, EyeOff} from 'lucide-react';
+import {Button, Input, Card, CardHeader, CardTitle, CardContent, CardFooter} from '@/components/ui';
+import {useAuth} from '@/stores/authStore';
+import {LoginFormData} from '@/types/auth';
 
-// Validation schema
 const loginSchema = z.object({
     email: z
         .string()
@@ -30,19 +29,15 @@ interface LoginFormProps {
     onSuccess?: () => void;
 }
 
-export const LoginForm: React.FC<LoginFormProps> = ({
-                                                        redirectTo = '/dashboard',
-                                                        showSignUpLink = true,
-                                                        onSuccess,
-                                                    }) => {
+export const LoginForm: React.FC<LoginFormProps> = ({redirectTo = '/dashboard', showSignUpLink = true, onSuccess,}) => {
     const router = useRouter();
-    const { login, isLoading, error, clearError } = useAuth();
+    const {login, isLoading, error, clearError} = useAuth();
     const [showPassword, setShowPassword] = React.useState(false);
 
     const {
         register,
         handleSubmit,
-        formState: { errors, isSubmitting },
+        formState: {errors, isSubmitting},
         watch,
         setError,
     } = useForm<LoginFormData>({
@@ -54,7 +49,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         },
     });
 
-    // Clear errors when form changes
     React.useEffect(() => {
         if (error) {
             clearError();
@@ -71,7 +65,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                 remember: data.remember,
             });
 
-            // Success - redirect or call success callback
             if (onSuccess) {
                 onSuccess();
                 onSuccess();
@@ -80,7 +73,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             }
 
         } catch (error: any) {
-            // Handle validation errors
             if (error.errors) {
                 Object.entries(error.errors).forEach(([field, messages]) => {
                     if (Array.isArray(messages) && messages.length > 0) {
@@ -120,7 +112,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                         type="email"
                         label="Email Address"
                         placeholder="Enter your email"
-                        leftIcon={<Mail className="h-4 w-4" />}
+                        leftIcon={<Mail className="h-4 w-4"/>}
                         error={errors.email?.message || ''}
                         required
                         autoComplete="email"
@@ -134,7 +126,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                             type={showPassword ? 'text' : 'password'}
                             label="Password"
                             placeholder="Enter your password"
-                            leftIcon={<Lock className="h-4 w-4" />}
+                            leftIcon={<Lock className="h-4 w-4"/>}
                             rightIcon={
                                 <button
                                     type="button"
@@ -143,9 +135,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                                     tabIndex={-1}
                                 >
                                     {showPassword ? (
-                                        <EyeOff className="h-4 w-4" />
+                                        <EyeOff className="h-4 w-4"/>
                                     ) : (
-                                        <Eye className="h-4 w-4" />
+                                        <Eye className="h-4 w-4"/>
                                     )}
                                 </button>
                             }
