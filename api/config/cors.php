@@ -6,8 +6,8 @@ return [
     'allowed_methods' => ['GET', 'POST', 'OPTIONS'],
 
     'allowed_origins' => [
-        env('APP_URL'),
-        env('FRONTEND_URL'),
+        config('app_url'),
+        config('app_frontend_url'),
     ],
 
     'allowed_origins_patterns' => [],
