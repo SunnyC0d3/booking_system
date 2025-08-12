@@ -175,7 +175,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({redirectTo = '/dashboard', 
                         size="lg"
                         className="w-full"
                         loading={isLoading || isSubmitting}
-                        loadingText="Signing in..."
                     >
                         Sign In
                     </Button>

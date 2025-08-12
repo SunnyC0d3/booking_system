@@ -302,7 +302,6 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({redirectTo = '/dashbo
                         size="lg"
                         className="w-full"
                         loading={isLoading || isSubmitting}
-                        loadingText="Creating account..."
                     >
                         Create Account
                     </Button>

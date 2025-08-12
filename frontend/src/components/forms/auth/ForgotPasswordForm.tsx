@@ -166,7 +166,6 @@ export const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
                         size="lg"
                         className="w-full"
                         loading={isLoading || isSubmitting}
-                        loadingText="Sending email..."
                     >
                         Send Reset Link
                     </Button>
