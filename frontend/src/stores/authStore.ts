@@ -18,10 +18,8 @@ import {
     UseAuthReturn,
 } from '@/types/auth';
 
-// Session timeout (30 minutes)
 const SESSION_TIMEOUT = 30 * 60 * 1000;
 
-// Initial state
 const initialState: AuthState = {
     user: null,
     accessToken: null,
@@ -33,13 +31,10 @@ const initialState: AuthState = {
     lastActivity: null,
 };
 
-// Create the auth store
 export const useAuthStore = create<AuthState & AuthActions>()(
     persist(
         immer((set, get) => ({
             ...initialState,
-
-            // Authentication Actions
             login: async (credentials: LoginRequest) => {
                 try {
                     set((state) => {
@@ -49,7 +44,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 
                     const response = await authApi.login(credentials);
 
-                    // Set tokens in API client
                     api.setTokens(response.access_token, response.refresh_token);
 
                     set((state) => {
@@ -84,7 +78,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 
                     const response = await authApi.register(data);
 
-                    // Set tokens in API client
                     api.setTokens(response.access_token, response.refresh_token);
 
                     set((state) => {
@@ -115,30 +108,26 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                         state.isLoading = true;
                     });
 
-                    // Call logout endpoint if authenticated
                     if (get().isAuthenticated) {
                         try {
                             await authApi.logout();
                         } catch (error) {
-                            // Don't throw on logout API failure
                             console.warn('Logout API call failed:', error);
                         }
                     }
 
-                    // Clear tokens and state
                     api.clearTokens();
 
                     set((state) => {
                         Object.assign(state, initialState);
-                        state.isInitialized = true; // Keep initialized state
+                        state.isInitialized = true;
                     });
 
                     toast.success('Logged out successfully');
                 } catch (error: any) {
                     console.error('Logout error:', error);
-
-                    // Force clear state even on error
                     api.clearTokens();
+
                     set((state) => {
                         Object.assign(state, initialState);
                         state.isInitialized = true;
@@ -156,7 +145,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 
                     const response = await authApi.refreshToken(refreshToken);
 
-                    // Update tokens
                     api.setTokens(response.access_token, response.refresh_token);
 
                     set((state) => {
@@ -170,13 +158,11 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                 } catch (error: any) {
                     console.warn('Token refresh failed:', error);
 
-                    // Clear auth state on refresh failure
                     get().logout();
                     throw error;
                 }
             },
 
-            // Password Management
             forgotPassword: async (data: ForgotPasswordRequest) => {
                 try {
                     set((state) => {
@@ -211,7 +197,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 
                     const response = await authApi.resetPassword(data);
 
-                    // If response includes new auth tokens, log the user in
                     if (response.access_token && response.user) {
                         api.setTokens(response.access_token);
 
@@ -239,7 +224,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                 }
             },
 
-            // FIXED: Change password to match Laravel API field names
             changePassword: async (data: ChangePasswordRequest) => {
                 try {
                     set((state) => {
@@ -265,7 +249,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                 }
             },
 
-            // Email Verification
             verifyEmail: async (data: VerifyEmailRequest) => {
                 try {
                     set((state) => {
@@ -275,7 +258,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 
                     await authApi.verifyEmail(data);
 
-                    // Refresh user profile to get updated verification status
                     await get().fetchUserProfile();
 
                     set((state) => {
@@ -319,7 +301,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                 }
             },
 
-            // User Management
             updateUser: (userData: Partial<User>) => {
                 set((state) => {
                     if (state.user) {
@@ -348,7 +329,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                         state.isLoading = false;
                     });
 
-                    // Don't show toast for profile fetch errors
                     console.warn('Failed to fetch user profile:', error);
                     throw error;
                 }
@@ -382,7 +362,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                 }
             },
 
-            // Session Management
             checkAuth: async () => {
                 try {
                     if (!api.hasValidToken()) {
@@ -415,7 +394,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                         state.isLoading = true;
                     });
 
-                    // Check if we have a valid token
                     if (api.hasValidToken()) {
                         await get().checkAuth();
                     }
@@ -436,7 +414,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                 });
             },
 
-            // Token Management
             setTokens: (accessToken: string, refreshToken?: string) => {
                 api.setTokens(accessToken, refreshToken);
 
@@ -468,7 +445,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                 };
             },
 
-            // Utility Actions
             clearError: () => {
                 set((state) => {
                     state.error = null;
@@ -501,7 +477,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
     )
 );
 
-// Custom hook with computed properties
 export const useAuth = (): UseAuthReturn => {
     const store = useAuthStore();
 

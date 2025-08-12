@@ -7,17 +7,14 @@ import axios, {
 import { toast } from 'sonner';
 import { ApiResponse, ApiError } from '@/types/auth';
 
-// API Configuration
 const API_CONFIG = {
     baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1',
     timeout: 30000,
     withCredentials: true,
 } as const;
 
-// Create axios instance
 const apiClient: AxiosInstance = axios.create(API_CONFIG);
 
-// Token management
 class TokenManager {
     private static readonly ACCESS_TOKEN_KEY = 'access_token';
     private static readonly REFRESH_TOKEN_KEY = 'refresh_token';
@@ -53,7 +50,6 @@ class TokenManager {
         if (!token) return false;
 
         try {
-            // Check if token is expired (basic JWT parsing)
             const parts = token.split('.');
             if (parts.length !== 3 || !parts[1]) return false;
 
@@ -66,16 +62,14 @@ class TokenManager {
     }
 }
 
-// Request interceptor
 apiClient.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
-        // Add auth token
         const token = TokenManager.getAccessToken();
+
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
 
-        // Add CSRF token if available
         if (typeof document !== 'undefined') {
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
             if (csrfToken) {
@@ -83,7 +77,6 @@ apiClient.interceptors.request.use(
             }
         }
 
-        // Add request timestamp
         config.metadata = { startTime: new Date() };
 
         return config;
@@ -93,10 +86,8 @@ apiClient.interceptors.request.use(
     }
 );
 
-// Response interceptor
 apiClient.interceptors.response.use(
     (response: AxiosResponse) => {
-        // Log response time in development
         if (process.env.NODE_ENV === 'development' && response.config.metadata) {
             const endTime = new Date();
             const duration = endTime.getTime() - response.config.metadata.startTime.getTime();
@@ -108,7 +99,6 @@ apiClient.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
-        // Handle 401 Unauthorized
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
 
@@ -123,12 +113,10 @@ apiClient.interceptors.response.use(
                     const { access_token, refresh_token: newRefreshToken } = response.data;
                     TokenManager.setTokens(access_token, newRefreshToken);
 
-                    // Retry original request
                     originalRequest.headers.Authorization = `Bearer ${access_token}`;
                     return apiClient(originalRequest);
                 }
             } catch (refreshError) {
-                // Refresh failed, redirect to login
                 TokenManager.clearTokens();
                 if (typeof window !== 'undefined') {
                     window.location.href = '/login';
@@ -137,13 +125,11 @@ apiClient.interceptors.response.use(
             }
         }
 
-        // Handle network errors
         if (!error.response) {
             toast.error('Network error. Please check your connection.');
             return Promise.reject(new Error('Network error'));
         }
 
-        // Handle API errors
         const apiError: ApiError = {
             message: error.response?.data?.message || 'An unexpected error occurred',
             errors: error.response?.data?.errors,
@@ -151,7 +137,6 @@ apiClient.interceptors.response.use(
             code: error.response?.data?.code,
         };
 
-        // Show error toast for non-validation errors
         if (error.response?.status !== 422) {
             toast.error(apiError.message);
         }
@@ -160,7 +145,6 @@ apiClient.interceptors.response.use(
     }
 );
 
-// API wrapper class
 export class ApiClient {
     private client: AxiosInstance;
 
@@ -168,7 +152,6 @@ export class ApiClient {
         this.client = apiClient;
     }
 
-    // Generic request method
     private async request<T = any>(
         config: AxiosRequestConfig
     ): Promise<ApiResponse<T>> {
@@ -180,7 +163,6 @@ export class ApiClient {
         }
     }
 
-    // HTTP methods
     async get<T = any>(
         url: string,
         config?: AxiosRequestConfig
@@ -219,7 +201,6 @@ export class ApiClient {
         return this.request<T>({ ...config, method: 'DELETE', url });
     }
 
-    // File upload
     async upload<T = any>(
         url: string,
         file: File,
@@ -249,7 +230,6 @@ export class ApiClient {
         });
     }
 
-    // Error handler
     private handleError(error: any): ApiError {
         if (error.response) {
             return {
@@ -272,7 +252,6 @@ export class ApiClient {
         };
     }
 
-    // Token methods
     setTokens(accessToken: string, refreshToken?: string): void {
         TokenManager.setTokens(accessToken, refreshToken);
     }
@@ -290,13 +269,8 @@ export class ApiClient {
     }
 }
 
-// Export singleton instance
 export const api = new ApiClient();
-
-// Export token manager for direct access
 export { TokenManager };
-
-// Export axios instance for custom requests
 export { apiClient };
 
 // Declare module for axios metadata

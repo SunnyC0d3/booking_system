@@ -74,6 +74,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             // Success - redirect or call success callback
             if (onSuccess) {
                 onSuccess();
+                onSuccess();
             } else {
                 router.push(redirectTo);
             }
