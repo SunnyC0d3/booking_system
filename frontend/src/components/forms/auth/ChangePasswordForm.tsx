@@ -4,334 +4,342 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Lock, Eye, EyeOff, CheckCircle2, AlertCircle } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Progress } from '@/components/ui/progress';
-import { useAuth } from '@/stores/authStore';
-import { ChangePasswordFormData } from '@/types/auth';
-import { cn } from '@/lib/cn';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Mail, ArrowLeft, CheckCircle, Loader2, Clock, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
+import { Button, Input, Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui';
+import { useAuth } from '@/stores/authStore';
+import { ForgotPasswordFormData } from '@/types/auth';
+import { cn } from '@/lib/cn';
 
-// Password strength validation
-const passwordStrength = {
-    minLength: (password: string) => password.length >= 8,
-    hasUppercase: (password: string) => /[A-Z]/.test(password),
-    hasLowercase: (password: string) => /[a-z]/.test(password),
-    hasNumber: (password: string) => /\d/.test(password),
-    hasSpecial: (password: string) => /[!@#$%^&*(),.?":{}|<>]/.test(password),
-    notCommon: (password: string) => {
-        const common = ['password', '123456', 'qwerty', 'abc123', 'password123'];
-        return !common.some(p => password.toLowerCase().includes(p));
-    }
-};
-
-// Validation schema
-const changePasswordSchema = z.object({
-    current_password: z
+const forgotPasswordSchema = z.object({
+    email: z
         .string()
-        .min(1, 'Current password is required'),
-    password: z
-        .string()
-        .min(8, 'Password must be at least 8 characters')
-        .refine(
-            (password) => Object.values(passwordStrength).every(check => check(password)),
-            'Password must meet all security requirements'
-        ),
-    password_confirmation: z
-        .string()
-        .min(1, 'Password confirmation is required'),
-}).refine((data) => data.password === data.password_confirmation, {
-    message: "New passwords don't match",
-    path: ["password_confirmation"],
-}).refine((data) => data.current_password !== data.password, {
-    message: "New password must be different from current password",
-    path: ["password"],
+        .min(1, 'Email is required')
+        .email('Please enter a valid email address')
+        .max(100, 'Email must be less than 100 characters'),
 });
 
-interface ChangePasswordFormProps {
-    className?: string;
+interface ForgotPasswordFormProps {
     onSuccess?: () => void;
-    onCancel?: () => void;
-    standalone?: boolean;
+    className?: string;
 }
 
-export const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({
-                                                                          className,
+const ErrorAlert = React.memo(({ message }: { message: string }) => (
+    <div
+        className="rounded-lg border border-red-200 bg-red-50 p-3 text-red-800 dark:border-red-800 dark:bg-red-950 dark:text-red-200"
+        role="alert"
+        aria-live="polite"
+    >
+        <p className="text-sm font-medium">{message}</p>
+    </div>
+));
+
+ErrorAlert.displayName = 'ErrorAlert';
+
+const SuccessState = React.memo(({
+                                     email,
+                                     onResend,
+                                     isLoading,
+                                     resendCount
+                                 }: {
+    email: string;
+    onResend: () => void;
+    isLoading: boolean;
+    resendCount: number;
+}) => {
+    const [timeLeft, setTimeLeft] = React.useState(60);
+    const canResend = timeLeft === 0;
+
+    React.useEffect(() => {
+        if (timeLeft > 0) {
+            const timer = setTimeout(() => setTimeLeft(prev => prev - 1), 1000);
+            return () => clearTimeout(timer);
+        }
+    }, [timeLeft]);
+
+    const handleResend = () => {
+        onResend();
+        setTimeLeft(60);
+    };
+
+    return (
+        <Card className="w-full max-w-md mx-auto shadow-lg">
+            <CardHeader className="text-center space-y-4">
+                <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto">
+                    <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
+                </div>
+                <div className="space-y-2">
+                    <CardTitle className="text-2xl font-bold text-foreground">
+                        Check Your Email
+                    </CardTitle>
+                    <p className="text-muted-foreground text-sm">
+                        We've sent password reset instructions to:
+                    </p>
+                    <p className="text-sm font-medium text-foreground break-all">
+                        {email}
+                    </p>
+                </div>
+            </CardHeader>
+
+            <CardContent className="space-y-4">
+                <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800">
+                    <div className="flex items-start gap-3">
+                        <Clock className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+                        <div className="space-y-2 text-sm">
+                            <p className="text-blue-800 dark:text-blue-200 font-medium">
+                                Important Security Information
+                            </p>
+                            <ul className="text-blue-700 dark:text-blue-300 space-y-1 text-xs">
+                                <li>• Check your spam/junk folder if you don't see the email</li>
+                                <li>• The reset link expires in 60 minutes for security</li>
+                                <li>• Only the most recent reset link will work</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="flex flex-col items-center space-y-3">
+                    <Button
+                        variant="outline"
+                        onClick={handleResend}
+                        disabled={!canResend || isLoading}
+                        className="w-full"
+                        aria-describedby={!canResend ? 'resend-timer' : undefined}
+                    >
+                        {isLoading ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Sending...
+                            </>
+                        ) : (
+                            <>
+                                <RefreshCw className="mr-2 h-4 w-4" />
+                                {canResend ? 'Resend Email' : `Resend in ${timeLeft}s`}
+                            </>
+                        )}
+                    </Button>
+
+                    {resendCount > 0 && (
+                        <p className="text-xs text-muted-foreground text-center">
+                            Email sent {resendCount + 1} time{resendCount > 0 ? 's' : ''}
+                        </p>
+                    )}
+
+                    {!canResend && (
+                        <p id="resend-timer" className="text-xs text-muted-foreground text-center">
+                            Please wait before requesting another email
+                        </p>
+                    )}
+                </div>
+            </CardContent>
+
+            <CardFooter className="justify-center pt-4">
+                <Link
+                    href="/login"
+                    className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 rounded px-2 py-1"
+                >
+                    <ArrowLeft className="h-4 w-4" />
+                    Back to sign in
+                </Link>
+            </CardFooter>
+        </Card>
+    );
+});
+
+SuccessState.displayName = 'SuccessState';
+
+export const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
                                                                           onSuccess,
-                                                                          onCancel,
-                                                                          standalone = false
+                                                                          className,
                                                                       }) => {
-    const { changePassword, isLoading, error, clearError } = useAuth();
-    const [showCurrentPassword, setShowCurrentPassword] = React.useState(false);
-    const [showNewPassword, setShowNewPassword] = React.useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const { forgotPassword, isLoading, error, clearError } = useAuth();
+    const [isSuccess, setIsSuccess] = React.useState(false);
+    const [submittedEmail, setSubmittedEmail] = React.useState('');
+    const [resendCount, setResendCount] = React.useState(0);
 
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
         watch,
-        reset,
-    } = useForm<ChangePasswordFormData>({
-        resolver: zodResolver(changePasswordSchema),
+        getValues,
+        clearErrors,
+        setValue,
+    } = useForm<ForgotPasswordFormData>({
+        resolver: zodResolver(forgotPasswordSchema),
         defaultValues: {
-            current_password: '',
-            password: '',
-            password_confirmation: '',
+            email: '',
         },
+        mode: 'onTouched',
     });
 
-    const watchedPassword = watch('password', '');
+    const emailValue = watch('email');
 
-    // Clear errors when form changes
     React.useEffect(() => {
+        const emailParam = searchParams.get('email');
+        if (emailParam) {
+            setValue('email', emailParam);
+        }
+    }, [searchParams, setValue]);
+
+    const clearErrorsOnChange = React.useCallback(() => {
         if (error) {
             clearError();
         }
-    }, [watch('current_password'), watch('password'), error, clearError]);
+        if (errors.email) {
+            clearErrors(['email']);
+        }
+    }, [error, errors.email, clearError, clearErrors]);
 
-    const onSubmit = async (data: ChangePasswordFormData) => {
+    React.useEffect(() => {
+        clearErrorsOnChange();
+    }, [emailValue, clearErrorsOnChange]);
+
+    const onSubmit = React.useCallback(
+        async (data: ForgotPasswordFormData) => {
+            try {
+                clearError();
+
+                await forgotPassword({
+                    email: data.email,
+                });
+
+                setSubmittedEmail(data.email);
+                setIsSuccess(true);
+                setResendCount(0);
+
+                if (onSuccess) {
+                    onSuccess();
+                }
+
+                toast.success('Password reset email sent successfully');
+
+            } catch (error: any) {
+                toast.error(error.message || 'Failed to send reset email');
+            }
+        },
+        [forgotPassword, clearError, onSuccess]
+    );
+
+    const handleResend = React.useCallback(async () => {
+        const email = getValues('email') || submittedEmail;
+        if (!email) return;
+
         try {
             clearError();
 
-            await changePassword({
-                current_password: data.current_password,
-                password: data.password,
-                password_confirmation: data.password_confirmation,
-            });
+            await forgotPassword({ email });
+            setResendCount(prev => prev + 1);
 
-            toast.success('Password changed successfully!');
-            reset();
-
-            if (onSuccess) {
-                onSuccess();
-            }
-
+            toast.success('Reset email sent again');
         } catch (error: any) {
-            // Error is handled by the store and displayed
-            toast.error(error.message || 'Failed to change password');
+            toast.error(error.message || 'Failed to resend email');
         }
-    };
+    }, [forgotPassword, clearError, getValues, submittedEmail]);
 
-    // Calculate password strength
-    const getPasswordStrength = (password: string) => {
-        if (!password) return { score: 0, checks: [] };
+    const handleBackToLogin = React.useCallback(() => {
+        const currentEmail = getValues('email');
+        if (currentEmail) {
+            router.push(`/login?email=${encodeURIComponent(currentEmail)}`);
+        } else {
+            router.push('/login');
+        }
+    }, [router, getValues]);
 
-        const checks = Object.entries(passwordStrength).map(([key, checkFn]) => ({
-            key,
-            passed: checkFn(password),
-            label: {
-                minLength: 'At least 8 characters',
-                hasUppercase: 'One uppercase letter',
-                hasLowercase: 'One lowercase letter',
-                hasNumber: 'One number',
-                hasSpecial: 'One special character',
-                notCommon: 'Not a common password'
-            }[key]
-        }));
+    const isFormLoading = isLoading || isSubmitting;
 
-        const score = (checks.filter(c => c.passed).length / checks.length) * 100;
-        return { score, checks };
-    };
-
-    const { score: passwordScore, checks: passwordChecks } = getPasswordStrength(watchedPassword);
-
-    const getStrengthColor = (score: number) => {
-        if (score >= 80) return 'text-green-600';
-        if (score >= 60) return 'text-yellow-600';
-        if (score >= 40) return 'text-orange-600';
-        return 'text-red-600';
-    };
-
-    const getStrengthLabel = (score: number) => {
-        if (score >= 80) return 'Strong';
-        if (score >= 60) return 'Good';
-        if (score >= 40) return 'Fair';
-        if (score > 0) return 'Weak';
-        return '';
-    };
-
-    const formContent = (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Global Error */}
-            {error && (
-                <Alert variant="destructive">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>{error}</AlertDescription>
-                </Alert>
-            )}
-
-            {/* Current Password */}
-            <div className="space-y-2">
-                <label className="text-sm font-medium">Current Password</label>
-                <div className="relative">
-                    <Input
-                        {...register('current_password')}
-                        type={showCurrentPassword ? 'text' : 'password'}
-                        placeholder="Enter your current password"
-                        className={cn(errors.current_password && "border-destructive")}
-                        autoComplete="current-password"
-                    />
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                        onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                    >
-                        {showCurrentPassword ? (
-                            <EyeOff className="h-4 w-4" />
-                        ) : (
-                            <Eye className="h-4 w-4" />
-                        )}
-                    </Button>
-                </div>
-                {errors.current_password && (
-                    <p className="text-sm text-destructive">{errors.current_password.message}</p>
-                )}
-            </div>
-
-            {/* New Password */}
-            <div className="space-y-2">
-                <label className="text-sm font-medium">New Password</label>
-                <div className="relative">
-                    <Input
-                        {...register('password')}
-                        type={showNewPassword ? 'text' : 'password'}
-                        placeholder="Enter your new password"
-                        className={cn(errors.password && "border-destructive")}
-                        autoComplete="new-password"
-                    />
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                        onClick={() => setShowNewPassword(!showNewPassword)}
-                    >
-                        {showNewPassword ? (
-                            <EyeOff className="h-4 w-4" />
-                        ) : (
-                            <Eye className="h-4 w-4" />
-                        )}
-                    </Button>
-                </div>
-                {errors.password && (
-                    <p className="text-sm text-destructive">{errors.password.message}</p>
-                )}
-
-                {/* Password Strength Indicator */}
-                {watchedPassword && (
-                    <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs text-muted-foreground">Password strength</span>
-                            <span className={cn("text-xs font-medium", getStrengthColor(passwordScore))}>
-                                {getStrengthLabel(passwordScore)}
-                            </span>
-                        </div>
-                        <Progress value={passwordScore} className="h-2" />
-
-                        {/* Password Requirements */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-xs">
-                            {passwordChecks.map(({ key, passed, label }) => (
-                                <div key={key} className="flex items-center gap-2">
-                                    <CheckCircle2
-                                        className={cn("h-3 w-3", passed ? "text-green-600" : "text-muted-foreground")}
-                                    />
-                                    <span className={passed ? "text-green-600" : "text-muted-foreground"}>
-                                        {label}
-                                    </span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-            </div>
-
-            {/* Confirm New Password */}
-            <div className="space-y-2">
-                <label className="text-sm font-medium">Confirm New Password</label>
-                <div className="relative">
-                    <Input
-                        {...register('password_confirmation')}
-                        type={showConfirmPassword ? 'text' : 'password'}
-                        placeholder="Confirm your new password"
-                        className={cn(errors.password_confirmation && "border-destructive")}
-                        autoComplete="new-password"
-                    />
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    >
-                        {showConfirmPassword ? (
-                            <EyeOff className="h-4 w-4" />
-                        ) : (
-                            <Eye className="h-4 w-4" />
-                        )}
-                    </Button>
-                </div>
-                {errors.password_confirmation && (
-                    <p className="text-sm text-destructive">{errors.password_confirmation.message}</p>
-                )}
-            </div>
-
-            {/* Security Note */}
-            <Alert>
-                <Lock className="h-4 w-4" />
-                <AlertDescription>
-                    Your new password should be unique and not used on other websites.
-                    After changing your password, you'll need to sign in again on all devices.
-                </AlertDescription>
-            </Alert>
-
-            {/* Submit Buttons */}
-            <div className="flex gap-3">
-                <Button
-                    type="submit"
-                    disabled={isLoading || isSubmitting || passwordScore < 60}
-                    className="flex-1"
-                >
-                    {isLoading || isSubmitting ? 'Changing Password...' : 'Change Password'}
-                </Button>
-                {onCancel && (
-                    <Button
-                        type="button"
-                        variant="outline"
-                        onClick={onCancel}
-                        disabled={isLoading || isSubmitting}
-                        className="flex-1"
-                    >
-                        Cancel
-                    </Button>
-                )}
-            </div>
-        </form>
-    );
-
-    if (standalone) {
+    if (isSuccess) {
         return (
-            <Card className={className}>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <Lock className="h-5 w-5" />
-                        Change Password
-                    </CardTitle>
-                    <CardDescription>
-                        Update your password to keep your account secure
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    {formContent}
-                </CardContent>
-            </Card>
+            <SuccessState
+                email={submittedEmail}
+                onResend={handleResend}
+                isLoading={isLoading}
+                resendCount={resendCount}
+            />
         );
     }
 
-    return <div className={className}>{formContent}</div>;
+    return (
+        <Card className={cn("w-full max-w-md mx-auto shadow-lg", className)}>
+            <CardHeader className="text-center space-y-2">
+                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                    Forgot Password?
+                </CardTitle>
+                <p className="text-muted-foreground text-sm">
+                    Enter your email address and we'll send you a secure link to reset your password.
+                </p>
+            </CardHeader>
+
+            <CardContent>
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+                    {error && <ErrorAlert message={error} />}
+
+                    <div className="space-y-2">
+                        <label htmlFor="email" className="text-sm font-medium text-foreground">
+                            Email Address
+                        </label>
+                        <div className="relative">
+                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input
+                                {...register('email')}
+                                id="email"
+                                type="email"
+                                placeholder="Enter your email address"
+                                className={cn(
+                                    "pl-10",
+                                    errors.email && "border-red-500 focus:ring-red-500"
+                                )}
+                                autoComplete="email"
+                                autoFocus
+                                aria-invalid={errors.email ? 'true' : 'false'}
+                                aria-describedby={errors.email ? 'email-error' : 'email-help'}
+                            />
+                        </div>
+                        {errors.email && (
+                            <p id="email-error" className="text-sm text-red-600" role="alert">
+                                {errors.email.message}
+                            </p>
+                        )}
+                        <p id="email-help" className="text-xs text-muted-foreground">
+                            We'll send reset instructions to this email address
+                        </p>
+                    </div>
+
+                    <Button
+                        type="submit"
+                        variant="default"
+                        size="lg"
+                        className="w-full"
+                        disabled={isFormLoading}
+                        aria-describedby={isFormLoading ? 'loading-text' : undefined}
+                    >
+                        {isFormLoading ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                <span id="loading-text">Sending reset link...</span>
+                            </>
+                        ) : (
+                            'Send Reset Link'
+                        )}
+                    </Button>
+                </form>
+            </CardContent>
+
+            <CardFooter className="justify-center pt-4">
+                <button
+                    onClick={handleBackToLogin}
+                    className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 rounded px-2 py-1"
+                >
+                    <ArrowLeft className="h-4 w-4" />
+                    Back to sign in
+                </button>
+            </CardFooter>
+        </Card>
+    );
 };
+
+export default ForgotPasswordForm;

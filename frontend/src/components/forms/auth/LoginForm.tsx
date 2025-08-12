@@ -1,15 +1,16 @@
 'use client';
 
 import * as React from 'react';
-import {useForm} from 'react-hook-form';
-import {zodResolver} from '@hookform/resolvers/zod';
-import {z} from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import Link from 'next/link';
-import {useRouter} from 'next/navigation';
-import {Mail, Lock, Eye, EyeOff} from 'lucide-react';
-import {Button, Input, Card, CardHeader, CardTitle, CardContent, CardFooter} from '@/components/ui';
-import {useAuth} from '@/stores/authStore';
-import {LoginFormData} from '@/types/auth';
+import { useRouter } from 'next/navigation';
+import { Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
+import { Button, Input, Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui';
+import { useAuth } from '@/stores/authStore';
+import { LoginFormData } from '@/types/auth';
 
 const loginSchema = z.object({
     email: z
@@ -29,17 +30,58 @@ interface LoginFormProps {
     onSuccess?: () => void;
 }
 
-export const LoginForm: React.FC<LoginFormProps> = ({redirectTo = '/dashboard', showSignUpLink = true, onSuccess,}) => {
+const PasswordToggle = React.memo(({
+                                       showPassword,
+                                       onToggle
+                                   }: {
+    showPassword: boolean;
+    onToggle: () => void;
+}) => (
+    <button
+        type="button"
+        onClick={onToggle}
+        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 rounded"
+        tabIndex={-1}
+        aria-label={showPassword ? 'Hide password' : 'Show password'}
+    >
+        {showPassword ? (
+            <EyeOff className="h-4 w-4" />
+        ) : (
+            <Eye className="h-4 w-4" />
+        )}
+    </button>
+));
+
+PasswordToggle.displayName = 'PasswordToggle';
+
+const ErrorAlert = React.memo(({ message }: { message: string }) => (
+    <div
+        className="rounded-lg border border-red-200 bg-red-50 p-3 text-red-800 dark:border-red-800 dark:bg-red-950 dark:text-red-200"
+        role="alert"
+        aria-live="polite"
+    >
+        <p className="text-sm font-medium">{message}</p>
+    </div>
+));
+
+ErrorAlert.displayName = 'ErrorAlert';
+
+export const LoginForm: React.FC<LoginFormProps> = ({
+                                                        redirectTo = '/dashboard',
+                                                        showSignUpLink = true,
+                                                        onSuccess,
+                                                    }) => {
     const router = useRouter();
-    const {login, isLoading, error, clearError} = useAuth();
+    const { login, isLoading, error, clearError } = useAuth();
     const [showPassword, setShowPassword] = React.useState(false);
 
     const {
         register,
         handleSubmit,
-        formState: {errors, isSubmitting},
+        formState: { errors, isSubmitting },
         watch,
         setError,
+        clearErrors,
     } = useForm<LoginFormData>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -47,104 +89,145 @@ export const LoginForm: React.FC<LoginFormProps> = ({redirectTo = '/dashboard', 
             password: '',
             remember: false,
         },
+        mode: 'onTouched',
     });
 
-    React.useEffect(() => {
+    const clearErrorsOnChange = React.useCallback(() => {
         if (error) {
             clearError();
         }
-    }, [watch('email'), watch('password'), error, clearError]);
-
-    const onSubmit = async (data: LoginFormData) => {
-        try {
-            clearError();
-
-            await login({
-                email: data.email,
-                password: data.password,
-                remember: data.remember,
-            });
-
-            if (onSuccess) {
-                onSuccess();
-                onSuccess();
-            } else {
-                router.push(redirectTo);
-            }
-
-        } catch (error: any) {
-            if (error.errors) {
-                Object.entries(error.errors).forEach(([field, messages]) => {
-                    if (Array.isArray(messages) && messages.length > 0) {
-                        setError(field as keyof LoginFormData, {
-                            type: 'manual',
-                            message: messages[0],
-                        });
-                    }
-                });
-            }
+        if (errors.email || errors.password) {
+            clearErrors(['email', 'password']);
         }
-    };
+    }, [error, errors.email, errors.password, clearError, clearErrors]);
+
+    const emailValue = watch('email');
+    const passwordValue = watch('password');
+
+    React.useEffect(() => {
+        clearErrorsOnChange();
+    }, [emailValue, passwordValue, clearErrorsOnChange]);
+
+    const onSubmit = React.useCallback(
+        async (data: LoginFormData) => {
+            try {
+                clearError();
+
+                await login({
+                    email: data.email,
+                    password: data.password,
+                    remember: data.remember,
+                });
+
+                if (onSuccess) {
+                    onSuccess();
+                } else {
+                    router.push(redirectTo);
+                }
+
+                toast.success('Welcome back!');
+
+            } catch (error: any) {
+                if (error.errors) {
+                    Object.entries(error.errors).forEach(([field, messages]) => {
+                        if (Array.isArray(messages) && messages.length > 0) {
+                            setError(field as keyof LoginFormData, {
+                                type: 'server',
+                                message: messages[0],
+                            });
+                        }
+                    });
+                } else {
+                    toast.error(error.message || 'Login failed. Please try again.');
+                }
+            }
+        },
+        [login, clearError, onSuccess, router, redirectTo, setError]
+    );
+
+    const togglePasswordVisibility = React.useCallback(() => {
+        setShowPassword(prev => !prev);
+    }, []);
+
+    const isFormLoading = isLoading || isSubmitting;
 
     return (
-        <Card className="w-full max-w-md mx-auto">
-            <CardHeader className="text-center">
-                <CardTitle className="text-2xl font-bold text-gradient">
+        <Card className="w-full max-w-md mx-auto shadow-lg">
+            <CardHeader className="text-center space-y-2">
+                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
                     Welcome Back
                 </CardTitle>
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                     Sign in to your Creative Business account
                 </p>
             </CardHeader>
 
             <CardContent>
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                    {/* Global Error */}
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+                    {/* Global Error Display */}
                     {error && !errors.email && !errors.password && (
-                        <div className="alert alert-error">
-                            <p className="text-sm">{error}</p>
-                        </div>
+                        <ErrorAlert message={error} />
                     )}
 
                     {/* Email Field */}
-                    <Input
-                        {...register('email')}
-                        type="email"
-                        label="Email Address"
-                        placeholder="Enter your email"
-                        leftIcon={<Mail className="h-4 w-4"/>}
-                        error={errors.email?.message || ''}
-                        required
-                        autoComplete="email"
-                        autoFocus
-                    />
+                    <div className="space-y-2">
+                        <label htmlFor="email" className="text-sm font-medium text-foreground">
+                            Email Address
+                        </label>
+                        <div className="relative">
+                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input
+                                {...register('email')}
+                                id="email"
+                                type="email"
+                                placeholder="Enter your email"
+                                className={cn(
+                                    "pl-10",
+                                    errors.email && "border-red-500 focus:ring-red-500"
+                                )}
+                                autoComplete="email"
+                                autoFocus
+                                aria-invalid={errors.email ? 'true' : 'false'}
+                                aria-describedby={errors.email ? 'email-error' : undefined}
+                            />
+                        </div>
+                        {errors.email && (
+                            <p id="email-error" className="text-sm text-red-600" role="alert">
+                                {errors.email.message}
+                            </p>
+                        )}
+                    </div>
 
                     {/* Password Field */}
-                    <div className="relative">
-                        <Input
-                            {...register('password')}
-                            type={showPassword ? 'text' : 'password'}
-                            label="Password"
-                            placeholder="Enter your password"
-                            leftIcon={<Lock className="h-4 w-4"/>}
-                            rightIcon={
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="text-muted-foreground hover:text-foreground transition-colors"
-                                    tabIndex={-1}
-                                >
-                                    {showPassword ? (
-                                        <EyeOff className="h-4 w-4"/>
-                                    ) : (
-                                        <Eye className="h-4 w-4"/>
-                                    )}
-                                </button>
-                            }
-                            error={errors.password?.message || ''}
-                            required
-                            autoComplete="current-password"
-                        />
+                    <div className="space-y-2">
+                        <label htmlFor="password" className="text-sm font-medium text-foreground">
+                            Password
+                        </label>
+                        <div className="relative">
+                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input
+                                {...register('password')}
+                                id="password"
+                                type={showPassword ? 'text' : 'password'}
+                                placeholder="Enter your password"
+                                className={cn(
+                                    "pl-10 pr-10",
+                                    errors.password && "border-red-500 focus:ring-red-500"
+                                )}
+                                autoComplete="current-password"
+                                aria-invalid={errors.password ? 'true' : 'false'}
+                                aria-describedby={errors.password ? 'password-error' : undefined}
+                            />
+                            <PasswordToggle
+                                showPassword={showPassword}
+                                onToggle={togglePasswordVisibility}
+                            />
+                        </div>
+                        {errors.password && (
+                            <p id="password-error" className="text-sm text-red-600" role="alert">
+                                {errors.password.message}
+                            </p>
+                        )}
                     </div>
 
                     {/* Remember Me & Forgot Password */}
@@ -152,17 +235,18 @@ export const LoginForm: React.FC<LoginFormProps> = ({redirectTo = '/dashboard', 
                         <label className="flex items-center space-x-2 cursor-pointer">
                             <input
                                 {...register('remember')}
+                                id="remember"
                                 type="checkbox"
-                                className="rounded border-input text-primary focus:ring-primary focus:ring-offset-0"
+                                className="rounded border-input text-primary focus:ring-primary focus:ring-offset-0 h-4 w-4"
                             />
-                            <span className="text-sm text-muted-foreground">
+                            <span className="text-sm text-muted-foreground select-none">
                                 Remember me
                             </span>
                         </label>
 
                         <Link
                             href="/forgot-password"
-                            className="text-sm text-primary hover:text-primary/80 transition-colors"
+                            className="text-sm text-primary hover:text-primary/80 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 rounded px-1"
                         >
                             Forgot password?
                         </Link>
@@ -174,20 +258,28 @@ export const LoginForm: React.FC<LoginFormProps> = ({redirectTo = '/dashboard', 
                         variant="default"
                         size="lg"
                         className="w-full"
-                        loading={isLoading || isSubmitting}
+                        disabled={isFormLoading}
+                        aria-describedby={isFormLoading ? 'loading-text' : undefined}
                     >
-                        Sign In
+                        {isFormLoading ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                <span id="loading-text">Signing in...</span>
+                            </>
+                        ) : (
+                            'Sign In'
+                        )}
                     </Button>
                 </form>
             </CardContent>
 
             {showSignUpLink && (
-                <CardFooter className="justify-center">
+                <CardFooter className="justify-center pt-4">
                     <p className="text-sm text-muted-foreground">
                         Don't have an account?{' '}
                         <Link
                             href="/register"
-                            className="text-primary hover:text-primary/80 font-medium transition-colors"
+                            className="text-primary hover:text-primary/80 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 rounded px-1"
                         >
                             Sign up here
                         </Link>

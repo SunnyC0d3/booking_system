@@ -400,3 +400,23 @@ export interface AuditLogEntry {
     data?: Record<string, any>;
     created_at: string;
 }
+
+export interface AuthApiError extends Error {
+    code?: string;
+    status?: number;
+    details?: Record<string, string[]>;
+}
+
+export interface SecurityInfoResponse {
+    requires_password_change: boolean;
+    days_until_password_expiry: number;
+    security_score: number;
+    is_account_locked: boolean;
+    last_login_at?: string;
+    last_login_ip?: string;
+    failed_login_attempts: number;
+    active_sessions: number;
+    two_factor_enabled: boolean;
+    password_changed_at?: string;
+    recent_activity?: SecurityEvent[];
+}

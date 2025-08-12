@@ -2,7 +2,8 @@ import axios, {
     AxiosInstance,
     AxiosRequestConfig,
     AxiosResponse,
-    InternalAxiosRequestConfig
+    InternalAxiosRequestConfig,
+    CancelTokenSource,
 } from 'axios';
 import { toast } from 'sonner';
 import { ApiResponse, ApiError } from '@/types/auth';
@@ -10,15 +11,33 @@ import { clientCredentials } from './clientCredentials';
 
 const API_CONFIG = {
     baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1',
-    timeout: 30000,
+    timeout: process.env.NODE_ENV === 'production' ? 15000 : 30000,
     withCredentials: true,
+    maxRedirects: 3,
+    validateStatus: (status: number) => status < 500,
 } as const;
 
-const apiClient: AxiosInstance = axios.create(API_CONFIG);
+interface QueuedRequest {
+    config: InternalAxiosRequestConfig;
+    resolve: (value: AxiosResponse) => void;
+    reject: (error: any) => void;
+}
+
+interface TokenRefreshState {
+    isRefreshing: boolean;
+    failedQueue: QueuedRequest[];
+}
+
+interface RequestMetadata {
+    startTime: Date;
+    requestId: string;
+    retryCount: number;
+}
 
 class TokenManager {
     private static readonly ACCESS_TOKEN_KEY = 'access_token';
     private static readonly REFRESH_TOKEN_KEY = 'refresh_token';
+    private static readonly TOKEN_EXPIRY_BUFFER = 60;
 
     static getAccessToken(): string | null {
         if (typeof window === 'undefined') return null;
@@ -56,20 +75,91 @@ class TokenManager {
 
             const payload = JSON.parse(atob(parts[1]));
             const currentTime = Date.now() / 1000;
-            return payload.exp > currentTime;
+            return payload.exp > (currentTime + this.TOKEN_EXPIRY_BUFFER);
         } catch {
             return false;
         }
     }
+
+    static getTokenExpiry(): number | null {
+        const token = this.getAccessToken();
+        if (!token) return null;
+
+        try {
+            const parts = token.split('.');
+            if (parts.length !== 3 || !parts[1]) return null;
+
+            const payload = JSON.parse(atob(parts[1]));
+            return payload.exp * 1000;
+        } catch {
+            return null;
+        }
+    }
+
+    static isTokenExpiringSoon(bufferMinutes = 5): boolean {
+        const expiry = this.getTokenExpiry();
+        if (!expiry) return false;
+
+        const bufferMs = bufferMinutes * 60 * 1000;
+        return (expiry - Date.now()) < bufferMs;
+    }
 }
+
+const refreshState: TokenRefreshState = {
+    isRefreshing: false,
+    failedQueue: [],
+};
+
+const processQueue = (error: any = null, token: string | null = null) => {
+    refreshState.failedQueue.forEach(({ config, resolve, reject }) => {
+        if (error) {
+            reject(error);
+        } else if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+            resolve(apiClient(config));
+        } else {
+            reject(new Error('No token available'));
+        }
+    });
+
+    refreshState.failedQueue = [];
+};
+
+const generateRequestId = (): string => {
+    return Date.now().toString(36) + Math.random().toString(36).substring(2);
+};
+
+const apiClient: AxiosInstance = axios.create(API_CONFIG);
 
 apiClient.interceptors.request.use(
     async (config: InternalAxiosRequestConfig) => {
         try {
+            const requestId = generateRequestId();
+            config.metadata = {
+                startTime: new Date(),
+                requestId,
+                retryCount: config.metadata?.retryCount || 0,
+            };
+
             const userToken = TokenManager.getAccessToken();
 
-            if (userToken) {
+            if (userToken && TokenManager.hasValidToken()) {
                 config.headers.Authorization = `Bearer ${userToken}`;
+            } else if (userToken && TokenManager.isTokenExpiringSoon()) {
+                if (!refreshState.isRefreshing && TokenManager.getRefreshToken()) {
+                    try {
+                        await refreshUserToken();
+                        const newToken = TokenManager.getAccessToken();
+                        if (newToken) {
+                            config.headers.Authorization = `Bearer ${newToken}`;
+                        }
+                    } catch (refreshError) {
+                        console.warn('Proactive token refresh failed:', refreshError);
+                        config.headers.Authorization = `Bearer ${userToken}`;
+                    }
+                } else {
+                    config.headers.Authorization = `Bearer ${userToken}`;
+                }
             } else {
                 try {
                     const clientToken = await clientCredentials.getToken();
@@ -86,7 +176,9 @@ apiClient.interceptors.request.use(
                 }
             }
 
-            config.metadata = { startTime: new Date() };
+            config.headers['X-Request-ID'] = requestId;
+            config.headers['Content-Type'] = config.headers['Content-Type'] || 'application/json';
+            config.headers['Accept'] = config.headers['Accept'] || 'application/json';
 
             return config;
         } catch (error) {
@@ -94,80 +186,124 @@ apiClient.interceptors.request.use(
             return config;
         }
     },
-    (error) => {
-        return Promise.reject(error);
-    }
+    (error) => Promise.reject(error)
 );
+
+const refreshUserToken = async (): Promise<string> => {
+    const refreshToken = TokenManager.getRefreshToken();
+    if (!refreshToken) {
+        throw new Error('No refresh token available');
+    }
+
+    const refreshClient = axios.create({
+        baseURL: API_CONFIG.baseURL,
+        timeout: 10000,
+    });
+
+    const response = await refreshClient.post('/auth/refresh', {
+        refresh_token: refreshToken,
+    });
+
+    const { access_token, refresh_token: newRefreshToken } = response.data;
+    TokenManager.setTokens(access_token, newRefreshToken);
+
+    return access_token;
+};
 
 apiClient.interceptors.response.use(
     (response: AxiosResponse) => {
         if (process.env.NODE_ENV === 'development' && response.config.metadata) {
-            const endTime = new Date();
-            const duration = endTime.getTime() - response.config.metadata.startTime.getTime();
-            console.log(`API ${response.config.method?.toUpperCase()} ${response.config.url}: ${duration}ms`);
+            const { startTime, requestId } = response.config.metadata;
+            const duration = new Date().getTime() - startTime.getTime();
+            console.log(
+                `[${requestId}] ${response.config.method?.toUpperCase()} ${response.config.url}: ${duration}ms (${response.status})`
+            );
         }
 
         return response;
     },
     async (error) => {
         const originalRequest = error.config;
+        const maxRetries = 3;
 
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        if (!originalRequest || originalRequest._retry) {
+            return Promise.reject(error);
+        }
+
+        if (error.response?.status === 401) {
             originalRequest._retry = true;
 
-            const userToken = TokenManager.getAccessToken();
-            const refreshToken = TokenManager.getRefreshToken();
-
-            if (userToken && refreshToken) {
-                try {
-                    const refreshClient = axios.create({
-                        baseURL: API_CONFIG.baseURL,
-                        timeout: API_CONFIG.timeout,
+            if (refreshState.isRefreshing) {
+                return new Promise((resolve, reject) => {
+                    refreshState.failedQueue.push({
+                        config: originalRequest,
+                        resolve,
+                        reject,
                     });
-
-                    const response = await refreshClient.post('/auth/refresh',
-                        { refresh_token: refreshToken },
-                        {
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/json'
-                            }
-                        }
-                    );
-
-                    const { access_token, refresh_token: newRefreshToken } = response.data;
-                    TokenManager.setTokens(access_token, newRefreshToken);
-
-                    originalRequest.headers.Authorization = `Bearer ${access_token}`;
-                    return apiClient(originalRequest);
-                } catch (refreshError) {
-                    console.error('User token refresh failed:', refreshError);
-                    TokenManager.clearTokens();
-                }
+                });
             }
 
-            try {
-                const clientToken = await clientCredentials.refreshToken();
-                originalRequest.headers.Authorization = `Bearer ${clientToken}`;
-                return apiClient(originalRequest);
-            } catch (clientError) {
-                console.error('Client token refresh failed:', clientError);
+            refreshState.isRefreshing = true;
 
-                if (originalRequest.url?.includes('/auth/') ||
-                    originalRequest.url?.includes('/user') ||
-                    originalRequest.url?.includes('/my-')) {
-                    if (typeof window !== 'undefined') {
-                        window.location.href = '/login';
+            try {
+                const userToken = TokenManager.getAccessToken();
+                const refreshToken = TokenManager.getRefreshToken();
+
+                if (userToken && refreshToken) {
+                    try {
+                        const newToken = await refreshUserToken();
+                        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+                        processQueue(null, newToken);
+                        return apiClient(originalRequest);
+                    } catch (refreshError) {
+                        TokenManager.clearTokens();
+                        processQueue(refreshError, null);
                     }
                 }
 
-                return Promise.reject(error);
+                try {
+                    const clientToken = await clientCredentials.refreshToken();
+                    originalRequest.headers.Authorization = `Bearer ${clientToken}`;
+                    processQueue(null, clientToken);
+                    return apiClient(originalRequest);
+                } catch (clientError) {
+                    processQueue(clientError, null);
+
+                    if (this.isProtectedRoute(originalRequest.url)) {
+                        this.redirectToLogin();
+                    }
+                }
+            } finally {
+                refreshState.isRefreshing = false;
             }
         }
 
+        if (this.isRetryableError(error) &&
+            originalRequest.metadata?.retryCount < maxRetries) {
+
+            const retryCount = (originalRequest.metadata?.retryCount || 0) + 1;
+            const delay = Math.min(1000 * Math.pow(2, retryCount - 1), 5000);
+
+            await this.delay(delay);
+
+            originalRequest.metadata = {
+                ...originalRequest.metadata,
+                retryCount,
+            };
+
+            return apiClient(originalRequest);
+        }
+
         if (!error.response) {
-            toast.error('Network error. Please check your connection.');
-            return Promise.reject(new Error('Network error'));
+            const networkError = new Error('Network error');
+            if (!this.hasShownNetworkError) {
+                toast.error('Network error. Please check your connection.');
+                this.hasShownNetworkError = true;
+                setTimeout(() => {
+                    this.hasShownNetworkError = false;
+                }, 5000);
+            }
+            return Promise.reject(networkError);
         }
 
         const apiError: ApiError = {
@@ -177,7 +313,7 @@ apiClient.interceptors.response.use(
             code: error.response?.data?.code,
         };
 
-        if (error.response?.status !== 422) {
+        if (error.response?.status !== 422 && !this.isSilentRoute(originalRequest.url)) {
             toast.error(apiError.message);
         }
 
@@ -187,25 +323,48 @@ apiClient.interceptors.response.use(
 
 export class ApiClient {
     private client: AxiosInstance;
+    private cancelTokens = new Map<string, CancelTokenSource>();
+    private hasShownNetworkError = false;
 
     constructor() {
         this.client = apiClient;
     }
 
     private async request<T = any>(
-        config: AxiosRequestConfig
+        config: AxiosRequestConfig & { requestKey?: string }
     ): Promise<ApiResponse<T>> {
         try {
+            if (config.requestKey) {
+                this.cancelPreviousRequest(config.requestKey);
+
+                const cancelTokenSource = axios.CancelToken.source();
+                config.cancelToken = cancelTokenSource.token;
+                this.cancelTokens.set(config.requestKey, cancelTokenSource);
+            }
+
             const response = await this.client.request<ApiResponse<T>>(config);
+
+            if (config.requestKey) {
+                this.cancelTokens.delete(config.requestKey);
+            }
+
             return response.data;
         } catch (error) {
+            if (config.requestKey) {
+                this.cancelTokens.delete(config.requestKey);
+            }
+
+            if (axios.isCancel(error)) {
+                throw new Error('Request cancelled');
+            }
+
             throw this.handleError(error);
         }
     }
 
     async get<T = any>(
         url: string,
-        config?: AxiosRequestConfig
+        config?: AxiosRequestConfig & { requestKey?: string }
     ): Promise<ApiResponse<T>> {
         return this.request<T>({ ...config, method: 'GET', url });
     }
@@ -213,7 +372,7 @@ export class ApiClient {
     async post<T = any>(
         url: string,
         data?: any,
-        config?: AxiosRequestConfig
+        config?: AxiosRequestConfig & { requestKey?: string }
     ): Promise<ApiResponse<T>> {
         return this.request<T>({ ...config, method: 'POST', url, data });
     }
@@ -221,7 +380,7 @@ export class ApiClient {
     async put<T = any>(
         url: string,
         data?: any,
-        config?: AxiosRequestConfig
+        config?: AxiosRequestConfig & { requestKey?: string }
     ): Promise<ApiResponse<T>> {
         return this.request<T>({ ...config, method: 'PUT', url, data });
     }
@@ -229,26 +388,43 @@ export class ApiClient {
     async patch<T = any>(
         url: string,
         data?: any,
-        config?: AxiosRequestConfig
+        config?: AxiosRequestConfig & { requestKey?: string }
     ): Promise<ApiResponse<T>> {
         return this.request<T>({ ...config, method: 'PATCH', url, data });
     }
 
     async delete<T = any>(
         url: string,
-        config?: AxiosRequestConfig
+        config?: AxiosRequestConfig & { requestKey?: string }
     ): Promise<ApiResponse<T>> {
         return this.request<T>({ ...config, method: 'DELETE', url });
     }
 
     async upload<T = any>(
         url: string,
-        file: File,
+        file: File | File[],
         onProgress?: (progress: number) => void,
-        config?: AxiosRequestConfig
+        config?: AxiosRequestConfig & {
+            requestKey?: string;
+            fieldName?: string;
+            additionalFields?: Record<string, any>;
+        }
     ): Promise<ApiResponse<T>> {
         const formData = new FormData();
-        formData.append('file', file);
+
+        if (Array.isArray(file)) {
+            file.forEach((f, index) => {
+                formData.append(`${config?.fieldName || 'files'}[${index}]`, f);
+            });
+        } else {
+            formData.append(config?.fieldName || 'file', file);
+        }
+
+        if (config?.additionalFields) {
+            Object.entries(config.additionalFields).forEach(([key, value]) => {
+                formData.append(key, typeof value === 'string' ? value : JSON.stringify(value));
+            });
+        }
 
         return this.request<T>({
             ...config,
@@ -259,6 +435,7 @@ export class ApiClient {
                 'Content-Type': 'multipart/form-data',
                 ...config?.headers,
             },
+            timeout: 120000,
             onUploadProgress: (progressEvent) => {
                 if (onProgress && progressEvent.total) {
                     const progress = Math.round(
@@ -270,7 +447,74 @@ export class ApiClient {
         });
     }
 
+    async downloadFile(
+        url: string,
+        filename?: string,
+        onProgress?: (progress: number) => void,
+        config?: AxiosRequestConfig
+    ): Promise<Blob> {
+        try {
+            const response = await this.client.request({
+                ...config,
+                method: 'GET',
+                url,
+                responseType: 'blob',
+                timeout: 300000,
+                onDownloadProgress: (progressEvent) => {
+                    if (onProgress && progressEvent.total) {
+                        const progress = Math.round(
+                            (progressEvent.loaded * 100) / progressEvent.total
+                        );
+                        onProgress(progress);
+                    }
+                },
+            });
+
+            if (filename && typeof window !== 'undefined') {
+                const blob = new Blob([response.data]);
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(downloadUrl);
+            }
+
+            return response.data;
+        } catch (error) {
+            throw this.handleError(error);
+        }
+    }
+
+    cancelRequest(requestKey: string): void {
+        this.cancelPreviousRequest(requestKey);
+    }
+
+    cancelAllRequests(): void {
+        this.cancelTokens.forEach((source) => {
+            source.cancel('Request cancelled by user');
+        });
+        this.cancelTokens.clear();
+    }
+
+    private cancelPreviousRequest(requestKey: string): void {
+        const existingRequest = this.cancelTokens.get(requestKey);
+        if (existingRequest) {
+            existingRequest.cancel(`Request ${requestKey} superseded`);
+            this.cancelTokens.delete(requestKey);
+        }
+    }
+
     private handleError(error: any): ApiError {
+        if (axios.isCancel(error)) {
+            return {
+                message: 'Request was cancelled',
+                code: 'CANCELLED',
+            };
+        }
+
         if (error.response) {
             return {
                 message: error.response.data?.message || 'Server error',
@@ -284,12 +528,65 @@ export class ApiClient {
             return {
                 message: 'Network error. Please check your connection.',
                 status: 0,
+                code: 'NETWORK_ERROR',
             };
         }
 
         return {
             message: error.message || 'An unexpected error occurred',
+            code: 'UNKNOWN_ERROR',
         };
+    }
+
+    private isRetryableError(error: any): boolean {
+        if (axios.isCancel(error)) return false;
+
+        return (
+            !error.response ||
+            error.code === 'NETWORK_ERROR' ||
+            error.code === 'ECONNABORTED' ||
+            (error.response?.status >= 500 && error.response?.status < 600) ||
+            error.response?.status === 429
+        );
+    }
+
+    private isProtectedRoute(url?: string): boolean {
+        if (!url) return false;
+
+        const protectedPatterns = [
+            '/auth/',
+            '/user',
+            '/my-',
+            '/profile',
+            '/dashboard',
+            '/account',
+        ];
+
+        return protectedPatterns.some(pattern => url.includes(pattern));
+    }
+
+    private isSilentRoute(url?: string): boolean {
+        if (!url) return false;
+
+        const silentPatterns = [
+            '/health',
+            '/ping',
+            '/validate-session',
+        ];
+
+        return silentPatterns.some(pattern => url.includes(pattern));
+    }
+
+    private redirectToLogin(): void {
+        if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
+            const currentPath = window.location.pathname + window.location.search;
+            const loginUrl = `/login?redirect=${encodeURIComponent(currentPath)}`;
+            window.location.href = loginUrl;
+        }
+    }
+
+    private delay(ms: number): Promise<void> {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 
     setTokens(accessToken: string, refreshToken?: string): void {
@@ -299,6 +596,7 @@ export class ApiClient {
     clearTokens(): void {
         TokenManager.clearTokens();
         clientCredentials.clearToken();
+        this.cancelAllRequests();
     }
 
     hasValidToken(): boolean {
@@ -309,13 +607,45 @@ export class ApiClient {
         return TokenManager.getAccessToken();
     }
 
-    // Client credentials methods
+    isTokenExpiringSoon(): boolean {
+        return TokenManager.isTokenExpiringSoon();
+    }
+
     async getClientToken(): Promise<string> {
         return clientCredentials.getToken();
     }
 
     async refreshClientToken(): Promise<string> {
         return clientCredentials.refreshToken();
+    }
+
+    getRequestMetrics(): {
+        activeRequests: number;
+        queuedRequests: number;
+        isRefreshing: boolean;
+    } {
+        return {
+            activeRequests: this.cancelTokens.size,
+            queuedRequests: refreshState.failedQueue.length,
+            isRefreshing: refreshState.isRefreshing,
+        };
+    }
+
+    async healthCheck(): Promise<{ status: 'ok' | 'error'; latency: number }> {
+        const startTime = Date.now();
+
+        try {
+            await this.get('/health', { requestKey: 'health-check' });
+            return {
+                status: 'ok',
+                latency: Date.now() - startTime,
+            };
+        } catch {
+            return {
+                status: 'error',
+                latency: Date.now() - startTime,
+            };
+        }
     }
 }
 
@@ -327,6 +657,8 @@ declare module 'axios' {
     interface InternalAxiosRequestConfig {
         metadata?: {
             startTime: Date;
+            requestId: string;
+            retryCount: number;
         };
         _retry?: boolean;
     }
