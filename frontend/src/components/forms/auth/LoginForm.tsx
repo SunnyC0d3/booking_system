@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { Button, Input, Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui';
 import { useAuth } from '@/stores/authStore';
 import { LoginFormData } from '@/types/auth';
+import { cn } from '@/lib/cn';
 
 const loginSchema = z.object({
     email: z

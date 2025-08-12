@@ -10,7 +10,7 @@ import { ApiResponse, ApiError } from '@/types/auth';
 import { clientCredentials } from './clientCredentials';
 
 const API_CONFIG = {
-    baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1',
+    baseURL: '/', // Use relative URLs for our own server routes
     timeout: process.env.NODE_ENV === 'production' ? 15000 : 30000,
     withCredentials: true,
     maxRedirects: 3,
@@ -189,18 +189,19 @@ apiClient.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
+// Use server route for token refresh
 const refreshUserToken = async (): Promise<string> => {
     const refreshToken = TokenManager.getRefreshToken();
     if (!refreshToken) {
         throw new Error('No refresh token available');
     }
 
+    // Call our server route instead of direct API
     const refreshClient = axios.create({
-        baseURL: API_CONFIG.baseURL,
         timeout: 10000,
     });
 
-    const response = await refreshClient.post('/auth/refresh', {
+    const response = await refreshClient.post('/api/auth/refresh', {
         refresh_token: refreshToken,
     });
 
@@ -269,8 +270,8 @@ apiClient.interceptors.response.use(
                 } catch (clientError) {
                     processQueue(clientError, null);
 
-                    if (this.isProtectedRoute(originalRequest.url)) {
-                        this.redirectToLogin();
+                    if (isProtectedRoute(originalRequest.url)) {
+                        redirectToLogin();
                     }
                 }
             } finally {
@@ -278,13 +279,13 @@ apiClient.interceptors.response.use(
             }
         }
 
-        if (this.isRetryableError(error) &&
+        if (isRetryableError(error) &&
             originalRequest.metadata?.retryCount < maxRetries) {
 
             const retryCount = (originalRequest.metadata?.retryCount || 0) + 1;
             const delay = Math.min(1000 * Math.pow(2, retryCount - 1), 5000);
 
-            await this.delay(delay);
+            await new Promise(resolve => setTimeout(resolve, delay));
 
             originalRequest.metadata = {
                 ...originalRequest.metadata,
@@ -296,11 +297,11 @@ apiClient.interceptors.response.use(
 
         if (!error.response) {
             const networkError = new Error('Network error');
-            if (!this.hasShownNetworkError) {
+            if (!hasShownNetworkError) {
                 toast.error('Network error. Please check your connection.');
-                this.hasShownNetworkError = true;
+                hasShownNetworkError = true;
                 setTimeout(() => {
-                    this.hasShownNetworkError = false;
+                    hasShownNetworkError = false;
                 }, 5000);
             }
             return Promise.reject(networkError);
@@ -313,7 +314,7 @@ apiClient.interceptors.response.use(
             code: error.response?.data?.code,
         };
 
-        if (error.response?.status !== 422 && !this.isSilentRoute(originalRequest.url)) {
+        if (error.response?.status !== 422 && !isSilentRoute(originalRequest.url)) {
             toast.error(apiError.message);
         }
 
@@ -321,10 +322,59 @@ apiClient.interceptors.response.use(
     }
 );
 
+// Utility functions (moved outside class for use in interceptors)
+let hasShownNetworkError = false;
+
+const isRetryableError = (error: any): boolean => {
+    if (axios.isCancel(error)) return false;
+
+    return (
+        !error.response ||
+        error.code === 'NETWORK_ERROR' ||
+        error.code === 'ECONNABORTED' ||
+        (error.response?.status >= 500 && error.response?.status < 600) ||
+        error.response?.status === 429
+    );
+};
+
+const isProtectedRoute = (url?: string): boolean => {
+    if (!url) return false;
+
+    const protectedPatterns = [
+        '/auth/',
+        '/user',
+        '/my-',
+        '/profile',
+        '/dashboard',
+        '/account',
+    ];
+
+    return protectedPatterns.some(pattern => url.includes(pattern));
+};
+
+const isSilentRoute = (url?: string): boolean => {
+    if (!url) return false;
+
+    const silentPatterns = [
+        '/health',
+        '/ping',
+        '/validate-session',
+    ];
+
+    return silentPatterns.some(pattern => url.includes(pattern));
+};
+
+const redirectToLogin = (): void => {
+    if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
+        const currentPath = window.location.pathname + window.location.search;
+        const loginUrl = `/login?redirect=${encodeURIComponent(currentPath)}`;
+        window.location.href = loginUrl;
+    }
+};
+
 export class ApiClient {
     private client: AxiosInstance;
     private cancelTokens = new Map<string, CancelTokenSource>();
-    private hasShownNetworkError = false;
 
     constructor() {
         this.client = apiClient;
@@ -538,57 +588,6 @@ export class ApiClient {
         };
     }
 
-    private isRetryableError(error: any): boolean {
-        if (axios.isCancel(error)) return false;
-
-        return (
-            !error.response ||
-            error.code === 'NETWORK_ERROR' ||
-            error.code === 'ECONNABORTED' ||
-            (error.response?.status >= 500 && error.response?.status < 600) ||
-            error.response?.status === 429
-        );
-    }
-
-    private isProtectedRoute(url?: string): boolean {
-        if (!url) return false;
-
-        const protectedPatterns = [
-            '/auth/',
-            '/user',
-            '/my-',
-            '/profile',
-            '/dashboard',
-            '/account',
-        ];
-
-        return protectedPatterns.some(pattern => url.includes(pattern));
-    }
-
-    private isSilentRoute(url?: string): boolean {
-        if (!url) return false;
-
-        const silentPatterns = [
-            '/health',
-            '/ping',
-            '/validate-session',
-        ];
-
-        return silentPatterns.some(pattern => url.includes(pattern));
-    }
-
-    private redirectToLogin(): void {
-        if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
-            const currentPath = window.location.pathname + window.location.search;
-            const loginUrl = `/login?redirect=${encodeURIComponent(currentPath)}`;
-            window.location.href = loginUrl;
-        }
-    }
-
-    private delay(ms: number): Promise<void> {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
     setTokens(accessToken: string, refreshToken?: string): void {
         TokenManager.setTokens(accessToken, refreshToken);
     }
@@ -635,7 +634,8 @@ export class ApiClient {
         const startTime = Date.now();
 
         try {
-            await this.get('/health', { requestKey: 'health-check' });
+            // Use our server route for health check
+            await this.get('/api/health', { requestKey: 'health-check' });
             return {
                 status: 'ok',
                 latency: Date.now() - startTime,

@@ -7,13 +7,6 @@ interface ClientCredentialsResponse {
     scope?: string;
 }
 
-interface ClientCredentialsConfig {
-    clientId: string;
-    clientSecret: string;
-    baseUrl: string;
-    scope?: string;
-}
-
 const clientCredentialsClient: AxiosInstance = axios.create({
     timeout: 15000,
     headers: {
@@ -33,23 +26,6 @@ export class ClientCredentialsApi {
     private static clientTokenExpiry: number | null = null;
     private static isRefreshing = false;
     private static refreshPromise: Promise<string> | null = null;
-
-    private static getConfig(): ClientCredentialsConfig {
-        const clientId = process.env.NEXT_PUBLIC_CLIENT_ID || process.env.API_CLIENT_ID || '';
-        const clientSecret = process.env.NEXT_PUBLIC_CLIENT_SECRET || process.env.API_SECRET_KEY || '';
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-
-        if (!clientId || !clientSecret) {
-            throw new Error('Client credentials not configured');
-        }
-
-        return {
-            clientId,
-            clientSecret,
-            baseUrl,
-            scope: process.env.NEXT_PUBLIC_CLIENT_SCOPE || '',
-        };
-    }
 
     static async getClientToken(): Promise<string> {
         if (this.isRefreshing && this.refreshPromise) {
@@ -112,21 +88,12 @@ export class ClientCredentialsApi {
 
     private static async performTokenRequest(retryCount: number): Promise<string> {
         try {
-            const config = this.getConfig();
-
+            // Call our server-side API route instead of directly calling the OAuth endpoint
             const response = await clientCredentialsClient.post<ClientCredentialsResponse>(
-                `${config.baseUrl}/oauth/token`,
-                {
-                    grant_type: 'client_credentials',
-                    client_id: config.clientId,
-                    client_secret: config.clientSecret,
-                    scope: config.scope,
-                },
+                '/api/auth/client-token',
+                {},
                 {
                     timeout: 10000,
-                    headers: {
-                        'Authorization': this.getBasicAuthHeader(config),
-                    },
                 }
             );
 
@@ -166,9 +133,8 @@ export class ClientCredentialsApi {
 
     private static extractErrorMessage(error: any): string {
         return (
-            error.response?.data?.error_description ||
-            error.response?.data?.message ||
             error.response?.data?.error ||
+            error.response?.data?.message ||
             error.message ||
             'Unknown authentication error'
         );
@@ -219,53 +185,12 @@ export class ClientCredentialsApi {
         return false;
     }
 
-    static getClientAuthHeader(config?: ClientCredentialsConfig): string {
-        const actualConfig = config || this.getConfig();
-        const credentials = btoa(`${actualConfig.clientId}:${actualConfig.clientSecret}`);
-        return `Basic ${credentials}`;
-    }
-
-    private static getBasicAuthHeader(config: ClientCredentialsConfig): string {
-        return this.getClientAuthHeader(config);
-    }
-
     static validateConfiguration(): { valid: boolean; errors: string[] } {
-        const errors: string[] = [];
-
-        try {
-            const config = this.getConfig();
-
-            if (!config.clientId) {
-                errors.push('Client ID is required (API_CLIENT_ID or NEXT_PUBLIC_CLIENT_ID)');
-            }
-
-            if (!config.clientSecret) {
-                errors.push('Client Secret is required (API_SECRET_KEY or NEXT_PUBLIC_CLIENT_SECRET)');
-            }
-
-            if (!config.baseUrl) {
-                errors.push('Base URL is required (NEXT_PUBLIC_API_URL)');
-            }
-
-            if (config.clientId && config.clientId.length < 10) {
-                errors.push('Client ID appears to be too short');
-            }
-
-            if (config.clientSecret && config.clientSecret.length < 20) {
-                errors.push('Client Secret appears to be too short');
-            }
-
-        } catch (error: any) {
-            errors.push(error.message);
-        }
-
-        if (errors.length > 0) {
-            console.error('Client credentials configuration errors:', errors);
-        }
-
+        // Since we're using server route, we can't validate client credentials here
+        // The validation happens on the server side
         return {
-            valid: errors.length === 0,
-            errors,
+            valid: true,
+            errors: [],
         };
     }
 
@@ -299,9 +224,8 @@ export class ClientCredentialsApi {
         const startTime = Date.now();
 
         try {
-            const config = this.getConfig();
-
-            await clientCredentialsClient.get(`${config.baseUrl}/health`, {
+            // Test our server route instead of direct OAuth endpoint
+            await clientCredentialsClient.post('/api/auth/client-token', {}, {
                 timeout: 5000,
             });
 
@@ -317,14 +241,6 @@ export class ClientCredentialsApi {
             };
         }
     }
-
-    private static extractErrorMessage(error: any): string {
-        return (
-            error.response?.data?.message ||
-            error.message ||
-            'Connection test failed'
-        );
-    }
 }
 
 export const clientCredentials = {
@@ -332,11 +248,10 @@ export const clientCredentials = {
     refreshToken: () => ClientCredentialsApi.refreshClientCredentials(),
     clearToken: () => ClientCredentialsApi.clearClientCredentials(),
     hasValidToken: () => ClientCredentialsApi.hasValidClientToken(),
-    getAuthHeader: (config?: ClientCredentialsConfig) => ClientCredentialsApi.getClientAuthHeader(config),
     validateConfig: () => ClientCredentialsApi.validateConfiguration(),
     getTokenInfo: () => ClientCredentialsApi.getTokenInfo(),
     ensureValidToken: () => ClientCredentialsApi.ensureValidToken(),
     testConnection: () => ClientCredentialsApi.testConnection(),
 } as const;
 
-export type { ClientCredentialsResponse, ClientCredentialsConfig };
+export type { ClientCredentialsResponse };

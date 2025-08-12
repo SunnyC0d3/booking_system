@@ -16,18 +16,20 @@ import type {
 } from '@/types/auth';
 
 const API_ENDPOINTS = {
-    LOGIN: '/api/login',
-    REGISTER: '/api/register',
-    LOGOUT: '/api/logout',
-    REFRESH: '/api/refresh',
-    FORGOT_PASSWORD: '/api/forgot-password',
-    RESET_PASSWORD: '/api/reset-password',
-    CHANGE_PASSWORD: '/api/change-password',
-    VERIFY_EMAIL: '/email/verify',
-    RESEND_VERIFICATION: '/api/email/verification-notification',
+    LOGIN: '/api/auth/login',
+    REGISTER: '/api/auth/register',
+    LOGOUT: '/api/auth/logout',
+    REFRESH: '/api/auth/refresh',
+    FORGOT_PASSWORD: '/api/auth/forgot-password',
+    RESET_PASSWORD: '/api/auth/reset-password',
+    CHANGE_PASSWORD: '/api/auth/change-password',
+    VERIFY_EMAIL: '/api/auth/verify-email',
+    RESEND_VERIFICATION: '/api/auth/resend-verification',
     USER_PROFILE: '/api/user',
     USER_PREFERENCES: '/api/user/preferences',
     SECURITY_INFO: '/api/security-info',
+    VALIDATE_SESSION: '/api/auth/validate-session',
+    HEALTH_CHECK: '/api/health',
 } as const;
 
 export class AuthApi {
@@ -82,6 +84,7 @@ export class AuthApi {
         const MAX_RETRIES = 2;
 
         try {
+            // Use our server route for token refresh
             const response = await api.post<RefreshTokenResponse>(API_ENDPOINTS.REFRESH, {
                 refresh_token: refreshToken,
             });
@@ -137,11 +140,13 @@ export class AuthApi {
     async verifyEmail(data: VerifyEmailRequest): Promise<{ message: string }> {
         try {
             const params = new URLSearchParams({
+                id: data.id,
+                hash: data.hash,
                 expires: data.expires.toString(),
                 signature: data.signature,
             });
 
-            const url = `${API_ENDPOINTS.VERIFY_EMAIL}/${data.id}/${data.hash}?${params.toString()}`;
+            const url = `${API_ENDPOINTS.VERIFY_EMAIL}?${params.toString()}`;
 
             const response = await api.get<{ message: string }>(url);
             return response.data;
@@ -205,7 +210,8 @@ export class AuthApi {
 
     async validateSession(): Promise<boolean> {
         try {
-            const response = await api.get('/api/validate-session');
+            // Use our server route for session validation
+            const response = await api.get(API_ENDPOINTS.VALIDATE_SESSION);
             return response.data?.valid === true;
         } catch {
             return false;
@@ -290,7 +296,8 @@ export class AuthApi {
 
     async healthCheck(): Promise<{ status: 'ok' | 'error'; timestamp: number }> {
         try {
-            const response = await api.get('/api/health');
+            // Use our server route for health check
+            const response = await api.get(API_ENDPOINTS.HEALTH_CHECK);
             return {
                 status: 'ok',
                 timestamp: Date.now(),

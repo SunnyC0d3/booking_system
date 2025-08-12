@@ -35,8 +35,6 @@ return [
         ],
     ],
 
-    'app_url' => env('APP_URL'),
-    'app_frontend_url' => env('APP_URL_FRONTEND'),
     'proxy_key' => env('PROXY_LOGIN_KEY'),
     'passport_pa_id' => env('PASSPORT_PERSONAL_ACCESS_CLIENT_ID'),
     'passport_pa_secret' => env('PASSPORT_PERSONAL_ACCESS_CLIENT_SECRET'),
