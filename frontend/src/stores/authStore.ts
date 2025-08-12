@@ -24,7 +24,27 @@ const SESSION_TIMEOUT = 30 * 60 * 1000;
 const TOKEN_REFRESH_THRESHOLD = 5 * 60 * 1000;
 const MAX_RETRY_ATTEMPTS = 3;
 
-const initialState: AuthState = {
+// Enhanced token interface
+interface TokenInfo {
+    accessToken: string;
+    refreshToken?: string;
+    expiresAt?: number;
+    issuedAt: number;
+    type: 'user' | 'client';
+}
+
+interface ClientTokenInfo {
+    token: string;
+    expiresAt: number;
+    issuedAt: number;
+}
+
+// Enhanced initial state with token management
+const initialState: AuthState & {
+    userToken: TokenInfo | null;
+    clientToken: ClientTokenInfo | null;
+    tokenExpiryTimer: NodeJS.Timeout | null;
+} = {
     user: null,
     accessToken: null,
     refreshToken: null,
@@ -33,6 +53,9 @@ const initialState: AuthState = {
     isInitialized: false,
     error: null,
     lastActivity: null,
+    userToken: null,
+    clientToken: null,
+    tokenExpiryTimer: null,
 };
 
 const createAuthError = (error: any, fallbackMessage: string) => {
@@ -43,11 +66,191 @@ const createAuthError = (error: any, fallbackMessage: string) => {
     };
 };
 
-export const useAuthStore = create<AuthState & AuthActions>()(
+// Token utility functions
+const parseJwtExpiry = (token: string): number | null => {
+    try {
+        const parts = token.split('.');
+        if (parts.length !== 3) return null;
+
+        const payload = JSON.parse(atob(parts[1]));
+        return payload.exp ? payload.exp * 1000 : null;
+    } catch {
+        return null;
+    }
+};
+
+const isTokenExpiringSoon = (expiresAt: number, threshold = TOKEN_REFRESH_THRESHOLD): boolean => {
+    return (expiresAt - Date.now()) < threshold;
+};
+
+const isTokenExpired = (expiresAt: number): boolean => {
+    return Date.now() >= expiresAt;
+};
+
+export const useAuthStore = create<AuthState & AuthActions & {
+    userToken: TokenInfo | null;
+    clientToken: ClientTokenInfo | null;
+    tokenExpiryTimer: NodeJS.Timeout | null;
+
+    // Enhanced token management methods
+    setUserTokens: (accessToken: string, refreshToken?: string) => void;
+    setClientToken: (token: string, expiresIn: number) => void;
+    clearAllTokens: () => void;
+    getUserToken: () => string | null;
+    getClientToken: () => string | null;
+    isUserTokenValid: () => boolean;
+    isClientTokenValid: () => boolean;
+    isUserTokenExpiring: () => boolean;
+    scheduleTokenRefresh: () => void;
+    clearTokenRefreshTimer: () => void;
+    ensureValidClientToken: () => Promise<string>;
+}>()(
     subscribeWithSelector(
         persist(
             immer((set, get) => ({
                 ...initialState,
+
+                // Enhanced token management methods
+                setUserTokens: (accessToken: string, refreshToken?: string) => {
+                    const expiresAt = parseJwtExpiry(accessToken);
+                    const now = Date.now();
+
+                    set((state) => {
+                        state.userToken = {
+                            accessToken,
+                            refreshToken,
+                            expiresAt: expiresAt || (now + (60 * 60 * 1000)), // Default 1 hour
+                            issuedAt: now,
+                            type: 'user',
+                        };
+                        state.accessToken = accessToken;
+                        state.refreshToken = refreshToken || null;
+                        state.lastActivity = now;
+                        state.error = null;
+                    });
+
+                    // Schedule automatic refresh
+                    get().scheduleTokenRefresh();
+                },
+
+                setClientToken: (token: string, expiresIn: number) => {
+                    const now = Date.now();
+                    const expiresAt = now + (expiresIn * 1000);
+
+                    set((state) => {
+                        state.clientToken = {
+                            token,
+                            expiresAt,
+                            issuedAt: now,
+                        };
+                    });
+                },
+
+                clearAllTokens: () => {
+                    get().clearTokenRefreshTimer();
+
+                    set((state) => {
+                        state.userToken = null;
+                        state.clientToken = null;
+                        state.accessToken = null;
+                        state.refreshToken = null;
+                        state.isAuthenticated = false;
+                        state.user = null;
+                        state.lastActivity = null;
+                    });
+                },
+
+                getUserToken: () => {
+                    const { userToken } = get();
+                    return userToken?.accessToken || null;
+                },
+
+                getClientToken: () => {
+                    const { clientToken } = get();
+                    return clientToken?.token || null;
+                },
+
+                isUserTokenValid: () => {
+                    const { userToken } = get();
+                    return userToken ? !isTokenExpired(userToken.expiresAt || 0) : false;
+                },
+
+                isClientTokenValid: () => {
+                    const { clientToken } = get();
+                    return clientToken ? !isTokenExpired(clientToken.expiresAt) : false;
+                },
+
+                isUserTokenExpiring: () => {
+                    const { userToken } = get();
+                    return userToken ? isTokenExpiringSoon(userToken.expiresAt || 0) : false;
+                },
+
+                scheduleTokenRefresh: () => {
+                    const { userToken, tokenExpiryTimer } = get();
+
+                    // Clear existing timer
+                    if (tokenExpiryTimer) {
+                        clearTimeout(tokenExpiryTimer);
+                    }
+
+                    if (!userToken?.expiresAt || !userToken.refreshToken) return;
+
+                    const timeUntilRefresh = Math.max(
+                        0,
+                        userToken.expiresAt - Date.now() - TOKEN_REFRESH_THRESHOLD
+                    );
+
+                    const newTimer = setTimeout(async () => {
+                        try {
+                            await get().refreshAuthToken(false);
+                        } catch (error) {
+                            console.warn('Scheduled token refresh failed:', error);
+                        }
+                    }, timeUntilRefresh);
+
+                    set((state) => {
+                        state.tokenExpiryTimer = newTimer;
+                    });
+                },
+
+                clearTokenRefreshTimer: () => {
+                    const { tokenExpiryTimer } = get();
+                    if (tokenExpiryTimer) {
+                        clearTimeout(tokenExpiryTimer);
+                        set((state) => {
+                            state.tokenExpiryTimer = null;
+                        });
+                    }
+                },
+
+                ensureValidClientToken: async (): Promise<string> => {
+                    const state = get();
+
+                    if (state.isClientTokenValid()) {
+                        return state.getClientToken()!;
+                    }
+
+                    // Request new client token
+                    try {
+                        const response = await fetch('/api/auth/client-token', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                        });
+
+                        if (!response.ok) {
+                            throw new Error('Failed to get client token');
+                        }
+
+                        const data = await response.json();
+                        get().setClientToken(data.access_token, data.expires_in);
+
+                        return data.access_token;
+                    } catch (error) {
+                        console.error('Client token request failed:', error);
+                        throw error;
+                    }
+                },
+
                 login: async (credentials: LoginRequest, retryCount = 0) => {
                     try {
                         set((state) => {
@@ -57,16 +260,20 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 
                         const response = await authApi.login(credentials);
 
-                        api.setTokens(response.access_token, response.refresh_token);
+                        // Validate response format
+                        if (!response.access_token || !response.user) {
+                            throw new Error('Invalid login response format');
+                        }
 
+                        // Set user tokens FIRST
+                        get().setUserTokens(response.access_token, response.refresh_token);
+
+                        // Then update user state
                         set((state) => {
                             state.user = response.user;
-                            state.accessToken = response.access_token;
-                            state.refreshToken = response.refresh_token || null;
                             state.isAuthenticated = true;
                             state.isLoading = false;
                             state.error = null;
-                            state.lastActivity = Date.now();
                         });
 
                         get().setupSessionMonitoring?.();
@@ -98,16 +305,17 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 
                         const response = await authApi.register(data);
 
-                        api.setTokens(response.access_token, response.refresh_token);
+                        if (!response.access_token || !response.user) {
+                            throw new Error('Invalid registration response format');
+                        }
+
+                        get().setUserTokens(response.access_token, response.refresh_token);
 
                         set((state) => {
                             state.user = response.user;
-                            state.accessToken = response.access_token;
-                            state.refreshToken = response.refresh_token || null;
                             state.isAuthenticated = true;
                             state.isLoading = false;
                             state.error = null;
-                            state.lastActivity = Date.now();
                         });
 
                         get().setupSessionMonitoring?.();
@@ -142,7 +350,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                             }
                         }
 
-                        api.clearTokens();
+                        get().clearAllTokens();
 
                         set((state) => {
                             Object.assign(state, {
@@ -157,8 +365,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 
                     } catch (error: any) {
                         console.error('Logout error:', error);
-
-                        api.clearTokens();
+                        get().clearAllTokens();
                         get().cleanupSessionMonitoring?.();
 
                         set((state) => {
@@ -171,25 +378,17 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                 },
 
                 refreshAuthToken: async (showErrorToast = false) => {
-                    const state = get();
+                    const { userToken } = get();
 
                     try {
-                        if (!state.refreshToken) {
+                        if (!userToken?.refreshToken) {
                             throw new Error('No refresh token available');
                         }
 
-                        const response = await authApi.refreshToken(state.refreshToken);
+                        const response = await authApi.refreshToken(userToken.refreshToken);
 
-                        api.setTokens(response.access_token, response.refresh_token);
-
-                        set((state) => {
-                            state.accessToken = response.access_token;
-                            if (response.refresh_token) {
-                                state.refreshToken = response.refresh_token;
-                            }
-                            state.lastActivity = Date.now();
-                            state.error = null;
-                        });
+                        // Update tokens using centralized management
+                        get().setUserTokens(response.access_token, response.refresh_token);
 
                         return response.access_token;
 
@@ -203,6 +402,37 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                         await get().logout(true);
                         throw error;
                     }
+                },
+
+                // Enhanced token validation
+                ensureValidToken: async (): Promise<boolean> => {
+                    const state = get();
+
+                    // Check if user token exists and is valid
+                    if (!state.isUserTokenValid()) {
+                        // Try to refresh if we have a refresh token
+                        if (state.userToken?.refreshToken) {
+                            try {
+                                await get().refreshAuthToken();
+                                return true;
+                            } catch {
+                                await get().logout(true);
+                                return false;
+                            }
+                        }
+                        return false;
+                    }
+
+                    // Check if token is expiring soon and refresh proactively
+                    if (state.isUserTokenExpiring() && state.userToken?.refreshToken) {
+                        try {
+                            await get().refreshAuthToken();
+                        } catch (error) {
+                            console.warn('Proactive token refresh failed:', error);
+                        }
+                    }
+
+                    return true;
                 },
 
                 forgotPassword: async (data: ForgotPasswordRequest) => {
@@ -240,14 +470,11 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                         const response = await authApi.resetPassword(data);
 
                         if (response.access_token && response.user) {
-                            api.setTokens(response.access_token, response.refresh_token);
+                            get().setUserTokens(response.access_token, response.refresh_token);
 
                             set((state) => {
                                 state.user = response.user!;
-                                state.accessToken = response.access_token!;
-                                state.refreshToken = response.refresh_token || null;
                                 state.isAuthenticated = true;
-                                state.lastActivity = Date.now();
                             });
 
                             get().setupSessionMonitoring?.();
@@ -302,8 +529,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                         });
 
                         await authApi.verifyEmail(data);
-
-                        // Refresh user profile to get updated verification status
                         await get().fetchUserProfile();
 
                         set((state) => {
@@ -347,7 +572,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                     }
                 },
 
-                // Optimistic user updates
                 updateUser: (userData: Partial<User>) => {
                     set((state) => {
                         if (state.user) {
@@ -357,11 +581,9 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                     });
                 },
 
-                // Enhanced profile fetching with caching
                 fetchUserProfile: async (force = false) => {
                     const state = get();
 
-                    // Skip if recently fetched (unless forced)
                     if (!force && state.lastActivity && (Date.now() - state.lastActivity) < 60000) {
                         return state.user;
                     }
@@ -390,18 +612,15 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                             state.isLoading = false;
                         });
 
-                        // Don't auto-logout on profile fetch failure
                         console.warn('Failed to fetch user profile:', authError);
                         throw authError;
                     }
                 },
 
-                // Optimistic preferences update
                 updateUserPreferences: async (preferences: Partial<UserPreferences>) => {
                     const currentPreferences = get().user?.preferences;
 
                     try {
-                        // Optimistic update
                         set((state) => {
                             if (state.user) {
                                 state.user.preferences = { ...state.user.preferences, ...preferences };
@@ -425,7 +644,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                         return updatedPreferences;
 
                     } catch (error: any) {
-                        // Revert optimistic update on failure
                         set((state) => {
                             if (state.user && currentPreferences) {
                                 state.user.preferences = currentPreferences;
@@ -438,16 +656,14 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                     }
                 },
 
-                // Enhanced auth check with token validation
                 checkAuth: async () => {
                     try {
-                        if (!api.hasValidToken()) {
+                        if (!get().isUserTokenValid()) {
                             set((state) => {
                                 state.isAuthenticated = false;
                                 state.user = null;
-                                state.accessToken = null;
-                                state.refreshToken = null;
                             });
+                            get().clearAllTokens();
                             return false;
                         }
 
@@ -464,30 +680,28 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 
                     } catch (error) {
                         console.warn('Auth check failed:', error);
-                        await get().logout(true); // Silent logout
+                        await get().logout(true);
                         return false;
                     }
                 },
 
-                // Enhanced initialization with better error handling
                 initialize: async () => {
                     try {
                         set((state) => {
                             state.isLoading = true;
                         });
 
-                        // Check if we have valid tokens
-                        if (api.hasValidToken()) {
+                        if (get().isUserTokenValid()) {
                             const isValid = await get().checkAuth();
 
                             if (isValid) {
                                 get().setupSessionMonitoring?.();
+                                get().scheduleTokenRefresh();
                             }
                         }
 
                     } catch (error) {
                         console.warn('Auth initialization failed:', error);
-                        // Clear potentially corrupted state
                         await get().logout(true);
                     } finally {
                         set((state) => {
@@ -497,48 +711,31 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                     }
                 },
 
-                // Session monitoring
                 updateLastActivity: () => {
                     set((state) => {
                         state.lastActivity = Date.now();
                     });
                 },
 
-                // Enhanced token management
+                // Legacy compatibility methods (marked as deprecated)
                 setTokens: (accessToken: string, refreshToken?: string) => {
-                    api.setTokens(accessToken, refreshToken);
-
-                    set((state) => {
-                        state.accessToken = accessToken;
-                        if (refreshToken) {
-                            state.refreshToken = refreshToken;
-                        }
-                        state.lastActivity = Date.now();
-                        state.error = null;
-                    });
+                    console.warn('setTokens is deprecated, use setUserTokens instead');
+                    get().setUserTokens(accessToken, refreshToken);
                 },
 
                 clearTokens: () => {
-                    api.clearTokens();
-                    get().cleanupSessionMonitoring?.();
-
-                    set((state) => {
-                        state.accessToken = null;
-                        state.refreshToken = null;
-                        state.isAuthenticated = false;
-                        state.user = null;
-                        state.lastActivity = null;
-                    });
+                    console.warn('clearTokens is deprecated, use clearAllTokens instead');
+                    get().clearAllTokens();
                 },
 
                 getStoredTokens: () => {
+                    console.warn('getStoredTokens is deprecated, use getUserToken/getClientToken instead');
                     return {
-                        accessToken: api.getAccessToken(),
-                        refreshToken: get().refreshToken,
+                        accessToken: get().getUserToken(),
+                        refreshToken: get().userToken?.refreshToken || null,
                     };
                 },
 
-                // Utility methods
                 clearError: () => {
                     set((state) => {
                         state.error = null;
@@ -557,47 +754,27 @@ export const useAuthStore = create<AuthState & AuthActions>()(
                     });
                 },
 
-                // Session monitoring setup/cleanup (will be set by session monitoring hook)
                 setupSessionMonitoring: undefined,
                 cleanupSessionMonitoring: undefined,
-
-                // Token validation and auto-refresh
-                ensureValidToken: async () => {
-                    const state = get();
-
-                    if (!state.accessToken || !api.hasValidToken()) {
-                        if (state.refreshToken) {
-                            try {
-                                await get().refreshAuthToken();
-                                return true;
-                            } catch {
-                                await get().logout(true);
-                                return false;
-                            }
-                        }
-                        return false;
-                    }
-
-                    return true;
-                },
             })),
             {
                 name: 'auth-storage',
                 storage: createJSONStorage(() => localStorage),
                 partialize: (state) => ({
                     user: state.user,
-                    accessToken: state.accessToken,
-                    refreshToken: state.refreshToken,
+                    userToken: state.userToken,
+                    clientToken: state.clientToken,
                     isAuthenticated: state.isAuthenticated,
                     lastActivity: state.lastActivity,
                 }),
-                // Enhanced storage options
                 onRehydrateStorage: () => (state) => {
-                    // Validate tokens on rehydration
-                    if (state && !api.hasValidToken()) {
-                        state.isAuthenticated = false;
-                        state.accessToken = null;
-                        state.user = null;
+                    if (state?.userToken && state.userToken.expiresAt) {
+                        // Check if stored token is expired
+                        if (isTokenExpired(state.userToken.expiresAt)) {
+                            state.isAuthenticated = false;
+                            state.userToken = null;
+                            state.user = null;
+                        }
                     }
                 },
             }
@@ -605,11 +782,15 @@ export const useAuthStore = create<AuthState & AuthActions>()(
     )
 );
 
-// Enhanced useAuth hook with memoized selectors
-export const useAuth = (): UseAuthReturn => {
+// Enhanced useAuth hook with token management
+export const useAuth = (): UseAuthReturn & {
+    userToken: TokenInfo | null;
+    clientToken: ClientTokenInfo | null;
+    isUserTokenExpiring: boolean;
+    timeUntilTokenExpiry: number | null;
+} => {
     const store = useAuthStore();
 
-    // Memoized permission checkers
     const hasRole = React.useCallback((role: string): boolean => {
         return store.user?.role?.name === role;
     }, [store.user?.role?.name]);
@@ -626,7 +807,6 @@ export const useAuth = (): UseAuthReturn => {
         return permissions.some(permission => hasPermission(permission));
     }, [hasPermission]);
 
-    // Computed values
     const isEmailVerified = React.useMemo(
         () => Boolean(store.user?.email_verified_at),
         [store.user?.email_verified_at]
@@ -649,6 +829,11 @@ export const useAuth = (): UseAuthReturn => {
         [sessionTimeRemaining]
     );
 
+    const timeUntilTokenExpiry = React.useMemo(() => {
+        if (!store.userToken?.expiresAt) return null;
+        return Math.max(0, store.userToken.expiresAt - Date.now());
+    }, [store.userToken?.expiresAt]);
+
     return {
         ...store,
         hasRole,
@@ -659,6 +844,8 @@ export const useAuth = (): UseAuthReturn => {
         needsEmailVerification,
         sessionTimeRemaining,
         isSessionExpired,
+        isUserTokenExpiring: store.isUserTokenExpiring(),
+        timeUntilTokenExpiry,
     };
 };
 
@@ -668,10 +855,25 @@ export const useAuthLoading = () => useAuthStore((state) => state.isLoading);
 export const useAuthError = () => useAuthStore((state) => state.error);
 export const useIsAuthenticated = () => useAuthStore((state) => state.isAuthenticated);
 export const useIsInitialized = () => useAuthStore((state) => state.isInitialized);
+export const useUserToken = () => useAuthStore((state) => state.userToken);
+export const useTokenExpiry = () => useAuthStore((state) => {
+    const token = state.userToken;
+    if (!token?.expiresAt) return null;
+    return Math.max(0, token.expiresAt - Date.now());
+});
 
-// Session monitoring hook (to be used in app component)
+// Enhanced session monitoring hook
 export const useSessionMonitoring = () => {
-    const { updateLastActivity, logout, sessionTimeRemaining, isAuthenticated, setupSessionMonitoring, cleanupSessionMonitoring } = useAuthStore();
+    const {
+        updateLastActivity,
+        logout,
+        sessionTimeRemaining,
+        isAuthenticated,
+        setupSessionMonitoring,
+        cleanupSessionMonitoring,
+        scheduleTokenRefresh,
+        clearTokenRefreshTimer,
+    } = useAuthStore();
 
     React.useEffect(() => {
         if (!isAuthenticated) return;
@@ -680,7 +882,6 @@ export const useSessionMonitoring = () => {
         let activityListener: (() => void) | undefined;
 
         const setupMonitoring = () => {
-            // Update activity on user interactions
             activityListener = () => updateLastActivity();
 
             const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
@@ -688,7 +889,6 @@ export const useSessionMonitoring = () => {
                 document.addEventListener(event, activityListener!, { passive: true });
             });
 
-            // Check session expiry
             const checkSession = () => {
                 if (sessionTimeRemaining !== null && sessionTimeRemaining <= 0) {
                     logout(false);
@@ -696,7 +896,8 @@ export const useSessionMonitoring = () => {
                 }
             };
 
-            sessionTimeout = setInterval(checkSession, 60000); // Check every minute
+            sessionTimeout = setInterval(checkSession, 60000);
+            scheduleTokenRefresh();
         };
 
         const cleanup = () => {
@@ -710,16 +911,16 @@ export const useSessionMonitoring = () => {
             if (sessionTimeout) {
                 clearInterval(sessionTimeout);
             }
+
+            clearTokenRefreshTimer();
         };
 
-        // Set up monitoring functions in store
         useAuthStore.setState({
             setupSessionMonitoring: setupMonitoring,
             cleanupSessionMonitoring: cleanup,
         });
 
         setupMonitoring();
-
         return cleanup;
-    }, [isAuthenticated, updateLastActivity, logout, sessionTimeRemaining]);
+    }, [isAuthenticated, updateLastActivity, logout, sessionTimeRemaining, scheduleTokenRefresh, clearTokenRefreshTimer]);
 };

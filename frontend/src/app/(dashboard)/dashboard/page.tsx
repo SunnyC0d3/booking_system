@@ -12,7 +12,7 @@ import {
     ArrowRight,
     MapPin,
 } from 'lucide-react';
-import { DashboardLayout } from '@/components/layout';
+// import { DashboardLayout } from '@/components/layout';
 import { Card, CardHeader, CardTitle, CardContent, Button } from '@/components/ui';
 import { RouteGuard } from '@/components/auth/RouteGuard';
 import { useAuth } from '@/stores/authStore';
@@ -125,10 +125,11 @@ function DashboardOverview() {
     ];
 
     return (
-        <DashboardLayout
-            title={`Welcome back, ${user?.name?.split(' ')[0] || 'there'}!`}
-            description="Here's what's happening with your creative projects."
-        >
+        // <DashboardLayout
+        //     title={`Welcome back, ${user?.name?.split(' ')[0] || 'there'}!`}
+        //     description="Here's what's happening with your creative projects."
+        // >
+        <>
             <div className="space-y-8">
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -333,7 +334,8 @@ function DashboardOverview() {
                     </CardContent>
                 </Card>
             </div>
-        </DashboardLayout>
+            {/*</DashboardLayout>*/}
+        </>
     );
 }
 

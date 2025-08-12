@@ -73,16 +73,18 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                                                         onSuccess,
                                                     }) => {
     const router = useRouter();
-    const { login, isLoading, error, clearError } = useAuth();
+    const { login, isLoading, error, clearError, isAuthenticated } = useAuth();
     const [showPassword, setShowPassword] = React.useState(false);
+    const [isSubmittingForm, setIsSubmittingForm] = React.useState(false);
 
     const {
         register,
         handleSubmit,
-        formState: { errors, isSubmitting },
+        formState: { errors },
         watch,
         setError,
         clearErrors,
+        reset,
     } = useForm<LoginFormData>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -92,6 +94,18 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         },
         mode: 'onTouched',
     });
+
+    // Handle successful authentication redirect
+    React.useEffect(() => {
+        if (isAuthenticated && !isLoading && !isSubmittingForm) {
+            console.log('User authenticated, redirecting...');
+            if (onSuccess) {
+                onSuccess();
+            } else {
+                router.push(redirectTo);
+            }
+        }
+    }, [isAuthenticated, isLoading, isSubmittingForm, onSuccess, router, redirectTo]);
 
     const clearErrorsOnChange = React.useCallback(() => {
         if (error) {
@@ -111,8 +125,15 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
     const onSubmit = React.useCallback(
         async (data: LoginFormData) => {
+            if (isSubmittingForm || isLoading) {
+                return; // Prevent double submission
+            }
+
             try {
+                setIsSubmittingForm(true);
                 clearError();
+
+                console.log('Submitting login form with:', { email: data.email, remember: data.remember });
 
                 await login({
                     email: data.email,
@@ -120,15 +141,17 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                     remember: data.remember,
                 });
 
-                if (onSuccess) {
-                    onSuccess();
-                } else {
-                    router.push(redirectTo);
-                }
-
+                console.log('Login successful');
                 toast.success('Welcome back!');
 
+                // Don't redirect here, let the useEffect handle it
+                // The form state will be handled by the loading states
+
             } catch (error: any) {
+                console.error('Login error:', error);
+                setIsSubmittingForm(false);
+
+                // Handle validation errors
                 if (error.errors) {
                     Object.entries(error.errors).forEach(([field, messages]) => {
                         if (Array.isArray(messages) && messages.length > 0) {
@@ -143,14 +166,21 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                 }
             }
         },
-        [login, clearError, onSuccess, router, redirectTo, setError]
+        [login, clearError, setError, isSubmittingForm, isLoading]
     );
 
     const togglePasswordVisibility = React.useCallback(() => {
         setShowPassword(prev => !prev);
     }, []);
 
-    const isFormLoading = isLoading || isSubmitting;
+    // Reset form submission state when loading completes
+    React.useEffect(() => {
+        if (!isLoading && isSubmittingForm) {
+            setIsSubmittingForm(false);
+        }
+    }, [isLoading, isSubmittingForm]);
+
+    const isFormLoading = isLoading || isSubmittingForm;
 
     return (
         <Card className="w-full max-w-md mx-auto shadow-lg">
@@ -188,6 +218,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                                 )}
                                 autoComplete="email"
                                 autoFocus
+                                disabled={isFormLoading}
                                 aria-invalid={errors.email ? 'true' : 'false'}
                                 aria-describedby={errors.email ? 'email-error' : undefined}
                             />
@@ -216,6 +247,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                                     errors.password && "border-red-500 focus:ring-red-500"
                                 )}
                                 autoComplete="current-password"
+                                disabled={isFormLoading}
                                 aria-invalid={errors.password ? 'true' : 'false'}
                                 aria-describedby={errors.password ? 'password-error' : undefined}
                             />
@@ -238,7 +270,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                                 {...register('remember')}
                                 id="remember"
                                 type="checkbox"
-                                className="rounded border-input text-primary focus:ring-primary focus:ring-offset-0 h-4 w-4"
+                                disabled={isFormLoading}
+                                className="rounded border-input text-primary focus:ring-primary focus:ring-offset-0 h-4 w-4 disabled:opacity-50"
                             />
                             <span className="text-sm text-muted-foreground select-none">
                                 Remember me
@@ -248,6 +281,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                         <Link
                             href="/forgot-password"
                             className="text-sm text-primary hover:text-primary/80 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 rounded px-1"
+                            tabIndex={isFormLoading ? -1 : 0}
                         >
                             Forgot password?
                         </Link>
@@ -265,7 +299,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                         {isFormLoading ? (
                             <>
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                <span id="loading-text">Signing in...</span>
+                                <span id="loading-text">
+                                    {isAuthenticated ? 'Redirecting...' : 'Signing in...'}
+                                </span>
                             </>
                         ) : (
                             'Sign In'
@@ -281,6 +317,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                         <Link
                             href="/register"
                             className="text-primary hover:text-primary/80 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 rounded px-1"
+                            tabIndex={isFormLoading ? -1 : 0}
                         >
                             Sign up here
                         </Link>

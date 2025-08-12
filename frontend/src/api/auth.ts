@@ -1,4 +1,4 @@
-import { api } from './client';
+import {api} from './client';
 import type {
     LoginRequest,
     RegisterRequest,
@@ -234,7 +234,7 @@ export class AuthApi {
 
     async updateTwoFactorAuth(enabled: boolean): Promise<{ message: string; backup_codes?: string[] }> {
         try {
-            const response = await api.post('/api/user/two-factor', { enabled });
+            const response = await api.post('/api/user/two-factor', {enabled});
             return response.data;
         } catch (error: any) {
             throw this.handleAuthError(error, 'Failed to update two-factor authentication');

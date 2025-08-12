@@ -7,10 +7,9 @@ import axios, {
 } from 'axios';
 import { toast } from 'sonner';
 import { ApiResponse, ApiError } from '@/types/auth';
-import { clientCredentials } from './clientCredentials';
 
 const API_CONFIG = {
-    baseURL: '/', // Use relative URLs for our own server routes
+    baseURL: '/',
     timeout: process.env.NODE_ENV === 'production' ? 15000 : 30000,
     withCredentials: true,
     maxRedirects: 3,
@@ -23,91 +22,20 @@ interface QueuedRequest {
     reject: (error: any) => void;
 }
 
-interface TokenRefreshState {
-    isRefreshing: boolean;
-    failedQueue: QueuedRequest[];
-}
-
 interface RequestMetadata {
     startTime: Date;
     requestId: string;
     retryCount: number;
 }
 
-class TokenManager {
-    private static readonly ACCESS_TOKEN_KEY = 'access_token';
-    private static readonly REFRESH_TOKEN_KEY = 'refresh_token';
-    private static readonly TOKEN_EXPIRY_BUFFER = 60;
-
-    static getAccessToken(): string | null {
-        if (typeof window === 'undefined') return null;
-        return localStorage.getItem(this.ACCESS_TOKEN_KEY);
-    }
-
-    static getRefreshToken(): string | null {
-        if (typeof window === 'undefined') return null;
-        return localStorage.getItem(this.REFRESH_TOKEN_KEY);
-    }
-
-    static setTokens(accessToken: string, refreshToken?: string): void {
-        if (typeof window === 'undefined') return;
-
-        localStorage.setItem(this.ACCESS_TOKEN_KEY, accessToken);
-        if (refreshToken) {
-            localStorage.setItem(this.REFRESH_TOKEN_KEY, refreshToken);
-        }
-    }
-
-    static clearTokens(): void {
-        if (typeof window === 'undefined') return;
-
-        localStorage.removeItem(this.ACCESS_TOKEN_KEY);
-        localStorage.removeItem(this.REFRESH_TOKEN_KEY);
-    }
-
-    static hasValidToken(): boolean {
-        const token = this.getAccessToken();
-        if (!token) return false;
-
-        try {
-            const parts = token.split('.');
-            if (parts.length !== 3 || !parts[1]) return false;
-
-            const payload = JSON.parse(atob(parts[1]));
-            const currentTime = Date.now() / 1000;
-            return payload.exp > (currentTime + this.TOKEN_EXPIRY_BUFFER);
-        } catch {
-            return false;
-        }
-    }
-
-    static getTokenExpiry(): number | null {
-        const token = this.getAccessToken();
-        if (!token) return null;
-
-        try {
-            const parts = token.split('.');
-            if (parts.length !== 3 || !parts[1]) return null;
-
-            const payload = JSON.parse(atob(parts[1]));
-            return payload.exp * 1000;
-        } catch {
-            return null;
-        }
-    }
-
-    static isTokenExpiringSoon(bufferMinutes = 5): boolean {
-        const expiry = this.getTokenExpiry();
-        if (!expiry) return false;
-
-        const bufferMs = bufferMinutes * 60 * 1000;
-        return (expiry - Date.now()) < bufferMs;
-    }
-}
-
-const refreshState: TokenRefreshState = {
+// Token refresh state
+const refreshState = {
     isRefreshing: false,
-    failedQueue: [],
+    failedQueue: [] as QueuedRequest[],
+};
+
+const generateRequestId = (): string => {
+    return Date.now().toString(36) + Math.random().toString(36).substring(2);
 };
 
 const processQueue = (error: any = null, token: string | null = null) => {
@@ -125,12 +53,21 @@ const processQueue = (error: any = null, token: string | null = null) => {
     refreshState.failedQueue = [];
 };
 
-const generateRequestId = (): string => {
-    return Date.now().toString(36) + Math.random().toString(36).substring(2);
+// Get auth store function with error handling
+const getAuthStore = () => {
+    try {
+        // Use dynamic import to avoid circular dependency
+        const authStoreModule = require('@/stores/authStore');
+        return authStoreModule.useAuthStore.getState();
+    } catch (error) {
+        console.warn('Auth store not available:', error);
+        return null;
+    }
 };
 
 const apiClient: AxiosInstance = axios.create(API_CONFIG);
 
+// Request interceptor
 apiClient.interceptors.request.use(
     async (config: InternalAxiosRequestConfig) => {
         try {
@@ -141,34 +78,44 @@ apiClient.interceptors.request.use(
                 retryCount: config.metadata?.retryCount || 0,
             };
 
-            const userToken = TokenManager.getAccessToken();
+            // Skip auth for auth endpoints to avoid circular dependency
+            const isAuthEndpoint = config.url?.includes('/api/auth/') || false;
 
-            if (userToken && TokenManager.hasValidToken()) {
-                config.headers.Authorization = `Bearer ${userToken}`;
-            } else if (userToken && TokenManager.isTokenExpiringSoon()) {
-                if (!refreshState.isRefreshing && TokenManager.getRefreshToken()) {
-                    try {
-                        await refreshUserToken();
-                        const newToken = TokenManager.getAccessToken();
-                        if (newToken) {
-                            config.headers.Authorization = `Bearer ${newToken}`;
-                        }
-                    } catch (refreshError) {
-                        console.warn('Proactive token refresh failed:', refreshError);
-                        config.headers.Authorization = `Bearer ${userToken}`;
+            if (!isAuthEndpoint) {
+                const authStore = getAuthStore();
+
+                if (authStore) {
+                    let token: string | null = null;
+
+                    // Try to get user token first if authenticated
+                    if (authStore.isAuthenticated && authStore.isUserTokenValid()) {
+                        token = authStore.getUserToken();
                     }
-                } else {
-                    config.headers.Authorization = `Bearer ${userToken}`;
-                }
-            } else {
-                try {
-                    const clientToken = await clientCredentials.getToken();
-                    config.headers.Authorization = `Bearer ${clientToken}`;
-                } catch (clientError) {
-                    console.warn('Client token unavailable:', clientError);
+                    // If user token is expiring and we have a refresh token, try to refresh
+                    else if (authStore.isAuthenticated && authStore.isUserTokenExpiring() && authStore.userToken?.refreshToken) {
+                        try {
+                            await authStore.refreshAuthToken();
+                            token = authStore.getUserToken();
+                        } catch (error) {
+                            console.warn('Token refresh failed in interceptor:', error);
+                        }
+                    }
+                    // For public endpoints, try client token
+                    else if (!authStore.isAuthenticated) {
+                        try {
+                            token = await authStore.ensureValidClientToken();
+                        } catch (error) {
+                            console.warn('Client token unavailable:', error);
+                        }
+                    }
+
+                    if (token) {
+                        config.headers.Authorization = `Bearer ${token}`;
+                    }
                 }
             }
 
+            // Add CSRF token if available
             if (typeof document !== 'undefined') {
                 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
                 if (csrfToken) {
@@ -189,28 +136,7 @@ apiClient.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
-// Use server route for token refresh
-const refreshUserToken = async (): Promise<string> => {
-    const refreshToken = TokenManager.getRefreshToken();
-    if (!refreshToken) {
-        throw new Error('No refresh token available');
-    }
-
-    // Call our server route instead of direct API
-    const refreshClient = axios.create({
-        timeout: 10000,
-    });
-
-    const response = await refreshClient.post('/api/auth/refresh', {
-        refresh_token: refreshToken,
-    });
-
-    const { access_token, refresh_token: newRefreshToken } = response.data;
-    TokenManager.setTokens(access_token, newRefreshToken);
-
-    return access_token;
-};
-
+// Response interceptor
 apiClient.interceptors.response.use(
     (response: AxiosResponse) => {
         if (process.env.NODE_ENV === 'development' && response.config.metadata) {
@@ -247,30 +173,34 @@ apiClient.interceptors.response.use(
             refreshState.isRefreshing = true;
 
             try {
-                const userToken = TokenManager.getAccessToken();
-                const refreshToken = TokenManager.getRefreshToken();
+                const authStore = getAuthStore();
 
-                if (userToken && refreshToken) {
-                    try {
-                        const newToken = await refreshUserToken();
-                        originalRequest.headers.Authorization = `Bearer ${newToken}`;
-                        processQueue(null, newToken);
-                        return apiClient(originalRequest);
-                    } catch (refreshError) {
-                        TokenManager.clearTokens();
-                        processQueue(refreshError, null);
+                if (authStore) {
+                    // Try to refresh user token first
+                    if (authStore.isAuthenticated && authStore.userToken?.refreshToken) {
+                        try {
+                            const newToken = await authStore.refreshAuthToken();
+                            originalRequest.headers.Authorization = `Bearer ${newToken}`;
+                            processQueue(null, newToken);
+                            return apiClient(originalRequest);
+                        } catch (refreshError) {
+                            console.warn('User token refresh failed:', refreshError);
+                            await authStore.logout(true);
+                        }
                     }
-                }
 
-                try {
-                    const clientToken = await clientCredentials.refreshToken();
-                    originalRequest.headers.Authorization = `Bearer ${clientToken}`;
-                    processQueue(null, clientToken);
-                    return apiClient(originalRequest);
-                } catch (clientError) {
-                    processQueue(clientError, null);
-
-                    if (isProtectedRoute(originalRequest.url)) {
+                    // Fall back to client token for public routes
+                    if (!isProtectedRoute(originalRequest.url)) {
+                        try {
+                            const clientToken = await authStore.ensureValidClientToken();
+                            originalRequest.headers.Authorization = `Bearer ${clientToken}`;
+                            processQueue(null, clientToken);
+                            return apiClient(originalRequest);
+                        } catch (clientError) {
+                            processQueue(clientError, null);
+                        }
+                    } else {
+                        processQueue(new Error('Authentication required'), null);
                         redirectToLogin();
                     }
                 }
@@ -279,6 +209,7 @@ apiClient.interceptors.response.use(
             }
         }
 
+        // Retry logic for network errors
         if (isRetryableError(error) &&
             originalRequest.metadata?.retryCount < maxRetries) {
 
@@ -295,6 +226,7 @@ apiClient.interceptors.response.use(
             return apiClient(originalRequest);
         }
 
+        // Handle network errors
         if (!error.response) {
             const networkError = new Error('Network error');
             if (!hasShownNetworkError) {
@@ -322,7 +254,7 @@ apiClient.interceptors.response.use(
     }
 );
 
-// Utility functions (moved outside class for use in interceptors)
+// Utility functions
 let hasShownNetworkError = false;
 
 const isRetryableError = (error: any): boolean => {
@@ -588,34 +520,31 @@ export class ApiClient {
         };
     }
 
+    // Legacy token management methods (for backward compatibility)
     setTokens(accessToken: string, refreshToken?: string): void {
-        TokenManager.setTokens(accessToken, refreshToken);
+        console.warn('api.setTokens() is deprecated. Tokens are managed by auth store.');
     }
 
     clearTokens(): void {
-        TokenManager.clearTokens();
-        clientCredentials.clearToken();
+        const authStore = getAuthStore();
+        if (authStore) {
+            authStore.clearAllTokens();
+        }
         this.cancelAllRequests();
     }
 
     hasValidToken(): boolean {
-        return TokenManager.hasValidToken();
+        const authStore = getAuthStore();
+        if (!authStore) return false;
+
+        return authStore.isUserTokenValid() || authStore.isClientTokenValid();
     }
 
     getAccessToken(): string | null {
-        return TokenManager.getAccessToken();
-    }
+        const authStore = getAuthStore();
+        if (!authStore) return null;
 
-    isTokenExpiringSoon(): boolean {
-        return TokenManager.isTokenExpiringSoon();
-    }
-
-    async getClientToken(): Promise<string> {
-        return clientCredentials.getToken();
-    }
-
-    async refreshClientToken(): Promise<string> {
-        return clientCredentials.refreshToken();
+        return authStore.getUserToken() || authStore.getClientToken();
     }
 
     getRequestMetrics(): {
@@ -634,7 +563,6 @@ export class ApiClient {
         const startTime = Date.now();
 
         try {
-            // Use our server route for health check
             await this.get('/api/health', { requestKey: 'health-check' });
             return {
                 status: 'ok',
@@ -650,7 +578,6 @@ export class ApiClient {
 }
 
 export const api = new ApiClient();
-export { TokenManager, clientCredentials };
 export { apiClient };
 
 declare module 'axios' {

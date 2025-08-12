@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from 'axios';
+import axios, {AxiosInstance} from 'axios';
 
 interface ClientCredentialsResponse {
     access_token: string;
@@ -48,14 +48,14 @@ export class ClientCredentialsApi {
 
     private static getStoredToken(): { token: string | null; expiry: number | null } {
         if (typeof window === 'undefined') {
-            return { token: null, expiry: null };
+            return {token: null, expiry: null};
         }
 
         const token = localStorage.getItem(this.CLIENT_TOKEN_KEY);
         const expiryStr = localStorage.getItem(this.CLIENT_TOKEN_EXPIRY_KEY);
         const expiry = expiryStr ? parseInt(expiryStr, 10) : null;
 
-        return { token, expiry };
+        return {token, expiry};
     }
 
     private static setStoredToken(token: string, expiry: number): void {
@@ -254,4 +254,4 @@ export const clientCredentials = {
     testConnection: () => ClientCredentialsApi.testConnection(),
 } as const;
 
-export type { ClientCredentialsResponse };
+export type {ClientCredentialsResponse};
