@@ -323,32 +323,6 @@ export const useAuthStore = create<AuthState & AuthActions & {
                         throw error;
                     }
                 },
-                ensureValidToken: async (): Promise<boolean> => {
-                    const state = get();
-
-                    if (!state.isUserTokenValid()) {
-                        if (state.userToken?.refreshToken) {
-                            try {
-                                await get().refreshAuthToken();
-                                return true;
-                            } catch {
-                                await get().logout(true);
-                                return false;
-                            }
-                        }
-                        return false;
-                    }
-
-                    if (state.isUserTokenExpiring() && state.userToken?.refreshToken) {
-                        try {
-                            await get().refreshAuthToken();
-                        } catch (error) {
-                            console.warn('Proactive token refresh failed:', error);
-                        }
-                    }
-
-                    return true;
-                },
 
                 forgotPassword: async (data: ForgotPasswordRequest) => {
                     try {

@@ -1,10 +1,10 @@
 'use client'
 
 import * as React from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/stores/authStore';
-import { LoadingPage } from '@/components/ui';
-import { RouteGuardProps } from '@/types/auth';
+import {useRouter} from 'next/navigation';
+import {useAuth} from '@/stores/authStore';
+import {LoadingPage} from '@/components/ui';
+import {RouteGuardProps} from '@/types/auth';
 
 export const RouteGuard: React.FC<RouteGuardProps> = ({
                                                           children,
@@ -25,34 +25,29 @@ export const RouteGuard: React.FC<RouteGuardProps> = ({
         initialize
     } = useAuth();
 
-    // Initialize auth on mount
     React.useEffect(() => {
         if (!isInitialized) {
             initialize();
         }
     }, [isInitialized, initialize]);
 
-    // Show loading while initializing
     if (!isInitialized || isLoading) {
-        return fallback || <LoadingPage message="Loading..." />;
+        return fallback || <LoadingPage message="Loading..."/>;
     }
 
-    // Guest-only routes (login, register)
     if (requireGuest && isAuthenticated) {
         const redirect = redirectTo || '/dashboard';
         router.replace(redirect);
-        return fallback || <LoadingPage message="Redirecting..." />;
+        return fallback || <LoadingPage message="Redirecting..."/>;
     }
 
-    // Protected routes
     if (requireAuth && !isAuthenticated) {
         const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
         const redirect = redirectTo || `/login?redirect=${encodeURIComponent(currentPath)}`;
         router.replace(redirect);
-        return fallback || <LoadingPage message="Please sign in..." />;
+        return fallback || <LoadingPage message="Please sign in..."/>;
     }
 
-    // Role-based protection
     if (requiredRoles.length > 0 && isAuthenticated) {
         const hasRequiredRole = requiredRoles.some(role => hasRole(role));
         if (!hasRequiredRole) {
@@ -71,7 +66,6 @@ export const RouteGuard: React.FC<RouteGuardProps> = ({
         }
     }
 
-    // Permission-based protection
     if (requiredPermissions.length > 0 && isAuthenticated) {
         const hasRequiredPermission = requiredPermissions.some(permission =>
             hasPermission(permission)
@@ -95,7 +89,6 @@ export const RouteGuard: React.FC<RouteGuardProps> = ({
     return <>{children}</>;
 };
 
-// Higher-order component for easier usage
 export function withAuth<P extends object>(
     Component: React.ComponentType<P>,
     options: Omit<RouteGuardProps, 'children'> = {}
@@ -109,7 +102,6 @@ export function withAuth<P extends object>(
     };
 }
 
-// Hook for auth status in components
 export function useAuthGuard() {
     const {
         isAuthenticated,

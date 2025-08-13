@@ -27,7 +27,6 @@ export default function LoginPage({ searchParams }: LoginPageProps) {
             showBackButton
         >
             <div className="space-y-6">
-                {/* Display messages */}
                 {searchParams.message && (
                     <div className="alert alert-default">
                         <p className="text-sm">{searchParams.message}</p>

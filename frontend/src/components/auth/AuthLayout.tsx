@@ -5,7 +5,6 @@ import { AuthBranding } from './AuthBranding';
 import { AuthFormContainer } from './AuthFormContainer';
 import type { AuthLayoutProps } from '@/types/auth';
 
-// Loading component for streaming
 function AuthBrandingFallback() {
     return (
         <div className="hidden lg:flex flex-col justify-center space-y-8">

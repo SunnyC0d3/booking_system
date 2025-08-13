@@ -27,7 +27,8 @@ use App\Http\Controllers\V1\Public\VendorDropshippingController;
 
 // Auth
 
-Route::middleware(['throttle:3,1', 'client'])
+//Route::middleware(['throttle:3,1', 'client'])
+Route::middleware(['client'])
     ->controller(AuthController::class)
     ->group(function () {
         Route::post('/register', 'register')->middleware('rate_limit:auth.register')->name('auth.register');

@@ -1,17 +1,17 @@
 'use client';
 
 import * as React from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import {useForm} from 'react-hook-form';
+import {zodResolver} from '@hookform/resolvers/zod';
+import {z} from 'zod';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
-import { Button, Input, Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui';
-import { useAuth } from '@/stores/authStore';
-import { LoginFormData } from '@/types/auth';
-import { cn } from '@/lib/cn';
+import {useRouter} from 'next/navigation';
+import {Mail, Lock, Eye, EyeOff, Loader2} from 'lucide-react';
+import {toast} from 'sonner';
+import {Button, Input, Card, CardHeader, CardTitle, CardContent, CardFooter} from '@/components/ui';
+import {useAuth} from '@/stores/authStore';
+import {LoginFormData} from '@/types/auth';
+import {cn} from '@/lib/cn';
 
 const loginSchema = z.object({
     email: z
@@ -31,10 +31,7 @@ interface LoginFormProps {
     onSuccess?: () => void;
 }
 
-const PasswordToggle = React.memo(({
-                                       showPassword,
-                                       onToggle
-                                   }: {
+const PasswordToggle = React.memo(({showPassword, onToggle}: {
     showPassword: boolean;
     onToggle: () => void;
 }) => (
@@ -46,16 +43,16 @@ const PasswordToggle = React.memo(({
         aria-label={showPassword ? 'Hide password' : 'Show password'}
     >
         {showPassword ? (
-            <EyeOff className="h-4 w-4" />
+            <EyeOff className="h-4 w-4"/>
         ) : (
-            <Eye className="h-4 w-4" />
+            <Eye className="h-4 w-4"/>
         )}
     </button>
 ));
 
 PasswordToggle.displayName = 'PasswordToggle';
 
-const ErrorAlert = React.memo(({ message }: { message: string }) => (
+const ErrorAlert = React.memo(({message}: { message: string }) => (
     <div
         className="rounded-lg border border-red-200 bg-red-50 p-3 text-red-800 dark:border-red-800 dark:bg-red-950 dark:text-red-200"
         role="alert"
@@ -67,24 +64,19 @@ const ErrorAlert = React.memo(({ message }: { message: string }) => (
 
 ErrorAlert.displayName = 'ErrorAlert';
 
-export const LoginForm: React.FC<LoginFormProps> = ({
-                                                        redirectTo = '/dashboard',
-                                                        showSignUpLink = true,
-                                                        onSuccess,
-                                                    }) => {
+export const LoginForm: React.FC<LoginFormProps> = ({redirectTo = '/dashboard', showSignUpLink = true, onSuccess,}) => {
     const router = useRouter();
-    const { login, isLoading, error, clearError, isAuthenticated } = useAuth();
+    const {login, isLoading, error, clearError, isAuthenticated} = useAuth();
     const [showPassword, setShowPassword] = React.useState(false);
     const [isSubmittingForm, setIsSubmittingForm] = React.useState(false);
 
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: {errors},
         watch,
         setError,
         clearErrors,
-        reset,
     } = useForm<LoginFormData>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -95,10 +87,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         mode: 'onTouched',
     });
 
-    // Handle successful authentication redirect
     React.useEffect(() => {
         if (isAuthenticated && !isLoading && !isSubmittingForm) {
-            console.log('User authenticated, redirecting...');
             if (onSuccess) {
                 onSuccess();
             } else {
@@ -126,14 +116,12 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     const onSubmit = React.useCallback(
         async (data: LoginFormData) => {
             if (isSubmittingForm || isLoading) {
-                return; // Prevent double submission
+                return;
             }
 
             try {
                 setIsSubmittingForm(true);
                 clearError();
-
-                console.log('Submitting login form with:', { email: data.email, remember: data.remember });
 
                 await login({
                     email: data.email,
@@ -141,17 +129,10 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                     remember: data.remember,
                 });
 
-                console.log('Login successful');
                 toast.success('Welcome back!');
-
-                // Don't redirect here, let the useEffect handle it
-                // The form state will be handled by the loading states
-
             } catch (error: any) {
-                console.error('Login error:', error);
                 setIsSubmittingForm(false);
 
-                // Handle validation errors
                 if (error.errors) {
                     Object.entries(error.errors).forEach(([field, messages]) => {
                         if (Array.isArray(messages) && messages.length > 0) {
@@ -173,7 +154,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         setShowPassword(prev => !prev);
     }, []);
 
-    // Reset form submission state when loading completes
     React.useEffect(() => {
         if (!isLoading && isSubmittingForm) {
             setIsSubmittingForm(false);
@@ -185,7 +165,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     return (
         <Card className="w-full max-w-md mx-auto shadow-lg">
             <CardHeader className="text-center space-y-2">
-                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                <CardTitle
+                    className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
                     Welcome Back
                 </CardTitle>
                 <p className="text-muted-foreground text-sm">
@@ -195,18 +176,16 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
             <CardContent>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-                    {/* Global Error Display */}
                     {error && !errors.email && !errors.password && (
-                        <ErrorAlert message={error} />
+                        <ErrorAlert message={error}/>
                     )}
 
-                    {/* Email Field */}
                     <div className="space-y-2">
                         <label htmlFor="email" className="text-sm font-medium text-foreground">
                             Email Address
                         </label>
                         <div className="relative">
-                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"/>
                             <Input
                                 {...register('email')}
                                 id="email"
@@ -230,13 +209,12 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                         )}
                     </div>
 
-                    {/* Password Field */}
                     <div className="space-y-2">
                         <label htmlFor="password" className="text-sm font-medium text-foreground">
                             Password
                         </label>
                         <div className="relative">
-                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"/>
                             <Input
                                 {...register('password')}
                                 id="password"
@@ -263,7 +241,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                         )}
                     </div>
 
-                    {/* Remember Me & Forgot Password */}
                     <div className="flex items-center justify-between">
                         <label className="flex items-center space-x-2 cursor-pointer">
                             <input
@@ -287,7 +264,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                         </Link>
                     </div>
 
-                    {/* Submit Button */}
                     <Button
                         type="submit"
                         variant="default"
@@ -298,7 +274,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                     >
                         {isFormLoading ? (
                             <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
                                 <span id="loading-text">
                                     {isAuthenticated ? 'Redirecting...' : 'Signing in...'}
                                 </span>
