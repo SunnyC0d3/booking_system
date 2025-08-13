@@ -1,0 +1,115 @@
+class ClientTokenManager {
+    private static instance: ClientTokenManager;
+    private token: string | null = null;
+    private expiresAt: number | null = null;
+    private isRefreshing = false;
+    private refreshPromise: Promise<string> | null = null;
+    private readonly EXPIRY_BUFFER = 5 * 60 * 1000;
+    private readonly MAX_RETRIES = 3;
+
+    private constructor() {}
+
+    static getInstance(): ClientTokenManager {
+        if (!ClientTokenManager.instance) {
+            ClientTokenManager.instance = new ClientTokenManager();
+        }
+        return ClientTokenManager.instance;
+    }
+
+    async getValidToken(): Promise<string> {
+        if (this.isRefreshing && this.refreshPromise) {
+            return this.refreshPromise;
+        }
+
+        if (this.token && this.expiresAt && Date.now() < this.expiresAt) {
+            return this.token;
+        }
+
+        return this.refreshToken();
+    }
+
+    private async refreshToken(retryCount = 0): Promise<string> {
+        if (this.isRefreshing && this.refreshPromise) {
+            return this.refreshPromise;
+        }
+
+        this.isRefreshing = true;
+        this.refreshPromise = this.performTokenRequest(retryCount);
+
+        try {
+            const token = await this.refreshPromise;
+            return token;
+        } finally {
+            this.isRefreshing = false;
+            this.refreshPromise = null;
+        }
+    }
+
+    private async performTokenRequest(retryCount: number): Promise<string> {
+        try {
+            const response = await fetch('/api/auth/client-token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                cache: 'no-cache'
+            });
+
+            if (!response.ok) {
+                throw new Error(`Client token request failed: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (!data.access_token || !data.expires_in) {
+                throw new Error('Invalid client token response format');
+            }
+
+            this.token = data.access_token;
+            this.expiresAt = Date.now() + (data.expires_in * 1000) - this.EXPIRY_BUFFER;
+
+            console.log('Client token obtained, expires in:', Math.round((this.expiresAt - Date.now()) / 1000 / 60), 'minutes');
+
+            return this.token;
+
+        } catch (error: any) {
+            console.error('Client token request failed:', error);
+
+            if (retryCount < this.MAX_RETRIES) {
+                const delay = Math.min(1000 * Math.pow(2, retryCount), 5000);
+                await new Promise(resolve => setTimeout(resolve, delay));
+                return this.performTokenRequest(retryCount + 1);
+            }
+
+            throw error;
+        }
+    }
+
+    isTokenValid(): boolean {
+        return this.token !== null &&
+            this.expiresAt !== null &&
+            Date.now() < this.expiresAt;
+    }
+
+    clearToken(): void {
+        this.token = null;
+        this.expiresAt = null;
+    }
+
+    getTokenInfo(): {
+        hasToken: boolean;
+        expiresAt: Date | null;
+        expiresIn: number | null;
+        isExpiringSoon: boolean;
+    } {
+        return {
+            hasToken: this.token !== null,
+            expiresAt: this.expiresAt ? new Date(this.expiresAt) : null,
+            expiresIn: this.expiresAt ? Math.max(0, this.expiresAt - Date.now()) : null,
+            isExpiringSoon: this.expiresAt ? (this.expiresAt - Date.now()) < (10 * 60 * 1000) : false,
+        };
+    }
+}
+
+export const clientTokenManager = ClientTokenManager.getInstance();

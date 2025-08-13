@@ -35,7 +35,10 @@ const API_ENDPOINTS = {
 export class AuthApi {
     async login(credentials: LoginRequest): Promise<AuthResponse> {
         try {
-            const response = await api.post<AuthResponse>(API_ENDPOINTS.LOGIN, credentials);
+            const response = await api.post<AuthResponse>(API_ENDPOINTS.LOGIN, credentials, {
+                requestKey: 'auth-login',
+                timeout: 15000,
+            });
 
             if (!response.data?.access_token || !response.data?.user) {
                 throw new Error('Invalid login response format');
@@ -43,6 +46,10 @@ export class AuthApi {
 
             return response.data;
         } catch (error: any) {
+            if (error.code === 'CANCELLED') {
+                throw new Error('Login request was cancelled');
+            }
+
             throw this.handleAuthError(error, 'Login failed');
         }
     }

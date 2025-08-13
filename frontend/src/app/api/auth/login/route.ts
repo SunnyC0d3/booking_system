@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import axios from 'axios';
 
 export async function POST(request: NextRequest) {
     try {
@@ -8,43 +7,66 @@ export async function POST(request: NextRequest) {
 
         console.log('Login request:', { email: body.email, remember: body.remember });
 
-        const response = await axios.post(
-            `${baseUrl}/api/login`,
-            body,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
+        const authHeader = request.headers.get('authorization');
+
+        if (!authHeader) {
+            return NextResponse.json(
+                {
+                    message: 'Client authentication required',
+                    errors: { general: ['Authentication service unavailable'] }
                 },
-                timeout: 15000,
-            }
-        );
-
-        console.log('Login response status:', response.status);
-        console.log('Login response data:', {
-            hasAccessToken: !!response.data?.access_token,
-            hasUser: !!response.data?.user,
-            userId: response.data?.user?.id,
-            hasDataWrapper: !!response.data?.data,
-            dataStructure: Object.keys(response.data || {})
-        });
-
-        // Handle different response structures from backend
-        let responseData = response.data;
-
-        // If the backend wraps response in a 'data' field, unwrap it
-        if (response.data?.data && !response.data?.access_token) {
-            responseData = response.data.data;
-            console.log('Unwrapped nested data structure');
+                { status: 401 }
+            );
         }
 
-        // Ensure response has required fields
+        const response = await fetch(`${baseUrl}/api/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': authHeader,
+            },
+            body: JSON.stringify(body),
+            signal: AbortSignal.timeout(15000),
+        });
+
+        console.log('Login response status:', response.status);
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+
+            console.error('Login failed:', {
+                status: response.status,
+                data: errorData,
+            });
+
+            return NextResponse.json(
+                {
+                    message: errorData.message || 'Login failed',
+                    errors: errorData.errors || {
+                        general: [errorData.message || 'Authentication failed']
+                    }
+                },
+                { status: response.status }
+            );
+        }
+
+        const responseData = await response.json();
+
+        console.log('Login response data:', {
+            hasAccessToken: !!responseData?.access_token,
+            hasUser: !!responseData?.user,
+            userId: responseData?.user?.id,
+            dataStructure: Object.keys(responseData || {})
+        });
+
         if (!responseData?.access_token || !responseData?.user) {
             console.error('Invalid login response format:', {
                 hasAccessToken: !!responseData?.access_token,
                 hasUser: !!responseData?.user,
                 responseStructure: Object.keys(responseData || {})
             });
+
             return NextResponse.json(
                 {
                     message: 'Invalid response from authentication server',
@@ -56,7 +78,6 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Return the response with proper structure
         return NextResponse.json({
             access_token: responseData.access_token,
             refresh_token: responseData.refresh_token,
@@ -69,22 +90,27 @@ export async function POST(request: NextRequest) {
     } catch (error: any) {
         console.error('Login error:', {
             message: error.message,
-            status: error.response?.status,
-            data: error.response?.data,
+            name: error.name,
         });
 
-        const errorMessage = error.response?.data?.message || 'Login failed';
-        const status = error.response?.status || 500;
-        const errors = error.response?.data?.errors;
+        if (error.name === 'TimeoutError' || error.name === 'AbortError') {
+            return NextResponse.json(
+                {
+                    message: 'Request timeout',
+                    errors: { general: ['The request took too long to complete'] }
+                },
+                { status: 408 }
+            );
+        }
 
         return NextResponse.json(
             {
-                message: errorMessage,
-                errors: errors || {
-                    general: [errorMessage]
+                message: error.message || 'Login failed',
+                errors: {
+                    general: [error.message || 'An unexpected error occurred']
                 }
             },
-            { status }
+            { status: 500 }
         );
     }
 }

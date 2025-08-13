@@ -5,15 +5,14 @@ import axios, {
     InternalAxiosRequestConfig,
     CancelTokenSource,
 } from 'axios';
-import { toast } from 'sonner';
-import { ApiResponse, ApiError } from '@/types/auth';
+import {toast} from 'sonner';
+import {ApiResponse, ApiError} from '@/types/auth';
 
 const API_CONFIG = {
     baseURL: '/',
     timeout: process.env.NODE_ENV === 'production' ? 15000 : 30000,
     withCredentials: true,
     maxRedirects: 3,
-    validateStatus: (status: number) => status < 500,
 } as const;
 
 interface QueuedRequest {
@@ -22,13 +21,6 @@ interface QueuedRequest {
     reject: (error: any) => void;
 }
 
-interface RequestMetadata {
-    startTime: Date;
-    requestId: string;
-    retryCount: number;
-}
-
-// Token refresh state
 const refreshState = {
     isRefreshing: false,
     failedQueue: [] as QueuedRequest[],
@@ -39,7 +31,7 @@ const generateRequestId = (): string => {
 };
 
 const processQueue = (error: any = null, token: string | null = null) => {
-    refreshState.failedQueue.forEach(({ config, resolve, reject }) => {
+    refreshState.failedQueue.forEach(({config, resolve, reject}) => {
         if (error) {
             reject(error);
         } else if (token) {
@@ -53,10 +45,8 @@ const processQueue = (error: any = null, token: string | null = null) => {
     refreshState.failedQueue = [];
 };
 
-// Get auth store function with error handling
 const getAuthStore = () => {
     try {
-        // Use dynamic import to avoid circular dependency
         const authStoreModule = require('@/stores/authStore');
         return authStoreModule.useAuthStore.getState();
     } catch (error) {
@@ -67,65 +57,62 @@ const getAuthStore = () => {
 
 const apiClient: AxiosInstance = axios.create(API_CONFIG);
 
-// Request interceptor
 apiClient.interceptors.request.use(
     async (config: InternalAxiosRequestConfig) => {
         try {
             const requestId = generateRequestId();
+
             config.metadata = {
                 startTime: new Date(),
                 requestId,
                 retryCount: config.metadata?.retryCount || 0,
             };
 
-            // Skip auth for auth endpoints to avoid circular dependency
             const isAuthEndpoint = config.url?.includes('/api/auth/') || false;
 
             if (!isAuthEndpoint) {
                 const authStore = getAuthStore();
 
-                if (authStore) {
-                    let token: string | null = null;
-
-                    // Try to get user token first if authenticated
-                    if (authStore.isAuthenticated && authStore.isUserTokenValid()) {
-                        token = authStore.getUserToken();
-                    }
-                    // If user token is expiring and we have a refresh token, try to refresh
-                    else if (authStore.isAuthenticated && authStore.isUserTokenExpiring() && authStore.userToken?.refreshToken) {
+                if (authStore?.isAuthenticated) {
+                    if (authStore.isUserTokenValid()) {
+                        const token = authStore.getUserToken();
+                        if (token) {
+                            config.headers.Authorization = `Bearer ${token}`;
+                        }
+                    } else if (authStore.isUserTokenExpiring() && authStore.userToken?.refreshToken) {
                         try {
                             await authStore.refreshAuthToken();
-                            token = authStore.getUserToken();
+                            const token = authStore.getUserToken();
+                            if (token) {
+                                config.headers.Authorization = `Bearer ${token}`;
+                            }
                         } catch (error) {
                             console.warn('Token refresh failed in interceptor:', error);
                         }
                     }
-                    // For public endpoints, try client token
-                    else if (!authStore.isAuthenticated) {
-                        try {
-                            token = await authStore.ensureValidClientToken();
-                        } catch (error) {
-                            console.warn('Client token unavailable:', error);
-                        }
-                    }
-
-                    if (token) {
-                        config.headers.Authorization = `Bearer ${token}`;
-                    }
                 }
             }
 
-            // Add CSRF token if available
-            if (typeof document !== 'undefined') {
-                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-                if (csrfToken) {
-                    config.headers['X-CSRF-TOKEN'] = csrfToken;
+            if (!config.headers.Authorization) {
+                try {
+                    const {clientTokenManager} = await import('@/lib/clientTokenManager');
+                    const clientToken = await clientTokenManager.getValidToken();
+                    config.headers.Authorization = `Bearer ${clientToken}`;
+                } catch (error) {
+                    console.error('Client token unavailable:', error);
                 }
             }
 
             config.headers['X-Request-ID'] = requestId;
             config.headers['Content-Type'] = config.headers['Content-Type'] || 'application/json';
             config.headers['Accept'] = config.headers['Accept'] || 'application/json';
+
+            if (typeof document !== 'undefined') {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                if (csrfToken) {
+                    config.headers['X-CSRF-TOKEN'] = csrfToken;
+                }
+            }
 
             return config;
         } catch (error) {
@@ -136,11 +123,10 @@ apiClient.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
-// Response interceptor
 apiClient.interceptors.response.use(
     (response: AxiosResponse) => {
         if (process.env.NODE_ENV === 'development' && response.config.metadata) {
-            const { startTime, requestId } = response.config.metadata;
+            const {startTime, requestId} = response.config.metadata;
             const duration = new Date().getTime() - startTime.getTime();
             console.log(
                 `[${requestId}] ${response.config.method?.toUpperCase()} ${response.config.url}: ${duration}ms (${response.status})`
@@ -176,7 +162,6 @@ apiClient.interceptors.response.use(
                 const authStore = getAuthStore();
 
                 if (authStore) {
-                    // Try to refresh user token first
                     if (authStore.isAuthenticated && authStore.userToken?.refreshToken) {
                         try {
                             const newToken = await authStore.refreshAuthToken();
@@ -189,10 +174,10 @@ apiClient.interceptors.response.use(
                         }
                     }
 
-                    // Fall back to client token for public routes
                     if (!isProtectedRoute(originalRequest.url)) {
                         try {
-                            const clientToken = await authStore.ensureValidClientToken();
+                            const {clientTokenManager} = await import('@/lib/clientTokenManager');
+                            const clientToken = await clientTokenManager.getValidToken();
                             originalRequest.headers.Authorization = `Bearer ${clientToken}`;
                             processQueue(null, clientToken);
                             return apiClient(originalRequest);
@@ -209,7 +194,6 @@ apiClient.interceptors.response.use(
             }
         }
 
-        // Retry logic for network errors
         if (isRetryableError(error) &&
             originalRequest.metadata?.retryCount < maxRetries) {
 
@@ -226,7 +210,6 @@ apiClient.interceptors.response.use(
             return apiClient(originalRequest);
         }
 
-        // Handle network errors
         if (!error.response) {
             const networkError = new Error('Network error');
             if (!hasShownNetworkError) {
@@ -254,7 +237,6 @@ apiClient.interceptors.response.use(
     }
 );
 
-// Utility functions
 let hasShownNetworkError = false;
 
 const isRetryableError = (error: any): boolean => {
@@ -348,7 +330,7 @@ export class ApiClient {
         url: string,
         config?: AxiosRequestConfig & { requestKey?: string }
     ): Promise<ApiResponse<T>> {
-        return this.request<T>({ ...config, method: 'GET', url });
+        return this.request<T>({...config, method: 'GET', url});
     }
 
     async post<T = any>(
@@ -356,7 +338,7 @@ export class ApiClient {
         data?: any,
         config?: AxiosRequestConfig & { requestKey?: string }
     ): Promise<ApiResponse<T>> {
-        return this.request<T>({ ...config, method: 'POST', url, data });
+        return this.request<T>({...config, method: 'POST', url, data});
     }
 
     async put<T = any>(
@@ -364,7 +346,7 @@ export class ApiClient {
         data?: any,
         config?: AxiosRequestConfig & { requestKey?: string }
     ): Promise<ApiResponse<T>> {
-        return this.request<T>({ ...config, method: 'PUT', url, data });
+        return this.request<T>({...config, method: 'PUT', url, data});
     }
 
     async patch<T = any>(
@@ -372,14 +354,14 @@ export class ApiClient {
         data?: any,
         config?: AxiosRequestConfig & { requestKey?: string }
     ): Promise<ApiResponse<T>> {
-        return this.request<T>({ ...config, method: 'PATCH', url, data });
+        return this.request<T>({...config, method: 'PATCH', url, data});
     }
 
     async delete<T = any>(
         url: string,
         config?: AxiosRequestConfig & { requestKey?: string }
     ): Promise<ApiResponse<T>> {
-        return this.request<T>({ ...config, method: 'DELETE', url });
+        return this.request<T>({...config, method: 'DELETE', url});
     }
 
     async upload<T = any>(
@@ -429,51 +411,6 @@ export class ApiClient {
         });
     }
 
-    async downloadFile(
-        url: string,
-        filename?: string,
-        onProgress?: (progress: number) => void,
-        config?: AxiosRequestConfig
-    ): Promise<Blob> {
-        try {
-            const response = await this.client.request({
-                ...config,
-                method: 'GET',
-                url,
-                responseType: 'blob',
-                timeout: 300000,
-                onDownloadProgress: (progressEvent) => {
-                    if (onProgress && progressEvent.total) {
-                        const progress = Math.round(
-                            (progressEvent.loaded * 100) / progressEvent.total
-                        );
-                        onProgress(progress);
-                    }
-                },
-            });
-
-            if (filename && typeof window !== 'undefined') {
-                const blob = new Blob([response.data]);
-                const downloadUrl = window.URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = downloadUrl;
-                link.download = filename;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                window.URL.revokeObjectURL(downloadUrl);
-            }
-
-            return response.data;
-        } catch (error) {
-            throw this.handleError(error);
-        }
-    }
-
-    cancelRequest(requestKey: string): void {
-        this.cancelPreviousRequest(requestKey);
-    }
-
     cancelAllRequests(): void {
         this.cancelTokens.forEach((source) => {
             source.cancel('Request cancelled by user');
@@ -519,66 +456,10 @@ export class ApiClient {
             code: 'UNKNOWN_ERROR',
         };
     }
-
-    // Legacy token management methods (for backward compatibility)
-    setTokens(accessToken: string, refreshToken?: string): void {
-        console.warn('api.setTokens() is deprecated. Tokens are managed by auth store.');
-    }
-
-    clearTokens(): void {
-        const authStore = getAuthStore();
-        if (authStore) {
-            authStore.clearAllTokens();
-        }
-        this.cancelAllRequests();
-    }
-
-    hasValidToken(): boolean {
-        const authStore = getAuthStore();
-        if (!authStore) return false;
-
-        return authStore.isUserTokenValid() || authStore.isClientTokenValid();
-    }
-
-    getAccessToken(): string | null {
-        const authStore = getAuthStore();
-        if (!authStore) return null;
-
-        return authStore.getUserToken() || authStore.getClientToken();
-    }
-
-    getRequestMetrics(): {
-        activeRequests: number;
-        queuedRequests: number;
-        isRefreshing: boolean;
-    } {
-        return {
-            activeRequests: this.cancelTokens.size,
-            queuedRequests: refreshState.failedQueue.length,
-            isRefreshing: refreshState.isRefreshing,
-        };
-    }
-
-    async healthCheck(): Promise<{ status: 'ok' | 'error'; latency: number }> {
-        const startTime = Date.now();
-
-        try {
-            await this.get('/api/health', { requestKey: 'health-check' });
-            return {
-                status: 'ok',
-                latency: Date.now() - startTime,
-            };
-        } catch {
-            return {
-                status: 'error',
-                latency: Date.now() - startTime,
-            };
-        }
-    }
 }
 
 export const api = new ApiClient();
-export { apiClient };
+export {apiClient};
 
 declare module 'axios' {
     interface InternalAxiosRequestConfig {
