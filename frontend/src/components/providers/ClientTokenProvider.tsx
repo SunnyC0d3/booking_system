@@ -26,14 +26,11 @@ export const ClientTokenProvider: React.FC<ClientTokenProviderProps> = ({ childr
     const initializeClientToken = async () => {
         try {
             setIsError(false);
-            console.log('Initializing client token...');
 
             await clientTokenManager.getValidToken();
 
             setIsInitialized(true);
-            console.log('Client token initialized successfully');
         } catch (error) {
-            console.error('Failed to initialize client token:', error);
             setIsError(true);
             setIsInitialized(false);
         }
@@ -50,7 +47,8 @@ export const ClientTokenProvider: React.FC<ClientTokenProviderProps> = ({ childr
             try {
                 await clientTokenManager.getValidToken();
             } catch (error) {
-                console.error('Client token refresh failed:', error);
+                setIsError(true);
+                setIsInitialized(false);
             }
         }, 30 * 60 * 1000);
 

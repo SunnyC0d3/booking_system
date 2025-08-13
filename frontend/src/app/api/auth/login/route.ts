@@ -31,11 +31,6 @@ export async function POST(request: NextRequest) {
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
 
-            console.error('Login failed:', {
-                status: response.status,
-                data: errorData,
-            });
-
             return NextResponse.json(
                 {
                     message: errorData.message || 'Login failed',
@@ -47,15 +42,14 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const responseData = await response.json();
+        let responseData = await response.json();
+        let authData = responseData;
 
-        if (!responseData?.access_token || !responseData?.user) {
-            console.error('Invalid login response format:', {
-                hasAccessToken: !!responseData?.access_token,
-                hasUser: !!responseData?.user,
-                responseStructure: Object.keys(responseData || {})
-            });
+        if (responseData?.data && !responseData?.access_token) {
+            authData = responseData.data;
+        }
 
+        if (!authData?.access_token || !authData?.user) {
             return NextResponse.json(
                 {
                     message: 'Invalid response from authentication server',
@@ -68,20 +62,15 @@ export async function POST(request: NextRequest) {
         }
 
         return NextResponse.json({
-            access_token: responseData.access_token,
-            refresh_token: responseData.refresh_token,
-            user: responseData.user,
-            expires_in: responseData.expires_in,
-            expires_at: responseData.expires_at,
-            token_type: responseData.token_type || 'Bearer',
+            access_token: authData.access_token,
+            refresh_token: authData.refresh_token,
+            user: authData.user,
+            expires_in: authData.expires_in,
+            expires_at: authData.expires_at,
+            token_type: authData.token_type || 'Bearer',
         });
 
     } catch (error: any) {
-        console.error('Login error:', {
-            message: error.message,
-            name: error.name,
-        });
-
         if (error.name === 'TimeoutError' || error.name === 'AbortError') {
             return NextResponse.json(
                 {

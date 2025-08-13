@@ -21,7 +21,6 @@ export async function POST(request: NextRequest) {
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
         if (!clientId || !clientSecret) {
-            console.error('Client credentials not configured');
             return NextResponse.json(
                 {
                     error: 'Client credentials not configured',
@@ -40,8 +39,6 @@ export async function POST(request: NextRequest) {
             scope: '',
         };
 
-        console.log('Requesting client credentials token...');
-
         const response = await fetch(`${baseUrl}/oauth/token`, {
             method: 'POST',
             headers: {
@@ -56,12 +53,6 @@ export async function POST(request: NextRequest) {
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
-
-            console.error('Client credentials request failed:', {
-                status: response.status,
-                statusText: response.statusText,
-                error: errorData,
-            });
 
             const errorMessage = errorData.error_description ||
                 errorData.message ||
@@ -82,12 +73,6 @@ export async function POST(request: NextRequest) {
 
         // Validate response structure
         if (!tokenData.access_token || !tokenData.expires_in) {
-            console.error('Invalid client credentials response:', {
-                hasAccessToken: !!tokenData.access_token,
-                hasExpiresIn: !!tokenData.expires_in,
-                responseKeys: Object.keys(tokenData)
-            });
-
             return NextResponse.json(
                 {
                     error: 'Invalid token response from OAuth server',
@@ -96,12 +81,6 @@ export async function POST(request: NextRequest) {
                 { status: 502 }
             );
         }
-
-        console.log('Client credentials token obtained successfully', {
-            tokenType: tokenData.token_type,
-            expiresIn: tokenData.expires_in,
-            hasScope: !!tokenData.scope
-        });
 
         return NextResponse.json({
             access_token: tokenData.access_token,
@@ -112,12 +91,6 @@ export async function POST(request: NextRequest) {
         });
 
     } catch (error: any) {
-        console.error('Client credentials error:', {
-            message: error.message,
-            name: error.name,
-            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
-        });
-
         if (error.name === 'TimeoutError' || error.name === 'AbortError') {
             return NextResponse.json(
                 {

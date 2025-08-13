@@ -69,13 +69,9 @@ class ClientTokenManager {
             this.token = data.access_token;
             this.expiresAt = Date.now() + (data.expires_in * 1000) - this.EXPIRY_BUFFER;
 
-            console.log('Client token obtained, expires in:', Math.round((this.expiresAt - Date.now()) / 1000 / 60), 'minutes');
-
             return this.token;
 
         } catch (error: any) {
-            console.error('Client token request failed:', error);
-
             if (retryCount < this.MAX_RETRIES) {
                 const delay = Math.min(1000 * Math.pow(2, retryCount), 5000);
                 await new Promise(resolve => setTimeout(resolve, delay));

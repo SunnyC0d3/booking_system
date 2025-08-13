@@ -40,11 +40,11 @@ export class AuthApi {
                 timeout: 15000,
             });
 
-            if (!response.data?.access_token || !response.data?.user) {
+            if (!response.access_token || !response.user) {
                 throw new Error('Invalid login response format');
             }
 
-            return response.data;
+            return response;
         } catch (error: any) {
             if (error.code === 'CANCELLED') {
                 throw new Error('Login request was cancelled');
@@ -58,11 +58,11 @@ export class AuthApi {
         try {
             const response = await api.post<AuthResponse>(API_ENDPOINTS.REGISTER, data);
 
-            if (!response.data?.access_token || !response.data?.user) {
+            if (!response.access_token || !response.user) {
                 throw new Error('Invalid registration response format');
             }
 
-            return response.data;
+            return response;
         } catch (error: any) {
             throw this.handleAuthError(error, 'Registration failed');
         }
@@ -96,11 +96,11 @@ export class AuthApi {
                 refresh_token: refreshToken,
             });
 
-            if (!response.data?.access_token) {
+            if (!response.access_token) {
                 throw new Error('Invalid refresh token response');
             }
 
-            return response.data;
+            return response;
         } catch (error: any) {
             if (retryCount < MAX_RETRIES && this.isRetryableError(error)) {
                 await this.delay(1000 * (retryCount + 1));
@@ -114,7 +114,7 @@ export class AuthApi {
     async forgotPassword(data: ForgotPasswordRequest): Promise<{ message: string }> {
         try {
             const response = await api.post<{ message: string }>(API_ENDPOINTS.FORGOT_PASSWORD, data);
-            return response.data;
+            return response;
         } catch (error: any) {
             throw this.handleAuthError(error, 'Failed to send reset email');
         }
@@ -123,7 +123,7 @@ export class AuthApi {
     async resetPassword(data: ResetPasswordRequest): Promise<PasswordResetResponse> {
         try {
             const response = await api.post<PasswordResetResponse>(API_ENDPOINTS.RESET_PASSWORD, data);
-            return response.data;
+            return response;
         } catch (error: any) {
             throw this.handleAuthError(error, 'Password reset failed');
         }
@@ -138,7 +138,7 @@ export class AuthApi {
             };
 
             const response = await api.post<{ message: string }>(API_ENDPOINTS.CHANGE_PASSWORD, payload);
-            return response.data;
+            return response;
         } catch (error: any) {
             throw this.handleAuthError(error, 'Failed to change password');
         }
@@ -156,7 +156,7 @@ export class AuthApi {
             const url = `${API_ENDPOINTS.VERIFY_EMAIL}?${params.toString()}`;
 
             const response = await api.get<{ message: string }>(url);
-            return response.data;
+            return response;
         } catch (error: any) {
             throw this.handleAuthError(error, 'Email verification failed');
         }
@@ -165,7 +165,7 @@ export class AuthApi {
     async resendVerification(): Promise<{ message: string }> {
         try {
             const response = await api.post<{ message: string }>(API_ENDPOINTS.RESEND_VERIFICATION);
-            return response.data;
+            return response;
         } catch (error: any) {
             throw this.handleAuthError(error, 'Failed to resend verification email');
         }
@@ -179,11 +179,11 @@ export class AuthApi {
 
             const response = await api.get<User>(url);
 
-            if (!response.data?.id || !response.data?.email) {
+            if (!response.id || !response.email) {
                 throw new Error('Invalid user profile data');
             }
 
-            return response.data;
+            return response;
         } catch (error: any) {
             throw this.handleAuthError(error, 'Failed to fetch user profile');
         }
@@ -196,7 +196,7 @@ export class AuthApi {
             }
 
             const response = await api.patch<UserPreferences>(API_ENDPOINTS.USER_PREFERENCES, preferences);
-            return response.data;
+            return response;
         } catch (error: any) {
             throw this.handleAuthError(error, 'Failed to update preferences');
         }
@@ -209,7 +209,7 @@ export class AuthApi {
                 : API_ENDPOINTS.SECURITY_INFO;
 
             const response = await api.get<SecurityInfoResponse>(url);
-            return response.data;
+            return response;
         } catch (error: any) {
             throw this.handleAuthError(error, 'Failed to fetch security information');
         }
@@ -219,7 +219,7 @@ export class AuthApi {
         try {
             // Use our server route for session validation
             const response = await api.get(API_ENDPOINTS.VALIDATE_SESSION);
-            return response.data?.valid === true;
+            return response.valid === true;
         } catch {
             return false;
         }
@@ -229,11 +229,11 @@ export class AuthApi {
         try {
             const response = await api.patch<User>(API_ENDPOINTS.USER_PROFILE, profileData);
 
-            if (!response.data?.id) {
+            if (!response.id) {
                 throw new Error('Invalid profile update response');
             }
 
-            return response.data;
+            return response;
         } catch (error: any) {
             throw this.handleAuthError(error, 'Failed to update profile');
         }
@@ -242,7 +242,7 @@ export class AuthApi {
     async updateTwoFactorAuth(enabled: boolean): Promise<{ message: string; backup_codes?: string[] }> {
         try {
             const response = await api.post('/api/user/two-factor', {enabled});
-            return response.data;
+            return response;
         } catch (error: any) {
             throw this.handleAuthError(error, 'Failed to update two-factor authentication');
         }
@@ -260,7 +260,7 @@ export class AuthApi {
     }> {
         try {
             const response = await api.get('/api/user/sessions');
-            return response.data;
+            return response;
         } catch (error: any) {
             throw this.handleAuthError(error, 'Failed to fetch user sessions');
         }
@@ -269,7 +269,7 @@ export class AuthApi {
     async revokeSession(sessionId: string): Promise<{ message: string }> {
         try {
             const response = await api.delete(`/api/user/sessions/${sessionId}`);
-            return response.data;
+            return response;
         } catch (error: any) {
             throw this.handleAuthError(error, 'Failed to revoke session');
         }
@@ -278,13 +278,13 @@ export class AuthApi {
     private handleAuthError(error: any, fallbackMessage: string): AuthApiError {
         const authError: AuthApiError = new Error(
             error?.message ||
-            error?.response?.data?.message ||
+            error?.response?.message ||
             fallbackMessage
         );
 
-        authError.code = error?.code || error?.response?.data?.code;
+        authError.code = error?.code || error?.response?.code;
         authError.status = error?.status || error?.response?.status;
-        authError.details = error?.errors || error?.response?.data?.errors;
+        authError.details = error?.errors || error?.response?.errors;
 
         return authError;
     }
