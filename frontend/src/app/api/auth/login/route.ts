@@ -5,8 +5,6 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
-        console.log('Login request:', { email: body.email, remember: body.remember });
-
         const authHeader = request.headers.get('authorization');
 
         if (!authHeader) {
@@ -30,8 +28,6 @@ export async function POST(request: NextRequest) {
             signal: AbortSignal.timeout(15000),
         });
 
-        console.log('Login response status:', response.status);
-
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
 
@@ -52,13 +48,6 @@ export async function POST(request: NextRequest) {
         }
 
         const responseData = await response.json();
-
-        console.log('Login response data:', {
-            hasAccessToken: !!responseData?.access_token,
-            hasUser: !!responseData?.user,
-            userId: responseData?.user?.id,
-            dataStructure: Object.keys(responseData || {})
-        });
 
         if (!responseData?.access_token || !responseData?.user) {
             console.error('Invalid login response format:', {

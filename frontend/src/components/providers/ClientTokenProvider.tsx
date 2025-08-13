@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { clientTokenManager } from '@/lib/clientTokenManager';
 
 interface ClientTokenContextType {
@@ -14,8 +14,6 @@ const ClientTokenContext = createContext<ClientTokenContextType>({
     isError: false,
     retry: async () => {},
 });
-
-export const useClientToken = () => useContext(ClientTokenContext);
 
 interface ClientTokenProviderProps {
     children: React.ReactNode;

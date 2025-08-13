@@ -5,7 +5,7 @@ import {Toaster} from 'sonner';
 import {ThemeProvider} from 'next-themes';
 import {ErrorBoundary} from '@/components/error/ErrorBoundary';
 import {QueryProvider} from '@/components/providers/QueryProvider';
-import {ClientTokenProvider, useClientToken} from '@/components/providers/ClientTokenProvider';
+import {ClientTokenProvider} from '@/components/providers/ClientTokenProvider';
 import '@/app/globals.css';
 
 const inter = Inter({
@@ -79,48 +79,6 @@ export const metadata: Metadata = {
     manifest: '/site.webmanifest',
 };
 
-const ClientTokenLoader: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const { isInitialized, isError, retry } = useClientToken();
-
-    if (isError) {
-        return (
-            <div className="flex items-center justify-center min-h-screen bg-background">
-                <div className="text-center space-y-4">
-                    <div className="text-destructive">
-                        <svg className="mx-auto h-12 w-12 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.732 15.5c-.77.833.192 2.5 1.732 2.5z" />
-                        </svg>
-                    </div>
-                    <h2 className="text-lg font-semibold text-foreground">Connection Error</h2>
-                    <p className="text-muted-foreground">Unable to initialize application</p>
-                    <button
-                        onClick={retry}
-                        className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                    >
-                        <svg className="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                        </svg>
-                        Retry
-                    </button>
-                </div>
-            </div>
-        );
-    }
-
-    if (!isInitialized) {
-        return (
-            <div className="flex items-center justify-center min-h-screen bg-background">
-                <div className="text-center space-y-4">
-                    <div className="inline-flex items-center justify-center w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
-                    <p className="text-muted-foreground">Initializing application...</p>
-                </div>
-            </div>
-        );
-    }
-
-    return <>{children}</>;
-};
-
 export default function RootLayout({children,}: { children: React.ReactNode; }) {
     return (
         <html lang="en" suppressHydrationWarning>
@@ -134,11 +92,9 @@ export default function RootLayout({children,}: { children: React.ReactNode; }) 
             >
                 <ClientTokenProvider>
                     <QueryProvider>
-                        <ClientTokenLoader>
-                            <div className="relative min-h-screen bg-background">
-                                {children}
-                            </div>
-                        </ClientTokenLoader>
+                        <div className="relative min-h-screen bg-background">
+                            {children}
+                        </div>
                         <Toaster
                             position="top-right"
                             expand={true}
