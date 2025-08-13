@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { securityMiddleware, RATE_LIMIT_CONFIGS, validateOrigin, detectSuspiciousActivity } from '@/middleware/security';
+import { MiddlewareAuthUtils } from '@/middleware/auth-utils';
 
-// Route configuration
 const routeConfig = {
-    // Protected routes requiring authentication
     protectedRoutes: [
         '/dashboard',
         '/profile',
@@ -13,13 +12,7 @@ const routeConfig = {
         '/admin',
         '/digital-library',
     ],
-
-    // Admin-only routes
-    adminRoutes: [
-        '/admin',
-    ],
-
-    // Public routes (no authentication required)
+    adminRoutes: ['/admin'],
     publicRoutes: [
         '/',
         '/products',
@@ -29,79 +22,51 @@ const routeConfig = {
         '/reset-password',
         '/about',
         '/contact',
-        '/download', // Digital download routes
+        '/download',
     ],
-
-    // API routes with different rate limits
     apiRoutes: {
         auth: ['/api/auth', '/api/login', '/api/register'],
         public: ['/api/products', '/api/categories', '/api/search'],
         protected: ['/api/user', '/api/orders', '/api/downloads'],
         admin: ['/api/admin'],
     },
-};
+} as const;
 
-// Main middleware function
+interface MiddlewareConfig {
+    rateLimit?: any;
+    csp?: string;
+    hsts?: string;
+    cache?: string;
+}
+
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
     const startTime = Date.now();
 
-    // Skip middleware for static files and internal Next.js routes
     if (shouldSkipMiddleware(pathname)) {
         return NextResponse.next();
     }
 
     try {
-        // 1. Basic security checks
-        if (!validateOrigin(request)) {
-            return new NextResponse('Invalid Origin', {
-                status: 403,
-                headers: { 'Content-Type': 'text/plain' }
-            });
-        }
+        const securityResult = await handleSecurity(request);
+        if (securityResult) return securityResult;
 
-        // 2. Detect suspicious activity
-        if (detectSuspiciousActivity(request)) {
-            console.warn(`Suspicious activity detected: ${request.method} ${pathname} from ${getClientIP(request)}`);
-            return new NextResponse('Access Denied', {
-                status: 403,
-                headers: { 'Content-Type': 'text/plain' }
-            });
-        }
+        const authResult = await handleAuthentication(request);
+        if (authResult) return authResult;
 
-        // 3. Apply security middleware with route-specific configurations
-        const securityConfig = getSecurityConfigForRoute(pathname);
-        const securityResponse = await securityMiddleware(request, securityConfig);
+        const routeResult = await handleRouteSpecific(request);
+        if (routeResult) return routeResult;
 
-        // If security middleware blocked the request, return early
-        if (securityResponse.status !== 200) {
-            return securityResponse;
-        }
-
-        // 4. Authentication and authorization
-        const authResponse = await handleAuthentication(request);
-        if (authResponse) {
-            return authResponse;
-        }
-
-        // 5. Route-specific handling
-        const routeResponse = await handleRouteSpecific(request);
-        if (routeResponse) {
-            return routeResponse;
-        }
-
-        // 6. Add performance and monitoring headers
         const response = NextResponse.next();
         addPerformanceHeaders(response, startTime);
+        addSecurityHeaders(response, pathname);
 
         return response;
 
     } catch (error) {
         console.error('Middleware error:', error);
-
-        // Fail securely - allow the request but log the error
         const response = NextResponse.next();
-        addBasicHeaders(response);
+        addBasicSecurityHeaders(response);
         return response;
     }
 }
@@ -114,29 +79,136 @@ function shouldSkipMiddleware(pathname: string): boolean {
         '/robots.txt',
         '/sitemap.xml',
         '/manifest.json',
-    ];
+        '/__nextjs_original-stack-frame',
+    ] as const;
 
     return skipPatterns.some(pattern => pathname.startsWith(pattern)) ||
-        pathname.includes('.') && !pathname.startsWith('/download/'); // Skip files with extensions except download routes
+        (pathname.includes('.') && !pathname.startsWith('/download/'));
 }
 
-function getClientIP(request: NextRequest): string {
-    const forwarded = request.headers.get('x-forwarded-for');
-    const realIP = request.headers.get('x-real-ip');
-    const cfConnectingIP = request.headers.get('cf-connecting-ip');
-
-    if (cfConnectingIP) return cfConnectingIP;
-    if (realIP) return realIP;
-    if (forwarded) {
-        const firstIP = forwarded.split(',')[0];
-        if (firstIP) return firstIP.trim();
+async function handleSecurity(request: NextRequest): Promise<NextResponse | null> {
+    if (!validateOrigin(request)) {
+        return new NextResponse('Invalid Origin', {
+            status: 403,
+            headers: { 'Content-Type': 'text/plain' }
+        });
     }
 
-    return '127.0.0.1';
+    if (detectSuspiciousActivity(request)) {
+        console.warn(`Suspicious activity: ${request.method} ${request.nextUrl.pathname} from ${getClientIP(request)}`);
+        return new NextResponse('Access Denied', {
+            status: 403,
+            headers: { 'Content-Type': 'text/plain' }
+        });
+    }
+
+    const securityConfig = getSecurityConfigForRoute(request.nextUrl.pathname);
+    const securityResponse = await securityMiddleware(request, securityConfig);
+
+    return securityResponse.status !== 200 ? securityResponse : null;
 }
 
-function getSecurityConfigForRoute(pathname: string) {
-    // Configure security based on route type
+async function handleAuthentication(request: NextRequest): Promise<NextResponse | null> {
+    const { pathname } = request.nextUrl;
+
+    const requiresAuth = routeConfig.protectedRoutes.some(route => pathname.startsWith(route));
+    const requiresAdmin = routeConfig.adminRoutes.some(route => pathname.startsWith(route));
+
+    if (!requiresAuth && !requiresAdmin) {
+        return null;
+    }
+
+    const authToken = getAuthToken(request);
+
+    if (!authToken) {
+        return createAuthRedirect(request, pathname);
+    }
+
+    if (isTokenExpired(authToken)) {
+        return createTokenExpiredResponse(request, pathname);
+    }
+
+    const isValid = await validateAuthToken(authToken);
+    if (!isValid) {
+        return createInvalidTokenResponse(request, pathname);
+    }
+
+    if (requiresAdmin) {
+        const hasAdminRole = await checkAdminRole(authToken);
+        if (!hasAdminRole) {
+            return new NextResponse('Forbidden - Admin access required', {
+                status: 403,
+                headers: { 'Content-Type': 'text/plain' }
+            });
+        }
+    }
+
+    return null;
+}
+
+function getAuthToken(request: NextRequest): string | null {
+    const tokenInfo = MiddlewareAuthUtils.extractTokenFromRequest(request);
+    return tokenInfo?.token || null;
+}
+
+async function validateAuthToken(token: string): Promise<boolean> {
+    const result = await MiddlewareAuthUtils.validateToken(token);
+    return result.isValid;
+}
+
+async function checkAdminRole(token: string): Promise<boolean> {
+    return await MiddlewareAuthUtils.checkUserRole(token, 'admin');
+}
+
+function createAuthRedirect(request: NextRequest, pathname: string): NextResponse {
+    if (pathname.startsWith('/api/')) {
+        return new NextResponse('Unauthorized', {
+            status: 401,
+            headers: {
+                'Content-Type': 'text/plain',
+                'WWW-Authenticate': 'Bearer realm="API"'
+            }
+        });
+    }
+
+    const loginUrl = new URL('/login', request.url);
+    loginUrl.searchParams.set('redirect', pathname);
+    return NextResponse.redirect(loginUrl);
+}
+
+function createTokenExpiredResponse(request: NextRequest, pathname: string): NextResponse {
+    if (pathname.startsWith('/api/')) {
+        return new NextResponse('Token Expired', {
+            status: 401,
+            headers: {
+                'Content-Type': 'text/plain',
+                'WWW-Authenticate': 'Bearer error="invalid_token", error_description="Token expired"'
+            }
+        });
+    }
+
+    const response = NextResponse.redirect(new URL('/login', request.url));
+    response.cookies.delete('auth-token');
+    return response;
+}
+
+function createInvalidTokenResponse(request: NextRequest, pathname: string): NextResponse {
+    if (pathname.startsWith('/api/')) {
+        return new NextResponse('Invalid Token', {
+            status: 401,
+            headers: {
+                'Content-Type': 'text/plain',
+                'WWW-Authenticate': 'Bearer error="invalid_token"'
+            }
+        });
+    }
+
+    const response = NextResponse.redirect(new URL('/login', request.url));
+    response.cookies.delete('auth-token');
+    return response;
+}
+
+function getSecurityConfigForRoute(pathname: string): MiddlewareConfig {
     if (pathname.startsWith('/api/auth')) {
         return {
             rateLimit: RATE_LIMIT_CONFIGS.auth,
@@ -163,140 +235,36 @@ function getSecurityConfigForRoute(pathname: string) {
     if (pathname.startsWith('/admin')) {
         return {
             rateLimit: RATE_LIMIT_CONFIGS.admin,
-            csp: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';",
+            csp: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;",
         };
     }
 
-    // Default configuration for public routes
     return {
         rateLimit: RATE_LIMIT_CONFIGS.public,
     };
 }
 
-// Authentication and authorization handler
-async function handleAuthentication(request: NextRequest): Promise<NextResponse | null> {
-    const { pathname } = request.nextUrl;
-
-    // Check if route requires authentication
-    const requiresAuth = routeConfig.protectedRoutes.some(route =>
-        pathname.startsWith(route)
-    );
-
-    const requiresAdmin = routeConfig.adminRoutes.some(route =>
-        pathname.startsWith(route)
-    );
-
-    if (!requiresAuth && !requiresAdmin) {
-        return null; // Public route, no auth required
-    }
-
-    // Get auth token from various sources
-    const authToken = getAuthToken(request);
-
-    if (!authToken) {
-        // Redirect to login for protected routes
-        const loginUrl = new URL('/login', request.url);
-        loginUrl.searchParams.set('redirect', pathname);
-        return NextResponse.redirect(loginUrl);
-    }
-
-    // Validate token (this is a simplified version - implement proper JWT validation)
-    const isValidToken = await validateAuthToken(authToken);
-
-    if (!isValidToken) {
-        // Clear invalid token and redirect to login
-        const response = NextResponse.redirect(new URL('/login', request.url));
-        response.cookies.delete('auth-token');
-        return response;
-    }
-
-    // Check admin permissions
-    if (requiresAdmin) {
-        const hasAdminRole = await checkAdminRole(authToken);
-        if (!hasAdminRole) {
-            return new NextResponse('Forbidden', {
-                status: 403,
-                headers: { 'Content-Type': 'text/plain' }
-            });
-        }
-    }
-
-    return null; // Authentication successful
-}
-
-function getAuthToken(request: NextRequest): string | null {
-    // Check Authorization header first
-    const authHeader = request.headers.get('authorization');
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-        return authHeader.substring(7);
-    }
-
-    // Check cookie
-    const tokenCookie = request.cookies.get('auth-token');
-    if (tokenCookie) {
-        return tokenCookie.value;
-    }
-
-    return null;
-}
-
-async function validateAuthToken(token: string): Promise<boolean> {
-    // Implement proper JWT validation here
-    // This is a simplified version for demonstration
-    try {
-        // In a real implementation, verify JWT signature and expiration
-        // const payload = jwt.verify(token, process.env.JWT_SECRET);
-        // return payload && !isTokenExpired(payload);
-
-        // Placeholder validation
-        return token.length > 10; // Very basic check
-    } catch {
-        return false;
-    }
-}
-
-async function checkAdminRole(token: string): Promise<boolean> {
-    // Implement proper role checking here
-    // This is a simplified version for demonstration
-    try {
-        // In a real implementation, decode token and check roles
-        // const payload = jwt.decode(token);
-        // return payload.roles.includes('admin');
-
-        // Placeholder check
-        return token.includes('admin'); // Very basic check
-    } catch {
-        return false;
-    }
-}
-
-// Route-specific handling
 async function handleRouteSpecific(request: NextRequest): Promise<NextResponse | null> {
     const { pathname } = request.nextUrl;
 
-    // Handle API routes
     if (pathname.startsWith('/api/')) {
         return handleApiRoutes(request);
     }
 
-    // Handle admin routes
     if (pathname.startsWith('/admin')) {
         return handleAdminRoutes();
     }
 
-    // Handle download routes with special security
     if (pathname.startsWith('/download/')) {
         return handleDownloadRoutes(request);
     }
 
-    // Handle product routes with caching
     if (pathname.startsWith('/products')) {
         const response = NextResponse.next();
-        response.headers.set('Cache-Control', 'public, max-age=300, s-maxage=300');
+        response.headers.set('Cache-Control', 'public, max-age=300, s-maxage=600, stale-while-revalidate=86400');
         return response;
     }
 
-    // Handle static content with long caching
     if (pathname.startsWith('/images/') || pathname.startsWith('/assets/')) {
         const response = NextResponse.next();
         response.headers.set('Cache-Control', 'public, max-age=31536000, immutable');
@@ -306,11 +274,9 @@ async function handleRouteSpecific(request: NextRequest): Promise<NextResponse |
     return null;
 }
 
-// API routes handler
 async function handleApiRoutes(request: NextRequest): Promise<NextResponse | null> {
     const response = NextResponse.next();
 
-    // CORS headers for API routes
     const allowedOrigins = [
         process.env.NEXT_PUBLIC_APP_URL,
         process.env.FRONTEND_URL,
@@ -323,60 +289,50 @@ async function handleApiRoutes(request: NextRequest): Promise<NextResponse | nul
         response.headers.set('Access-Control-Allow-Origin', origin);
     }
 
-    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-CSRF-Token');
+    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-CSRF-Token, X-Request-ID');
     response.headers.set('Access-Control-Allow-Credentials', 'true');
+    response.headers.set('Access-Control-Max-Age', '86400');
 
-    // Handle preflight requests
     if (request.method === 'OPTIONS') {
-        return new NextResponse(null, { status: 200, headers: response.headers });
+        return new NextResponse(null, { status: 204, headers: response.headers });
     }
 
-    // Add API versioning header
     response.headers.set('API-Version', 'v1');
-
-    // Add request ID for tracing
     response.headers.set('X-Request-ID', generateRequestId());
-
-    // Add API rate limit headers are already added by security middleware
 
     return response;
 }
 
-// Admin routes handler
 async function handleAdminRoutes(): Promise<NextResponse | null> {
     const response = NextResponse.next();
 
-    // Stricter CSP for admin routes
     response.headers.set(
         'Content-Security-Policy',
-        "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;"
+        "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:;"
     );
 
-    // Disable caching for admin routes
-    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     response.headers.set('Pragma', 'no-cache');
     response.headers.set('Expires', '0');
+    response.headers.set('Surrogate-Control', 'no-store');
 
     return response;
 }
 
-// Download routes handler with enhanced security
 async function handleDownloadRoutes(request: NextRequest): Promise<NextResponse | null> {
     const response = NextResponse.next();
 
-    // Special headers for download routes
     response.headers.set('X-Content-Type-Options', 'nosniff');
     response.headers.set('X-Download-Options', 'noopen');
     response.headers.set('X-Frame-Options', 'DENY');
+    response.headers.set('Referrer-Policy', 'no-referrer');
 
-    // Disable caching for download tokens
     response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate');
     response.headers.set('Pragma', 'no-cache');
 
-    // Log download attempts for security monitoring
     const token = request.nextUrl.pathname.split('/').pop();
-    console.log(`Download attempt: token=${token} from IP=${getClientIP(request)}`);
+    console.log(`Download attempt: token=${token} from IP=${getClientIP(request)} UA=${request.headers.get('user-agent')?.substring(0, 100)}`);
 
     return response;
 }
@@ -385,37 +341,50 @@ function addPerformanceHeaders(response: NextResponse, startTime: number): void 
     const processingTime = Date.now() - startTime;
     response.headers.set('X-Response-Time', `${processingTime}ms`);
     response.headers.set('X-Timestamp', new Date().toISOString());
+    response.headers.set('X-Middleware-Version', '2.0');
 }
 
-function addBasicHeaders(response: NextResponse): void {
+function addSecurityHeaders(response: NextResponse, pathname: string): void {
     response.headers.set('X-Content-Type-Options', 'nosniff');
     response.headers.set('X-Frame-Options', 'DENY');
     response.headers.set('X-XSS-Protection', '1; mode=block');
+    response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+
+    if (!pathname.startsWith('/admin')) {
+        response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+    }
+}
+
+function addBasicSecurityHeaders(response: NextResponse): void {
+    response.headers.set('X-Content-Type-Options', 'nosniff');
+    response.headers.set('X-Frame-Options', 'DENY');
+    response.headers.set('X-XSS-Protection', '1; mode=block');
+    response.headers.set('X-Middleware-Error', 'true');
+}
+
+function getClientIP(request: NextRequest): string {
+    return MiddlewareAuthUtils.getClientIP(request);
 }
 
 function generateRequestId(): string {
     if (typeof crypto !== 'undefined' && crypto.randomUUID) {
         return crypto.randomUUID();
     }
-
-    // Fallback for environments without crypto.randomUUID
-    return Date.now().toString(36) + Math.random().toString(36).substring(2);
+    return `${Date.now().toString(36)}-${Math.random().toString(36).substring(2)}`;
 }
 
-// Export configuration for other parts of the app
+function parseJwtExpiry(token: string): number | null {
+    return MiddlewareAuthUtils.parseJwtExpiry(token);
+}
+
+function isTokenExpired(token: string): boolean {
+    const tokenInfo = { token, expiresAt: MiddlewareAuthUtils.parseJwtExpiry(token) };
+    return MiddlewareAuthUtils.isTokenExpired(tokenInfo);
+}
+
 export const config = {
     matcher: [
-        /*
-         * Match all request paths except for the ones starting with:
-         * - api (API routes - handled separately)
-         * - _next/static (static files)
-         * - _next/image (image optimization files)
-         * - favicon.ico (favicon file)
-         * - robots.txt
-         * - sitemap.xml
-         * - manifest.json
-         */
-        '/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.json).*)',
+        '/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.json).*)',
     ],
 };
 
