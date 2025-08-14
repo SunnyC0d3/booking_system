@@ -1,307 +1,130 @@
 'use client';
 
-import * as React from 'react';
-import {useForm} from 'react-hook-form';
-import {zodResolver} from '@hookform/resolvers/zod';
-import {z} from 'zod';
+import { useState } from 'react';
+import { useAuthUtils } from '@/hooks/useAuthUtils';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import { toast } from 'sonner';
 import Link from 'next/link';
-import {useRouter} from 'next/navigation';
-import {Mail, Lock, Eye, EyeOff, Loader2} from 'lucide-react';
-import {toast} from 'sonner';
-import {Button, Input, Card, CardHeader, CardTitle, CardContent, CardFooter} from '@/components/ui';
-import {useAuth} from '@/stores/authStore';
-import {LoginFormData} from '@/types/auth';
-import {cn} from '@/lib/cn';
+import { Eye, EyeOff } from 'lucide-react';
 
-const loginSchema = z.object({
-    email: z
-        .string()
-        .min(1, 'Email is required')
-        .email('Please enter a valid email address'),
-    password: z
-        .string()
-        .min(1, 'Password is required')
-        .min(6, 'Password must be at least 6 characters'),
-    remember: z.boolean().default(false),
-});
-
-interface LoginFormProps {
-    redirectTo?: string;
-    showSignUpLink?: boolean;
-    onSuccess?: () => void;
-}
-
-const PasswordToggle = React.memo(({showPassword, onToggle}: {
-    showPassword: boolean;
-    onToggle: () => void;
-}) => (
-    <button
-        type="button"
-        onClick={onToggle}
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 rounded"
-        tabIndex={-1}
-        aria-label={showPassword ? 'Hide password' : 'Show password'}
-    >
-        {showPassword ? (
-            <EyeOff className="h-4 w-4"/>
-        ) : (
-            <Eye className="h-4 w-4"/>
-        )}
-    </button>
-));
-
-PasswordToggle.displayName = 'PasswordToggle';
-
-const ErrorAlert = React.memo(({message}: { message: string }) => (
-    <div
-        className="rounded-lg border border-red-200 bg-red-50 p-3 text-red-800 dark:border-red-800 dark:bg-red-950 dark:text-red-200"
-        role="alert"
-        aria-live="polite"
-    >
-        <p className="text-sm font-medium">{message}</p>
-    </div>
-));
-
-ErrorAlert.displayName = 'ErrorAlert';
-
-export const LoginForm: React.FC<LoginFormProps> = ({redirectTo = '/dashboard', showSignUpLink = true, onSuccess,}) => {
-    const router = useRouter();
-    const {login, isLoading, error, clearError, isAuthenticated} = useAuth();
-    const [showPassword, setShowPassword] = React.useState(false);
-    const [isSubmittingForm, setIsSubmittingForm] = React.useState(false);
-
-    const {
-        register,
-        handleSubmit,
-        formState: {errors},
-        watch,
-        setError,
-        clearErrors,
-    } = useForm<LoginFormData>({
-        resolver: zodResolver(loginSchema),
-        defaultValues: {
-            email: '',
-            password: '',
-            remember: false,
-        },
-        mode: 'onTouched',
+export function LoginForm() {
+    const { login, redirectAfterLogin, isLoading } = useAuthUtils();
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+        remember: false
     });
+    const [showPassword, setShowPassword] = useState(false);
 
-    React.useEffect(() => {
-        if (isAuthenticated && !isLoading && !isSubmittingForm) {
-            if (onSuccess) {
-                onSuccess();
-            } else {
-                router.push(redirectTo);
-            }
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (!formData.email || !formData.password) {
+            toast.error('Please fill in all fields');
+            return;
         }
-    }, [isAuthenticated, isLoading, isSubmittingForm, onSuccess, router, redirectTo]);
 
-    const clearErrorsOnChange = React.useCallback(() => {
-        if (error) {
-            clearError();
+        try {
+            await login({
+                email: formData.email,
+                password: formData.password,
+                remember: formData.remember
+            });
+
+            // Automatically redirects to original page or dashboard
+            redirectAfterLogin();
+        } catch (error: any) {
+            // Error is already handled by login method with toast
+            console.error('Login failed:', error);
         }
-        if (errors.email || errors.password) {
-            clearErrors(['email', 'password']);
-        }
-    }, [error, errors.email, errors.password, clearError, clearErrors]);
+    };
 
-    const emailValue = watch('email');
-    const passwordValue = watch('password');
-
-    React.useEffect(() => {
-        clearErrorsOnChange();
-    }, [emailValue, passwordValue, clearErrorsOnChange]);
-
-    const onSubmit = React.useCallback(
-        async (data: LoginFormData) => {
-            if (isSubmittingForm || isLoading) {
-                return;
-            }
-
-            try {
-                setIsSubmittingForm(true);
-                clearError();
-
-                await login({
-                    email: data.email,
-                    password: data.password,
-                    remember: data.remember,
-                });
-
-                toast.success('Welcome back!');
-            } catch (error: any) {
-                setIsSubmittingForm(false);
-
-                if (error.errors) {
-                    Object.entries(error.errors).forEach(([field, messages]) => {
-                        if (Array.isArray(messages) && messages.length > 0) {
-                            setError(field as keyof LoginFormData, {
-                                type: 'server',
-                                message: messages[0],
-                            });
-                        }
-                    });
-                } else {
-                    toast.error(error.message || 'Login failed. Please try again.');
-                }
-            }
-        },
-        [login, clearError, setError, isSubmittingForm, isLoading]
-    );
-
-    const togglePasswordVisibility = React.useCallback(() => {
-        setShowPassword(prev => !prev);
-    }, []);
-
-    React.useEffect(() => {
-        if (!isLoading && isSubmittingForm) {
-            setIsSubmittingForm(false);
-        }
-    }, [isLoading, isSubmittingForm]);
-
-    const isFormLoading = isLoading || isSubmittingForm;
+    const handleInputChange = (field: string, value: string | boolean) => {
+        setFormData(prev => ({ ...prev, [field]: value }));
+    };
 
     return (
-        <Card className="w-full max-w-md mx-auto shadow-lg">
-            <CardHeader className="text-center space-y-2">
-                <CardTitle
-                    className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                    Welcome Back
-                </CardTitle>
-                <p className="text-muted-foreground text-sm">
-                    Sign in to your Creative Business account
-                </p>
-            </CardHeader>
+        <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+                <Label htmlFor="email">Email Address</Label>
+                <Input
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    required
+                    disabled={isLoading}
+                />
+            </div>
 
-            <CardContent>
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-                    {error && !errors.email && !errors.password && (
-                        <ErrorAlert message={error}/>
-                    )}
-
-                    <div className="space-y-2">
-                        <label htmlFor="email" className="text-sm font-medium text-foreground">
-                            Email Address
-                        </label>
-                        <div className="relative">
-                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"/>
-                            <Input
-                                {...register('email')}
-                                id="email"
-                                type="email"
-                                placeholder="Enter your email"
-                                className={cn(
-                                    "pl-10",
-                                    errors.email && "border-red-500 focus:ring-red-500"
-                                )}
-                                autoComplete="email"
-                                autoFocus
-                                disabled={isFormLoading}
-                                aria-invalid={errors.email ? 'true' : 'false'}
-                                aria-describedby={errors.email ? 'email-error' : undefined}
-                            />
-                        </div>
-                        {errors.email && (
-                            <p id="email-error" className="text-sm text-red-600" role="alert">
-                                {errors.email.message}
-                            </p>
-                        )}
-                    </div>
-
-                    <div className="space-y-2">
-                        <label htmlFor="password" className="text-sm font-medium text-foreground">
-                            Password
-                        </label>
-                        <div className="relative">
-                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"/>
-                            <Input
-                                {...register('password')}
-                                id="password"
-                                type={showPassword ? 'text' : 'password'}
-                                placeholder="Enter your password"
-                                className={cn(
-                                    "pl-10 pr-10",
-                                    errors.password && "border-red-500 focus:ring-red-500"
-                                )}
-                                autoComplete="current-password"
-                                disabled={isFormLoading}
-                                aria-invalid={errors.password ? 'true' : 'false'}
-                                aria-describedby={errors.password ? 'password-error' : undefined}
-                            />
-                            <PasswordToggle
-                                showPassword={showPassword}
-                                onToggle={togglePasswordVisibility}
-                            />
-                        </div>
-                        {errors.password && (
-                            <p id="password-error" className="text-sm text-red-600" role="alert">
-                                {errors.password.message}
-                            </p>
-                        )}
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                        <label className="flex items-center space-x-2 cursor-pointer">
-                            <input
-                                {...register('remember')}
-                                id="remember"
-                                type="checkbox"
-                                disabled={isFormLoading}
-                                className="rounded border-input text-primary focus:ring-primary focus:ring-offset-0 h-4 w-4 disabled:opacity-50"
-                            />
-                            <span className="text-sm text-muted-foreground select-none">
-                                Remember me
-                            </span>
-                        </label>
-
-                        <Link
-                            href="/forgot-password"
-                            className="text-sm text-primary hover:text-primary/80 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 rounded px-1"
-                            tabIndex={isFormLoading ? -1 : 0}
-                        >
-                            Forgot password?
-                        </Link>
-                    </div>
-
+            <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <div className="relative">
+                    <Input
+                        id="password"
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder="Enter your password"
+                        value={formData.password}
+                        onChange={(e) => handleInputChange('password', e.target.value)}
+                        required
+                        disabled={isLoading}
+                    />
                     <Button
-                        type="submit"
-                        variant="default"
-                        size="lg"
-                        className="w-full"
-                        disabled={isFormLoading}
-                        aria-describedby={isFormLoading ? 'loading-text' : undefined}
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() => setShowPassword(!showPassword)}
+                        disabled={isLoading}
                     >
-                        {isFormLoading ? (
-                            <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
-                                <span id="loading-text">
-                                    {isAuthenticated ? 'Redirecting...' : 'Signing in...'}
-                                </span>
-                            </>
+                        {showPassword ? (
+                            <EyeOff className="h-4 w-4" />
                         ) : (
-                            'Sign In'
+                            <Eye className="h-4 w-4" />
                         )}
                     </Button>
-                </form>
-            </CardContent>
+                </div>
+            </div>
 
-            {showSignUpLink && (
-                <CardFooter className="justify-center pt-4">
-                    <p className="text-sm text-muted-foreground">
-                        Don't have an account?{' '}
-                        <Link
-                            href="/register"
-                            className="text-primary hover:text-primary/80 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 rounded px-1"
-                            tabIndex={isFormLoading ? -1 : 0}
-                        >
-                            Sign up here
-                        </Link>
-                    </p>
-                </CardFooter>
-            )}
-        </Card>
+            <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                    <Checkbox
+                        id="remember"
+                        checked={formData.remember}
+                        onCheckedChange={(checked) => handleInputChange('remember', checked as boolean)}
+                        disabled={isLoading}
+                    />
+                    <Label htmlFor="remember" className="text-sm">
+                        Remember me
+                    </Label>
+                </div>
+
+                <Link
+                    href="/forgot-password"
+                    className="text-sm text-blue-600 hover:text-blue-500"
+                >
+                    Forgot password?
+                </Link>
+            </div>
+
+            <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full"
+            >
+                {isLoading ? 'Signing in...' : 'Sign In'}
+            </Button>
+
+            <div className="text-center text-sm">
+                Don't have an account?{' '}
+                <Link href="/register" className="text-blue-600 hover:text-blue-500">
+                    Sign up
+                </Link>
+            </div>
+        </form>
     );
-};
-
-export default LoginForm;
+}

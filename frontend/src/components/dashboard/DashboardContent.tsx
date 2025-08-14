@@ -1,149 +1,586 @@
 'use client';
 
-import * as React from 'react';
-import { Suspense } from 'react';
-import DashboardLayout from '@/components/layout/DashboardLayout';
-import DashboardStats from '@/components/dashboard/DashboardStats';
-import RecentOrders from '@/components/dashboard/RecentOrders';
-import QuickActions from '@/components/dashboard/QuickActions';
-import AccountSummary from '@/components/dashboard/AccountSummary';
-import RecentActivity from '@/components/dashboard/RecentActivity';
-import CartItemsClient from '@/components/dashboard/CartItemsClient';
-import { useAuth } from '@/stores/authStore';
+import { useState, useEffect } from 'react';
+import { useAuthUtils } from '@/hooks/useAuthUtils';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { EmailVerification } from '@/components/auth/EmailVerification';
+import { toast } from 'sonner';
+import Link from 'next/link';
+import {
+    User,
+    ShoppingBag,
+    Download,
+    CreditCard,
+    Settings,
+    AlertCircle,
+    TrendingUp,
+    Package,
+    Heart,
+    Clock,
+    ArrowRight,
+    Eye,
+    Star
+} from 'lucide-react';
 
-const DashboardStatsLoading = () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-24 bg-muted animate-pulse rounded-lg" />
-        ))}
-    </div>
-);
-
-const RecentOrdersLoading = () => (
-    <div className="space-y-4">
-        <div className="h-6 bg-muted animate-pulse rounded w-1/4" />
-        {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="h-16 bg-muted animate-pulse rounded" />
-        ))}
-    </div>
-);
-
-const ActivityLoading = () => (
-    <div className="space-y-3">
-        <div className="h-6 bg-muted animate-pulse rounded w-1/3" />
-        {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-12 bg-muted animate-pulse rounded" />
-        ))}
-    </div>
-);
-
-class DashboardErrorBoundary extends React.Component<
-    { children: React.ReactNode; fallback?: React.ReactNode },
-    { hasError: boolean }
-> {
-    constructor(props: { children: React.ReactNode; fallback?: React.ReactNode }) {
-        super(props);
-        this.state = { hasError: false };
-    }
-
-    static getDerivedStateFromError() {
-        return { hasError: true };
-    }
-
-    componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-        console.error('Dashboard component error:', error, errorInfo);
-    }
-
-    render() {
-        if (this.state.hasError) {
-            return this.props.fallback || (
-                <div className="p-6 text-center">
-                    <h3 className="text-lg font-medium text-foreground mb-2">
-                        Something went wrong
-                    </h3>
-                    <p className="text-muted-foreground mb-4">
-                        We encountered an error loading this section.
-                    </p>
-                    <button
-                        onClick={() => this.setState({ hasError: false })}
-                        className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
-                    >
-                        Try Again
-                    </button>
-                </div>
-            );
-        }
-
-        return this.props.children;
-    }
+interface DashboardStats {
+    total_orders: number;
+    total_spent: number;
+    digital_downloads: number;
+    active_subscriptions: number;
+    wishlist_items: number;
+    loyalty_points: number;
 }
 
-function DashboardInner() {
-    const { user } = useAuth();
+interface RecentOrder {
+    id: number;
+    order_number: string;
+    status: string;
+    total: number;
+    created_at: string;
+    items_count: number;
+}
 
-    if (!user) {
+interface RecentDownload {
+    id: number;
+    product_name: string;
+    downloaded_at: string;
+    file_size: string;
+    download_count: number;
+    max_downloads: number;
+}
+
+export default function DashboardContent() {
+    const {
+        user,
+        requireAuth,
+        isEmailVerified,
+        needsEmailVerification,
+        getAuthHeaders,
+        isLoading: authLoading
+    } = useAuthUtils();
+
+    const [stats, setStats] = useState<DashboardStats | null>(null);
+    const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
+    const [recentDownloads, setRecentDownloads] = useState<RecentDownload[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState('overview');
+
+    useEffect(() => {
+        if (!requireAuth()) return;
+    }, [requireAuth]);
+
+    useEffect(() => {
+        if (user && isEmailVerified) {
+            fetchDashboardData();
+        } else if (user) {
+            setIsLoading(false);
+        }
+    }, [user, isEmailVerified]);
+
+    const fetchDashboardData = async () => {
+        setIsLoading(true);
+        try {
+            const statsResponse = await fetch('/api/user/dashboard/stats', {
+                headers: getAuthHeaders(),
+            });
+
+            if (statsResponse.ok) {
+                const statsData = await statsResponse.json();
+                setStats(statsData);
+            }
+
+            const ordersResponse = await fetch('/api/user/orders?limit=5', {
+                headers: getAuthHeaders(),
+            });
+
+            if (ordersResponse.ok) {
+                const ordersData = await ordersResponse.json();
+                setRecentOrders(ordersData.orders || []);
+            }
+
+            const downloadsResponse = await fetch('/api/user/digital-library/recent?limit=5', {
+                headers: getAuthHeaders(),
+            });
+
+            if (downloadsResponse.ok) {
+                const downloadsData = await downloadsResponse.json();
+                setRecentDownloads(downloadsData.downloads || []);
+            }
+
+        } catch (error) {
+            console.error('Failed to fetch dashboard data:', error);
+            toast.error('Failed to load dashboard data');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const getOrderStatusColor = (status: string) => {
+        switch (status.toLowerCase()) {
+            case 'completed': return 'bg-green-100 text-green-800';
+            case 'processing': return 'bg-blue-100 text-blue-800';
+            case 'pending': return 'bg-yellow-100 text-yellow-800';
+            case 'cancelled': return 'bg-red-100 text-red-800';
+            default: return 'bg-gray-100 text-gray-800';
+        }
+    };
+
+    const formatCurrency = (amount: number) => {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD'
+        }).format(amount);
+    };
+
+    // Show loading state
+    if (authLoading || (isLoading && user)) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <div className="space-y-6">
+                {[1, 2, 3].map(i => (
+                    <Card key={i}>
+                        <CardContent className="p-6">
+                            <div className="animate-pulse space-y-4">
+                                <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+                                <div className="h-20 bg-gray-200 rounded"></div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                ))}
             </div>
         );
     }
 
-    const welcomeMessage = React.useMemo(() => {
-        const firstName = user.name?.split(' ')[0] || 'there';
-        return `Welcome back, ${firstName}!`;
-    }, [user.name]);
+    if (needsEmailVerification) {
+        return (
+            <div className="space-y-6">
+                <Alert className="border-yellow-200 bg-yellow-50">
+                    <AlertCircle className="h-4 w-4 text-yellow-600" />
+                    <AlertDescription className="text-yellow-800">
+                        <strong>Email verification required</strong> - Please verify your email address to access all dashboard features.
+                    </AlertDescription>
+                </Alert>
+
+                <EmailVerification showCard={false} autoVerify={false} />
+            </div>
+        );
+    }
 
     return (
-        <DashboardLayout
-            title={welcomeMessage}
-            description="Here's what's happening with your creative projects."
-        >
-            <div className="space-y-8">
-                <DashboardErrorBoundary fallback={<DashboardStatsLoading />}>
-                    <Suspense fallback={<DashboardStatsLoading />}>
-                        <CartItemsClient>
-                            {(cartItemCount) => (
-                                <DashboardStats userId={user.id} cartItemCount={cartItemCount} />
-                            )}
-                        </CartItemsClient>
-                    </Suspense>
-                </DashboardErrorBoundary>
-
-                <div className="grid lg:grid-cols-3 gap-8">
-                    <div className="lg:col-span-2">
-                        <DashboardErrorBoundary fallback={<RecentOrdersLoading />}>
-                            <Suspense fallback={<RecentOrdersLoading />}>
-                                <RecentOrders userId={user.id} limit={3} />
-                            </Suspense>
-                        </DashboardErrorBoundary>
-                    </div>
-
-                    <div className="space-y-6">
-                        <DashboardErrorBoundary>
-                            <Suspense fallback={<div className="h-32 bg-muted animate-pulse rounded" />}>
-                                <QuickActions />
-                            </Suspense>
-                        </DashboardErrorBoundary>
-
-                        <DashboardErrorBoundary>
-                            <Suspense fallback={<div className="h-40 bg-muted animate-pulse rounded" />}>
-                                <AccountSummary userId={user.id} />
-                            </Suspense>
-                        </DashboardErrorBoundary>
-                    </div>
+        <div className="space-y-6">
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-2xl font-bold text-gray-900">
+                        Welcome back, {user?.name?.split(' ')[0] || 'User'}!
+                    </h1>
+                    <p className="text-gray-600">
+                        Here's what's happening with your account today.
+                    </p>
                 </div>
 
-                <DashboardErrorBoundary fallback={<ActivityLoading />}>
-                    <Suspense fallback={<ActivityLoading />}>
-                        <RecentActivity userId={user.id} limit={4} />
-                    </Suspense>
-                </DashboardErrorBoundary>
+                <div className="flex items-center space-x-2">
+                    <Badge variant="outline" className="text-xs">
+                        {user?.role?.name || 'Member'}
+                    </Badge>
+                    {isEmailVerified && (
+                        <Badge variant="default" className="text-xs bg-green-100 text-green-800">
+                            Verified
+                        </Badge>
+                    )}
+                </div>
             </div>
-        </DashboardLayout>
-    );
-}
 
-export default function DashboardContent() {
-    return <DashboardInner />;
+            {stats && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <Card>
+                        <CardContent className="p-6">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-gray-600">Total Orders</p>
+                                    <p className="text-2xl font-bold text-gray-900">{stats.total_orders}</p>
+                                </div>
+                                <div className="p-3 bg-blue-100 rounded-full">
+                                    <ShoppingBag className="h-6 w-6 text-blue-600" />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardContent className="p-6">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-gray-600">Total Spent</p>
+                                    <p className="text-2xl font-bold text-gray-900">
+                                        {formatCurrency(stats.total_spent)}
+                                    </p>
+                                </div>
+                                <div className="p-3 bg-green-100 rounded-full">
+                                    <CreditCard className="h-6 w-6 text-green-600" />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardContent className="p-6">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-gray-600">Digital Downloads</p>
+                                    <p className="text-2xl font-bold text-gray-900">{stats.digital_downloads}</p>
+                                </div>
+                                <div className="p-3 bg-purple-100 rounded-full">
+                                    <Download className="h-6 w-6 text-purple-600" />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardContent className="p-6">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-gray-600">Wishlist Items</p>
+                                    <p className="text-2xl font-bold text-gray-900">{stats.wishlist_items}</p>
+                                </div>
+                                <div className="p-3 bg-red-100 rounded-full">
+                                    <Heart className="h-6 w-6 text-red-600" />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            )}
+
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+                <TabsList className="grid w-full grid-cols-3">
+                    <TabsTrigger value="overview">Overview</TabsTrigger>
+                    <TabsTrigger value="orders">Recent Orders</TabsTrigger>
+                    <TabsTrigger value="downloads">Downloads</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="overview" className="space-y-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Quick Actions</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-3">
+                                <Link href="/products">
+                                    <Button variant="outline" className="w-full justify-start">
+                                        <Package className="w-4 h-4 mr-3" />
+                                        Browse Products
+                                        <ArrowRight className="w-4 h-4 ml-auto" />
+                                    </Button>
+                                </Link>
+
+                                <Link href="/orders">
+                                    <Button variant="outline" className="w-full justify-start">
+                                        <ShoppingBag className="w-4 h-4 mr-3" />
+                                        View All Orders
+                                        <ArrowRight className="w-4 h-4 ml-auto" />
+                                    </Button>
+                                </Link>
+
+                                <Link href="/account/digital-library">
+                                    <Button variant="outline" className="w-full justify-start">
+                                        <Download className="w-4 h-4 mr-3" />
+                                        Digital Library
+                                        <ArrowRight className="w-4 h-4 ml-auto" />
+                                    </Button>
+                                </Link>
+
+                                <Link href="/profile">
+                                    <Button variant="outline" className="w-full justify-start">
+                                        <Settings className="w-4 h-4 mr-3" />
+                                        Account Settings
+                                        <ArrowRight className="w-4 h-4 ml-auto" />
+                                    </Button>
+                                </Link>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Account Status</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-sm text-gray-600">Email Verification</span>
+                                    <Badge variant={isEmailVerified ? 'default' : 'secondary'}>
+                                        {isEmailVerified ? 'Verified' : 'Pending'}
+                                    </Badge>
+                                </div>
+
+                                <div className="flex items-center justify-between">
+                                    <span className="text-sm text-gray-600">Account Type</span>
+                                    <Badge variant="outline">
+                                        {user?.role?.name || 'Member'}
+                                    </Badge>
+                                </div>
+
+                                <div className="flex items-center justify-between">
+                                    <span className="text-sm text-gray-600">Member Since</span>
+                                    <span className="text-sm text-gray-900">
+                    {user?.created_at
+                        ? new Date(user.created_at).toLocaleDateString()
+                        : 'Unknown'
+                    }
+                  </span>
+                                </div>
+
+                                {stats?.loyalty_points && stats.loyalty_points > 0 && (
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-sm text-gray-600">Loyalty Points</span>
+                                        <Badge variant="outline" className="bg-yellow-50 text-yellow-700">
+                                            <Star className="w-3 h-3 mr-1" />
+                                            {stats.loyalty_points}
+                                        </Badge>
+                                    </div>
+                                )}
+                            </CardContent>
+                        </Card>
+                    </div>
+                </TabsContent>
+
+                <TabsContent value="orders">
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between">
+                            <CardTitle>Recent Orders</CardTitle>
+                            <Link href="/orders">
+                                <Button variant="outline" size="sm">
+                                    View All
+                                    <ArrowRight className="w-4 h-4 ml-2" />
+                                </Button>
+                            </Link>
+                        </CardHeader>
+                        <CardContent>
+                            {recentOrders.length > 0 ? (
+                                <div className="space-y-4">
+                                    {recentOrders.map((order) => (
+                                        <div
+                                            key={order.id}
+                                            className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50"
+                                        >
+                                            <div className="flex items-center space-x-4">
+                                                <div className="p-2 bg-blue-100 rounded-full">
+                                                    <ShoppingBag className="h-4 w-4 text-blue-600" />
+                                                </div>
+                                                <div>
+                                                    <p className="font-medium">Order #{order.order_number}</p>
+                                                    <p className="text-sm text-gray-600">
+                                                        {order.items_count} item{order.items_count !== 1 ? 's' : ''} • {' '}
+                                                        {new Date(order.created_at).toLocaleDateString()}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div className="text-right">
+                                                <p className="font-medium">{formatCurrency(order.total)}</p>
+                                                <Badge
+                                                    variant="outline"
+                                                    className={getOrderStatusColor(order.status)}
+                                                >
+                                                    {order.status}
+                                                </Badge>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="text-center py-8">
+                                    <ShoppingBag className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                                    <h3 className="text-lg font-semibold text-gray-900 mb-2">No orders yet</h3>
+                                    <p className="text-gray-600 mb-4">
+                                        When you make your first purchase, it will appear here.
+                                    </p>
+                                    <Link href="/products">
+                                        <Button>Start Shopping</Button>
+                                    </Link>
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="downloads">
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between">
+                            <CardTitle>Recent Downloads</CardTitle>
+                            <Link href="/account/digital-library">
+                                <Button variant="outline" size="sm">
+                                    View Library
+                                    <ArrowRight className="w-4 h-4 ml-2" />
+                                </Button>
+                            </Link>
+                        </CardHeader>
+                        <CardContent>
+                            {recentDownloads.length > 0 ? (
+                                <div className="space-y-4">
+                                    {recentDownloads.map((download) => (
+                                        <div
+                                            key={download.id}
+                                            className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50"
+                                        >
+                                            <div className="flex items-center space-x-4">
+                                                <div className="p-2 bg-purple-100 rounded-full">
+                                                    <Download className="h-4 w-4 text-purple-600" />
+                                                </div>
+                                                <div>
+                                                    <p className="font-medium">{download.product_name}</p>
+                                                    <p className="text-sm text-gray-600">
+                                                        {download.file_size} • Downloaded {' '}
+                                                        {new Date(download.downloaded_at).toLocaleDateString()}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div className="text-right">
+                                                <p className="text-sm text-gray-600">
+                                                    {download.download_count}/{download.max_downloads} downloads
+                                                </p>
+                                                <div className="w-20 bg-gray-200 rounded-full h-2 mt-1">
+                                                    <div
+                                                        className="bg-purple-600 h-2 rounded-full"
+                                                        style={{
+                                                            width: `${(download.download_count / download.max_downloads) * 100}%`
+                                                        }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="text-center py-8">
+                                    <Download className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                                    <h3 className="text-lg font-semibold text-gray-900 mb-2">No downloads yet</h3>
+                                    <p className="text-gray-600 mb-4">
+                                        Digital products you purchase will be available for download here.
+                                    </p>
+                                    <Link href="/products?type=digital">
+                                        <Button>Browse Digital Products</Button>
+                                    </Link>
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+            </Tabs>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center space-x-2">
+                            <Clock className="h-5 w-5" />
+                            <span>Recent Activity</span>
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="space-y-3">
+                            {recentOrders.slice(0, 3).map((order) => (
+                                <div key={`activity-${order.id}`} className="flex items-center space-x-3">
+                                    <div className="w-2 h-2 bg-blue-600 rounded-full flex-shrink-0"></div>
+                                    <div className="flex-1">
+                                        <p className="text-sm">
+                                            Order #{order.order_number} was {order.status.toLowerCase()}
+                                        </p>
+                                        <p className="text-xs text-gray-500">
+                                            {new Date(order.created_at).toLocaleDateString()}
+                                        </p>
+                                    </div>
+                                </div>
+                            ))}
+
+                            {recentDownloads.slice(0, 2).map((download) => (
+                                <div key={`activity-download-${download.id}`} className="flex items-center space-x-3">
+                                    <div className="w-2 h-2 bg-purple-600 rounded-full flex-shrink-0"></div>
+                                    <div className="flex-1">
+                                        <p className="text-sm">
+                                            Downloaded {download.product_name}
+                                        </p>
+                                        <p className="text-xs text-gray-500">
+                                            {new Date(download.downloaded_at).toLocaleDateString()}
+                                        </p>
+                                    </div>
+                                </div>
+                            ))}
+
+                            {recentOrders.length === 0 && recentDownloads.length === 0 && (
+                                <p className="text-center text-gray-500 py-4">
+                                    No recent activity
+                                </p>
+                            )}
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Help & Support</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <p className="text-sm text-gray-600">
+                            Need help with your account or have questions about your orders?
+                        </p>
+
+                        <div className="space-y-2">
+                            <Link href="/help">
+                                <Button variant="outline" className="w-full justify-start">
+                                    <Eye className="w-4 h-4 mr-3" />
+                                    Browse Help Center
+                                </Button>
+                            </Link>
+
+                            <Link href="/contact">
+                                <Button variant="outline" className="w-full justify-start">
+                                    <User className="w-4 h-4 mr-3" />
+                                    Contact Support
+                                </Button>
+                            </Link>
+                        </div>
+
+                        <div className="bg-blue-50 p-3 rounded-lg">
+                            <p className="text-xs text-blue-700">
+                                <strong>Pro tip:</strong> Check your email for order confirmations and download links.
+                                They contain important information about your purchases.
+                            </p>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+
+            {stats && stats.total_orders === 0 && (
+                <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+                    <CardContent className="p-6">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                                    Welcome to your dashboard! 🎉
+                                </h3>
+                                <p className="text-gray-600 mb-4">
+                                    Ready to explore our products? Get started with your first purchase and unlock exclusive digital content.
+                                </p>
+                                <Link href="/products">
+                                    <Button>
+                                        Start Shopping
+                                        <ArrowRight className="w-4 h-4 ml-2" />
+                                    </Button>
+                                </Link>
+                            </div>
+
+                            <div className="hidden lg:block">
+                                <div className="p-4 bg-white/50 rounded-full">
+                                    <TrendingUp className="h-8 w-8 text-blue-600" />
+                                </div>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
+        </div>
+    );
 }

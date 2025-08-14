@@ -1,778 +1,520 @@
-'use client'
+'use client';
 
-import * as React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import { useState, useEffect } from 'react';
+import { useAuthUtils } from '@/hooks/useAuthUtils';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
-    Star,
-    ThumbsUp,
-    Flag,
-    User,
-    Calendar,
-    CheckCircle,
-    Camera,
-    X,
-    Send,
-    Filter,
-    SortDesc,
-    MessageSquare,
-    BarChart3,
-} from 'lucide-react';
-import {
-    Button,
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-    Input,
-    Badge,
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui';
-// import { productsApi } from '@/api/products'; // Unused for now
-import { ProductReview, ReviewStats } from '@/types/product';
-import { useAuth } from '@/stores/authStore';
-import { useNotificationStore } from '@/stores/notificationStore';
-import { cn } from '@/lib/cn';
+} from '@/components/ui/dialog';
+import { toast } from 'sonner';
+import {
+    Star,
+    ThumbsUp,
+    ThumbsDown,
+    MessageSquare,
+    Edit,
+    Trash2,
+    Flag,
+    MoreHorizontal
+} from 'lucide-react';
 
-// Simple Progress component
-const Progress: React.FC<{
-    value: number;
-    className?: string;
-}> = ({ value, className }) => {
-    return (
-        <div className={cn("w-full bg-secondary rounded-full h-2", className)}>
-            <div
-                className="bg-primary rounded-full h-2 transition-all duration-300"
-                style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
-            />
-        </div>
-    );
-};
-
-// Review form schema
-const reviewSchema = z.object({
-    rating: z.number().min(1, 'Please select a rating').max(5),
-    title: z.string().min(1, 'Review title is required').max(100, 'Title must be less than 100 characters'),
-    content: z.string().min(10, 'Review must be at least 10 characters').max(1000, 'Review must be less than 1000 characters'),
-    images: z.array(z.instanceof(File)).max(5, 'Maximum 5 images allowed').optional(),
-});
-
-type ReviewFormData = z.infer<typeof reviewSchema>;
-
-// Sort options
-const sortOptions = [
-    { value: 'newest', label: 'Newest First' },
-    { value: 'oldest', label: 'Oldest First' },
-    { value: 'highest', label: 'Highest Rating' },
-    { value: 'lowest', label: 'Lowest Rating' },
-    { value: 'helpful', label: 'Most Helpful' },
-];
-
-// Filter options
-const filterOptions = [
-    { value: 'all', label: 'All Reviews' },
-    { value: '5', label: '5 Stars' },
-    { value: '4', label: '4 Stars' },
-    { value: '3', label: '3 Stars' },
-    { value: '2', label: '2 Stars' },
-    { value: '1', label: '1 Star' },
-    { value: 'verified', label: 'Verified Purchases' },
-    { value: 'with_images', label: 'With Images' },
-];
+interface Review {
+    id: number;
+    rating: number;
+    title: string;
+    comment: string;
+    user: {
+        id: number;
+        name: string;
+        avatar_url?: string;
+    };
+    created_at: string;
+    updated_at: string;
+    helpful_count: number;
+    user_found_helpful: boolean;
+    verified_purchase: boolean;
+    is_own_review: boolean;
+}
 
 interface ProductReviewsProps {
     productId: number;
-    className?: string;
+    productName: string;
+    userCanReview?: boolean;
 }
 
-export const ProductReviews: React.FC<ProductReviewsProps> = ({
-                                                                  productId,
-                                                                  className,
-                                                              }) => {
-    const { isAuthenticated } = useAuth();
-    const { addNotification } = useNotificationStore();
+export function ProductReviews({
+                                   productId,
+                                   productName,
+                                   userCanReview = false
+                               }: ProductReviewsProps) {
+    const {
+        isAuthenticated,
+        requireAuth,
+        getAuthHeaders
+    } = useAuthUtils();
 
-    // Helper functions for notifications
-    const success = (title: string, description?: string) => {
-        addNotification({
-            type: 'success',
-            title,
-            ...(description && { description })
-        });
-    };
+    const [reviews, setReviews] = useState<Review[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showReviewForm, setShowReviewForm] = useState(false);
+    const [editingReview, setEditingReview] = useState<Review | null>(null);
 
-    const error = (title: string, description?: string) => {
-        addNotification({
-            type: 'error',
-            title,
-            ...(description && { description })
-        });
-    };
+    const [reviewForm, setReviewForm] = useState({
+        rating: 5,
+        title: '',
+        comment: ''
+    });
 
-    // State
-    const [reviews, setReviews] = React.useState<ProductReview[]>([]);
-    const [reviewStats, setReviewStats] = React.useState<ReviewStats | null>(null);
-    const [isLoading, setIsLoading] = React.useState(true);
-    const [sortBy, setSortBy] = React.useState('newest');
-    const [filterBy, setFilterBy] = React.useState('all');
-    const [isSubmittingReview, setIsSubmittingReview] = React.useState(false);
-    const [showReviewForm, setShowReviewForm] = React.useState(false);
+    const [averageRating, setAverageRating] = useState(0);
+    const [totalReviews, setTotalReviews] = useState(0);
+    const [ratingBreakdown, setRatingBreakdown] = useState<Record<number, number>>({});
 
-    // Fetch reviews and stats
+    useEffect(() => {
+        fetchReviews();
+    }, [productId]);
+
     const fetchReviews = async () => {
+        setIsLoading(true);
         try {
-            setIsLoading(true);
-            // Mock API calls since these methods don't exist in ProductsApi
-            const mockReviews: ProductReview[] = [];
-            const mockStats: ReviewStats = {
-                average_rating: 0,
-                total_reviews: 0,
-                rating_distribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
-            };
+            const response = await fetch(`/api/products/${productId}/reviews`, {
+                headers: isAuthenticated ? getAuthHeaders() : {},
+            });
 
-            setReviews(mockReviews);
-            setReviewStats(mockStats);
-        } catch (err) {
-            error('Failed to load reviews', 'Please try again later');
+            if (response.ok) {
+                const data = await response.json();
+                setReviews(data.reviews || []);
+                setAverageRating(data.average_rating || 0);
+                setTotalReviews(data.total_reviews || 0);
+                setRatingBreakdown(data.rating_breakdown || {});
+            }
+        } catch (error) {
+            console.error('Failed to fetch reviews:', error);
+            toast.error('Failed to load reviews');
         } finally {
             setIsLoading(false);
         }
     };
 
-    React.useEffect(() => {
-        fetchReviews();
-    }, [productId, sortBy, filterBy]);
+    const handleSubmitReview = async () => {
+        if (!requireAuth('/login', 'Please sign in to write a review')) return;
 
-    const handleHelpfulVote = async (_reviewId: number) => {
-        if (!isAuthenticated) {
-            error('Please log in', 'You need to be logged in to vote on reviews');
+        if (!reviewForm.title.trim()) {
+            toast.error('Please enter a review title');
             return;
         }
 
+        if (!reviewForm.comment.trim()) {
+            toast.error('Please enter a review comment');
+            return;
+        }
+
+        setIsSubmitting(true);
         try {
-            // Mock API call since method doesn't exist in ProductsApi
-            await new Promise(resolve => setTimeout(resolve, 500));
-            success('Vote recorded', 'Thank you for your feedback');
-            fetchReviews(); // Refresh to show updated count
-        } catch (err) {
-            error('Failed to record vote', 'Please try again');
+            const url = editingReview
+                ? `/api/products/${productId}/reviews/${editingReview.id}`
+                : `/api/products/${productId}/reviews`;
+
+            const method = editingReview ? 'PUT' : 'POST';
+
+            const response = await fetch(url, {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...getAuthHeaders(),
+                },
+                body: JSON.stringify(reviewForm),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+
+                if (editingReview) {
+                    setReviews(prev => prev.map(review =>
+                        review.id === editingReview.id ? data.review : review
+                    ));
+                    toast.success('Review updated successfully');
+                    setEditingReview(null);
+                } else {
+                    setReviews(prev => [data.review, ...prev]);
+                    toast.success('Review submitted successfully');
+                }
+
+                setShowReviewForm(false);
+                setReviewForm({ rating: 5, title: '', comment: '' });
+
+                fetchReviews();
+            } else {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to submit review');
+            }
+        } catch (error: any) {
+            console.error('Review submission failed:', error);
+            toast.error(error.message || 'Failed to submit review');
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
-    return (
-        <div className={cn('space-y-6', className)}>
-            {/* Review Stats Overview */}
-            {reviewStats && (
-                <ReviewStatsOverview
-                    stats={reviewStats}
-                    onFilterChange={setFilterBy}
-                    currentFilter={filterBy}
-                />
-            )}
+    const handleDeleteReview = async (reviewId: number) => {
+        if (!requireAuth()) return;
 
-            {/* Review Controls */}
-            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-                <div className="flex gap-4">
-                    {/* Sort */}
-                    <Select value={sortBy} onValueChange={setSortBy}>
-                        <SelectTrigger className="w-40">
-                            <SortDesc className="mr-2 h-4 w-4" />
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {sortOptions.map((option) => (
-                                <SelectItem key={option.value} value={option.value}>
-                                    {option.label}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
+        if (!confirm('Are you sure you want to delete this review?')) return;
 
-                    {/* Filter */}
-                    <Select value={filterBy} onValueChange={setFilterBy}>
-                        <SelectTrigger className="w-40">
-                            <Filter className="mr-2 h-4 w-4" />
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {filterOptions.map((option) => (
-                                <SelectItem key={option.value} value={option.value}>
-                                    {option.label}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
+        try {
+            const response = await fetch(`/api/products/${productId}/reviews/${reviewId}`, {
+                method: 'DELETE',
+                headers: getAuthHeaders(),
+            });
 
-                {/* Write Review Button */}
-                {isAuthenticated && (
-                    <Dialog open={showReviewForm} onOpenChange={setShowReviewForm}>
-                        <DialogTrigger>
-                            <Button>
-                                <MessageSquare className="mr-2 h-4 w-4" />
-                                Write Review
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-                            <DialogHeader>
-                                <DialogTitle>Write a Review</DialogTitle>
-                            </DialogHeader>
-                            <ReviewForm
-                                onSubmit={async (_data) => {
-                                    setIsSubmittingReview(true);
-                                    try {
-                                        // Mock API call since method doesn't exist in ProductsApi
-                                        await new Promise(resolve => setTimeout(resolve, 1000));
-                                        success('Review submitted!', 'Thank you for your feedback');
-                                        setShowReviewForm(false);
-                                        fetchReviews();
-                                    } catch (err) {
-                                        error('Failed to submit review', 'Please try again');
-                                    } finally {
-                                        setIsSubmittingReview(false);
-                                    }
-                                }}
-                                isSubmitting={isSubmittingReview}
-                            />
-                        </DialogContent>
-                    </Dialog>
-                )}
-            </div>
+            if (response.ok) {
+                setReviews(prev => prev.filter(review => review.id !== reviewId));
+                toast.success('Review deleted successfully');
+                fetchReviews(); // Refresh statistics
+            } else {
+                throw new Error('Failed to delete review');
+            }
+        } catch (error) {
+            console.error('Review deletion failed:', error);
+            toast.error('Failed to delete review');
+        }
+    };
 
-            {/* Reviews List */}
-            <div className="space-y-6">
-                {isLoading ? (
-                    <ReviewsSkeleton />
-                ) : reviews.length > 0 ? (
-                    <motion.div layout className="space-y-4">
-                        <AnimatePresence>
-                            {reviews.map((review, index) => (
-                                <ReviewItem
-                                    key={review.id}
-                                    review={review}
-                                    index={index}
-                                    onHelpfulVote={handleHelpfulVote}
-                                    isAuthenticated={isAuthenticated}
-                                />
-                            ))}
-                        </AnimatePresence>
-                    </motion.div>
-                ) : (
-                    <EmptyReviews
-                        onWriteReview={() => setShowReviewForm(true)}
-                        isAuthenticated={isAuthenticated}
+    const handleHelpfulVote = async (reviewId: number, helpful: boolean) => {
+        if (!requireAuth('/login', 'Please sign in to vote')) return;
+
+        try {
+            const response = await fetch(`/api/products/${productId}/reviews/${reviewId}/helpful`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...getAuthHeaders(),
+                },
+                body: JSON.stringify({ helpful }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setReviews(prev => prev.map(review =>
+                    review.id === reviewId
+                        ? {
+                            ...review,
+                            helpful_count: data.helpful_count,
+                            user_found_helpful: data.user_found_helpful
+                        }
+                        : review
+                ));
+            }
+        } catch (error) {
+            console.error('Helpful vote failed:', error);
+            toast.error('Failed to record vote');
+        }
+    };
+
+    const startEditReview = (review: Review) => {
+        setEditingReview(review);
+        setReviewForm({
+            rating: review.rating,
+            title: review.title,
+            comment: review.comment
+        });
+        setShowReviewForm(true);
+    };
+
+    const renderStars = (rating: number, interactive = false, size = 'default') => {
+        const sizeClasses = {
+            sm: 'h-3 w-3',
+            default: 'h-4 w-4',
+            lg: 'h-5 w-5'
+        };
+
+        return (
+            <div className="flex items-center space-x-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                    <Star
+                        key={star}
+                        className={`${sizeClasses[size]} ${
+                            star <= rating
+                                ? 'fill-yellow-400 text-yellow-400'
+                                : 'text-gray-300'
+                        } ${interactive ? 'cursor-pointer hover:text-yellow-400' : ''}`}
+                        onClick={interactive ? () => setReviewForm(prev => ({ ...prev, rating: star })) : undefined}
                     />
+                ))}
+            </div>
+        );
+    };
+
+    const getUserInitials = (name: string) => {
+        return name.split(' ')
+            .map(word => word[0])
+            .join('')
+            .toUpperCase()
+            .slice(0, 2);
+    };
+
+    if (isLoading) {
+        return (
+            <Card>
+                <CardContent className="p-6">
+                    <div className="animate-pulse space-y-4">
+                        <div className="h-6 bg-gray-200 rounded w-1/3"></div>
+                        <div className="space-y-3">
+                            {[1, 2, 3].map(i => (
+                                <div key={i} className="h-20 bg-gray-200 rounded"></div>
+                            ))}
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+        );
+    }
+
+    return (
+        <div className="space-y-6">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Customer Reviews</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <div className="flex items-center space-x-6">
+                        <div className="text-center">
+                            <div className="text-3xl font-bold">{averageRating.toFixed(1)}</div>
+                            {renderStars(Math.round(averageRating), false, 'lg')}
+                            <div className="text-sm text-gray-600 mt-1">
+                                {totalReviews} review{totalReviews !== 1 ? 's' : ''}
+                            </div>
+                        </div>
+
+                        <div className="flex-1 space-y-2">
+                            {[5, 4, 3, 2, 1].map(rating => (
+                                <div key={rating} className="flex items-center space-x-3">
+                                    <span className="text-sm w-8">{rating}</span>
+                                    <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                                    <div className="flex-1 bg-gray-200 rounded-full h-2">
+                                        <div
+                                            className="bg-yellow-400 h-2 rounded-full"
+                                            style={{
+                                                width: `${totalReviews > 0 ? ((ratingBreakdown[rating] || 0) / totalReviews) * 100 : 0}%`
+                                            }}
+                                        />
+                                    </div>
+                                    <span className="text-sm text-gray-600 w-8">
+                    {ratingBreakdown[rating] || 0}
+                  </span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {isAuthenticated && userCanReview && (
+                        <Dialog open={showReviewForm} onOpenChange={setShowReviewForm}>
+                            <DialogTrigger asChild>
+                                <Button className="w-full">
+                                    <MessageSquare className="w-4 h-4 mr-2" />
+                                    Write a Review
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-2xl">
+                                <DialogHeader>
+                                    <DialogTitle>
+                                        {editingReview ? 'Edit Review' : `Write a Review for ${productName}`}
+                                    </DialogTitle>
+                                </DialogHeader>
+
+                                <div className="space-y-4">
+                                    <div>
+                                        <Label>Rating</Label>
+                                        <div className="mt-2">
+                                            {renderStars(reviewForm.rating, true, 'lg')}
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <Label htmlFor="title" required>Review Title</Label>
+                                        <input
+                                            id="title"
+                                            className="mt-1 w-full p-2 border border-gray-300 rounded-md"
+                                            placeholder="Summarize your experience"
+                                            value={reviewForm.title}
+                                            onChange={(e) => setReviewForm(prev => ({ ...prev, title: e.target.value }))}
+                                            maxLength={100}
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <Label htmlFor="comment" required>Your Review</Label>
+                                        <Textarea
+                                            id="comment"
+                                            className="mt-1"
+                                            placeholder="Tell others about your experience with this product"
+                                            value={reviewForm.comment}
+                                            onChange={(e) => setReviewForm(prev => ({ ...prev, comment: e.target.value }))}
+                                            rows={4}
+                                            maxLength={1000}
+                                        />
+                                        <div className="text-right text-xs text-gray-500 mt-1">
+                                            {reviewForm.comment.length}/1000
+                                        </div>
+                                    </div>
+
+                                    <div className="flex justify-end space-x-3">
+                                        <Button
+                                            variant="outline"
+                                            onClick={() => {
+                                                setShowReviewForm(false);
+                                                setEditingReview(null);
+                                                setReviewForm({ rating: 5, title: '', comment: '' });
+                                            }}
+                                        >
+                                            Cancel
+                                        </Button>
+                                        <Button
+                                            onClick={handleSubmitReview}
+                                            disabled={isSubmitting}
+                                        >
+                                            {isSubmitting ? 'Submitting...' : editingReview ? 'Update Review' : 'Submit Review'}
+                                        </Button>
+                                    </div>
+                                </div>
+                            </DialogContent>
+                        </Dialog>
+                    )}
+
+                    {!isAuthenticated && (
+                        <div className="text-center text-sm text-gray-600">
+                            <Button variant="outline" asChild>
+                                <a href="/login">Sign in to write a review</a>
+                            </Button>
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
+
+            <div className="space-y-4">
+                {reviews.map((review) => (
+                    <Card key={review.id}>
+                        <CardContent className="p-6">
+                            <div className="space-y-4">
+                                {/* Review Header */}
+                                <div className="flex items-start justify-between">
+                                    <div className="flex items-center space-x-3">
+                                        <Avatar className="h-10 w-10">
+                                            <AvatarImage src={review.user.avatar_url} />
+                                            <AvatarFallback>
+                                                {getUserInitials(review.user.name)}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <div>
+                                            <div className="flex items-center space-x-2">
+                                                <span className="font-medium">{review.user.name}</span>
+                                                {review.verified_purchase && (
+                                                    <Badge variant="outline" className="text-xs">
+                                                        Verified Purchase
+                                                    </Badge>
+                                                )}
+                                            </div>
+                                            <div className="flex items-center space-x-2">
+                                                {renderStars(review.rating)}
+                                                <span className="text-sm text-gray-600">
+                          {new Date(review.created_at).toLocaleDateString()}
+                        </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {review.is_own_review && (
+                                        <div className="flex items-center space-x-2">
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={() => startEditReview(review)}
+                                            >
+                                                <Edit className="h-4 w-4" />
+                                            </Button>
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={() => handleDeleteReview(review.id)}
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div>
+                                    <h4 className="font-semibold mb-2">{review.title}</h4>
+                                    <p className="text-gray-700 leading-relaxed">{review.comment}</p>
+                                </div>
+
+                                <div className="flex items-center justify-between pt-2 border-t">
+                                    <div className="flex items-center space-x-4">
+                                        {isAuthenticated && !review.is_own_review && (
+                                            <div className="flex items-center space-x-2">
+                                                <span className="text-sm text-gray-600">Was this helpful?</span>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => handleHelpfulVote(review.id, true)}
+                                                    className={review.user_found_helpful ? 'text-green-600' : ''}
+                                                >
+                                                    <ThumbsUp className="h-4 w-4 mr-1" />
+                                                    Yes
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => handleHelpfulVote(review.id, false)}
+                                                >
+                                                    <ThumbsDown className="h-4 w-4 mr-1" />
+                                                    No
+                                                </Button>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className="flex items-center space-x-2 text-sm text-gray-600">
+                                        {review.helpful_count > 0 && (
+                                            <span>{review.helpful_count} found this helpful</span>
+                                        )}
+                                        {review.updated_at !== review.created_at && (
+                                            <span className="text-xs">
+                        (edited {new Date(review.updated_at).toLocaleDateString()})
+                      </span>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                ))}
+
+                {reviews.length === 0 && (
+                    <Card>
+                        <CardContent className="p-6 text-center">
+                            <MessageSquare className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                            <h3 className="text-lg font-semibold text-gray-900 mb-2">No reviews yet</h3>
+                            <p className="text-gray-600 mb-4">
+                                Be the first to share your thoughts about this product.
+                            </p>
+                            {isAuthenticated && userCanReview && (
+                                <Button onClick={() => setShowReviewForm(true)}>
+                                    Write the First Review
+                                </Button>
+                            )}
+                        </CardContent>
+                    </Card>
                 )}
             </div>
         </div>
     );
-};
-
-// Review Stats Overview Component
-interface ReviewStatsOverviewProps {
-    stats: ReviewStats;
-    onFilterChange: (filter: string) => void;
-    currentFilter: string;
 }
-
-const ReviewStatsOverview: React.FC<ReviewStatsOverviewProps> = ({
-                                                                     stats,
-                                                                     onFilterChange,
-                                                                     currentFilter,
-                                                                 }) => {
-    return (
-        <Card>
-            <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                    <BarChart3 className="h-5 w-5 text-primary" />
-                    Customer Reviews
-                </CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div className="grid md:grid-cols-2 gap-6">
-                    {/* Overall Rating */}
-                    <div className="text-center">
-                        <div className="text-4xl font-bold text-primary mb-2">
-                            {stats.average_rating.toFixed(1)}
-                        </div>
-                        <div className="flex items-center justify-center gap-1 mb-2">
-                            {[...Array(5)].map((_, i) => (
-                                <Star
-                                    key={i}
-                                    className={cn(
-                                        'h-5 w-5',
-                                        i < Math.floor(stats.average_rating)
-                                            ? 'fill-yellow-400 text-yellow-400'
-                                            : 'text-muted-foreground'
-                                    )}
-                                />
-                            ))}
-                        </div>
-                        <p className="text-muted-foreground">
-                            Based on {stats.total_reviews} {stats.total_reviews === 1 ? 'review' : 'reviews'}
-                        </p>
-                    </div>
-
-                    {/* Rating Distribution */}
-                    <div className="space-y-2">
-                        {[5, 4, 3, 2, 1].map((rating) => {
-                            const count = stats.rating_distribution[rating] || 0;
-                            const percentage = stats.total_reviews > 0
-                                ? (count / stats.total_reviews) * 100
-                                : 0;
-
-                            return (
-                                <div key={rating} className="flex items-center gap-3">
-                                    <button
-                                        onClick={() => onFilterChange(rating.toString())}
-                                        className={cn(
-                                            'flex items-center gap-1 text-sm hover:text-primary transition-colors',
-                                            currentFilter === rating.toString() && 'text-primary font-medium'
-                                        )}
-                                    >
-                                        <span>{rating}</span>
-                                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                                    </button>
-                                    <div className="flex-1">
-                                        <Progress
-                                            value={percentage}
-                                            className="h-2"
-                                        />
-                                    </div>
-                                    <span className="text-sm text-muted-foreground min-w-[3ch]">
-                                        {count}
-                                    </span>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
-    );
-};
-
-// Individual Review Item Component
-interface ReviewItemProps {
-    review: ProductReview;
-    index: number;
-    onHelpfulVote: (reviewId: number) => void;
-    isAuthenticated: boolean;
-}
-
-const ReviewItem: React.FC<ReviewItemProps> = ({
-                                                   review,
-                                                   index,
-                                                   onHelpfulVote,
-                                                   isAuthenticated,
-                                               }) => {
-    const [showFullContent, setShowFullContent] = React.useState(false);
-    const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
-
-    const isLongContent = review.content.length > 300;
-    const displayContent = showFullContent || !isLongContent
-        ? review.content
-        : `${review.content.substring(0, 300)}...`;
-
-    return (
-        <motion.div
-            layout
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: index * 0.05 }}
-        >
-            <Card>
-                <CardContent className="p-6">
-                    <div className="space-y-4">
-                        {/* Header */}
-                        <div className="flex items-start justify-between">
-                            <div className="flex items-center gap-3">
-                                <Avatar className="w-10 h-10">
-                                    <AvatarImage src={review.user.avatar} />
-                                    <AvatarFallback>
-                                        <User className="h-5 w-5" />
-                                    </AvatarFallback>
-                                </Avatar>
-                                <div>
-                                    <h4 className="font-medium text-foreground">
-                                        {review.user.name}
-                                    </h4>
-                                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                        <Calendar className="h-3 w-3" />
-                                        <span>{new Date(review.created_at).toLocaleDateString()}</span>
-                                        {review.verified_purchase && (
-                                            <Badge variant="secondary" className="text-xs">
-                                                <CheckCircle className="mr-1 h-3 w-3" />
-                                                Verified Purchase
-                                            </Badge>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Rating */}
-                            <div className="flex items-center gap-1">
-                                {[...Array(5)].map((_, i) => (
-                                    <Star
-                                        key={i}
-                                        className={cn(
-                                            'h-4 w-4',
-                                            i < review.rating
-                                                ? 'fill-yellow-400 text-yellow-400'
-                                                : 'text-muted-foreground'
-                                        )}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Title */}
-                        {review.title && (
-                            <h5 className="font-medium text-foreground">
-                                {review.title}
-                            </h5>
-                        )}
-
-                        {/* Content */}
-                        <div className="space-y-2">
-                            <p className="text-muted-foreground leading-relaxed">
-                                {displayContent}
-                            </p>
-                            {isLongContent && (
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => setShowFullContent(!showFullContent)}
-                                    className="text-primary hover:text-primary/80 p-0 h-auto"
-                                >
-                                    {showFullContent ? 'Show Less' : 'Read More'}
-                                </Button>
-                            )}
-                        </div>
-
-                        {/* Images */}
-                        {review.images && review.images.length > 0 && (
-                            <div className="flex gap-2 flex-wrap">
-                                {review.images.map((image, imgIndex) => (
-                                    <button
-                                        key={imgIndex}
-                                        onClick={() => setSelectedImage(image.url)}
-                                        className="relative w-16 h-16 rounded-lg overflow-hidden border hover:opacity-80 transition-opacity"
-                                    >
-                                        <img
-                                            src={image.url}
-                                            alt={`Review image ${imgIndex + 1}`}
-                                            className="w-full h-full object-cover"
-                                        />
-                                    </button>
-                                ))}
-                            </div>
-                        )}
-
-                        {/* Actions */}
-                        <div className="flex items-center justify-between pt-4 border-t">
-                            <div className="flex items-center gap-4">
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => onHelpfulVote(review.id)}
-                                    disabled={!isAuthenticated}
-                                    className="flex items-center gap-2"
-                                >
-                                    <ThumbsUp className="h-4 w-4" />
-                                    <span>Helpful ({review.helpful_count})</span>
-                                </Button>
-                            </div>
-
-                            <Button variant="ghost" size="sm" className="text-muted-foreground">
-                                <Flag className="h-4 w-4 mr-1" />
-                                Report
-                            </Button>
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
-
-            {/* Image Modal */}
-            {selectedImage && (
-                <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
-                    <DialogContent className="max-w-3xl">
-                        <DialogHeader>
-                            <DialogTitle className="sr-only">Review Image</DialogTitle>
-                        </DialogHeader>
-                        <div className="relative">
-                            <img
-                                src={selectedImage}
-                                alt="Review image"
-                                className="w-full h-auto max-h-[70vh] object-contain"
-                            />
-                            <Button
-                                variant="secondary"
-                                size="icon"
-                                onClick={() => setSelectedImage(null)}
-                                className="absolute top-2 right-2"
-                            >
-                                <X className="h-4 w-4" />
-                            </Button>
-                        </div>
-                    </DialogContent>
-                </Dialog>
-            )}
-        </motion.div>
-    );
-};
-
-// Review Form Component
-interface ReviewFormProps {
-    onSubmit: (data: ReviewFormData) => Promise<void>;
-    isSubmitting: boolean;
-}
-
-const ReviewForm: React.FC<ReviewFormProps> = ({
-                                                   onSubmit,
-                                                   isSubmitting,
-                                               }) => {
-    const [selectedImages, setSelectedImages] = React.useState<File[]>([]);
-    const [rating, setRating] = React.useState(0);
-    const [hoveredRating, setHoveredRating] = React.useState(0);
-
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        setValue,
-        watch,
-    } = useForm<ReviewFormData>({
-        resolver: zodResolver(reviewSchema),
-        defaultValues: {
-            rating: 0,
-            title: '',
-            content: '',
-            images: [],
-        },
-    });
-
-    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const files = Array.from(event.target.files || []);
-        if (selectedImages.length + files.length > 5) {
-            alert('Maximum 5 images allowed');
-            return;
-        }
-        setSelectedImages([...selectedImages, ...files]);
-        setValue('images', [...selectedImages, ...files]);
-    };
-
-    const removeImage = (index: number) => {
-        const newImages = selectedImages.filter((_, i) => i !== index);
-        setSelectedImages(newImages);
-        setValue('images', newImages);
-    };
-
-    const handleRatingClick = (value: number) => {
-        setRating(value);
-        setValue('rating', value);
-    };
-
-    const onFormSubmit = async (data: ReviewFormData) => {
-        await onSubmit({
-            ...data,
-            rating,
-            images: selectedImages,
-        });
-    };
-
-    return (
-        <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
-            {/* Rating */}
-            <div className="space-y-2">
-                <label className="text-sm font-medium">Rating *</label>
-                <div className="flex items-center gap-1">
-                    {[1, 2, 3, 4, 5].map((value) => (
-                        <button
-                            key={value}
-                            type="button"
-                            onClick={() => handleRatingClick(value)}
-                            onMouseEnter={() => setHoveredRating(value)}
-                            onMouseLeave={() => setHoveredRating(0)}
-                            className="transition-colors"
-                        >
-                            <Star
-                                className={cn(
-                                    'h-6 w-6',
-                                    (hoveredRating || rating) >= value
-                                        ? 'fill-yellow-400 text-yellow-400'
-                                        : 'text-muted-foreground'
-                                )}
-                            />
-                        </button>
-                    ))}
-                </div>
-                {errors.rating && (
-                    <p className="text-sm text-destructive">{errors.rating.message}</p>
-                )}
-            </div>
-
-            {/* Title */}
-            <div className="space-y-2">
-                <Input
-                    {...register('title')}
-                    placeholder="Give your review a title"
-                    label="Review Title *"
-                    {...(errors.title?.message && { error: errors.title.message })}
-                />
-            </div>
-
-            {/* Content */}
-            <div className="space-y-2">
-                <label className="text-sm font-medium">Review *</label>
-                <textarea
-                    {...register('content')}
-                    rows={5}
-                    placeholder="Share your experience with this product..."
-                    className="w-full px-3 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-                />
-                {errors.content && (
-                    <p className="text-sm text-destructive">{errors.content.message}</p>
-                )}
-                <p className="text-xs text-muted-foreground">
-                    {watch('content')?.length || 0}/1000 characters
-                </p>
-            </div>
-
-            {/* Image Upload */}
-            <div className="space-y-2">
-                <label className="text-sm font-medium">Add Photos (Optional)</label>
-                <div className="space-y-3">
-                    {selectedImages.length > 0 && (
-                        <div className="flex gap-2 flex-wrap">
-                            {selectedImages.map((file, index) => (
-                                <div key={index} className="relative">
-                                    <img
-                                        src={URL.createObjectURL(file)}
-                                        alt={`Preview ${index + 1}`}
-                                        className="w-16 h-16 object-cover rounded-lg border"
-                                    />
-                                    <Button
-                                        type="button"
-                                        variant="secondary"
-                                        size="icon"
-                                        onClick={() => removeImage(index)}
-                                        className="absolute -top-2 -right-2 w-6 h-6"
-                                    >
-                                        <X className="h-3 w-3" />
-                                    </Button>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                    {selectedImages.length < 5 && (
-                        <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center">
-                            <Camera className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                            <p className="text-sm text-muted-foreground mb-2">
-                                Add up to 5 photos to help others
-                            </p>
-                            <input
-                                type="file"
-                                multiple
-                                accept="image/*"
-                                onChange={handleImageUpload}
-                                className="hidden"
-                                id="image-upload"
-                            />
-                            <label htmlFor="image-upload">
-                                <Button type="button" variant="outline" size="sm">
-                                    <span>Choose Files</span>
-                                </Button>
-                            </label>
-                        </div>
-                    )}
-                </div>
-            </div>
-
-            {/* Submit */}
-            <div className="flex gap-3 pt-4">
-                <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="flex-1"
-                >
-                    {isSubmitting ? (
-                        'Submitting...'
-                    ) : (
-                        <>
-                            <Send className="mr-2 h-4 w-4" />
-                            Submit Review
-                        </>
-                    )}
-                </Button>
-            </div>
-        </form>
-    );
-};
-
-// Empty Reviews Component
-const EmptyReviews: React.FC<{
-    onWriteReview: () => void;
-    isAuthenticated: boolean;
-}> = ({ onWriteReview, isAuthenticated }) => (
-    <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-center py-12"
-    >
-        <MessageSquare className="h-16 w-16 text-muted-foreground mx-auto mb-6" />
-        <h3 className="text-xl font-semibold text-foreground mb-4">
-            No Reviews Yet
-        </h3>
-        <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-            Be the first to share your experience with this product and help other customers make informed decisions.
-        </p>
-        {isAuthenticated && (
-            <Button onClick={onWriteReview}>
-                <MessageSquare className="mr-2 h-4 w-4" />
-                Write First Review
-            </Button>
-        )}
-    </motion.div>
-);
-
-// Reviews Skeleton
-const ReviewsSkeleton: React.FC = () => (
-    <div className="space-y-4">
-        {[...Array(3)].map((_, i) => (
-            <Card key={i}>
-                <CardContent className="p-6">
-                    <div className="space-y-4">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-muted rounded-full animate-pulse" />
-                            <div className="space-y-2">
-                                <div className="h-4 bg-muted rounded w-32 animate-pulse" />
-                                <div className="h-3 bg-muted rounded w-24 animate-pulse" />
-                            </div>
-                        </div>
-                        <div className="space-y-2">
-                            <div className="h-4 bg-muted rounded w-3/4 animate-pulse" />
-                            <div className="h-4 bg-muted rounded w-1/2 animate-pulse" />
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
-        ))}
-    </div>
-);
-
-export default ProductReviews;

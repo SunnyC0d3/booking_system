@@ -1,219 +1,284 @@
 'use client';
 
-import * as React from 'react';
-import { useRouter } from 'next/navigation';
-import { Mail, CheckCircle, AlertCircle, RefreshCw, Clock } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useAuthUtils } from '@/hooks/useAuthUtils';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
-import { useAuth } from '@/stores/authStore';
 import { toast } from 'sonner';
-import { cn } from '@/lib/cn';
+import Link from 'next/link';
+import {
+    Mail,
+    CheckCircle,
+    XCircle,
+    RefreshCw,
+    Clock,
+    ArrowRight
+} from 'lucide-react';
 
 interface EmailVerificationProps {
-    className?: string;
     showCard?: boolean;
-    redirectTo?: string;
+    autoVerify?: boolean;
 }
 
-export const EmailVerification: React.FC<EmailVerificationProps> = ({
-                                                                        className,
-                                                                        showCard = true,
-                                                                        redirectTo = '/dashboard'
-                                                                    }) => {
-    const router = useRouter();
-    const { user, resendVerification, isLoading } = useAuth();
-    const [isResending, setIsResending] = React.useState(false);
-    const [countdown, setCountdown] = React.useState(0);
-    const [lastSentAt, setLastSentAt] = React.useState<number | null>(null);
+export function EmailVerification({
+                                      showCard = true,
+                                      autoVerify = true
+                                  }: EmailVerificationProps) {
+    const searchParams = useSearchParams();
+    const {
+        user,
+        verifyEmail,
+        resendVerification,
+        isEmailVerified,
+        needsEmailVerification,
+        isLoading: authLoading
+    } = useAuthUtils();
 
-    // Countdown timer for resend button
-    React.useEffect(() => {
+    const [status, setStatus] = useState<'pending' | 'loading' | 'success' | 'error' | 'expired'>('pending');
+    const [isResending, setIsResending] = useState(false);
+    const [lastSentTime, setLastSentTime] = useState<Date | null>(null);
+    const [countdown, setCountdown] = useState(0);
+    const token = searchParams.get('token');
+    const email = searchParams.get('email');
+
+    useEffect(() => {
         if (countdown > 0) {
             const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
             return () => clearTimeout(timer);
         }
-        return undefined;
     }, [countdown]);
 
-    // Start countdown when component mounts if recently sent
-    React.useEffect(() => {
-        const lastSent = localStorage.getItem('verification_email_sent_at');
-        if (lastSent) {
-            const sentTime = parseInt(lastSent);
-            const timeSince = Date.now() - sentTime;
-            const remainingTime = Math.max(0, 60 - Math.floor(timeSince / 1000));
+    useEffect(() => {
+        if (autoVerify && token && email && status === 'pending' && !authLoading) {
+            handleVerification();
+        }
+    }, [token, email, status, authLoading, autoVerify]);
 
-            if (remainingTime > 0) {
-                setCountdown(remainingTime);
-                setLastSentAt(sentTime);
+    useEffect(() => {
+        if (isEmailVerified && status === 'pending') {
+            setStatus('success');
+        }
+    }, [isEmailVerified, status]);
+
+    const handleVerification = async () => {
+        if (!token || !email) {
+            setStatus('error');
+            return;
+        }
+
+        setStatus('loading');
+        try {
+            await verifyEmail({ token, email });
+            setStatus('success');
+            toast.success('Email verified successfully!');
+        } catch (error: any) {
+            if (error.message?.includes('expired') || error.message?.includes('invalid')) {
+                setStatus('expired');
+            } else {
+                setStatus('error');
             }
         }
-    }, []);
+    };
 
-    const handleResendEmail = async () => {
-        if (countdown > 0) return;
+    const handleResendVerification = async () => {
+        if (countdown > 0) {
+            toast.warning(`Please wait ${countdown} seconds before requesting another email`);
+            return;
+        }
 
         setIsResending(true);
         try {
             await resendVerification();
-
-            const now = Date.now();
-            setLastSentAt(now);
+            setLastSentTime(new Date());
             setCountdown(60); // 60 second cooldown
-            localStorage.setItem('verification_email_sent_at', now.toString());
-
-            toast.success('Verification email sent! Check your inbox.');
+            toast.success('Verification email sent! Please check your inbox.');
         } catch (error: any) {
-            toast.error(error.message || 'Failed to send verification email');
+            console.error('Resend verification failed:', error);
         } finally {
             setIsResending(false);
         }
     };
 
-    const handleGoToDashboard = () => {
-        router.push(redirectTo);
+    const getStatusIcon = () => {
+        switch (status) {
+            case 'loading':
+                return <RefreshCw className="h-8 w-8 text-blue-600 animate-spin" />;
+            case 'success':
+                return <CheckCircle className="h-8 w-8 text-green-600" />;
+            case 'error':
+            case 'expired':
+                return <XCircle className="h-8 w-8 text-red-600" />;
+            default:
+                return <Mail className="h-8 w-8 text-yellow-600" />;
+        }
     };
 
-    // If user is already verified, show success state
-    if (user?.email_verified_at) {
-        const content = (
-            <div className="text-center space-y-4">
-                <div className="w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto">
-                    <CheckCircle className="h-8 w-8 text-green-600" />
-                </div>
-                <div>
-                    <h3 className="text-lg font-semibold text-green-600">Email Verified!</h3>
-                    <p className="text-muted-foreground">
-                        Your email address has been successfully verified.
-                    </p>
-                </div>
-                <Button onClick={handleGoToDashboard} className="w-full">
-                    Continue to Dashboard
-                </Button>
-            </div>
-        );
-
-        if (showCard) {
-            return (
-                <Card className={className}>
-                    <CardContent className="pt-6">
-                        {content}
-                    </CardContent>
-                </Card>
-            );
+    const getStatusTitle = () => {
+        switch (status) {
+            case 'loading':
+                return 'Verifying Email...';
+            case 'success':
+                return 'Email Verified!';
+            case 'error':
+                return 'Verification Failed';
+            case 'expired':
+                return 'Link Expired';
+            default:
+                return 'Verify Your Email';
         }
+    };
 
-        return <div className={className}>{content}</div>;
+    const getStatusMessage = () => {
+        switch (status) {
+            case 'loading':
+                return 'Please wait while we verify your email address...';
+            case 'success':
+                return 'Your email address has been successfully verified. You now have full access to your account.';
+            case 'error':
+                return 'We encountered an error while verifying your email. Please try again or request a new verification email.';
+            case 'expired':
+                return 'This verification link has expired. Please request a new verification email to continue.';
+            default:
+                return user?.email
+                    ? `We've sent a verification link to ${user.email}. Please check your email and click the link to verify your account.`
+                    : 'Please verify your email address to complete your account setup.';
+        }
+    };
+
+    const renderActions = () => {
+        switch (status) {
+            case 'success':
+                return (
+                    <div className="space-y-3">
+                        <Link href="/dashboard">
+                            <Button className="w-full">
+                                Go to Dashboard
+                                <ArrowRight className="w-4 h-4 ml-2" />
+                            </Button>
+                        </Link>
+                    </div>
+                );
+
+            case 'error':
+            case 'expired':
+            case 'pending':
+                return (
+                    <div className="space-y-3">
+                        <Button
+                            onClick={handleResendVerification}
+                            disabled={isResending || countdown > 0}
+                            className="w-full"
+                            variant={status === 'pending' ? 'outline' : 'default'}
+                        >
+                            {isResending ? (
+                                <>
+                                    <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                                    Sending...
+                                </>
+                            ) : countdown > 0 ? (
+                                <>
+                                    <Clock className="w-4 h-4 mr-2" />
+                                    Resend in {countdown}s
+                                </>
+                            ) : (
+                                'Send New Verification Email'
+                            )}
+                        </Button>
+
+                        {status !== 'pending' && (
+                            <Link href="/dashboard">
+                                <Button variant="outline" className="w-full">
+                                    Continue to Dashboard
+                                </Button>
+                            </Link>
+                        )}
+                    </div>
+                );
+
+            case 'loading':
+                return (
+                    <div className="text-center">
+                        <div className="animate-pulse text-sm text-gray-600">
+                            This may take a few seconds...
+                        </div>
+                    </div>
+                );
+
+            default:
+                return null;
+        }
+    };
+
+    if (!needsEmailVerification && !token) {
+        return null;
     }
 
     const content = (
         <div className="space-y-6">
-            {/* Header */}
-            <div className="text-center space-y-2">
-                <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center mx-auto">
-                    <Mail className="h-8 w-8 text-blue-600" />
+            <div className="text-center">
+                <div className="flex justify-center mb-4">
+                    <div className="p-3 rounded-full bg-gray-100">
+                        {getStatusIcon()}
+                    </div>
                 </div>
-                <div>
-                    <h3 className="text-lg font-semibold">Verify Your Email</h3>
-                    <p className="text-muted-foreground">
-                        We've sent a verification link to <strong>{user?.email}</strong>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                    {getStatusTitle()}
+                </h2>
+                <p className="text-gray-600 leading-relaxed">
+                    {getStatusMessage()}
+                </p>
+            </div>
+
+            {lastSentTime && (
+                <Alert>
+                    <CheckCircle className="h-4 w-4" />
+                    <AlertDescription>
+                        Verification email sent at {lastSentTime.toLocaleTimeString()}.
+                        Please check your inbox and spam folder.
+                    </AlertDescription>
+                </Alert>
+            )}
+
+            {(status === 'pending' || status === 'error' || status === 'expired') && (
+                <div className="bg-gray-50 p-4 rounded-lg">
+                    <h4 className="font-medium text-gray-900 mb-2">Didn't receive the email?</h4>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                        <li>• Check your spam or junk folder</li>
+                        <li>• Make sure {user?.email} is correct</li>
+                        <li>• Try adding our domain to your email whitelist</li>
+                        <li>• Wait a few minutes and check again</li>
+                    </ul>
+                </div>
+            )}
+
+            {renderActions()}
+
+            {(status === 'error' || status === 'expired') && (
+                <div className="text-center">
+                    <p className="text-xs text-gray-500">
+                        Still having issues?{' '}
+                        <Link href="/contact" className="text-blue-600 hover:text-blue-500">
+                            Contact support
+                        </Link>
                     </p>
                 </div>
-            </div>
-
-            {/* Instructions */}
-            <Alert>
-                <Mail className="h-4 w-4" />
-                <AlertDescription>
-                    <strong>Check your email inbox</strong> and click the verification link to activate your account.
-                    Don't forget to check your spam folder if you don't see it within a few minutes.
-                </AlertDescription>
-            </Alert>
-
-            {/* Status badges */}
-            <div className="flex justify-center gap-2">
-                <Badge variant="outline" className="gap-1">
-                    <AlertCircle className="h-3 w-3" />
-                    Pending Verification
-                </Badge>
-                {lastSentAt && (
-                    <Badge variant="secondary" className="gap-1">
-                        <Clock className="h-3 w-3" />
-                        Sent {Math.floor((Date.now() - lastSentAt) / 1000 / 60)}m ago
-                    </Badge>
-                )}
-            </div>
-
-            {/* Resend button */}
-            <div className="space-y-3">
-                <Button
-                    onClick={handleResendEmail}
-                    disabled={isResending || countdown > 0 || isLoading}
-                    variant="outline"
-                    className="w-full gap-2"
-                >
-                    {isResending ? (
-                        <>
-                            <RefreshCw className="h-4 w-4 animate-spin" />
-                            Sending...
-                        </>
-                    ) : countdown > 0 ? (
-                        <>
-                            <Clock className="h-4 w-4" />
-                            Resend in {countdown}s
-                        </>
-                    ) : (
-                        <>
-                            <RefreshCw className="h-4 w-4" />
-                            Resend Email
-                        </>
-                    )}
-                </Button>
-
-                <div className="text-center">
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={handleGoToDashboard}
-                        className="text-muted-foreground"
-                    >
-                        Skip for now
-                    </Button>
-                </div>
-            </div>
-
-            {/* Additional help */}
-            <div className="text-center space-y-2">
-                <p className="text-xs text-muted-foreground">
-                    Not receiving emails? Check your spam folder or contact support.
-                </p>
-                <div className="text-xs text-muted-foreground">
-                    Wrong email? You can update it in your
-                    <Button variant="link" size="sm" className="px-1 h-auto text-xs">
-                        account settings
-                    </Button>
-                </div>
-            </div>
+            )}
         </div>
     );
 
-    if (showCard) {
-        return (
-            <Card className={cn('w-full max-w-md mx-auto', className)}>
-                <CardHeader className="text-center">
-                    <CardTitle>Email Verification Required</CardTitle>
-                    <CardDescription>
-                        Please verify your email address to continue
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
+    if (!showCard) {
+        return content;
+    }
+
+    return (
+        <div className="min-h-screen flex items-center justify-center p-4">
+            <Card className="w-full max-w-md">
+                <CardContent className="p-6">
                     {content}
                 </CardContent>
             </Card>
-        );
-    }
-
-    return <div className={className}>{content}</div>;
-};
+        </div>
+    );
+}
