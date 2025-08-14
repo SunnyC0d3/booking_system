@@ -1,16 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useAuthUtils } from '@/hooks/useAuthUtils';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { toast } from 'sonner';
-import { Eye, EyeOff, Lock } from 'lucide-react';
+import {useState, useEffect} from 'react';
+import {useAuthUtils} from '@/hooks/useAuthUtils';
+import {Button, Card, CardContent, CardHeader, CardTitle, Input, Label} from '@/components/ui';
+import {toast} from 'sonner';
+import {Eye, EyeOff, Lock} from 'lucide-react';
 
 export function ChangePasswordForm() {
-    const { changePassword, requireAuth, isLoading } = useAuthUtils();
+    const {changePassword, requireAuth, isLoading} = useAuthUtils();
     const [formData, setFormData] = useState({
         current_password: '',
         password: '',
@@ -75,18 +72,18 @@ export function ChangePasswordForm() {
     };
 
     const handleInputChange = (field: string, value: string) => {
-        setFormData(prev => ({ ...prev, [field]: value }));
+        setFormData(prev => ({...prev, [field]: value}));
     };
 
     const togglePasswordVisibility = (field: 'current' | 'new' | 'confirm') => {
-        setShowPasswords(prev => ({ ...prev, [field]: !prev[field] }));
+        setShowPasswords(prev => ({...prev, [field]: !prev[field]}));
     };
 
     return (
         <Card>
             <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
-                    <Lock className="h-5 w-5" />
+                    <Lock className="h-5 w-5"/>
                     <span>Change Password</span>
                 </CardTitle>
                 <p className="text-sm text-gray-600">
@@ -116,9 +113,9 @@ export function ChangePasswordForm() {
                                 disabled={isSaving || isLoading}
                             >
                                 {showPasswords.current ? (
-                                    <EyeOff className="h-4 w-4" />
+                                    <EyeOff className="h-4 w-4"/>
                                 ) : (
-                                    <Eye className="h-4 w-4" />
+                                    <Eye className="h-4 w-4"/>
                                 )}
                             </Button>
                         </div>
@@ -145,9 +142,9 @@ export function ChangePasswordForm() {
                                 disabled={isSaving || isLoading}
                             >
                                 {showPasswords.new ? (
-                                    <EyeOff className="h-4 w-4" />
+                                    <EyeOff className="h-4 w-4"/>
                                 ) : (
-                                    <Eye className="h-4 w-4" />
+                                    <Eye className="h-4 w-4"/>
                                 )}
                             </Button>
                         </div>
@@ -174,9 +171,9 @@ export function ChangePasswordForm() {
                                 disabled={isSaving || isLoading}
                             >
                                 {showPasswords.confirm ? (
-                                    <EyeOff className="h-4 w-4" />
+                                    <EyeOff className="h-4 w-4"/>
                                 ) : (
-                                    <Eye className="h-4 w-4" />
+                                    <Eye className="h-4 w-4"/>
                                 )}
                             </Button>
                         </div>

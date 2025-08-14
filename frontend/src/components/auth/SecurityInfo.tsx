@@ -3,11 +3,7 @@
 import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Shield, AlertTriangle, CheckCircle2, Clock, Users, Key, RefreshCw } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Alert, AlertDescription, Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Skeleton } from '@/components/ui';
 import { authApi } from '@/api/auth';
 import { formatDistanceToNow } from 'date-fns';
 

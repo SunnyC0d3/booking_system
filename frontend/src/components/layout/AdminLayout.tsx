@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 import { cn } from '@/lib/cn';
 
 interface QuickStatsProps {

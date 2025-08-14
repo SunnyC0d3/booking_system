@@ -3,17 +3,19 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useAuthUtils } from '@/hooks/useAuthUtils';
-import { Button } from '@/components/ui/button';
 import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
+    Badge,
+    Button,
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
+} from '@/components/ui';
 import {
     User,
     Settings,

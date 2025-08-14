@@ -2,15 +2,12 @@
 
 import { useState } from 'react';
 import { useAuthUtils } from '@/hooks/useAuthUtils';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Button, Input, Label, Checkbox } from '@/components/ui';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { Eye, EyeOff } from 'lucide-react';
 
-export function LoginForm() {
+export default function LoginForm() {
     const { login, redirectAfterLogin, isLoading } = useAuthUtils();
     const [formData, setFormData] = useState({
         email: '',

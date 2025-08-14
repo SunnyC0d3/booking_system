@@ -228,12 +228,10 @@
 }
 
 @layer utilities {
-  /* Minimal utility overrides */
   .focus-ring {
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
 
-  /* Container utilities */
   .container-padding {
     @apply px-4 sm:px-6 lg:px-8;
   }
@@ -242,12 +240,66 @@
     @apply py-12 sm:py-16 lg:py-20;
   }
 
-  /* Animation utilities */
   .animate-fade-in {
     @apply animate-fade-in;
   }
 
   .hover-lift {
     @apply transition-transform duration-200 hover:-translate-y-1;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-pulse-fast {
+    animation: pulse-fast 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .skeleton-shimmer {
+    @apply relative overflow-hidden;
+  }
+
+  .skeleton-shimmer::after {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent;
+    animation: shimmer 2s infinite;
+  }
+
+  .dark .skeleton-shimmer::after {
+    @apply bg-gradient-to-r from-transparent via-white/10 to-transparent;
+  }
+}
+
+@layer base {
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes pulse-slow {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  @keyframes pulse-fast {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
   }
 }

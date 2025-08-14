@@ -1,14 +1,23 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useAuthUtils } from '@/hooks/useAuthUtils';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { EmailVerification } from '@/components/auth/EmailVerification';
-import { toast } from 'sonner';
+import {useState, useEffect} from 'react';
+import {useAuthUtils} from '@/hooks/useAuthUtils';
+import {
+    Alert,
+    AlertDescription,
+    Button,
+    Badge,
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+    Tabs,
+    TabsContent,
+    TabsList,
+    TabsTrigger
+} from '@/components/ui';
+import {EmailVerification} from '@/components/auth/EmailVerification';
+import {toast} from 'sonner';
 import Link from 'next/link';
 import {
     User,
@@ -121,11 +130,16 @@ export default function DashboardContent() {
 
     const getOrderStatusColor = (status: string) => {
         switch (status.toLowerCase()) {
-            case 'completed': return 'bg-green-100 text-green-800';
-            case 'processing': return 'bg-blue-100 text-blue-800';
-            case 'pending': return 'bg-yellow-100 text-yellow-800';
-            case 'cancelled': return 'bg-red-100 text-red-800';
-            default: return 'bg-gray-100 text-gray-800';
+            case 'completed':
+                return 'bg-green-100 text-green-800';
+            case 'processing':
+                return 'bg-blue-100 text-blue-800';
+            case 'pending':
+                return 'bg-yellow-100 text-yellow-800';
+            case 'cancelled':
+                return 'bg-red-100 text-red-800';
+            default:
+                return 'bg-gray-100 text-gray-800';
         }
     };
 
@@ -158,13 +172,14 @@ export default function DashboardContent() {
         return (
             <div className="space-y-6">
                 <Alert className="border-yellow-200 bg-yellow-50">
-                    <AlertCircle className="h-4 w-4 text-yellow-600" />
+                    <AlertCircle className="h-4 w-4 text-yellow-600"/>
                     <AlertDescription className="text-yellow-800">
-                        <strong>Email verification required</strong> - Please verify your email address to access all dashboard features.
+                        <strong>Email verification required</strong> - Please verify your email address to access all
+                        dashboard features.
                     </AlertDescription>
                 </Alert>
 
-                <EmailVerification showCard={false} autoVerify={false} />
+                <EmailVerification showCard={false} autoVerify={false}/>
             </div>
         );
     }
@@ -203,7 +218,7 @@ export default function DashboardContent() {
                                     <p className="text-2xl font-bold text-gray-900">{stats.total_orders}</p>
                                 </div>
                                 <div className="p-3 bg-blue-100 rounded-full">
-                                    <ShoppingBag className="h-6 w-6 text-blue-600" />
+                                    <ShoppingBag className="h-6 w-6 text-blue-600"/>
                                 </div>
                             </div>
                         </CardContent>
@@ -219,7 +234,7 @@ export default function DashboardContent() {
                                     </p>
                                 </div>
                                 <div className="p-3 bg-green-100 rounded-full">
-                                    <CreditCard className="h-6 w-6 text-green-600" />
+                                    <CreditCard className="h-6 w-6 text-green-600"/>
                                 </div>
                             </div>
                         </CardContent>
@@ -233,7 +248,7 @@ export default function DashboardContent() {
                                     <p className="text-2xl font-bold text-gray-900">{stats.digital_downloads}</p>
                                 </div>
                                 <div className="p-3 bg-purple-100 rounded-full">
-                                    <Download className="h-6 w-6 text-purple-600" />
+                                    <Download className="h-6 w-6 text-purple-600"/>
                                 </div>
                             </div>
                         </CardContent>
@@ -247,7 +262,7 @@ export default function DashboardContent() {
                                     <p className="text-2xl font-bold text-gray-900">{stats.wishlist_items}</p>
                                 </div>
                                 <div className="p-3 bg-red-100 rounded-full">
-                                    <Heart className="h-6 w-6 text-red-600" />
+                                    <Heart className="h-6 w-6 text-red-600"/>
                                 </div>
                             </div>
                         </CardContent>
@@ -271,33 +286,33 @@ export default function DashboardContent() {
                             <CardContent className="space-y-3">
                                 <Link href="/products">
                                     <Button variant="outline" className="w-full justify-start">
-                                        <Package className="w-4 h-4 mr-3" />
+                                        <Package className="w-4 h-4 mr-3"/>
                                         Browse Products
-                                        <ArrowRight className="w-4 h-4 ml-auto" />
+                                        <ArrowRight className="w-4 h-4 ml-auto"/>
                                     </Button>
                                 </Link>
 
                                 <Link href="/orders">
                                     <Button variant="outline" className="w-full justify-start">
-                                        <ShoppingBag className="w-4 h-4 mr-3" />
+                                        <ShoppingBag className="w-4 h-4 mr-3"/>
                                         View All Orders
-                                        <ArrowRight className="w-4 h-4 ml-auto" />
+                                        <ArrowRight className="w-4 h-4 ml-auto"/>
                                     </Button>
                                 </Link>
 
                                 <Link href="/account/digital-library">
                                     <Button variant="outline" className="w-full justify-start">
-                                        <Download className="w-4 h-4 mr-3" />
+                                        <Download className="w-4 h-4 mr-3"/>
                                         Digital Library
-                                        <ArrowRight className="w-4 h-4 ml-auto" />
+                                        <ArrowRight className="w-4 h-4 ml-auto"/>
                                     </Button>
                                 </Link>
 
                                 <Link href="/profile">
                                     <Button variant="outline" className="w-full justify-start">
-                                        <Settings className="w-4 h-4 mr-3" />
+                                        <Settings className="w-4 h-4 mr-3"/>
                                         Account Settings
-                                        <ArrowRight className="w-4 h-4 ml-auto" />
+                                        <ArrowRight className="w-4 h-4 ml-auto"/>
                                     </Button>
                                 </Link>
                             </CardContent>
@@ -336,7 +351,7 @@ export default function DashboardContent() {
                                     <div className="flex items-center justify-between">
                                         <span className="text-sm text-gray-600">Loyalty Points</span>
                                         <Badge variant="outline" className="bg-yellow-50 text-yellow-700">
-                                            <Star className="w-3 h-3 mr-1" />
+                                            <Star className="w-3 h-3 mr-1"/>
                                             {stats.loyalty_points}
                                         </Badge>
                                     </div>
@@ -353,7 +368,7 @@ export default function DashboardContent() {
                             <Link href="/orders">
                                 <Button variant="outline" size="sm">
                                     View All
-                                    <ArrowRight className="w-4 h-4 ml-2" />
+                                    <ArrowRight className="w-4 h-4 ml-2"/>
                                 </Button>
                             </Link>
                         </CardHeader>
@@ -367,7 +382,7 @@ export default function DashboardContent() {
                                         >
                                             <div className="flex items-center space-x-4">
                                                 <div className="p-2 bg-blue-100 rounded-full">
-                                                    <ShoppingBag className="h-4 w-4 text-blue-600" />
+                                                    <ShoppingBag className="h-4 w-4 text-blue-600"/>
                                                 </div>
                                                 <div>
                                                     <p className="font-medium">Order #{order.order_number}</p>
@@ -392,7 +407,7 @@ export default function DashboardContent() {
                                 </div>
                             ) : (
                                 <div className="text-center py-8">
-                                    <ShoppingBag className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                                    <ShoppingBag className="h-12 w-12 text-gray-400 mx-auto mb-4"/>
                                     <h3 className="text-lg font-semibold text-gray-900 mb-2">No orders yet</h3>
                                     <p className="text-gray-600 mb-4">
                                         When you make your first purchase, it will appear here.
@@ -413,7 +428,7 @@ export default function DashboardContent() {
                             <Link href="/account/digital-library">
                                 <Button variant="outline" size="sm">
                                     View Library
-                                    <ArrowRight className="w-4 h-4 ml-2" />
+                                    <ArrowRight className="w-4 h-4 ml-2"/>
                                 </Button>
                             </Link>
                         </CardHeader>
@@ -427,7 +442,7 @@ export default function DashboardContent() {
                                         >
                                             <div className="flex items-center space-x-4">
                                                 <div className="p-2 bg-purple-100 rounded-full">
-                                                    <Download className="h-4 w-4 text-purple-600" />
+                                                    <Download className="h-4 w-4 text-purple-600"/>
                                                 </div>
                                                 <div>
                                                     <p className="font-medium">{download.product_name}</p>
@@ -456,7 +471,7 @@ export default function DashboardContent() {
                                 </div>
                             ) : (
                                 <div className="text-center py-8">
-                                    <Download className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                                    <Download className="h-12 w-12 text-gray-400 mx-auto mb-4"/>
                                     <h3 className="text-lg font-semibold text-gray-900 mb-2">No downloads yet</h3>
                                     <p className="text-gray-600 mb-4">
                                         Digital products you purchase will be available for download here.
@@ -475,7 +490,7 @@ export default function DashboardContent() {
                 <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center space-x-2">
-                            <Clock className="h-5 w-5" />
+                            <Clock className="h-5 w-5"/>
                             <span>Recent Activity</span>
                         </CardTitle>
                     </CardHeader>
@@ -530,14 +545,14 @@ export default function DashboardContent() {
                         <div className="space-y-2">
                             <Link href="/help">
                                 <Button variant="outline" className="w-full justify-start">
-                                    <Eye className="w-4 h-4 mr-3" />
+                                    <Eye className="w-4 h-4 mr-3"/>
                                     Browse Help Center
                                 </Button>
                             </Link>
 
                             <Link href="/contact">
                                 <Button variant="outline" className="w-full justify-start">
-                                    <User className="w-4 h-4 mr-3" />
+                                    <User className="w-4 h-4 mr-3"/>
                                     Contact Support
                                 </Button>
                             </Link>
@@ -562,19 +577,20 @@ export default function DashboardContent() {
                                     Welcome to your dashboard! 🎉
                                 </h3>
                                 <p className="text-gray-600 mb-4">
-                                    Ready to explore our products? Get started with your first purchase and unlock exclusive digital content.
+                                    Ready to explore our products? Get started with your first purchase and unlock
+                                    exclusive digital content.
                                 </p>
                                 <Link href="/products">
                                     <Button>
                                         Start Shopping
-                                        <ArrowRight className="w-4 h-4 ml-2" />
+                                        <ArrowRight className="w-4 h-4 ml-2"/>
                                     </Button>
                                 </Link>
                             </div>
 
                             <div className="hidden lg:block">
                                 <div className="p-4 bg-white/50 rounded-full">
-                                    <TrendingUp className="h-8 w-8 text-blue-600" />
+                                    <TrendingUp className="h-8 w-8 text-blue-600"/>
                                 </div>
                             </div>
                         </div>

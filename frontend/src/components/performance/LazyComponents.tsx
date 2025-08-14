@@ -1,8 +1,7 @@
 'use client'
 
 import { lazy, Suspense, ComponentType, ReactNode } from 'react';
-import { Skeleton } from '@/components/ui/loading';
-import { Card, CardContent } from '@/components/ui';
+import { Card, CardContent, Skeleton } from '@/components/ui';
 import { Loader2 } from 'lucide-react';
 
 // Extend Window interface for gtag

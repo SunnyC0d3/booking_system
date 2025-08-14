@@ -3,8 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useAuthUtils } from '@/hooks/useAuthUtils';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { Mail, CheckCircle, XCircle, RefreshCw } from 'lucide-react';

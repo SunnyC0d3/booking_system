@@ -1,21 +1,27 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useAuthUtils } from '@/hooks/useAuthUtils';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {useState, useEffect} from 'react';
+import {useAuthUtils} from '@/hooks/useAuthUtils';
 import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
+    Badge,
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from '@/components/ui/dialog';
-import { toast } from 'sonner';
+    Button,
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+    Label,
+    Textarea
+} from '@/components/ui';
+
+import {toast} from 'sonner';
 import {
     Star,
     ThumbsUp,
@@ -149,7 +155,7 @@ export function ProductReviews({
                 }
 
                 setShowReviewForm(false);
-                setReviewForm({ rating: 5, title: '', comment: '' });
+                setReviewForm({rating: 5, title: '', comment: ''});
 
                 fetchReviews();
             } else {
@@ -198,7 +204,7 @@ export function ProductReviews({
                     'Content-Type': 'application/json',
                     ...getAuthHeaders(),
                 },
-                body: JSON.stringify({ helpful }),
+                body: JSON.stringify({helpful}),
             });
 
             if (response.ok) {
@@ -246,7 +252,7 @@ export function ProductReviews({
                                 ? 'fill-yellow-400 text-yellow-400'
                                 : 'text-gray-300'
                         } ${interactive ? 'cursor-pointer hover:text-yellow-400' : ''}`}
-                        onClick={interactive ? () => setReviewForm(prev => ({ ...prev, rating: star })) : undefined}
+                        onClick={interactive ? () => setReviewForm(prev => ({...prev, rating: star})) : undefined}
                     />
                 ))}
             </div>
@@ -298,7 +304,7 @@ export function ProductReviews({
                             {[5, 4, 3, 2, 1].map(rating => (
                                 <div key={rating} className="flex items-center space-x-3">
                                     <span className="text-sm w-8">{rating}</span>
-                                    <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                                    <Star className="h-3 w-3 fill-yellow-400 text-yellow-400"/>
                                     <div className="flex-1 bg-gray-200 rounded-full h-2">
                                         <div
                                             className="bg-yellow-400 h-2 rounded-full"
@@ -319,7 +325,7 @@ export function ProductReviews({
                         <Dialog open={showReviewForm} onOpenChange={setShowReviewForm}>
                             <DialogTrigger asChild>
                                 <Button className="w-full">
-                                    <MessageSquare className="w-4 h-4 mr-2" />
+                                    <MessageSquare className="w-4 h-4 mr-2"/>
                                     Write a Review
                                 </Button>
                             </DialogTrigger>
@@ -345,7 +351,7 @@ export function ProductReviews({
                                             className="mt-1 w-full p-2 border border-gray-300 rounded-md"
                                             placeholder="Summarize your experience"
                                             value={reviewForm.title}
-                                            onChange={(e) => setReviewForm(prev => ({ ...prev, title: e.target.value }))}
+                                            onChange={(e) => setReviewForm(prev => ({...prev, title: e.target.value}))}
                                             maxLength={100}
                                         />
                                     </div>
@@ -357,7 +363,10 @@ export function ProductReviews({
                                             className="mt-1"
                                             placeholder="Tell others about your experience with this product"
                                             value={reviewForm.comment}
-                                            onChange={(e) => setReviewForm(prev => ({ ...prev, comment: e.target.value }))}
+                                            onChange={(e) => setReviewForm(prev => ({
+                                                ...prev,
+                                                comment: e.target.value
+                                            }))}
                                             rows={4}
                                             maxLength={1000}
                                         />
@@ -372,7 +381,7 @@ export function ProductReviews({
                                             onClick={() => {
                                                 setShowReviewForm(false);
                                                 setEditingReview(null);
-                                                setReviewForm({ rating: 5, title: '', comment: '' });
+                                                setReviewForm({rating: 5, title: '', comment: ''});
                                             }}
                                         >
                                             Cancel
@@ -408,7 +417,7 @@ export function ProductReviews({
                                 <div className="flex items-start justify-between">
                                     <div className="flex items-center space-x-3">
                                         <Avatar className="h-10 w-10">
-                                            <AvatarImage src={review.user.avatar_url} />
+                                            <AvatarImage src={review.user.avatar_url}/>
                                             <AvatarFallback>
                                                 {getUserInitials(review.user.name)}
                                             </AvatarFallback>
@@ -438,14 +447,14 @@ export function ProductReviews({
                                                 size="sm"
                                                 onClick={() => startEditReview(review)}
                                             >
-                                                <Edit className="h-4 w-4" />
+                                                <Edit className="h-4 w-4"/>
                                             </Button>
                                             <Button
                                                 variant="ghost"
                                                 size="sm"
                                                 onClick={() => handleDeleteReview(review.id)}
                                             >
-                                                <Trash2 className="h-4 w-4" />
+                                                <Trash2 className="h-4 w-4"/>
                                             </Button>
                                         </div>
                                     )}
@@ -467,7 +476,7 @@ export function ProductReviews({
                                                     onClick={() => handleHelpfulVote(review.id, true)}
                                                     className={review.user_found_helpful ? 'text-green-600' : ''}
                                                 >
-                                                    <ThumbsUp className="h-4 w-4 mr-1" />
+                                                    <ThumbsUp className="h-4 w-4 mr-1"/>
                                                     Yes
                                                 </Button>
                                                 <Button
@@ -475,7 +484,7 @@ export function ProductReviews({
                                                     size="sm"
                                                     onClick={() => handleHelpfulVote(review.id, false)}
                                                 >
-                                                    <ThumbsDown className="h-4 w-4 mr-1" />
+                                                    <ThumbsDown className="h-4 w-4 mr-1"/>
                                                     No
                                                 </Button>
                                             </div>
@@ -501,7 +510,7 @@ export function ProductReviews({
                 {reviews.length === 0 && (
                     <Card>
                         <CardContent className="p-6 text-center">
-                            <MessageSquare className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                            <MessageSquare className="h-12 w-12 text-gray-400 mx-auto mb-4"/>
                             <h3 className="text-lg font-semibold text-gray-900 mb-2">No reviews yet</h3>
                             <p className="text-gray-600 mb-4">
                                 Be the first to share your thoughts about this product.

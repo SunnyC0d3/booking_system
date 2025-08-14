@@ -1,3 +1,4 @@
+export * from './alert';
 export * from './button';
 export * from './input';
 export * from './card';
@@ -7,9 +8,13 @@ export * from './select';
 export * from './checkbox';
 export * from './tabs';
 export * from './table';
+export * from './textarea';
 export * from './badge';
 export * from './avatar';
 export * from './dropdown-menu';
+export * from './label';
+export * from './switch';
+export * from './skeleton';
 
 export { default as ProductCardSkeleton } from './loading/ProductCardSkeleton';
 export { cn } from '@/lib/cn';

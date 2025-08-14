@@ -1,13 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useAuthUtils } from '@/hooks/useAuthUtils';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { toast } from 'sonner';
+import {useState, useEffect} from 'react';
+import {useAuthUtils} from '@/hooks/useAuthUtils';
+import {Button, Badge, Card, CardContent, CardHeader, CardTitle, Switch, Label} from '@/components/ui';
+import {toast} from 'sonner';
 import {
     Shield,
     Eye,
@@ -114,7 +110,7 @@ export function SecurityDashboard() {
                     'Content-Type': 'application/json',
                     ...getAuthHeaders(),
                 },
-                body: JSON.stringify({ enabled }),
+                body: JSON.stringify({enabled}),
             });
 
             if (response.ok) {
@@ -140,7 +136,7 @@ export function SecurityDashboard() {
                     'Content-Type': 'application/json',
                     ...getAuthHeaders(),
                 },
-                body: JSON.stringify({ email_notifications: enabled }),
+                body: JSON.stringify({email_notifications: enabled}),
             });
 
             if (response.ok) {
@@ -198,19 +194,23 @@ export function SecurityDashboard() {
     };
 
     const getDeviceIcon = (userAgent: string) => {
-        if (userAgent.includes('Mobile')) return <Smartphone className="h-4 w-4" />;
-        if (userAgent.includes('Tablet')) return <Smartphone className="h-4 w-4" />;
-        return <Monitor className="h-4 w-4" />;
+        if (userAgent.includes('Mobile')) return <Smartphone className="h-4 w-4"/>;
+        if (userAgent.includes('Tablet')) return <Smartphone className="h-4 w-4"/>;
+        return <Monitor className="h-4 w-4"/>;
     };
 
     const getEventIcon = (type: string, success: boolean) => {
-        if (!success) return <AlertTriangle className="h-4 w-4 text-red-500" />;
+        if (!success) return <AlertTriangle className="h-4 w-4 text-red-500"/>;
 
         switch (type) {
-            case 'login': return <CheckCircle className="h-4 w-4 text-green-500" />;
-            case 'logout': return <Eye className="h-4 w-4 text-gray-500" />;
-            case 'password_change': return <Key className="h-4 w-4 text-blue-500" />;
-            default: return <Activity className="h-4 w-4 text-gray-500" />;
+            case 'login':
+                return <CheckCircle className="h-4 w-4 text-green-500"/>;
+            case 'logout':
+                return <Eye className="h-4 w-4 text-gray-500"/>;
+            case 'password_change':
+                return <Key className="h-4 w-4 text-blue-500"/>;
+            default:
+                return <Activity className="h-4 w-4 text-gray-500"/>;
         }
     };
 
@@ -236,7 +236,7 @@ export function SecurityDashboard() {
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center space-x-2">
-                        <Shield className="h-5 w-5" />
+                        <Shield className="h-5 w-5"/>
                         <span>Security Overview</span>
                     </CardTitle>
                 </CardHeader>
@@ -245,9 +245,9 @@ export function SecurityDashboard() {
                         <div className="flex items-center space-x-3">
                             <div className={`p-2 rounded-full ${isEmailVerified ? 'bg-green-100' : 'bg-yellow-100'}`}>
                                 {isEmailVerified ? (
-                                    <CheckCircle className="h-4 w-4 text-green-600" />
+                                    <CheckCircle className="h-4 w-4 text-green-600"/>
                                 ) : (
-                                    <AlertTriangle className="h-4 w-4 text-yellow-600" />
+                                    <AlertTriangle className="h-4 w-4 text-yellow-600"/>
                                 )}
                             </div>
                             <div>
@@ -260,7 +260,7 @@ export function SecurityDashboard() {
 
                         <div className="flex items-center space-x-3">
                             <div className={`p-2 rounded-full ${twoFactorEnabled ? 'bg-green-100' : 'bg-gray-100'}`}>
-                                <Shield className={`h-4 w-4 ${twoFactorEnabled ? 'text-green-600' : 'text-gray-400'}`} />
+                                <Shield className={`h-4 w-4 ${twoFactorEnabled ? 'text-green-600' : 'text-gray-400'}`}/>
                             </div>
                             <div>
                                 <p className="font-medium">Two-Factor Auth</p>
@@ -272,7 +272,7 @@ export function SecurityDashboard() {
 
                         <div className="flex items-center space-x-3">
                             <div className="p-2 rounded-full bg-blue-100">
-                                <Activity className="h-4 w-4 text-blue-600" />
+                                <Activity className="h-4 w-4 text-blue-600"/>
                             </div>
                             <div>
                                 <p className="font-medium">Active Sessions</p>
@@ -361,11 +361,11 @@ export function SecurityDashboard() {
                                         </div>
                                         <div className="flex items-center space-x-4 text-sm text-gray-600">
                       <span className="flex items-center space-x-1">
-                        <Globe className="h-3 w-3" />
+                        <Globe className="h-3 w-3"/>
                         <span>{session.ip_address}</span>
                       </span>
                                             <span className="flex items-center space-x-1">
-                        <Clock className="h-3 w-3" />
+                        <Clock className="h-3 w-3"/>
                         <span>
                           {new Date(session.last_activity).toLocaleString()}
                         </span>

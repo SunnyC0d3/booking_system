@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import {MainLayout} from '@/components/layout/MainLayout';
 import DashboardContent from '@/components/dashboard/DashboardContent';
+import {RouteGuard} from "@/components/auth/RouteGuard";
 
 export const metadata: Metadata = {
     title: 'Dashboard | Creative Business',
@@ -9,8 +10,10 @@ export const metadata: Metadata = {
 
 export default function DashboardPage() {
     return (
-        <MainLayout showBreadcrumbs={false}>
-            <DashboardContent />
-        </MainLayout>
+        <RouteGuard requireAuth>
+            <MainLayout showBreadcrumbs={false}>
+                <DashboardContent />
+            </MainLayout>
+        </RouteGuard>
     );
 }

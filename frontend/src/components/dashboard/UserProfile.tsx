@@ -2,11 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuthUtils } from '@/hooks/useAuthUtils';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Badge, Button, Input, Label, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 import { toast } from 'sonner';
 import { User, Mail, Calendar, Shield } from 'lucide-react';
 

@@ -1,12 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { useAuthUtils } from '@/hooks/useAuthUtils';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { toast } from 'sonner';
+import {useState, useEffect} from 'react';
+import {useSearchParams} from 'next/navigation';
+import {useAuthUtils} from '@/hooks/useAuthUtils';
+import {Alert, AlertDescription, Button, Card, CardContent} from '@/components/ui';
+import {toast} from 'sonner';
 import Link from 'next/link';
 import {
     Mail,
@@ -70,7 +68,7 @@ export function EmailVerification({
 
         setStatus('loading');
         try {
-            await verifyEmail({ token, email });
+            await verifyEmail({token, email});
             setStatus('success');
             toast.success('Email verified successfully!');
         } catch (error: any) {
@@ -104,14 +102,14 @@ export function EmailVerification({
     const getStatusIcon = () => {
         switch (status) {
             case 'loading':
-                return <RefreshCw className="h-8 w-8 text-blue-600 animate-spin" />;
+                return <RefreshCw className="h-8 w-8 text-blue-600 animate-spin"/>;
             case 'success':
-                return <CheckCircle className="h-8 w-8 text-green-600" />;
+                return <CheckCircle className="h-8 w-8 text-green-600"/>;
             case 'error':
             case 'expired':
-                return <XCircle className="h-8 w-8 text-red-600" />;
+                return <XCircle className="h-8 w-8 text-red-600"/>;
             default:
-                return <Mail className="h-8 w-8 text-yellow-600" />;
+                return <Mail className="h-8 w-8 text-yellow-600"/>;
         }
     };
 
@@ -155,7 +153,7 @@ export function EmailVerification({
                         <Link href="/dashboard">
                             <Button className="w-full">
                                 Go to Dashboard
-                                <ArrowRight className="w-4 h-4 ml-2" />
+                                <ArrowRight className="w-4 h-4 ml-2"/>
                             </Button>
                         </Link>
                     </div>
@@ -174,12 +172,12 @@ export function EmailVerification({
                         >
                             {isResending ? (
                                 <>
-                                    <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                                    <RefreshCw className="w-4 h-4 mr-2 animate-spin"/>
                                     Sending...
                                 </>
                             ) : countdown > 0 ? (
                                 <>
-                                    <Clock className="w-4 h-4 mr-2" />
+                                    <Clock className="w-4 h-4 mr-2"/>
                                     Resend in {countdown}s
                                 </>
                             ) : (
@@ -233,7 +231,7 @@ export function EmailVerification({
 
             {lastSentTime && (
                 <Alert>
-                    <CheckCircle className="h-4 w-4" />
+                    <CheckCircle className="h-4 w-4"/>
                     <AlertDescription>
                         Verification email sent at {lastSentTime.toLocaleTimeString()}.
                         Please check your inbox and spam folder.
