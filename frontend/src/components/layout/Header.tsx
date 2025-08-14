@@ -52,18 +52,18 @@ export function Header() {
     };
 
     return (
-        <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+        <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border shadow-soft">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
                     <div className="flex items-center">
-                        <Link href="/" className="flex items-center space-x-2">
-                            <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                                <span className="text-white font-bold text-sm">CB</span>
+                        <Link href="/" className="flex items-center space-x-2 group">
+                            <div className="h-8 w-8 bg-gradient-to-br from-primary to-primary-600 rounded-lg flex items-center justify-center transition-transform group-hover:scale-105">
+                                <span className="text-primary-foreground font-bold text-sm">CB</span>
                             </div>
-                            <span className="hidden sm:block text-xl font-semibold text-gray-900">
-                Creative Business
-              </span>
+                            <span className="hidden sm:block text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
+                                Creative Business
+                            </span>
                         </Link>
                     </div>
 
@@ -71,28 +71,28 @@ export function Header() {
                     <nav className="hidden md:flex items-center space-x-8">
                         <Link
                             href="/products"
-                            className="text-gray-600 hover:text-gray-900 transition-colors"
+                            className="text-muted-foreground hover:text-foreground transition-colors duration-200 font-medium"
                         >
                             Products
                         </Link>
                         <Link
                             href="/about"
-                            className="text-gray-600 hover:text-gray-900 transition-colors"
+                            className="text-muted-foreground hover:text-foreground transition-colors duration-200 font-medium"
                         >
                             About
                         </Link>
                         <Link
                             href="/contact"
-                            className="text-gray-600 hover:text-gray-900 transition-colors"
+                            className="text-muted-foreground hover:text-foreground transition-colors duration-200 font-medium"
                         >
                             Contact
                         </Link>
                     </nav>
 
                     {/* Right Side */}
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-3">
                         <Link href="/cart">
-                            <Button variant="ghost" size="sm" className="relative">
+                            <Button variant="ghost" size="sm" className="relative hover:bg-accent">
                                 <ShoppingCart className="h-5 w-5" />
                             </Button>
                         </Link>
@@ -100,7 +100,7 @@ export function Header() {
                         {isAuthenticated ? (
                             <>
                                 {needsEmailVerification && (
-                                    <Badge variant="secondary" className="hidden sm:inline-flex">
+                                    <Badge variant="secondary" className="hidden sm:inline-flex bg-warning text-warning-foreground">
                                         Verify Email
                                     </Badge>
                                 )}
@@ -109,14 +109,14 @@ export function Header() {
                                     <DropdownMenuTrigger asChild>
                                         <Button
                                             variant="ghost"
-                                            className="relative h-8 w-8 rounded-full"
+                                            className="relative h-8 w-8 rounded-full hover:bg-accent"
                                         >
-                                            <Avatar className="h-8 w-8">
+                                            <Avatar className="h-8 w-8 ring-2 ring-primary/20 ring-offset-2 ring-offset-background">
                                                 <AvatarImage
                                                     src={user?.avatar_url}
                                                     alt={user?.name || 'User'}
                                                 />
-                                                <AvatarFallback>
+                                                <AvatarFallback className="bg-primary/10 text-primary font-medium">
                                                     {getUserInitials(user?.name)}
                                                 </AvatarFallback>
                                             </Avatar>
@@ -125,14 +125,14 @@ export function Header() {
                                     <DropdownMenuContent className="w-56" align="end" forceMount>
                                         <DropdownMenuLabel className="font-normal">
                                             <div className="flex flex-col space-y-1">
-                                                <p className="text-sm font-medium leading-none">
+                                                <p className="text-sm font-medium leading-none text-foreground">
                                                     {user?.name || 'User'}
                                                 </p>
                                                 <p className="text-xs leading-none text-muted-foreground">
                                                     {user?.email}
                                                 </p>
                                                 {user?.role?.name && (
-                                                    <Badge variant="outline" className="w-fit text-xs">
+                                                    <Badge variant="outline" className="w-fit text-xs border-primary/20 text-primary">
                                                         {user.role.name}
                                                     </Badge>
                                                 )}
@@ -172,7 +172,7 @@ export function Header() {
                                             <>
                                                 <DropdownMenuSeparator />
                                                 <DropdownMenuItem asChild>
-                                                    <Link href="/admin" className="cursor-pointer">
+                                                    <Link href="/admin" className="cursor-pointer text-primary">
                                                         <Shield className="mr-2 h-4 w-4" />
                                                         Admin Panel
                                                     </Link>
@@ -182,7 +182,7 @@ export function Header() {
 
                                         <DropdownMenuSeparator />
                                         <DropdownMenuItem
-                                            className="cursor-pointer text-red-600 focus:text-red-600"
+                                            className="cursor-pointer text-destructive focus:text-destructive"
                                             onClick={handleLogoutClick}
                                         >
                                             <LogOut className="mr-2 h-4 w-4" />
@@ -195,12 +195,12 @@ export function Header() {
                             <>
                                 {/* Guest Navigation */}
                                 <Link href="/login">
-                                    <Button variant="ghost" size="sm">
+                                    <Button variant="ghost" size="sm" className="hover:bg-accent">
                                         Sign In
                                     </Button>
                                 </Link>
                                 <Link href="/register">
-                                    <Button size="sm">
+                                    <Button variant="ghost" size="sm" className="hover:bg-accent">
                                         Sign Up
                                     </Button>
                                 </Link>
@@ -210,7 +210,7 @@ export function Header() {
                         <Button
                             variant="ghost"
                             size="sm"
-                            className="md:hidden"
+                            className="md:hidden hover:bg-accent"
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         >
                             <Menu className="h-5 w-5" />
@@ -218,26 +218,27 @@ export function Header() {
                     </div>
                 </div>
 
+                {/* Mobile Menu */}
                 {isMobileMenuOpen && (
-                    <div className="md:hidden">
-                        <div className="px-2 pt-2 pb-3 space-y-1 border-t border-gray-200">
+                    <div className="md:hidden animate-in slide-in-from-top-2 duration-200">
+                        <div className="px-2 pt-2 pb-3 space-y-1 border-t border-border bg-card/50 backdrop-blur-sm">
                             <Link
                                 href="/products"
-                                className="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900"
+                                className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors"
                                 onClick={() => setIsMobileMenuOpen(false)}
                             >
                                 Products
                             </Link>
                             <Link
                                 href="/about"
-                                className="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900"
+                                className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors"
                                 onClick={() => setIsMobileMenuOpen(false)}
                             >
                                 About
                             </Link>
                             <Link
                                 href="/contact"
-                                className="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900"
+                                className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors"
                                 onClick={() => setIsMobileMenuOpen(false)}
                             >
                                 Contact
@@ -245,17 +246,17 @@ export function Header() {
 
                             {isAuthenticated && (
                                 <>
-                                    <div className="border-t border-gray-200 pt-2 mt-2">
+                                    <div className="border-t border-border pt-2 mt-2">
                                         <Link
                                             href="/dashboard"
-                                            className="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900"
+                                            className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors"
                                             onClick={() => setIsMobileMenuOpen(false)}
                                         >
                                             Dashboard
                                         </Link>
                                         <Link
                                             href="/profile"
-                                            className="block px-3 py-2 text-base font-medium text-gray-600 hover:text-gray-900"
+                                            className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors"
                                             onClick={() => setIsMobileMenuOpen(false)}
                                         >
                                             Profile
