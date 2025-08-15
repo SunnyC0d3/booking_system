@@ -14,6 +14,11 @@ interface ClientCredentialsRequest {
     scope: string;
 }
 
+let tokenCache: {
+    token: string;
+    expiresAt: number;
+} | null = null;
+
 export async function POST(request: NextRequest) {
     try {
         const clientId = process.env.API_CLIENT_ID;
@@ -28,6 +33,17 @@ export async function POST(request: NextRequest) {
                 },
                 { status: 500 }
             );
+        }
+
+        if (tokenCache && Date.now() < (tokenCache.expiresAt - 300000)) {
+            return NextResponse.json({
+                access_token: tokenCache.token,
+                expires_in: Math.floor((tokenCache.expiresAt - Date.now()) / 1000),
+                token_type: 'Bearer',
+                scope: '',
+                issued_at: Math.floor(Date.now() / 1000),
+                from_cache: true
+            });
         }
 
         const credentials = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
@@ -71,7 +87,6 @@ export async function POST(request: NextRequest) {
 
         const tokenData: ClientCredentialsResponse = await response.json();
 
-        // Validate response structure
         if (!tokenData.access_token || !tokenData.expires_in) {
             return NextResponse.json(
                 {
@@ -81,6 +96,12 @@ export async function POST(request: NextRequest) {
                 { status: 502 }
             );
         }
+
+        tokenCache = {
+            token: tokenData.access_token,
+            expiresAt: Date.now() + (tokenData.expires_in * 1000)
+        };
+
 
         return NextResponse.json({
             access_token: tokenData.access_token,
