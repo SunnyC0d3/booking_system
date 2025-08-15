@@ -4,15 +4,12 @@ import * as React from 'react';
 import { motion } from 'framer-motion';
 import { AlertTriangle, RefreshCw, Home, Bug } from 'lucide-react';
 import { Button, Card, CardContent } from '@/components/ui';
-import { cn } from '@/lib/cn';
 import { ErrorBoundaryProps, ErrorFallbackProps, ErrorBoundaryState } from '@/types/error';
 
-// Default Error Fallback Component
 const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
                                                                 error,
                                                                 errorInfo,
-                                                                retry,
-                                                                resetErrorBoundary
+                                                                retry
                                                             }) => {
     const [showDetails, setShowDetails] = React.useState(false);
 
@@ -115,10 +112,8 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
             errorInfo,
         });
 
-        // Call custom error handler
         this.props.onError?.(error, errorInfo);
 
-        // Log error details
         console.error('ErrorBoundary caught an error:', {
             error: error.message,
             stack: error.stack,
@@ -126,7 +121,6 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
             timestamp: new Date().toISOString(),
         });
 
-        // Send to error tracking service
         if (typeof window !== 'undefined' && window.gtag) {
             window.gtag('event', 'exception', {
                 description: `Component Error: ${error.message}`,
@@ -160,7 +154,6 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     };
 
     retry = () => {
-        // Add a small delay to prevent immediate re-error
         this.resetTimeoutId = window.setTimeout(() => {
             this.resetErrorBoundary();
         }, 100);
@@ -184,13 +177,8 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     }
 }
 
-// Hook for error boundary context
 export const useErrorHandler = () => {
     return React.useCallback((error: Error, errorInfo?: React.ErrorInfo) => {
-        console.error('Manual error caught:', error);
-
-        // You could throw the error to trigger error boundary
-        // or handle it differently based on your needs
         if (typeof window !== 'undefined' && window.gtag) {
             window.gtag('event', 'exception', {
                 description: error.message,
@@ -200,7 +188,6 @@ export const useErrorHandler = () => {
     }, []);
 };
 
-// Higher Order Component wrapper
 export function withErrorBoundary<P extends object>(
     Component: React.ComponentType<P>,
     errorBoundaryProps?: Omit<ErrorBoundaryProps, 'children'>

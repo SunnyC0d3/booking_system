@@ -4,7 +4,6 @@ import {Inter} from 'next/font/google';
 import {Toaster} from 'sonner';
 import {ThemeProvider} from 'next-themes';
 import {ErrorBoundary} from '@/components/error/ErrorBoundary';
-import {QueryProvider} from '@/components/providers/QueryProvider';
 import {ClientTokenProvider} from '@/components/providers/ClientTokenProvider';
 import '@/app/globals.css';
 
@@ -91,25 +90,23 @@ export default function RootLayout({children,}: { children: React.ReactNode; }) 
                 disableTransitionOnChange
             >
                 <ClientTokenProvider>
-                    <QueryProvider>
-                        <div className="relative min-h-screen bg-background">
-                            {children}
-                        </div>
-                        <Toaster
-                            position="top-right"
-                            expand={true}
-                            richColors
-                            closeButton
-                            toastOptions={{
-                                duration: 4000,
-                                style: {
-                                    background: 'hsl(var(--background))',
-                                    border: '1px solid hsl(var(--border))',
-                                    color: 'hsl(var(--foreground))',
-                                },
-                            }}
-                        />
-                    </QueryProvider>
+                    <div className="relative min-h-screen bg-background">
+                        {children}
+                    </div>
+                    <Toaster
+                        position="top-right"
+                        expand={true}
+                        richColors
+                        closeButton
+                        toastOptions={{
+                            duration: 4000,
+                            style: {
+                                background: 'hsl(var(--background))',
+                                border: '1px solid hsl(var(--border))',
+                                color: 'hsl(var(--foreground))',
+                            },
+                        }}
+                    />
                 </ClientTokenProvider>
             </ThemeProvider>
         </ErrorBoundary>

@@ -5,7 +5,6 @@ import {getFeaturedCategories, getTestimonials, getCompanyStats} from '@/lib/dat
 import {HomepageContent} from '@/components/homepage/HomepageContent';
 import {MainLayout} from '@/components/layout/MainLayout';
 
-// Metadata for SEO
 export const metadata: Metadata = {
     title: 'Creative Business | Professional Labels, Invitations & Custom Printing',
     description: 'Transform your creative vision with professional custom labels, wedding invitations, gift tags, stickers, greeting cards, and packaging. Quality craftsmanship with fast shipping.',

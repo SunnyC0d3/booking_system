@@ -32,7 +32,6 @@ export function Header() {
         user,
         handleLogout,
         isAdmin,
-        isEmailVerified,
         needsEmailVerification
     } = useAuthUtils();
 
@@ -55,7 +54,6 @@ export function Header() {
         <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border shadow-soft">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
-                    {/* Logo */}
                     <div className="flex items-center">
                         <Link href="/" className="flex items-center space-x-2 group">
                             <div className="h-8 w-8 bg-gradient-to-br from-primary to-primary-600 rounded-lg flex items-center justify-center transition-transform group-hover:scale-105">
@@ -67,7 +65,6 @@ export function Header() {
                         </Link>
                     </div>
 
-                    {/* Navigation */}
                     <nav className="hidden md:flex items-center space-x-8">
                         <Link
                             href="/products"
@@ -89,7 +86,6 @@ export function Header() {
                         </Link>
                     </nav>
 
-                    {/* Right Side */}
                     <div className="flex items-center space-x-3">
                         <Link href="/cart">
                             <Button variant="ghost" size="sm" className="relative hover:bg-accent">
@@ -193,7 +189,6 @@ export function Header() {
                             </>
                         ) : (
                             <>
-                                {/* Guest Navigation */}
                                 <Link href="/login">
                                     <Button variant="ghost" size="sm" className="hover:bg-accent">
                                         Sign In
@@ -218,7 +213,6 @@ export function Header() {
                     </div>
                 </div>
 
-                {/* Mobile Menu */}
                 {isMobileMenuOpen && (
                     <div className="md:hidden animate-in slide-in-from-top-2 duration-200">
                         <div className="px-2 pt-2 pb-3 space-y-1 border-t border-border bg-card/50 backdrop-blur-sm">

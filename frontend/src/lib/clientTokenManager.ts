@@ -81,31 +81,6 @@ class ClientTokenManager {
             throw error;
         }
     }
-
-    isTokenValid(): boolean {
-        return this.token !== null &&
-            this.expiresAt !== null &&
-            Date.now() < this.expiresAt;
-    }
-
-    clearToken(): void {
-        this.token = null;
-        this.expiresAt = null;
-    }
-
-    getTokenInfo(): {
-        hasToken: boolean;
-        expiresAt: Date | null;
-        expiresIn: number | null;
-        isExpiringSoon: boolean;
-    } {
-        return {
-            hasToken: this.token !== null,
-            expiresAt: this.expiresAt ? new Date(this.expiresAt) : null,
-            expiresIn: this.expiresAt ? Math.max(0, this.expiresAt - Date.now()) : null,
-            isExpiringSoon: this.expiresAt ? (this.expiresAt - Date.now()) < (10 * 60 * 1000) : false,
-        };
-    }
 }
 
 export const clientTokenManager = ClientTokenManager.getInstance();
