@@ -113,12 +113,10 @@ export const animationVariants = {
         whileTap: { scale: 0.98 },
     },
 
-    // Button animations (removed transition)
     buttonPress: {
         whileTap: { scale: 0.95 },
     },
 
-    // Card animations
     cardHover: {
         initial: { borderColor: "transparent" },
         whileHover: {
@@ -127,7 +125,6 @@ export const animationVariants = {
     },
 };
 
-// Animated wrapper components
 interface AnimatedWrapperProps {
     children: React.ReactNode;
     variant?: keyof typeof animationVariants;
@@ -164,7 +161,6 @@ export const AnimatedWrapper: React.FC<AnimatedWrapperProps> = ({
     );
 };
 
-// Stagger children animation
 export const StaggerContainer: React.FC<{
     children: React.ReactNode;
     className?: string;
@@ -202,7 +198,6 @@ export const StaggerItem: React.FC<{
     );
 };
 
-// Loading spinner with animation
 export const AnimatedSpinner: React.FC<{
     size?: 'sm' | 'md' | 'lg';
     color?: string;
@@ -243,7 +238,6 @@ export const AnimatedSpinner: React.FC<{
     );
 };
 
-// Animated counter
 export const AnimatedCounter: React.FC<{
     value: number;
     duration?: number;
@@ -268,7 +262,6 @@ export const AnimatedCounter: React.FC<{
     return <span className={className}>{displayValue.toLocaleString()}</span>;
 };
 
-// Animated progress bar
 export const AnimatedProgressBar: React.FC<{
     progress: number;
     className?: string;
@@ -297,7 +290,6 @@ export const AnimatedProgressBar: React.FC<{
     );
 };
 
-// Animated notification toast
 export const AnimatedToast: React.FC<{
     children: React.ReactNode;
     isVisible: boolean;
@@ -342,7 +334,6 @@ export const AnimatedToast: React.FC<{
     );
 };
 
-// Animated modal backdrop
 export const AnimatedModalBackdrop: React.FC<{
     children: React.ReactNode;
     isOpen: boolean;
@@ -385,7 +376,6 @@ export const AnimatedModalBackdrop: React.FC<{
     );
 };
 
-// Hover card animation
 export const HoverCard: React.FC<{
     children: React.ReactNode;
     className?: string;
@@ -403,7 +393,6 @@ export const HoverCard: React.FC<{
     );
 };
 
-// Floating action button with animation
 export const FloatingActionButton: React.FC<{
     children: React.ReactNode;
     onClick?: () => void;
@@ -433,7 +422,6 @@ export const FloatingActionButton: React.FC<{
     );
 };
 
-// Page transition wrapper
 export const PageTransition: React.FC<{
     children: React.ReactNode;
     className?: string;
@@ -452,7 +440,6 @@ export const PageTransition: React.FC<{
     );
 };
 
-// Typing animation for text
 export const TypingAnimation: React.FC<{
     text: string;
     speed?: number;
@@ -470,7 +457,6 @@ export const TypingAnimation: React.FC<{
 
             return () => clearTimeout(timeout);
         }
-        // Added return statement for when effect doesn't need cleanup
         return undefined;
     }, [currentIndex, text, speed]);
 

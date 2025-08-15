@@ -3,7 +3,6 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/cn';
 
-// Spinner Component
 const spinnerVariants = cva('animate-spin', {
     variants: {
         size: {
@@ -41,39 +40,6 @@ const Spinner = React.forwardRef<HTMLDivElement, SpinnerProps>(
 );
 Spinner.displayName = 'Spinner';
 
-// Skeleton Component
-const skeletonVariants = cva(
-    'animate-pulse rounded-md bg-muted',
-    {
-        variants: {
-            variant: {
-                default: 'bg-muted',
-                lighter: 'bg-muted/50',
-                darker: 'bg-muted-foreground/20',
-            },
-        },
-        defaultVariants: {
-            variant: 'default',
-        },
-    }
-);
-
-export interface SkeletonProps
-    extends React.HTMLAttributes<HTMLDivElement>,
-        VariantProps<typeof skeletonVariants> {}
-
-const Skeleton = React.forwardRef<HTMLDivElement, SkeletonProps>(
-    ({ className, variant, ...props }, ref) => (
-        <div
-            ref={ref}
-            className={cn(skeletonVariants({ variant }), className)}
-            {...props}
-        />
-    )
-);
-Skeleton.displayName = 'Skeleton';
-
-// Shimmer Component
 export interface ShimmerProps extends React.HTMLAttributes<HTMLDivElement> {
     lines?: number;
     showAvatar?: boolean;
@@ -112,28 +78,6 @@ const Shimmer = React.forwardRef<HTMLDivElement, ShimmerProps>(
 );
 Shimmer.displayName = 'Shimmer';
 
-// Product Card Skeleton
-const ProductCardSkeleton = React.forwardRef<
-    HTMLDivElement,
-    React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-    <div
-        ref={ref}
-        className={cn('space-y-4 p-4 border rounded-xl', className)}
-        {...props}
-    >
-        <Skeleton className="aspect-square w-full rounded-lg" />
-        <div className="space-y-2">
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-2/3" />
-            <Skeleton className="h-6 w-1/3" />
-        </div>
-        <Skeleton className="h-10 w-full rounded-lg" />
-    </div>
-));
-ProductCardSkeleton.displayName = 'ProductCardSkeleton';
-
-// Full Page Loading
 export interface LoadingPageProps {
     message?: string;
     size?: 'sm' | 'default' | 'lg' | 'xl';
@@ -149,7 +93,6 @@ const LoadingPage: React.FC<LoadingPageProps> = ({
     </div>
 );
 
-// Loading Button State
 export interface LoadingButtonProps extends React.HTMLAttributes<HTMLDivElement> {
     loading?: boolean;
     children: React.ReactNode;
@@ -177,11 +120,11 @@ const LoadingButton = React.forwardRef<HTMLDivElement, LoadingButtonProps>(
 );
 LoadingButton.displayName = 'LoadingButton';
 
-// Loading Overlay
 export interface LoadingOverlayProps extends React.HTMLAttributes<HTMLDivElement> {
     loading: boolean;
     message?: string;
     blur?: boolean;
+    children: React.ReactNode;
 }
 
 const LoadingOverlay = React.forwardRef<HTMLDivElement, LoadingOverlayProps>(
@@ -208,12 +151,9 @@ LoadingOverlay.displayName = 'LoadingOverlay';
 
 export {
     Spinner,
-    Skeleton,
     Shimmer,
-    ProductCardSkeleton,
     LoadingPage,
     LoadingButton,
     LoadingOverlay,
     spinnerVariants,
-    skeletonVariants,
 };

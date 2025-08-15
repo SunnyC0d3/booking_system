@@ -1,7 +1,7 @@
 'use client';
 
-import {useState, useEffect} from 'react';
-import {useAuthUtils} from '@/hooks/useAuthUtils';
+import { useState, useEffect } from 'react';
+import { useAuthUtils } from '@/hooks/useAuthUtils';
 import {
     Alert,
     AlertDescription,
@@ -14,10 +14,10 @@ import {
     Tabs,
     TabsContent,
     TabsList,
-    TabsTrigger
+    TabsTrigger,
+    Skeleton
 } from '@/components/ui';
-import {EmailVerification} from '@/components/auth/EmailVerification';
-import {toast} from 'sonner';
+import { EmailVerification } from '@/components/auth/EmailVerification';
 import Link from 'next/link';
 import {
     User,
@@ -62,6 +62,57 @@ interface RecentDownload {
     max_downloads: number;
 }
 
+const DashboardSkeleton = () => (
+    <div className="space-y-6">
+        <div className="flex items-center justify-between">
+            <div>
+                <Skeleton className="h-8 w-64 mb-2" />
+                <Skeleton className="h-4 w-96" />
+            </div>
+            <div className="flex space-x-2">
+                <Skeleton className="h-6 w-16" />
+                <Skeleton className="h-6 w-16" />
+            </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+                <Card key={i}>
+                    <CardContent className="p-6">
+                        <div className="flex items-center justify-between">
+                            <div className="space-y-2">
+                                <Skeleton className="h-4 w-20" />
+                                <Skeleton className="h-8 w-16" />
+                            </div>
+                            <Skeleton className="h-12 w-12 rounded-full" />
+                        </div>
+                    </CardContent>
+                </Card>
+            ))}
+        </div>
+
+        <div className="space-y-6">
+            <Skeleton className="h-10 w-full" />
+            <Card>
+                <CardContent className="p-6">
+                    <div className="space-y-4">
+                        {Array.from({ length: 3 }).map((_, i) => (
+                            <div key={i} className="flex items-center space-x-4">
+                                <Skeleton className="h-10 w-10 rounded-full" />
+                                <div className="flex-1">
+                                    <Skeleton className="h-4 w-full mb-2" />
+                                    <Skeleton className="h-3 w-3/4" />
+                                </div>
+                                <Skeleton className="h-6 w-16" />
+                            </div>
+                        ))}
+                    </div>
+                </CardContent>
+            </Card>
+        </div>
+    </div>
+);
+
 export default function DashboardContent() {
     const {
         user,
@@ -77,6 +128,7 @@ export default function DashboardContent() {
     const [recentDownloads, setRecentDownloads] = useState<RecentDownload[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('overview');
+    const [dataError, setDataError] = useState<string | null>(null);
 
     useEffect(() => {
         if (!requireAuth()) return;
@@ -92,37 +144,50 @@ export default function DashboardContent() {
 
     const fetchDashboardData = async () => {
         setIsLoading(true);
+        setDataError(null);
+
         try {
-            const statsResponse = await fetch('/api/user/dashboard/stats', {
-                headers: getAuthHeaders(),
-            });
+            const headers = getAuthHeaders();
 
-            if (statsResponse.ok) {
-                const statsData = await statsResponse.json();
-                setStats(statsData);
+            try {
+                const statsResponse = await fetch('/api/user/dashboard/stats', { headers });
+                if (statsResponse.ok) {
+                    const statsData = await statsResponse.json();
+                    setStats(statsData);
+                } else if (statsResponse.status === 404) {
+                    console.warn('Dashboard stats endpoint not found');
+                }
+            } catch (error) {
+                console.warn('Failed to fetch stats:', error);
             }
 
-            const ordersResponse = await fetch('/api/user/orders?limit=5', {
-                headers: getAuthHeaders(),
-            });
-
-            if (ordersResponse.ok) {
-                const ordersData = await ordersResponse.json();
-                setRecentOrders(ordersData.orders || []);
+            try {
+                const ordersResponse = await fetch('/api/user/orders?limit=5', { headers });
+                if (ordersResponse.ok) {
+                    const ordersData = await ordersResponse.json();
+                    setRecentOrders(ordersData.orders || []);
+                } else if (ordersResponse.status === 404) {
+                    console.warn('Orders endpoint not found');
+                }
+            } catch (error) {
+                console.warn('Failed to fetch orders:', error);
             }
 
-            const downloadsResponse = await fetch('/api/user/digital-library/recent?limit=5', {
-                headers: getAuthHeaders(),
-            });
-
-            if (downloadsResponse.ok) {
-                const downloadsData = await downloadsResponse.json();
-                setRecentDownloads(downloadsData.downloads || []);
+            try {
+                const downloadsResponse = await fetch('/api/user/digital-library/recent?limit=5', { headers });
+                if (downloadsResponse.ok) {
+                    const downloadsData = await downloadsResponse.json();
+                    setRecentDownloads(downloadsData.downloads || []);
+                } else if (downloadsResponse.status === 404) {
+                    console.warn('Downloads endpoint not found');
+                }
+            } catch (error) {
+                console.warn('Failed to fetch downloads:', error);
             }
 
         } catch (error) {
             console.error('Failed to fetch dashboard data:', error);
-            toast.error('Failed to load dashboard data');
+            setDataError('Failed to load some dashboard data. Some features may be limited.');
         } finally {
             setIsLoading(false);
         }
@@ -150,22 +215,8 @@ export default function DashboardContent() {
         }).format(amount);
     };
 
-    // Show loading state
     if (authLoading || (isLoading && user)) {
-        return (
-            <div className="space-y-6">
-                {[1, 2, 3].map(i => (
-                    <Card key={i}>
-                        <CardContent className="p-6">
-                            <div className="animate-pulse space-y-4">
-                                <div className="h-4 bg-gray-200 rounded w-1/4"></div>
-                                <div className="h-20 bg-gray-200 rounded"></div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
-        );
+        return <DashboardSkeleton />;
     }
 
     if (needsEmailVerification) {
@@ -186,6 +237,15 @@ export default function DashboardContent() {
 
     return (
         <div className="space-y-6">
+            {dataError && (
+                <Alert className="border-orange-200 bg-orange-50">
+                    <AlertCircle className="h-4 w-4 text-orange-600"/>
+                    <AlertDescription className="text-orange-800">
+                        {dataError}
+                    </AlertDescription>
+                </Alert>
+            )}
+
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900">
@@ -340,11 +400,11 @@ export default function DashboardContent() {
                                 <div className="flex items-center justify-between">
                                     <span className="text-sm text-gray-600">Member Since</span>
                                     <span className="text-sm text-gray-900">
-                    {user?.created_at
-                        ? new Date(user.created_at).toLocaleDateString()
-                        : 'Unknown'
-                    }
-                  </span>
+                                        {user?.created_at
+                                            ? new Date(user.created_at).toLocaleDateString()
+                                            : 'Unknown'
+                                        }
+                                    </span>
                                 </div>
 
                                 {stats?.loyalty_points && stats.loyalty_points > 0 && (
@@ -378,7 +438,7 @@ export default function DashboardContent() {
                                     {recentOrders.map((order) => (
                                         <div
                                             key={order.id}
-                                            className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50"
+                                            className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors"
                                         >
                                             <div className="flex items-center space-x-4">
                                                 <div className="p-2 bg-blue-100 rounded-full">
@@ -438,7 +498,7 @@ export default function DashboardContent() {
                                     {recentDownloads.map((download) => (
                                         <div
                                             key={download.id}
-                                            className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50"
+                                            className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors"
                                         >
                                             <div className="flex items-center space-x-4">
                                                 <div className="p-2 bg-purple-100 rounded-full">
@@ -459,9 +519,9 @@ export default function DashboardContent() {
                                                 </p>
                                                 <div className="w-20 bg-gray-200 rounded-full h-2 mt-1">
                                                     <div
-                                                        className="bg-purple-600 h-2 rounded-full"
+                                                        className="bg-purple-600 h-2 rounded-full transition-all"
                                                         style={{
-                                                            width: `${(download.download_count / download.max_downloads) * 100}%`
+                                                            width: `${Math.min((download.download_count / download.max_downloads) * 100, 100)}%`
                                                         }}
                                                     />
                                                 </div>
@@ -499,8 +559,8 @@ export default function DashboardContent() {
                             {recentOrders.slice(0, 3).map((order) => (
                                 <div key={`activity-${order.id}`} className="flex items-center space-x-3">
                                     <div className="w-2 h-2 bg-blue-600 rounded-full flex-shrink-0"></div>
-                                    <div className="flex-1">
-                                        <p className="text-sm">
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-sm truncate">
                                             Order #{order.order_number} was {order.status.toLowerCase()}
                                         </p>
                                         <p className="text-xs text-gray-500">
@@ -513,8 +573,8 @@ export default function DashboardContent() {
                             {recentDownloads.slice(0, 2).map((download) => (
                                 <div key={`activity-download-${download.id}`} className="flex items-center space-x-3">
                                     <div className="w-2 h-2 bg-purple-600 rounded-full flex-shrink-0"></div>
-                                    <div className="flex-1">
-                                        <p className="text-sm">
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-sm truncate">
                                             Downloaded {download.product_name}
                                         </p>
                                         <p className="text-xs text-gray-500">

@@ -39,200 +39,205 @@ export function Header() {
 
     const getUserInitials = (name?: string) => {
         if (!name) return 'U';
-        return name.split(' ')
-            .map(word => word[0])
-            .join('')
-            .toUpperCase()
-            .slice(0, 2);
+        return name
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase())
+            .slice(0, 2)
+            .join('');
     };
 
-    const handleLogoutClick = () => {
-        handleLogout('/login', 'Logged out successfully');
+    const handleLogoutClick = async () => {
+        try {
+            await handleLogout();
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
     };
 
     return (
-        <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border shadow-soft">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center h-16">
-                    <div className="flex items-center">
-                        <Link href="/" className="flex items-center space-x-2 group">
-                            <div className="h-8 w-8 bg-gradient-to-br from-primary to-primary-600 rounded-lg flex items-center justify-center transition-transform group-hover:scale-105">
-                                <span className="text-primary-foreground font-bold text-sm">CB</span>
-                            </div>
-                            <span className="hidden sm:block text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
-                                Creative Business
-                            </span>
-                        </Link>
+        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <div className="container flex h-16 items-center justify-between px-4">
+                <Link href="/" className="flex items-center space-x-2">
+                    <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
+                        <span className="text-sm font-bold text-primary-foreground">CB</span>
                     </div>
+                    <span className="hidden font-bold sm:inline-block">
+                        Creative Business
+                    </span>
+                </Link>
 
-                    <nav className="hidden md:flex items-center space-x-8">
-                        <Link
-                            href="/products"
-                            className="text-muted-foreground hover:text-foreground transition-colors duration-200 font-medium"
-                        >
-                            Products
-                        </Link>
-                        <Link
-                            href="/about"
-                            className="text-muted-foreground hover:text-foreground transition-colors duration-200 font-medium"
-                        >
-                            About
-                        </Link>
-                        <Link
-                            href="/contact"
-                            className="text-muted-foreground hover:text-foreground transition-colors duration-200 font-medium"
-                        >
-                            Contact
-                        </Link>
-                    </nav>
+                <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
+                    <Link
+                        href="/products"
+                        className="transition-colors hover:text-foreground/80 text-foreground/60"
+                    >
+                        Products
+                    </Link>
+                    <Link
+                        href="/categories"
+                        className="transition-colors hover:text-foreground/80 text-foreground/60"
+                    >
+                        Categories
+                    </Link>
+                    <Link
+                        href="/about"
+                        className="transition-colors hover:text-foreground/80 text-foreground/60"
+                    >
+                        About
+                    </Link>
+                    <Link
+                        href="/contact"
+                        className="transition-colors hover:text-foreground/80 text-foreground/60"
+                    >
+                        Contact
+                    </Link>
+                </nav>
 
-                    <div className="flex items-center space-x-3">
-                        <Link href="/cart">
-                            <Button variant="ghost" size="sm" className="relative hover:bg-accent">
-                                <ShoppingCart className="h-5 w-5" />
-                            </Button>
-                        </Link>
-
-                        {isAuthenticated ? (
-                            <>
-                                {needsEmailVerification && (
-                                    <Badge variant="secondary" className="hidden sm:inline-flex bg-warning text-warning-foreground">
-                                        Verify Email
-                                    </Badge>
-                                )}
-
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button
-                                            variant="ghost"
-                                            className="relative h-8 w-8 rounded-full hover:bg-accent"
-                                        >
-                                            <Avatar className="h-8 w-8 ring-2 ring-primary/20 ring-offset-2 ring-offset-background">
-                                                <AvatarImage
-                                                    src={user?.avatar_url}
-                                                    alt={user?.name || 'User'}
-                                                />
-                                                <AvatarFallback className="bg-primary/10 text-primary font-medium">
-                                                    {getUserInitials(user?.name)}
-                                                </AvatarFallback>
-                                            </Avatar>
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent className="w-56" align="end" forceMount>
-                                        <DropdownMenuLabel className="font-normal">
-                                            <div className="flex flex-col space-y-1">
-                                                <p className="text-sm font-medium leading-none text-foreground">
-                                                    {user?.name || 'User'}
-                                                </p>
-                                                <p className="text-xs leading-none text-muted-foreground">
-                                                    {user?.email}
-                                                </p>
-                                                {user?.role?.name && (
-                                                    <Badge variant="outline" className="w-fit text-xs border-primary/20 text-primary">
-                                                        {user.role.name}
-                                                    </Badge>
-                                                )}
-                                            </div>
-                                        </DropdownMenuLabel>
-                                        <DropdownMenuSeparator />
-
-                                        <DropdownMenuItem asChild>
-                                            <Link href="/dashboard" className="cursor-pointer">
-                                                <User className="mr-2 h-4 w-4" />
-                                                Dashboard
-                                            </Link>
-                                        </DropdownMenuItem>
-
-                                        <DropdownMenuItem asChild>
-                                            <Link href="/profile" className="cursor-pointer">
-                                                <Settings className="mr-2 h-4 w-4" />
-                                                Profile Settings
-                                            </Link>
-                                        </DropdownMenuItem>
-
-                                        <DropdownMenuItem asChild>
-                                            <Link href="/orders" className="cursor-pointer">
-                                                <ShoppingCart className="mr-2 h-4 w-4" />
-                                                My Orders
-                                            </Link>
-                                        </DropdownMenuItem>
-
-                                        <DropdownMenuItem asChild>
-                                            <Link href="/account/digital-library" className="cursor-pointer">
-                                                <Download className="mr-2 h-4 w-4" />
-                                                Digital Library
-                                            </Link>
-                                        </DropdownMenuItem>
-
-                                        {isAdmin && (
-                                            <>
-                                                <DropdownMenuSeparator />
-                                                <DropdownMenuItem asChild>
-                                                    <Link href="/admin" className="cursor-pointer text-primary">
-                                                        <Shield className="mr-2 h-4 w-4" />
-                                                        Admin Panel
-                                                    </Link>
-                                                </DropdownMenuItem>
-                                            </>
-                                        )}
-
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuItem
-                                            className="cursor-pointer text-destructive focus:text-destructive"
-                                            onClick={handleLogoutClick}
-                                        >
-                                            <LogOut className="mr-2 h-4 w-4" />
-                                            Sign Out
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </>
-                        ) : (
-                            <>
-                                <Link href="/login">
-                                    <Button variant="ghost" size="sm" className="hover:bg-accent">
-                                        Sign In
-                                    </Button>
-                                </Link>
-                                <Link href="/register">
-                                    <Button variant="ghost" size="sm" className="hover:bg-accent">
-                                        Sign Up
-                                    </Button>
-                                </Link>
-                            </>
-                        )}
-
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            className="md:hidden hover:bg-accent"
-                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        >
-                            <Menu className="h-5 w-5" />
+                <div className="flex items-center space-x-4">
+                    <Link href="/cart">
+                        <Button variant="ghost" size="sm" className="relative">
+                            <ShoppingCart className="h-4 w-4" />
+                            <span className="sr-only">Shopping cart</span>
                         </Button>
-                    </div>
-                </div>
+                    </Link>
 
-                {isMobileMenuOpen && (
-                    <div className="md:hidden animate-in slide-in-from-top-2 duration-200">
-                        <div className="px-2 pt-2 pb-3 space-y-1 border-t border-border bg-card/50 backdrop-blur-sm">
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        className="md:hidden"
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    >
+                        <Menu className="h-4 w-4" />
+                        <span className="sr-only">Menu</span>
+                    </Button>
+
+                    {isAuthenticated ? (
+                        <>
+                            {needsEmailVerification && (
+                                <Badge variant="secondary" className="hidden sm:inline-flex bg-yellow-100 text-yellow-800">
+                                    Verify Email
+                                </Badge>
+                            )}
+
+                            <DropdownMenu>
+                                <DropdownMenuTrigger className="relative h-8 w-8 rounded-full hover:bg-accent transition-colors">
+                                    <Avatar className="h-8 w-8 ring-2 ring-primary/20 ring-offset-2 ring-offset-background">
+                                        <AvatarImage
+                                            src={user?.avatar_url}
+                                            alt={user?.name || 'User'}
+                                        />
+                                        <AvatarFallback className="bg-primary/10 text-primary font-medium">
+                                            {getUserInitials(user?.name)}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="w-56" align="end">
+                                    <DropdownMenuLabel className="font-normal">
+                                        <div className="flex flex-col space-y-1">
+                                            <p className="text-sm font-medium leading-none text-foreground">
+                                                {user?.name || 'User'}
+                                            </p>
+                                            <p className="text-xs leading-none text-muted-foreground">
+                                                {user?.email}
+                                            </p>
+                                            {user?.role?.name && (
+                                                <Badge variant="outline" className="w-fit text-xs border-primary/20 text-primary">
+                                                    {user.role.name}
+                                                </Badge>
+                                            )}
+                                        </div>
+                                    </DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+
+                                    <DropdownMenuItem onClick={() => window.location.href = '/dashboard'}>
+                                        <User className="mr-2 h-4 w-4" />
+                                        Dashboard
+                                    </DropdownMenuItem>
+
+                                    <DropdownMenuItem onClick={() => window.location.href = '/profile'}>
+                                        <Settings className="mr-2 h-4 w-4" />
+                                        Profile Settings
+                                    </DropdownMenuItem>
+
+                                    <DropdownMenuItem onClick={() => window.location.href = '/orders'}>
+                                        <ShoppingCart className="mr-2 h-4 w-4" />
+                                        My Orders
+                                    </DropdownMenuItem>
+
+                                    <DropdownMenuItem onClick={() => window.location.href = '/account/digital-library'}>
+                                        <Download className="mr-2 h-4 w-4" />
+                                        Digital Library
+                                    </DropdownMenuItem>
+
+                                    {isAdmin && (
+                                        <>
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuItem
+                                                onClick={() => window.location.href = '/admin'}
+                                                className="text-primary"
+                                            >
+                                                <Shield className="mr-2 h-4 w-4" />
+                                                Admin Panel
+                                            </DropdownMenuItem>
+                                        </>
+                                    )}
+
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem
+                                        className="text-destructive focus:text-destructive"
+                                        onClick={handleLogoutClick}
+                                    >
+                                        <LogOut className="mr-2 h-4 w-4" />
+                                        Sign Out
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </>
+                    ) : (
+                        <>
+                            <Link href="/login">
+                                <Button variant="ghost" size="sm">
+                                    Sign In
+                                </Button>
+                            </Link>
+                            <Link href="/register">
+                                <Button size="sm">
+                                    Get Started
+                                </Button>
+                            </Link>
+                        </>
+                    )}
+                </div>
+            </div>
+
+            {isMobileMenuOpen && (
+                <div className="md:hidden border-t bg-background">
+                    <div className="container px-4 py-4">
+                        <nav className="flex flex-col space-y-3">
                             <Link
                                 href="/products"
-                                className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors"
+                                className="text-sm font-medium transition-colors hover:text-primary"
                                 onClick={() => setIsMobileMenuOpen(false)}
                             >
                                 Products
                             </Link>
                             <Link
+                                href="/categories"
+                                className="text-sm font-medium transition-colors hover:text-primary"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                                Categories
+                            </Link>
+                            <Link
                                 href="/about"
-                                className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors"
+                                className="text-sm font-medium transition-colors hover:text-primary"
                                 onClick={() => setIsMobileMenuOpen(false)}
                             >
                                 About
                             </Link>
                             <Link
                                 href="/contact"
-                                className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors"
+                                className="text-sm font-medium transition-colors hover:text-primary"
                                 onClick={() => setIsMobileMenuOpen(false)}
                             >
                                 Contact
@@ -240,28 +245,34 @@ export function Header() {
 
                             {isAuthenticated && (
                                 <>
-                                    <div className="border-t border-border pt-2 mt-2">
-                                        <Link
-                                            href="/dashboard"
-                                            className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors"
-                                            onClick={() => setIsMobileMenuOpen(false)}
-                                        >
-                                            Dashboard
-                                        </Link>
-                                        <Link
-                                            href="/profile"
-                                            className="block px-3 py-2 text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors"
-                                            onClick={() => setIsMobileMenuOpen(false)}
-                                        >
-                                            Profile
-                                        </Link>
-                                    </div>
+                                    <hr className="my-2" />
+                                    <Link
+                                        href="/dashboard"
+                                        className="text-sm font-medium transition-colors hover:text-primary"
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                    >
+                                        Dashboard
+                                    </Link>
+                                    <Link
+                                        href="/profile"
+                                        className="text-sm font-medium transition-colors hover:text-primary"
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                    >
+                                        Profile
+                                    </Link>
+                                    <Link
+                                        href="/orders"
+                                        className="text-sm font-medium transition-colors hover:text-primary"
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                    >
+                                        My Orders
+                                    </Link>
                                 </>
                             )}
-                        </div>
+                        </nav>
                     </div>
-                )}
-            </div>
+                </div>
+            )}
         </header>
     );
 }
