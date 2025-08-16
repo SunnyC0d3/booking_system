@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\V1\Bookings\TimeSlotService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -330,7 +331,7 @@ class ServicePackage extends Model implements HasMedia
         // Get availability for each required service
         $serviceSlots = [];
         foreach ($requiredServices as $service) {
-            $timeSlotService = app(\App\Services\V1\Bookings\EnhancedTimeSlotService::class);
+            $timeSlotService = app(TimeSlotService::class);
             $slots = $timeSlotService->getAvailableSlots(
                 $service,
                 $date->clone()->startOfDay(),

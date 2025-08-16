@@ -17,9 +17,6 @@ class ServiceController extends Controller
 
     public function __construct()
     {
-        // Apply rate limiting
-        $this->middleware('throttle:api')->except(['index', 'show']);
-        $this->middleware('throttle:service-search:30,1')->only(['search']);
     }
 
     /**
@@ -167,7 +164,6 @@ class ServiceController extends Controller
                 'vendor'
             ]);
 
-            // Get recent reviews if they exist
             $service->loadCount(['bookings as completed_bookings_count' => function ($query) {
                 $query->where('status', 'completed');
             }]);

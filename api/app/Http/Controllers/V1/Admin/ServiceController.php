@@ -19,8 +19,6 @@ class ServiceController extends Controller
 
     public function __construct()
     {
-        $this->middleware('throttle:admin-api')->except(['index', 'show']);
-        $this->middleware('throttle:admin-services:30,1')->only(['store', 'update']);
     }
 
     /**

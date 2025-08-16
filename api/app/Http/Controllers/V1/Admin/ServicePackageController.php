@@ -20,8 +20,6 @@ class ServicePackageController extends Controller
 
     public function __construct()
     {
-        $this->middleware('throttle:admin-api')->except(['index', 'show']);
-        $this->middleware('throttle:admin-packages:20,1')->only(['store', 'update']);
     }
 
     /**

@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             BookingSeeder::class,
             BookingNotificationSeeder::class,
             ServiceAvailabilityExceptionSeeder::class,
+            VenueDetailsSeeder::class,
         ]);
     }
 }

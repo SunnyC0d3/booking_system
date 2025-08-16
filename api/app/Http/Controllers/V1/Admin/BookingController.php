@@ -22,10 +22,6 @@ class BookingController extends Controller
     public function __construct(BookingService $bookingService)
     {
         $this->bookingService = $bookingService;
-
-        // Apply rate limiting middleware for admin actions
-        $this->middleware('throttle:admin-api')->except(['index', 'show', 'getStatistics', 'getCalendarData']);
-        $this->middleware('throttle:admin-bookings:20,1')->only(['store', 'bulkUpdate']);
     }
 
     /**

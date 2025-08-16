@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\V1\Admin\ServiceController;
+use App\Http\Controllers\V1\Admin\ServicePackageController;
 use Illuminate\Support\Facades\Route;
 
 // Admin Controllers
@@ -230,7 +232,7 @@ Route::prefix('admin/services')
 
         // Service add-ons
         Route::prefix('{service}/add-ons')
-            ->controller(\App\Http\Controllers\V1\Admin\ServiceAddOnController::class)
+            ->controller(ServiceAddOnController::class)
             ->group(function () {
                 Route::get('/', 'index')
                     ->middleware('rate_limit:admin.service_management')
@@ -251,7 +253,7 @@ Route::prefix('admin/services')
 
         // Service packages
         Route::prefix('{service}/packages')
-            ->controller(\App\Http\Controllers\V1\Admin\ServicePackageController::class)
+            ->controller(ServicePackageController::class)
             ->group(function () {
                 Route::get('/', 'index')
                     ->middleware('rate_limit:admin.service_management')

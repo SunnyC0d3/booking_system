@@ -27,11 +27,6 @@ class BookingController extends Controller
     {
         $this->bookingService = $bookingService;
         $this->timeSlotService = $timeSlotService;
-
-        // Apply rate limiting middleware
-        $this->middleware('throttle:api')->except(['index', 'show', 'getAvailableSlots']);
-        $this->middleware('throttle:bookings:10,1')->only(['store']);
-        $this->middleware('throttle:booking-updates:5,1')->only(['update', 'cancel', 'reschedule']);
     }
 
     /**

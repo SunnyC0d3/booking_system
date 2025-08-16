@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\V1\Public\ServiceController;
 use Illuminate\Support\Facades\Route;
 
 // Auth Controllers
@@ -106,6 +107,7 @@ Route::prefix('bookings')
 // Service availability routes (public access with guest rate limiting)
 
 Route::prefix('services/{service}')
+    ->middleware(['client'])
     ->controller(BookingController::class)
     ->group(function () {
         Route::get('/slots', 'getAvailableSlots')
@@ -128,6 +130,7 @@ Route::prefix('services/{service}')
 // Public service information routes (no auth required, guest rate limiting)
 
 Route::prefix('services')
+    ->middleware(['client'])
     ->controller(ServiceController::class)
     ->group(function () {
         Route::get('/', 'index')
