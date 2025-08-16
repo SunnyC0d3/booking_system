@@ -5,7 +5,7 @@ namespace App\Resources\V1;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class EnhancedSearchResponse extends JsonResource
+class EnhancedSearchResource extends JsonResource
 {
     protected $searchStats;
     protected $facets;
