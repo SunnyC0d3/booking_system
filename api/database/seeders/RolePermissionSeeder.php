@@ -28,6 +28,62 @@ class RolePermissionSeeder extends Seeder
                 // Payment Management
                 'view_payments', 'create_payments', 'edit_payments', 'delete_payments',
                 'view_payment_methods', 'create_payment_methods', 'edit_payment_methods', 'delete_payment_methods',
+
+                // Booking Management - Full Access
+                'view_own_bookings', 'create_own_bookings', 'edit_own_bookings', 'delete_own_bookings',
+                'view_all_bookings', 'create_bookings_for_users', 'edit_all_bookings', 'delete_all_bookings',
+
+                // Service Management - Full Access
+                'view_services', 'create_services', 'edit_services', 'delete_services',
+                'view_service_locations', 'create_service_locations', 'edit_service_locations', 'delete_service_locations',
+                'view_service_availability', 'create_service_availability', 'edit_service_availability', 'delete_service_availability',
+                'view_service_addons', 'create_service_addons', 'edit_service_addons', 'delete_service_addons',
+
+                // Booking Status Management
+                'confirm_bookings', 'mark_bookings_in_progress', 'mark_bookings_completed', 'mark_bookings_no_show',
+
+                // Analytics and Reporting
+                'view_booking_statistics', 'view_booking_calendar', 'export_bookings', 'bulk_update_bookings',
+
+                // Consultation and Pricing
+                'manage_consultations', 'view_consultation_notes', 'view_pricing_details', 'modify_pricing',
+            ],
+
+            'Vendor Manager' => [
+                // User Management - View Only
+                'view_all_users',
+
+                // Booking Management - View and Limited Edit
+                'view_all_bookings', 'edit_all_bookings',
+
+                // Service Management - View and Edit
+                'view_services', 'edit_services',
+                'view_service_locations', 'edit_service_locations',
+                'view_service_availability', 'edit_service_availability',
+                'view_service_addons', 'edit_service_addons',
+
+                // Analytics
+                'view_booking_statistics', 'view_booking_calendar',
+
+                // Consultation
+                'view_consultation_notes', 'view_pricing_details',
+            ],
+
+            'Vendor' => [
+                // Own Profile Management
+                'view_own_profile', 'edit_own_profile',
+
+                // Booking Management - Own Services Only
+                'view_own_bookings', 'create_own_bookings', 'edit_own_bookings', 'delete_own_bookings',
+
+                // Service Management - Own Services
+                'view_services', 'edit_services',
+                'view_service_locations', 'create_service_locations', 'edit_service_locations',
+                'view_service_availability', 'create_service_availability', 'edit_service_availability',
+                'view_service_addons', 'create_service_addons', 'edit_service_addons',
+
+                // Consultation and Pricing - View Only
+                'view_consultation_notes', 'view_pricing_details',
             ],
 
             'Customer Service' => [
@@ -35,25 +91,62 @@ class RolePermissionSeeder extends Seeder
                 'view_all_users',
 
                 // Customer Support
-                'view_customer_data',
-                'manage_refunds',
-                'manage_returns',
+                'view_customer_data', 'manage_refunds', 'manage_returns',
+
+                // Booking Management - View and Status Updates
+                'view_all_bookings', 'edit_all_bookings',
+                'confirm_bookings', 'mark_bookings_in_progress', 'mark_bookings_completed', 'mark_bookings_no_show',
+
+                // Service Information - View Only
+                'view_services', 'view_service_locations', 'view_service_availability', 'view_service_addons',
+
+                // Consultation Management
+                'manage_consultations', 'view_consultation_notes',
+
+                // Analytics - Limited
+                'view_booking_statistics', 'view_booking_calendar',
+
+                // Pricing - View Only
+                'view_pricing_details',
             ],
 
             'Content Manager' => [
                 // User Management - View Only
                 'view_all_users',
+
+                // Service Content Management
+                'view_services', 'edit_services',
+                'view_service_locations', 'edit_service_locations',
+                'view_service_addons', 'edit_service_addons',
+
+                // Booking Information - View Only
+                'view_all_bookings',
+
+                // Pricing - View Only
+                'view_pricing_details',
             ],
 
             'User' => [
                 // User Management - Own Profile Only
                 'view_own_profile', 'edit_own_profile', 'delete_own_account',
                 'create_user_account', // For self-registration
+
+                // Booking Management - Own Bookings Only
+                'view_own_bookings', 'create_own_bookings', 'edit_own_bookings', 'delete_own_bookings',
+
+                // Service Information - View Only
+                'view_services', 'view_service_locations', 'view_service_availability', 'view_service_addons',
+
+                // Pricing - View Only
+                'view_pricing_details',
             ],
 
             'Guest' => [
                 // User Registration
                 'create_user_account',
+
+                // Service Information - View Only (Public)
+                'view_services', 'view_service_locations', 'view_service_availability', 'view_service_addons',
             ],
         ];
 

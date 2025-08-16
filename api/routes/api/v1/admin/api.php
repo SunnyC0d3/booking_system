@@ -12,6 +12,7 @@ use App\Http\Controllers\V1\Admin\PaymentMethodController;
 use App\Http\Controllers\V1\Admin\ReturnsController;
 use App\Http\Controllers\V1\Admin\RefundController;
 use App\Http\Controllers\V1\Admin\PaymentController;
+use App\Http\Controllers\V1\Admin\BookingController;
 
 // Admin/Users
 
@@ -102,3 +103,133 @@ Route::prefix('admin/payments')
     ->group(function () {
         Route::get('/', 'index')->name('admin.payments.index');
     });
+
+// Admin/Bookings
+
+Route::prefix('admin/bookings')
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->controller(BookingController::class)
+    ->group(function () {
+        Route::get('/', 'index')
+            ->middleware('rate_limit:admin.bookings.view')
+            ->name('admin.bookings.index');
+        Route::post('/', 'store')
+            ->middleware('rate_limit:admin.bookings.create')
+            ->name('admin.bookings.store');
+        Route::get('/statistics', 'getStatistics')
+            ->middleware('rate_limit:admin.statistics')
+            ->name('admin.bookings.statistics');
+        Route::get('/calendar', 'getCalendarData')
+            ->middleware('rate_limit:admin.calendar')
+            ->name('admin.bookings.calendar');
+        Route::get('/schedule/daily', 'getDailySchedule')
+            ->middleware('rate_limit:admin.calendar')
+            ->name('admin.bookings.schedule.daily');
+        Route::post('/bulk-update', 'bulkUpdate')
+            ->middleware('rate_limit:admin.bulk_operations')
+            ->name('admin.bookings.bulk-update');
+        Route::get('/export', 'export')
+            ->middleware('rate_limit:admin.export')
+            ->name('admin.bookings.export');
+
+        Route::get('/{booking}', 'show')
+            ->middleware('rate_limit:admin.bookings.view')
+            ->name('admin.bookings.show');
+        Route::put('/{booking}', 'update')
+            ->middleware('rate_limit:admin.bookings.update')
+            ->name('admin.bookings.update');
+        Route::delete('/{booking}', 'destroy')
+            ->middleware('rate_limit:admin.bookings.delete')
+            ->name('admin.bookings.destroy');
+
+        // Status management
+        Route::post('/{booking}/confirm', 'confirm')
+            ->middleware('rate_limit:admin.bookings.update')
+            ->name('admin.bookings.confirm');
+        Route::post('/{booking}/in-progress', 'markInProgress')
+            ->middleware('rate_limit:admin.bookings.update')
+            ->name('admin.bookings.in-progress');
+        Route::post('/{booking}/completed', 'markCompleted')
+            ->middleware('rate_limit:admin.bookings.update')
+            ->name('admin.bookings.completed');
+        Route::post('/{booking}/no-show', 'markNoShow')
+            ->middleware('rate_limit:admin.bookings.update')
+            ->name('admin.bookings.no-show');
+    });
+
+// Service management routes (Admin)
+Route::prefix('admin/services')
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->group(function () {
+
+        // Service locations
+        Route::prefix('{service}/locations')
+            ->controller(\App\Http\Controllers\V1\Admin\ServiceLocationController::class)
+            ->group(function () {
+                Route::get('/', 'index')
+                    ->middleware('rate_limit:admin.bookings.view')
+                    ->name('admin.services.locations.index');
+                Route::post('/', 'store')
+                    ->middleware('rate_limit:admin.bookings.create')
+                    ->name('admin.services.locations.store');
+                Route::get('/{location}', 'show')
+                    ->middleware('rate_limit:admin.bookings.view')
+                    ->name('admin.services.locations.show');
+                Route::put('/{location}', 'update')
+                    ->middleware('rate_limit:admin.bookings.update')
+                    ->name('admin.services.locations.update');
+                Route::delete('/{location}', 'destroy')
+                    ->middleware('rate_limit:admin.bookings.delete')
+                    ->name('admin.services.locations.destroy');
+            });
+
+        // Service availability windows
+        Route::prefix('{service}/availability')
+            ->controller(\App\Http\Controllers\V1\Admin\ServiceAvailabilityController::class)
+            ->group(function () {
+                Route::get('/', 'index')
+                    ->middleware('rate_limit:admin.bookings.view')
+                    ->name('admin.services.availability.index');
+                Route::post('/', 'store')
+                    ->middleware('rate_limit:admin.bookings.create')
+                    ->name('admin.services.availability.store');
+                Route::get('/{window}', 'show')
+                    ->middleware('rate_limit:admin.bookings.view')
+                    ->name('admin.services.availability.show');
+                Route::put('/{window}', 'update')
+                    ->middleware('rate_limit:admin.bookings.update')
+                    ->name('admin.services.availability.update');
+                Route::delete('/{window}', 'destroy')
+                    ->middleware('rate_limit:admin.bookings.delete')
+                    ->name('admin.services.availability.destroy');
+                Route::post('/bulk-create', 'bulkCreate')
+                    ->middleware('rate_limit:admin.bulk_operations')
+                    ->name('admin.services.availability.bulk-create');
+            });
+
+        // Service add-ons
+        Route::prefix('{service}/add-ons')
+            ->controller(\App\Http\Controllers\V1\Admin\ServiceAddOnController::class)
+            ->group(function () {
+                Route::get('/', 'index')
+                    ->middleware('rate_limit:admin.bookings.view')
+                    ->name('admin.services.addons.index');
+                Route::post('/', 'store')
+                    ->middleware('rate_limit:admin.bookings.create')
+                    ->name('admin.services.addons.store');
+                Route::get('/{addon}', 'show')
+                    ->middleware('rate_limit:admin.bookings.view')
+                    ->name('admin.services.addons.show');
+                Route::put('/{addon}', 'update')
+                    ->middleware('rate_limit:admin.bookings.update')
+                    ->name('admin.services.addons.update');
+                Route::delete('/{addon}', 'destroy')
+                    ->middleware('rate_limit:admin.bookings.delete')
+                    ->name('admin.services.addons.destroy');
+                Route::post('/reorder', 'reorder')
+                    ->middleware('rate_limit:admin.bookings.update')
+                    ->name('admin.services.addons.reorder');
+            });
+    });
+
+

@@ -23,8 +23,38 @@ return [
         'admin' => '100,1',         // 100 admin requests per minute
         'payments' => '10,1',       // 10 payment requests per minute
         'uploads' => '10,1',        // 10 upload requests per minute
-        'downloads' => '50,1',      // 50 download requests per minute (NEW)
-        'license_validation' => '100,1', // 100 license checks per minute (NEW)
+    ],
+
+    'bookings' => [
+        'create' => '10,60',           // 10 booking creations per hour
+        'update' => '20,60',           // 20 booking updates per hour
+        'cancel' => '5,60',            // 5 cancellations per hour
+        'reschedule' => '3,60',        // 3 reschedules per hour
+        'view' => '100,60',            // 100 booking views per hour
+    ],
+
+    'availability' => [
+        'check' => '60,60',            // 60 availability checks per hour
+        'slots' => '30,60',            // 30 slot requests per hour
+        'summary' => '20,60',          // 20 availability summaries per hour
+        'pricing' => '30,60',          // 30 pricing estimates per hour
+    ],
+
+    'services' => [
+        'view' => '200,60',            // 200 service views per hour (public)
+        'locations' => '100,60',       // 100 location requests per hour
+        'addons' => '100,60',          // 100 add-on requests per hour
+    ],
+
+    'admin' => [
+        'bookings.view' => '500,60',       // 500 booking views per hour for admins
+        'bookings.create' => '100,60',     // 100 booking creations per hour for admins
+        'bookings.update' => '200,60',     // 200 booking updates per hour for admins
+        'bookings.delete' => '50,60',      // 50 booking deletions per hour for admins
+        'statistics' => '50,60',           // 50 statistics requests per hour
+        'calendar' => '100,60',            // 100 calendar requests per hour
+        'export' => '10,60',               // 10 export requests per hour
+        'bulk_operations' => '20,60',      // 20 bulk operations per hour
     ],
 
     'guest' => [
@@ -35,6 +65,13 @@ return [
         'review_reports' => '0,1',  // No reporting for guests
         'review_create' => '0,1',   // No review creation for guests
         'review_responses' => '5,1', // 5 response views per minute
+        'services.view' => '60,60',        // 60 service views per hour for guests
+        'services.locations' => '30,60',   // 30 location requests per hour for guests
+        'services.addons' => '30,60',      // 30 add-on requests per hour for guests
+        'availability.check' => '20,60',   // 20 availability checks per hour for guests
+        'availability.slots' => '10,60',   // 10 slot requests per hour for guests
+        'availability.summary' => '5,60',  // 5 availability summaries per hour for guests
+        'availability.pricing' => '10,60', // 10 pricing estimates per hour for guests
     ],
 
     'returns' => [

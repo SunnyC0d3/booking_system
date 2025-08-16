@@ -361,4 +361,116 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsTo(ShippingAddress::class, 'default_shipping_address_id');
     }
+
+    /**
+     * Check if user has any of the specified permissions
+     */
+    public function hasAnyPermission(array $permissions): bool
+    {
+        foreach ($permissions as $permission) {
+            if ($this->hasPermission($permission)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check if user has all of the specified permissions
+     */
+    public function hasAllPermissions(array $permissions): bool
+    {
+        foreach ($permissions as $permission) {
+            if (!$this->hasPermission($permission)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Check if user has any of the specified roles
+     */
+    public function hasAnyRole(array $roles): bool
+    {
+        if (!$this->role) {
+            return false;
+        }
+
+        return in_array($this->role->name, $roles);
+    }
+
+    /**
+     * Grant temporary permissions (used for admin operations)
+     */
+    public function grantTemporaryPermissions(array $permissions): void
+    {
+        $this->temp_permission_override = array_merge(
+            $this->temp_permission_override ?? [],
+            $permissions
+        );
+    }
+
+    /**
+     * Revoke temporary permissions
+     */
+    public function revokeTemporaryPermissions(array $permissions = null): void
+    {
+        if ($permissions === null) {
+            $this->temp_permission_override = [];
+        } else {
+            $this->temp_permission_override = array_diff(
+                $this->temp_permission_override ?? [],
+                $permissions
+            );
+        }
+    }
+
+    /**
+     * Check if user can perform booking operations
+     */
+    public function canManageBookings(): bool
+    {
+        return $this->hasAnyPermission([
+            'view_all_bookings',
+            'edit_all_bookings',
+            'delete_all_bookings'
+        ]);
+    }
+
+    /**
+     * Check if user can manage services
+     */
+    public function canManageServices(): bool
+    {
+        return $this->hasAnyPermission([
+            'create_services',
+            'edit_services',
+            'delete_services'
+        ]);
+    }
+
+    /**
+     * Check if user is admin level
+     */
+    public function isAdmin(): bool
+    {
+        return $this->hasAnyRole(['Super Admin', 'Admin']);
+    }
+
+    /**
+     * Check if user is super admin
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->hasRole('Super Admin');
+    }
+
+    /**
+     * Check if user can view booking statistics
+     */
+    public function canViewBookingStatistics(): bool
+    {
+        return $this->hasPermission('view_booking_statistics');
+    }
 }
