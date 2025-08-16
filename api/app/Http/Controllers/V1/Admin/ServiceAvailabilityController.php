@@ -761,6 +761,8 @@ class ServiceAvailabilityController extends Controller
     {
         return match($templateType) {
             'business_hours' => [
+                ['type' => 'regular', 'pattern' => 'weekly', 'day_of_week' => 1, 'start_time' => '09:00:00', 'end_time' => '17:00:00', 'max_bookings' => 4, 'is_active' => true, 'is_bookable' => true],
+                ['type' => 'regular', 'pattern' => 'weekly', 'day_of_week' => 2, 'start_time' => '09:00:00', 'end_time' => '17:00:00', 'max_bookings' => 4, 'is_active' => true, 'is_bookable' => true],
                 ['type' => 'regular', 'pattern' => 'weekly', 'day_of_week' => 3, 'start_time' => '09:00:00', 'end_time' => '17:00:00', 'max_bookings' => 4, 'is_active' => true, 'is_bookable' => true],
                 ['type' => 'regular', 'pattern' => 'weekly', 'day_of_week' => 4, 'start_time' => '09:00:00', 'end_time' => '17:00:00', 'max_bookings' => 4, 'is_active' => true, 'is_bookable' => true],
                 ['type' => 'regular', 'pattern' => 'weekly', 'day_of_week' => 5, 'start_time' => '09:00:00', 'end_time' => '17:00:00', 'max_bookings' => 4, 'is_active' => true, 'is_bookable' => true],
@@ -780,6 +782,4 @@ class ServiceAvailabilityController extends Controller
             'custom' => $customSchedule ?? [],
         };
     }
-}' => 1, 'start_time' => '09:00:00', 'end_time' => '17:00:00', 'max_bookings' => 4, 'is_active' => true, 'is_bookable' => true],
-                ['type' => 'regular', 'pattern' => 'weekly', 'day_of_week' => 2, 'start_time' => '09:00:00', 'end_time' => '17:00:00', 'max_bookings' => 4, 'is_active' => true, 'is_bookable' => true],
-                ['type' => 'regular', 'pattern' => 'weekly', 'day_of_week
+}
