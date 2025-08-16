@@ -27,8 +27,16 @@ class BookingController extends Controller
     {
         $this->bookingService = $bookingService;
         $this->timeSlotService = $timeSlotService;
+
+        // Apply rate limiting middleware
+        $this->middleware('throttle:api')->except(['index', 'show', 'getAvailableSlots']);
+        $this->middleware('throttle:bookings:10,1')->only(['store']);
+        $this->middleware('throttle:booking-updates:5,1')->only(['update', 'cancel', 'reschedule']);
     }
 
+    /**
+     * Get user's bookings
+     */
     public function index(FilterBookingRequest $request)
     {
         try {
@@ -38,6 +46,9 @@ class BookingController extends Controller
         }
     }
 
+    /**
+     * Create a new booking
+     */
     public function store(StoreBookingRequest $request)
     {
         try {
@@ -47,6 +58,9 @@ class BookingController extends Controller
         }
     }
 
+    /**
+     * Get booking details
+     */
     public function show(Request $request, Booking $booking)
     {
         try {
@@ -56,6 +70,9 @@ class BookingController extends Controller
         }
     }
 
+    /**
+     * Update a booking
+     */
     public function update(UpdateBookingRequest $request, Booking $booking)
     {
         try {
@@ -65,191 +82,207 @@ class BookingController extends Controller
         }
     }
 
+    /**
+     * Cancel a booking
+     */
     public function cancel(Request $request, Booking $booking)
     {
         try {
+            $request->validate([
+                'reason' => 'nullable|string|max:500',
+            ]);
+
             return $this->bookingService->cancelBooking($request, $booking);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 422);
         }
     }
 
+    /**
+     * Reschedule a booking
+     */
     public function reschedule(Request $request, Booking $booking)
     {
         try {
+            $request->validate([
+                'scheduled_at' => 'required|date|after:now',
+                'reason' => 'nullable|string|max:500',
+            ]);
+
             return $this->bookingService->rescheduleBooking($request, $booking);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 422);
         }
     }
 
+    /**
+     * Get available time slots for a service
+     */
     public function getAvailableSlots(Request $request, Service $service)
     {
         try {
+            $request->validate([
+                'date' => 'required|date|after_or_equal:today',
+                'location_id' => 'nullable|exists:service_locations,id',
+                'duration_minutes' => 'nullable|integer|min:15|max:480',
+            ]);
+
             $date = Carbon::parse($request->input('date'));
             $locationId = $request->input('location_id');
+            $durationMinutes = $request->input('duration_minutes', $service->duration_minutes);
 
-            $location = $locationId ? ServiceLocation::find($locationId) : null;
+            $location = $locationId ?
+                ServiceLocation::where('service_id', $service->id)
+                    ->where('id', $locationId)
+                    ->where('is_active', true)
+                    ->first() : null;
 
             if ($locationId && !$location) {
-                return $this->error('Invalid location specified', 404);
+                return $this->error('Invalid location for this service', 422);
             }
 
-            $slots = $this->timeSlotService->getAvailableSlots($service, $date, $location);
-
-            return $this->ok('Available time slots retrieved successfully', [
-                'date' => $date->format('Y-m-d'),
-                'service' => [
-                    'id' => $service->id,
-                    'name' => $service->name,
-                    'duration_minutes' => $service->duration_minutes,
-                    'formatted_price' => $service->getFormattedPriceAttribute(),
-                ],
-                'location' => $location ? [
-                    'id' => $location->id,
-                    'name' => $location->name,
-                    'type' => $location->type,
-                    'additional_charge' => $location->getFormattedAdditionalChargeAttribute(),
-                ] : null,
-                'slots' => $slots,
-                'total_slots' => count($slots),
-                'available_slots' => count(array_filter($slots, fn($slot) => $slot['is_available'])),
-            ]);
-        } catch (Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode() ?: 500);
-        }
-    }
-
-    public function getAvailabilitySummary(Request $request, Service $service)
-    {
-        try {
-            $startDate = Carbon::parse($request->input('start_date'));
-            $endDate = Carbon::parse($request->input('end_date', $startDate->clone()->addDays(7)));
-            $locationId = $request->input('location_id');
-
-            // Limit to 30 days to prevent performance issues
-            if ($endDate->diffInDays($startDate) > 30) {
-                $endDate = $startDate->clone()->addDays(30);
-            }
-
-            $location = $locationId ? ServiceLocation::find($locationId) : null;
-
-            $summary = $this->timeSlotService->getAvailabilitySummary(
+            $endDate = $date->clone()->endOfDay();
+            $slots = $this->timeSlotService->getAvailableSlots(
                 $service,
-                $startDate,
+                $date,
                 $endDate,
-                $location
+                $location,
+                $durationMinutes
             );
 
-            return $this->ok('Availability summary retrieved successfully', [
-                'service' => [
-                    'id' => $service->id,
-                    'name' => $service->name,
-                ],
+            return $this->ok('Available slots retrieved', [
+                'service_id' => $service->id,
+                'service_name' => $service->name,
+                'date' => $date->format('Y-m-d'),
                 'location' => $location ? [
                     'id' => $location->id,
                     'name' => $location->name,
                 ] : null,
-                'date_range' => [
-                    'start' => $startDate->format('Y-m-d'),
-                    'end' => $endDate->format('Y-m-d'),
-                ],
-                'summary' => $summary,
+                'duration_minutes' => $durationMinutes,
+                'slots' => $slots->values(),
+                'total_slots' => $slots->count(),
             ]);
+
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
     }
 
-    public function checkSlotAvailability(Request $request, Service $service)
+    /**
+     * Get booking notification statistics
+     */
+    public function getNotificationStats(Request $request, Booking $booking)
     {
         try {
-            $startTime = Carbon::parse($request->input('start_time'));
-            $durationMinutes = $request->input('duration_minutes', $service->duration_minutes);
-            $locationId = $request->input('location_id');
+            return $this->bookingService->getBookingNotificationStats($request, $booking);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
+    }
 
-            $location = $locationId ? ServiceLocation::find($locationId) : null;
+    /**
+     * Resend booking confirmation email
+     */
+    public function resendConfirmation(Request $request, Booking $booking)
+    {
+        try {
+            $user = $request->user();
 
-            $isAvailable = $this->timeSlotService->isSlotAvailable(
-                $service,
-                $startTime,
-                $durationMinutes,
-                $location
-            );
-
-            $conflicts = [];
-            if (!$isAvailable) {
-                $conflicts = $this->timeSlotService->getConflictingBookings(
-                    $service,
-                    $startTime,
-                    $durationMinutes,
-                    $location
-                )->map(function ($booking) {
-                    return [
-                        'booking_reference' => $booking->booking_reference,
-                        'client_name' => $booking->client_name,
-                        'scheduled_at' => $booking->scheduled_at->format('Y-m-d H:i'),
-                        'ends_at' => $booking->ends_at->format('Y-m-d H:i'),
-                        'status' => $booking->status,
-                    ];
-                })->toArray();
+            // Check if user owns this booking
+            if ($booking->user_id !== $user->id) {
+                return $this->error('You can only resend confirmations for your own bookings.', 403);
             }
 
-            return $this->ok('Slot availability checked', [
-                'is_available' => $isAvailable,
-                'requested_slot' => [
-                    'start_time' => $startTime->format('Y-m-d H:i'),
-                    'end_time' => $startTime->clone()->addMinutes($durationMinutes)->format('Y-m-d H:i'),
+            // Use the booking service to resend confirmation
+            $success = $this->bookingService->resendBookingConfirmation($request, $booking);
+
+            if ($success) {
+                return $this->ok('Confirmation email resent successfully');
+            } else {
+                return $this->error('Failed to resend confirmation email', 500);
+            }
+
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
+    }
+
+    /**
+     * Get booking summary for checkout
+     */
+    public function getBookingSummary(Request $request)
+    {
+        try {
+            $request->validate([
+                'service_id' => 'required|exists:services,id',
+                'service_location_id' => 'nullable|exists:service_locations,id',
+                'scheduled_at' => 'required|date|after:now',
+                'duration_minutes' => 'nullable|integer|min:15|max:480',
+                'add_ons' => 'nullable|array',
+                'add_ons.*.service_add_on_id' => 'required|exists:service_add_ons,id',
+                'add_ons.*.quantity' => 'required|integer|min:1|max:10',
+            ]);
+
+            $service = Service::with(['addOns'])->findOrFail($request->service_id);
+            $location = $request->service_location_id ?
+                ServiceLocation::find($request->service_location_id) : null;
+
+            $durationMinutes = $request->duration_minutes ?? $service->duration_minutes;
+            $scheduledAt = Carbon::parse($request->scheduled_at);
+            $endsAt = $scheduledAt->clone()->addMinutes($durationMinutes);
+
+            // Calculate pricing
+            $basePrice = $service->base_price;
+            $addOnTotal = 0;
+            $addOnDetails = [];
+
+            if ($request->add_ons) {
+                foreach ($request->add_ons as $addOn) {
+                    $serviceAddOn = $service->addOns()->find($addOn['service_add_on_id']);
+                    if ($serviceAddOn) {
+                        $quantity = $addOn['quantity'];
+                        $lineTotal = $serviceAddOn->price * $quantity;
+                        $addOnTotal += $lineTotal;
+
+                        $addOnDetails[] = [
+                            'id' => $serviceAddOn->id,
+                            'name' => $serviceAddOn->name,
+                            'price' => $serviceAddOn->price,
+                            'quantity' => $quantity,
+                            'line_total' => $lineTotal,
+                        ];
+                    }
+                }
+            }
+
+            $totalAmount = $basePrice + $addOnTotal;
+
+            return $this->ok('Booking summary calculated', [
+                'service' => [
+                    'id' => $service->id,
+                    'name' => $service->name,
+                    'base_price' => $basePrice,
                     'duration_minutes' => $durationMinutes,
                 ],
-                'conflicts' => $conflicts,
-            ]);
-        } catch (Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode() ?: 500);
-        }
-    }
-
-    public function getNextAvailableSlot(Request $request, Service $service)
-    {
-        try {
-            $fromDate = $request->input('from_date') ?
-                Carbon::parse($request->input('from_date')) :
-                Carbon::now()->addDay();
-
-            $locationId = $request->input('location_id');
-            $location = $locationId ? ServiceLocation::find($locationId) : null;
-
-            $nextSlot = $this->timeSlotService->getNextAvailableSlot($service, $fromDate, $location);
-
-            if (!$nextSlot) {
-                return $this->error('No available slots found in the next 30 days', 404);
-            }
-
-            return $this->ok('Next available slot found', [
-                'service' => [
-                    'id' => $service->id,
-                    'name' => $service->name,
+                'location' => $location ? [
+                    'id' => $location->id,
+                    'name' => $location->name,
+                    'address' => $location->address,
+                ] : null,
+                'schedule' => [
+                    'scheduled_at' => $scheduledAt->format('Y-m-d H:i:s'),
+                    'ends_at' => $endsAt->format('Y-m-d H:i:s'),
+                    'duration_minutes' => $durationMinutes,
                 ],
-                'next_slot' => $nextSlot,
+                'pricing' => [
+                    'base_price' => $basePrice,
+                    'add_ons_total' => $addOnTotal,
+                    'total_amount' => $totalAmount,
+                    'formatted_total' => '£' . number_format($totalAmount / 100, 2),
+                ],
+                'add_ons' => $addOnDetails,
             ]);
-        } catch (Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode() ?: 500);
-        }
-    }
 
-    public function getPricingEstimate(Request $request, Service $service)
-    {
-        try {
-            return $this->bookingService->getPricingEstimate($request, $service);
-        } catch (Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode() ?: 500);
-        }
-    }
-
-    public function completeConsultation(Request $request, Booking $booking)
-    {
-        try {
-            return $this->bookingService->completeConsultation($request, $booking);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 422);
         }
