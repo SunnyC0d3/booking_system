@@ -9,12 +9,7 @@ Schedule::command('passport:purge')->hourly();
 Schedule::command('auth:clear-resets')->everyFifteenMinutes();
 Schedule::command(RevokeExpiredTokens::class)->everyThirtyMinutes();
 
-// Order Management
-Schedule::command('orders:process-overdue-shipments')->hourly();
-Schedule::command('orders:auto-cancel-abandoned')->dailyAt('03:00');
-
 // Communication & Notifications
-Schedule::command('reviews:send-digest')->weeklyOn(1, '10:00');
 Schedule::command('notifications:send-pending')->everyFiveMinutes();
 
 // Maintenance & Cleanup

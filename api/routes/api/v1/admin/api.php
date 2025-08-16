@@ -12,8 +12,6 @@ use App\Http\Controllers\V1\Admin\PaymentMethodController;
 use App\Http\Controllers\V1\Admin\ReturnsController;
 use App\Http\Controllers\V1\Admin\RefundController;
 use App\Http\Controllers\V1\Admin\PaymentController;
-use App\Http\Controllers\V1\Admin\ReviewController;
-use App\Http\Controllers\V1\Admin\ReviewResponseController;
 
 // Admin/Users
 
@@ -103,39 +101,4 @@ Route::prefix('admin/payments')
     ->controller(PaymentController::class)
     ->group(function () {
         Route::get('/', 'index')->name('admin.payments.index');
-    });
-
-// Admin/Reviews - Complete Review Management System
-
-Route::prefix('admin/reviews')
-    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'rate_limit:admin'])
-    ->controller(ReviewController::class)
-    ->group(function () {
-        Route::get('/reports', 'getReportedReviews')->name('admin.reviews.reports');
-        Route::get('/analytics', 'getAnalytics')->name('admin.reviews.analytics');
-        Route::post('/bulk-moderate', 'bulkModerate')->name('admin.reviews.bulk-moderate');
-
-        Route::get('/', 'index')->name('admin.reviews.index');
-
-        Route::get('/{review}', 'show')->name('admin.reviews.show');
-        Route::delete('/{review}', 'destroy')->name('admin.reviews.destroy');
-        Route::post('/{review}/moderate', 'moderate')->name('admin.reviews.moderate');
-
-        Route::post('/reports/{report}/handle', 'handleReport')->name('admin.reviews.reports.handle');
-    });
-
-// Admin/Review Responses - Manage vendor responses
-
-Route::prefix('admin/review-responses')
-    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified', 'rate_limit:admin'])
-    ->controller(ReviewResponseController::class)
-    ->group(function () {
-        Route::get('/analytics', 'getAnalytics')->name('admin.review-responses.analytics');
-        Route::post('/bulk-moderate', 'bulkModerate')->name('admin.review-responses.bulk-moderate');
-
-        Route::get('/', 'adminIndex')->name('admin.review-responses.index');
-
-        Route::get('/{response}', 'adminShow')->name('admin.review-responses.show');
-        Route::post('/{response}/approve', 'approve')->name('admin.review-responses.approve');
-        Route::delete('/{response}', 'adminDestroy')->name('admin.review-responses.destroy');
     });

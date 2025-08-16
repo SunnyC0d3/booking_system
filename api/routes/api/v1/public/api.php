@@ -10,8 +10,6 @@ use App\Http\Controllers\V1\Auth\EmailVerificationController;
 use App\Http\Controllers\V1\Public\UserController;
 use App\Http\Controllers\V1\Public\PaymentController;
 use App\Http\Controllers\V1\Public\ReturnsController;
-use App\Http\Controllers\V1\Public\ReviewController;
-use App\Http\Controllers\V1\Public\ReviewResponseController;
 
 // Auth
 
@@ -85,86 +83,3 @@ Route::prefix('returns')
     ->group(function () {
         Route::post('/', 'return')->name('returns');
     });
-
-// Public Review Viewing (Guest + Authenticated users can view reviews)
-
-Route::prefix('products/{product}/reviews')
-    ->middleware(['review.smart_throttle:view,false'])
-    ->controller(ReviewController::class)
-    ->group(function () {
-        Route::get('/', 'index')->name('products.reviews.index');
-    });
-
-Route::prefix('reviews')
-    ->middleware(['review.smart_throttle:view,false'])
-    ->controller(ReviewController::class)
-    ->group(function () {
-        Route::get('/{review}', 'show')->name('reviews.show');
-    });
-
-// Review Actions (Require Authentication) - SmartReviewThrottle handles auth
-
-Route::prefix('reviews')
-    ->controller(ReviewController::class)
-    ->group(function () {
-        Route::post('/', 'store')
-            ->middleware(['review.smart_throttle:create,true'])
-            ->name('reviews.store');
-    });
-
-Route::prefix('reviews/{review}')
-    ->controller(ReviewController::class)
-    ->group(function () {
-        Route::post('/', 'update')
-            ->middleware(['review.smart_throttle:update,true'])
-            ->name('reviews.update');
-
-        Route::delete('/', 'destroy')
-            ->middleware(['review.smart_throttle:delete,true'])
-            ->name('reviews.destroy');
-
-        Route::post('/helpfulness', 'voteHelpfulness')
-            ->middleware(['review.smart_throttle:vote,true'])
-            ->name('reviews.helpfulness');
-
-        Route::post('/report', 'report')
-            ->middleware(['review.smart_throttle:report,true'])
-            ->name('reviews.report');
-    });
-
-// Review Responses - Public Viewing (No auth required)
-
-Route::prefix('reviews/{review}/responses')
-    ->middleware(['review.smart_throttle:responses,false'])
-    ->controller(ReviewResponseController::class)
-    ->group(function () {
-        Route::get('/', 'publicIndex')->name('review.responses.public.index');
-        Route::get('/{response}', 'publicShow')->name('review.responses.public.show');
-    });
-
-// Review Responses - Vendor Actions (Auth required + Role check)
-
-Route::prefix('reviews/{review}/responses')
-    ->middleware(['review.smart_throttle:respond,true', 'roles:vendor'])
-    ->controller(ReviewResponseController::class)
-    ->group(function () {
-        Route::post('/', 'store')->name('review.responses.store');
-        Route::post('/{response}', 'update')->name('review.responses.update');
-        Route::delete('/{response}', 'destroy')->name('review.responses.destroy');
-    });
-
-// Vendor Dashboard (Auth required + Role check)
-
-Route::prefix('vendor/responses')
-    ->middleware(['review.smart_throttle:dashboard,true', 'roles:vendor'])
-    ->controller(ReviewResponseController::class)
-    ->group(function () {
-        Route::get('/', 'index')->name('vendor.responses.index');
-        Route::get('/{response}', 'show')->name('vendor.responses.show');
-    });
-
-// Vendor Unanswered Reviews
-
-Route::get('vendor/unanswered-reviews', [ReviewResponseController::class, 'getUnansweredReviews'])
-    ->middleware(['review.smart_throttle:dashboard,true', 'roles:vendor'])
-    ->name('vendor.responses.unanswered');

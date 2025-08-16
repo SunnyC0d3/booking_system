@@ -37,16 +37,6 @@ return [
         'review_responses' => '5,1', // 5 response views per minute
     ],
 
-    'reviews' => [
-        'create' => '10,60',        // 10 reviews per hour
-        'update' => '10,1',         // 10 review updates per minute
-        'vote' => '20,1',           // 20 helpfulness votes per minute
-        'report' => '3,5',          // 3 reports per 5 minutes
-        'respond' => '10,5',        // 10 vendor responses per 5 minutes
-        'moderate' => '50,1',       // 50 moderation actions per minute (admin)
-        'bulk' => '5,5',            // 5 bulk operations per 5 minutes (admin)
-    ],
-
     'returns' => [
         'attempts' => 10,           // 10 return requests per minute
         'decay_minutes' => 1,
