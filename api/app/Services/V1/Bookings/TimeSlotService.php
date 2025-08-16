@@ -2,374 +2,553 @@
 
 namespace App\Services\V1\Bookings;
 
+use App\Constants\BookingStatuses;
+use App\Models\BookingCapacitySlot;
+use App\Models\CalendarIntegration;
 use App\Models\Service;
 use App\Models\ServiceLocation;
 use App\Models\ServiceAvailabilityWindow;
 use App\Models\Booking;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class TimeSlotService
 {
-    /**
-     * Get available time slots for a service on a specific date
-     */
     public function getAvailableSlots(
-        Service $service,
-        Carbon $date,
-        ?ServiceLocation $location = null
-    ): array {
-        // Get all availability windows for this service and date
-        $windows = $this->getAvailabilityWindows($service, $date, $location);
-
-        if ($windows->isEmpty()) {
-            return [];
-        }
-
-        $allSlots = [];
-
-        foreach ($windows as $window) {
-            $windowSlots = $window->getAvailableSlots($date);
-
-            foreach ($windowSlots as $slot) {
-                // Apply any price modifiers from the window
-                $slot['base_price'] = $service->base_price;
-                $slot['modified_price'] = $window->calculatePriceForSlot($service->base_price);
-                $slot['price_difference'] = $slot['modified_price'] - $slot['base_price'];
-                $slot['formatted_price'] = '£' . number_format($slot['modified_price'] / 100, 2);
-                $slot['window_id'] = $window->id;
-                $slot['window_title'] = $window->title;
-
-                $allSlots[] = $slot;
-            }
-        }
-
-        // Sort slots by start time
-        usort($allSlots, fn($a, $b) => $a['start_datetime']->timestamp <=> $b['start_datetime']->timestamp);
-
-        // Remove any overlapping slots, keeping the one with higher priority
-        return $this->resolveOverlappingSlots($allSlots);
-    }
-
-    /**
-     * Check if a specific time slot is available
-     */
-    public function isSlotAvailable(
-        Service $service,
-        Carbon $startTime,
-        int $durationMinutes,
-        ?ServiceLocation $location = null
-    ): bool {
-        $endTime = $startTime->clone()->addMinutes($durationMinutes);
-
-        // Find applicable availability window
-        $window = $this->findAvailabilityWindow($service, $startTime, $location);
-
-        if (!$window) {
-            return false;
-        }
-
-        // Check if the slot fits within the window
-        $windowStart = Carbon::parse($window->start_time)->setDate(
-            $startTime->year,
-            $startTime->month,
-            $startTime->day
-        );
-
-        $windowEnd = Carbon::parse($window->end_time)->setDate(
-            $startTime->year,
-            $startTime->month,
-            $startTime->day
-        );
-
-        // Handle overnight windows
-        if ($windowEnd->lessThan($windowStart)) {
-            $windowEnd->addDay();
-        }
-
-        if ($startTime->lessThan($windowStart) || $endTime->greaterThan($windowEnd)) {
-            return false;
-        }
-
-        // Check capacity
-        return $window->getSlotBookingCount($startTime) < $window->max_bookings;
-    }
-
-    /**
-     * Reserve a time slot (create booking)
-     */
-    public function reserveSlot(
-        Service $service,
-        Carbon $startTime,
-        int $durationMinutes,
-        array $bookingData,
-        ?ServiceLocation $location = null
-    ): ?Booking {
-        if (!$this->isSlotAvailable($service, $startTime, $durationMinutes, $location)) {
-            throw new \Exception('Time slot is not available');
-        }
-
-        $endTime = $startTime->clone()->addMinutes($durationMinutes);
-
-        // Find the applicable window for pricing
-        $window = $this->findAvailabilityWindow($service, $startTime, $location);
-        $basePrice = $window ? $window->calculatePriceForSlot($service->base_price) : $service->base_price;
-
-        // Calculate deposit if required
-        $depositAmount = null;
-        $remainingAmount = null;
-
-        if ($service->requires_deposit) {
-            $depositAmount = $service->getDepositAmountAttribute();
-            $remainingAmount = $basePrice - $depositAmount;
-        }
-
-        $booking = Booking::create(array_merge($bookingData, [
-            'service_id' => $service->id,
-            'service_location_id' => $location?->id,
-            'scheduled_at' => $startTime,
-            'ends_at' => $endTime,
-            'duration_minutes' => $durationMinutes,
-            'base_price' => $basePrice,
-            'total_amount' => $basePrice, // Will be updated with add-ons
-            'deposit_amount' => $depositAmount,
-            'remaining_amount' => $remainingAmount,
-        ]));
-
-        return $booking;
-    }
-
-    /**
-     * Get next available slot for a service
-     */
-    public function getNextAvailableSlot(
-        Service $service,
-        ?Carbon $fromDate = null,
-        ?ServiceLocation $location = null
-    ): ?array {
-        $searchDate = $fromDate ?? now()->addDay();
-        $maxSearchDays = 30; // Limit search to prevent infinite loops
-
-        for ($i = 0; $i < $maxSearchDays; $i++) {
-            $currentDate = $searchDate->clone()->addDays($i);
-            $slots = $this->getAvailableSlots($service, $currentDate, $location);
-
-            if (!empty($slots)) {
-                return $slots[0]; // Return first available slot
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Get availability summary for a date range
-     */
-    public function getAvailabilitySummary(
         Service $service,
         Carbon $startDate,
         Carbon $endDate,
-        ?ServiceLocation $location = null
-    ): array {
-        $summary = [];
-
-        $currentDate = $startDate->clone();
-        while ($currentDate->lessThanOrEqualTo($endDate)) {
-            $slots = $this->getAvailableSlots($service, $currentDate, $location);
-
-            $summary[] = [
-                'date' => $currentDate->format('Y-m-d'),
-                'formatted_date' => $currentDate->format('l, F j, Y'),
-                'available_slots_count' => count(array_filter($slots, fn($slot) => $slot['is_available'])),
-                'total_slots_count' => count($slots),
-                'is_fully_booked' => count($slots) > 0 && count(array_filter($slots, fn($slot) => $slot['is_available'])) === 0,
-                'has_availability' => count(array_filter($slots, fn($slot) => $slot['is_available'])) > 0,
-                'earliest_slot' => !empty($slots) ? $slots[0]['start_time'] : null,
-                'latest_slot' => !empty($slots) ? end($slots)['start_time'] : null,
-            ];
-
-            $currentDate->addDay();
-        }
-
-        return $summary;
-    }
-
-    /**
-     * Get conflicting bookings for a time slot
-     */
-    public function getConflictingBookings(
-        Service $service,
-        Carbon $startTime,
-        int $durationMinutes,
         ?ServiceLocation $location = null,
-        ?int $excludeBookingId = null
+        int $durationMinutes = null
     ): Collection {
-        $endTime = $startTime->clone()->addMinutes($durationMinutes);
+        $durationMinutes = $durationMinutes ?? $service->duration_minutes;
 
-        $query = Booking::where('service_id', $service->id)
-            ->whereIn('status', ['confirmed', 'in_progress'])
-            ->where(function ($q) use ($startTime, $endTime) {
-                $q->where(function ($sq) use ($startTime, $endTime) {
-                    // Booking starts during this slot
-                    $sq->where('scheduled_at', '>=', $startTime)
-                        ->where('scheduled_at', '<', $endTime);
-                })->orWhere(function ($sq) use ($startTime, $endTime) {
-                    // Booking ends during this slot
-                    $sq->where('ends_at', '>', $startTime)
-                        ->where('ends_at', '<=', $endTime);
-                })->orWhere(function ($sq) use ($startTime, $endTime) {
-                    // Booking encompasses this slot
-                    $sq->where('scheduled_at', '<=', $startTime)
-                        ->where('ends_at', '>=', $endTime);
-                });
-            });
+        $cacheKey = "available_slots_{$service->id}_{$location?->id}_{$startDate->format('Y-m-d')}_{$endDate->format('Y-m-d')}_{$durationMinutes}";
 
-        if ($location) {
-            $query->where('service_location_id', $location->id);
-        }
-
-        if ($excludeBookingId) {
-            $query->where('id', '!=', $excludeBookingId);
-        }
-
-        return $query->get();
+        return Cache::remember($cacheKey, 300, function () use ($service, $startDate, $endDate, $location, $durationMinutes) {
+            return $this->generateAvailableSlots($service, $startDate, $endDate, $location, $durationMinutes);
+        });
     }
 
-    /**
-     * Private helper methods
-     */
-    private function getAvailabilityWindows(
+    private function generateAvailableSlots(
+        Service $service,
+        Carbon $startDate,
+        Carbon $endDate,
+        ?ServiceLocation $location,
+        int $durationMinutes
+    ): Collection {
+        $availableSlots = collect();
+
+        // Get all availability windows for the service
+        $availabilityWindows = $this->getAvailabilityWindows($service, $location);
+
+        // Get all exceptions for the date range
+        $exceptions = $this->getAvailabilityExceptions($service, $startDate, $endDate, $location);
+
+        // Get existing bookings for the date range
+        $existingBookings = $this->getExistingBookings($service, $startDate, $endDate, $location);
+
+        // Get calendar integrations that block time
+        $blockedTimes = $this->getExternalCalendarBlocks($service, $startDate, $endDate);
+
+        // Generate slots for each day
+        $period = CarbonPeriod::create($startDate, $endDate);
+
+        foreach ($period as $date) {
+            $daySlots = $this->generateDaySlots(
+                $service,
+                $date,
+                $availabilityWindows,
+                $exceptions,
+                $existingBookings,
+                $blockedTimes,
+                $location,
+                $durationMinutes
+            );
+
+            $availableSlots = $availableSlots->merge($daySlots);
+        }
+
+        return $availableSlots->sortBy('start_time');
+    }
+
+    private function generateDaySlots(
         Service $service,
         Carbon $date,
-        ?ServiceLocation $location = null
+        Collection $availabilityWindows,
+        Collection $exceptions,
+        Collection $existingBookings,
+        Collection $blockedTimes,
+        ?ServiceLocation $location,
+        int $durationMinutes
     ): Collection {
-        $query = ServiceAvailabilityWindow::where('service_id', $service->id)
-            ->active()
-            ->bookable()
-            ->forDate($date);
+        $daySlots = collect();
+        $dayOfWeek = $date->dayOfWeek;
 
-        if ($location) {
-            $query->where(function ($q) use ($location) {
-                $q->where('service_location_id', $location->id)
-                    ->orWhereNull('service_location_id');
-            });
-        } else {
-            $query->whereNull('service_location_id');
+        // Check if this date has any exceptions
+        $dayExceptions = $exceptions->where('exception_date', $date->format('Y-m-d'));
+
+        // If day is completely blocked, return empty
+        if ($dayExceptions->where('exception_type', 'blocked')->isNotEmpty()) {
+            return $daySlots;
         }
 
-        return $query->get();
+        // Get applicable availability windows for this day
+        $applicableWindows = $availabilityWindows->filter(function ($window) use ($date, $dayOfWeek) {
+            return $this->isWindowApplicable($window, $date, $dayOfWeek);
+        });
+
+        if ($applicableWindows->isEmpty()) {
+            return $daySlots;
+        }
+
+        foreach ($applicableWindows as $window) {
+            $windowSlots = $this->generateWindowSlots(
+                $service,
+                $window,
+                $date,
+                $dayExceptions,
+                $existingBookings,
+                $blockedTimes,
+                $location,
+                $durationMinutes
+            );
+
+            $daySlots = $daySlots->merge($windowSlots);
+        }
+
+        return $daySlots;
     }
 
-    private function findAvailabilityWindow(
+    private function generateWindowSlots(
         Service $service,
-        Carbon $startTime,
-        ?ServiceLocation $location = null
-    ): ?ServiceAvailabilityWindow {
-        $windows = $this->getAvailabilityWindows($service, $startTime, $location);
+        ServiceAvailabilityWindow $window,
+        Carbon $date,
+        Collection $dayExceptions,
+        Collection $existingBookings,
+        Collection $blockedTimes,
+        ?ServiceLocation $location,
+        int $durationMinutes
+    ): Collection {
+        $slots = collect();
 
-        foreach ($windows as $window) {
-            if ($window->isSlotAvailable($startTime)) {
-                return $window;
-            }
-        }
+        // Get window times, potentially overridden by exceptions
+        $windowTimes = $this->getEffectiveWindowTimes($window, $dayExceptions, $date);
 
-        return null;
-    }
-
-    private function resolveOverlappingSlots(array $slots): array
-    {
-        if (empty($slots)) {
+        if (!$windowTimes) {
             return $slots;
         }
 
-        $resolved = [];
-        $lastEndTime = null;
+        $slotDuration = $window->slot_duration_minutes ?: $durationMinutes;
+        $breakDuration = $window->break_duration_minutes ?: 0;
+        $bufferDuration = $window->booking_buffer_minutes ?: 0;
+        $maxConcurrent = $window->max_concurrent_bookings ?: 1;
 
-        foreach ($slots as $slot) {
-            $slotStart = $slot['start_datetime'];
+        $currentTime = $windowTimes['start'];
+        $endTime = $windowTimes['end'];
 
-            // If this slot doesn't overlap with the previous one, add it
-            if ($lastEndTime === null || $slotStart->greaterThanOrEqualTo($lastEndTime)) {
-                $resolved[] = $slot;
-                $lastEndTime = $slot['end_datetime'];
+        while ($currentTime->clone()->addMinutes($durationMinutes)->lte($endTime)) {
+            $slotEndTime = $currentTime->clone()->addMinutes($durationMinutes);
+
+            // Check if this slot is available
+            if ($this->isSlotAvailable(
+                $service,
+                $currentTime,
+                $slotEndTime,
+                $existingBookings,
+                $blockedTimes,
+                $location,
+                $maxConcurrent
+            )) {
+                $slots->push([
+                    'start_time' => $currentTime->clone(),
+                    'end_time' => $slotEndTime->clone(),
+                    'duration_minutes' => $durationMinutes,
+                    'is_available' => true,
+                    'max_capacity' => $maxConcurrent,
+                    'current_bookings' => $this->countBookingsInSlot($currentTime, $slotEndTime, $existingBookings),
+                    'price_modifier' => $this->getPriceModifier($window, $dayExceptions, $date),
+                    'location_id' => $location?->id,
+                ]);
             }
-            // If there's an overlap, keep the slot with the earlier start time (already sorted)
-            // or apply other priority rules here if needed
+
+            // Move to next slot
+            $currentTime->addMinutes($slotDuration + $breakDuration + $bufferDuration);
         }
 
-        return $resolved;
+        return $slots;
     }
 
-    /**
-     * Calculate busy periods for calendar display
-     */
-    public function getBusyPeriods(
+    private function isWindowApplicable(ServiceAvailabilityWindow $window, Carbon $date, int $dayOfWeek): bool
+    {
+        // Check if window is active
+        if (!$window->is_active || !$window->is_bookable) {
+            return false;
+        }
+
+        // Check date range
+        if ($window->start_date && $date->lt($window->start_date)) {
+            return false;
+        }
+
+        if ($window->end_date && $date->gt($window->end_date)) {
+            return false;
+        }
+
+        // Check day of week for weekly pattern
+        if ($window->pattern === 'weekly' && $window->day_of_week !== $dayOfWeek) {
+            return false;
+        }
+
+        // Check advance booking constraints
+        $now = Carbon::now();
+        $minAdvanceTime = $now->clone()->addHours($window->min_advance_booking_hours ?: 0);
+        $maxAdvanceTime = $now->clone()->addDays($window->max_advance_booking_days ?: 365);
+
+        if ($date->lt($minAdvanceTime->startOfDay()) || $date->gt($maxAdvanceTime->endOfDay())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function getEffectiveWindowTimes(
+        ServiceAvailabilityWindow $window,
+        Collection $dayExceptions,
+        Carbon $date
+    ): ?array {
+        $startTime = $date->clone()->setTimeFromTimeString($window->start_time->format('H:i:s'));
+        $endTime = $date->clone()->setTimeFromTimeString($window->end_time->format('H:i:s'));
+
+        // Check for custom hours exception
+        $customHoursException = $dayExceptions->where('exception_type', 'custom_hours')->first();
+
+        if ($customHoursException && $customHoursException->start_time && $customHoursException->end_time) {
+            $startTime = $date->clone()->setTimeFromTimeString($customHoursException->start_time);
+            $endTime = $date->clone()->setTimeFromTimeString($customHoursException->end_time);
+        }
+
+        // Validate times
+        if ($startTime->gte($endTime)) {
+            return null;
+        }
+
+        return [
+            'start' => $startTime,
+            'end' => $endTime
+        ];
+    }
+
+    private function isSlotAvailable(
         Service $service,
-        Carbon $date,
-        ?ServiceLocation $location = null
+        Carbon $slotStart,
+        Carbon $slotEnd,
+        Collection $existingBookings,
+        Collection $blockedTimes,
+        ?ServiceLocation $location,
+        int $maxConcurrent
+    ): bool {
+        // Check if slot is in the past
+        if ($slotStart->lt(Carbon::now())) {
+            return false;
+        }
+
+        // Check against existing bookings
+        $conflictingBookings = $existingBookings->filter(function ($booking) use ($slotStart, $slotEnd) {
+            $bookingStart = Carbon::parse($booking->scheduled_at);
+            $bookingEnd = Carbon::parse($booking->ends_at);
+
+            return $this->timesOverlap($slotStart, $slotEnd, $bookingStart, $bookingEnd);
+        });
+
+        // Check capacity
+        if ($conflictingBookings->count() >= $maxConcurrent) {
+            return false;
+        }
+
+        // Check against external calendar blocks
+        $isBlocked = $blockedTimes->first(function ($block) use ($slotStart, $slotEnd) {
+            return $this->timesOverlap($slotStart, $slotEnd, $block['start'], $block['end']);
+        });
+
+        if ($isBlocked) {
+            return false;
+        }
+
+        // Check capacity slots table for manual blocks
+        $capacitySlot = BookingCapacitySlot::where('service_id', $service->id)
+            ->where('service_location_id', $location?->id)
+            ->where('slot_datetime', $slotStart)
+            ->first();
+
+        if ($capacitySlot && ($capacitySlot->is_blocked || $capacitySlot->available_slots <= 0)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function timesOverlap(Carbon $start1, Carbon $end1, Carbon $start2, Carbon $end2): bool
+    {
+        return $start1->lt($end2) && $end1->gt($start2);
+    }
+
+    private function countBookingsInSlot(Carbon $slotStart, Carbon $slotEnd, Collection $existingBookings): int
+    {
+        return $existingBookings->filter(function ($booking) use ($slotStart, $slotEnd) {
+            $bookingStart = Carbon::parse($booking->scheduled_at);
+            $bookingEnd = Carbon::parse($booking->ends_at);
+
+            return $this->timesOverlap($slotStart, $slotEnd, $bookingStart, $bookingEnd);
+        })->count();
+    }
+
+    private function getPriceModifier(
+        ServiceAvailabilityWindow $window,
+        Collection $dayExceptions,
+        Carbon $date
     ): array {
-        $bookings = Booking::where('service_id', $service->id)
-            ->whereDate('scheduled_at', $date)
-            ->whereIn('status', ['confirmed', 'in_progress'])
-            ->when($location, function ($query, $location) {
-                return $query->where('service_location_id', $location->id);
+        // Check for special pricing exception first
+        $pricingException = $dayExceptions->where('exception_type', 'special_pricing')->first();
+
+        if ($pricingException) {
+            return [
+                'amount' => $pricingException->price_modifier,
+                'type' => $pricingException->price_modifier_type,
+                'reason' => $pricingException->reason
+            ];
+        }
+
+        // Use window pricing
+        if ($window->price_modifier) {
+            return [
+                'amount' => $window->price_modifier,
+                'type' => $window->price_modifier_type,
+                'reason' => $window->title
+            ];
+        }
+
+        return [
+            'amount' => 0,
+            'type' => 'fixed',
+            'reason' => null
+        ];
+    }
+
+    private function getAvailabilityWindows(Service $service, ?ServiceLocation $location): Collection
+    {
+        return ServiceAvailabilityWindow::where('service_id', $service->id)
+            ->when($location, function ($query) use ($location) {
+                $query->where(function ($q) use ($location) {
+                    $q->where('service_location_id', $location->id)
+                        ->orWhereNull('service_location_id');
+                });
             })
-            ->orderBy('scheduled_at')
+            ->active()
+            ->bookable()
+            ->orderBy('start_time')
+            ->get();
+    }
+
+    private function getAvailabilityExceptions(
+        Service $service,
+        Carbon $startDate,
+        Carbon $endDate,
+        ?ServiceLocation $location
+    ): Collection {
+        return ServiceAvailabilityException::where('service_id', $service->id)
+            ->when($location, function ($query) use ($location) {
+                $query->where(function ($q) use ($location) {
+                    $q->where('service_location_id', $location->id)
+                        ->orWhereNull('service_location_id');
+                });
+            })
+            ->whereBetween('exception_date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
+            ->where('is_active', true)
+            ->get();
+    }
+
+    private function getExistingBookings(
+        Service $service,
+        Carbon $startDate,
+        Carbon $endDate,
+        ?ServiceLocation $location
+    ): Collection {
+        return Booking::where('service_id', $service->id)
+            ->when($location, function ($query) use ($location) {
+                $query->where('service_location_id', $location->id);
+            })
+            ->whereBetween('scheduled_at', [$startDate->startOfDay(), $endDate->endOfDay()])
+            ->whereNotIn('status', [BookingStatuses::CANCELLED, BookingStatuses::NO_SHOW])
+            ->get();
+    }
+
+    private function getExternalCalendarBlocks(Service $service, Carbon $startDate, Carbon $endDate): Collection
+    {
+        $blocks = collect();
+
+        // Get calendar integrations for this service
+        $integrations = CalendarIntegration::where('service_id', $service->id)
+            ->where('is_active', true)
+            ->where('auto_block_external_events', true)
             ->get();
 
-        return $bookings->map(function ($booking) {
-            return [
-                'start' => $booking->scheduled_at->format('H:i'),
-                'end' => $booking->ends_at->format('H:i'),
-                'start_datetime' => $booking->scheduled_at,
-                'end_datetime' => $booking->ends_at,
-                'booking_id' => $booking->id,
-                'booking_reference' => $booking->booking_reference,
-                'client_name' => $booking->client_name,
-                'status' => $booking->status,
-            ];
-        })->toArray();
+        foreach ($integrations as $integration) {
+            // This would integrate with external calendar APIs
+            // For now, return empty collection
+            // TODO: Implement Google Calendar, Outlook API integration
+        }
+
+        return $blocks;
     }
 
-    /**
-     * Validate booking time constraints
-     */
     public function validateBookingTime(
         Service $service,
         Carbon $requestedTime,
-        ?ServiceLocation $location = null
+        ?ServiceLocation $location = null,
+        int $durationMinutes = null
     ): array {
         $errors = [];
-        $now = now();
+        $durationMinutes = $durationMinutes ?? $service->duration_minutes;
+        $endTime = $requestedTime->clone()->addMinutes($durationMinutes);
 
         // Check if time is in the past
-        if ($requestedTime->isPast()) {
-            $errors[] = 'Cannot book appointments in the past';
+        if ($requestedTime->lt(Carbon::now())) {
+            $errors[] = 'Booking time cannot be in the past';
         }
 
-        // Check minimum advance booking time
-        $minAdvanceHours = $service->min_advance_booking_hours;
-        if ($requestedTime->lessThan($now->addHours($minAdvanceHours))) {
-            $errors[] = "Minimum {$minAdvanceHours} hours advance booking required";
+        // Check advance booking constraints
+        $now = Carbon::now();
+        $minAdvanceHours = $service->min_advance_booking_hours ?? 24;
+        $maxAdvanceDays = $service->max_advance_booking_days ?? 365;
+
+        if ($requestedTime->lt($now->clone()->addHours($minAdvanceHours))) {
+            $errors[] = "Bookings must be made at least {$minAdvanceHours} hours in advance";
         }
 
-        // Check maximum advance booking time
-        $maxAdvanceDays = $service->max_advance_booking_days;
-        if ($requestedTime->greaterThan($now->addDays($maxAdvanceDays))) {
-            $errors[] = "Cannot book more than {$maxAdvanceDays} days in advance";
+        if ($requestedTime->gt($now->clone()->addDays($maxAdvanceDays))) {
+            $errors[] = "Bookings cannot be made more than {$maxAdvanceDays} days in advance";
         }
 
-        // Check if service is active
-        if (!$service->isAvailableForBooking()) {
-            $errors[] = 'Service is currently not available for booking';
+        // Check if service has availability windows for this time
+        $availableSlots = $this->getAvailableSlots(
+            $service,
+            $requestedTime->clone()->startOfDay(),
+            $requestedTime->clone()->endOfDay(),
+            $location,
+            $durationMinutes
+        );
+
+        $slotExists = $availableSlots->first(function ($slot) use ($requestedTime) {
+            return $slot['start_time']->equalTo($requestedTime);
+        });
+
+        if (!$slotExists) {
+            $errors[] = 'The requested time slot is not available';
         }
 
-        // Check location availability if specified
-        if ($location && !$location->is_active) {
-            $errors[] = 'Selected location is not available';
+        // Check daily booking limits
+        if ($service->max_bookings_per_day) {
+            $dailyBookings = Booking::where('service_id', $service->id)
+                ->whereDate('scheduled_at', $requestedTime->format('Y-m-d'))
+                ->whereNotIn('status', [BookingStatuses::CANCELLED, BookingStatuses::NO_SHOW])
+                ->count();
+
+            if ($dailyBookings >= $service->max_bookings_per_day) {
+                $errors[] = 'Maximum daily bookings limit reached for this service';
+            }
+        }
+
+        // Check weekly booking limits
+        if ($service->max_bookings_per_week) {
+            $weekStart = $requestedTime->clone()->startOfWeek();
+            $weekEnd = $requestedTime->clone()->endOfWeek();
+
+            $weeklyBookings = Booking::where('service_id', $service->id)
+                ->whereBetween('scheduled_at', [$weekStart, $weekEnd])
+                ->whereNotIn('status', [BookingStatuses::CANCELLED, BookingStatuses::NO_SHOW])
+                ->count();
+
+            if ($weeklyBookings >= $service->max_bookings_per_week) {
+                $errors[] = 'Maximum weekly bookings limit reached for this service';
+            }
         }
 
         return $errors;
+    }
+
+    public function reserveTimeSlot(
+        Service $service,
+        Carbon $slotTime,
+        int $durationMinutes,
+        ?ServiceLocation $location = null
+    ): bool {
+        // Create or update capacity slot
+        $capacitySlot = BookingCapacitySlot::firstOrCreate([
+            'service_id' => $service->id,
+            'service_location_id' => $location?->id,
+            'slot_datetime' => $slotTime,
+        ], [
+            'max_capacity' => 1,
+            'current_bookings' => 0,
+        ]);
+
+        if ($capacitySlot->available_slots > 0) {
+            $capacitySlot->increment('current_bookings');
+
+            Log::info('Time slot reserved', [
+                'service_id' => $service->id,
+                'slot_time' => $slotTime->toISOString(),
+                'location_id' => $location?->id,
+                'remaining_capacity' => $capacitySlot->available_slots - 1
+            ]);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public function releaseTimeSlot(
+        Service $service,
+        Carbon $slotTime,
+        ?ServiceLocation $location = null
+    ): void {
+        $capacitySlot = BookingCapacitySlot::where([
+            'service_id' => $service->id,
+            'service_location_id' => $location?->id,
+            'slot_datetime' => $slotTime,
+        ])->first();
+
+        if ($capacitySlot && $capacitySlot->current_bookings > 0) {
+            $capacitySlot->decrement('current_bookings');
+
+            Log::info('Time slot released', [
+                'service_id' => $service->id,
+                'slot_time' => $slotTime->toISOString(),
+                'location_id' => $location?->id,
+                'available_capacity' => $capacitySlot->available_slots + 1
+            ]);
+        }
+    }
+
+    public function clearCache(Service $service, ?ServiceLocation $location = null): void
+    {
+        $patterns = [
+            "available_slots_{$service->id}_{$location?->id}_*",
+            "service_availability_{$service->id}_*"
+        ];
+
+        foreach ($patterns as $pattern) {
+            Cache::forget($pattern);
+        }
+
+        Log::info('Availability cache cleared', [
+            'service_id' => $service->id,
+            'location_id' => $location?->id
+        ]);
     }
 }
 

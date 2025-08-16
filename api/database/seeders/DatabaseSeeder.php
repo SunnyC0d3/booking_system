@@ -21,6 +21,13 @@ class DatabaseSeeder extends Seeder
             PaymentSeeder::class,
 
             ServiceSeeder::class,
+            ServiceLocationSeeder::class,
+            ServiceAddOnSeeder::class,
+            ServiceAvailabilityWindowSeeder::class,
+            ServicePackageSeeder::class,
+            BookingSeeder::class,
+            BookingNotificationSeeder::class,
+            ServiceAvailabilityExceptionSeeder::class,
         ]);
     }
 }
