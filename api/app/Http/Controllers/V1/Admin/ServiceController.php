@@ -214,7 +214,7 @@ class ServiceController extends Controller
 
             // Date range based on period
             $endDate = now();
-            $startDate = match($period) {
+            $startDate = match ($period) {
                 'week' => $endDate->clone()->subWeek(),
                 'month' => $endDate->clone()->subMonth(),
                 'quarter' => $endDate->clone()->subMonths(3),
@@ -299,390 +299,390 @@ class ServiceController extends Controller
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
     }
-}
 
-/**
- * Get service details (admin view)
- */
-public function show(Request $request, Service $service)
-{
-    try {
-        $user = $request->user();
+    /**
+     * Get service details (admin view)
+     */
+    public function show(Request $request, Service $service)
+    {
+        try {
+            $user = $request->user();
 
-        // Check permissions
-        if (!$user->hasPermission('view_services')) {
-            return $this->error('You do not have permission to view services.', 403);
-        }
-
-        // Check if user can view this specific service
-        if (!$user->hasPermission('view_all_services') && $service->vendor_id !== $user->id) {
-            return $this->error('You can only view your own services.', 403);
-        }
-
-        $service->load([
-            'serviceLocations',
-            'addOns',
-            'availabilityWindows',
-            'vendor',
-            'media',
-            'bookings' => function ($query) {
-                $query->latest()->limit(10);
+            // Check permissions
+            if (!$user->hasPermission('view_services')) {
+                return $this->error('You do not have permission to view services.', 403);
             }
-        ]);
 
-        // Add statistics
-        $service->loadCount([
-            'bookings as total_bookings_count',
-            'bookings as completed_bookings_count' => function ($q) {
-                $q->where('status', 'completed');
-            },
-            'bookings as cancelled_bookings_count' => function ($q) {
-                $q->where('status', 'cancelled');
-            },
-        ]);
+            // Check if user can view this specific service
+            if (!$user->hasPermission('view_all_services') && $service->vendor_id !== $user->id) {
+                return $this->error('You can only view your own services.', 403);
+            }
 
-        // Calculate revenue
-        $totalRevenue = $service->bookings()
-            ->where('status', 'completed')
-            ->sum('total_amount');
+            $service->load([
+                'serviceLocations',
+                'addOns',
+                'availabilityWindows',
+                'vendor',
+                'media',
+                'bookings' => function ($query) {
+                    $query->latest()->limit(10);
+                }
+            ]);
 
-        return $this->ok('Service details retrieved', [
-            'service' => new ServiceResource($service),
-            'statistics' => [
-                'total_bookings' => $service->total_bookings_count,
-                'completed_bookings' => $service->completed_bookings_count,
-                'cancelled_bookings' => $service->cancelled_bookings_count,
-                'total_revenue' => $totalRevenue,
-                'formatted_revenue' => '£' . number_format($totalRevenue / 100, 2),
-            ],
-        ]);
+            // Add statistics
+            $service->loadCount([
+                'bookings as total_bookings_count',
+                'bookings as completed_bookings_count' => function ($q) {
+                    $q->where('status', 'completed');
+                },
+                'bookings as cancelled_bookings_count' => function ($q) {
+                    $q->where('status', 'cancelled');
+                },
+            ]);
 
-    } catch (Exception $e) {
-        return $this->error($e->getMessage(), $e->getCode() ?: 500);
+            // Calculate revenue
+            $totalRevenue = $service->bookings()
+                ->where('status', 'completed')
+                ->sum('total_amount');
+
+            return $this->ok('Service details retrieved', [
+                'service' => new ServiceResource($service),
+                'statistics' => [
+                    'total_bookings' => $service->total_bookings_count,
+                    'completed_bookings' => $service->completed_bookings_count,
+                    'cancelled_bookings' => $service->cancelled_bookings_count,
+                    'total_revenue' => $totalRevenue,
+                    'formatted_revenue' => '£' . number_format($totalRevenue / 100, 2),
+                ],
+            ]);
+
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
     }
-}
 
-/**
- * Update a service
- */
-public function update(UpdateServiceRequest $request, Service $service)
-{
-    try {
-        $user = $request->user();
+    /**
+     * Update a service
+     */
+    public function update(UpdateServiceRequest $request, Service $service)
+    {
+        try {
+            $user = $request->user();
 
-        // Check permissions
-        if (!$user->hasPermission('edit_services')) {
-            return $this->error('You do not have permission to edit services.', 403);
-        }
-
-        // Check if user can edit this specific service
-        if (!$user->hasPermission('edit_all_services') && $service->vendor_id !== $user->id) {
-            return $this->error('You can only edit your own services.', 403);
-        }
-
-        return DB::transaction(function () use ($request, $service, $user) {
-            $data = $request->validated();
-
-            // Don't allow non-admin to change vendor
-            if (!$user->hasPermission('manage_all_services')) {
-                unset($data['vendor_id']);
+            // Check permissions
+            if (!$user->hasPermission('edit_services')) {
+                return $this->error('You do not have permission to edit services.', 403);
             }
 
-            $service->update($data);
-
-            // Handle media uploads if present
-            if ($request->hasFile('images')) {
-                // Clear existing images if replacing
-                if ($request->input('replace_images', false)) {
-                    $service->clearMediaCollection('images');
-                }
-
-                foreach ($request->file('images') as $image) {
-                    $service->addMediaFromRequest('images')
-                        ->each(function ($fileAdder) {
-                            $fileAdder->toMediaCollection('images');
-                        });
-                }
+            // Check if user can edit this specific service
+            if (!$user->hasPermission('edit_all_services') && $service->vendor_id !== $user->id) {
+                return $this->error('You can only edit your own services.', 403);
             }
 
-            Log::info('Service updated', [
+            return DB::transaction(function () use ($request, $service, $user) {
+                $data = $request->validated();
+
+                // Don't allow non-admin to change vendor
+                if (!$user->hasPermission('manage_all_services')) {
+                    unset($data['vendor_id']);
+                }
+
+                $service->update($data);
+
+                // Handle media uploads if present
+                if ($request->hasFile('images')) {
+                    // Clear existing images if replacing
+                    if ($request->input('replace_images', false)) {
+                        $service->clearMediaCollection('images');
+                    }
+
+                    foreach ($request->file('images') as $image) {
+                        $service->addMediaFromRequest('images')
+                            ->each(function ($fileAdder) {
+                                $fileAdder->toMediaCollection('images');
+                            });
+                    }
+                }
+
+                Log::info('Service updated', [
+                    'service_id' => $service->id,
+                    'service_name' => $service->name,
+                    'updated_by' => $user->id,
+                    'updated_fields' => array_keys($data),
+                ]);
+
+                return $this->ok('Service updated successfully', [
+                    'service' => new ServiceResource($service->load(['serviceLocations', 'addOns', 'vendor', 'media']))
+                ]);
+            });
+
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 422);
+        }
+    }
+
+    /**
+     * Delete a service
+     */
+    public function destroy(Request $request, Service $service)
+    {
+        try {
+            $user = $request->user();
+
+            // Check permissions
+            if (!$user->hasPermission('delete_services')) {
+                return $this->error('You do not have permission to delete services.', 403);
+            }
+
+            // Check if user can delete this specific service
+            if (!$user->hasPermission('delete_all_services') && $service->vendor_id !== $user->id) {
+                return $this->error('You can only delete your own services.', 403);
+            }
+
+            // Check if service has active bookings
+            $activeBookingsCount = $service->bookings()
+                ->whereIn('status', ['pending', 'confirmed', 'in_progress'])
+                ->count();
+
+            if ($activeBookingsCount > 0) {
+                return $this->error("Cannot delete service with {$activeBookingsCount} active bookings.", 422);
+            }
+
+            return DB::transaction(function () use ($service, $user) {
+                $serviceName = $service->name;
+                $serviceId = $service->id;
+
+                $service->delete();
+
+                Log::info('Service deleted', [
+                    'service_id' => $serviceId,
+                    'service_name' => $serviceName,
+                    'deleted_by' => $user->id,
+                ]);
+
+                return $this->ok('Service deleted successfully');
+            });
+
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 422);
+        }
+    }
+
+    /**
+     * Toggle service active status
+     */
+    public function toggleStatus(Request $request, Service $service)
+    {
+        try {
+            $user = $request->user();
+
+            // Check permissions
+            if (!$user->hasPermission('edit_services')) {
+                return $this->error('You do not have permission to edit services.', 403);
+            }
+
+            // Check if user can edit this specific service
+            if (!$user->hasPermission('edit_all_services') && $service->vendor_id !== $user->id) {
+                return $this->error('You can only edit your own services.', 403);
+            }
+
+            $newStatus = !$service->is_active;
+            $service->update(['is_active' => $newStatus]);
+
+            Log::info('Service status toggled', [
                 'service_id' => $service->id,
                 'service_name' => $service->name,
+                'new_status' => $newStatus ? 'active' : 'inactive',
                 'updated_by' => $user->id,
-                'updated_fields' => array_keys($data),
             ]);
 
-            return $this->ok('Service updated successfully', [
-                'service' => new ServiceResource($service->load(['serviceLocations', 'addOns', 'vendor', 'media']))
+            return $this->ok('Service status updated successfully', [
+                'service' => new ServiceResource($service),
+                'new_status' => $newStatus ? 'active' : 'inactive',
             ]);
-        });
 
-    } catch (Exception $e) {
-        return $this->error($e->getMessage(), $e->getCode() ?: 422);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 422);
+        }
     }
-}
 
-/**
- * Delete a service
- */
-public function destroy(Request $request, Service $service)
-{
-    try {
-        $user = $request->user();
+    /**
+     * Duplicate a service
+     */
+    public function duplicate(Request $request, Service $service)
+    {
+        try {
+            $user = $request->user();
 
-        // Check permissions
-        if (!$user->hasPermission('delete_services')) {
-            return $this->error('You do not have permission to delete services.', 403);
-        }
+            // Check permissions
+            if (!$user->hasPermission('create_services')) {
+                return $this->error('You do not have permission to create services.', 403);
+            }
 
-        // Check if user can delete this specific service
-        if (!$user->hasPermission('delete_all_services') && $service->vendor_id !== $user->id) {
-            return $this->error('You can only delete your own services.', 403);
-        }
+            // Check if user can access this specific service
+            if (!$user->hasPermission('view_all_services') && $service->vendor_id !== $user->id) {
+                return $this->error('You can only duplicate your own services.', 403);
+            }
 
-        // Check if service has active bookings
-        $activeBookingsCount = $service->bookings()
-            ->whereIn('status', ['pending', 'confirmed', 'in_progress'])
-            ->count();
-
-        if ($activeBookingsCount > 0) {
-            return $this->error("Cannot delete service with {$activeBookingsCount} active bookings.", 422);
-        }
-
-        return DB::transaction(function () use ($service, $user) {
-            $serviceName = $service->name;
-            $serviceId = $service->id;
-
-            $service->delete();
-
-            Log::info('Service deleted', [
-                'service_id' => $serviceId,
-                'service_name' => $serviceName,
-                'deleted_by' => $user->id,
-            ]);
-
-            return $this->ok('Service deleted successfully');
-        });
-
-    } catch (Exception $e) {
-        return $this->error($e->getMessage(), $e->getCode() ?: 422);
-    }
-}
-
-/**
- * Toggle service active status
- */
-public function toggleStatus(Request $request, Service $service)
-{
-    try {
-        $user = $request->user();
-
-        // Check permissions
-        if (!$user->hasPermission('edit_services')) {
-            return $this->error('You do not have permission to edit services.', 403);
-        }
-
-        // Check if user can edit this specific service
-        if (!$user->hasPermission('edit_all_services') && $service->vendor_id !== $user->id) {
-            return $this->error('You can only edit your own services.', 403);
-        }
-
-        $newStatus = !$service->is_active;
-        $service->update(['is_active' => $newStatus]);
-
-        Log::info('Service status toggled', [
-            'service_id' => $service->id,
-            'service_name' => $service->name,
-            'new_status' => $newStatus ? 'active' : 'inactive',
-            'updated_by' => $user->id,
-        ]);
-
-        return $this->ok('Service status updated successfully', [
-            'service' => new ServiceResource($service),
-            'new_status' => $newStatus ? 'active' : 'inactive',
-        ]);
-
-    } catch (Exception $e) {
-        return $this->error($e->getMessage(), $e->getCode() ?: 422);
-    }
-}
-
-/**
- * Duplicate a service
- */
-public function duplicate(Request $request, Service $service)
-{
-    try {
-        $user = $request->user();
-
-        // Check permissions
-        if (!$user->hasPermission('create_services')) {
-            return $this->error('You do not have permission to create services.', 403);
-        }
-
-        // Check if user can access this specific service
-        if (!$user->hasPermission('view_all_services') && $service->vendor_id !== $user->id) {
-            return $this->error('You can only duplicate your own services.', 403);
-        }
-
-        return DB::transaction(function () use ($service, $user) {
-            // Create duplicate service
-            $duplicatedService = $service->replicate([
-                'created_at',
-                'updated_at'
-            ]);
-
-            $duplicatedService->name = $service->name . ' (Copy)';
-            $duplicatedService->is_active = false; // Start as inactive
-            $duplicatedService->save();
-
-            // Copy locations
-            foreach ($service->serviceLocations as $location) {
-                $duplicatedLocation = $location->replicate([
+            return DB::transaction(function () use ($service, $user) {
+                // Create duplicate service
+                $duplicatedService = $service->replicate([
                     'created_at',
                     'updated_at'
                 ]);
-                $duplicatedLocation->service_id = $duplicatedService->id;
-                $duplicatedLocation->save();
-            }
 
-            // Copy add-ons
-            foreach ($service->addOns as $addOn) {
-                $duplicatedAddOn = $addOn->replicate([
-                    'created_at',
-                    'updated_at'
-                ]);
-                $duplicatedAddOn->service_id = $duplicatedService->id;
-                $duplicatedAddOn->save();
-            }
+                $duplicatedService->name = $service->name . ' (Copy)';
+                $duplicatedService->is_active = false; // Start as inactive
+                $duplicatedService->save();
 
-            // Copy availability windows
-            foreach ($service->availabilityWindows as $window) {
-                $duplicatedWindow = $window->replicate([
-                    'created_at',
-                    'updated_at'
-                ]);
-                $duplicatedWindow->service_id = $duplicatedService->id;
-                $duplicatedWindow->save();
-            }
-
-            Log::info('Service duplicated', [
-                'original_service_id' => $service->id,
-                'duplicated_service_id' => $duplicatedService->id,
-                'duplicated_by' => $user->id,
-            ]);
-
-            return $this->ok('Service duplicated successfully', [
-                'service' => new ServiceResource($duplicatedService->load(['serviceLocations', 'addOns', 'vendor']))
-            ]);
-        });
-
-    } catch (Exception $e) {
-        return $this->error($e->getMessage(), $e->getCode() ?: 422);
-    }
-}
-
-/**
- * Bulk update services
- */
-public function bulkUpdate(Request $request)
-{
-    try {
-        $request->validate([
-            'service_ids' => 'required|array|min:1|max:50',
-            'service_ids.*' => 'exists:services,id',
-            'action' => 'required|in:activate,deactivate,delete,update_category,update_vendor',
-            'category' => 'required_if:action,update_category|string|max:100',
-            'vendor_id' => 'required_if:action,update_vendor|exists:users,id',
-        ]);
-
-        $user = $request->user();
-
-        // Check permissions
-        if (!$user->hasPermission('edit_services')) {
-            return $this->error('You do not have permission to edit services.', 403);
-        }
-
-        $serviceIds = $request->service_ids;
-        $action = $request->action;
-        $updated = 0;
-        $errors = [];
-
-        return DB::transaction(function () use ($serviceIds, $action, $request, $user, &$updated, &$errors) {
-            foreach ($serviceIds as $serviceId) {
-                try {
-                    $service = Service::find($serviceId);
-
-                    if (!$service) {
-                        $errors[] = "Service ID {$serviceId} not found";
-                        continue;
-                    }
-
-                    // Check individual service permissions
-                    if (!$user->hasPermission('edit_all_services') && $service->vendor_id !== $user->id) {
-                        $errors[] = "No permission to edit service ID {$serviceId}";
-                        continue;
-                    }
-
-                    switch ($action) {
-                        case 'activate':
-                            $service->update(['is_active' => true]);
-                            break;
-                        case 'deactivate':
-                            $service->update(['is_active' => false]);
-                            break;
-                        case 'delete':
-                            if (!$user->hasPermission('delete_services')) {
-                                $errors[] = "No permission to delete service ID {$serviceId}";
-                                continue 2;
-                            }
-
-                            $activeBookings = $service->bookings()
-                                ->whereIn('status', ['pending', 'confirmed', 'in_progress'])
-                                ->count();
-
-                            if ($activeBookings > 0) {
-                                $errors[] = "Service ID {$serviceId} has active bookings";
-                                continue 2;
-                            }
-
-                            $service->delete();
-                            break;
-                        case 'update_category':
-                            $service->update(['category' => $request->category]);
-                            break;
-                        case 'update_vendor':
-                            if (!$user->hasPermission('manage_all_services')) {
-                                $errors[] = "No permission to change vendor for service ID {$serviceId}";
-                                continue 2;
-                            }
-                            $service->update(['vendor_id' => $request->vendor_id]);
-                            break;
-                    }
-
-                    $updated++;
-
-                } catch (Exception $e) {
-                    $errors[] = "Error updating service ID {$serviceId}: " . $e->getMessage();
+                // Copy locations
+                foreach ($service->serviceLocations as $location) {
+                    $duplicatedLocation = $location->replicate([
+                        'created_at',
+                        'updated_at'
+                    ]);
+                    $duplicatedLocation->service_id = $duplicatedService->id;
+                    $duplicatedLocation->save();
                 }
+
+                // Copy add-ons
+                foreach ($service->addOns as $addOn) {
+                    $duplicatedAddOn = $addOn->replicate([
+                        'created_at',
+                        'updated_at'
+                    ]);
+                    $duplicatedAddOn->service_id = $duplicatedService->id;
+                    $duplicatedAddOn->save();
+                }
+
+                // Copy availability windows
+                foreach ($service->availabilityWindows as $window) {
+                    $duplicatedWindow = $window->replicate([
+                        'created_at',
+                        'updated_at'
+                    ]);
+                    $duplicatedWindow->service_id = $duplicatedService->id;
+                    $duplicatedWindow->save();
+                }
+
+                Log::info('Service duplicated', [
+                    'original_service_id' => $service->id,
+                    'duplicated_service_id' => $duplicatedService->id,
+                    'duplicated_by' => $user->id,
+                ]);
+
+                return $this->ok('Service duplicated successfully', [
+                    'service' => new ServiceResource($duplicatedService->load(['serviceLocations', 'addOns', 'vendor']))
+                ]);
+            });
+
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 422);
+        }
+    }
+
+    /**
+     * Bulk update services
+     */
+    public function bulkUpdate(Request $request)
+    {
+        try {
+            $request->validate([
+                'service_ids' => 'required|array|min:1|max:50',
+                'service_ids.*' => 'exists:services,id',
+                'action' => 'required|in:activate,deactivate,delete,update_category,update_vendor',
+                'category' => 'required_if:action,update_category|string|max:100',
+                'vendor_id' => 'required_if:action,update_vendor|exists:users,id',
+            ]);
+
+            $user = $request->user();
+
+            // Check permissions
+            if (!$user->hasPermission('edit_services')) {
+                return $this->error('You do not have permission to edit services.', 403);
             }
 
-            Log::info('Bulk service update completed', [
-                'action' => $action,
-                'requested_count' => count($serviceIds),
-                'updated_count' => $updated,
-                'error_count' => count($errors),
-                'updated_by' => $user->id,
-            ]);
+            $serviceIds = $request->service_ids;
+            $action = $request->action;
+            $updated = 0;
+            $errors = [];
 
-            return $this->ok('Bulk update completed', [
-                'updated_count' => $updated,
-                'total_requested' => count($serviceIds),
-                'errors' => $errors,
-            ]);
-        });
+            return DB::transaction(function () use ($serviceIds, $action, $request, $user, &$updated, &$errors) {
+                foreach ($serviceIds as $serviceId) {
+                    try {
+                        $service = Service::find($serviceId);
 
-    } catch (Exception $e) {
-        return $this->error($e->getMessage(), $e->getCode() ?: 422);
+                        if (!$service) {
+                            $errors[] = "Service ID {$serviceId} not found";
+                            continue;
+                        }
+
+                        // Check individual service permissions
+                        if (!$user->hasPermission('edit_all_services') && $service->vendor_id !== $user->id) {
+                            $errors[] = "No permission to edit service ID {$serviceId}";
+                            continue;
+                        }
+
+                        switch ($action) {
+                            case 'activate':
+                                $service->update(['is_active' => true]);
+                                break;
+                            case 'deactivate':
+                                $service->update(['is_active' => false]);
+                                break;
+                            case 'delete':
+                                if (!$user->hasPermission('delete_services')) {
+                                    $errors[] = "No permission to delete service ID {$serviceId}";
+                                    continue 2;
+                                }
+
+                                $activeBookings = $service->bookings()
+                                    ->whereIn('status', ['pending', 'confirmed', 'in_progress'])
+                                    ->count();
+
+                                if ($activeBookings > 0) {
+                                    $errors[] = "Service ID {$serviceId} has active bookings";
+                                    continue 2;
+                                }
+
+                                $service->delete();
+                                break;
+                            case 'update_category':
+                                $service->update(['category' => $request->category]);
+                                break;
+                            case 'update_vendor':
+                                if (!$user->hasPermission('manage_all_services')) {
+                                    $errors[] = "No permission to change vendor for service ID {$serviceId}";
+                                    continue 2;
+                                }
+                                $service->update(['vendor_id' => $request->vendor_id]);
+                                break;
+                        }
+
+                        $updated++;
+
+                    } catch (Exception $e) {
+                        $errors[] = "Error updating service ID {$serviceId}: " . $e->getMessage();
+                    }
+                }
+
+                Log::info('Bulk service update completed', [
+                    'action' => $action,
+                    'requested_count' => count($serviceIds),
+                    'updated_count' => $updated,
+                    'error_count' => count($errors),
+                    'updated_by' => $user->id,
+                ]);
+
+                return $this->ok('Bulk update completed', [
+                    'updated_count' => $updated,
+                    'total_requested' => count($serviceIds),
+                    'errors' => $errors,
+                ]);
+            });
+
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 422);
+        }
     }
 }

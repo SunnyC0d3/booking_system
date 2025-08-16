@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\V1\Admin\ServiceAddOnController;
 use App\Http\Controllers\V1\Admin\ServiceController;
+use App\Http\Controllers\V1\Admin\ServiceLocationController;
 use App\Http\Controllers\V1\Admin\ServicePackageController;
 use Illuminate\Support\Facades\Route;
 
