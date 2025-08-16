@@ -12,8 +12,6 @@ class RoleSeeder extends Seeder
         $roles = [
             ['name' => 'Super Admin', 'description' => 'Full system access'],
             ['name' => 'Admin', 'description' => 'Administrative access'],
-            ['name' => 'Vendor Manager', 'description' => 'Can manage multiple vendors'],
-            ['name' => 'Vendor', 'description' => 'Single vendor access'],
             ['name' => 'Customer Service', 'description' => 'Support team access'],
             ['name' => 'Content Manager', 'description' => 'Manage product content'],
             ['name' => 'User', 'description' => 'Regular customer access'],
