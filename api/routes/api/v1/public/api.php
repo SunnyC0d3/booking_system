@@ -79,7 +79,7 @@ Route::prefix('users')
 // Returns
 
 Route::prefix('returns')
-    ->middleware(['auth:api', 'roles:user, vendor', 'emailVerified'])
+    ->middleware(['auth:api', 'roles:user', 'emailVerified'])
     ->controller(ReturnsController::class)
     ->group(function () {
         Route::post('/', 'return')->name('returns');

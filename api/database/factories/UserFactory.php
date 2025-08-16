@@ -63,27 +63,6 @@ class UserFactory extends Factory
         });
     }
 
-    public function vendorManager(): static
-    {
-        return $this->state(function (array $attributes) {
-            $role = Role::where('name', 'Vendor Manager')->first();
-
-            return ['role_id' => $role->id];
-        });
-    }
-
-    public function vendor(): static
-    {
-        return $this->state(function (array $attributes) {
-            $role = Role::where('name', 'Vendor')->first();
-
-            return [
-                'role_id' => $role->id,
-                'name'    => fake()->firstName() . ' Vendor Representative',
-            ];
-        });
-    }
-
     public function customerService(): static
     {
         return $this->state(function (array $attributes) {

@@ -49,43 +49,6 @@ class RolePermissionSeeder extends Seeder
                 'manage_consultations', 'view_consultation_notes', 'view_pricing_details', 'modify_pricing',
             ],
 
-            'Vendor Manager' => [
-                // User Management - View Only
-                'view_all_users',
-
-                // Booking Management - View and Limited Edit
-                'view_all_bookings', 'edit_all_bookings',
-
-                // Service Management - View and Edit
-                'view_services', 'edit_services',
-                'view_service_locations', 'edit_service_locations',
-                'view_service_availability', 'edit_service_availability',
-                'view_service_addons', 'edit_service_addons',
-
-                // Analytics
-                'view_booking_statistics', 'view_booking_calendar',
-
-                // Consultation
-                'view_consultation_notes', 'view_pricing_details',
-            ],
-
-            'Vendor' => [
-                // Own Profile Management
-                'view_own_profile', 'edit_own_profile',
-
-                // Booking Management - Own Services Only
-                'view_own_bookings', 'create_own_bookings', 'edit_own_bookings', 'delete_own_bookings',
-
-                // Service Management - Own Services
-                'view_services', 'edit_services',
-                'view_service_locations', 'create_service_locations', 'edit_service_locations',
-                'view_service_availability', 'create_service_availability', 'edit_service_availability',
-                'view_service_addons', 'create_service_addons', 'edit_service_addons',
-
-                // Consultation and Pricing - View Only
-                'view_consultation_notes', 'view_pricing_details',
-            ],
-
             'Customer Service' => [
                 // User Management - View Only
                 'view_all_users',

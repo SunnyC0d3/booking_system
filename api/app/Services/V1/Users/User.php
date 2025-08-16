@@ -25,7 +25,7 @@ class User
         if ($user->hasPermission('view_all_users')) {
             $request->validated();
 
-            $query = DB::with(['userAddress', 'role', 'vendors'])->filter($filter);
+            $query = DB::with(['userAddress', 'role'])->filter($filter);
             $perPage = $request->input('per_page', 15);
             $users = $query->paginate($perPage);
 
@@ -36,7 +36,7 @@ class User
         }
 
         if ($user->hasPermission('view_own_profile')) {
-            $userData = DB::with(['userAddress', 'role', 'vendors'])
+            $userData = DB::with(['userAddress', 'role'])
                 ->where('id', $user->id)
                 ->paginate(1);
 
@@ -54,7 +54,7 @@ class User
         $user = $request->user();
 
         if ($user->hasPermission('view_all_users')) {
-            $_user->load(['role', 'vendors', 'userAddress']);
+            $_user->load(['role', 'userAddress']);
             return $this->ok('User details retrieved.', new UserResource($_user));
         }
 
@@ -63,7 +63,7 @@ class User
                 return $this->error('You can only view your own profile.', 403);
             }
 
-            $_user->load(['role', 'vendors', 'userAddress']);
+            $_user->load(['role', 'userAddress']);
             return $this->ok('Your profile retrieved.', new UserResource($_user));
         }
 
@@ -209,7 +209,7 @@ class User
         }
 
         $_user->restore();
-        $_user->load(['role', 'vendors', 'userAddress']);
+        $_user->load(['role', 'userAddress']);
 
         return $this->ok('User restored successfully.', new UserResource($_user));
     }
