@@ -37,24 +37,6 @@ return [
         'review_responses' => '5,1', // 5 response views per minute
     ],
 
-    'cart' => [
-        'attempts' => 120, // 120 requests per minute for cart operations
-        'decay_minutes' => 1,
-        'message' => 'Too many cart requests. Please slow down.',
-    ],
-
-    'cart.add' => [
-        'attempts' => 30, // 30 add-to-cart requests per minute
-        'decay_minutes' => 1,
-        'message' => 'Too many items added to cart. Please wait a moment.',
-    ],
-
-    'cart.update' => [
-        'attempts' => 60, // 60 update requests per minute
-        'decay_minutes' => 1,
-        'message' => 'Too many cart updates. Please wait a moment.',
-    ],
-
     'reviews' => [
         'create' => '10,60',        // 10 reviews per hour
         'update' => '10,1',         // 10 review updates per minute
@@ -63,35 +45,6 @@ return [
         'respond' => '10,5',        // 10 vendor responses per 5 minutes
         'moderate' => '50,1',       // 50 moderation actions per minute (admin)
         'bulk' => '5,5',            // 5 bulk operations per 5 minutes (admin)
-    ],
-
-    'vendor' => [
-        'responses' => '10,5',      // 10 vendor responses per 5 minutes
-        'dashboard' => '30,1',      // 30 vendor dashboard requests per minute
-    ],
-
-    'shipping' => [
-        'attempts' => '30,1',       // 30 shipping requests per minute
-        'decay_minutes' => 1,
-        'message' => 'Too many shipping requests. Please wait a moment.',
-    ],
-
-    'tracking' => [
-        'attempts' => 30,           // 30 tracking requests per minute
-        'decay_minutes' => 1,
-        'message' => 'Too many tracking requests. Please wait a moment.',
-    ],
-
-    'checkout' => [
-        'attempts' => '5,5',        // 5 checkout attempts per 5 minutes
-        'decay_minutes' => 5,
-        'message' => 'Too many checkout requests. Please wait a moment.',
-    ],
-
-    'orders' => [
-        'attempts' => 30,           // 30 order requests per minute
-        'decay_minutes' => 1,
-        'message' => 'Too many order requests. Please wait a moment.',
     ],
 
     'returns' => [
@@ -104,49 +57,6 @@ return [
         'attempts' => 40,           // 40 user profile requests per minute
         'decay_minutes' => 1,
         'message' => 'Too many user requests. Please wait a moment.',
-    ],
-
-    'vendors.profile' => [
-        'attempts' => 40,           // 40 vendor profile requests per minute
-        'decay_minutes' => 1,
-        'message' => 'Too many vendor requests. Please wait a moment.',
-    ],
-
-    // Digital Downloads & License Management (NEW)
-    'downloads' => [
-        'attempts' => 50,           // 50 download requests per minute
-        'decay_minutes' => 1,
-        'message' => 'Too many download requests. Please wait a moment.',
-    ],
-
-    'license_validation' => [
-        'attempts' => 100,          // 100 license checks per minute
-        'decay_minutes' => 1,
-        'message' => 'Too many license validation requests. Please wait a moment.',
-    ],
-
-    'digital_products' => [
-        'attempts' => 60,           // 60 digital product requests per minute
-        'decay_minutes' => 1,
-        'message' => 'Too many digital product requests. Please wait a moment.',
-    ],
-
-    'download_progress' => [
-        'attempts' => 200,          // 200 progress updates per minute (for active downloads)
-        'decay_minutes' => 1,
-        'message' => 'Too many download progress updates. Please wait a moment.',
-    ],
-
-    'license_activation' => [
-        'attempts' => 20,           // 20 license activations per minute
-        'decay_minutes' => 1,
-        'message' => 'Too many license activation attempts. Please wait a moment.',
-    ],
-
-    'digital_library' => [
-        'attempts' => 40,           // 40 digital library requests per minute
-        'decay_minutes' => 1,
-        'message' => 'Too many digital library requests. Please wait a moment.',
     ],
 
     // Password security
@@ -184,13 +94,6 @@ return [
         'message' => 'Too many payment verification attempts. Please wait a moment.',
     ],
 
-    // Shipping address management
-    'shipping_addresses' => [
-        'attempts' => 30,           // 30 shipping address requests per minute
-        'decay_minutes' => 1,
-        'message' => 'Too many shipping address requests. Please wait a moment.',
-    ],
-
     // Address validation (can be expensive)
     'address_validation' => [
         'attempts' => 10,           // 10 address validations per minute
@@ -198,31 +101,10 @@ return [
         'message' => 'Too many address validation requests. Please wait a moment.',
     ],
 
-    // Shipping calculations (can be expensive with external APIs)
-    'shipping_calculations' => [
-        'attempts' => 40,           // 40 shipping calculations per minute
-        'decay_minutes' => 1,
-        'message' => 'Too many shipping calculation requests. Please wait a moment.',
-    ],
-
-    // Product-specific limits
-    'products' => [
-        'attempts' => 60,           // 60 product requests per minute
-        'decay_minutes' => 1,
-        'message' => 'Too many product requests. Please wait a moment.',
-    ],
-
     // General client limits (for non-authenticated requests)
     'client' => [
         'attempts' => 100,          // 100 general client requests per minute
         'decay_minutes' => 1,
         'message' => 'Rate limit exceeded. Please slow down.',
-    ],
-
-    // Dropshipping operations
-    'dropshipping' => [
-        'attempts' => 100,          // 100 dropshipping requests per minute
-        'decay_minutes' => 1,
-        'message' => 'Too many dropshipping requests. Please wait a moment.',
     ],
 ];
