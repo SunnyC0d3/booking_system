@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             UserAddressSeeder::class,
 
             PaymentSeeder::class,
+
+            ServiceSeeder::class,
         ]);
     }
 }
