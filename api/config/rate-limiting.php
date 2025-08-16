@@ -31,6 +31,7 @@ return [
         'cancel' => '5,60',            // 5 cancellations per hour
         'reschedule' => '3,60',        // 3 reschedules per hour
         'view' => '100,60',            // 100 booking views per hour
+        'consultation' => '10,60',     // 10 consultation completions per hour
     ],
 
     'availability' => [
@@ -38,12 +39,14 @@ return [
         'slots' => '30,60',            // 30 slot requests per hour
         'summary' => '20,60',          // 20 availability summaries per hour
         'pricing' => '30,60',          // 30 pricing estimates per hour
+        'next_slot' => '20,60',        // 20 next available slot requests per hour
     ],
 
     'services' => [
         'view' => '200,60',            // 200 service views per hour (public)
         'locations' => '100,60',       // 100 location requests per hour
         'addons' => '100,60',          // 100 add-on requests per hour
+        'packages' => '100,60',        // 100 package requests per hour
     ],
 
     'admin' => [
@@ -55,6 +58,9 @@ return [
         'calendar' => '100,60',            // 100 calendar requests per hour
         'export' => '10,60',               // 10 export requests per hour
         'bulk_operations' => '20,60',      // 20 bulk operations per hour
+        'service_management' => '100,60',  // 100 service management operations per hour
+        'location_management' => '50,60',  // 50 location management operations per hour
+        'availability_management' => '100,60', // 100 availability management operations per hour
     ],
 
     'guest' => [
@@ -68,10 +74,12 @@ return [
         'services.view' => '60,60',        // 60 service views per hour for guests
         'services.locations' => '30,60',   // 30 location requests per hour for guests
         'services.addons' => '30,60',      // 30 add-on requests per hour for guests
+        'services.packages' => '30,60',    // 30 package requests per hour for guests
         'availability.check' => '20,60',   // 20 availability checks per hour for guests
         'availability.slots' => '10,60',   // 10 slot requests per hour for guests
         'availability.summary' => '5,60',  // 5 availability summaries per hour for guests
         'availability.pricing' => '10,60', // 10 pricing estimates per hour for guests
+        'availability.next_slot' => '5,60', // 5 next slot requests per hour for guests
     ],
 
     'returns' => [
@@ -128,10 +136,20 @@ return [
         'message' => 'Too many address validation requests. Please wait a moment.',
     ],
 
-    // General client limits (for non-authenticated requests)
-    'client' => [
-        'attempts' => 100,          // 100 general client requests per minute
-        'decay_minutes' => 1,
-        'message' => 'Rate limit exceeded. Please slow down.',
+    // New booking-specific rate limits
+    'booking_specific' => [
+        'consultation_booking' => '5,60',   // 5 consultation bookings per hour
+        'emergency_booking' => '2,60',      // 2 emergency bookings per hour
+        'bulk_booking' => '1,60',           // 1 bulk booking operation per hour
+        'package_booking' => '10,60',       // 10 package bookings per hour
+        'recurring_booking' => '5,60',      // 5 recurring booking setups per hour
+    ],
+
+    // Service-specific limits
+    'service_specific' => [
+        'complex_service_booking' => '3,60',    // 3 complex service bookings per hour
+        'consultation_scheduling' => '10,60',   // 10 consultation schedulings per hour
+        'venue_search' => '50,60',              // 50 venue searches per hour
+        'availability_bulk_check' => '10,60',   // 10 bulk availability checks per hour
     ],
 ];

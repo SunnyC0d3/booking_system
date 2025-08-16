@@ -160,51 +160,72 @@ Route::prefix('admin/bookings')
 // Service management routes (Admin)
 Route::prefix('admin/services')
     ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->controller(ServiceController::class)
     ->group(function () {
+        Route::get('/', 'index')
+            ->middleware('rate_limit:admin.service_management')
+            ->name('admin.services.index');
+        Route::post('/', 'store')
+            ->middleware('rate_limit:admin.service_management')
+            ->name('admin.services.store');
+        Route::get('/{service}', 'show')
+            ->middleware('rate_limit:admin.service_management')
+            ->name('admin.services.show');
+        Route::put('/{service}', 'update')
+            ->middleware('rate_limit:admin.service_management')
+            ->name('admin.services.update');
+        Route::delete('/{service}', 'destroy')
+            ->middleware('rate_limit:admin.service_management')
+            ->name('admin.services.destroy');
 
         // Service locations
         Route::prefix('{service}/locations')
-            ->controller(\App\Http\Controllers\V1\Admin\ServiceLocationController::class)
+            ->controller(ServiceLocationController::class)
             ->group(function () {
                 Route::get('/', 'index')
-                    ->middleware('rate_limit:admin.bookings.view')
+                    ->middleware('rate_limit:admin.location_management')
                     ->name('admin.services.locations.index');
                 Route::post('/', 'store')
-                    ->middleware('rate_limit:admin.bookings.create')
+                    ->middleware('rate_limit:admin.location_management')
                     ->name('admin.services.locations.store');
                 Route::get('/{location}', 'show')
-                    ->middleware('rate_limit:admin.bookings.view')
+                    ->middleware('rate_limit:admin.location_management')
                     ->name('admin.services.locations.show');
                 Route::put('/{location}', 'update')
-                    ->middleware('rate_limit:admin.bookings.update')
+                    ->middleware('rate_limit:admin.location_management')
                     ->name('admin.services.locations.update');
                 Route::delete('/{location}', 'destroy')
-                    ->middleware('rate_limit:admin.bookings.delete')
+                    ->middleware('rate_limit:admin.location_management')
                     ->name('admin.services.locations.destroy');
             });
 
         // Service availability windows
         Route::prefix('{service}/availability')
-            ->controller(\App\Http\Controllers\V1\Admin\ServiceAvailabilityController::class)
+            ->controller(ServiceAvailabilityController::class)
             ->group(function () {
                 Route::get('/', 'index')
-                    ->middleware('rate_limit:admin.bookings.view')
+                    ->middleware('rate_limit:admin.availability_management')
                     ->name('admin.services.availability.index');
                 Route::post('/', 'store')
-                    ->middleware('rate_limit:admin.bookings.create')
+                    ->middleware('rate_limit:admin.availability_management')
                     ->name('admin.services.availability.store');
                 Route::get('/{window}', 'show')
-                    ->middleware('rate_limit:admin.bookings.view')
+                    ->middleware('rate_limit:admin.availability_management')
                     ->name('admin.services.availability.show');
                 Route::put('/{window}', 'update')
-                    ->middleware('rate_limit:admin.bookings.update')
+                    ->middleware('rate_limit:admin.availability_management')
                     ->name('admin.services.availability.update');
                 Route::delete('/{window}', 'destroy')
-                    ->middleware('rate_limit:admin.bookings.delete')
+                    ->middleware('rate_limit:admin.availability_management')
                     ->name('admin.services.availability.destroy');
+
+                // Bulk operations for availability
                 Route::post('/bulk-create', 'bulkCreate')
                     ->middleware('rate_limit:admin.bulk_operations')
                     ->name('admin.services.availability.bulk-create');
+                Route::post('/bulk-update', 'bulkUpdate')
+                    ->middleware('rate_limit:admin.bulk_operations')
+                    ->name('admin.services.availability.bulk-update');
             });
 
         // Service add-ons
@@ -212,23 +233,41 @@ Route::prefix('admin/services')
             ->controller(\App\Http\Controllers\V1\Admin\ServiceAddOnController::class)
             ->group(function () {
                 Route::get('/', 'index')
-                    ->middleware('rate_limit:admin.bookings.view')
+                    ->middleware('rate_limit:admin.service_management')
                     ->name('admin.services.addons.index');
                 Route::post('/', 'store')
-                    ->middleware('rate_limit:admin.bookings.create')
+                    ->middleware('rate_limit:admin.service_management')
                     ->name('admin.services.addons.store');
                 Route::get('/{addon}', 'show')
-                    ->middleware('rate_limit:admin.bookings.view')
+                    ->middleware('rate_limit:admin.service_management')
                     ->name('admin.services.addons.show');
                 Route::put('/{addon}', 'update')
-                    ->middleware('rate_limit:admin.bookings.update')
+                    ->middleware('rate_limit:admin.service_management')
                     ->name('admin.services.addons.update');
                 Route::delete('/{addon}', 'destroy')
-                    ->middleware('rate_limit:admin.bookings.delete')
+                    ->middleware('rate_limit:admin.service_management')
                     ->name('admin.services.addons.destroy');
-                Route::post('/reorder', 'reorder')
-                    ->middleware('rate_limit:admin.bookings.update')
-                    ->name('admin.services.addons.reorder');
+            });
+
+        // Service packages
+        Route::prefix('{service}/packages')
+            ->controller(\App\Http\Controllers\V1\Admin\ServicePackageController::class)
+            ->group(function () {
+                Route::get('/', 'index')
+                    ->middleware('rate_limit:admin.service_management')
+                    ->name('admin.services.packages.index');
+                Route::post('/', 'store')
+                    ->middleware('rate_limit:admin.service_management')
+                    ->name('admin.services.packages.store');
+                Route::get('/{package}', 'show')
+                    ->middleware('rate_limit:admin.service_management')
+                    ->name('admin.services.packages.show');
+                Route::put('/{package}', 'update')
+                    ->middleware('rate_limit:admin.service_management')
+                    ->name('admin.services.packages.update');
+                Route::delete('/{package}', 'destroy')
+                    ->middleware('rate_limit:admin.service_management')
+                    ->name('admin.services.packages.destroy');
             });
     });
 
