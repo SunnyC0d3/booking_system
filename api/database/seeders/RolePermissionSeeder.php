@@ -45,8 +45,28 @@ class RolePermissionSeeder extends Seeder
                 // Analytics and Reporting
                 'view_booking_statistics', 'view_booking_calendar', 'export_bookings', 'bulk_update_bookings',
 
-                // Consultation and Pricing
-                'manage_consultations', 'view_consultation_notes', 'view_pricing_details', 'modify_pricing',
+                // Consultation Management - Full Access
+                'manage_consultations', 'view_all_consultations', 'create_consultations_for_users',
+                'edit_all_consultations', 'delete_all_consultations', 'cancel_all_consultations',
+                'assign_consultants', 'bulk_update_consultations',
+
+                // Consultation Session Management
+                'host_consultations', 'start_consultations', 'complete_consultations', 'mark_consultations_no_show',
+                'view_consultation_notes', 'create_consultation_notes', 'edit_consultation_notes',
+
+                // Consultation Analytics
+                'view_consultation_statistics', 'view_consultation_dashboard', 'export_consultations',
+                'view_consultation_calendar',
+
+                // Consultation Workflow
+                'manage_consultation_workflow', 'approve_consultation_outcomes', 'schedule_follow_up_consultations',
+
+                // User Level Consultation Permissions (for self-management)
+                'create_consultations', 'view_own_consultations', 'edit_own_consultations',
+                'cancel_own_consultations', 'join_own_consultations', 'reschedule_own_consultations',
+
+                // Pricing
+                'view_pricing_details', 'modify_pricing',
             ],
 
             'Customer Service' => [
@@ -63,8 +83,20 @@ class RolePermissionSeeder extends Seeder
                 // Service Information - View Only
                 'view_services', 'view_service_locations', 'view_service_availability', 'view_service_addons',
 
-                // Consultation Management
-                'manage_consultations', 'view_consultation_notes',
+                // Consultation Management - Customer Service Level
+                'manage_consultations', 'view_all_consultations', 'edit_all_consultations',
+                'assign_consultants', 'host_consultations', 'start_consultations', 'complete_consultations',
+                'mark_consultations_no_show', 'view_consultation_notes', 'create_consultation_notes',
+
+                // Consultation Analytics - Limited
+                'view_consultation_statistics', 'view_consultation_dashboard', 'view_consultation_calendar',
+
+                // Consultation Workflow - Limited
+                'manage_consultation_workflow', 'schedule_follow_up_consultations',
+
+                // User Level Consultation Permissions
+                'create_consultations', 'view_own_consultations', 'edit_own_consultations',
+                'cancel_own_consultations', 'join_own_consultations', 'reschedule_own_consultations',
 
                 // Analytics - Limited
                 'view_booking_statistics', 'view_booking_calendar',
@@ -85,6 +117,13 @@ class RolePermissionSeeder extends Seeder
                 // Booking Information - View Only
                 'view_all_bookings',
 
+                // Limited Consultation Access
+                'view_all_consultations', 'view_consultation_notes',
+
+                // User Level Consultation Permissions
+                'create_consultations', 'view_own_consultations', 'edit_own_consultations',
+                'cancel_own_consultations', 'join_own_consultations', 'reschedule_own_consultations',
+
                 // Pricing - View Only
                 'view_pricing_details',
             ],
@@ -96,6 +135,10 @@ class RolePermissionSeeder extends Seeder
 
                 // Booking Management - Own Bookings Only
                 'view_own_bookings', 'create_own_bookings', 'edit_own_bookings', 'delete_own_bookings',
+
+                // Consultation Management - Own Consultations Only
+                'create_consultations', 'view_own_consultations', 'edit_own_consultations',
+                'cancel_own_consultations', 'join_own_consultations', 'reschedule_own_consultations',
 
                 // Service Information - View Only
                 'view_services', 'view_service_locations', 'view_service_availability', 'view_service_addons',

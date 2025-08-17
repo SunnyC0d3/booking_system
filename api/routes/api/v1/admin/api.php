@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\V1\Admin\ConsultationController;
 use App\Http\Controllers\V1\Admin\ServiceAddOnController;
+use App\Http\Controllers\V1\Admin\ServiceAvailabilityController;
 use App\Http\Controllers\V1\Admin\ServiceController;
 use App\Http\Controllers\V1\Admin\ServiceLocationController;
 use App\Http\Controllers\V1\Admin\ServicePackageController;
@@ -161,6 +163,54 @@ Route::prefix('admin/bookings')
             ->name('admin.bookings.no-show');
     });
 
+// Admin/Consultations
+
+Route::prefix('admin/consultations')
+    ->middleware(['auth:api', 'roles:super admin,admin,customer service', 'emailVerified'])
+    ->controller(ConsultationController::class)
+    ->group(function () {
+        // Core consultation management
+        Route::get('/', 'index')
+            ->middleware('rate_limit:admin.consultations.view')
+            ->name('admin.consultations.index');
+        Route::post('/', 'store')
+            ->middleware('rate_limit:admin.consultations.create')
+            ->name('admin.consultations.store');
+        Route::get('/dashboard', 'dashboard')
+            ->middleware('rate_limit:admin.statistics')
+            ->name('admin.consultations.dashboard');
+        Route::get('/statistics', 'getStatistics')
+            ->middleware('rate_limit:admin.statistics')
+            ->name('admin.consultations.statistics');
+        Route::get('/export', 'export')
+            ->middleware('rate_limit:admin.consultations.export')
+            ->name('admin.consultations.export');
+
+        // Bulk operations
+        Route::post('/bulk-update', 'bulkUpdate')
+            ->middleware('rate_limit:admin.consultations.bulk')
+            ->name('admin.consultations.bulk-update');
+
+        // Individual consultation management
+        Route::get('/{consultation}', 'show')
+            ->middleware('rate_limit:admin.consultations.view')
+            ->name('admin.consultations.show');
+        Route::put('/{consultation}', 'update')
+            ->middleware('rate_limit:admin.consultations.update')
+            ->name('admin.consultations.update');
+        Route::delete('/{consultation}', 'destroy')
+            ->middleware('rate_limit:admin.consultations.delete')
+            ->name('admin.consultations.destroy');
+
+        // Consultation workflow actions
+        Route::post('/{consultation}/assign-consultant', 'assignConsultant')
+            ->middleware('rate_limit:admin.consultations.assign')
+            ->name('admin.consultations.assign-consultant');
+        Route::post('/{consultation}/complete', 'complete')
+            ->middleware('rate_limit:admin.consultations.update')
+            ->name('admin.consultations.complete');
+    });
+
 // Service management routes (Admin)
 Route::prefix('admin/services')
     ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
@@ -274,5 +324,3 @@ Route::prefix('admin/services')
                     ->name('admin.services.packages.destroy');
             });
     });
-
-

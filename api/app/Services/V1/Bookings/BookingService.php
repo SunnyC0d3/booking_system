@@ -3,8 +3,12 @@
 namespace App\Services\V1\Bookings;
 
 use App\Constants\BookingStatuses;
+use App\Constants\ConsultationStatuses;
 use App\Constants\PaymentStatuses;
+use App\Mail\BookingCancelledMail;
+use App\Mail\BookingConfirmationMail;
 use App\Models\Booking;
+use App\Models\ConsultationBooking;
 use App\Models\Service;
 use App\Models\ServiceLocation;
 use App\Resources\V1\BookingResource;
@@ -322,7 +326,8 @@ class BookingService
     }
 
     /**
-     * Enhanced createBooking with queue integration
+     * Enhanced createBooking method with auto-consultation integration
+     * Add this method to your existing BookingService class
      */
     public function createBooking(Request $request)
     {
@@ -357,59 +362,385 @@ class BookingService
 
             // Calculate pricing
             $totalAmount = $this->calculateBookingPrice($service, $data['add_ons'] ?? []);
+            $depositAmount = $this->calculateDepositAmount($totalAmount, $service);
 
-            // Generate unique booking reference
-            $bookingReference = $this->generateBookingReference();
-
-            // Create the booking
+            // Create the main booking
             $booking = Booking::create([
-                'booking_reference' => $bookingReference,
                 'user_id' => $user->id,
                 'service_id' => $service->id,
                 'service_location_id' => $location?->id,
                 'scheduled_at' => $scheduledAt,
                 'ends_at' => $endsAt,
                 'duration_minutes' => $durationMinutes,
-                'base_price' => $service->base_price,
+                'base_price' => $service->price,
                 'total_amount' => $totalAmount,
-                'status' => BookingStatuses::PENDING,
+                'deposit_amount' => $depositAmount,
+                'remaining_amount' => $totalAmount - $depositAmount,
+                'status' => $service->requires_consultation ? BookingStatuses::PENDING : BookingStatuses::CONFIRMED,
                 'payment_status' => PaymentStatuses::PENDING,
                 'client_name' => $data['client_name'] ?? $user->name,
                 'client_email' => $data['client_email'] ?? $user->email,
-                'client_phone' => $data['client_phone'] ?? null,
+                'client_phone' => $data['client_phone'] ?? $user->phone,
                 'notes' => $data['notes'] ?? null,
                 'special_requirements' => $data['special_requirements'] ?? null,
-                'requires_consultation' => $data['requires_consultation'] ?? false,
+                'requires_consultation' => $service->requires_consultation,
                 'metadata' => $data['metadata'] ?? null,
             ]);
 
-            // Add booking add-ons
+            // Add booking add-ons if specified
             if (!empty($data['add_ons'])) {
                 $this->addBookingAddOns($booking, $data['add_ons']);
             }
 
-            // ✅ SEND IMMEDIATE CONFIRMATION EMAIL
-            $this->emailService->sendImmediateNotification(
-                $booking,
-                'booking_created',
-                ['email_type' => 'booking_confirmation']
-            );
+            // AUTO-CONSULTATION INTEGRATION: Create consultation if required
+            $consultation = null;
+            if ($service->requires_consultation) {
+                $consultation = $this->autoCreateConsultation($booking, $service, $user, $data);
 
-            // ✅ SCHEDULE ALL FUTURE NOTIFICATIONS WITH QUEUE
-            $this->emailService->scheduleAllNotificationsWithQueue($booking);
+                // Link consultation to booking
+                $booking->update([
+                    'consultation_booking_id' => $consultation->id,
+                    'consultation_notes' => "Pre-booking consultation scheduled for {$consultation->scheduled_at->format('M j, Y \a\t g:i A')}"
+                ]);
+            }
+
+            // Send confirmation emails
+            $this->sendBookingConfirmation($booking, $consultation);
+
+            // Schedule reminders
+            $this->scheduleBookingReminders($booking);
 
             // Log booking creation
-            Log::info('Booking created successfully with notifications scheduled', [
+            Log::info('Booking created with auto-consultation', [
                 'booking_id' => $booking->id,
                 'booking_reference' => $booking->booking_reference,
+                'consultation_id' => $consultation?->id,
+                'consultation_reference' => $consultation?->consultation_reference,
                 'user_id' => $user->id,
                 'service_id' => $service->id,
-                'total_amount' => $totalAmount,
+                'requires_consultation' => $service->requires_consultation,
                 'scheduled_at' => $scheduledAt->toDateTimeString(),
             ]);
 
-            return $this->ok('Booking created successfully', [
+            $response = [
                 'booking' => new BookingResource($booking->load(['service', 'serviceLocation', 'bookingAddOns.serviceAddOn']))
+            ];
+
+            // Include consultation details if created
+            if ($consultation) {
+                $response['consultation'] = new ConsultationBookingResource($consultation->load(['service']));
+                $response['next_steps'] = [
+                    'consultation_required' => true,
+                    'consultation_scheduled_at' => $consultation->scheduled_at->toDateTimeString(),
+                    'consultation_format' => $consultation->format,
+                    'preparation_instructions' => $consultation->preparation_instructions,
+                ];
+            }
+
+            return $this->ok(
+                $consultation ?
+                    'Booking created successfully. Consultation has been automatically scheduled.' :
+                    'Booking created successfully.',
+                $response
+            );
+        });
+    }
+
+    /**
+     * Auto-create consultation for services that require it
+     */
+    private function autoCreateConsultation(Booking $booking, Service $service, User $user, array $bookingData): ConsultationBooking
+    {
+        // Determine consultation timing - typically before the main booking
+        $consultationDate = $this->calculateConsultationDate($booking->scheduled_at, $service);
+        $consultationDuration = $service->consultation_duration_minutes ?? 30;
+
+        // Create consultation booking
+        $consultation = ConsultationBooking::create([
+            'consultation_reference' => $this->generateConsultationReference(),
+            'user_id' => $user->id,
+            'service_id' => $service->id,
+            'main_booking_id' => $booking->id,
+            'scheduled_at' => $consultationDate,
+            'ends_at' => $consultationDate->clone()->addMinutes($consultationDuration),
+            'duration_minutes' => $consultationDuration,
+            'status' => ConsultationStatuses::SCHEDULED,
+            'type' => 'pre_booking', // Auto-created consultations are pre-booking type
+            'format' => $this->determineConsultationFormat($service, $bookingData),
+            'client_name' => $booking->client_name,
+            'client_email' => $booking->client_email,
+            'client_phone' => $booking->client_phone,
+            'consultation_notes' => $this->generateAutoConsultationNotes($booking, $service, $bookingData),
+            'preparation_instructions' => $this->getDefaultPreparationInstructions($service, 'pre_booking'),
+            'consultation_questions' => $this->getDefaultConsultationQuestions($service, 'pre_booking'),
+            'workflow_stage' => 'scheduled',
+            'priority' => $this->determineConsultationPriority($booking, $service),
+        ]);
+
+        // Set up meeting details based on format
+        $this->setupMeetingDetailsForAutoConsultation($consultation, $service);
+
+        // Send consultation confirmation
+        $this->sendConsultationConfirmation($consultation);
+        $this->scheduleConsultationReminders($consultation);
+
+        Log::info('Auto-consultation created for booking', [
+            'consultation_id' => $consultation->id,
+            'booking_id' => $booking->id,
+            'service_id' => $service->id,
+            'consultation_date' => $consultationDate->toDateTimeString(),
+            'format' => $consultation->format,
+        ]);
+
+        return $consultation;
+    }
+
+    /**
+     * Calculate optimal consultation date (typically 3-7 days before booking)
+     */
+    private function calculateConsultationDate(Carbon $bookingDate, Service $service): Carbon
+    {
+        $daysBeforeBooking = $service->consultation_lead_days ?? 5; // Default 5 days before
+        $minDaysAdvance = 1; // At least 1 day advance notice
+
+        $idealConsultationDate = $bookingDate->clone()->subDays($daysBeforeBooking);
+        $earliestPossibleDate = now()->addDays($minDaysAdvance);
+
+        // If ideal date is too soon, use earliest possible date
+        if ($idealConsultationDate->lt($earliestPossibleDate)) {
+            $idealConsultationDate = $earliestPossibleDate;
+        }
+
+        // Find next available business day/time
+        return $this->findNextAvailableConsultationSlot($idealConsultationDate, $service);
+    }
+
+    /**
+     * Determine consultation format based on service and booking preferences
+     */
+    private function determineConsultationFormat(Service $service, array $bookingData): string
+    {
+        // Check if booking specified preference
+        if (!empty($bookingData['preferred_consultation_format'])) {
+            return $bookingData['preferred_consultation_format'];
+        }
+
+        // Use service default or smart defaults
+        return match($service->service_type ?? 'standard') {
+            'on_site', 'venue_based' => 'site_visit',
+            'design_heavy' => 'video',
+            'simple_consultation' => 'phone',
+            default => 'video' // Default to video for most services
+        };
+    }
+
+    /**
+     * Generate consultation notes based on booking details
+     */
+    private function generateAutoConsultationNotes(Booking $booking, Service $service, array $bookingData): string
+    {
+        $notes = "Automatically scheduled pre-booking consultation for {$service->name}.\n\n";
+
+        $notes .= "Booking Details:\n";
+        $notes .= "- Service: {$service->name}\n";
+        $notes .= "- Scheduled Date: {$booking->scheduled_at->format('l, F j, Y \a\t g:i A')}\n";
+        $notes .= "- Duration: {$booking->duration_minutes} minutes\n";
+
+        if ($booking->serviceLocation) {
+            $notes .= "- Location: {$booking->serviceLocation->name}\n";
+        }
+
+        if (!empty($booking->special_requirements)) {
+            $notes .= "\nSpecial Requirements:\n{$booking->special_requirements}\n";
+        }
+
+        if (!empty($booking->notes)) {
+            $notes .= "\nClient Notes:\n{$booking->notes}\n";
+        }
+
+        $notes .= "\nConsultation Purpose:\n";
+        $notes .= "- Confirm service requirements and expectations\n";
+        $notes .= "- Discuss timeline and logistics\n";
+        $notes .= "- Review pricing and any additional needs\n";
+        $notes .= "- Address any questions or concerns\n";
+
+        return $notes;
+    }
+
+    /**
+     * Determine consultation priority based on booking value and complexity
+     */
+    private function determineConsultationPriority(Booking $booking, Service $service): string
+    {
+        // High value bookings get higher priority
+        if ($booking->total_amount > 500000) { // £5000+
+            return 'high';
+        }
+
+        // Complex services get medium priority
+        if ($service->complexity_level === 'complex' || $booking->duration_minutes > 240) {
+            return 'medium';
+        }
+
+        // Urgent bookings (within 7 days) get higher priority
+        if ($booking->scheduled_at->diffInDays(now()) <= 7) {
+            return 'medium';
+        }
+
+        return 'normal';
+    }
+
+    /**
+     * Setup meeting details for auto-created consultations
+     */
+    private function setupMeetingDetailsForAutoConsultation(ConsultationBooking $consultation, Service $service): void
+    {
+        switch ($consultation->format) {
+            case 'video':
+                $consultation->update([
+                    'meeting_link' => $this->generateVideoMeetingLink($consultation),
+                    'meeting_instructions' => [
+                        'platform' => 'zoom', // or your preferred platform
+                        'join_instructions' => 'Join the meeting 5 minutes early to test your audio and video',
+                        'backup_phone' => 'Call +44 20 3890 2370 if you have technical issues',
+                    ],
+                ]);
+                break;
+
+            case 'phone':
+                $consultation->update([
+                    'meeting_instructions' => [
+                        'type' => 'phone_call',
+                        'instructions' => 'We will call you at the scheduled time using the phone number provided',
+                        'backup_instructions' => 'Please ensure your phone is available and charged',
+                    ],
+                ]);
+                break;
+
+            case 'in_person':
+                $consultation->update([
+                    'meeting_location' => $this->getDefaultConsultationLocation($service),
+                    'meeting_instructions' => [
+                        'location_type' => 'office',
+                        'parking' => 'Free parking available on-site',
+                        'bring' => ['Photo ID', 'Any inspiration materials'],
+                    ],
+                ]);
+                break;
+
+            case 'site_visit':
+                $consultation->update([
+                    'meeting_location' => 'Client location (to be confirmed)',
+                    'meeting_instructions' => [
+                        'location_type' => 'site_visit',
+                        'access_requirements' => 'Please ensure site access is available',
+                        'duration_note' => 'Site visits may take longer depending on complexity',
+                    ],
+                ]);
+                break;
+        }
+    }
+
+    /**
+     * Enhanced booking confirmation that includes consultation details
+     */
+    private function sendBookingConfirmation(Booking $booking, ?ConsultationBooking $consultation = null): void
+    {
+        // Send main booking confirmation
+        Mail::to($booking->client_email)->send(new BookingConfirmationMail($booking));
+
+        // Send separate consultation confirmation if consultation was auto-created
+        if ($consultation) {
+            Mail::to($consultation->client_email)->send(new ConsultationConfirmationMail($consultation, $booking));
+        }
+    }
+
+    /**
+     * Generate unique consultation reference
+     */
+    private function generateConsultationReference(): string
+    {
+        do {
+            $reference = 'CON' . strtoupper(substr(uniqid(), -8));
+        } while (ConsultationBooking::where('consultation_reference', $reference)->exists());
+
+        return $reference;
+    }
+
+    /**
+     * Generate video meeting link (integrate with your preferred video platform)
+     */
+    private function generateVideoMeetingLink(ConsultationBooking $consultation): string
+    {
+        // This would integrate with Zoom, Teams, Google Meet, etc.
+        // For now, return a placeholder
+        return "https://zoom.us/j/" . random_int(1000000000, 9999999999);
+    }
+
+    /**
+     * Get default consultation location for in-person meetings
+     */
+    private function getDefaultConsultationLocation(Service $service): string
+    {
+        // Could be pulled from service configuration or company settings
+        return $service->default_consultation_location ?? 'Main Office - 123 Business Street, London, UK';
+    }
+
+    /**
+     * Enhanced booking completion to handle consultation workflow
+     */
+    public function completeBookingConsultation(Request $request, Booking $booking): array
+    {
+        $data = $request->validated();
+        $user = $request->user();
+
+        if (!$booking->requires_consultation) {
+            return $this->error('This booking does not require a consultation.', 422);
+        }
+
+        if ($booking->consultation_completed_at) {
+            return $this->error('Consultation has already been completed for this booking.', 422);
+        }
+
+        return DB::transaction(function () use ($booking, $data, $user) {
+            // Update booking with consultation completion
+            $booking->update([
+                'consultation_completed' => true,
+                'consultation_completed_at' => now(),
+                'consultation_summary' => $data['consultation_summary'] ?? null,
+                'status' => $data['approve_booking'] ?? true ? BookingStatuses::CONFIRMED : BookingStatuses::CANCELLED,
+            ]);
+
+            // Update linked consultation if exists
+            if ($booking->consultation_booking_id) {
+                $consultation = ConsultationBooking::find($booking->consultation_booking_id);
+                if ($consultation && $consultation->status !== ConsultationStatuses::COMPLETED) {
+                    $consultation->update([
+                        'status' => ConsultationStatuses::COMPLETED,
+                        'completed_at' => now(),
+                        'outcome_summary' => $data['consultation_summary'] ?? 'Consultation completed via booking system',
+                        'feasibility_assessment' => $data['approve_booking'] ?? true ? 'feasible' : 'not_feasible',
+                    ]);
+                }
+            }
+
+            // Send appropriate notifications
+            if ($booking->status === BookingStatuses::CONFIRMED) {
+                Mail::to($booking->client_email)->send(new BookingConfirmationMail($booking));
+            } else {
+                Mail::to($booking->client_email)->send(new BookingCancelledMail($booking, 'Consultation did not meet requirements'));
+            }
+
+            Log::info('Booking consultation completed', [
+                'booking_id' => $booking->id,
+                'consultation_booking_id' => $booking->consultation_booking_id,
+                'approved' => $booking->status === BookingStatuses::CONFIRMED,
+                'completed_by' => $user->id,
+            ]);
+
+            return $this->ok('Consultation completed successfully', [
+                'booking' => new BookingResource($booking->load(['service', 'serviceLocation'])),
+                'status' => $booking->status === BookingStatuses::CONFIRMED ? 'approved' : 'cancelled',
             ]);
         });
     }

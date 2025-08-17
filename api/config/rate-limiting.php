@@ -34,6 +34,17 @@ return [
         'consultation' => '10,60',     // 10 consultation completions per hour
     ],
 
+    'consultations' => [
+        'create' => '8,60',            // 8 consultation bookings per hour
+        'update' => '15,60',           // 15 consultation updates per hour
+        'cancel' => '5,60',            // 5 consultation cancellations per hour
+        'reschedule' => '3,60',        // 3 consultation reschedules per hour
+        'view' => '80,60',             // 80 consultation views per hour
+        'join' => '20,60',             // 20 consultation joins per hour
+        'feedback' => '10,60',         // 10 feedback submissions per hour
+        'slots' => '40,60',            // 40 consultation slot requests per hour
+    ],
+
     'availability' => [
         'check' => '60,60',            // 60 availability checks per hour
         'slots' => '30,60',            // 30 slot requests per hour
@@ -54,6 +65,13 @@ return [
         'bookings.create' => '100,60',     // 100 booking creations per hour for admins
         'bookings.update' => '200,60',     // 200 booking updates per hour for admins
         'bookings.delete' => '50,60',      // 50 booking deletions per hour for admins
+        'consultations.view' => '300,60',  // 300 consultation views per hour for admins
+        'consultations.create' => '50,60', // 50 consultation creations per hour for admins
+        'consultations.update' => '100,60', // 100 consultation updates per hour for admins
+        'consultations.delete' => '30,60', // 30 consultation deletions per hour for admins
+        'consultations.assign' => '40,60', // 40 consultant assignments per hour
+        'consultations.bulk' => '10,60',   // 10 bulk consultation operations per hour
+        'consultations.export' => '5,60',  // 5 consultation exports per hour
         'statistics' => '50,60',           // 50 statistics requests per hour
         'calendar' => '100,60',            // 100 calendar requests per hour
         'export' => '10,60',               // 10 export requests per hour
@@ -80,6 +98,7 @@ return [
         'availability.summary' => '5,60',  // 5 availability summaries per hour for guests
         'availability.pricing' => '10,60', // 10 pricing estimates per hour for guests
         'availability.next_slot' => '5,60', // 5 next slot requests per hour for guests
+        'consultation.slots' => '10,60',   // 10 consultation slot requests per hour for guests
     ],
 
     'returns' => [
@@ -151,5 +170,14 @@ return [
         'consultation_scheduling' => '10,60',   // 10 consultation schedulings per hour
         'venue_search' => '50,60',              // 50 venue searches per hour
         'availability_bulk_check' => '10,60',   // 10 bulk availability checks per hour
+    ],
+
+    // Throttle group aliases for easier middleware usage
+    'throttle_aliases' => [
+        'consultation-api' => 'consultations.view',
+        'consultation-create' => 'consultations.create',
+        'consultation-update' => 'consultations.update',
+        'admin-consultation' => 'admin.consultations.update',
+        'admin-consultation-bulk' => 'admin.consultations.bulk',
     ],
 ];

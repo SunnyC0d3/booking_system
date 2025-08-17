@@ -98,9 +98,48 @@ class PermissionSeeder extends Seeder
             ['name' => 'export_bookings'],
             ['name' => 'bulk_update_bookings'],
 
-            // Consultation Management
-            ['name' => 'manage_consultations'],
+            // Consultation Management - User Level
+            ['name' => 'create_consultations'],
+            ['name' => 'view_own_consultations'],
+            ['name' => 'edit_own_consultations'],
+            ['name' => 'cancel_own_consultations'],
+            ['name' => 'join_own_consultations'],
+            ['name' => 'reschedule_own_consultations'],
+
+            // Consultation Management - Admin Level
+            ['name' => 'manage_consultations'], // Full admin access
+            ['name' => 'view_all_consultations'],
+            ['name' => 'create_consultations_for_users'],
+            ['name' => 'edit_all_consultations'],
+            ['name' => 'delete_all_consultations'],
+            ['name' => 'cancel_all_consultations'],
+            ['name' => 'assign_consultants'],
+            ['name' => 'bulk_update_consultations'],
+
+            // Consultation Session Management
+            ['name' => 'host_consultations'],
+            ['name' => 'start_consultations'],
+            ['name' => 'complete_consultations'],
+            ['name' => 'mark_consultations_no_show'],
             ['name' => 'view_consultation_notes'],
+            ['name' => 'create_consultation_notes'],
+            ['name' => 'edit_consultation_notes'],
+
+            // Consultation Analytics and Reporting
+            ['name' => 'view_consultation_statistics'],
+            ['name' => 'view_consultation_dashboard'],
+            ['name' => 'export_consultations'],
+            ['name' => 'view_consultation_calendar'],
+
+            // Consultation Workflow Management
+            ['name' => 'manage_consultation_workflow'],
+            ['name' => 'approve_consultation_outcomes'],
+            ['name' => 'schedule_follow_up_consultations'],
+
+            // Customer Service Permissions
+            ['name' => 'view_customer_data'],
+            ['name' => 'manage_refunds'],
+            ['name' => 'manage_returns'],
 
             // Pricing Management
             ['name' => 'view_pricing_details'],
