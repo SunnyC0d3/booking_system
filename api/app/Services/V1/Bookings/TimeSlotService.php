@@ -550,5 +550,149 @@ class TimeSlotService
             'location_id' => $location?->id
         ]);
     }
+
+    public function validateSlotRequest(
+        Service $service,
+        Carbon $requestedTime,
+        int $durationMinutes,
+        ?ServiceLocation $location = null
+    ): array {
+        $errors = [];
+        $endTime = $requestedTime->clone()->addMinutes($durationMinutes);
+
+        // Check if time is in the past
+        if ($requestedTime->lt(Carbon::now())) {
+            $errors[] = 'Booking time cannot be in the past';
+        }
+
+        // Check advance booking constraints
+        $now = Carbon::now();
+        $minAdvanceHours = $service->min_advance_booking_hours ?? 2;
+        $maxAdvanceDays = $service->max_advance_booking_days ?? 365;
+
+        if ($requestedTime->lt($now->clone()->addHours($minAdvanceHours))) {
+            $errors[] = "Bookings must be made at least {$minAdvanceHours} hours in advance";
+        }
+
+        if ($requestedTime->gt($now->clone()->addDays($maxAdvanceDays))) {
+            $errors[] = "Bookings cannot be made more than {$maxAdvanceDays} days in advance";
+        }
+
+        // Check service duration constraints
+        if ($durationMinutes < $service->duration_minutes) {
+            $errors[] = "Booking duration cannot be less than service minimum of {$service->duration_minutes} minutes";
+        }
+
+        $maxDuration = $service->max_duration_minutes ?? 480; // 8 hours default
+        if ($durationMinutes > $maxDuration) {
+            $errors[] = "Booking duration cannot exceed {$maxDuration} minutes";
+        }
+
+        // Check for availability windows
+        $availabilityWindows = $this->getAvailabilityWindows($service, $location);
+        $dayOfWeek = $requestedTime->dayOfWeek;
+        $isWithinWindow = false;
+
+        foreach ($availabilityWindows as $window) {
+            if ($this->isWindowApplicable($window, $requestedTime, $dayOfWeek)) {
+                $windowTimes = $this->getEffectiveWindowTimes(
+                    $window,
+                    collect(), // We'll skip exceptions for this validation
+                    $requestedTime
+                );
+
+                if ($windowTimes &&
+                    $requestedTime->greaterThanOrEqualTo($windowTimes['start']) &&
+                    $endTime->lessThanOrEqualTo($windowTimes['end'])) {
+                    $isWithinWindow = true;
+                    break;
+                }
+            }
+        }
+
+        if (!$isWithinWindow) {
+            $errors[] = 'Requested time is outside of service availability windows';
+        }
+
+        // Check for existing booking conflicts
+        $existingBookings = $this->getExistingBookings(
+            $service,
+            $requestedTime->clone()->startOfDay(),
+            $requestedTime->clone()->endOfDay(),
+            $location
+        );
+
+        $conflictingBookings = $existingBookings->filter(function ($booking) use ($requestedTime, $endTime) {
+            $bookingStart = Carbon::parse($booking->scheduled_at);
+            $bookingEnd = Carbon::parse($booking->ends_at);
+            return $this->timesOverlap($requestedTime, $endTime, $bookingStart, $bookingEnd);
+        });
+
+        // Check capacity limits
+        $maxConcurrent = $this->getMaxConcurrentBookings($service, $location);
+        if ($conflictingBookings->count() >= $maxConcurrent) {
+            $errors[] = 'Time slot is fully booked';
+        }
+
+        // Check for blocked time slots
+        $capacitySlot = BookingCapacitySlot::where('service_id', $service->id)
+            ->where('service_location_id', $location?->id)
+            ->where('slot_datetime', $requestedTime)
+            ->first();
+
+        if ($capacitySlot && $capacitySlot->is_blocked) {
+            $errors[] = 'Time slot is blocked and not available for booking';
+        }
+
+        // Check for availability exceptions
+        $exceptions = $service->availabilityExceptions()
+            ->where('exception_type', 'blocked')
+            ->where('exception_date', $requestedTime->toDateString())
+            ->when($location, function ($query) use ($location) {
+                $query->where(function ($q) use ($location) {
+                    $q->where('service_location_id', $location->id)
+                        ->orWhereNull('service_location_id');
+                });
+            })
+            ->where('is_active', true)
+            ->exists();
+
+        if ($exceptions) {
+            $errors[] = 'Selected date is blocked and not available for booking';
+        }
+
+        // Check weekly booking limits if applicable
+        if ($service->max_bookings_per_week) {
+            $weekStart = $requestedTime->clone()->startOfWeek();
+            $weekEnd = $requestedTime->clone()->endOfWeek();
+
+            $weeklyBookings = Booking::where('service_id', $service->id)
+                ->whereBetween('scheduled_at', [$weekStart, $weekEnd])
+                ->whereNotIn('status', [BookingStatuses::CANCELLED, BookingStatuses::NO_SHOW])
+                ->count();
+
+            if ($weeklyBookings >= $service->max_bookings_per_week) {
+                $errors[] = 'Maximum weekly bookings limit reached for this service';
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * Get maximum concurrent bookings for a service/location
+     */
+    private function getMaxConcurrentBookings(Service $service, ?ServiceLocation $location): int
+    {
+        // Check if there are specific availability windows that define capacity
+        $windows = $this->getAvailabilityWindows($service, $location);
+
+        if ($windows->isNotEmpty()) {
+            return $windows->max('max_bookings') ?? 1;
+        }
+
+        // Default to service-level capacity or 1
+        return $service->max_concurrent_bookings ?? 1;
+    }
 }
 

@@ -20,10 +20,12 @@ class BookingService
     use ApiResponses;
 
     private BookingEmailService $emailService;
+    private TimeSlotService $timeSlotService;
 
-    public function __construct(BookingEmailService $emailService)
+    public function __construct(BookingEmailService $emailService, TimeSlotService $timeSlotService)
     {
         $this->emailService = $emailService;
+        $this->timeSlotService = $timeSlotService;
     }
 
     /**
@@ -129,17 +131,144 @@ class BookingService
         });
     }
 
-    /**
-     * Helper method: Validate booking availability
-     */
     private function validateBookingAvailability(Service $service, Carbon $scheduledAt, int $durationMinutes, ?ServiceLocation $location)
     {
-        // TODO: Implement availability checking logic
-        // This should check against:
-        // - Service availability windows
-        // - Existing bookings
-        // - Calendar integrations
-        // - Service capacity limits
+        // Check if the service is available for booking
+        if (!$service->isAvailableForBooking()) {
+            throw new Exception('Service is not currently available for booking', 422);
+        }
+
+        // Calculate end time
+        $endsAt = $scheduledAt->clone()->addMinutes($durationMinutes);
+
+        // Check if the requested time is in the past
+        if ($scheduledAt->lte(now())) {
+            throw new Exception('Cannot book appointments in the past', 422);
+        }
+
+        // Check minimum advance booking requirements
+        $minAdvanceHours = $service->min_advance_booking_hours ?? 2;
+        $minBookingTime = now()->addHours($minAdvanceHours);
+
+        if ($scheduledAt->lt($minBookingTime)) {
+            throw new Exception("Bookings must be made at least {$minAdvanceHours} hours in advance", 422);
+        }
+
+        // Check maximum advance booking restrictions
+        $maxAdvanceDays = $service->max_advance_booking_days ?? 365;
+        $maxBookingTime = now()->addDays($maxAdvanceDays);
+
+        if ($scheduledAt->gt($maxBookingTime)) {
+            throw new Exception("Bookings cannot be made more than {$maxAdvanceDays} days in advance", 422);
+        }
+
+        // Get available slots for the specific date to validate availability
+        $dateStart = $scheduledAt->clone()->startOfDay();
+        $dateEnd = $scheduledAt->clone()->endOfDay();
+
+        $availableSlots = $this->timeSlotService->getAvailableSlots(
+            $service,
+            $dateStart,
+            $dateEnd,
+            $location,
+            $durationMinutes
+        );
+
+        // Check if the requested time slot is available
+        $isSlotAvailable = $availableSlots->contains(function ($slot) use ($scheduledAt, $endsAt) {
+            $slotStart = $slot['start_time'];
+            $slotEnd = $slot['end_time'];
+
+            // Check if the requested booking fits within this available slot
+            return $scheduledAt->greaterThanOrEqualTo($slotStart) &&
+                $endsAt->lessThanOrEqualTo($slotEnd) &&
+                $slot['is_available'] === true;
+        });
+
+        if (!$isSlotAvailable) {
+            throw new Exception('The requested time slot is not available', 422);
+        }
+
+        // Validate using the TimeSlotService's validation errors
+        $validationErrors = $this->timeSlotService->validateBookingTime(
+            $service,
+            $scheduledAt,
+            $location,
+            $durationMinutes
+        );
+
+        if (!empty($validationErrors)) {
+            throw new Exception(implode('; ', $validationErrors), 422);
+        }
+
+        // Additional business rule validations
+        $this->validateBusinessRules($service, $scheduledAt, $durationMinutes, $location);
+    }
+
+    /**
+     * Additional business rule validations
+     */
+    private function validateBusinessRules(Service $service, Carbon $scheduledAt, int $durationMinutes, ?ServiceLocation $location)
+    {
+        // Check if service requires consultation and if one has been completed
+        if ($service->requires_consultation) {
+            // This could be enhanced to check if consultation has been completed
+            // For now, we'll allow booking with consultation requirement
+        }
+
+        // Check location-specific rules
+        if ($location) {
+            // Validate if the service can be provided at this location
+            if (!$location->is_active) {
+                throw new Exception('The selected location is not currently available', 422);
+            }
+
+            // Check location-specific advance booking requirements
+            if ($location->min_advance_booking_hours &&
+                $scheduledAt->lt(now()->addHours($location->min_advance_booking_hours))) {
+                throw new Exception("This location requires at least {$location->min_advance_booking_hours} hours advance booking", 422);
+            }
+        }
+
+        // Check service-specific duration constraints
+        if ($durationMinutes < $service->duration_minutes) {
+            throw new Exception("Booking duration cannot be less than the service's minimum duration of {$service->duration_minutes} minutes", 422);
+        }
+
+        $maxDuration = $service->max_duration_minutes ?? 480; // 8 hours default max
+        if ($durationMinutes > $maxDuration) {
+            throw new Exception("Booking duration cannot exceed {$maxDuration} minutes", 422);
+        }
+
+        // Check for blackout dates (if implemented)
+        $this->validateBlackoutDates($service, $scheduledAt, $location);
+    }
+
+    /**
+     * Check for blackout dates
+     */
+    private function validateBlackoutDates(Service $service, Carbon $scheduledAt, ?ServiceLocation $location)
+    {
+        // Check for service availability exceptions that block this date
+        $exceptions = $service->availabilityExceptions()
+            ->where('exception_type', 'blocked')
+            ->where('start_date', '<=', $scheduledAt->toDateString())
+            ->where(function ($query) use ($scheduledAt) {
+                $query->where('end_date', '>=', $scheduledAt->toDateString())
+                    ->orWhereNull('end_date');
+            })
+            ->when($location, function ($query, $location) {
+                $query->where(function ($q) use ($location) {
+                    $q->where('service_location_id', $location->id)
+                        ->orWhereNull('service_location_id');
+                });
+            })
+            ->where('is_active', true)
+            ->exists();
+
+        if ($exceptions) {
+            throw new Exception('The requested date is blocked and not available for booking', 422);
+        }
     }
 
     /**
