@@ -110,43 +110,27 @@ Route::prefix('admin/payments')
         Route::get('/', 'index')->name('admin.payments.index');
     });
 
-// Admin/Bookings
-
+// ✅ CLEANED Admin/Bookings - Essential routes only
 Route::prefix('admin/bookings')
     ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
     ->controller(BookingController::class)
     ->group(function () {
+        // Core CRUD operations
         Route::get('/', 'index')
             ->middleware('rate_limit:admin.bookings.view')
             ->name('admin.bookings.index');
         Route::post('/', 'store')
             ->middleware('rate_limit:admin.bookings.create')
             ->name('admin.bookings.store');
-        Route::get('/statistics', 'getStatistics')
-            ->middleware('rate_limit:admin.statistics')
-            ->name('admin.bookings.statistics');
-        Route::get('/calendar', 'getCalendarData')
-            ->middleware('rate_limit:admin.calendar')
-            ->name('admin.bookings.calendar');
-        Route::get('/schedule/daily', 'getDailySchedule')
-            ->middleware('rate_limit:admin.calendar')
-            ->name('admin.bookings.schedule.daily');
-        Route::post('/bulk-update', 'bulkUpdate')
-            ->middleware('rate_limit:admin.bulk_operations')
-            ->name('admin.bookings.bulk-update');
-        Route::get('/export', 'export')
-            ->middleware('rate_limit:admin.export')
-            ->name('admin.bookings.export');
-
         Route::get('/{booking}', 'show')
             ->middleware('rate_limit:admin.bookings.view')
             ->name('admin.bookings.show');
         Route::put('/{booking}', 'update')
             ->middleware('rate_limit:admin.bookings.update')
             ->name('admin.bookings.update');
-        Route::delete('/{booking}', 'destroy')
+        Route::delete('/{booking}/cancel', 'cancel')
             ->middleware('rate_limit:admin.bookings.delete')
-            ->name('admin.bookings.destroy');
+            ->name('admin.bookings.cancel');
 
         // Status management
         Route::post('/{booking}/confirm', 'confirm')
@@ -161,57 +145,71 @@ Route::prefix('admin/bookings')
         Route::post('/{booking}/no-show', 'markNoShow')
             ->middleware('rate_limit:admin.bookings.update')
             ->name('admin.bookings.no-show');
+
+        // Statistics and monitoring
+        Route::get('/statistics', 'getStatistics')
+            ->middleware('rate_limit:admin.statistics')
+            ->name('admin.bookings.statistics');
+        Route::get('/system/health', 'getSystemHealth')
+            ->middleware('rate_limit:admin.system')
+            ->name('admin.bookings.system.health');
+        Route::post('/notifications/process-overdue', 'processOverdueNotifications')
+            ->middleware('rate_limit:admin.system')
+            ->name('admin.bookings.notifications.process-overdue');
+
+        // Notification management
+        Route::post('/{booking}/notifications/resend', 'resendNotification')
+            ->middleware('rate_limit:admin.notifications')
+            ->name('admin.bookings.notifications.resend');
+        Route::get('/{booking}/notifications/stats', 'getNotificationStats')
+            ->middleware('rate_limit:admin.notifications')
+            ->name('admin.bookings.notifications.stats');
     });
 
-// Admin/Consultations
-
+//Booking routes
 Route::prefix('admin/consultations')
     ->middleware(['auth:api', 'roles:super admin,admin,customer service', 'emailVerified'])
     ->controller(ConsultationController::class)
     ->group(function () {
-        // Core consultation management
         Route::get('/', 'index')
             ->middleware('rate_limit:admin.consultations.view')
             ->name('admin.consultations.index');
         Route::post('/', 'store')
             ->middleware('rate_limit:admin.consultations.create')
             ->name('admin.consultations.store');
-        Route::get('/dashboard', 'dashboard')
-            ->middleware('rate_limit:admin.statistics')
-            ->name('admin.consultations.dashboard');
-        Route::get('/statistics', 'getStatistics')
-            ->middleware('rate_limit:admin.statistics')
-            ->name('admin.consultations.statistics');
-        Route::get('/export', 'export')
-            ->middleware('rate_limit:admin.consultations.export')
-            ->name('admin.consultations.export');
-
-        // Bulk operations
-        Route::post('/bulk-update', 'bulkUpdate')
-            ->middleware('rate_limit:admin.consultations.bulk')
-            ->name('admin.consultations.bulk-update');
-
-        // Individual consultation management
         Route::get('/{consultation}', 'show')
             ->middleware('rate_limit:admin.consultations.view')
             ->name('admin.consultations.show');
         Route::put('/{consultation}', 'update')
             ->middleware('rate_limit:admin.consultations.update')
             ->name('admin.consultations.update');
-        Route::delete('/{consultation}', 'destroy')
+        Route::delete('/{consultation}/cancel', 'cancel')
             ->middleware('rate_limit:admin.consultations.delete')
-            ->name('admin.consultations.destroy');
+            ->name('admin.consultations.cancel');
 
         // Consultation workflow actions
-        Route::post('/{consultation}/assign-consultant', 'assignConsultant')
-            ->middleware('rate_limit:admin.consultations.assign')
-            ->name('admin.consultations.assign-consultant');
+        Route::post('/{consultation}/start', 'start')
+            ->middleware('rate_limit:admin.consultations.update')
+            ->name('admin.consultations.start');
         Route::post('/{consultation}/complete', 'complete')
             ->middleware('rate_limit:admin.consultations.update')
             ->name('admin.consultations.complete');
+        Route::post('/{consultation}/no-show', 'markNoShow')
+            ->middleware('rate_limit:admin.consultations.update')
+            ->name('admin.consultations.no-show');
+
+        // Consultation notes
+        Route::post('/{consultation}/notes', 'addNote')
+            ->middleware('rate_limit:admin.consultations.notes')
+            ->name('admin.consultations.notes.add');
+
+        // Statistics
+        Route::get('/statistics', 'getStatistics')
+            ->middleware('rate_limit:admin.statistics')
+            ->name('admin.consultations.statistics');
     });
 
-// Service management routes (Admin)
+// ✅ Service management routes (Admin) - Essential routes only
 Route::prefix('admin/services')
     ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
     ->controller(ServiceController::class)
@@ -272,14 +270,6 @@ Route::prefix('admin/services')
                 Route::delete('/{window}', 'destroy')
                     ->middleware('rate_limit:admin.availability_management')
                     ->name('admin.services.availability.destroy');
-
-                // Bulk operations for availability
-                Route::post('/bulk-create', 'bulkCreate')
-                    ->middleware('rate_limit:admin.bulk_operations')
-                    ->name('admin.services.availability.bulk-create');
-                Route::post('/bulk-update', 'bulkUpdate')
-                    ->middleware('rate_limit:admin.bulk_operations')
-                    ->name('admin.services.availability.bulk-update');
             });
 
         // Service add-ons

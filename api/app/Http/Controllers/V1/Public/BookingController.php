@@ -104,7 +104,27 @@ class BookingController extends Controller
                 'reason' => 'nullable|string|max:500',
             ]);
 
-            return $this->bookingService->rescheduleBooking($request, $booking);
+            // Use the updateBooking method with rescheduling data
+            $request->merge(['rescheduling' => true]);
+            return $this->bookingService->updateBooking($request, $booking);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 422);
+        }
+    }
+
+    /**
+     * Complete booking consultation
+     */
+    public function completeConsultation(Request $request, Booking $booking)
+    {
+        try {
+            $request->validate([
+                'consultation_summary' => 'nullable|string|max:1000',
+                'approve_booking' => 'required|boolean',
+                'recommendations' => 'nullable|string|max:500',
+            ]);
+
+            return $this->bookingService->completeBookingConsultation($request, $booking);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 422);
         }
@@ -157,45 +177,6 @@ class BookingController extends Controller
                 'slots' => $slots->values(),
                 'total_slots' => $slots->count(),
             ]);
-
-        } catch (Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode() ?: 500);
-        }
-    }
-
-    /**
-     * Get booking notification statistics
-     */
-    public function getNotificationStats(Request $request, Booking $booking)
-    {
-        try {
-            return $this->bookingService->getBookingNotificationStats($request, $booking);
-        } catch (Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode() ?: 500);
-        }
-    }
-
-    /**
-     * Resend booking confirmation email
-     */
-    public function resendConfirmation(Request $request, Booking $booking)
-    {
-        try {
-            $user = $request->user();
-
-            // Check if user owns this booking
-            if ($booking->user_id !== $user->id) {
-                return $this->error('You can only resend confirmations for your own bookings.', 403);
-            }
-
-            // Use the booking service to resend confirmation
-            $success = $this->bookingService->resendBookingConfirmation($request, $booking);
-
-            if ($success) {
-                return $this->ok('Confirmation email resent successfully');
-            } else {
-                return $this->error('Failed to resend confirmation email', 500);
-            }
 
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
@@ -258,6 +239,7 @@ class BookingController extends Controller
                     'name' => $service->name,
                     'base_price' => $basePrice,
                     'duration_minutes' => $durationMinutes,
+                    'requires_consultation' => $service->requires_consultation,
                 ],
                 'location' => $location ? [
                     'id' => $location->id,
@@ -280,6 +262,45 @@ class BookingController extends Controller
 
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 422);
+        }
+    }
+
+    /**
+     * Get booking notification statistics
+     */
+    public function getNotificationStats(Request $request, Booking $booking)
+    {
+        try {
+            return $this->bookingService->getBookingNotificationStats($request, $booking);
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
+        }
+    }
+
+    /**
+     * Resend booking confirmation email
+     */
+    public function resendConfirmation(Request $request, Booking $booking)
+    {
+        try {
+            $user = $request->user();
+
+            // Check if user owns this booking
+            if ($booking->user_id !== $user->id) {
+                return $this->error('You can only resend confirmations for your own bookings.', 403);
+            }
+
+            // Use the booking service to resend confirmation
+            $success = $this->bookingService->resendBookingNotification($request, $booking, 'booking_confirmation');
+
+            if ($success) {
+                return $this->ok('Confirmation email resent successfully');
+            } else {
+                return $this->error('Failed to resend confirmation email', 500);
+            }
+
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
     }
 }

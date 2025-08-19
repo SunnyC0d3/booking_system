@@ -88,92 +88,135 @@ Route::prefix('returns')
     });
 
 
-// Service information routes (public access)
-
+// SERVICE INFORMATION ROUTES (Public Access)
 Route::prefix('services')
     ->middleware(['client'])
     ->controller(ServiceController::class)
     ->group(function () {
-        Route::get('/', 'index')->middleware('rate_limit:services.view')->name('services.index');
-        Route::get('/{service}', 'show')->middleware('rate_limit:services.view')->name('services.show');
-        Route::get('/{service}/locations', 'getLocations')->middleware('rate_limit:services.view')->name('services.locations');
-        Route::get('/{service}/addons', 'getAddons')->middleware('rate_limit:services.view')->name('services.addons');
-        Route::get('/{service}/packages', 'getPackages')->middleware('rate_limit:services.view')->name('services.packages');
+        Route::get('/', 'index')
+            ->middleware('rate_limit:services.view')
+            ->name('services.index');
+        Route::get('/{service}', 'show')
+            ->middleware('rate_limit:services.view')
+            ->name('services.show');
+        Route::get('/{service}/locations', 'getLocations')
+            ->middleware('rate_limit:services.view')
+            ->name('services.locations');
+        Route::get('/{service}/addons', 'getAddons')
+            ->middleware('rate_limit:services.view')
+            ->name('services.addons');
+        Route::get('/{service}/packages', 'getPackages')
+            ->middleware('rate_limit:services.view')
+            ->name('services.packages');
+
+        // Service availability (public access for checking slots)
+        Route::get('/{service}/slots', [BookingController::class, 'getAvailableSlots'])
+            ->middleware('rate_limit:availability.slots')
+            ->name('services.slots');
     });
 
-// Booking management routes (authenticated users)
-
+// BOOKING MANAGEMENT ROUTES (Authenticated Users)
 Route::prefix('bookings')
     ->middleware(['auth:api', 'roles:user', 'emailVerified'])
     ->controller(BookingController::class)
     ->group(function () {
-        Route::get('/', 'index')->middleware('rate_limit:bookings.view')->name('bookings.index');
-        Route::post('/', 'store')->middleware('rate_limit:bookings.create')->name('bookings.store');
-        Route::get('/{booking}', 'show')->middleware('rate_limit:bookings.view')->name('bookings.show');
-        Route::put('/{booking}', 'update')->middleware('rate_limit:bookings.update')->name('bookings.update');
-        Route::delete('/{booking}/cancel', 'cancel')->middleware('rate_limit:bookings.cancel')->name('bookings.cancel');
-        Route::post('/{booking}/reschedule', 'reschedule')->middleware('rate_limit:bookings.reschedule')->name('bookings.reschedule');
+        // Core booking CRUD
+        Route::get('/', 'index')
+            ->middleware('rate_limit:bookings.view')
+            ->name('bookings.index');
+        Route::post('/', 'store')
+            ->middleware('rate_limit:bookings.create')
+            ->name('bookings.store');
+        Route::get('/{booking}', 'show')
+            ->middleware('rate_limit:bookings.view')
+            ->name('bookings.show');
+        Route::put('/{booking}', 'update')
+            ->middleware('rate_limit:bookings.update')
+            ->name('bookings.update');
+
+        // Booking actions
+        Route::delete('/{booking}/cancel', 'cancel')
+            ->middleware('rate_limit:bookings.cancel')
+            ->name('bookings.cancel');
+        Route::post('/{booking}/reschedule', 'reschedule')
+            ->middleware('rate_limit:bookings.reschedule')
+            ->name('bookings.reschedule');
+
+        // Consultation related
         Route::post('/{booking}/consultation/complete', 'completeConsultation')
             ->middleware('rate_limit:bookings.update')
             ->name('bookings.consultation.complete');
+
+        // Notifications
+        Route::post('/{booking}/notifications/resend-confirmation', 'resendConfirmation')
+            ->middleware('rate_limit:bookings.notifications')
+            ->name('bookings.notifications.resend-confirmation');
+        Route::get('/{booking}/notifications/stats', 'getNotificationStats')
+            ->middleware('rate_limit:bookings.notifications')
+            ->name('bookings.notifications.stats');
     });
 
-// Consultation management routes (authenticated users)
-
+// CONSULTATION MANAGEMENT ROUTES (Authenticated Users)
 Route::prefix('consultations')
     ->middleware(['auth:api', 'roles:user', 'emailVerified'])
     ->controller(ConsultationController::class)
     ->group(function () {
         // Core consultation CRUD
-        Route::get('/', 'index')->middleware('rate_limit:consultations.view')->name('consultations.index');
-        Route::post('/', 'store')->middleware('rate_limit:consultations.create')->name('consultations.store');
-        Route::get('/{consultation}', 'show')->middleware('rate_limit:consultations.view')->name('consultations.show');
-        Route::put('/{consultation}', 'update')->middleware('rate_limit:consultations.update')->name('consultations.update');
+        Route::get('/', 'index')
+            ->middleware('rate_limit:consultations.view')
+            ->name('consultations.index');
+        Route::post('/', 'store')
+            ->middleware('rate_limit:consultations.create')
+            ->name('consultations.store');
+        Route::get('/{consultation}', 'show')
+            ->middleware('rate_limit:consultations.view')
+            ->name('consultations.show');
+        Route::put('/{consultation}', 'update')
+            ->middleware('rate_limit:consultations.update')
+            ->name('consultations.update');
 
         // Consultation actions
-        Route::delete('/{consultation}/cancel', 'cancel')->middleware('rate_limit:consultations.cancel')->name('consultations.cancel');
-        Route::post('/{consultation}/reschedule', 'reschedule')->middleware('rate_limit:consultations.reschedule')->name('consultations.reschedule');
-        Route::post('/{consultation}/join', 'join')->middleware('rate_limit:consultations.join')->name('consultations.join');
-        Route::post('/{consultation}/feedback', 'provideFeedback')->middleware('rate_limit:consultations.feedback')->name('consultations.feedback');
+        Route::delete('/{consultation}/cancel', 'cancel')
+            ->middleware('rate_limit:consultations.cancel')
+            ->name('consultations.cancel');
+        Route::post('/{consultation}/reschedule', 'reschedule')
+            ->middleware('rate_limit:consultations.reschedule')
+            ->name('consultations.reschedule');
+        Route::post('/{consultation}/join', 'join')
+            ->middleware('rate_limit:consultations.join')
+            ->name('consultations.join');
+        Route::post('/{consultation}/feedback', 'provideFeedback')
+            ->middleware('rate_limit:consultations.feedback')
+            ->name('consultations.feedback');
     });
 
-// Service availability routes (public access with guest rate limiting)
-
-Route::prefix('services/{service}')
+// BOOKING UTILITIES (Public & Authenticated)
+Route::prefix('booking-utils')
     ->middleware(['client'])
     ->controller(BookingController::class)
     ->group(function () {
-        Route::get('/slots', 'getAvailableSlots')
-            ->middleware('rate_limit:availability.slots')
-            ->name('services.slots');
-        Route::get('/availability', 'getAvailabilitySummary')
-            ->middleware('rate_limit:availability.summary')
-            ->name('services.availability');
+        // Booking summary calculation (no auth required for price checks)
+        Route::post('/summary', 'getBookingSummary')
+            ->middleware('rate_limit:booking.summary')
+            ->name('booking.utils.summary');
     });
 
-// Consultation availability routes (public access)
-
-Route::prefix('services/{service}/consultations')
-    ->middleware(['client'])
-    ->controller(ConsultationController::class)
-    ->group(function () {
-        Route::get('/slots', 'getAvailableSlots')
-            ->middleware('rate_limit:consultation.slots')
-            ->name('services.consultation.slots');
-    });
-
-// Additional service-specific routes for authenticated users
-
+// SERVICE-SPECIFIC BOOKING ROUTES (Authenticated)
 Route::prefix('services/{service}')
     ->middleware(['auth:api', 'emailVerified'])
     ->group(function () {
-        // Service booking routes
+        // Direct service booking
         Route::post('/book', [BookingController::class, 'store'])
             ->middleware('rate_limit:bookings.create')
             ->name('services.book');
 
-        // Service consultation booking routes
+        // Service consultation booking
         Route::post('/consultations', [ConsultationController::class, 'store'])
             ->middleware('rate_limit:consultations.create')
             ->name('services.consultations.book');
+
+        // Consultation availability
+        Route::get('/consultations/slots', [ConsultationController::class, 'getAvailableSlots'])
+            ->middleware('rate_limit:consultation.slots')
+            ->name('services.consultation.slots');
     });

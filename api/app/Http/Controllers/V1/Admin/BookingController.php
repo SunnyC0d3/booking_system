@@ -4,7 +4,6 @@ namespace App\Http\Controllers\V1\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
-use App\Models\Service;
 use App\Requests\V1\StoreBookingRequest;
 use App\Requests\V1\UpdateBookingRequest;
 use App\Requests\V1\FilterBookingRequest;
@@ -25,7 +24,7 @@ class BookingController extends Controller
     }
 
     /**
-     * Get all bookings (admin view)
+     * Get all bookings with admin filtering
      */
     public function index(FilterBookingRequest $request)
     {
@@ -37,24 +36,24 @@ class BookingController extends Controller
     }
 
     /**
-     * Create booking as admin
+     * Create booking as admin (for customer)
      */
     public function store(StoreBookingRequest $request)
     {
         try {
-            return $this->bookingService->createBookingAsAdmin($request);
+            return $this->bookingService->createBooking($request);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 422);
         }
     }
 
     /**
-     * Get booking details (admin view)
+     * Get booking details with admin view
      */
     public function show(Request $request, Booking $booking)
     {
         try {
-            return $this->bookingService->getBookingDetailsAdmin($request, $booking);
+            return $this->bookingService->getBookingDetails($request, $booking);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
@@ -66,19 +65,23 @@ class BookingController extends Controller
     public function update(UpdateBookingRequest $request, Booking $booking)
     {
         try {
-            return $this->bookingService->updateBookingAsAdmin($request, $booking);
+            return $this->bookingService->updateBooking($request, $booking);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 422);
         }
     }
 
     /**
-     * Force delete booking
+     * Cancel booking (admin can cancel any booking)
      */
-    public function destroy(Request $request, Booking $booking)
+    public function cancel(Request $request, Booking $booking)
     {
         try {
-            return $this->bookingService->deleteBooking($request, $booking);
+            $request->validate([
+                'reason' => 'required|string|max:500',
+            ]);
+
+            return $this->bookingService->cancelBooking($request, $booking);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 422);
         }
@@ -133,60 +136,18 @@ class BookingController extends Controller
     }
 
     /**
-     * Get booking statistics
+     * Get basic booking statistics
      */
     public function getStatistics(Request $request)
     {
         try {
+            $request->validate([
+                'period' => 'nullable|in:today,week,month,quarter,year',
+                'start_date' => 'nullable|date',
+                'end_date' => 'nullable|date|after_or_equal:start_date',
+            ]);
+
             return $this->bookingService->getBookingStatistics($request);
-        } catch (Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode() ?: 500);
-        }
-    }
-
-    /**
-     * Get calendar data for booking management
-     */
-    public function getCalendarData(Request $request)
-    {
-        try {
-            return $this->bookingService->getCalendarData($request);
-        } catch (Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode() ?: 500);
-        }
-    }
-
-    /**
-     * Export bookings
-     */
-    public function export(Request $request)
-    {
-        try {
-            return $this->bookingService->exportBookings($request);
-        } catch (Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode() ?: 500);
-        }
-    }
-
-    /**
-     * Bulk update bookings
-     */
-    public function bulkUpdate(Request $request)
-    {
-        try {
-            return $this->bookingService->bulkUpdateBookings($request);
-        } catch (Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode() ?: 422);
-        }
-    }
-
-    /**
-     * Get daily schedule
-     */
-    public function getDailySchedule(Request $request)
-    {
-        try {
-            return $this->bookingService->getDailySchedule($request);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
@@ -223,7 +184,7 @@ class BookingController extends Controller
     {
         try {
             $request->validate([
-                'notification_type' => 'required|in:booking_confirmation,booking_reminder,payment_reminder,consultation_reminder',
+                'notification_type' => 'required|in:booking_confirmation,booking_reminder,consultation_reminder',
             ]);
 
             $success = $this->bookingService->resendBookingNotification(
@@ -244,93 +205,12 @@ class BookingController extends Controller
     }
 
     /**
-     * Get booking notification history
+     * Get booking notification statistics
      */
-    public function getNotificationHistory(Request $request, Booking $booking)
+    public function getNotificationStats(Request $request, Booking $booking)
     {
         try {
-            return $this->bookingService->getBookingNotificationHistory($request, $booking);
-        } catch (Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode() ?: 500);
-        }
-    }
-
-    /**
-     * Cancel multiple bookings
-     */
-    public function bulkCancel(Request $request)
-    {
-        try {
-            $request->validate([
-                'booking_ids' => 'required|array|min:1|max:50',
-                'booking_ids.*' => 'exists:bookings,id',
-                'reason' => 'required|string|max:500',
-                'send_notifications' => 'boolean',
-            ]);
-
-            return $this->bookingService->bulkCancelBookings($request);
-
-        } catch (Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode() ?: 422);
-        }
-    }
-
-    /**
-     * Reschedule multiple bookings
-     */
-    public function bulkReschedule(Request $request)
-    {
-        try {
-            $request->validate([
-                'booking_ids' => 'required|array|min:1|max:20',
-                'booking_ids.*' => 'exists:bookings,id',
-                'date_offset_days' => 'required|integer|min:-30|max:30',
-                'time_offset_minutes' => 'nullable|integer|min:-480|max:480',
-                'reason' => 'required|string|max:500',
-                'send_notifications' => 'boolean',
-            ]);
-
-            return $this->bookingService->bulkRescheduleBookings($request);
-
-        } catch (Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode() ?: 422);
-        }
-    }
-
-    /**
-     * Get revenue analytics
-     */
-    public function getRevenueAnalytics(Request $request)
-    {
-        try {
-            $request->validate([
-                'period' => 'required|in:day,week,month,quarter,year',
-                'start_date' => 'nullable|date',
-                'end_date' => 'nullable|date|after_or_equal:start_date',
-                'service_id' => 'nullable|exists:services,id',
-                'location_id' => 'nullable|exists:service_locations,id',
-            ]);
-
-            return $this->bookingService->getRevenueAnalytics($request);
-
-        } catch (Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode() ?: 500);
-        }
-    }
-
-    /**
-     * Get customer insights
-     */
-    public function getCustomerInsights(Request $request)
-    {
-        try {
-            $request->validate([
-                'period' => 'nullable|in:week,month,quarter,year',
-                'limit' => 'nullable|integer|min:5|max:100',
-            ]);
-
-            return $this->bookingService->getCustomerInsights($request);
-
+            return $this->bookingService->getBookingNotificationStats($request, $booking);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
