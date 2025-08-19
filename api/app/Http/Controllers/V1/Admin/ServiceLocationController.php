@@ -20,8 +20,6 @@ class ServiceLocationController extends Controller
 
     public function __construct()
     {
-        $this->middleware('throttle:admin-api')->except(['index', 'show']);
-        $this->middleware('throttle:admin-locations:15,1')->only(['store', 'update']);
     }
 
     /**

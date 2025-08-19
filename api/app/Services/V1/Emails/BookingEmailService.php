@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Services\V1\Bookings;
+namespace App\Services\V1\Emails;
 
-use App\Mail\BookingConfirmationMail;
 use App\Mail\BookingCancelledMail;
+use App\Mail\BookingConfirmationMail;
 use App\Mail\BookingReminderMail;
 use App\Models\Booking;
 use App\Models\BookingNotification;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Log;
 use Exception;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class BookingEmailService
 {

@@ -12,12 +12,13 @@ use App\Models\ConsultationBooking;
 use App\Models\Service;
 use App\Models\ServiceLocation;
 use App\Resources\V1\BookingResource;
+use App\Services\V1\Emails\BookingEmailService;
 use App\Traits\V1\ApiResponses;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Exception;
 
 class BookingService
 {

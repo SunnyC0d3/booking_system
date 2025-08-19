@@ -2,23 +2,23 @@
 
 namespace App\Services\V1\Bookings;
 
-use App\Constants\ConsultationStatuses;
 use App\Constants\BookingStatuses;
-use App\Constants\NotificationTypes;
-use App\Models\ConsultationBooking;
+use App\Constants\ConsultationStatuses;
+use App\Mail\ConsultationReminderMail;
 use App\Models\Booking;
+use App\Models\ConsultationBooking;
+use App\Models\ConsultationNote;
 use App\Models\Service;
 use App\Models\User;
-use App\Models\ConsultationNote;
 use App\Resources\V1\ConsultationBookingResource;
+use App\Services\V1\Emails\BookingEmailService;
 use App\Traits\V1\ApiResponses;
-use App\Mail\ConsultationReminderMail;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Exception;
 
 class ConsultationBookingService
 {

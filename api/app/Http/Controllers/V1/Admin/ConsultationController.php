@@ -26,13 +26,6 @@ class ConsultationController extends Controller
     public function __construct(ConsultationBookingService $consultationService)
     {
         $this->consultationService = $consultationService;
-
-        // Apply rate limiting
-        $this->middleware('throttle:admin-api')->except(['index', 'show', 'dashboard', 'getStatistics']);
-        $this->middleware('throttle:admin-consultation:15,1')->only(['store', 'update', 'bulkUpdate']);
-
-        // Ensure admin authentication and permissions
-        $this->middleware(['auth:api', 'roles:super admin,admin,customer service', 'emailVerified']);
     }
 
     /**

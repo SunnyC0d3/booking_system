@@ -26,8 +26,6 @@ class ServiceAvailabilityController extends Controller
     public function __construct(TimeSlotService $timeSlotService)
     {
         $this->timeSlotService = $timeSlotService;
-        $this->middleware('throttle:admin-api')->except(['index', 'show', 'getAvailableSlots']);
-        $this->middleware('throttle:admin-availability:10,1')->only(['store', 'update']);
     }
 
     /**
