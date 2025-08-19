@@ -643,7 +643,7 @@ class BookingService
         }
 
         // Check if booking can be modified
-        if (!in_array($booking->status, ['pending', 'confirmed'])) {
+        if (!in_array($booking->status, [BookingStatuses::PENDING, BookingStatuses::CONFIRMED])) {
             throw new Exception('Booking cannot be modified in current status', 422);
         }
 
@@ -1213,10 +1213,10 @@ class BookingService
                 'end' => $endDate->format('Y-m-d'),
             ],
             'total_bookings' => (clone $baseQuery)->count(),
-            'confirmed_bookings' => (clone $baseQuery)->where('status', 'confirmed')->count(),
-            'pending_bookings' => (clone $baseQuery)->where('status', 'pending')->count(),
-            'completed_bookings' => (clone $baseQuery)->where('status', 'completed')->count(),
-            'cancelled_bookings' => (clone $baseQuery)->where('status', 'cancelled')->count(),
+            'confirmed_bookings' => (clone $baseQuery)->where('status', BookingStatuses::CONFIRMED)->count(),
+            'pending_bookings' => (clone $baseQuery)->where('status', BookingStatuses::PENDING)->count(),
+            'completed_bookings' => (clone $baseQuery)->where('status', BookingStatuses::COMPLETED)->count(),
+            'cancelled_bookings' => (clone $baseQuery)->where('status', BookingStatuses::CANCELLED)->count(),
             'total_revenue' => $totalRevenue,
             'average_booking_value' => $averageBookingValue,
             'formatted_revenue' => $this->formatPrice($totalRevenue),
@@ -1274,10 +1274,10 @@ class BookingService
     {
         return [
             'total_bookings' => Booking::count(),
-            'confirmed_bookings' => Booking::where('status', 'confirmed')->count(),
-            'pending_bookings' => Booking::where('status', 'pending')->count(),
-            'completed_bookings' => Booking::where('status', 'completed')->count(),
-            'cancelled_bookings' => Booking::where('status', 'cancelled')->count(),
+            'confirmed_bookings' => Booking::where('status', BookingStatuses::CONFIRMED)->count(),
+            'pending_bookings' => Booking::where('status', BookingStatuses::PENDING)->count(),
+            'completed_bookings' => Booking::where('status', BookingStatuses::COMPLETED)->count(),
+            'cancelled_bookings' => Booking::where('status', BookingStatuses::CANCELLED)->count(),
         ];
     }
 

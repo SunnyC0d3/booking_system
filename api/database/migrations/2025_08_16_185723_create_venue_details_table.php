@@ -172,20 +172,6 @@ return new class extends Migration
             $table->index('booking_id');
             $table->index(['service_location_id', 'event_start_time']);
         });
-
-        // Enhanced booking location fields
-        Schema::table('bookings', function (Blueprint $table) {
-            // Add venue-specific booking information
-            $table->json('venue_requirements')->nullable()->after('special_requirements');
-            $table->datetime('venue_access_time')->nullable()->after('scheduled_at'); // When to arrive for setup
-            $table->datetime('venue_departure_time')->nullable()->after('ends_at'); // When breakdown should finish
-            $table->text('venue_contact_info')->nullable()->after('client_phone');
-            $table->json('vendor_coordination')->nullable()->after('venue_contact_info'); // Other vendors at same venue
-
-            // Indexes
-            $table->index('venue_access_time');
-            $table->index('venue_departure_time');
-        });
     }
 
     /**
@@ -193,18 +179,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Remove booking fields
-        Schema::table('bookings', function (Blueprint $table) {
-            $table->dropColumn([
-                'venue_requirements',
-                'venue_access_time',
-                'venue_departure_time',
-                'venue_contact_info',
-                'vendor_coordination'
-            ]);
-        });
-
-        // Drop venue tables
+        // Drop venue tables (no booking fields to remove since we didn't add any)
         Schema::dropIfExists('client_venue_requirements');
         Schema::dropIfExists('venue_amenities');
         Schema::dropIfExists('venue_availability_windows');

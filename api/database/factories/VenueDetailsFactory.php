@@ -13,260 +13,305 @@ class VenueDetailsFactory extends Factory
     public function definition(): array
     {
         $venueType = $this->faker->randomElement([
-            'studio', 'hall', 'garden', 'ballroom', 'restaurant', 'hotel',
-            'church', 'outdoor', 'home', 'client_location', 'office',
-            'warehouse', 'general'
+            'indoor', 'outdoor', 'mixed', 'studio', 'client_home', 'corporate', 'public_space'
+        ]);
+
+        $spaceStyle = $this->faker->randomElement([
+            'modern', 'traditional', 'rustic', 'industrial', 'garden', 'ballroom', 'casual', 'formal'
         ]);
 
         return [
             'service_location_id' => ServiceLocation::factory(),
+
+            // Main venue characteristics
             'venue_type' => $venueType,
-            'setup_requirements' => $this->getSetupRequirements($venueType),
-            'equipment_available' => $this->getEquipmentAvailable($venueType),
-            'accessibility_info' => $this->getAccessibilityInfo(),
-            'parking_info' => $this->getParkingInfo(),
-            'catering_options' => $this->getCateringOptions($venueType),
-            'max_capacity' => $this->faker->numberBetween(10, 500),
+            'space_style' => $spaceStyle,
+
+            // Physical specifications
+            'ceiling_height_meters' => $this->faker->randomFloat(2, 2.4, 5.0),
+            'floor_area_sqm' => $this->faker->randomFloat(2, 20, 500),
+            'room_dimensions' => $this->getRoomDimensions(),
+            'color_scheme' => $this->getColorScheme(),
+
+            // Access and logistics
+            'access_instructions' => $this->getAccessInstructions($venueType),
+            'parking_information' => $this->getParkingInfo(),
+            'loading_instructions' => $this->getLoadingInstructions($venueType),
+            'lift_access' => $this->faker->boolean(30),
+            'step_free_access' => $this->faker->boolean(70),
+            'stairs_count' => $this->faker->numberBetween(0, 3),
+
+            // Utilities and power
+            'power_outlets' => $this->getPowerOutlets(),
+            'has_adequate_lighting' => $this->faker->boolean(85),
+            'lighting_notes' => $this->getLightingNotes(),
+            'climate_controlled' => $this->faker->boolean(60),
+            'typical_temperature' => $this->faker->randomFloat(1, 18.0, 24.0),
+
+            // Setup considerations
+            'setup_restrictions' => $this->getSetupRestrictions($venueType),
             'setup_time_minutes' => $this->faker->numberBetween(15, 120),
             'breakdown_time_minutes' => $this->faker->numberBetween(10, 60),
-            'additional_fee' => $this->faker->randomFloat(2, 0, 100),
-            'amenities' => $this->getAmenities($venueType),
-            'restrictions' => $this->getRestrictions($venueType),
-            'contact_info' => [
-                'manager' => $this->faker->name(),
-                'phone' => $this->faker->phoneNumber(),
-                'email' => $this->faker->email(),
-                'emergency_contact' => $this->faker->phoneNumber(),
-            ],
-            'operating_hours' => $this->getOperatingHours(),
-            'cancellation_policy' => $this->getCancellationPolicy(),
+            'noise_restrictions' => $this->getNoiseRestrictions($venueType),
+            'prohibited_items' => $this->getProhibitedItems($venueType),
+
+            // Contacts and instructions
+            'venue_contacts' => $this->getVenueContacts(),
             'special_instructions' => $this->getSpecialInstructions($venueType),
-            'metadata' => [
-                'created_by' => 'factory',
-                'venue_rating' => $this->faker->randomFloat(1, 3.0, 5.0),
-                'last_inspection' => $this->faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d'),
-            ],
+
+            // Photo/event restrictions
+            'photography_allowed' => $this->faker->boolean(90),
+            'photography_restrictions' => $this->getPhotographyRestrictions(),
+            'social_media_allowed' => $this->faker->boolean(85),
         ];
     }
 
+    // State methods for specific venue types
     public function studio(): static
     {
         return $this->state(fn (array $attributes) => [
             'venue_type' => 'studio',
-            'setup_requirements' => 'Professional photography studio with controlled lighting and backdrop systems.',
-            'equipment_available' => 'Professional lighting, backdrop stands, balloon equipment, air conditioning',
-            'max_capacity' => $this->faker->numberBetween(15, 50),
-            'amenities' => ['Professional lighting', 'Backdrop systems', 'Climate control', 'Equipment storage'],
+            'space_style' => 'modern',
+            'ceiling_height_meters' => $this->faker->randomFloat(2, 3.0, 4.5),
+            'floor_area_sqm' => $this->faker->randomFloat(2, 80, 200),
+            'climate_controlled' => true,
+            'has_adequate_lighting' => true,
+            'lighting_notes' => 'Professional studio lighting with adjustable tracks and LED panels',
+            'setup_restrictions' => ['No setup during client sessions', 'Equipment must be stored in designated areas'],
+            'prohibited_items' => ['open_flames', 'liquids_near_equipment', 'outside_food'],
         ]);
     }
 
-    public function hall(): static
+    public function corporate(): static
     {
         return $this->state(fn (array $attributes) => [
-            'venue_type' => 'hall',
-            'setup_requirements' => 'Large event hall suitable for weddings and corporate events.',
-            'equipment_available' => 'Sound system, stage area, tables and chairs, basic lighting',
-            'max_capacity' => $this->faker->numberBetween(100, 500),
-            'amenities' => ['Sound system', 'Stage area', 'Kitchen facilities', 'Dance floor'],
+            'venue_type' => 'corporate',
+            'space_style' => 'modern',
+            'climate_controlled' => true,
+            'lift_access' => $this->faker->boolean(80),
+            'step_free_access' => true,
+            'photography_allowed' => true,
+            'photography_restrictions' => 'Business appropriate content only, no confidential areas',
+            'social_media_allowed' => false,
         ]);
     }
 
-    public function clientLocation(): static
+    public function clientHome(): static
     {
         return $this->state(fn (array $attributes) => [
-            'venue_type' => 'client_location',
-            'setup_requirements' => 'Setup at client-specified location. Requirements vary by venue.',
-            'equipment_available' => 'Mobile equipment brought by service team',
-            'max_capacity' => 999, // Depends on client venue
-            'additional_fee' => $this->faker->randomFloat(2, 20, 50),
-            'amenities' => ['Mobile service', 'Flexible setup'],
-            'restrictions' => [
-                'Client must provide adequate space',
-                'Parking space required for service vehicle',
-                'Setup area must be accessible',
+            'venue_type' => 'client_home',
+            'space_style' => $this->faker->randomElement(['traditional', 'modern', 'casual']),
+            'setup_restrictions' => ['Respect homeowner property', 'Remove shoes if requested', 'Parking coordination required'],
+            'prohibited_items' => ['damage_risk_items', 'excessive_noise_equipment'],
+            'venue_contacts' => [
+                'homeowner' => ['name' => 'Property Owner', 'phone' => $this->faker->phoneNumber()],
             ],
         ]);
     }
 
-    private function getSetupRequirements(string $venueType): string
+    // Helper methods for generating realistic data
+    private function getRoomDimensions(): array
     {
-        $requirements = [
-            'studio' => 'Professional design studio with adequate workspace and equipment storage.',
-            'hall' => 'Large event space with high ceilings and open floor plan.',
-            'garden' => 'Outdoor space with weather protection and electrical access.',
-            'ballroom' => 'Elegant ballroom with dance floor and staging area.',
-            'restaurant' => 'Restaurant space with table setup and service access.',
-            'hotel' => 'Hotel event space with professional amenities.',
-            'church' => 'Religious venue with ceremonial space and decorative guidelines.',
-            'outdoor' => 'Outdoor venue with weather contingency and power access.',
-            'home' => 'Private residence with suitable space for decoration setup.',
-            'client_location' => 'Client-specified venue with variable requirements.',
-            'office' => 'Corporate office space with professional environment.',
-            'warehouse' => 'Industrial space with high ceilings and open layout.',
-            'general' => 'General venue space with basic facility requirements.',
-        ];
+        $rooms = [];
+        $roomTypes = ['main_area', 'reception', 'prep_area', 'storage'];
 
-        return $requirements[$venueType] ?? 'Standard venue setup requirements apply.';
+        $numRooms = $this->faker->numberBetween(1, 3);
+        for ($i = 0; $i < $numRooms; $i++) {
+            $roomType = $roomTypes[$i] ?? 'additional_space_' . ($i + 1);
+            $rooms[$roomType] = [
+                'length' => $this->faker->randomFloat(1, 3.0, 15.0),
+                'width' => $this->faker->randomFloat(1, 3.0, 12.0),
+                'height' => $this->faker->randomFloat(1, 2.4, 4.5),
+            ];
+        }
+
+        return $rooms;
     }
 
-    private function getEquipmentAvailable(string $venueType): string
+    private function getColorScheme(): array
     {
-        $equipment = [
-            'studio' => 'Professional balloon equipment, design tools, consultation furniture',
-            'hall' => 'Sound system, lighting, tables, chairs, staging equipment',
-            'garden' => 'Outdoor equipment, weather protection, extension leads',
-            'ballroom' => 'Professional sound and lighting, dance floor, staging',
-            'restaurant' => 'Tables, chairs, service equipment, kitchen access',
-            'hotel' => 'Full hotel amenities, professional equipment, catering facilities',
-            'church' => 'Basic sound system, seating, altar area access',
-            'outdoor' => 'Weather protection, portable equipment, power access',
-            'home' => 'Basic household facilities, flexible space usage',
-            'client_location' => 'Mobile equipment provided by service team',
-            'office' => 'Professional meeting facilities, presentation equipment',
-            'warehouse' => 'Industrial space, high ceiling access, loading facilities',
-            'general' => 'Basic venue facilities and equipment',
+        $colorOptions = [
+            ['white', 'cream', 'light_grey'],
+            ['beige', 'brown', 'gold'],
+            ['blue', 'white', 'silver'],
+            ['green', 'cream', 'brown'],
+            ['pink', 'white', 'gold'],
+            ['purple', 'silver', 'white'],
+            ['red', 'gold', 'cream'],
+            ['black', 'white', 'grey'],
         ];
 
-        return $equipment[$venueType] ?? 'Standard equipment available upon request.';
+        return $this->faker->randomElement($colorOptions);
     }
 
-    private function getAccessibilityInfo(): string
+    private function getAccessInstructions(string $venueType): string
     {
-        $options = [
-            'Fully wheelchair accessible with ramps and accessible toilets',
-            'Ground floor access with accessible parking available',
-            'Wheelchair accessible entrance with elevator access to all floors',
-            'Limited accessibility - please contact for specific requirements',
-            'Accessible parking and toilets, step-free access throughout',
-            'Hearing loop installed, wheelchair accessible facilities available',
+        $instructions = [
+            'studio' => 'Enter through main entrance, studio access on ground floor. Keypad code provided.',
+            'corporate' => 'Check in at reception, visitor badges required. Escort to venue area.',
+            'client_home' => 'Ring doorbell, homeowner will provide access. Please be respectful of property.',
+            'indoor' => 'Main entrance access, follow signage to event area.',
+            'outdoor' => 'Gate access provided, follow path markings to setup area.',
+            'mixed' => 'Multiple access points available, main entrance recommended for equipment.',
+            'public_space' => 'Public access, coordinate with local authorities if required.',
         ];
 
-        return $this->faker->randomElement($options);
+        return $instructions[$venueType] ?? 'Standard access procedures apply, contact for details.';
     }
 
     private function getParkingInfo(): string
     {
         $options = [
-            'Free on-site parking for 20 vehicles',
-            'Limited street parking, public transport recommended',
-            'Paid parking available, £5 per hour',
-            'Free parking for 2 hours, then £2 per hour',
-            'Valet parking service available for events',
-            'No parking on-site, nearest car park 2 minutes walk',
+            'Free on-site parking for up to 10 vehicles',
+            'Limited street parking, arrive early or use public transport',
+            'Paid parking available, £5 per session',
             'Free parking with advance booking required',
+            'Valet parking service available for premium events',
+            'No on-site parking, nearest car park 5 minutes walk',
+            'Loading zone available for 30 minutes, then relocate',
         ];
 
         return $this->faker->randomElement($options);
     }
 
-    private function getCateringOptions(string $venueType): ?string
+    private function getLoadingInstructions(string $venueType): string
     {
-        if (in_array($venueType, ['client_location', 'outdoor'])) {
-            return null;
-        }
-
-        $options = [
-            'Full catering kitchen with professional chef available',
-            'Basic refreshments and light snacks available',
-            'External catering can be arranged with approved suppliers',
-            'Tea, coffee, and biscuits provided for consultations',
-            'Full bar service and catering menu available',
-            'Kitchen facilities available for external caterers',
+        $instructions = [
+            'studio' => 'Rear entrance loading bay, suitable for equipment trolleys and cases.',
+            'corporate' => 'Loading dock access via security, coordinate with facilities team.',
+            'client_home' => 'Front door access only, homeowner to assist with access.',
+            'indoor' => 'Loading area at main entrance, 15-minute loading window.',
+            'outdoor' => 'Vehicle access to within 50m of setup area.',
+            'mixed' => 'Multiple loading options available depending on event area.',
+            'public_space' => 'Temporary loading permitted, follow local parking regulations.',
         ];
 
-        return $this->faker->randomElement($options);
+        return $instructions[$venueType] ?? 'Standard loading procedures, coordinate in advance.';
     }
 
-    private function getAmenities(string $venueType): array
-    {
-        $baseAmenities = ['WiFi', 'Toilets', 'Basic refreshments'];
-
-        $specificAmenities = [
-            'studio' => ['Professional lighting', 'Climate control', 'Equipment storage'],
-            'hall' => ['Sound system', 'Dance floor', 'Stage area', 'Kitchen'],
-            'garden' => ['Outdoor space', 'Weather protection', 'Natural setting'],
-            'ballroom' => ['Elegant decor', 'Professional lighting', 'Dance floor'],
-            'restaurant' => ['Full kitchen', 'Table service', 'Bar facilities'],
-            'hotel' => ['Full hotel services', 'Concierge', 'Room service'],
-            'church' => ['Ceremonial space', 'Organ', 'Seating'],
-            'outdoor' => ['Natural setting', 'Fresh air', 'Scenic views'],
-            'home' => ['Intimate setting', 'Flexible space', 'Personal touch'],
-            'client_location' => ['Flexible location', 'Personalized service'],
-            'office' => ['Professional environment', 'Meeting facilities', 'Presentation equipment'],
-            'warehouse' => ['High ceilings', 'Open space', 'Loading access'],
-            'general' => ['Flexible space', 'Basic facilities'],
-        ];
-
-        return array_merge($baseAmenities, $specificAmenities[$venueType] ?? []);
-    }
-
-    private function getRestrictions(string $venueType): array
-    {
-        $baseRestrictions = ['No smoking', 'Advance booking required'];
-
-        $specificRestrictions = [
-            'studio' => ['No food near equipment', 'Maximum capacity limits'],
-            'hall' => ['No confetti', 'Music curfew at 11 PM'],
-            'garden' => ['Weather dependent', 'No loud music after 8 PM'],
-            'ballroom' => ['Formal dress code', 'No outside catering'],
-            'restaurant' => ['Minimum spend required', 'No outside food'],
-            'hotel' => ['Hotel policies apply', 'Noise restrictions'],
-            'church' => ['Religious guidelines', 'Appropriate content only'],
-            'outdoor' => ['Weather dependent', 'Backup plan required'],
-            'home' => ['Respect property', 'Parking limitations'],
-            'client_location' => ['Client venue rules apply', 'Setup access required'],
-            'office' => ['Business hours only', 'Professional conduct'],
-            'warehouse' => ['Safety regulations', 'Industrial guidelines'],
-            'general' => ['Standard terms apply', 'Follow venue rules'],
-        ];
-
-        return array_merge($baseRestrictions, $specificRestrictions[$venueType] ?? []);
-    }
-
-    private function getOperatingHours(): array
+    private function getPowerOutlets(): array
     {
         return [
-            'monday' => ['09:00', '18:00'],
-            'tuesday' => ['09:00', '18:00'],
-            'wednesday' => ['09:00', '18:00'],
-            'thursday' => ['09:00', '18:00'],
-            'friday' => ['09:00', '18:00'],
-            'saturday' => ['10:00', '16:00'],
-            'sunday' => $this->faker->boolean(30) ? ['12:00', '16:00'] : 'closed',
+            'main_area' => [
+                'type' => '13A UK standard',
+                'quantity' => $this->faker->numberBetween(4, 12),
+                'location' => 'Wall mounted and floor boxes'
+            ],
+            'additional_areas' => [
+                'type' => '13A UK standard',
+                'quantity' => $this->faker->numberBetween(2, 6),
+                'location' => 'Wall mounted'
+            ],
         ];
     }
 
-    private function getCancellationPolicy(): string
+    private function getLightingNotes(): string
     {
-        $policies = [
-            '48 hours notice required for all cancellations',
-            '24 hours notice required, 50% charge for late cancellations',
-            '72 hours notice required for weekend bookings',
-            'Standard cancellation policy applies as per terms and conditions',
-            '48 hours notice required, full refund for earlier cancellations',
+        $options = [
+            'Natural lighting supplemented with LED track lighting',
+            'Professional event lighting system with dimmer controls',
+            'Basic overhead lighting, additional lighting may be required',
+            'Large windows provide excellent natural light during day',
+            'Adjustable lighting zones for different areas and moods',
+            'Chandelier and accent lighting create elegant atmosphere',
         ];
 
-        return $this->faker->randomElement($policies);
+        return $this->faker->randomElement($options);
+    }
+
+    private function getSetupRestrictions(string $venueType): array
+    {
+        $baseRestrictions = ['Advance coordination required'];
+
+        $specific = [
+            'studio' => ['No setup during client sessions', 'Equipment storage in designated areas only'],
+            'corporate' => ['Business hours setup only', 'Security clearance required'],
+            'client_home' => ['Homeowner approval for setup plan', 'Respect property and neighbors'],
+            'indoor' => ['Weather protection not required', 'Consider noise levels'],
+            'outdoor' => ['Weather contingency plan required', 'Ground protection needed'],
+            'mixed' => ['Coordinate indoor/outdoor elements', 'Weather backup plan'],
+            'public_space' => ['Permits may be required', 'Public access considerations'],
+        ];
+
+        return array_merge($baseRestrictions, $specific[$venueType] ?? []);
+    }
+
+    private function getNoiseRestrictions(string $venueType): string
+    {
+        $restrictions = [
+            'studio' => 'Quiet setup during business hours, no loud equipment after 6pm',
+            'corporate' => 'Business appropriate noise levels, no disruption to offices',
+            'client_home' => 'Respectful of neighbors, avoid early morning or late evening noise',
+            'indoor' => 'Standard venue noise policies apply',
+            'outdoor' => 'Local noise ordinances apply, typically quiet after 8pm',
+            'mixed' => 'Indoor and outdoor noise restrictions both apply',
+            'public_space' => 'Public space noise regulations apply',
+        ];
+
+        return $restrictions[$venueType] ?? 'Standard noise restrictions apply';
+    }
+
+    private function getProhibitedItems(string $venueType): array
+    {
+        $baseProhibited = ['illegal_substances', 'weapons'];
+
+        $specific = [
+            'studio' => ['open_flames', 'liquids_near_equipment', 'excessive_confetti'],
+            'corporate' => ['inappropriate_content', 'alcohol_without_permission'],
+            'client_home' => ['anything_damaging_property', 'items_upsetting_neighbors'],
+            'indoor' => ['open_flames_without_permission', 'messy_materials'],
+            'outdoor' => ['items_harmful_to_environment', 'excessive_waste'],
+            'mixed' => ['weather_sensitive_items_outdoors'],
+            'public_space' => ['items_violating_public_use', 'permanent_installations'],
+        ];
+
+        return array_merge($baseProhibited, $specific[$venueType] ?? []);
+    }
+
+    private function getVenueContacts(): array
+    {
+        return [
+            'manager' => [
+                'name' => $this->faker->name(),
+                'phone' => $this->faker->phoneNumber(),
+                'email' => $this->faker->email(),
+            ],
+            'emergency' => [
+                'contact' => $this->faker->phoneNumber(),
+            ],
+            'facilities' => [
+                'name' => $this->faker->name(),
+                'phone' => $this->faker->phoneNumber(),
+            ],
+        ];
     }
 
     private function getSpecialInstructions(string $venueType): string
     {
         $instructions = [
-            'studio' => 'Please arrive 15 minutes early for equipment briefing.',
-            'hall' => 'Loading access available via rear entrance during setup.',
-            'garden' => 'Weather backup plan will be discussed during consultation.',
-            'ballroom' => 'Formal attire recommended for all events.',
-            'restaurant' => 'Coordinate with restaurant manager for service timing.',
-            'hotel' => 'Check in with hotel concierge upon arrival.',
-            'church' => 'Please respect religious guidelines and venue policies.',
-            'outdoor' => 'Bring weather-appropriate clothing and backup plans.',
-            'home' => 'Please ensure clear access for equipment and setup.',
-            'client_location' => 'Coordinate with venue management for access and requirements.',
-            'office' => 'Maintain professional standards throughout the event.',
-            'warehouse' => 'Safety equipment required, coordinate with facilities team.',
-            'general' => 'Follow all venue guidelines and safety requirements.',
+            'studio' => 'Arrive 15 minutes early for equipment briefing and safety overview.',
+            'corporate' => 'Check in at reception and wait for escort to venue area.',
+            'client_home' => 'Please remove shoes if requested and be respectful of family property.',
+            'indoor' => 'Follow venue guidelines and emergency procedures posted at entrance.',
+            'outdoor' => 'Bring weather-appropriate clothing and backup plans for equipment.',
+            'mixed' => 'Coordinate between indoor and outdoor setups, weather contingency ready.',
+            'public_space' => 'Respect public use of space and follow all local regulations.',
         ];
 
-        return $instructions[$venueType] ?? 'Please follow all venue guidelines and contact us with any questions.';
+        return $instructions[$venueType] ?? 'Follow all venue guidelines and contact us with questions.';
+    }
+
+    private function getPhotographyRestrictions(): string
+    {
+        $options = [
+            'No flash photography near decorative elements, client permission required for social media',
+            'Photography allowed during event only, no venue documentation without permission',
+            'Professional photography welcome, coordinate with venue for any restrictions',
+            'Photography allowed but be respectful of other guests and venue property',
+            'No photography in restricted areas, follow venue staff guidance',
+            'Social media friendly, tag venue if sharing photos online',
+        ];
+
+        return $this->faker->randomElement($options);
     }
 }

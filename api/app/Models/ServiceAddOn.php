@@ -24,6 +24,7 @@ class ServiceAddOn extends Model
         'max_quantity',
         'sort_order',
         'category',
+        'metadata', // Added missing metadata field
     ];
 
     protected $casts = [
@@ -33,6 +34,7 @@ class ServiceAddOn extends Model
         'is_required' => 'boolean',
         'max_quantity' => 'integer',
         'sort_order' => 'integer',
+        'metadata' => 'array', // Added metadata array casting
     ];
 
     // Relationships
@@ -96,55 +98,127 @@ class ServiceAddOn extends Model
         }
     }
 
-    public function getCategoryDisplayNameAttribute(): string
+    // Metadata helper methods
+    public function hasMetadata(string $key = null): bool
     {
-        return match($this->category) {
-            'equipment' => 'Equipment',
-            'service_enhancement' => 'Service Enhancement',
-            'location' => 'Location',
-            'other' => 'Other',
-            default => ucfirst($this->category)
-        };
+        if ($key === null) {
+            return !empty($this->metadata);
+        }
+
+        return isset($this->metadata[$key]);
     }
 
-    public function getCategoryIconAttribute(): string
+    public function getMetadata(string $key, $default = null)
     {
-        return match($this->category) {
-            'equipment' => 'wrench',
-            'service_enhancement' => 'star',
-            'location' => 'map-pin',
-            'other' => 'plus',
-            default => 'plus'
-        };
+        return $this->metadata[$key] ?? $default;
     }
 
-    public function isRequired(): bool
+    public function setMetadata(string $key, $value): void
     {
-        return $this->is_required;
+        $metadata = $this->metadata ?? [];
+        $metadata[$key] = $value;
+        $this->metadata = $metadata;
     }
 
-    public function isOptional(): bool
+    public function removeMetadata(string $key): void
     {
-        return !$this->is_required;
+        if ($this->hasMetadata($key)) {
+            $metadata = $this->metadata;
+            unset($metadata[$key]);
+            $this->metadata = $metadata;
+        }
     }
 
-    public function hasQuantityLimit(): bool
+    // Category-specific helper methods
+    public function isEquipmentCategory(): bool
     {
-        return $this->max_quantity > 1;
+        return $this->category === 'equipment';
     }
 
-    public function addsDuration(): bool
+    public function isServiceEnhancement(): bool
     {
-        return $this->duration_minutes > 0;
+        return $this->category === 'service_enhancement';
     }
 
-    public function calculateTotalPrice(int $quantity = 1): int
+    public function isLocationCategory(): bool
     {
-        return $this->price * min($quantity, $this->max_quantity);
+        return $this->category === 'location';
     }
 
-    public function calculateTotalDuration(int $quantity = 1): int
+    // Pricing helper methods
+    public function getTotalPrice(int $quantity): int
     {
-        return $this->duration_minutes * min($quantity, $this->max_quantity);
+        return $this->price * $quantity;
+    }
+
+    public function getFormattedTotalPrice(int $quantity): string
+    {
+        return '£' . number_format($this->getTotalPrice($quantity) / 100, 2);
+    }
+
+    public function getTotalDuration(int $quantity): int
+    {
+        return $this->duration_minutes * $quantity;
+    }
+
+    public function getFormattedTotalDuration(int $quantity): string
+    {
+        $totalMinutes = $this->getTotalDuration($quantity);
+
+        if ($totalMinutes <= 0) {
+            return 'No additional time';
+        }
+
+        $hours = floor($totalMinutes / 60);
+        $minutes = $totalMinutes % 60;
+
+        if ($hours > 0 && $minutes > 0) {
+            return "+{$hours}h {$minutes}m";
+        } elseif ($hours > 0) {
+            return "+{$hours}h";
+        } else {
+            return "+{$minutes}m";
+        }
+    }
+
+    // Availability helper methods
+    public function canBeAddedToBooking(int $requestedQuantity): bool
+    {
+        if (!$this->is_active) {
+            return false;
+        }
+
+        if ($this->max_quantity && $requestedQuantity > $this->max_quantity) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function getAvailableQuantity(): int
+    {
+        return $this->max_quantity ?? 999; // Return max_quantity or large number if unlimited
+    }
+
+    // API response helper
+    public function toApiArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'price' => $this->price,
+            'formatted_price' => $this->formatted_price,
+            'duration_minutes' => $this->duration_minutes,
+            'formatted_duration' => $this->formatted_duration,
+            'is_active' => $this->is_active,
+            'is_required' => $this->is_required,
+            'max_quantity' => $this->max_quantity,
+            'available_quantity' => $this->getAvailableQuantity(),
+            'sort_order' => $this->sort_order,
+            'category' => $this->category,
+            'metadata' => $this->metadata,
+            'service_id' => $this->service_id,
+        ];
     }
 }

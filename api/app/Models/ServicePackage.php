@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Services\V1\Bookings\TimeSlotService;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -379,12 +380,12 @@ class ServicePackage extends Model implements HasMedia
     }
 
     public function createBookingFromPackage(
-        \App\Models\User $user,
-        \Carbon\Carbon $scheduledAt,
+        User $user,
+        Carbon $scheduledAt,
         ?ServiceLocation $location = null,
         array $selectedOptionalServices = [],
         array $bookingData = []
-    ): \App\Models\Booking {
+    ): Booking {
         // Calculate final pricing including optional services
         $totalPrice = $this->total_price;
         $totalDuration = $this->total_duration_minutes;
@@ -399,7 +400,7 @@ class ServicePackage extends Model implements HasMedia
         }
 
         // Create the main booking
-        $booking = \App\Models\Booking::create(array_merge([
+        $booking = Booking::create(array_merge([
             'user_id' => $user->id,
             'service_package_id' => $this->id,
             'service_location_id' => $location?->id,
@@ -422,7 +423,7 @@ class ServicePackage extends Model implements HasMedia
             $quantity = $service->pivot->quantity ?? 1;
 
             for ($i = 0; $i < $quantity; $i++) {
-                \App\Models\ServiceBooking::create([
+                ServiceBooking::create([
                     'booking_id' => $booking->id,
                     'service_id' => $service->id,
                     'scheduled_at' => $currentTime->clone(),
@@ -444,7 +445,7 @@ class ServicePackage extends Model implements HasMedia
                 $quantity = $optionalService->pivot->quantity ?? 1;
 
                 for ($i = 0; $i < $quantity; $i++) {
-                    \App\Models\ServiceBooking::create([
+                    ServiceBooking::create([
                         'booking_id' => $booking->id,
                         'service_id' => $optionalService->id,
                         'scheduled_at' => $currentTime->clone(),
@@ -557,66 +558,5 @@ class ServicePackage extends Model implements HasMedia
             'terms_and_conditions' => 'nullable|string',
             'sort_order' => 'nullable|integer|min:0',
         ];
-    }
-
-    // Boot method for model events
-    protected static function booted(): void
-    {
-        static::creating(function (self $package) {
-            if (!$package->sort_order) {
-                $package->sort_order = (self::max('sort_order') ?? 0) + 1;
-            }
-        });
-
-        static::saved(function (self $package) {
-            // Recalculate pricing when package is saved
-            if ($package->wasRecentlyCreated || $package->wasChanged(['discount_amount', 'discount_percentage'])) {
-                $package->recalculatePricing();
-            }
-        });
-    }
-}
-
-// Pivot model for package items
-class ServicePackageItem extends Model
-{
-    protected $fillable = [
-        'service_package_id',
-        'service_id',
-        'quantity',
-        'order',
-        'is_optional',
-        'notes',
-    ];
-
-    protected $casts = [
-        'quantity' => 'integer',
-        'order' => 'integer',
-        'is_optional' => 'boolean',
-    ];
-
-    public function package(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(ServicePackage::class, 'service_package_id');
-    }
-
-    public function service(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(Service::class);
-    }
-
-    public function getTotalPriceAttribute(): int
-    {
-        return $this->service->base_price * $this->quantity;
-    }
-
-    public function getFormattedTotalPriceAttribute(): string
-    {
-        return '£' . number_format($this->total_price / 100, 2);
-    }
-
-    public function getTotalDurationMinutesAttribute(): int
-    {
-        return $this->service->duration_minutes * $this->quantity;
     }
 }

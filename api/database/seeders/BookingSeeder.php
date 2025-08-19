@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Constants\PaymentStatuses;
 use App\Models\Booking;
 use App\Models\Service;
 use App\Models\ServiceLocation;
@@ -16,30 +17,40 @@ class BookingSeeder extends Seeder
 {
     public function run(): void
     {
-        // Ensure we have services with locations and availability windows
         $services = Service::with(['locations', 'availabilityWindows', 'addOns'])->get();
 
         if ($services->isEmpty()) {
-            $this->command->info('No services found. Creating some services first...');
-            // Create some services with full setup
             $this->createServicesWithFullSetup();
             $services = Service::with(['locations', 'availabilityWindows', 'addOns'])->get();
         }
 
-        $users = User::where('role_id', '!=', 1)->take(10)->get(); // Get non-admin users
+        // Get users - be more flexible with role checking
+        $users = User::where(function ($query) {
+            $query->whereHas('role', function ($roleQuery) {
+                $roleQuery->where('name', '!=', 'super_admin');
+            })->orWhereDoesntHave('role');
+        })->take(10)->get();
+
         if ($users->isEmpty()) {
-            $this->command->info('Creating additional users for bookings...');
-            $users = User::factory(10)->create();
+            try {
+                $users = User::factory(10)->create();
+            } catch (\Exception $e) {
+                $users = User::take(10)->get();
+
+                if ($users->isEmpty()) {
+                    return;
+                }
+            }
         }
 
-        $this->command->info('Creating bookings...');
+        if ($users->isEmpty()) {
+            return;
+        }
 
         foreach ($services as $service) {
             // Create various types of bookings for each service
             $this->createBookingsForService($service, $users);
         }
-
-        $this->command->info('Bookings created successfully!');
     }
 
     private function createServicesWithFullSetup(): void
@@ -49,31 +60,51 @@ class BookingSeeder extends Seeder
                 'name' => 'Balloon Arch Design & Setup',
                 'description' => 'Custom balloon arch design and professional setup for weddings, parties, and special events. Includes consultation, design, and on-site installation.',
                 'short_description' => 'Professional balloon arch design and setup service',
+                'category' => 'balloon_decorations',
                 'base_price' => 15000, // £150
                 'duration_minutes' => 120,
                 'buffer_minutes' => 30,
                 'requires_deposit' => true,
                 'deposit_percentage' => 40.00,
+                'is_active' => true,
+                'is_bookable' => true,
+                'requires_consultation' => true,
+                'consultation_duration_minutes' => 30,
+                'min_advance_booking_hours' => 48,
+                'max_advance_booking_days' => 90,
             ],
             [
                 'name' => 'Wedding Decoration Package',
                 'description' => 'Complete wedding decoration service including balloon arrangements, table centerpieces, and venue styling. Full-day service with setup and breakdown.',
                 'short_description' => 'Complete wedding decoration service',
+                'category' => 'wedding_packages',
                 'base_price' => 35000, // £350
                 'duration_minutes' => 480, // 8 hours
                 'buffer_minutes' => 60,
                 'requires_deposit' => true,
                 'deposit_percentage' => 50.00,
+                'is_active' => true,
+                'is_bookable' => true,
+                'requires_consultation' => true,
+                'consultation_duration_minutes' => 60,
+                'min_advance_booking_hours' => 72,
+                'max_advance_booking_days' => 180,
             ],
             [
                 'name' => 'Birthday Party Decorations',
                 'description' => 'Fun and colorful birthday party decorations including balloons, banners, and themed arrangements. Perfect for children and adult parties.',
                 'short_description' => 'Birthday party decoration service',
+                'category' => 'party_decorations',
                 'base_price' => 8000, // £80
                 'duration_minutes' => 90,
                 'buffer_minutes' => 15,
                 'requires_deposit' => true,
                 'deposit_amount' => 3000, // £30 fixed
+                'is_active' => true,
+                'is_bookable' => true,
+                'requires_consultation' => false,
+                'min_advance_booking_hours' => 24,
+                'max_advance_booking_days' => 60,
             ],
         ];
 
@@ -218,57 +249,86 @@ class BookingSeeder extends Seeder
 
     private function createBookingsForService(Service $service, $users): void
     {
+        if ($users->isEmpty()) {
+            return;
+        }
+
+        if ($service->locations->isEmpty()) {
+            return;
+        }
+
         $bookingCount = rand(5, 12);
 
         for ($i = 0; $i < $bookingCount; $i++) {
-            $user = $users->random();
-            $location = $service->locations->random();
+            try {
+                $user = $users->random();
+                $location = $service->locations->random();
 
-            // Generate booking date (mix of past, present, and future)
-            $scheduledAt = $this->generateBookingDateTime();
-            $endTime = $scheduledAt->clone()->addMinutes($service->duration_minutes);
+                // Generate booking date (mix of past, present, and future)
+                $scheduledAt = $this->generateBookingDateTime();
+                $endTime = $scheduledAt->clone()->addMinutes($service->duration_minutes);
 
-            // Determine status based on date
-            $status = $this->determineBookingStatus($scheduledAt);
-            $paymentStatus = $this->determinePaymentStatus($status, $service->requires_deposit);
+                // Determine status based on date
+                $status = $this->determineBookingStatus($scheduledAt);
+                $paymentStatus = $this->determinePaymentStatus($status, $service->requires_deposit);
 
-            // Calculate pricing
-            $basePrice = $service->base_price;
-            $addOnsTotal = 0;
-            $totalAmount = $basePrice;
+                // Calculate pricing
+                $basePrice = $service->base_price;
+                $addOnsTotal = 0;
+                $totalAmount = $basePrice;
 
-            // Create the booking
-            $booking = Booking::create([
-                'user_id' => $user->id,
-                'service_id' => $service->id,
-                'service_location_id' => $location->id,
-                'scheduled_at' => $scheduledAt,
-                'ends_at' => $endTime,
-                'duration_minutes' => $service->duration_minutes,
-                'base_price' => $basePrice,
-                'addons_total' => $addOnsTotal,
-                'total_amount' => $totalAmount,
-                'deposit_amount' => $service->requires_deposit ? $service->getDepositAmountAttribute() : null,
-                'remaining_amount' => $service->requires_deposit ? ($totalAmount - $service->getDepositAmountAttribute()) : null,
-                'status' => $status,
-                'payment_status' => $paymentStatus,
-                'client_name' => $user->name,
-                'client_email' => $user->email,
-                'client_phone' => fake()->phoneNumber(),
-                'notes' => fake()->optional(0.6)->paragraph(),
-                'special_requirements' => fake()->optional(0.3)->sentence(),
-                'requires_consultation' => fake()->boolean(40),
-                'consultation_completed_at' => $status !== 'pending' && fake()->boolean(70) ? fake()->dateTimeBetween('-7 days', 'now') : null,
-                'metadata' => [
-                    'source' => fake()->randomElement(['website', 'phone', 'email', 'referral']),
-                    'event_type' => fake()->randomElement(['wedding', 'birthday', 'anniversary', 'corporate', 'baby_shower']),
-                    'guest_count' => fake()->numberBetween(10, 200),
-                ],
-            ]);
+                // Calculate deposit amount
+                $depositAmount = null;
+                $remainingAmount = null;
 
-            // Add some random add-ons (30% chance)
-            if (fake()->boolean(30) && $service->addOns->isNotEmpty()) {
-                $this->addRandomAddOns($booking, $service->addOns);
+                if ($service->requires_deposit) {
+                    if ($service->deposit_amount) {
+                        $depositAmount = $service->deposit_amount;
+                    } elseif ($service->deposit_percentage) {
+                        $depositAmount = (int) round($totalAmount * ($service->deposit_percentage / 100));
+                    }
+
+                    if ($depositAmount) {
+                        $remainingAmount = $totalAmount - $depositAmount;
+                    }
+                }
+
+                // Create the booking
+                $booking = Booking::create([
+                    'user_id' => $user->id,
+                    'service_id' => $service->id,
+                    'service_location_id' => $location->id,
+                    'scheduled_at' => $scheduledAt,
+                    'ends_at' => $endTime,
+                    'duration_minutes' => $service->duration_minutes,
+                    'base_price' => $basePrice,
+                    'addons_total' => $addOnsTotal,
+                    'total_amount' => $totalAmount,
+                    'deposit_amount' => $depositAmount,
+                    'remaining_amount' => $remainingAmount,
+                    'status' => $status,
+                    'payment_status' => $paymentStatus,
+                    'client_name' => $user->name,
+                    'client_email' => $user->email,
+                    'client_phone' => fake()->phoneNumber(),
+                    'notes' => fake()->optional(0.6)->paragraph(),
+                    'special_requirements' => fake()->optional(0.3)->sentence(),
+                    'requires_consultation' => $service->requires_consultation,
+                    'consultation_completed_at' => $status !== 'pending' && fake()->boolean(70) ? fake()->dateTimeBetween('-7 days', 'now') : null,
+                    'metadata' => [
+                        'source' => fake()->randomElement(['website', 'phone', 'email', 'referral']),
+                        'event_type' => fake()->randomElement(['wedding', 'birthday', 'anniversary', 'corporate', 'baby_shower']),
+                        'guest_count' => fake()->numberBetween(10, 200),
+                    ],
+                ]);
+
+                // Add some random add-ons (30% chance) - with safety check
+                if (fake()->boolean(30) && $service->addOns->isNotEmpty()) {
+                    $this->addRandomAddOns($booking, $service->addOns);
+                }
+
+            } catch (\Exception $e) {
+                continue;
             }
         }
     }
@@ -276,21 +336,23 @@ class BookingSeeder extends Seeder
     private function generateBookingDateTime(): Carbon
     {
         $scenarios = [
-            'past_completed' => 30,     // 30% past completed bookings
-            'past_cancelled' => 10,     // 10% past cancelled bookings
-            'upcoming_confirmed' => 40, // 40% upcoming confirmed bookings
-            'upcoming_pending' => 20,   // 20% upcoming pending bookings
+            'past_completed' => 30,
+            'past_cancelled' => 10,
+            'upcoming_confirmed' => 40,
+            'upcoming_pending' => 20,
         ];
 
         $scenario = fake()->randomElement(array_merge(
             ...array_map(fn($weight, $key) => array_fill(0, $weight, $key), $scenarios, array_keys($scenarios))
         ));
 
-        return match($scenario) {
+        $dateTime = match($scenario) {
             'past_completed', 'past_cancelled' => fake()->dateTimeBetween('-60 days', '-1 day'),
             'upcoming_confirmed', 'upcoming_pending' => fake()->dateTimeBetween('+1 day', '+90 days'),
             default => fake()->dateTimeBetween('-30 days', '+30 days'),
         };
+
+        return Carbon::instance($dateTime); // Convert DateTime → Carbon
     }
 
     private function determineBookingStatus(Carbon $scheduledAt): string
@@ -305,53 +367,101 @@ class BookingSeeder extends Seeder
     private function determinePaymentStatus(string $status, bool $requiresDeposit): string
     {
         if ($status === 'cancelled') {
-            return fake()->randomElement(['refunded', 'partially_refunded', 'pending']);
+            return fake()->randomElement([
+                PaymentStatuses::REFUNDED,
+                PaymentStatuses::PARTIAL,
+                PaymentStatuses::PENDING,
+                PaymentStatuses::CANCELLED,
+                PaymentStatuses::FAILED
+            ]);
         }
 
         if ($status === 'completed') {
-            return 'fully_paid';
+            return PaymentStatuses::PAID;
         }
 
         if ($requiresDeposit) {
-            return fake()->randomElement(['deposit_paid', 'fully_paid', 'pending']);
+            return fake()->randomElement([
+                PaymentStatuses::DEPOSIT_PAID,
+                PaymentStatuses::PAID,
+                PaymentStatuses::PENDING
+            ]);
         }
 
-        return fake()->randomElement(['fully_paid', 'pending']);
+        return fake()->randomElement([
+            PaymentStatuses::PAID,
+            PaymentStatuses::PENDING
+        ]);
     }
+
 
     private function addRandomAddOns(Booking $booking, $availableAddOns): void
     {
-        $selectedAddOns = $availableAddOns->random(fake()->numberBetween(1, 3));
-        $totalAddOnsCost = 0;
-        $totalAddOnsDuration = 0;
-
-        foreach ($selectedAddOns as $addOn) {
-            $quantity = fake()->numberBetween(1, min(2, $addOn->max_quantity));
-            $unitPrice = $addOn->price;
-            $totalPrice = $unitPrice * $quantity;
-            $duration = $addOn->duration_minutes * $quantity;
-
-            BookingAddOn::create([
-                'booking_id' => $booking->id,
-                'service_add_on_id' => $addOn->id,
-                'quantity' => $quantity,
-                'unit_price' => $unitPrice,
-                'total_price' => $totalPrice,
-                'duration_minutes' => $addOn->duration_minutes,
-            ]);
-
-            $totalAddOnsCost += $totalPrice;
-            $totalAddOnsDuration += $duration;
+        // Safety check
+        if ($availableAddOns->isEmpty()) {
+            return;
         }
 
-        // Update booking totals
-        $newTotalAmount = $booking->base_price + $totalAddOnsCost;
-        $booking->update([
-            'addons_total' => $totalAddOnsCost,
-            'total_amount' => $newTotalAmount,
-            'duration_minutes' => $booking->duration_minutes + $totalAddOnsDuration,
-            'ends_at' => $booking->scheduled_at->clone()->addMinutes($booking->duration_minutes + $totalAddOnsDuration),
-            'remaining_amount' => $booking->deposit_amount ? ($newTotalAmount - $booking->deposit_amount) : null,
-        ]);
+        try {
+            // Don't request more items than available
+            $maxAddOns = min(3, $availableAddOns->count());
+            $numberOfAddOns = fake()->numberBetween(1, $maxAddOns);
+
+            $selectedAddOns = $availableAddOns->random($numberOfAddOns);
+
+            // Handle single item (not a collection)
+            if (!is_iterable($selectedAddOns)) {
+                $selectedAddOns = [$selectedAddOns];
+            }
+
+            $totalAddOnsCost = 0;
+            $totalAddOnsDuration = 0;
+
+            foreach ($selectedAddOns as $addOn) {
+                $quantity = fake()->numberBetween(1, min(2, $addOn->max_quantity));
+                $unitPrice = $addOn->price;
+                $totalPrice = $unitPrice * $quantity;
+                $duration = $addOn->duration_minutes * $quantity;
+
+                BookingAddOn::create([
+                    'booking_id' => $booking->id,
+                    'service_add_on_id' => $addOn->id,
+                    'quantity' => $quantity,
+                    'unit_price' => $unitPrice,
+                    'total_price' => $totalPrice,
+                    'duration_minutes' => $addOn->duration_minutes,
+                ]);
+
+                $totalAddOnsCost += $totalPrice;
+                $totalAddOnsDuration += $duration;
+            }
+
+            // Update booking totals
+            $newTotalAmount = $booking->base_price + $totalAddOnsCost;
+
+            // Recalculate deposit if needed
+            $newDepositAmount = $booking->deposit_amount;
+            $newRemainingAmount = $booking->remaining_amount;
+
+            if ($booking->deposit_amount && $booking->service && $booking->service->deposit_percentage) {
+                $newDepositAmount = (int) round($newTotalAmount * ($booking->service->deposit_percentage / 100));
+                $newRemainingAmount = $newTotalAmount - $newDepositAmount;
+            } elseif ($booking->remaining_amount !== null) {
+                $newRemainingAmount = $newTotalAmount - ($booking->deposit_amount ?? 0);
+            }
+
+            $booking->update([
+                'addons_total' => $totalAddOnsCost,
+                'total_amount' => $newTotalAmount,
+                'duration_minutes' => $booking->duration_minutes + $totalAddOnsDuration,
+                'ends_at' => $booking->scheduled_at->clone()->addMinutes($booking->duration_minutes + $totalAddOnsDuration),
+                'deposit_amount' => $newDepositAmount,
+                'remaining_amount' => $newRemainingAmount,
+            ]);
+
+        } catch (\Exception $e) {
+            // Don't fail the whole process for add-on errors
+            error_log("Failed to add add-ons to booking {$booking->id}: " . $e->getMessage());
+        }
     }
 }

@@ -92,11 +92,4 @@ class ServiceFactory extends Factory
             'deposit_percentage' => null,
         ]);
     }
-
-    public function forVendor(Vendor $vendor): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'vendor_id' => $vendor->id,
-        ]);
-    }
 }

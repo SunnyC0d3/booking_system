@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use App\Constants\BookingStatuses;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -165,7 +165,7 @@ class Service extends Model implements HasMedia
             return 0;
         }
 
-        if ($this->deposit_amount) {
+        if ($this->attributes['deposit_amount'] !== null) {
             return $this->deposit_amount;
         }
 
@@ -276,13 +276,13 @@ class Service extends Model implements HasMedia
 
     public function getCompletedBookingsCount(): int
     {
-        return $this->bookings()->where('status', 'completed')->count();
+        return $this->bookings()->where('status', BookingStatuses::COMPLETED)->count();
     }
 
     public function getTotalRevenue(): int
     {
         return $this->bookings()
-            ->where('status', 'completed')
+            ->where('status', BookingStatuses::COMPLETED)
             ->sum('total_amount');
     }
 
@@ -300,14 +300,14 @@ class Service extends Model implements HasMedia
     public function hasActiveBookings(): bool
     {
         return $this->bookings()
-            ->whereIn('status', ['pending', 'confirmed', 'in_progress'])
+            ->whereIn('status', [BookingStatuses::PENDING, BookingStatuses::CONFIRMED, BookingStatuses::IN_PROGRESS])
             ->exists();
     }
 
     public function hasFutureBookings(): bool
     {
         return $this->bookings()
-            ->whereIn('status', ['pending', 'confirmed'])
+            ->whereIn('status', [BookingStatuses::PENDING, BookingStatuses::CONFIRMED])
             ->where('scheduled_at', '>', now())
             ->exists();
     }

@@ -6,40 +6,37 @@ use App\Models\ServicePackage;
 use App\Models\Service;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ServicePackageSeeder extends Seeder
 {
     public function run(): void
     {
         DB::transaction(function () {
-            // Get all active services
-            $services = Service::active()->get();
+            $services = Service::where('is_active', true)->get();
 
             if ($services->isEmpty()) {
-                $this->command->warn('No active services found. Please run ServiceSeeder first.');
                 return;
             }
 
-            // Create predefined packages
-            $this->createWeddingPackage($services);
-            $this->createBirthdayPackage($services);
-            $this->createCorporatePackage($services);
-            $this->createBabyShowerPackage($services);
-            $this->createAnniversaryPackage($services);
+            $this->createWeddingPackage();
+            $this->createBirthdayPackage();
+            $this->createCorporatePackage();
+            $this->createBabyShowerPackage();
+            $this->createAnniversaryPackage();
+            $this->createGraduationPackage();
+            $this->createHolidayPackage();
 
-            // Create additional random packages
             ServicePackage::factory()
-                ->count(5)
+                ->count(3)
                 ->create()
                 ->each(function ($package) use ($services) {
                     $this->attachRandomServices($package, $services);
                 });
-
-            $this->command->info('Service packages created successfully!');
         });
     }
 
-    private function createWeddingPackage($services): void
+    private function createWeddingPackage(): void
     {
         $package = ServicePackage::create([
             'name' => 'Wedding Complete Package',
@@ -56,6 +53,7 @@ class ServicePackageSeeder extends Seeder
             'metadata' => [
                 'featured' => true,
                 'popular' => true,
+                'category' => 'wedding',
                 'includes' => [
                     'Bridal arch',
                     'Table centerpieces (up to 10 tables)',
@@ -64,22 +62,23 @@ class ServicePackageSeeder extends Seeder
                     'Professional setup',
                     'Breakdown service',
                     'Consultation included'
-                ]
+                ],
+                'wedding_styles' => ['Traditional', 'Modern', 'Rustic', 'Romantic']
             ]
         ]);
 
-        // Add core services (required)
+        // Add core services (required) - using actual service names from ServiceSeeder
         $this->attachServiceToPackage($package, 'Balloon Arch Design', 1, 1, false);
         $this->attachServiceToPackage($package, 'Table Centerpieces', 8, 2, false);
-        $this->attachServiceToPackage($package, 'Photo Backdrop Setup', 1, 3, false);
+        $this->attachServiceToPackage($package, 'Event Backdrop Design', 1, 3, false);
 
         // Add optional services
-        $this->attachServiceToPackage($package, 'Venue Consultation', 1, 4, true);
+        $this->attachServiceToPackage($package, 'Design Consultation', 1, 4, true);
 
         $this->calculatePackagePricing($package, 15); // 15% discount
     }
 
-    private function createBirthdayPackage($services): void
+    private function createBirthdayPackage(): void
     {
         $package = ServicePackage::create([
             'name' => 'Birthday Party Deluxe',
@@ -92,6 +91,7 @@ class ServicePackageSeeder extends Seeder
             'min_advance_booking_hours' => 24,
             'sort_order' => 2,
             'metadata' => [
+                'category' => 'birthday',
                 'age_groups' => ['kids', 'teens', 'adults'],
                 'themes_available' => ['cartoon', 'superhero', 'princess', 'sports', 'custom']
             ]
@@ -99,12 +99,12 @@ class ServicePackageSeeder extends Seeder
 
         $this->attachServiceToPackage($package, 'Balloon Arch Design', 1, 1, false);
         $this->attachServiceToPackage($package, 'Table Centerpieces', 3, 2, false);
-        $this->attachServiceToPackage($package, 'Photo Backdrop Setup', 1, 3, true);
+        $this->attachServiceToPackage($package, 'Balloon Garland Installation', 1, 3, true);
 
         $this->calculatePackagePricing($package, 10); // 10% discount
     }
 
-    private function createCorporatePackage($services): void
+    private function createCorporatePackage(): void
     {
         $package = ServicePackage::create([
             'name' => 'Corporate Event Package',
@@ -118,20 +118,21 @@ class ServicePackageSeeder extends Seeder
             'min_advance_booking_hours' => 48,
             'sort_order' => 3,
             'metadata' => [
+                'category' => 'corporate',
                 'suitable_for' => ['conferences', 'product launches', 'corporate parties', 'award ceremonies'],
                 'customizable' => true,
                 'brand_colors' => true
             ]
         ]);
 
-        $this->attachServiceToPackage($package, 'Venue Consultation', 1, 1, false);
+        $this->attachServiceToPackage($package, 'Design Consultation', 1, 1, false);
         $this->attachServiceToPackage($package, 'Table Centerpieces', 6, 2, false);
-        $this->attachServiceToPackage($package, 'Photo Backdrop Setup', 1, 3, true);
+        $this->attachServiceToPackage($package, 'Event Backdrop Design', 1, 3, true);
 
         $this->calculatePackagePricing($package, 12); // 12% discount
     }
 
-    private function createBabyShowerPackage($services): void
+    private function createBabyShowerPackage(): void
     {
         $package = ServicePackage::create([
             'name' => 'Baby Shower Bliss',
@@ -144,6 +145,7 @@ class ServicePackageSeeder extends Seeder
             'min_advance_booking_hours' => 24,
             'sort_order' => 4,
             'metadata' => [
+                'category' => 'baby_shower',
                 'themes' => ['boy', 'girl', 'neutral', 'safari', 'cloud', 'floral'],
                 'color_schemes' => ['pink/gold', 'blue/silver', 'mint/gold', 'neutral/gold']
             ]
@@ -151,12 +153,12 @@ class ServicePackageSeeder extends Seeder
 
         $this->attachServiceToPackage($package, 'Balloon Arch Design', 1, 1, false);
         $this->attachServiceToPackage($package, 'Table Centerpieces', 4, 2, false);
-        $this->attachServiceToPackage($package, 'Photo Backdrop Setup', 1, 3, true);
+        $this->attachServiceToPackage($package, 'Balloon Bouquet Delivery', 1, 3, true);
 
         $this->calculatePackagePricing($package, 8); // 8% discount
     }
 
-    private function createAnniversaryPackage($services): void
+    private function createAnniversaryPackage(): void
     {
         $package = ServicePackage::create([
             'name' => 'Anniversary Elegance',
@@ -169,6 +171,7 @@ class ServicePackageSeeder extends Seeder
             'min_advance_booking_hours' => 48,
             'sort_order' => 5,
             'metadata' => [
+                'category' => 'anniversary',
                 'romantic_themes' => ['classic', 'vintage', 'modern', 'garden'],
                 'anniversary_milestones' => ['1st', '5th', '10th', '25th', '50th'],
                 'special_touches' => ['candles', 'flowers', 'personalized elements']
@@ -176,22 +179,108 @@ class ServicePackageSeeder extends Seeder
         ]);
 
         $this->attachServiceToPackage($package, 'Table Centerpieces', 2, 1, false);
-        $this->attachServiceToPackage($package, 'Photo Backdrop Setup', 1, 2, false);
+        $this->attachServiceToPackage($package, 'Balloon Garland Installation', 1, 2, false);
         $this->attachServiceToPackage($package, 'Balloon Arch Design', 1, 3, true);
 
         $this->calculatePackagePricing($package, 10); // 10% discount
     }
 
+    private function createGraduationPackage(): void
+    {
+        $package = ServicePackage::create([
+            'name' => 'Graduation Celebration',
+            'description' => 'Honor this momentous achievement with our graduation celebration package. Features school colors, diploma-themed decorations, and celebratory balloon arrangements.',
+            'short_description' => 'Academic achievement celebration decorations',
+            'total_price' => 20000, // £200
+            'is_active' => true,
+            'requires_consultation' => false,
+            'max_advance_booking_days' => 60,
+            'min_advance_booking_hours' => 48,
+            'sort_order' => 6,
+            'metadata' => [
+                'category' => 'graduation',
+                'education_levels' => ['high_school', 'college', 'university', 'graduate'],
+                'school_colors' => true,
+                'diploma_themed' => true
+            ]
+        ]);
+
+        $this->attachServiceToPackage($package, 'Balloon Arch Design', 1, 1, false);
+        $this->attachServiceToPackage($package, 'Table Centerpieces', 3, 2, false);
+        $this->attachServiceToPackage($package, 'Balloon Bouquet Delivery', 1, 3, true);
+
+        $this->calculatePackagePricing($package, 8); // 8% discount
+    }
+
+    private function createHolidayPackage(): void
+    {
+        $package = ServicePackage::create([
+            'name' => 'Holiday Spectacular',
+            'description' => 'Transform your space for the holidays with seasonal decorations, festive balloon arrangements, and themed centerpieces that capture the spirit of the season.',
+            'short_description' => 'Seasonal holiday decoration package',
+            'total_price' => 28000, // £280
+            'is_active' => true,
+            'requires_consultation' => false,
+            'max_advance_booking_days' => 90,
+            'min_advance_booking_hours' => 72,
+            'sort_order' => 7,
+            'metadata' => [
+                'category' => 'holiday',
+                'seasonal_themes' => ['christmas', 'new_year', 'easter', 'halloween'],
+                'seasonal_only' => true,
+                'includes_lighting' => true
+            ]
+        ]);
+
+        $this->attachServiceToPackage($package, 'Balloon Arch Design', 2, 1, false);
+        $this->attachServiceToPackage($package, 'Table Centerpieces', 5, 2, false);
+        $this->attachServiceToPackage($package, 'Balloon Garland Installation', 1, 3, true);
+
+        $this->calculatePackagePricing($package, 12); // 12% discount
+    }
+
     private function attachServiceToPackage($package, $serviceName, $quantity, $order, $isOptional): void
     {
-        $service = Service::where('name', 'like', "%{$serviceName}%")->first();
+        // Try exact match first
+        $service = Service::where('name', $serviceName)->first();
+
+        // If no exact match, try partial match
+        if (!$service) {
+            $service = Service::where('name', 'like', "%{$serviceName}%")->first();
+        }
 
         if ($service) {
-            $package->services()->attach($service->id, [
-                'quantity' => $quantity,
-                'order' => $order,
-                'is_optional' => $isOptional,
-                'notes' => $isOptional ? 'Optional upgrade' : null,
+            try {
+                $package->services()->attach($service->id, [
+                    'quantity' => $quantity,
+                    'order' => $order,
+                    'is_optional' => $isOptional,
+                    'notes' => $isOptional ? 'Optional upgrade' : null,
+                ]);
+
+                Log::info("Attached service to package", [
+                    'package' => $package->name,
+                    'service' => $service->name,
+                    'quantity' => $quantity,
+                    'is_optional' => $isOptional
+                ]);
+            } catch (\Exception $e) {
+                $this->command->error("Failed to attach service '{$service->name}' to package '{$package->name}': " . $e->getMessage());
+                Log::error("Service attachment failed", [
+                    'package' => $package->name,
+                    'service' => $service->name,
+                    'error' => $e->getMessage()
+                ]);
+            }
+        } else {
+            $this->command->warn("Service '{$serviceName}' not found, skipping attachment to {$package->name}");
+
+            // Log available services for debugging
+            $availableServices = Service::pluck('name')->toArray();
+            $this->command->info("Available services: " . implode(', ', $availableServices));
+            Log::warning("Service not found", [
+                'requested_service' => $serviceName,
+                'available_services' => $availableServices
             ]);
         }
     }
@@ -220,11 +309,22 @@ class ServicePackageSeeder extends Seeder
 
     private function calculatePackagePricing($package, $discountPercentage = 0): void
     {
+        // Refresh the package to get the latest relationships
+        $package->refresh();
+
         $totalPrice = 0;
         $totalDuration = 0;
 
-        foreach ($package->services as $service) {
-            $quantity = $service->pivot->quantity;
+        // Load services with pivot data
+        $services = $package->services()->get();
+
+        if ($services->isEmpty()) {
+            $this->command->warn("No services attached to package '{$package->name}', skipping pricing calculation");
+            return;
+        }
+
+        foreach ($services as $service) {
+            $quantity = $service->pivot->quantity ?? 1;
             $totalPrice += $service->base_price * $quantity;
             $totalDuration += $service->duration_minutes * $quantity;
         }
@@ -232,17 +332,35 @@ class ServicePackageSeeder extends Seeder
         $discountAmount = 0;
         $finalPrice = $totalPrice;
 
-        if ($discountPercentage > 0) {
+        if ($discountPercentage > 0 && $totalPrice > 0) {
             $discountAmount = (int) round($totalPrice * ($discountPercentage / 100));
             $finalPrice = $totalPrice - $discountAmount;
         }
 
-        $package->update([
-            'individual_price_total' => $totalPrice,
-            'total_duration_minutes' => $totalDuration,
-            'discount_percentage' => $discountPercentage > 0 ? $discountPercentage : null,
-            'discount_amount' => $discountAmount,
-            'total_price' => $finalPrice,
-        ]);
+        try {
+            $package->update([
+                'individual_price_total' => $totalPrice,
+                'total_duration_minutes' => $totalDuration,
+                'discount_percentage' => $discountPercentage > 0 ? $discountPercentage : null,
+                'discount_amount' => $discountAmount,
+                'total_price' => $finalPrice,
+            ]);
+
+            Log::info("Calculated package pricing", [
+                'package' => $package->name,
+                'individual_total' => $totalPrice,
+                'discount_percentage' => $discountPercentage,
+                'discount_amount' => $discountAmount,
+                'final_price' => $finalPrice,
+                'duration_minutes' => $totalDuration,
+                'services_count' => $services->count()
+            ]);
+        } catch (\Exception $e) {
+            $this->command->error("Failed to update pricing for package '{$package->name}': " . $e->getMessage());
+            Log::error("Package pricing calculation failed", [
+                'package' => $package->name,
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 }

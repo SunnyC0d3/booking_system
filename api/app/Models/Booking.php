@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Constants\BookingStatuses;
+use App\Constants\PaymentStatuses;
 use App\Filters\V1\QueryFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -117,17 +119,17 @@ class Booking extends Model
 
     public function scopeActive(Builder $query): Builder
     {
-        return $query->whereIn('status', ['pending', 'confirmed', 'in_progress']);
+        return $query->whereIn('status', [BookingStatuses::PENDING, BookingStatuses::CONFIRMED, BookingStatuses::IN_PROGRESS]);
     }
 
     public function scopeCompleted(Builder $query): Builder
     {
-        return $query->where('status', 'completed');
+        return $query->where('status', BookingStatuses::COMPLETED);
     }
 
     public function scopeCancelled(Builder $query): Builder
     {
-        return $query->where('status', 'cancelled');
+        return $query->where('status', BookingStatuses::CANCELLED);
     }
 
     public function scopeFilter(Builder $builder, QueryFilter $filters)
@@ -188,13 +190,13 @@ class Booking extends Model
 
     public function canBeCancelled(): bool
     {
-        return in_array($this->status, ['pending', 'confirmed']) &&
+        return in_array($this->status, [BookingStatuses::PENDING, BookingStatuses::CONFIRMED]) &&
             $this->scheduled_at > now()->addHours(24); // 24h cancellation policy
     }
 
     public function canBeRescheduled(): bool
     {
-        return in_array($this->status, ['pending', 'confirmed']) &&
+        return in_array($this->status, [BookingStatuses::PENDING, BookingStatuses::CONFIRMED]) &&
             $this->scheduled_at > now()->addHours(24);
     }
 
@@ -210,17 +212,17 @@ class Booking extends Model
 
     public function needsDeposit(): bool
     {
-        return $this->deposit_amount > 0 && $this->payment_status === 'pending';
+        return $this->deposit_amount > 0 && $this->payment_status === PaymentStatuses::PENDING;
     }
 
     public function isDepositPaid(): bool
     {
-        return in_array($this->payment_status, ['deposit_paid', 'fully_paid']);
+        return in_array($this->payment_status, [PaymentStatuses::DEPOSIT_PAID, PaymentStatuses::PAID]);
     }
 
     public function isFullyPaid(): bool
     {
-        return $this->payment_status === 'fully_paid';
+        return $this->payment_status === PaymentStatuses::PAID;
     }
 
     public function getDurationInHours(): float
@@ -244,27 +246,11 @@ class Booking extends Model
 
     public function getStatusColorAttribute(): string
     {
-        return match($this->status) {
-            'pending' => 'yellow',
-            'confirmed' => 'blue',
-            'in_progress' => 'green',
-            'completed' => 'green',
-            'cancelled' => 'red',
-            'no_show' => 'red',
-            'rescheduled' => 'orange',
-            default => 'gray'
-        };
+        return BookingStatuses::getColor($this->status);
     }
 
     public function getPaymentStatusColorAttribute(): string
     {
-        return match($this->payment_status) {
-            'pending' => 'red',
-            'deposit_paid' => 'yellow',
-            'fully_paid' => 'green',
-            'refunded' => 'gray',
-            'partially_refunded' => 'orange',
-            default => 'gray'
-        };
+        return PaymentStatuses::getColor($this->payment_status);
     }
 }

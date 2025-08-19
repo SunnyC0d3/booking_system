@@ -167,18 +167,6 @@ return new class extends Migration
             $table->index('follow_up_by_date');
             $table->index(['quote_requested', 'quote_due_date']);
         });
-
-        // Add consultation fields to main bookings table
-        Schema::table('bookings', function (Blueprint $table) {
-            $table->foreignId('consultation_booking_id')->nullable()->after('service_location_id')->constrained('consultation_bookings')->onDelete('set null');
-            $table->boolean('consultation_completed')->default(false)->after('requires_consultation');
-            $table->datetime('consultation_completed_at')->nullable()->after('consultation_completed');
-            $table->text('consultation_summary')->nullable()->after('consultation_completed_at');
-
-            // Indexes
-            $table->index('consultation_booking_id');
-            $table->index(['requires_consultation', 'consultation_completed']);
-        });
     }
 
     /**
@@ -186,17 +174,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Remove fields from bookings table
-        Schema::table('bookings', function (Blueprint $table) {
-            $table->dropForeign(['consultation_booking_id']);
-            $table->dropColumn([
-                'consultation_booking_id',
-                'consultation_completed',
-                'consultation_completed_at',
-                'consultation_summary'
-            ]);
-        });
-
         // Drop consultation tables
         Schema::dropIfExists('consultation_outcomes');
         Schema::dropIfExists('consultation_notes');

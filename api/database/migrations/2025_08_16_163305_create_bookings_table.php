@@ -1,5 +1,6 @@
 <?php
 
+use App\Constants\PaymentStatuses;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -53,12 +54,14 @@ return new class extends Migration
             ])->default('pending');
 
             $table->enum('payment_status', [
-                'pending',      // No payment yet
-                'deposit_paid', // Deposit received
-                'paid',         // Fully paid
-                'refunded',     // Money returned
-                'partially_refunded' // Partial refund given
-            ])->default('pending');
+                PaymentStatuses::DEPOSIT_PAID,
+                PaymentStatuses::PENDING,
+                PaymentStatuses::PARTIAL,
+                PaymentStatuses::PAID,
+                PaymentStatuses::REFUNDED,
+                PaymentStatuses::FAILED,
+                PaymentStatuses::CANCELLED
+            ])->default(PaymentStatuses::PENDING);
 
             // Client information
             $table->string('client_name');
@@ -72,12 +75,8 @@ return new class extends Migration
             $table->text('venue_contact_info')->nullable(); // Venue contact details
             $table->json('vendor_coordination')->nullable(); // Other vendors at same venue
 
-            // Consultation workflow
-            $table->foreignId('consultation_booking_id')->nullable()->constrained('consultation_bookings')->onDelete('set null');
+            // Basic consultation flag (we'll add foreign key later)
             $table->boolean('requires_consultation')->default(false);
-            $table->boolean('consultation_completed')->default(false);
-            $table->datetime('consultation_completed_at')->nullable();
-            $table->text('consultation_summary')->nullable();
 
             // Service delivery tracking
             $table->datetime('started_at')->nullable(); // When service actually began
@@ -111,11 +110,10 @@ return new class extends Migration
             $table->index(['status', 'scheduled_at']);
             $table->index(['payment_status', 'created_at']);
             $table->index('booking_reference');
-            $table->index('consultation_booking_id');
-            $table->index(['requires_consultation', 'consultation_completed']);
             $table->index('venue_access_time');
             $table->index('venue_departure_time');
             $table->index(['follow_up_required', 'follow_up_scheduled_at']);
+            $table->index('requires_consultation');
 
             // Composite indexes for common queries
             $table->index(['service_id', 'status', 'scheduled_at'], 'service_status_time_idx');

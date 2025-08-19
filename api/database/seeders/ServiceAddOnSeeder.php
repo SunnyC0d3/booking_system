@@ -17,8 +17,6 @@ class ServiceAddOnSeeder extends Seeder
             foreach ($services as $service) {
                 $this->createAddOnsForService($service);
             }
-
-            $this->command->info('Service add-ons created successfully!');
         });
     }
 

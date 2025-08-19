@@ -27,6 +27,8 @@ return new class extends Migration
             $table->integer('sort_order')->default(0);
             $table->enum('category', ['equipment', 'service_enhancement', 'location', 'other'])->default('other');
 
+            $table->json('metadata')->nullable()->after('category');
+
             $table->timestamps();
             $table->softDeletes();
 

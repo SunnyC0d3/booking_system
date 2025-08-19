@@ -14,11 +14,13 @@ class ServiceAvailabilityWindowSeeder extends Seeder
         DB::transaction(function () {
             $services = Service::with('locations')->get();
 
+            if ($services->isEmpty()) {
+                return;
+            }
+
             foreach ($services as $service) {
                 $this->createAvailabilityForService($service);
             }
-
-            $this->command->info('Service availability windows created successfully!');
         });
     }
 
@@ -53,9 +55,7 @@ class ServiceAvailabilityWindowSeeder extends Seeder
                     'max_bookings' => $this->getMaxBookingsForService($service, 'weekday'),
                     'slot_duration_minutes' => $service->duration_minutes,
                     'break_duration_minutes' => 15,
-                    'booking_buffer_minutes' => 30,
-                    'allow_overlapping_bookings' => false,
-                    'max_concurrent_bookings' => 1,
+                    // Removed: booking_buffer_minutes, allow_overlapping_bookings, max_concurrent_bookings
                     'min_advance_booking_hours' => 24,
                     'max_advance_booking_days' => 90,
                     'is_active' => true,
@@ -80,9 +80,7 @@ class ServiceAvailabilityWindowSeeder extends Seeder
                     'max_bookings' => 3,
                     'slot_duration_minutes' => $service->duration_minutes,
                     'break_duration_minutes' => 30,
-                    'booking_buffer_minutes' => 60,
-                    'allow_overlapping_bookings' => false,
-                    'max_concurrent_bookings' => 1,
+                    // Removed: booking_buffer_minutes, allow_overlapping_bookings, max_concurrent_bookings
                     'min_advance_booking_hours' => 48,
                     'max_advance_booking_days' => 90,
                     'is_active' => true,
@@ -111,9 +109,7 @@ class ServiceAvailabilityWindowSeeder extends Seeder
                 'max_bookings' => $this->getMaxBookingsForService($service, 'weekend'),
                 'slot_duration_minutes' => $service->duration_minutes,
                 'break_duration_minutes' => 30,
-                'booking_buffer_minutes' => 45,
-                'allow_overlapping_bookings' => false,
-                'max_concurrent_bookings' => 1,
+                // Removed: booking_buffer_minutes, allow_overlapping_bookings, max_concurrent_bookings
                 'min_advance_booking_hours' => 48,
                 'max_advance_booking_days' => 90,
                 'is_active' => true,
@@ -138,9 +134,7 @@ class ServiceAvailabilityWindowSeeder extends Seeder
                 'max_bookings' => 4,
                 'slot_duration_minutes' => $service->duration_minutes,
                 'break_duration_minutes' => 45,
-                'booking_buffer_minutes' => 60,
-                'allow_overlapping_bookings' => false,
-                'max_concurrent_bookings' => 1,
+                // Removed: booking_buffer_minutes, allow_overlapping_bookings, max_concurrent_bookings
                 'min_advance_booking_hours' => 72,
                 'max_advance_booking_days' => 90,
                 'is_active' => true,
@@ -166,9 +160,7 @@ class ServiceAvailabilityWindowSeeder extends Seeder
                     'max_bookings' => $this->getMaxBookingsForService($service, 'sunday'),
                     'slot_duration_minutes' => $service->duration_minutes,
                     'break_duration_minutes' => 30,
-                    'booking_buffer_minutes' => 60,
-                    'allow_overlapping_bookings' => false,
-                    'max_concurrent_bookings' => 1,
+                    // Removed: booking_buffer_minutes, allow_overlapping_bookings, max_concurrent_bookings
                     'min_advance_booking_hours' => 72,
                     'max_advance_booking_days' => 90,
                     'is_active' => true,
@@ -190,7 +182,7 @@ class ServiceAvailabilityWindowSeeder extends Seeder
                 ServiceAvailabilityWindow::create([
                     'service_id' => $service->id,
                     'service_location_id' => $location->id,
-                    'type' => 'evening',
+                    'type' => 'special_hours', // Changed from 'evening' to match migration enum
                     'pattern' => 'weekly',
                     'day_of_week' => $dayOfWeek,
                     'start_time' => '18:00:00',
@@ -198,9 +190,7 @@ class ServiceAvailabilityWindowSeeder extends Seeder
                     'max_bookings' => 2,
                     'slot_duration_minutes' => $service->duration_minutes,
                     'break_duration_minutes' => 15,
-                    'booking_buffer_minutes' => 15,
-                    'allow_overlapping_bookings' => false,
-                    'max_concurrent_bookings' => 1,
+                    // Removed: booking_buffer_minutes, allow_overlapping_bookings, max_concurrent_bookings
                     'min_advance_booking_hours' => 24,
                     'max_advance_booking_days' => 60,
                     'is_active' => true,
@@ -236,37 +226,35 @@ class ServiceAvailabilityWindowSeeder extends Seeder
         }
 
         // Default for other services
-        return $period === 'weekend' ? 2 : 4;
+        return $period === 'weekend' ? 3 : 5;
     }
 
     private function serviceSupportsEveningBookings(Service $service): bool
     {
         $serviceName = strtolower($service->name);
 
-        // Only consultation services support evening bookings
+        // Only consultation services typically offer evening appointments
         return str_contains($serviceName, 'consultation') ||
-            str_contains($serviceName, 'planning');
+            str_contains($serviceName, 'design');
     }
 
     private function serviceSupportsWeekends(Service $service): bool
     {
         $serviceName = strtolower($service->name);
 
-        // Most services support weekends except basic consultations
+        // Most services support weekends except maybe consultations
         return !str_contains($serviceName, 'consultation') ||
-            str_contains($serviceName, 'design consultation');
+            str_contains($serviceName, 'emergency') ||
+            str_contains($serviceName, 'wedding');
     }
 
     private function isMobileService(Service $service): bool
     {
         $serviceName = strtolower($service->name);
 
-        // Services that can be provided at client locations
-        return str_contains($serviceName, 'arch') ||
-            str_contains($serviceName, 'garland') ||
-            str_contains($serviceName, 'backdrop') ||
-            str_contains($serviceName, 'centerpiece') ||
-            str_contains($serviceName, 'ceiling') ||
-            str_contains($serviceName, 'delivery');
+        // Check if this is a mobile service based on name or if it has mobile locations
+        return str_contains($serviceName, 'mobile') ||
+            str_contains($serviceName, 'delivery') ||
+            $service->locations->where('type', 'client_location')->isNotEmpty();
     }
 }

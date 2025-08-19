@@ -2,6 +2,10 @@
 
 namespace App\Models;
 
+use App\Constants\ConsultationFormats;
+use App\Constants\ConsultationPaymentStatuses;
+use App\Constants\ConsultationStatuses;
+use App\Constants\ConsultationTypes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -100,22 +104,22 @@ class ConsultationBooking extends Model
     // Scopes
     public function scopeScheduled(Builder $query): Builder
     {
-        return $query->where('status', 'scheduled');
+        return $query->where('status', ConsultationStatuses::SCHEDULED);
     }
 
     public function scopeCompleted(Builder $query): Builder
     {
-        return $query->where('status', 'completed');
+        return $query->where('status', ConsultationStatuses::COMPLETED);
     }
 
     public function scopeCancelled(Builder $query): Builder
     {
-        return $query->where('status', 'cancelled');
+        return $query->where('status', ConsultationStatuses::CANCELLED);
     }
 
     public function scopeInProgress(Builder $query): Builder
     {
-        return $query->where('status', 'in_progress');
+        return $query->where('status', ConsultationStatuses::IN_PROGRESS);
     }
 
     public function scopeUpcoming(Builder $query): Builder
@@ -179,70 +183,43 @@ class ConsultationBooking extends Model
 
     public function getStatusDisplayAttribute(): string
     {
-        return match($this->status) {
-            'scheduled' => 'Scheduled',
-            'in_progress' => 'In Progress',
-            'completed' => 'Completed',
-            'cancelled' => 'Cancelled',
-            'no_show' => 'No Show',
-            default => ucfirst($this->status)
-        };
+        return ConsultationStatuses::getDisplayName($this->status);
     }
 
     public function getTypeDisplayAttribute(): string
     {
-        return match($this->type) {
-            'pre_booking' => 'Pre-Booking Consultation',
-            'design' => 'Design Consultation',
-            'planning' => 'Planning Session',
-            'technical' => 'Technical Consultation',
-            'follow_up' => 'Follow-Up Meeting',
-            default => ucfirst(str_replace('_', ' ', $this->type))
-        };
+        return ConsultationTypes::getDisplayName($this->type);
     }
 
     public function getFormatDisplayAttribute(): string
     {
-        return match($this->format) {
-            'phone' => 'Phone Call',
-            'video' => 'Video Call',
-            'in_person' => 'In-Person Meeting',
-            'site_visit' => 'Site Visit',
-            default => ucfirst(str_replace('_', ' ', $this->format))
-        };
+        return ConsultationFormats::getDisplayName($this->format);
     }
 
     public function getPaymentStatusDisplayAttribute(): string
     {
-        return match($this->payment_status) {
-            'free' => 'Free Consultation',
-            'unpaid' => 'Payment Required',
-            'paid' => 'Paid',
-            'refunded' => 'Refunded',
-            'waived' => 'Fee Waived',
-            default => ucfirst($this->payment_status)
-        };
+        return ConsultationPaymentStatuses::getDisplayName($this->payment_status);
     }
 
     // Helper Methods
     public function isScheduled(): bool
     {
-        return $this->status === 'scheduled';
+        return $this->status === ConsultationStatuses::SCHEDULED;
     }
 
     public function isCompleted(): bool
     {
-        return $this->status === 'completed';
+        return $this->status === ConsultationStatuses::COMPLETED;
     }
 
     public function isCancelled(): bool
     {
-        return $this->status === 'cancelled';
+        return $this->status === ConsultationStatuses::CANCELLED;
     }
 
     public function isInProgress(): bool
     {
-        return $this->status === 'in_progress';
+        return $this->status === ConsultationStatuses::IN_PROGRESS;
     }
 
     public function isUpcoming(): bool
@@ -258,7 +235,7 @@ class ConsultationBooking extends Model
     public function canStart(): bool
     {
         return $this->isScheduled() &&
-            $this->scheduled_at->subMinutes(15)->isPast(); // Can start 15 mins early
+            $this->scheduled_at->subMinutes(15)->isPast();
     }
 
     public function canComplete(): bool
@@ -268,7 +245,7 @@ class ConsultationBooking extends Model
 
     public function canCancel(): bool
     {
-        return in_array($this->status, ['scheduled', 'in_progress']);
+        return in_array($this->status, [ConsultationStatuses::SCHEDULED, ConsultationStatuses::IN_PROGRESS]);
     }
 
     public function canReschedule(): bool
@@ -278,17 +255,17 @@ class ConsultationBooking extends Model
 
     public function isFreeConsultation(): bool
     {
-        return $this->consultation_fee === 0 || $this->payment_status === 'free';
+        return $this->consultation_fee === 0 || $this->payment_status === ConsultationPaymentStatuses::FREE;
     }
 
     public function isVirtualMeeting(): bool
     {
-        return in_array($this->format, ['phone', 'video']);
+        return in_array($this->format, [ConsultationFormats::PHONE, ConsultationFormats::VIDEO]);
     }
 
     public function isInPersonMeeting(): bool
     {
-        return in_array($this->format, ['in_person', 'site_visit']);
+        return in_array($this->format, [ConsultationFormats::IN_PERSON, ConsultationFormats::SITE_VISIT]);
     }
 
     public function requiresLocation(): bool
@@ -298,7 +275,7 @@ class ConsultationBooking extends Model
 
     public function requiresMeetingLink(): bool
     {
-        return $this->format === 'video';
+        return $this->format === ConsultationFormats::VIDEO;
     }
 
     public function needsFollowUp(): bool
@@ -353,7 +330,7 @@ class ConsultationBooking extends Model
         }
 
         return $this->update([
-            'status' => 'in_progress',
+            'status' => ConsultationStatuses::IN_PROGRESS,
             'started_at' => now(),
         ]);
     }
@@ -365,7 +342,7 @@ class ConsultationBooking extends Model
         }
 
         $updateData = array_merge([
-            'status' => 'completed',
+            'status' => ConsultationStatuses::COMPLETED,
             'completed_at' => now(),
         ], $completionData);
 
@@ -379,7 +356,7 @@ class ConsultationBooking extends Model
         }
 
         return $this->update([
-            'status' => 'cancelled',
+            'status' => ConsultationStatuses::CANCELLED,
             'completion_notes' => $reason,
         ]);
     }

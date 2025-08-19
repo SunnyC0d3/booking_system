@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
@@ -63,6 +64,28 @@ class ServiceLocation extends Model
     public function availabilityWindows(): HasMany
     {
         return $this->hasMany(ServiceAvailabilityWindow::class);
+    }
+
+    // ADD THIS RELATIONSHIP - This is what was missing!
+    public function venueDetails(): HasOne
+    {
+        return $this->hasOne(VenueDetails::class);
+    }
+
+    // Also add these related relationships based on your migrations
+    public function venueAvailabilityWindows(): HasMany
+    {
+        return $this->hasMany(VenueAvailabilityWindow::class);
+    }
+
+    public function venueAmenities(): HasMany
+    {
+        return $this->hasMany(VenueAmenity::class);
+    }
+
+    public function clientVenueRequirements(): HasMany
+    {
+        return $this->hasMany(ClientVenueRequirement::class);
     }
 
     // Scopes
@@ -230,5 +253,17 @@ class ServiceLocation extends Model
         $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
 
         return $earthRadius * $c;
+    }
+
+    // Helper method to check if venue details exist
+    public function hasVenueDetails(): bool
+    {
+        return $this->venueDetails()->exists();
+    }
+
+    // Helper method to get or create venue details
+    public function getOrCreateVenueDetails(): VenueDetails
+    {
+        return $this->venueDetails ?? $this->venueDetails()->create([]);
     }
 }
