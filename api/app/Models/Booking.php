@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Filters\V1\QueryFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -127,6 +128,11 @@ class Booking extends Model
     public function scopeCancelled(Builder $query): Builder
     {
         return $query->where('status', 'cancelled');
+    }
+
+    public function scopeFilter(Builder $builder, QueryFilter $filters)
+    {
+        return $filters->apply($builder);
     }
 
     public function scopeRequiresConsultation(Builder $query): Builder

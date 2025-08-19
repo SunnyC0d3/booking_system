@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1\Public;
 
+use App\Filters\V1\BookingFilter;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Service;
@@ -32,10 +33,10 @@ class BookingController extends Controller
     /**
      * Get user's bookings
      */
-    public function index(FilterBookingRequest $request)
+    public function index(FilterBookingRequest $request, BookingFilter $filter)
     {
         try {
-            return $this->bookingService->getUserBookings($request);
+            return $this->bookingService->getUserBookings($request, $filter);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }

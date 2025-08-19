@@ -110,7 +110,7 @@ Route::prefix('admin/payments')
         Route::get('/', 'index')->name('admin.payments.index');
     });
 
-// ✅ CLEANED Admin/Bookings - Essential routes only
+// CLEANED Admin/Bookings - Essential routes only
 Route::prefix('admin/bookings')
     ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
     ->controller(BookingController::class)
@@ -147,7 +147,7 @@ Route::prefix('admin/bookings')
             ->name('admin.bookings.no-show');
 
         // Statistics and monitoring
-        Route::get('/statistics', 'getStatistics')
+        Route::get('/stats/overview', 'getStatistics')
             ->middleware('rate_limit:admin.statistics')
             ->name('admin.bookings.statistics');
         Route::get('/system/health', 'getSystemHealth')
@@ -166,11 +166,12 @@ Route::prefix('admin/bookings')
             ->name('admin.bookings.notifications.stats');
     });
 
-//Booking routes
+// CLEANED Admin/Consultations - Essential routes only
 Route::prefix('admin/consultations')
     ->middleware(['auth:api', 'roles:super admin,admin,customer service', 'emailVerified'])
     ->controller(ConsultationController::class)
     ->group(function () {
+        // Core consultation management
         Route::get('/', 'index')
             ->middleware('rate_limit:admin.consultations.view')
             ->name('admin.consultations.index');
@@ -209,7 +210,7 @@ Route::prefix('admin/consultations')
             ->name('admin.consultations.statistics');
     });
 
-// ✅ Service management routes (Admin) - Essential routes only
+// Service management routes (Admin) - Essential routes only
 Route::prefix('admin/services')
     ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
     ->controller(ServiceController::class)

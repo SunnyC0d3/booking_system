@@ -5,6 +5,7 @@ namespace App\Services\V1\Bookings;
 use App\Constants\BookingStatuses;
 use App\Constants\ConsultationStatuses;
 use App\Constants\PaymentStatuses;
+use App\Filters\V1\BookingFilter;
 use App\Mail\BookingCancelledMail;
 use App\Mail\BookingConfirmationMail;
 use App\Mail\ConsultationConfirmationMail;
@@ -1057,7 +1058,7 @@ class BookingService
     /**
      * Get all bookings (admin view)
      */
-    public function getAllBookings(Request $request): array
+    public function getAllBookings(Request $request, BookingFilter $filter): array
     {
         $user = $request->user();
 
@@ -1065,61 +1066,14 @@ class BookingService
             return $this->error('You do not have permission to view all bookings.', 403);
         }
 
-        // Get validated filters from the request
-        $filters = $request->only([
-            'user_id', 'service_id', 'status', 'payment_status',
-            'date_from', 'date_to', 'search', 'sort_by', 'sort_order', 'per_page'
-        ]);
+        $request->validated();
 
-        $query = Booking::with(['service', 'user', 'serviceLocation', 'bookingAddOns.serviceAddOn']);
+        $query = Booking::with(['service', 'user', 'serviceLocation', 'bookingAddOns.serviceAddOn'])
+            ->filter($filter);
 
-        // Apply admin filters
-        if (!empty($filters['user_id'])) {
-            $query->where('user_id', $filters['user_id']);
-        }
+        $perPage = $request->input('per_page', 25);
+        $perPage = min($perPage, 100); // Maximum 100 items per page
 
-        if (!empty($filters['service_id'])) {
-            $query->where('service_id', $filters['service_id']);
-        }
-
-        if (!empty($filters['status'])) {
-            if (is_array($filters['status'])) {
-                $query->whereIn('status', $filters['status']);
-            } else {
-                $query->where('status', $filters['status']);
-            }
-        }
-
-        if (!empty($filters['payment_status'])) {
-            $query->where('payment_status', $filters['payment_status']);
-        }
-
-        if (!empty($filters['date_from'])) {
-            $query->where('scheduled_at', '>=', Carbon::parse($filters['date_from'])->startOfDay());
-        }
-
-        if (!empty($filters['date_to'])) {
-            $query->where('scheduled_at', '<=', Carbon::parse($filters['date_to'])->endOfDay());
-        }
-
-        // Search functionality
-        if (!empty($filters['search'])) {
-            $search = $filters['search'];
-            $query->where(function ($q) use ($search) {
-                $q->where('booking_reference', 'like', "%{$search}%")
-                    ->orWhere('client_name', 'like', "%{$search}%")
-                    ->orWhere('client_email', 'like', "%{$search}%")
-                    ->orWhere('notes', 'like', "%{$search}%");
-            });
-        }
-
-        // Sorting
-        $sortBy = $filters['sort_by'] ?? 'scheduled_at';
-        $sortOrder = $filters['sort_order'] ?? 'desc';
-        $query->orderBy($sortBy, $sortOrder);
-
-        // Pagination
-        $perPage = min($filters['per_page'] ?? 25, 100);
         $bookings = $query->paginate($perPage);
 
         return $this->ok('All bookings retrieved successfully', [
@@ -1129,8 +1083,12 @@ class BookingService
                 'per_page' => $bookings->perPage(),
                 'total' => $bookings->total(),
                 'last_page' => $bookings->lastPage(),
+                'has_more_pages' => $bookings->hasMorePages(),
             ],
-            'filters_applied' => $filters,
+            'filters_applied' => $request->only([
+                'user_id', 'service_id', 'status', 'payment_status',
+                'date_from', 'date_to', 'search', 'sort', 'per_page'
+            ]),
             'statistics' => $this->getBasicBookingStatistics(),
         ]);
     }
@@ -1138,7 +1096,7 @@ class BookingService
     /**
      * Get user's bookings
      */
-    public function getUserBookings(Request $request): array
+    public function getUserBookings(Request $request, BookingFilter $filter): array
     {
         $user = $request->user();
 
@@ -1146,39 +1104,15 @@ class BookingService
             return $this->error('You do not have permission to view bookings.', 403);
         }
 
-        // Get validated filters from the request
-        $filters = $request->only([
-            'status', 'service_id', 'date_from', 'date_to',
-            'sort_by', 'sort_order', 'per_page'
-        ]);
+        $request->validated();
 
         $query = Booking::with(['service', 'serviceLocation', 'bookingAddOns.serviceAddOn'])
-            ->where('user_id', $user->id);
+            ->where('user_id', $user->id)
+            ->filter($filter);
 
-        // Apply user filters
-        if (!empty($filters['status'])) {
-            $query->where('status', $filters['status']);
-        }
+        $perPage = $request->input('per_page', 15);
+        $perPage = min($perPage, 50); // Maximum 50 items per page for users
 
-        if (!empty($filters['service_id'])) {
-            $query->where('service_id', $filters['service_id']);
-        }
-
-        if (!empty($filters['date_from'])) {
-            $query->where('scheduled_at', '>=', Carbon::parse($filters['date_from'])->startOfDay());
-        }
-
-        if (!empty($filters['date_to'])) {
-            $query->where('scheduled_at', '<=', Carbon::parse($filters['date_to'])->endOfDay());
-        }
-
-        // Sorting
-        $sortBy = $filters['sort_by'] ?? 'scheduled_at';
-        $sortOrder = $filters['sort_order'] ?? 'desc';
-        $query->orderBy($sortBy, $sortOrder);
-
-        // Pagination
-        $perPage = min($filters['per_page'] ?? 15, 50);
         $bookings = $query->paginate($perPage);
 
         return $this->ok('User bookings retrieved successfully', [
@@ -1188,8 +1122,11 @@ class BookingService
                 'per_page' => $bookings->perPage(),
                 'total' => $bookings->total(),
                 'last_page' => $bookings->lastPage(),
+                'has_more_pages' => $bookings->hasMorePages(),
             ],
-            'filters_applied' => $filters,
+            'filters_applied' => $request->only([
+                'service_id', 'status', 'date_from', 'date_to', 'search', 'sort', 'per_page'
+            ]),
         ]);
     }
 

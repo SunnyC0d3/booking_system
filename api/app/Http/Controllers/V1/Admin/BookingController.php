@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1\Admin;
 
+use App\Filters\V1\BookingFilter;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Requests\V1\StoreBookingRequest;
@@ -26,10 +27,10 @@ class BookingController extends Controller
     /**
      * Get all bookings with admin filtering
      */
-    public function index(FilterBookingRequest $request)
+    public function index(FilterBookingRequest $request, BookingFilter $filter)
     {
         try {
-            return $this->bookingService->getAllBookings($request);
+            return $this->bookingService->getAllBookings($request, $filter);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), $e->getCode() ?: 500);
         }
