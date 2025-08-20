@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\V1\CalendarTokenValidation;
 use App\Http\Middleware\V1\CheckAccountLock;
 use App\Http\Middleware\V1\CheckPasswordExpiry;
 use App\Http\Middleware\V1\DynamicRateLimit;
@@ -34,6 +35,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'client' => CheckClientCredentials::class,
+            'calendarTokenValidated' => CalendarTokenValidation::class,
             'scopes' => CheckScopes::class,
             'scope' => CheckForAnyScope::class,
             'roles' => Role::class,
