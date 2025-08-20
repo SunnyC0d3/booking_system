@@ -204,41 +204,6 @@ class CalendarEventService
     }
 
     /**
-     * Bulk delete events by integration
-     */
-    public function bulkDeleteEventsByIntegration(CalendarIntegration $integration): int
-    {
-        try {
-            // Verify user owns the integration
-            $currentUser = auth()->user();
-            if ($currentUser && $currentUser->id !== $integration->user_id && !$currentUser->hasPermission('manage_all_calendar_integrations')) {
-                Log::warning('Unauthorized bulk calendar event deletion attempt', [
-                    'user_id' => $currentUser->id,
-                    'integration_user_id' => $integration->user_id,
-                ]);
-                return 0;
-            }
-
-            $deletedCount = $integration->calendarEvents()->delete();
-
-            Log::info('Bulk calendar events deleted', [
-                'integration_id' => $integration->id,
-                'deleted_count' => $deletedCount,
-            ]);
-
-            return $deletedCount;
-
-        } catch (Exception $e) {
-            Log::error('Failed to bulk delete calendar events', [
-                'integration_id' => $integration->id,
-                'error' => $e->getMessage(),
-            ]);
-
-            return 0;
-        }
-    }
-
-    /**
      * Find conflicting events
      */
     public function findConflictingEvents(

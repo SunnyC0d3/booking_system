@@ -47,7 +47,7 @@ class RefreshCalendarTokens implements ShouldQueue
         $this->options = $options;
 
         // Set queue based on operation type
-        $queueName = $integration ? 'calendar-tokens' : 'calendar-tokens-bulk';
+        $queueName = 'calendar-tokens';
         $this->onQueue($queueName);
     }
 
@@ -59,14 +59,10 @@ class RefreshCalendarTokens implements ShouldQueue
         try {
             if ($this->integration) {
                 $this->refreshSingleIntegration($integrationService);
-            } else {
-                $this->refreshMultipleIntegrations($integrationService);
             }
-
         } catch (Exception $e) {
             Log::error('Calendar token refresh job failed', [
                 'integration_id' => $this->integration?->id,
-                'bulk_operation' => !$this->integration,
                 'error' => $e->getMessage(),
                 'attempt' => $this->attempts(),
             ]);
@@ -106,11 +102,6 @@ class RefreshCalendarTokens implements ShouldQueue
                 // TODO: Send notification to user about disabled integration
                 $this->sendIntegrationDisabledNotification();
             }
-        } else {
-            Log::error('Bulk calendar token refresh failed permanently', [
-                'attempts' => $this->attempts(),
-                'error' => $exception->getMessage(),
-            ]);
         }
     }
 
@@ -156,8 +147,6 @@ class RefreshCalendarTokens implements ShouldQueue
                 'provider:' . $this->integration->provider,
                 'user:' . $this->integration->user_id,
             ]);
-        } else {
-            $tags[] = 'bulk-refresh';
         }
 
         return $tags;
@@ -250,77 +239,6 @@ class RefreshCalendarTokens implements ShouldQueue
     }
 
     /**
-     * Refresh tokens for multiple integrations (bulk operation)
-     */
-    private function refreshMultipleIntegrations(CalendarIntegrationService $integrationService): void
-    {
-        Log::info('Starting bulk token refresh operation', [
-            'attempt' => $this->attempts(),
-        ]);
-
-        $results = ['refreshed' => 0, 'failed' => 0, 'skipped' => 0];
-
-        // Get integrations that need token refresh
-        $integrations = $this->getIntegrationsNeedingRefresh();
-
-        Log::info('Found integrations needing token refresh', [
-            'count' => $integrations->count(),
-        ]);
-
-        foreach ($integrations as $integration) {
-            try {
-                // Dispatch individual refresh job for each integration
-                RefreshCalendarTokens::dispatch($integration, [
-                    'schedule_next' => false, // Don't auto-schedule in bulk operation
-                    'bulk_operation' => true,
-                ])->onQueue('calendar-tokens');
-
-                $results['refreshed']++;
-
-                // Add small delay between dispatches to prevent overwhelming
-                usleep(100000); // 0.1 seconds
-
-            } catch (Exception $e) {
-                $results['failed']++;
-                Log::error('Failed to dispatch token refresh for integration', [
-                    'integration_id' => $integration->id,
-                    'error' => $e->getMessage(),
-                ]);
-            }
-        }
-
-        Log::info('Bulk token refresh operation completed', $results);
-
-        // Schedule next bulk refresh
-        if ($this->options['schedule_next_bulk'] ?? true) {
-            $this->scheduleNextBulkRefresh();
-        }
-    }
-
-    /**
-     * Get integrations that need token refresh
-     */
-    private function getIntegrationsNeedingRefresh()
-    {
-        $refreshWindow = now()->addMinutes(30); // Refresh tokens expiring in next 30 minutes
-
-        return CalendarIntegration::where('is_active', true)
-            ->whereNotNull('refresh_token')
-            ->where(function ($query) use ($refreshWindow) {
-                $query->where('token_expires_at', '<', $refreshWindow)
-                    ->orWhere(function ($q) {
-                        // Also refresh tokens that haven't been refreshed in 24 hours
-                        $q->whereNull('last_sync_at')
-                            ->orWhere('last_sync_at', '<', now()->subDay());
-                    });
-            })
-            ->where('sync_error_count', '<', 5) // Skip integrations with too many errors
-            ->orderBy('token_expires_at')
-            ->limit($this->options['batch_size'] ?? 50)
-            ->get();
-    }
-
-    /**
      * Mark integration as needing re-authorization
      */
     private function markNeedsReauthorization(): void
@@ -371,26 +289,6 @@ class RefreshCalendarTokens implements ShouldQueue
     }
 
     /**
-     * Schedule next bulk refresh operation
-     */
-    private function scheduleNextBulkRefresh(): void
-    {
-        // Schedule next bulk refresh in 6 hours
-        $nextRefresh = now()->addHours(6);
-
-        RefreshCalendarTokens::dispatch(null, [
-            'schedule_next_bulk' => true,
-            'batch_size' => 50,
-        ])
-            ->delay($nextRefresh)
-            ->onQueue('calendar-tokens-bulk');
-
-        Log::info('Next bulk token refresh scheduled', [
-            'refresh_at' => $nextRefresh->toISOString(),
-        ]);
-    }
-
-    /**
      * Send integration disabled notification
      */
     private function sendIntegrationDisabledNotification(): void
@@ -419,11 +317,7 @@ class RefreshCalendarTokens implements ShouldQueue
      */
     public function uniqueId(): string
     {
-        if ($this->integration) {
-            return "refresh_calendar_tokens_{$this->integration->id}";
-        }
-
-        return "refresh_calendar_tokens_bulk_" . now()->format('Y-m-d-H');
+        return "refresh_calendar_tokens_{$this->integration->id}";
     }
 
     /**
@@ -431,7 +325,7 @@ class RefreshCalendarTokens implements ShouldQueue
      */
     public function uniqueFor(): int
     {
-        return $this->integration ? 1800 : 3600; // 30 minutes for single, 1 hour for bulk
+        return 1800;
     }
 
     /**
@@ -439,11 +333,7 @@ class RefreshCalendarTokens implements ShouldQueue
      */
     public function displayName(): string
     {
-        if ($this->integration) {
-            return "Refresh Calendar Tokens (Integration: {$this->integration->id}, Provider: {$this->integration->provider})";
-        }
-
-        return "Bulk Refresh Calendar Tokens";
+        return "Refresh Calendar Tokens (Integration: {$this->integration->id}, Provider: {$this->integration->provider})";
     }
 
     /**
@@ -452,17 +342,6 @@ class RefreshCalendarTokens implements ShouldQueue
     public function timeoutAt(): Carbon
     {
         return now()->addMinutes(5); // Hard timeout
-    }
-
-    /**
-     * Static method to dispatch bulk refresh
-     */
-    public static function dispatchBulkRefresh(array $options = []): void
-    {
-        self::dispatch(null, array_merge([
-            'schedule_next_bulk' => true,
-            'batch_size' => 50,
-        ], $options))->onQueue('calendar-tokens-bulk');
     }
 
     /**

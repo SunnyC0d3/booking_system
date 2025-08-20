@@ -326,55 +326,6 @@ class ConsultationController extends Controller
     }
 
     /**
-     * Bulk update consultations
-     */
-    public function bulkUpdate(Request $request)
-    {
-        try {
-            $request->validate([
-                'consultation_ids' => 'required|array|min:1|max:50',
-                'consultation_ids.*' => 'exists:consultation_bookings,id',
-                'action' => 'required|in:assign_consultant,update_status,update_priority,reschedule,cancel',
-                'consultant_id' => 'nullable|exists:users,id',
-                'status' => 'nullable|in:scheduled,in_progress,completed,cancelled,no_show',
-                'priority' => 'nullable|in:low,medium,high,urgent',
-                'scheduled_at' => 'nullable|date|after:now',
-                'reason' => 'nullable|string|max:500',
-                'notify_clients' => 'boolean',
-                'notify_consultants' => 'boolean',
-            ]);
-
-            $user = $request->user();
-
-            // Check permissions
-            if (!$user->hasPermission('manage_consultations')) {
-                return $this->error('You do not have permission to perform bulk operations.', 403);
-            }
-
-            $consultationIds = $request->input('consultation_ids');
-            $action = $request->input('action');
-
-            Log::info('Admin performing bulk consultation update', [
-                'admin_id' => $user->id,
-                'action' => $action,
-                'consultation_count' => count($consultationIds),
-                'consultation_ids' => $consultationIds,
-            ]);
-
-            return $this->consultationService->bulkUpdateConsultations($request);
-
-        } catch (Exception $e) {
-            Log::error('Failed to perform bulk consultation update', [
-                'admin_id' => $request->user()?->id,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-
-            return $this->error($e->getMessage(), $e->getCode() ?: 422);
-        }
-    }
-
-    /**
      * Get consultation dashboard data
      */
     public function dashboard(Request $request)

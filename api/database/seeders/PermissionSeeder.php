@@ -96,7 +96,6 @@ class PermissionSeeder extends Seeder
             ['name' => 'view_booking_statistics'],
             ['name' => 'view_booking_calendar'],
             ['name' => 'export_bookings'],
-            ['name' => 'bulk_update_bookings'],
 
             // Consultation Management - User Level
             ['name' => 'create_consultations'],
@@ -114,7 +113,6 @@ class PermissionSeeder extends Seeder
             ['name' => 'delete_all_consultations'],
             ['name' => 'cancel_all_consultations'],
             ['name' => 'assign_consultants'],
-            ['name' => 'bulk_update_consultations'],
 
             // Consultation Session Management
             ['name' => 'host_consultations'],

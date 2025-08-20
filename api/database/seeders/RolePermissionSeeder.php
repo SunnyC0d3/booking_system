@@ -42,13 +42,10 @@ class RolePermissionSeeder extends Seeder
                 // Booking Status Management
                 'confirm_bookings', 'mark_bookings_in_progress', 'mark_bookings_completed', 'mark_bookings_no_show',
 
-                // Analytics and Reporting
-                'view_booking_statistics', 'view_booking_calendar', 'export_bookings', 'bulk_update_bookings',
-
                 // Consultation Management - Full Access
                 'manage_consultations', 'view_all_consultations', 'create_consultations_for_users',
                 'edit_all_consultations', 'delete_all_consultations', 'cancel_all_consultations',
-                'assign_consultants', 'bulk_update_consultations',
+                'assign_consultants',
 
                 // Consultation Session Management
                 'host_consultations', 'start_consultations', 'complete_consultations', 'mark_consultations_no_show',

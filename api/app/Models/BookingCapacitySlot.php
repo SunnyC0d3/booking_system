@@ -391,49 +391,6 @@ class BookingCapacitySlot extends Model
         ];
     }
 
-    public static function bulkBlock(
-        int $serviceId,
-        Carbon $startDate,
-        Carbon $endDate,
-        string $reason,
-        ?int $locationId = null
-    ): int {
-        $count = 0;
-        $slots = self::forService($serviceId)
-            ->forLocation($locationId)
-            ->forDateRange($startDate, $endDate)
-            ->upcoming()
-            ->get();
-
-        foreach ($slots as $slot) {
-            $slot->blockCompletely($reason);
-            $count++;
-        }
-
-        return $count;
-    }
-
-    public static function bulkUnblock(
-        int $serviceId,
-        Carbon $startDate,
-        Carbon $endDate,
-        ?int $locationId = null
-    ): int {
-        $count = 0;
-        $slots = self::forService($serviceId)
-            ->forLocation($locationId)
-            ->forDateRange($startDate, $endDate)
-            ->blocked()
-            ->get();
-
-        foreach ($slots as $slot) {
-            $slot->unblock();
-            $count++;
-        }
-
-        return $count;
-    }
-
     public static function cleanupPastSlots(): int
     {
         $cutoffDate = now()->subDays(30); // Keep slots for 30 days for reporting

@@ -436,45 +436,6 @@ class BookingNotification extends Model
         ];
     }
 
-    public static function bulkScheduleForBooking(
-        Booking $booking,
-        array $notificationTypes = null
-    ): array {
-        $notificationTypes = $notificationTypes ?: array_keys(self::getDefaultSchedule());
-        $scheduled = [];
-
-        foreach ($notificationTypes as $type) {
-            try {
-                $notification = match ($type) {
-                    'booking_created' => self::createImmediateNotification(
-                        $booking->id,
-                        'booking_created',
-                        'email',
-                        $booking->client_email
-                    ),
-                    'booking_reminder' => self::scheduleBookingReminder($booking->id, 60),
-                    'consultation_reminder' => $booking->requires_consultation
-                        ? self::scheduleConsultationReminder($booking->id, 24 * 60)
-                        : null,
-                    'payment_reminder' => $booking->payment_status === 'pending'
-                        ? self::schedulePaymentReminder($booking->id, 24)
-                        : null,
-                    'follow_up' => self::scheduleFollowUp($booking->id, 24),
-                    default => null
-                };
-
-                if ($notification) {
-                    $scheduled[] = $notification;
-                }
-            } catch (\Exception $e) {
-                // Log error but continue with other notifications
-                \Log::error("Failed to schedule {$type} notification for booking {$booking->id}: " . $e->getMessage());
-            }
-        }
-
-        return $scheduled;
-    }
-
     public static function cancelAllForBooking(int $bookingId): int
     {
         return self::where('booking_id', $bookingId)
