@@ -29,6 +29,9 @@ class DatabaseSeeder extends Seeder
             BookingNotificationSeeder::class,
             ServiceAvailabilityExceptionSeeder::class,
             VenueDetailsSeeder::class,
+
+            NotificationTemplateSeeder::class,
+            UserNotificationPreferencesSeeder::class
         ]);
     }
 }
