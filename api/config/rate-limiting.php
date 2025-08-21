@@ -79,6 +79,13 @@ return [
         'service_management' => '100,60',  // 100 service management operations per hour
         'location_management' => '50,60',  // 50 location management operations per hour
         'availability_management' => '100,60', // 100 availability management operations per hour
+
+        // VENUE MANAGEMENT RATE LIMITS (Admin)
+        'venue_management' => '100,60',         // 100 venue management operations per hour
+        'venue_availability' => '150,60',       // 150 venue availability operations per hour
+        'venue_amenities' => '200,60',          // 200 venue amenity operations per hour
+        'venue_analytics' => '50,60',           // 50 venue analytics requests per hour
+        'venue_bulk_operations' => '20,60',     // 20 venue bulk operations per hour
     ],
 
     'guest' => [
@@ -99,6 +106,12 @@ return [
         'availability.pricing' => '10,60', // 10 pricing estimates per hour for guests
         'availability.next_slot' => '5,60', // 5 next slot requests per hour for guests
         'consultation.slots' => '10,60',   // 10 consultation slot requests per hour for guests
+
+        // VENUE PUBLIC ACCESS RATE LIMITS (Guests)
+        'venue.public_view' => '60,60',         // 60 venue views per hour for guests
+        'venue.availability_check' => '20,60',  // 20 venue availability checks per hour for guests
+        'venue.amenity_search' => '30,60',      // 30 amenity searches per hour for guests
+        'venue.widget' => '100,60',             // 100 venue widget requests per hour for guests
     ],
 
     'returns' => [
@@ -172,6 +185,50 @@ return [
         'availability_bulk_check' => '10,60',   // 10 bulk availability checks per hour
     ],
 
+    // VENUE PUBLIC ACCESS RATE LIMITS (Authenticated Users)
+    'venue' => [
+        'public_view' => '300,60',              // 300 venue information views per hour
+        'availability_check' => '100,60',       // 100 venue availability checks per hour
+        'requirements_check' => '50,60',        // 50 venue requirements validation per hour
+        'suitability_check' => '50,60',         // 50 venue suitability assessments per hour
+        'search' => '200,60',                   // 200 venue search operations per hour
+        'recommendations' => '30,60',           // 30 venue recommendation requests per hour
+        'compare' => '20,60',                   // 20 venue comparison operations per hour
+        'amenity_matching' => '40,60',          // 40 amenity requirement matching per hour
+        'amenity_search' => '100,60',           // 100 amenity search operations per hour
+        'amenity_compatibility' => '30,60',     // 30 amenity compatibility checks per hour
+        'setup_guide' => '20,60',               // 20 venue setup guide generations per hour
+        'widget' => '500,60',                   // 500 venue widget data requests per hour
+        'balloon_arch' => '60,60',              // 60 balloon arch venue operations per hour
+    ],
+
+    // BOOKING WITH VENUE INTEGRATION
+    'booking' => [
+        'venue_summary' => '100,60',            // 100 booking summaries with venue details per hour
+        'venue_validation' => '80,60',          // 80 booking validations against venue constraints per hour
+    ],
+
+    // CALENDAR INTEGRATION WITH VENUE
+    'calendar' => [
+        'venue_sync' => '30,60',                // 30 calendar sync with venue availability per hour
+        'view' => '200,60',                     // 200 calendar views per hour
+        'oauth' => '10,60',                     // 10 OAuth operations per hour
+        'update' => '50,60',                    // 50 calendar updates per hour
+        'delete' => '20,60',                    // 20 calendar deletions per hour
+        'sync' => '30,60',                      // 30 sync operations per hour
+        'tokens' => '20,60',                    // 20 token operations per hour
+        'status' => '100,60',                   // 100 status checks per hour
+    ],
+
+    // VENUE NOTIFICATION RATE LIMITS
+    'notifications' => [
+        'venue' => '50,60',                     // 50 venue-related notifications per hour
+        'booking_reminders' => '100,60',        // 100 booking reminder notifications per hour
+        'consultation_reminders' => '80,60',    // 80 consultation reminder notifications per hour
+        'resend_confirmation' => '10,60',       // 10 confirmation resends per hour
+        'stats' => '30,60',                     // 30 notification stats requests per hour
+    ],
+
     // Throttle group aliases for easier middleware usage
     'throttle_aliases' => [
         'consultation-api' => 'consultations.view',
@@ -179,5 +236,18 @@ return [
         'consultation-update' => 'consultations.update',
         'admin-consultation' => 'admin.consultations.update',
         'admin-consultation-bulk' => 'admin.consultations.bulk',
+
+        // VENUE MANAGEMENT ALIASES
+        'admin-venue' => 'admin.venue_management',
+        'admin-venue-availability' => 'admin.venue_availability',
+        'admin-venue-amenities' => 'admin.venue_amenities',
+        'admin-venue-analytics' => 'admin.venue_analytics',
+        'admin-venue-bulk' => 'admin.venue_bulk_operations',
+        'venue-public' => 'venue.public_view',
+        'venue-search' => 'venue.search',
+        'venue-availability' => 'venue.availability_check',
+        'venue-booking' => 'booking.venue_validation',
+        'venue-balloon-arch' => 'venue.balloon_arch',
+        'venue-widgets' => 'venue.widget',
     ],
 ];

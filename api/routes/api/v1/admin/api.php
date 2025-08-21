@@ -6,6 +6,9 @@ use App\Http\Controllers\V1\Admin\ServiceAvailabilityController;
 use App\Http\Controllers\V1\Admin\ServiceController;
 use App\Http\Controllers\V1\Admin\ServiceLocationController;
 use App\Http\Controllers\V1\Admin\ServicePackageController;
+use App\Http\Controllers\V1\Admin\VenueAmenityController;
+use App\Http\Controllers\V1\Admin\VenueAvailabilityController;
+use App\Http\Controllers\V1\Admin\VenueDetailsController;
 use Illuminate\Support\Facades\Route;
 
 // Admin Controllers
@@ -314,4 +317,165 @@ Route::prefix('admin/services')
                     ->middleware('rate_limit:admin.service_management')
                     ->name('admin.services.packages.destroy');
             });
+    });
+
+// VENUE MANAGEMENT ROUTES (Admin)
+Route::prefix('admin/venues')
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->group(function () {
+
+        // VENUE DETAILS MANAGEMENT
+        Route::prefix('locations/{location}/details')
+            ->controller(VenueDetailsController::class)
+            ->group(function () {
+                Route::get('/', 'show')
+                    ->middleware('rate_limit:admin.venue_management')
+                    ->name('admin.venues.details.show');
+                Route::post('/', 'store')
+                    ->middleware('rate_limit:admin.venue_management')
+                    ->name('admin.venues.details.store');
+                Route::put('/{details}', 'update')
+                    ->middleware('rate_limit:admin.venue_management')
+                    ->name('admin.venues.details.update');
+                Route::delete('/{details}', 'destroy')
+                    ->middleware('rate_limit:admin.venue_management')
+                    ->name('admin.venues.details.destroy');
+
+                // Venue analytics and validation
+                Route::get('/analytics', 'getAnalytics')
+                    ->middleware('rate_limit:admin.venue_analytics')
+                    ->name('admin.venues.details.analytics');
+                Route::post('/validate', 'validateConfiguration')
+                    ->middleware('rate_limit:admin.venue_management')
+                    ->name('admin.venues.details.validate');
+                Route::post('/setup-instructions', 'generateSetupInstructions')
+                    ->middleware('rate_limit:admin.venue_management')
+                    ->name('admin.venues.details.setup-instructions');
+            });
+
+        // VENUE AVAILABILITY MANAGEMENT
+        Route::prefix('locations/{location}/availability')
+            ->controller(VenueAvailabilityController::class)
+            ->group(function () {
+                Route::get('/', 'index')
+                    ->middleware('rate_limit:admin.venue_availability')
+                    ->name('admin.venues.availability.index');
+                Route::post('/', 'store')
+                    ->middleware('rate_limit:admin.venue_availability')
+                    ->name('admin.venues.availability.store');
+                Route::get('/{window}', 'show')
+                    ->middleware('rate_limit:admin.venue_availability')
+                    ->name('admin.venues.availability.show');
+                Route::put('/{window}', 'update')
+                    ->middleware('rate_limit:admin.venue_availability')
+                    ->name('admin.venues.availability.update');
+                Route::delete('/{window}', 'destroy')
+                    ->middleware('rate_limit:admin.venue_availability')
+                    ->name('admin.venues.availability.destroy');
+
+                // Bulk operations
+                Route::post('/bulk-update', 'bulkUpdate')
+                    ->middleware('rate_limit:admin.venue_bulk_operations')
+                    ->name('admin.venues.availability.bulk-update');
+                Route::post('/bulk-delete', 'bulkDelete')
+                    ->middleware('rate_limit:admin.venue_bulk_operations')
+                    ->name('admin.venues.availability.bulk-delete');
+
+                // Availability analysis
+                Route::get('/conflicts', 'getConflicts')
+                    ->middleware('rate_limit:admin.venue_availability')
+                    ->name('admin.venues.availability.conflicts');
+                Route::get('/utilization', 'getUtilization')
+                    ->middleware('rate_limit:admin.venue_analytics')
+                    ->name('admin.venues.availability.utilization');
+            });
+
+        // VENUE AMENITY MANAGEMENT
+        Route::prefix('locations/{location}/amenities')
+            ->controller(VenueAmenityController::class)
+            ->group(function () {
+                Route::get('/', 'index')
+                    ->middleware('rate_limit:admin.venue_amenities')
+                    ->name('admin.venues.amenities.index');
+                Route::post('/', 'store')
+                    ->middleware('rate_limit:admin.venue_amenities')
+                    ->name('admin.venues.amenities.store');
+                Route::get('/{amenity}', 'show')
+                    ->middleware('rate_limit:admin.venue_amenities')
+                    ->name('admin.venues.amenities.show');
+                Route::put('/{amenity}', 'update')
+                    ->middleware('rate_limit:admin.venue_amenities')
+                    ->name('admin.venues.amenities.update');
+                Route::delete('/{amenity}', 'destroy')
+                    ->middleware('rate_limit:admin.venue_amenities')
+                    ->name('admin.venues.amenities.destroy');
+
+                // Amenity operations
+                Route::post('/bulk-update-availability', 'bulkUpdateAvailability')
+                    ->middleware('rate_limit:admin.venue_bulk_operations')
+                    ->name('admin.venues.amenities.bulk-update-availability');
+                Route::post('/{amenity}/duplicate', 'duplicate')
+                    ->middleware('rate_limit:admin.venue_amenities')
+                    ->name('admin.venues.amenities.duplicate');
+
+                // Amenity analysis
+                Route::get('/{amenity}/usage-stats', 'getUsageStats')
+                    ->middleware('rate_limit:admin.venue_analytics')
+                    ->name('admin.venues.amenities.usage-stats');
+                Route::get('/{amenity}/requirements', 'getRequirements')
+                    ->middleware('rate_limit:admin.venue_amenities')
+                    ->name('admin.venues.amenities.requirements');
+                Route::get('/compatibility-matrix', 'getCompatibilityMatrix')
+                    ->middleware('rate_limit:admin.venue_analytics')
+                    ->name('admin.venues.amenities.compatibility-matrix');
+            });
+
+        // VENUE OVERVIEW AND MANAGEMENT
+        Route::get('/dashboard', function () {
+            // Venue management dashboard overview
+            return response()->json([
+                'message' => 'Venue management dashboard',
+                'available_endpoints' => [
+                    'venue_details' => '/admin/venues/locations/{location}/details',
+                    'availability_windows' => '/admin/venues/locations/{location}/availability',
+                    'amenities' => '/admin/venues/locations/{location}/amenities',
+                ],
+            ]);
+        })
+            ->middleware('rate_limit:admin.venue_management')
+            ->name('admin.venues.dashboard');
+    });
+
+// VENUE REPORTING AND ANALYTICS (Admin)
+Route::prefix('admin/reports/venues')
+    ->middleware(['auth:api', 'roles:super admin,admin', 'emailVerified'])
+    ->group(function () {
+
+        Route::get('/overview', function () {
+            // Overall venue system analytics
+            return response()->json(['message' => 'Venue system overview']);
+        })
+            ->middleware('rate_limit:admin.venue_analytics')
+            ->name('admin.reports.venues.overview');
+
+        Route::get('/utilization', function () {
+            // Venue utilization reports
+            return response()->json(['message' => 'Venue utilization reports']);
+        })
+            ->middleware('rate_limit:admin.venue_analytics')
+            ->name('admin.reports.venues.utilization');
+
+        Route::get('/revenue', function () {
+            // Venue revenue analytics
+            return response()->json(['message' => 'Venue revenue analytics']);
+        })
+            ->middleware('rate_limit:admin.venue_analytics')
+            ->name('admin.reports.venues.revenue');
+
+        Route::get('/maintenance', function () {
+            // Venue maintenance tracking
+            return response()->json(['message' => 'Venue maintenance reports']);
+        })
+            ->middleware('rate_limit:admin.venue_analytics')
+            ->name('admin.reports.venues.maintenance');
     });

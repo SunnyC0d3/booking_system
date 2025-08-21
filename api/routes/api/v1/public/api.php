@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\V1\Public\VenueController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\Auth\AuthController;
 use App\Http\Controllers\V1\Auth\EmailVerificationController;
@@ -316,4 +317,181 @@ Route::prefix('webhooks/payments')
     ->group(function () {
         Route::post('/stripe', [PaymentController::class, 'stripeWebhook'])
             ->name('stripe');
+    });
+
+// VENUE INFORMATION ROUTES (Public Access)
+Route::prefix('venues/locations/{location}')
+    ->middleware(['client'])
+    ->controller(VenueController::class)
+    ->group(function () {
+
+        // Basic venue information (existing route enhanced)
+        Route::get('/details', 'getDetails')
+            ->middleware('rate_limit:venue.public_view')
+            ->name('venues.details');
+
+        // Venue amenities (existing route enhanced)
+        Route::get('/amenities', 'getAmenities')
+            ->middleware('rate_limit:venue.public_view')
+            ->name('venues.amenities');
+
+        // Venue availability calendar
+        Route::get('/availability', 'getAvailability')
+            ->middleware('rate_limit:venue.public_view')
+            ->name('venues.availability');
+
+        // Available time slots for booking
+        Route::get('/slots', 'getAvailableSlots')
+            ->middleware('rate_limit:venue.availability_check')
+            ->name('venues.slots');
+
+        // Venue booking requirements
+        Route::post('/requirements-check', 'checkRequirements')
+            ->middleware('rate_limit:venue.requirements_check')
+            ->name('venues.requirements-check');
+
+        // Venue suitability assessment
+        Route::post('/suitability-check', 'checkSuitability')
+            ->middleware('rate_limit:venue.suitability_check')
+            ->name('venues.suitability-check');
+    });
+
+// VENUE SEARCH AND DISCOVERY (Public)
+Route::prefix('venues')
+    ->middleware(['client'])
+    ->controller(VenueController::class)
+    ->group(function () {
+
+        // Search venues by criteria
+        Route::get('/search', 'search')
+            ->middleware('rate_limit:venue.search')
+            ->name('venues.search');
+
+        // Get venue recommendations
+        Route::post('/recommendations', 'getRecommendations')
+            ->middleware('rate_limit:venue.recommendations')
+            ->name('venues.recommendations');
+
+        // Compare multiple venues
+        Route::post('/compare', 'compareVenues')
+            ->middleware('rate_limit:venue.compare')
+            ->name('venues.compare');
+
+        // Get popular venues
+        Route::get('/popular', 'getPopularVenues')
+            ->middleware('rate_limit:venue.public_view')
+            ->name('venues.popular');
+
+        // Get venues by type/category
+        Route::get('/by-type/{type}', 'getVenuesByType')
+            ->middleware('rate_limit:venue.public_view')
+            ->name('venues.by-type');
+    });
+
+// VENUE BOOKING INTEGRATION (Public/Authenticated)
+Route::prefix('venues/locations/{location}/booking')
+    ->middleware(['client'])
+    ->controller(VenueController::class)
+    ->group(function () {
+
+        // Get booking summary with venue details
+        Route::post('/summary', 'getBookingSummary')
+            ->middleware('rate_limit:booking.venue_summary')
+            ->name('venues.booking.summary');
+
+        // Validate booking against venue constraints
+        Route::post('/validate', 'validateBooking')
+            ->middleware('rate_limit:booking.venue_validation')
+            ->name('venues.booking.validate');
+
+        // Get setup instructions for booking
+        Route::post('/setup-guide', 'getSetupGuide')
+            ->middleware('rate_limit:venue.setup_guide')
+            ->name('venues.booking.setup-guide');
+    });
+
+// VENUE AMENITY MATCHING (Public)
+Route::prefix('venues/amenities')
+    ->middleware(['client'])
+    ->controller(VenueController::class)
+    ->group(function () {
+
+        // Match requirements to available amenities
+        Route::post('/match-requirements', 'matchAmenityRequirements')
+            ->middleware('rate_limit:venue.amenity_matching')
+            ->name('venues.amenities.match-requirements');
+
+        // Get amenity categories and filters
+        Route::get('/categories', 'getAmenityCategories')
+            ->middleware('rate_limit:venue.public_view')
+            ->name('venues.amenities.categories');
+
+        // Search amenities across all venues
+        Route::get('/search', 'searchAmenities')
+            ->middleware('rate_limit:venue.amenity_search')
+            ->name('venues.amenities.search');
+
+        // Get amenity compatibility information
+        Route::post('/compatibility', 'checkAmenityCompatibility')
+            ->middleware('rate_limit:venue.amenity_compatibility')
+            ->name('venues.amenities.compatibility');
+    });
+
+// VENUE INFORMATION WIDGETS (Public - for embedding)
+Route::prefix('venues/widgets')
+    ->middleware(['client'])
+    ->controller(VenueController::class)
+    ->group(function () {
+
+        // Availability widget data
+        Route::get('/locations/{location}/availability-widget', 'getAvailabilityWidget')
+            ->middleware('rate_limit:venue.widget')
+            ->name('venues.widgets.availability');
+
+        // Quick booking widget data
+        Route::get('/locations/{location}/booking-widget', 'getBookingWidget')
+            ->middleware('rate_limit:venue.widget')
+            ->name('venues.widgets.booking');
+
+        // Amenity showcase widget
+        Route::get('/locations/{location}/amenities-widget', 'getAmenitiesWidget')
+            ->middleware('rate_limit:venue.widget')
+            ->name('venues.widgets.amenities');
+
+        // Venue info card widget
+        Route::get('/locations/{location}/info-card', 'getInfoCard')
+            ->middleware('rate_limit:venue.widget')
+            ->name('venues.widgets.info-card');
+    });
+
+// BALLOON ARCH SPECIFIC ROUTES (Public)
+Route::prefix('venues/balloon-arch')
+    ->middleware(['client'])
+    ->controller(VenueController::class)
+    ->group(function () {
+
+        // Find balloon arch suitable venues
+        Route::get('/suitable-venues', 'getBalloonArchSuitableVenues')
+            ->middleware('rate_limit:venue.balloon_arch')
+            ->name('venues.balloon-arch.suitable');
+
+        // Balloon arch setup requirements
+        Route::post('/setup-requirements', 'getBalloonArchRequirements')
+            ->middleware('rate_limit:venue.balloon_arch')
+            ->name('venues.balloon-arch.requirements');
+
+        // Balloon arch compatibility check
+        Route::post('/compatibility-check', 'checkBalloonArchCompatibility')
+            ->middleware('rate_limit:venue.balloon_arch')
+            ->name('venues.balloon-arch.compatibility');
+
+        // Get balloon arch equipment recommendations
+        Route::get('/equipment-recommendations', 'getBalloonArchEquipmentRecommendations')
+            ->middleware('rate_limit:venue.balloon_arch')
+            ->name('venues.balloon-arch.equipment');
+
+        // Balloon arch venue calculator
+        Route::post('/venue-calculator', 'calculateBalloonArchVenue')
+            ->middleware('rate_limit:venue.balloon_arch')
+            ->name('venues.balloon-arch.calculator');
     });
