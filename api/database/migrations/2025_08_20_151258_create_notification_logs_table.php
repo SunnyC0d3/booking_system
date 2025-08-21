@@ -108,7 +108,6 @@ return new class extends Migration
             $table->index(['provider', 'provider_message_id']);
             $table->index(['error_code', 'failed_at']);
             $table->index(['attempts', 'next_retry_at']);
-            $table->index(['data_retention_until']);
 
             // Composite indexes for common queries
             $table->index(['notification_type', 'channel', 'status']);

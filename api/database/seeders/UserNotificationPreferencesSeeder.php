@@ -14,20 +14,14 @@ class UserNotificationPreferencesSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->command->info('Seeding user notification preferences...');
-
         // Get all existing users
         $users = User::all();
 
         if ($users->isEmpty()) {
-            $this->command->warn('No users found. Creating sample users with notification preferences...');
             $this->createSampleUsersWithPreferences();
         } else {
-            $this->command->info("Found {$users->count()} existing users. Adding notification preferences...");
             $this->updateExistingUsersWithPreferences($users);
         }
-
-        $this->command->info('User notification preferences seeded successfully!');
     }
 
     /**
@@ -102,8 +96,6 @@ class UserNotificationPreferencesSeeder extends Seeder
                 $this->addDoNotDisturbSettings($user);
             }
         }
-
-        $this->command->info('✓ Created ' . count($sampleUsers) . ' sample users with preferences');
     }
 
     /**
@@ -159,8 +151,6 @@ class UserNotificationPreferencesSeeder extends Seeder
 
             $updated++;
         }
-
-        $this->command->info("✓ Updated {$updated} existing users with notification preferences");
     }
 
     /**
@@ -342,8 +332,6 @@ class UserNotificationPreferencesSeeder extends Seeder
                 'updated_at' => now(),
             ]
         );
-
-        $this->command->info('✓ Generated notification preference statistics');
     }
 
     /**
@@ -380,8 +368,6 @@ class UserNotificationPreferencesSeeder extends Seeder
                 ]);
             }
         }
-
-        $this->command->info('✓ Created sample unsubscribe scenarios');
     }
 
     /**
@@ -443,9 +429,7 @@ class UserNotificationPreferencesSeeder extends Seeder
             }
         }
 
-        if (empty($errors)) {
-            $this->command->info('✓ All notification preferences are valid');
-        } else {
+        if (!empty($errors)) {
             $this->command->warn('Found ' . count($errors) . ' validation errors:');
             foreach ($errors as $error) {
                 $this->command->warn('  - ' . $error);
@@ -480,14 +464,5 @@ class UserNotificationPreferencesSeeder extends Seeder
                 'marketing_rate' => $totalUsers > 0 ? round(($marketingOptIn / $totalUsers) * 100, 2) : 0,
             ],
         ];
-
-        $this->command->info('');
-        $this->command->info('=== NOTIFICATION PREFERENCES MIGRATION REPORT ===');
-        $this->command->info("Total Users: {$report['total_users']}");
-        $this->command->info("Users with Preferences: {$report['users_with_preferences']} ({$report['migration_coverage']}%)");
-        $this->command->info("SMS Enabled: {$report['channel_adoption']['sms_enabled']} ({$report['adoption_rates']['sms_rate']}%)");
-        $this->command->info("Push Enabled: {$report['channel_adoption']['push_enabled']} ({$report['adoption_rates']['push_rate']}%)");
-        $this->command->info("Marketing Opt-in: {$report['channel_adoption']['marketing_opt_in']} ({$report['adoption_rates']['marketing_rate']}%)");
-        $this->command->info('================================================');
     }
 }

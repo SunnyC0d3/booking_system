@@ -13,8 +13,6 @@ class NotificationTemplateSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->command->info('Seeding notification templates and settings...');
-
         // Clear notification-related cache
         Cache::forget('notification_statistics');
         Cache::forget('notification_templates');
@@ -30,8 +28,6 @@ class NotificationTemplateSeeder extends Seeder
 
         // Seed notification statistics for demo purposes
         $this->seedNotificationStatistics();
-
-        $this->command->info('Notification templates and settings seeded successfully!');
     }
 
     /**
@@ -174,8 +170,6 @@ class NotificationTemplateSeeder extends Seeder
 
         // For now, store in cache as example data
         Cache::put('notification_templates', collect($templates), now()->addDays(30));
-
-        $this->command->info('✓ Notification templates seeded');
     }
 
     /**
@@ -254,8 +248,6 @@ class NotificationTemplateSeeder extends Seeder
         ];
 
         Cache::put('notification_settings', $settings, now()->addDays(30));
-
-        $this->command->info('✓ Notification settings seeded');
     }
 
     /**
@@ -315,8 +307,6 @@ class NotificationTemplateSeeder extends Seeder
         ];
 
         Cache::put('notification_preferences_examples', $preferencesExamples, now()->addDays(30));
-
-        $this->command->info('✓ Notification preference examples seeded');
     }
 
     /**
@@ -365,8 +355,6 @@ class NotificationTemplateSeeder extends Seeder
         ];
 
         Cache::put('notification_statistics', $statistics, now()->addHours(6));
-
-        $this->command->info('✓ Notification statistics seeded');
     }
 
     /**
@@ -490,7 +478,5 @@ class NotificationTemplateSeeder extends Seeder
         ];
 
         Cache::put('notification_channel_configs', $channelConfigs, now()->addDays(30));
-
-        $this->command->info('✓ Channel configurations seeded');
     }
 }
