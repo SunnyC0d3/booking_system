@@ -1,22 +1,29 @@
 <?php
 
-use App\Http\Controllers\V1\Public\ConsultationController;
-use App\Http\Controllers\V1\Public\ServiceController;
 use Illuminate\Support\Facades\Route;
-
-// Auth Controllers
 use App\Http\Controllers\V1\Auth\AuthController;
 use App\Http\Controllers\V1\Auth\EmailVerificationController;
-
-// Other Controllers
-use App\Http\Controllers\V1\Public\UserController;
+use App\Http\Controllers\V1\Public\BookingController;
+use App\Http\Controllers\V1\Public\CalendarController;
+use App\Http\Controllers\V1\Public\ConsultationController;
 use App\Http\Controllers\V1\Public\PaymentController;
 use App\Http\Controllers\V1\Public\ReturnsController;
-use App\Http\Controllers\V1\Public\BookingController;
+use App\Http\Controllers\V1\Public\ServiceController;
+use App\Http\Controllers\V1\Public\UserController;
 
-// Auth
+/*
+|--------------------------------------------------------------------------
+| Public API Routes
+|--------------------------------------------------------------------------
+|
+| Here are the public-facing API routes that handle user interactions
+| with the booking system. These routes are organized by functionality
+| and include appropriate middleware for security and rate limiting.
+|
+*/
 
-//Route::middleware(['throttle:3,1', 'client'])
+//Auth
+
 Route::middleware(['client'])
     ->controller(AuthController::class)
     ->group(function () {
@@ -55,6 +62,49 @@ Route::middleware(['throttle:3,5', 'client'])
     ->group(function () {
         Route::post('/forgot-password', 'forgotPassword')->middleware('rate_limit:auth.password_reset')->name('password.email');
         Route::post('/reset-password', 'passwordReset')->middleware('rate_limit:auth.password_reset')->name('password.update');
+    });
+
+// CALENDAR INTEGRATION ROUTES (Authenticated Users)
+Route::prefix('calendar')
+    ->middleware(['auth:api', 'emailVerified'])
+    ->controller(CalendarController::class)
+    ->group(function () {
+        // Core calendar integration management
+        Route::get('/', 'index')
+            ->middleware('rate_limit:calendar.view')
+            ->name('calendar.integrations.index');
+
+        // OAuth flow for connecting calendars
+        Route::post('/oauth/initiate', 'initiateOAuth')
+            ->middleware('rate_limit:calendar.oauth')
+            ->name('calendar.oauth.initiate');
+
+        Route::get('/oauth/callback', 'handleOAuthCallback')
+            ->middleware('rate_limit:calendar.oauth')
+            ->name('calendar.oauth.callback');
+
+        // Integration management
+        Route::put('/{integration}', 'update')
+            ->middleware('rate_limit:calendar.update')
+            ->name('calendar.integrations.update');
+
+        Route::delete('/{integration}', 'destroy')
+            ->middleware('rate_limit:calendar.delete')
+            ->name('calendar.integrations.destroy');
+
+        // Sync operations
+        Route::post('/{integration}/sync', 'triggerSync')
+            ->middleware('rate_limit:calendar.sync')
+            ->name('calendar.integrations.sync');
+
+        Route::get('/sync-status', 'getSyncStatus')
+            ->middleware('rate_limit:calendar.status')
+            ->name('calendar.sync.status');
+
+        // Token management
+        Route::post('/{integration}/refresh-tokens', 'refreshTokens')
+            ->middleware('rate_limit:calendar.tokens')
+            ->name('calendar.tokens.refresh');
     });
 
 // Payments
@@ -219,4 +269,51 @@ Route::prefix('services/{service}')
         Route::get('/consultations/slots', [ConsultationController::class, 'getAvailableSlots'])
             ->middleware('rate_limit:consultation.slots')
             ->name('services.consultation.slots');
+    });
+
+// Calendar Webhook Routes
+Route::prefix('webhooks/calendar')
+    ->middleware(['verify_webhook_signature', 'throttle:webhook'])
+    ->name('webhooks.calendar.')
+    ->group(function () {
+
+        // Google Calendar Webhooks
+        Route::post('/google', [CalendarController::class, 'handleGoogleWebhook'])
+            ->name('google');
+
+        // Outlook/Microsoft Calendar Webhooks
+        Route::post('/outlook', [CalendarController::class, 'handleOutlookWebhook'])
+            ->name('outlook');
+
+        // Handle Outlook subscription validation (GET request)
+        Route::get('/outlook', [CalendarController::class, 'validateOutlookSubscription'])
+            ->name('outlook.validate');
+
+        // iCal Webhook (for calendar feeds that support webhooks)
+        Route::post('/ical/{integration}', [CalendarController::class, 'handleICalWebhook'])
+            ->name('ical')
+            ->where('integration', '[0-9]+');
+
+        // Apple Calendar Webhooks (if needed in future)
+        Route::post('/apple', [CalendarController::class, 'handleAppleWebhook'])
+            ->name('apple');
+
+        // Generic webhook handler for testing/development
+        Route::post('/test', [CalendarController::class, 'handleTestWebhook'])
+            ->name('test')
+            ->middleware('throttle:10,1'); // More restrictive for testing
+
+        // Webhook status/health check endpoint
+        Route::get('/status', [CalendarController::class, 'getWebhookStatus'])
+            ->middleware('auth:api')
+            ->name('status');
+    });
+
+// Payment Webhooks (existing, keeping for reference)
+Route::prefix('webhooks/payments')
+    ->middleware(['throttle:webhook'])
+    ->name('webhooks.payments.')
+    ->group(function () {
+        Route::post('/stripe', [PaymentController::class, 'stripeWebhook'])
+            ->name('stripe');
     });
